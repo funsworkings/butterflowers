@@ -11,7 +11,10 @@ public class Wand : MonoBehaviour
 
     public Vector3 position {
         get{
-            return camera.ScreenToWorldPoint(new Vector3(Input.mousePosition.x, Input.mousePosition.y, distanceFromCamera));
+            return Input.mousePosition;
+        }
+        set {
+            transform.position = value;
         }
     }
 
@@ -37,6 +40,8 @@ public class Wand : MonoBehaviour
     void Update()
     {
         float dt = Time.deltaTime;
+
+        position = camera.ScreenToWorldPoint(new Vector3(Input.mousePosition.x, Input.mousePosition.y, distanceFromCamera));
 
         b = position;
         m_velocity = (b - a) / dt;
