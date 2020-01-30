@@ -22,6 +22,8 @@ namespace Settings {
         [Tooltip("Growth measured based on energy / 1.0")]
         public AnimationCurve energyGrowthCurve;
 
+        public AnimationCurve attractionCurve;
+
         public float energyGrowth, energyDecay;
         public float recoveryTime;
     }

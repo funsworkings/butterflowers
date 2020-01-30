@@ -63,7 +63,10 @@ public class Butterfly : MonoBehaviour
         Vector3 dir = (target - position);
 
         float distance = dir.magnitude;
-        float magnitude = preset.attraction * Mathf.Pow(1f - Mathf.Clamp01((distance / preset.maxDistanceFromWand)), 1f);
+
+        float a = Mathf.Clamp01((distance - preset.minDistanceFromWand) / (preset.maxDistanceFromWand - preset.minDistanceFromWand));
+        float magnitude = preset.attraction * preset.attractionCurve.Evaluate(a);
+
         float speed = preset.moveAmount * magnitude;
 
         transform.position += (dir * speed * energy * dt);
