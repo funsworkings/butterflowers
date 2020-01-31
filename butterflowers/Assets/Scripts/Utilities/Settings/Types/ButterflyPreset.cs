@@ -26,6 +26,8 @@ namespace Settings {
 
         public float energyGrowth, energyDecay;
         public float recoveryTime;
+
+        public float minAnimationSpeed = 1f, maxAnimationSpeed = 2f;
     }
 
 }

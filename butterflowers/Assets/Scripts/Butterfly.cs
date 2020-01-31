@@ -10,7 +10,10 @@ public class Butterfly : MonoBehaviour
     new Camera camera;
     Wand wand;
 
+    Animator animator;
+
     [SerializeField] Preset preset;
+    
 
     public Vector3 position { get{ return camera.WorldToScreenPoint(transform.position); } }
 
@@ -26,6 +29,8 @@ public class Butterfly : MonoBehaviour
     {
         camera = Camera.main;
         wand = FindObjectOfType<Wand>();
+
+        animator = GetComponentInChildren<Animator>();
     }
 
     // Update is called once per frame
@@ -44,6 +49,9 @@ public class Butterfly : MonoBehaviour
 
         float noise = MoveWithNoise(dt);
         Grow(dt);
+
+
+        animator.speed = (preset.maxAnimationSpeed - preset.minAnimationSpeed) * energy + preset.minAnimationSpeed;
     }
 
     float MoveWithNoise(float dt){
@@ -68,8 +76,9 @@ public class Butterfly : MonoBehaviour
         float magnitude = preset.attraction * preset.attractionCurve.Evaluate(a);
 
         float speed = preset.moveAmount * magnitude;
+        Vector3 move = camera.transform.right * dir.x + camera.transform.up * dir.y;
 
-        transform.position += (dir * speed * energy * dt);
+        transform.position += (move * speed * energy * dt);
 
         return speed * dt;
     }

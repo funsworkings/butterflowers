@@ -41,8 +41,6 @@ public class Wand : MonoBehaviour
     {
         float dt = Time.deltaTime;
 
-        position = camera.ScreenToWorldPoint(new Vector3(Input.mousePosition.x, Input.mousePosition.y, distanceFromCamera));
-
         b = position;
         m_velocity = (b - a) / dt;
         a = b;
