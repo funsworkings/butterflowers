@@ -25,6 +25,8 @@ public class Wand : MonoBehaviour
         }
     }
 
+    public float speed;
+
     Vector3 a, b;
 
     // Start is called before the first frame update
@@ -44,5 +46,7 @@ public class Wand : MonoBehaviour
         b = position;
         m_velocity = (b - a) / dt;
         a = b;
+
+        speed = velocity.magnitude;
     }
 }

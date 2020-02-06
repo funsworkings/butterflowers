@@ -13,12 +13,18 @@ MonoBehaviour:
   m_Name: Default Butterfly
   m_EditorClassIdentifier: 
   maxSpeed: 0.33
-  noiseAmount: 11.9
-  noiseSize: 69.44
+  noiseAmount: 5.7
+  noiseSize: 50.51
   moveAmount: 0.67
-  attraction: 0.05
-  minDistanceFromWand: 10
-  maxDistanceFromWand: 80
+  attraction: 3
+  gravity: 0.098
+  descentTime: 3
+  trailsSize: 0.167
+  colorRefresh: 1
+  minLifetime: 1
+  maxLifetime: 10
+  wandRadius: 128
+  wandRepelSpeed: 1280
   energyDecayCurve:
     serializedVersion: 2
     m_Curve:
@@ -100,6 +106,8 @@ MonoBehaviour:
     m_PreInfinity: 2
     m_PostInfinity: 2
     m_RotationOrder: 4
+  centerStrength: 3
+  minCenterDistance: 0.87
   energyGrowth: 18.21
   energyDecay: 1000
   recoveryTime: 3

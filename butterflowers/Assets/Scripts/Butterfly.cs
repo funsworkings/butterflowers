@@ -7,30 +7,57 @@ using Preset = Settings.ButterflyPreset;
 
 public class Butterfly : MonoBehaviour
 {
-    new Camera camera;
+    CameraDriver driver;
+
+    Mother mother;
     Wand wand;
 
     Animator animator;
+    Renderer[] renderers;
 
     [SerializeField] Preset preset;
-    
+    [SerializeField] GameObject trailsPrefab;
+                     GameObject trails = null;
+                     ParticleSystem trails_ps;
 
-    public Vector3 position { get{ return camera.WorldToScreenPoint(transform.position); } }
+    public Vector3 position { get{ return driver.ConvertToScreen(transform.position); } }
 
 
     Vector3 velocity = Vector3.zero;
+    Color value = Color.white;
+
     [SerializeField] float energy = 1f;
 
-    float timeSinceRecover = 0f;
-    bool recovering = false;
+    public bool alive = true;
+    public bool dying = false;
+
+        float timeSinceDeath = 0f;
+        float lifetime = 0f;
+        float life = 0f;
+
+    Vector4 uv1, uv2;
 
     // Start is called before the first frame update
     void Start()
     {
-        camera = Camera.main;
+        driver = CameraDriver.Instance;
+
+        mother = FindObjectOfType<Mother>();
         wand = FindObjectOfType<Wand>();
 
         animator = GetComponentInChildren<Animator>();
+        renderers = GetComponentsInChildren<Renderer>();
+
+     /*  var viewport = driver.ConvertToViewport(transform.position);
+        uv1 = uv2 = new Vector4(viewport.x, viewport.y, 0f, 0f);
+
+        foreach(Renderer r in renderers){
+            r.material.SetVector("_UV1", uv1);
+            r.material.SetVector("_UV2", uv2);
+        }*/
+
+        lifetime = Random.Range(preset.minLifetime, preset.maxLifetime);
+        StartCoroutine("UpdateAttentuationFromTexture");
     }
 
     // Update is called once per frame
@@ -38,50 +65,139 @@ public class Butterfly : MonoBehaviour
     {
         float dt = Time.deltaTime;
 
-        //Decay(noise, dt);
+        if(alive){
+            float str = dt;
+            if(dying){
+                if(trails == null){
+                    trails = Instantiate(trailsPrefab, transform);
+                        trails.transform.localPosition = Vector3.zero;
+                        trails.transform.localScale = Vector3.one * preset.trailsSize;
 
-        
-        if(wand != null){
-            float attract = MoveTowardsWand(dt);
-            Decay(attract, dt);
+                    trails_ps = trails.GetComponent<ParticleSystem>();
+                    var main = trails_ps.main;
+                        main.loop = true;
+
+                    trails_ps.Play();
+                }
+
+                float duration = preset.descentTime;
+                str *= (1f - Mathf.Clamp01((timeSinceDeath) / duration));
+
+                timeSinceDeath += dt;
+                MoveTowardsGround(timeSinceDeath);
+
+                if(position.y <= 64f)
+                    Die();
+            }
+
+            MoveWithWand(str);
+            MoveTowardsCenter(str);
+            MoveWithNoise(str);
         }
 
+        float speed = (dying)? preset.maxAnimationSpeed:preset.minAnimationSpeed;
+        animator.speed += (speed - animator.speed)*dt;
 
-        float noise = MoveWithNoise(dt);
-        Grow(dt);
 
+       /* var viewport = driver.ConvertToViewport(transform.position);
+        uv2 = new Vector4(viewport.x, viewport.y, 0f, 0f);
+        foreach(Renderer r in renderers){
+            r.material.SetVector("_UV2", uv2);
+        }*/
+    }
 
-        animator.speed = (preset.maxAnimationSpeed - preset.minAnimationSpeed) * energy + preset.minAnimationSpeed;
+    void LateUpdate() {
+        float dt = Time.deltaTime;
+
+        transform.position += velocity * dt;
     }
 
     float MoveWithNoise(float dt){
         Vector2 screen = position * preset.noiseSize;
         float noise = Mathf.PerlinNoise(screen.x, screen.y);
 
-        Vector3 dir = Random.insideUnitSphere;
+        Vector2 dir = Random.insideUnitCircle;
         float speed = preset.noiseAmount * noise;
 
-        transform.position += (dir * speed * dt);
+        transform.position += (driver.MoveRelativeToCamera(dir) * speed * dt);
 
        return speed;
     }
 
-    float MoveTowardsWand(float dt){
+    void MoveWithWand(float dt){
         Vector3 target = wand.position;
-        Vector3 dir = (target - position);
+        Vector3 current = position;
 
-        float distance = dir.magnitude;
+        Vector3 direction = (target - current);
 
-        float a = Mathf.Clamp01((distance - preset.minDistanceFromWand) / (preset.maxDistanceFromWand - preset.minDistanceFromWand));
-        float magnitude = preset.attraction * preset.attractionCurve.Evaluate(a);
+        float radius = preset.wandRadius;
+        float magnitude = preset.attractionCurve.Evaluate(Mathf.Clamp(radius - direction.magnitude, 0f, radius) / radius);
 
-        float speed = preset.moveAmount * magnitude;
-        Vector3 move = camera.transform.right * dir.x + camera.transform.up * dir.y;
+        if(wand.speed >= preset.wandRepelSpeed) {
+            if(magnitude > 0f)
+                dying = true; // Flag butterfly for death
 
-        transform.position += (move * speed * energy * dt);
-
-        return speed * dt;
+            magnitude *= -1f;
+        }
+        
+        velocity += driver.MoveRelativeToCamera(direction.normalized) * magnitude * preset.attraction * dt;
     }
+
+    void MoveTowardsCenter(float dt){
+        Vector3 viewPosition = driver.ConvertToViewport(transform.position);
+        Vector3 center = (Vector3.one * .5f);
+
+        Vector3 direction = driver.MoveRelativeToCamera(center - viewPosition); // Grab vector to center of screen
+
+        float distanceFromCenter = direction.magnitude;
+        float magnitude = Mathf.Max(0f, (distanceFromCenter - preset.minCenterDistance));
+
+        velocity += (direction.normalized) * preset.centerStrength * Mathf.Pow(magnitude, 2f);
+    }
+
+    void MoveTowardsGround(float t){
+        velocity += driver.MoveRelativeToCamera(Vector3.down) * Mathf.Pow(t, 2f) * preset.gravity;
+    }
+
+    void Die(){
+        trails.transform.parent = null;
+
+        var main = trails_ps.main;
+            main.loop = false;
+
+        var emission = trails_ps.emission;
+        var burst = new ParticleSystem.Burst(Mathf.Repeat(trails_ps.time + .01f, main.duration), 100);
+            emission.SetBursts(new ParticleSystem.Burst[]{ burst });
+
+        alive = false;
+        dying = false;
+
+        GameObject.Destroy(gameObject);
+    }
+
+
+    IEnumerator UpdateAttentuationFromTexture(){
+        while(alive && !dying){
+            var viewport = driver.ConvertToViewport(transform.position);
+
+            value = mother.GetColorFromCanvas(viewport);
+            var rgb = new Vector3(value.r, value.g, value.b);
+
+           /* uv1 = uv2;
+            foreach(Renderer r in renderers){
+                r.material.SetVector("_UV1", uv1);
+            }*/
+
+            if(rgb.magnitude < .33f)
+                dying = true;
+
+            yield return new WaitForSeconds(preset.colorRefresh);
+        }
+
+    }
+
+
+
 
     void Decay(float speed, float dt){
         float decay = preset.energyDecay * preset.energyDecayCurve.Evaluate(Mathf.Clamp01(speed / preset.maxSpeed));

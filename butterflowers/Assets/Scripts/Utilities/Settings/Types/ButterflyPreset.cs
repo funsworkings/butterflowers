@@ -14,8 +14,15 @@ namespace Settings {
         public float moveAmount;
         public float attraction;
 
-        public float minDistanceFromWand;
-        public float maxDistanceFromWand;
+        public float gravity = .98f;
+        public float descentTime;
+        public float trailsSize;
+        public float colorRefresh;
+
+        public float minLifetime, maxLifetime; 
+
+        public float wandRadius;
+        public float wandRepelSpeed;
 
         [Tooltip("Decay measured based on speed / max speed")]
         public AnimationCurve energyDecayCurve;
@@ -23,6 +30,9 @@ namespace Settings {
         public AnimationCurve energyGrowthCurve;
 
         public AnimationCurve attractionCurve;
+
+        public float centerStrength;
+        public float minCenterDistance;
 
         public float energyGrowth, energyDecay;
         public float recoveryTime;
