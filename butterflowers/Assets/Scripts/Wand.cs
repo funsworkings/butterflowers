@@ -5,48 +5,35 @@ using UnityEngine;
 public class Wand : MonoBehaviour
 {
     new Camera camera;
-
+    
+    [SerializeField] Cursor cursor;
     [SerializeField] float distanceFromCamera = 10f;
 
 
     public Vector3 position {
         get{
-            return Input.mousePosition;
+            return cursor.position;
         }
         set {
             transform.position = value;
         }
     }
 
-    Vector3 m_velocity = Vector3.zero;
     public Vector3 velocity {
         get{
-            return m_velocity;
+            return cursor.velocity;
         }
     }
 
-    public float speed;
-
-    Vector3 a, b;
+    public float speed {
+        get{
+            return cursor.speed;
+        }
+    }
 
     // Start is called before the first frame update
     void Start()
     {
         camera = Camera.main;
-
-        a = b = position;
-        m_velocity = Vector3.zero;
-    }
-
-    // Update is called once per frame
-    void Update()
-    {
-        float dt = Time.deltaTime;
-
-        b = position;
-        m_velocity = (b - a) / dt;
-        a = b;
-
-        speed = velocity.magnitude;
     }
 }

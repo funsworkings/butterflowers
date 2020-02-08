@@ -8,10 +8,14 @@ public class Mother : MonoBehaviour
     [SerializeField] RenderTexture canvas;
     [SerializeField] float refreshRate = .167f;
 
+    public Material material;
     public Texture2D sampler;
         int w = 0;
         int h = 0;
-    
+
+
+    public Texture2D[] textures;
+    public int index = 0;
 
     // Start is called before the first frame updaste
     void Start()
@@ -20,6 +24,16 @@ public class Mother : MonoBehaviour
         h = canvas.height;
 
         sampler = new Texture2D(w, h, TextureFormat.ARGB32, false, true);
+        textures = new Texture2D[] { 
+            new Texture2D(2, 2),   
+            new Texture2D(2, 2),
+            new Texture2D(2, 2),
+            new Texture2D(2, 2)
+        };
+
+        ApplyTextures();
+
+        Uploader.onSuccessReceiveImage += PushTexture;  
 
         StartCoroutine("Refresh");   
     }
@@ -49,5 +63,30 @@ public class Mother : MonoBehaviour
         var y = Mathf.FloorToInt(viewport.y * h);
 
         return sampler.GetPixel(x, y);
+    }
+
+    void PushTexture(byte[] dat){
+        var tex = textures[index];
+        tex.LoadImage(dat);
+
+        ApplyTextures();
+
+        if(++index > textures.Length-1)
+            index = 0;
+    }
+
+    void ApplyTextures(){
+        if(material == null)
+            return;
+
+        int i = 0;
+        foreach(Texture2D t in textures){
+            material.SetTexture(string.Format("_Tex{0}", i+1), textures[i]);
+            ++i;
+        }
+    }
+
+    void OnDestroy() {
+        Uploader.onSuccessReceiveImage -= PushTexture;    
     }
 }
