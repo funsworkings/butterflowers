@@ -40,6 +40,8 @@
             sampler2D _MainTex;
             sampler2D _Tex1, _Tex2, _Tex3, _Tex4;
 
+            float _ActiveStates[4];
+
             float4 _MainTex_ST;
 
             v2f vert (appdata v)
@@ -57,16 +59,21 @@
 
                 fixed4 mid = fixed4(.5, .5, .5, .5);
 
+                fixed4 ct = fixed4(1.0, 1.0, 1.0, 1.0);
+
                 fixed4 c1 = tex2D(_Tex1, uv);
                 fixed4 c2 = tex2D(_Tex2, uv);
                 fixed4 c3 = tex2D(_Tex3, uv);
                 fixed4 c4 = tex2D(_Tex4, uv);
-
-                fixed4 ct = c1;
-
-                ct += (mid - c2)*2.0;
-                ct += (mid - c3)*2.0;
-                ct += (mid - c4)*2.0;
+                
+                if(_ActiveStates[0] > 0.0)
+                    ct += (mid - c1);
+                if(_ActiveStates[1] > 0.0)
+                    ct += (mid - c2);
+                if(_ActiveStates[2] > 0.0)
+                    ct += (mid - c3);
+                if(_ActiveStates[3] > 0.0)
+                    ct += (mid - c4);
 
                 // apply fog
                 UNITY_APPLY_FOG(i.fogCoord, ct);

@@ -109,7 +109,17 @@ public class Butterfly : MonoBehaviour
     void LateUpdate() {
         float dt = Time.deltaTime;
 
+        if(!dying)
+            ClampVelocity();
+            
         transform.position += velocity * dt;
+    }
+
+    void ClampVelocity(){
+        float speed = velocity.magnitude;
+              speed = Mathf.Min(speed, preset.maxSpeed);
+
+        velocity = (speed * velocity.normalized);
     }
 
     float MoveWithNoise(float dt){
@@ -194,21 +204,5 @@ public class Butterfly : MonoBehaviour
             yield return new WaitForSeconds(preset.colorRefresh);
         }
 
-    }
-
-
-
-
-    void Decay(float speed, float dt){
-        float decay = preset.energyDecay * preset.energyDecayCurve.Evaluate(Mathf.Clamp01(speed / preset.maxSpeed));
-        energy = Mathf.Clamp01(energy - decay*dt);
-    }
-
-    void Grow(float dt){
-        float grow = preset.energyGrowth * preset.energyGrowthCurve.Evaluate(1f - Mathf.Clamp01(energy / 1f));
-        if(energy <= 0f)
-            grow = preset.energyGrowth;
-
-        energy = Mathf.Clamp01(energy + grow*dt);
     }
 }

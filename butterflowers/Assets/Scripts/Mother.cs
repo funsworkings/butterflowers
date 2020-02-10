@@ -17,6 +17,8 @@ public class Mother : MonoBehaviour
     public Texture2D[] textures;
     public int index = 0;
 
+    bool loop = false;
+
     // Start is called before the first frame updaste
     void Start()
     {
@@ -71,19 +73,26 @@ public class Mother : MonoBehaviour
 
         ApplyTextures();
 
-        if(++index > textures.Length-1)
+        if(++index > textures.Length-1) {
             index = 0;
+            loop = true;
+        }
     }
 
     void ApplyTextures(){
         if(material == null)
             return;
+            
+        var activeStates = new float[4];
 
         int i = 0;
         foreach(Texture2D t in textures){
             material.SetTexture(string.Format("_Tex{0}", i+1), textures[i]);
+            activeStates[i] = (loop || i <= index)? 1f:0f;
+
             ++i;
         }
+        material.SetFloatArray("_ActiveStates", activeStates);
     }
 
     void OnDestroy() {
