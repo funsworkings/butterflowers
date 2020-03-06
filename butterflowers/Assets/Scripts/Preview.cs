@@ -22,7 +22,7 @@ public class Preview : MonoBehaviour
     }
 
     void Start() {
-        Uploader.onSuccessReceiveImage += OnReceiveImage;  
+         Navigator.onSuccessReceiveImage += OnReceiveImage;  
     }
 
     void OnReceiveImage(byte[] dat){
@@ -57,6 +57,6 @@ public class Preview : MonoBehaviour
     }
 
     void OnDestroy() {
-        Uploader.onSuccessReceiveImage -= OnReceiveImage;  
+        Navigator.onSuccessReceiveImage -= OnReceiveImage;  
     }
 }

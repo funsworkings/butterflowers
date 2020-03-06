@@ -35,7 +35,7 @@ public class Mother : MonoBehaviour
 
         ApplyTextures();
 
-        Uploader.onSuccessReceiveImage += PushTexture;  
+        Navigator.onSuccessReceiveImage += PushTexture;  
 
         StartCoroutine("Refresh");   
     }
@@ -96,6 +96,6 @@ public class Mother : MonoBehaviour
     }
 
     void OnDestroy() {
-        Uploader.onSuccessReceiveImage -= PushTexture;    
+        Navigator.onSuccessReceiveImage -= PushTexture;    
     }
 }

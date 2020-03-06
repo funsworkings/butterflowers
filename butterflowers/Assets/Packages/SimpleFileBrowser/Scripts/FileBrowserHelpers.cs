@@ -3,11 +3,14 @@ using UnityEngine;
 
 namespace SimpleFileBrowser
 {
-	public struct FileSystemEntry
+    [System.Serializable]
+	public class FileSystemEntry
 	{
 		public readonly string Path;
 		public readonly string Name;
 		public readonly string Extension;
+
+        [HideInInspector]
 		public readonly FileAttributes Attributes;
 
 		public bool IsDirectory { get { return ( Attributes & FileAttributes.Directory ) == FileAttributes.Directory; } }
