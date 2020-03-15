@@ -2,13 +2,10 @@
 {
     Properties
     {
-        _MainTex ("Texture", 2D) = "white" {}
-
-        _Tex1 ("Texture 1", 2D) = "white" {}
-        _Tex2 ("Texture 2", 2D) = "white" {}
-        _Tex3 ("Texture 3", 2D) = "white" {}
-        _Tex4 ("Texture 4", 2D) = "white" {}
+        _Textures ("Textures", 2DArray) = ""{}
+        _TextureCount ("Texture Count", int) = 0
     }
+    
     SubShader
     {
         Tags { "RenderType"="Opaque" }
@@ -36,44 +33,40 @@
                 UNITY_FOG_COORDS(1)
                 float4 vertex : SV_POSITION;
             };
-
-            sampler2D _MainTex;
-            sampler2D _Tex1, _Tex2, _Tex3, _Tex4;
-
-            float _ActiveStates[4];
-
-            float4 _MainTex_ST;
-
+            
+            
+            UNITY_DECLARE_TEX2DARRAY(_Textures);
+            int _TextureCount;
+         
             v2f vert (appdata v)
             {
                 v2f o;
+                
                 o.vertex = UnityObjectToClipPos(v.vertex);
-                o.uv = TRANSFORM_TEX(v.uv, _MainTex);
-                UNITY_TRANSFER_FOG(o,o.vertex);
+                o.uv = o.vertex / 2.0;
+                
+                UNITY_TRANSFER_FOG(o, o.vertex);
+                
                 return o;
             }
 
             fixed4 frag (v2f i) : SV_Target
             {
-                float2 uv = i.uv;
+                float3 uv = float3(1.0, 1.0, 1.0);
+                
+                uv.xy = i.uv.xy;
+                
 
                 fixed4 mid = fixed4(.5, .5, .5, .5);
-
                 fixed4 ct = fixed4(1.0, 1.0, 1.0, 1.0);
-
-                fixed4 c1 = tex2D(_Tex1, uv);
-                fixed4 c2 = tex2D(_Tex2, uv);
-                fixed4 c3 = tex2D(_Tex3, uv);
-                fixed4 c4 = tex2D(_Tex4, uv);
                 
-                if(_ActiveStates[0] > 0.0)
-                    ct += (mid - c1);
-                if(_ActiveStates[1] > 0.0)
-                    ct += (mid - c2);
-                if(_ActiveStates[2] > 0.0)
-                    ct += (mid - c3);
-                if(_ActiveStates[3] > 0.0)
-                    ct += (mid - c4);
+                fixed4 c = fixed4(1.0, 1.0, 1.0, 1.0);
+                for(int i = 0; i < _TextureCount; i++){
+                    uv.z = i;
+                
+                    c = UNITY_SAMPLE_TEX2DARRAY(_Textures, uv);
+                    ct -= abs(mid - c);
+                }
 
                 // apply fog
                 UNITY_APPLY_FOG(i.fogCoord, ct);

@@ -14,10 +14,12 @@ public class Mother : MonoBehaviour
         int h = 0;
 
 
-    public Texture2D[] textures;
-    public int index = 0;
+    public List<Texture2D> textures = new List<Texture2D>();
+    public int textureCap = 4;
 
-    bool loop = false;
+    public CreateTextureArray textureArray;
+
+    int index = -1;
 
     // Start is called before the first frame updaste
     void Start()
@@ -26,12 +28,7 @@ public class Mother : MonoBehaviour
         h = canvas.height;
 
         sampler = new Texture2D(w, h, TextureFormat.ARGB32, false, true);
-        textures = new Texture2D[] { 
-            new Texture2D(2, 2),   
-            new Texture2D(2, 2),
-            new Texture2D(2, 2),
-            new Texture2D(2, 2)
-        };
+        textures = new List<Texture2D>();
 
         ApplyTextures();
 
@@ -68,31 +65,32 @@ public class Mother : MonoBehaviour
     }
 
     void PushTexture(byte[] dat){
-        var tex = textures[index];
+        ++index;
+
+        if (index == textureCap)
+        {
+            index = 0;
+
+            var _textures = textures.ToArray();
+            for (int i = 0; i < _textures.Length; i++)
+                Texture2D.Destroy(textures[i]); // Destroy all temporary textures
+
+            textures = new List<Texture2D>();
+        }
+
+        var tex = new Texture2D(2, 2);
         tex.LoadImage(dat);
 
-        ApplyTextures();
+            textures.Add(tex);
 
-        if(++index > textures.Length-1) {
-            index = 0;
-            loop = true;
-        }
+        ApplyTextures();
     }
 
     void ApplyTextures(){
         if(material == null)
             return;
-            
-        var activeStates = new float[4];
 
-        int i = 0;
-        foreach(Texture2D t in textures){
-            material.SetTexture(string.Format("_Tex{0}", i+1), textures[i]);
-            activeStates[i] = (loop || i <= index)? 1f:0f;
-
-            ++i;
-        }
-        material.SetFloatArray("_ActiveStates", activeStates);
+        textureArray.PopulateTextureArray(textures.ToArray());
     }
 
     void OnDestroy() {

@@ -3,60 +3,64 @@
     Properties
     {
         _Color ("Color", Color) = (1,1,1,1)
-        _Glossiness ("Smoothness", Range(0,1)) = 0.5
-        _Metallic ("Metallic", Range(0,1)) = 0.0
 
         _MainTex ("Main Texture", 2D) = "white" {}
-
-        _UV1 ("UV1", Vector) = (0, 0, 0, 0)
-        _UV1 ("UV2", Vector) = (0, 0, 0, 0)
+        _Death ("Death", Range(0, 1)) = 0.0
+        _DeathColor ("Death Color", Color) = (1,1,1,1)
     }
     SubShader
     {
         Tags { "RenderType"="Opaque" }
-        LOD 200
-
-        CGPROGRAM
-        // Physically based Standard lighting model, and enable shadows on all light types
-        #pragma surface surf Standard fullforwardshadows
-
-        // Use shader model 3.0 target, to get nicer looking lighting
-        #pragma target 4.0
-
-        sampler2D _MainTex;
-
-        struct Input
+        LOD 100
+        
+        
+        Pass
         {
-            float2 uv_MainTex;
-            float4 screenPos;
-        };
+            CGPROGRAM
+            #pragma vertex vert
+            #pragma fragment frag
 
-        half _Glossiness;
-        half _Metallic;
-        fixed4 _Color;
+            #include "UnityCG.cginc"
+           
 
-        fixed4 _UV1, _UV2;
+            struct v2f
+            {
+                float2 uv : TEXCOORD0;
+            };
+           
+            half _Death;
+        
+            fixed4 _Color;
+            fixed4 _DeathColor;
 
-        // Add instancing support for this shader. You need to check 'Enable Instancing' on materials that use the shader.
-        // See https://docs.unity3d.com/Manual/GPUInstancing.html for more information about instancing.
-        // #pragma instancing_options assumeuniformscaling
-        UNITY_INSTANCING_BUFFER_START(Props)
-            // put more per-instance properties here
-        UNITY_INSTANCING_BUFFER_END(Props)
-
-        void surf (Input IN, inout SurfaceOutputStandard o)
-        {
-            float2 coords = (IN.screenPos.xy / IN.screenPos.w) ;
+            sampler2D _MainTex;
             
-            fixed4 c = tex2D(_MainTex, coords) * _Color;
-    
-            o.Albedo = c.rgb;
-            o.Metallic = _Metallic;
-            o.Smoothness = _Glossiness;
-            o.Alpha = c.a;
+            v2f vert (
+                float4 vertex : POSITION, // vertex position input
+                float2 uv : TEXCOORD0, // texture coordinate input
+                out float4 outpos : SV_POSITION // clip space position output
+                )
+            {
+                v2f o;
+                o.uv = uv;
+                outpos = UnityObjectToClipPos(vertex);
+                return o;
+            }
+
             
+
+            fixed4 frag (v2f i, UNITY_VPOS_TYPE screenPos : VPOS) : SV_Target
+            {
+                float2 coords = float2(screenPos.x / _ScreenParams.x, screenPos.y / _ScreenParams.y);
+            
+                fixed4 col = tex2D(_MainTex, coords) * _Color;
+                fixed4 actual = (1.0 - _Death)*col + (_Death)*_DeathColor;
+            
+                // apply fog
+
+                return col;
+            }
+            ENDCG
         }
-        ENDCG
     }
-    FallBack "Diffuse"
 }

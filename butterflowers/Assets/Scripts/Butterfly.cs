@@ -7,6 +7,9 @@ using Preset = Settings.ButterflyPreset;
 
 public class Butterfly : MonoBehaviour
 {
+    public delegate void OnDeath(Butterfly butterfly);
+    public static event OnDeath Died;
+
     CameraDriver driver;
 
     Mother mother;
@@ -22,42 +25,48 @@ public class Butterfly : MonoBehaviour
 
     public Vector3 position { get{ return driver.ConvertToScreen(transform.position); } }
 
-
     Vector3 velocity = Vector3.zero;
     Color value = Color.white;
-
-    [SerializeField] float energy = 1f;
 
     public bool alive = true;
     public bool dying = false;
 
         float timeSinceDeath = 0f;
+        float delayToDeath = .67f;
         float lifetime = 0f;
-        float life = 0f;
 
     Vector4 uv1, uv2;
 
-    // Start is called before the first frame update
+    [SerializeField] Color final;
+
     void Start()
     {
-        driver = CameraDriver.Instance;
+        if (driver == null) driver = CameraDriver.Instance;
 
-        mother = FindObjectOfType<Mother>();
-        wand = FindObjectOfType<Wand>();
+        if (mother == null) mother = FindObjectOfType<Mother>();
+        if (wand == null) wand = FindObjectOfType<Wand>();
 
-        animator = GetComponentInChildren<Animator>();
-        renderers = GetComponentsInChildren<Renderer>();
+        if (animator == null) animator = GetComponentInChildren<Animator>();
+        if (renderers == null || renderers.Length == 0) renderers = GetComponentsInChildren<Renderer>();
 
-     /*  var viewport = driver.ConvertToViewport(transform.position);
-        uv1 = uv2 = new Vector4(viewport.x, viewport.y, 0f, 0f);
+        Reset();
 
-        foreach(Renderer r in renderers){
-            r.material.SetVector("_UV1", uv1);
-            r.material.SetVector("_UV2", uv2);
-        }*/
-
-        lifetime = Random.Range(preset.minLifetime, preset.maxLifetime);
         StartCoroutine("UpdateAttentuationFromTexture");
+    }
+
+    public void Reset() {
+        alive = true;
+        dying = false;
+
+        velocity = Vector3.zero;
+
+        timeSinceDeath = 0f;
+        lifetime = Random.Range(preset.minLifetime, preset.maxLifetime);
+
+        trails = null; // Ensure new trails created for every butterfly on respawn
+
+        foreach (Renderer r in renderers)
+            r.material.SetFloat("_Death", 0f);
     }
 
     // Update is called once per frame
@@ -68,22 +77,33 @@ public class Butterfly : MonoBehaviour
         if(alive){
             float str = dt;
             if(dying){
-                if(trails == null){
+                float duration = preset.descentTime;
+                str *= (1f - Mathf.Clamp01((timeSinceDeath) / duration));
+
+
+                if (trails == null)
+                {
                     trails = Instantiate(trailsPrefab, transform);
-                        trails.transform.localPosition = Vector3.zero;
-                        trails.transform.localScale = Vector3.one * preset.trailsSize;
+                    trails.transform.localPosition = Vector3.zero;
+                    trails.transform.localScale = Vector3.one * preset.trailsSize;
 
                     trails_ps = trails.GetComponent<ParticleSystem>();
+
                     var main = trails_ps.main;
                         main.loop = true;
 
                     trails_ps.Play();
                 }
 
-                float duration = preset.descentTime;
-                str *= (1f - Mathf.Clamp01((timeSinceDeath) / duration));
-
                 timeSinceDeath += dt;
+
+                float d = (timeSinceDeath - delayToDeath) / .167f; // Go full white --> .167 = time to go white
+                if (d >= 0f && d <= 1f)
+                {
+                    foreach (Renderer r in renderers)
+                        r.material.SetFloat("_Death", Mathf.Clamp01(d));
+                }
+
                 MoveTowardsGround(timeSinceDeath);
 
                 if(position.y <= 64f)
@@ -99,21 +119,13 @@ public class Butterfly : MonoBehaviour
         animator.speed += (speed - animator.speed)*dt;
 
 
-       /* var viewport = driver.ConvertToViewport(transform.position);
-        uv2 = new Vector4(viewport.x, viewport.y, 0f, 0f);
-        foreach(Renderer r in renderers){
-            r.material.SetVector("_UV2", uv2);
-        }*/
-    }
-
-    void LateUpdate() {
-        float dt = Time.deltaTime;
-
-        if(!dying)
+        if (!dying)
             ClampVelocity();
-            
+
         transform.position += velocity * dt;
     }
+
+    #region Movement
 
     void ClampVelocity(){
         float speed = velocity.magnitude;
@@ -169,6 +181,8 @@ public class Butterfly : MonoBehaviour
         velocity += driver.MoveRelativeToCamera(Vector3.down) * Mathf.Pow(t, 2f) * preset.gravity;
     }
 
+    #endregion
+
     void Die(){
         trails.transform.parent = null;
 
@@ -182,7 +196,17 @@ public class Butterfly : MonoBehaviour
         alive = false;
         dying = false;
 
-        GameObject.Destroy(gameObject);
+        if (Died != null)
+            Died(this);
+    }
+
+    #region Appearance
+
+    void UpdateMaterials() {
+        float death = (dying) ? Mathf.Clamp01((timeSinceDeath - delayToDeath) / .33f) : 0f;
+
+        foreach (Renderer r in renderers)
+            r.material.SetFloat("_Death", death);
     }
 
 
@@ -193,16 +217,16 @@ public class Butterfly : MonoBehaviour
             value = mother.GetColorFromCanvas(viewport);
             var rgb = new Vector3(value.r, value.g, value.b);
 
-           /* uv1 = uv2;
-            foreach(Renderer r in renderers){
-                r.material.SetVector("_UV1", uv1);
-            }*/
-
-            if(rgb.magnitude < .33f)
+            if (rgb.magnitude < .33f)
+            {
                 dying = true;
+                final = value;
+            }
 
             yield return new WaitForSeconds(preset.colorRefresh);
         }
 
     }
+
+    #endregion
 }

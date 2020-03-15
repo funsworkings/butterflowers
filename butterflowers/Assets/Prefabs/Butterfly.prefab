@@ -27,7 +27,7 @@ Transform:
   m_GameObject: {fileID: 5556437273785765615}
   m_LocalRotation: {x: 0, y: 0, z: 0, w: 1}
   m_LocalPosition: {x: 0, y: 0, z: 0}
-  m_LocalScale: {x: 0.15, y: 0.15, z: 0.15}
+  m_LocalScale: {x: 0.167, y: 0.167, z: 0.167}
   m_Children:
   - {fileID: 6119437147720788972}
   m_Father: {fileID: 0}
@@ -46,12 +46,11 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: 
   preset: {fileID: 11400000, guid: 822b126e098004bdf8f1e1158c2a85f7, type: 2}
-  canvas: {fileID: 8400000, guid: ff6f3aa6e1be04a159213d070f9b2f04, type: 2}
   trailsPrefab: {fileID: 382550191870845936, guid: fee354e8b11564a1c84451cf147ab5b4,
     type: 3}
-  energy: 1
   alive: 1
   dying: 0
+  final: {r: 0, g: 0, b: 0, a: 0}
 --- !u!114 &114254769642422460
 MonoBehaviour:
   m_ObjectHideFlags: 0
