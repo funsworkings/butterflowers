@@ -97,7 +97,7 @@ public class Butterfly : MonoBehaviour
 
                 timeSinceDeath += dt;
 
-                float d = (timeSinceDeath - delayToDeath) / .167f; // Go full white --> .167 = time to go white
+                float d = (timeSinceDeath - delayToDeath) / .067f; // Go full white --> .167 = time to go white
                 if (d >= 0f && d <= 1f)
                 {
                     foreach (Renderer r in renderers)

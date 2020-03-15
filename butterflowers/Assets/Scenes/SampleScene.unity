@@ -307,7 +307,7 @@ MonoBehaviour:
   material: {fileID: 2100000, guid: 81234154ee004467ba76e135ca590a5b, type: 2}
   sampler: {fileID: 0}
   textures: []
-  textureCap: 8
+  textureCap: 24
   textureArray: {fileID: 1550434188}
 --- !u!4 &247339872
 Transform:
@@ -448,7 +448,7 @@ Camera:
     height: 1
   near clip plane: 0.3
   far clip plane: 1000
-  field of view: 31
+  field of view: 45
   orthographic: 0
   orthographic size: 5
   m_Depth: -1
@@ -1137,9 +1137,11 @@ MonoBehaviour:
   material: {fileID: 2100000, guid: 81234154ee004467ba76e135ca590a5b, type: 2}
   rend: {fileID: 1550434186}
   textures: []
+  validated: []
   m_width: 0
   m_height: 0
   refresh: 0
+  hardLimitOnSize: 0
   texturePropertyId: _Textures
   textureArrayCountPropertyId: _TextureCount
   array: {fileID: 0}

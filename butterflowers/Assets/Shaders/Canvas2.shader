@@ -4,6 +4,8 @@
     {
         _Textures ("Textures", 2DArray) = ""{}
         _TextureCount ("Texture Count", int) = 0
+        
+        _TextureStrength ("Texture Strength", Range(0,1)) = 0.5
     }
     
     SubShader
@@ -36,7 +38,9 @@
             
             
             UNITY_DECLARE_TEX2DARRAY(_Textures);
+            
             int _TextureCount;
+            float _TextureStrength;
          
             v2f vert (appdata v)
             {
@@ -65,7 +69,7 @@
                     uv.z = i;
                 
                     c = UNITY_SAMPLE_TEX2DARRAY(_Textures, uv);
-                    ct -= abs(mid - c);
+                    ct += ((c - mid)*_TextureStrength);
                 }
 
                 // apply fog
