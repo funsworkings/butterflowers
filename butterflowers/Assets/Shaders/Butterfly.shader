@@ -3,8 +3,8 @@
     Properties
     {
         _Color ("Color", Color) = (1,1,1,1)
-
         _MainTex ("Main Texture", 2D) = "white" {}
+        
         _Death ("Death", Range(0, 1)) = 0.0
         _DeathColor ("Death Color", Color) = (1,1,1,1)
     }
@@ -35,6 +35,9 @@
 
             sampler2D _MainTex;
             
+            
+   
+            
             v2f vert (
                 float4 vertex : POSITION, // vertex position input
                 float2 uv : TEXCOORD0, // texture coordinate input
@@ -52,6 +55,7 @@
             fixed4 frag (v2f i, UNITY_VPOS_TYPE screenPos : VPOS) : SV_Target
             {
                 float2 coords = float2(screenPos.x / _ScreenParams.x, screenPos.y / _ScreenParams.y);
+               
             
                 fixed4 col = tex2D(_MainTex, coords) * _Color;
                 fixed4 actual = (1.0 - _Death)*col + (_Death)*_DeathColor;

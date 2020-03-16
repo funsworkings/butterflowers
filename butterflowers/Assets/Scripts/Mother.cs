@@ -10,12 +10,16 @@ public class Mother : MonoBehaviour
 
     public Material material;
     public Texture2D sampler;
-        int w = 0;
-        int h = 0;
+    Color[] sample;
+
+    int w = 0;
+    int h = 0;
 
 
     public List<Texture2D> textures = new List<Texture2D>();
+
     public int textureCap = 4;
+    public bool allowRepeatTextures = false;
 
     public CreateTextureArray textureArray;
 
@@ -31,6 +35,8 @@ public class Mother : MonoBehaviour
         textures = new List<Texture2D>();
 
         ApplyTextures();
+
+        Sample();
 
         Navigator.onSuccessReceiveImage += PushTexture;  
 
@@ -54,17 +60,29 @@ public class Mother : MonoBehaviour
         sampler.ReadPixels(new Rect(0, 0, w, h), 0, 0, false);
         sampler.Apply();
 
+        sample = sampler.GetPixels();
         RenderTexture.active = render;
     }
 
-    public Color GetColorFromCanvas(Vector3 viewport){
-        var x = Mathf.FloorToInt(viewport.x * w);
-        var y = Mathf.FloorToInt(viewport.y * h);
+    // BL = (0,0) TR = (1,1)
 
+    public Color GetColorFromCanvas(Vector3 viewport){
+        var vx = viewport.x;
+        var vy = viewport.y;
+
+        if (vx < 0f || vx > 1f || vy < 0f || vy > 1f)
+            return Color.black;
+
+        var x = Mathf.FloorToInt(vx * w);
+        var y = Mathf.FloorToInt((1f - vy) * h); // Invert y position to match uv space
+
+        var ind = Mathf.FloorToInt((1f - vy) * w) + x;//Debug.Log("x: " + x + "  y: " + y + "index: " + ind + "  cap: " + sample.Length);
         return sampler.GetPixel(x, y);
     }
 
-    void PushTexture(byte[] dat){
+    void PushTexture(Texture tex){
+        var texture = (tex as Texture2D);
+
         ++index;
 
         if (index == textureCap)
@@ -78,10 +96,7 @@ public class Mother : MonoBehaviour
             textures = new List<Texture2D>();
         }
 
-        var tex = new Texture2D(2, 2);
-        tex.LoadImage(dat);
-
-            textures.Add(tex);
+        textures.Add(texture);
 
         ApplyTextures();
     }

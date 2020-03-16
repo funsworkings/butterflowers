@@ -25,7 +25,7 @@ public class Preview : MonoBehaviour
          Navigator.onSuccessReceiveImage += OnReceiveImage;  
     }
 
-    void OnReceiveImage(byte[] dat){
+    void OnReceiveImage(Texture tex){
         if(hiding)
             StopCoroutine("Hiding");
         else {

@@ -2,10 +2,17 @@
 {
     Properties
     {
+        _MainTex ("Main Texture", 2D) = "white" {}
+        _NoiseTex ("Noise Texture", 2D) = "white" {}
+    
         _Textures ("Textures", 2DArray) = ""{}
         _TextureCount ("Texture Count", int) = 0
         
         _TextureStrength ("Texture Strength", Range(0,1)) = 0.5
+        _NoiseStrength ("Noise Strength", Range(0,1)) = 0.5
+        
+        _DebugColor ("Debug Color", Color) = (1,1,1,1)
+        _DebugStrength ("Debug Strength", Range(0,1)) = 0.5
     }
     
     SubShader
@@ -39,19 +46,32 @@
             
             UNITY_DECLARE_TEX2DARRAY(_Textures);
             
+            sampler2D _MainTex;
+            sampler2D _NoiseTex;
+            
+            float4 _MainTex_ST;
+            
             int _TextureCount;
-            float _TextureStrength;
+            float _TextureStrength, _NoiseStrength;
+            
+            fixed4 _DebugColor;
+            float _DebugStrength;
          
             v2f vert (appdata v)
             {
                 v2f o;
                 
                 o.vertex = UnityObjectToClipPos(v.vertex);
-                o.uv = o.vertex / 2.0;
+                o.uv = TRANSFORM_TEX(v.uv, _MainTex);
                 
                 UNITY_TRANSFER_FOG(o, o.vertex);
                 
                 return o;
+            }
+            
+            
+            float2 FlowUV (float2 uv, float2 flowVector, float time) {
+                return uv - ((flowVector + float2(time, time)) * _NoiseStrength);
             }
 
             fixed4 frag (v2f i) : SV_Target
@@ -60,6 +80,11 @@
                 
                 uv.xy = i.uv.xy;
                 
+                float2 dir = (tex2D(_NoiseTex, uv.xy)).rg;
+                uv.xy = FlowUV(uv.xy, dir, _Time.y);
+                
+                float t = _Time.y;
+                float str = 0.0;
 
                 fixed4 mid = fixed4(.5, .5, .5, .5);
                 fixed4 ct = fixed4(1.0, 1.0, 1.0, 1.0);
@@ -69,12 +94,14 @@
                     uv.z = i;
                 
                     c = UNITY_SAMPLE_TEX2DARRAY(_Textures, uv);
-                    ct += ((c - mid)*_TextureStrength);
+                    
+                    str = _TextureStrength*(( sin( t + (i*1.0)/_TextureCount*6.28 )));
+                    ct += ((c - mid)*str);
                 }
 
                 // apply fog
                 UNITY_APPLY_FOG(i.fogCoord, ct);
-                return ct;
+                return (1.0 - _DebugStrength)*ct + _DebugStrength*_DebugColor;
             }
             ENDCG
         }

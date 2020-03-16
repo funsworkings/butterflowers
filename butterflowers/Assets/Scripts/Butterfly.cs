@@ -67,6 +67,9 @@ public class Butterfly : MonoBehaviour
 
         foreach (Renderer r in renderers)
             r.material.SetFloat("_Death", 0f);
+
+        StopCoroutine("UpdateAttentuationFromTexture");
+        StartCoroutine("UpdateAttentuationFromTexture");
     }
 
     // Update is called once per frame
@@ -215,9 +218,10 @@ public class Butterfly : MonoBehaviour
             var viewport = driver.ConvertToViewport(transform.position);
 
             value = mother.GetColorFromCanvas(viewport);
+
             var rgb = new Vector3(value.r, value.g, value.b);
 
-            if (rgb.magnitude < .33f)
+            if (rgb.magnitude < .167f)
             {
                 dying = true;
                 final = value;

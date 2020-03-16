@@ -62,8 +62,8 @@ public class Spawner : MonoBehaviour
         }
         else
         {
-            offset = new Vector3(Random.Range(0f, 1f),
-                                 Random.Range(0f, 1f),
+            offset = new Vector3(Random.Range(.33f, .67f),
+                                 Random.Range(.33f, .67f),
                                  Random.Range(extents.z, 2f * extents.z));
 
             position = camera.ViewportToWorldPoint(offset);

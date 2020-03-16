@@ -202,8 +202,8 @@ RectTransform:
   m_LocalPosition: {x: 0, y: 0, z: 0}
   m_LocalScale: {x: 0, y: 0, z: 0}
   m_Children:
-  - {fileID: 776641181}
   - {fileID: 1216840458}
+  - {fileID: 776641181}
   m_Father: {fileID: 0}
   m_RootOrder: 7
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
@@ -245,7 +245,7 @@ MonoBehaviour:
   butterflyPrefab: {fileID: 5556437273785765615, guid: 65b20077fa37f4d0ca2efb64c4c78518,
     type: 3}
   amount: 667
-  camera: {fileID: 534669904}
+  camera: {fileID: 0}
 --- !u!65 &166675945
 BoxCollider:
   m_ObjectHideFlags: 0
@@ -257,7 +257,7 @@ BoxCollider:
   m_IsTrigger: 1
   m_Enabled: 1
   serializedVersion: 2
-  m_Size: {x: 10, y: 10, z: 25}
+  m_Size: {x: 15, y: 10, z: 15}
   m_Center: {x: 0, y: 0, z: 0}
 --- !u!4 &166675946
 Transform:
@@ -307,7 +307,8 @@ MonoBehaviour:
   material: {fileID: 2100000, guid: 81234154ee004467ba76e135ca590a5b, type: 2}
   sampler: {fileID: 0}
   textures: []
-  textureCap: 24
+  textureCap: 12
+  allowRepeatTextures: 0
   textureArray: {fileID: 1550434188}
 --- !u!4 &247339872
 Transform:
@@ -448,7 +449,7 @@ Camera:
     height: 1
   near clip plane: 0.3
   far clip plane: 1000
-  field of view: 45
+  field of view: 33
   orthographic: 0
   orthographic size: 5
   m_Depth: -1
@@ -710,7 +711,7 @@ RectTransform:
   m_Children:
   - {fileID: 1811459621}
   m_Father: {fileID: 62689480}
-  m_RootOrder: 0
+  m_RootOrder: 1
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
   m_AnchorMin: {x: 0, y: 0}
   m_AnchorMax: {x: 1, y: 1}
@@ -860,6 +861,8 @@ MonoBehaviour:
   - .tif
   typeFilter: 2
   m_files: []
+  visited: []
+  allowRepeats: 1
 --- !u!4 &1012865804
 Transform:
   m_ObjectHideFlags: 0
@@ -904,11 +907,11 @@ RectTransform:
   m_LocalScale: {x: 1, y: 1, z: 1}
   m_Children: []
   m_Father: {fileID: 62689480}
-  m_RootOrder: 1
+  m_RootOrder: 0
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
   m_AnchorMin: {x: 0, y: 0}
   m_AnchorMax: {x: 1, y: 1}
-  m_AnchoredPosition: {x: 44, y: 0}
+  m_AnchoredPosition: {x: 41, y: -186}
   m_SizeDelta: {x: -696, y: -228}
   m_Pivot: {x: 0.5, y: 0.5}
 --- !u!114 &1216840459
@@ -1267,10 +1270,10 @@ RectTransform:
   m_Father: {fileID: 776641181}
   m_RootOrder: 0
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
-  m_AnchorMin: {x: 0, y: 0}
-  m_AnchorMax: {x: 1, y: 1}
-  m_AnchoredPosition: {x: 0.0025634766, y: 0}
-  m_SizeDelta: {x: -0.0048828125, y: 0.00036621}
+  m_AnchorMin: {x: 0.5, y: 0.5}
+  m_AnchorMax: {x: 0.5, y: 0.5}
+  m_AnchoredPosition: {x: -651, y: 334}
+  m_SizeDelta: {x: 480, y: 480}
   m_Pivot: {x: 0.5, y: 0.5}
 --- !u!114 &1811459622
 MonoBehaviour:
@@ -1301,13 +1304,13 @@ MonoBehaviour:
   m_Script: {fileID: -98529514, guid: f70555f144d8491a825f0804e09c671c, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  m_Material: {fileID: 2100000, guid: 81234154ee004467ba76e135ca590a5b, type: 2}
+  m_Material: {fileID: 10754, guid: 0000000000000000f000000000000000, type: 0}
   m_Color: {r: 1, g: 1, b: 1, a: 1}
   m_RaycastTarget: 0
   m_OnCullStateChanged:
     m_PersistentCalls:
       m_Calls: []
-  m_Texture: {fileID: 0}
+  m_Texture: {fileID: 8400000, guid: ff6f3aa6e1be04a159213d070f9b2f04, type: 2}
   m_UVRect:
     serializedVersion: 2
     x: 0
