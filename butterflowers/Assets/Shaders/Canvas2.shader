@@ -96,7 +96,7 @@
                     c = UNITY_SAMPLE_TEX2DARRAY(_Textures, uv);
                     
                     str = _TextureStrength*(( sin( t + (i*1.0)/_TextureCount*6.28 )));
-                    ct += ((c - mid)*str);
+                    ct += ((c)*str);
                 }
 
                 // apply fog

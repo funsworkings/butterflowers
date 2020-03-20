@@ -5,23 +5,24 @@ using UnityEngine;
 [RequireComponent(typeof(Collider))]
 public class Spawner : MonoBehaviour
 {
-    public GameObject butterflyPrefab;
+    public GameObject prefab;
     
     [SerializeField] int amount = 100;
-    [SerializeField] new Camera camera;
 
     Collider bounds;
 
 
+    Vector3 m_center = Vector3.zero;
     public Vector3 center {
         get{
-            return transform.position + bounds.bounds.center;
+            return transform.position + m_center;
         }
     }
-    
+
+    Vector3 m_extents = Vector3.zero;
     public Vector3 extents {
         get{
-            return bounds.bounds.extents;
+            return m_extents;
         }
     }
 
@@ -30,11 +31,14 @@ public class Spawner : MonoBehaviour
     }
 
     // Start is called before the first frame update
-    void Start()
+    protected virtual void Start()
     {
-        Butterfly.Died += onRespawnButterfly;
+        m_center = bounds.bounds.center;
+        m_extents = bounds.bounds.extents;
 
-        if (butterflyPrefab != null)
+        bounds.enabled = false; // Disable collider after fetching center+bounds
+
+        if (prefab != null)
             Spawn();
     }
 
@@ -44,58 +48,43 @@ public class Spawner : MonoBehaviour
 
         for(int i = 0; i < amount; i++)
         {
-            InstantiateButterfly();
+            InstantiatePrefab();
         }
     }
 
-    void DecidePosition(ref Vector3 pos, ref Quaternion rot)
+    protected virtual void DecidePosition(ref Vector3 pos)
     {
         Vector3 offset = Vector3.zero, position = Vector3.zero;
 
-        if (camera == null)
-        {
-            offset = new Vector3(Random.Range(-extents.x, extents.x),
-                                Random.Range(-extents.y, extents.y),
-                                Random.Range(-extents.z, extents.z));
+      
+        offset = new Vector3(Random.Range(-extents.x, extents.x),
+                             Random.Range(-extents.y, extents.y),
+                             Random.Range(-extents.z, extents.z));
 
-            position = transform.TransformPoint(offset);
-        }
-        else
-        {
-            offset = new Vector3(Random.Range(.33f, .67f),
-                                 Random.Range(.33f, .67f),
-                                 Random.Range(extents.z, 2f * extents.z));
+        position = transform.TransformPoint(offset);
 
-            position = camera.ViewportToWorldPoint(offset);
-        }
 
         pos = position;
-        rot = butterflyPrefab.transform.rotation;
     }
 
-    void InstantiateButterfly(Butterfly butterfly = null)
+    protected virtual void DecideRotation(ref Quaternion rot)
     {
-        var instance = (butterfly == null)? null:butterfly.gameObject;
-        if (instance == null)
-            instance = Instantiate(butterflyPrefab, transform);
+        rot = prefab.transform.rotation;
+    }
 
+    protected void InstantiatePrefab(GameObject inst = null)
+    {
+        var instance = inst;
+        if (instance == null)
+            instance = Instantiate(prefab, transform);
 
         Vector3 pos = Vector3.zero;
         Quaternion rot = transform.rotation;
 
-        DecidePosition(ref pos, ref rot);
+        DecidePosition(ref pos);
+        DecideRotation(ref rot);
 
         instance.transform.position = pos;
         instance.transform.rotation = rot;
-    }
-
-    void OnDestroy() {
-        Butterfly.Died -= onRespawnButterfly;
-    }
-
-    void onRespawnButterfly(Butterfly butterfly)
-    {
-        InstantiateButterfly(butterfly);
-        butterfly.Reset();
     }
 }

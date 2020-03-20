@@ -7,6 +7,8 @@
         
         _Death ("Death", Range(0, 1)) = 0.0
         _DeathColor ("Death Color", Color) = (1,1,1,1)
+        
+        _Tiling ("Tiling", Float) = 1.0
     }
     SubShader
     {
@@ -34,8 +36,9 @@
             fixed4 _DeathColor;
 
             sampler2D _MainTex;
+            float4 _MainTex_ST;
             
-            
+            float _Tiling;
    
             
             v2f vert (
@@ -45,7 +48,7 @@
                 )
             {
                 v2f o;
-                o.uv = uv;
+                o.uv = TRANSFORM_TEX(uv, _MainTex);
                 outpos = UnityObjectToClipPos(vertex);
                 return o;
             }
@@ -54,10 +57,11 @@
 
             fixed4 frag (v2f i, UNITY_VPOS_TYPE screenPos : VPOS) : SV_Target
             {
-                float2 coords = float2(screenPos.x / _ScreenParams.x, screenPos.y / _ScreenParams.y);
+                float2 screen = float2(screenPos.x / _ScreenParams.x, screenPos.y / _ScreenParams.y);
                
+                //coords = TRANSFORM_TEX(coords, _MainTex);
             
-                fixed4 col = tex2D(_MainTex, coords) * _Color;
+                fixed4 col = tex2D(_MainTex, screen) * _Color;
                 fixed4 actual = (1.0 - _Death)*col + (_Death)*_DeathColor;
             
                 // apply fog
