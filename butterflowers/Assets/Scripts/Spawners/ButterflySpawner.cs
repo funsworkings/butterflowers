@@ -6,6 +6,7 @@ public class ButterflySpawner : Spawner
 {
     [SerializeField] new Camera camera;
 
+    [SerializeField] float minDistance = 0f, maxDistance = 1f;
 
     protected override void Start()
     {
@@ -20,9 +21,9 @@ public class ButterflySpawner : Spawner
         {
             Vector3 offset = Vector3.zero, position = Vector3.zero;
 
-            offset = new Vector3(Random.Range(.33f, .67f),
-                                     Random.Range(.33f, .67f),
-                                     Random.Range(extents.z, 2f * extents.z));
+            offset = new Vector3(Random.Range(0f, 1f),
+                                     Random.Range(0f, 1f),
+                                     Random.Range(minDistance, maxDistance));
 
             position = camera.ViewportToWorldPoint(offset);
 

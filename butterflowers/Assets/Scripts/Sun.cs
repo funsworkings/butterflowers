@@ -2,8 +2,13 @@
 using System.Collections.Generic;
 using UnityEngine;
 
+using UnityEngine.UI;
+using System.Linq;
+
 public class Sun : MonoBehaviour
 {
+    public static Sun Instance;
+
     [System.Serializable]
     public class Data
     {
@@ -37,10 +42,45 @@ public class Sun : MonoBehaviour
         }
     }
 
+    [SerializeField] float m_days = 0f;
+    public int days
+    {
+        get
+        {
+            m_days = world.ConvertToDays(time);
+            return Mathf.FloorToInt(m_days);
+        }
+    }
+
+    [SerializeField] float m_timeOfDay = 0f;
+    public float timeOfDay
+    {
+        get
+        {
+            m_days = world.ConvertToDays(time);
+            m_timeOfDay = m_days - Mathf.Floor(m_days);
+
+            return m_timeOfDay;
+        }
+    }
+
+
+    public bool reset = false;
+
+
+    IReactToSun[] listeners;
+
 
     void Awake()
     {
+        Instance = this;
+
         light = GetComponent<Light>();
+    }
+
+    void Start()
+    {
+        listeners = FindObjectsOfType<MonoBehaviour>().OfType<IReactToSun>().ToArray();
     }
 
     // Update is called once per frame
@@ -49,6 +89,7 @@ public class Sun : MonoBehaviour
         time += Time.deltaTime; // Add time to global clock
 
         AlignWithRay();
+        UpdateListeners();
     }
 
     void AlignWithRay()
@@ -56,7 +97,7 @@ public class Sun : MonoBehaviour
         var bearing = transform.forward;
         var directionBetween = (ray - transform.forward);
 
-        transform.forward += (directionBetween * Mathf.Min(1f, Time.realtimeSinceStartup / (world.ConvertToDays(time))));
+        transform.forward += (directionBetween * Mathf.Min(1f, Time.realtimeSinceStartup / days));
     }
 
     void AdjustRayFromTime() {
@@ -64,7 +105,7 @@ public class Sun : MonoBehaviour
             return;
 
         float interval = Mathf.Repeat(time / world.secondsPerDay, 1f);
-        float angle = interval * 360f;
+        float angle = Mathf.Repeat(interval-.25f, 1f) * 360f;
 
         ray = Quaternion.AngleAxis(angle, axis) * origin;
     }
@@ -78,8 +119,11 @@ public class Sun : MonoBehaviour
             axis = transform.right;
         }
 
+        Data dat = null;
 
-        var dat = DataHandler.Read<Data>(System.IO.Path.Combine(Application.persistentDataPath, "sun.dat"));
+        if(!reset)
+            dat = DataHandler.Read<Data>(System.IO.Path.Combine(Application.persistentDataPath, "sun.dat"));
+
         if (dat != null)
         {
             time = dat.time;
@@ -93,6 +137,16 @@ public class Sun : MonoBehaviour
         dat.intensity = light.intensity;
         dat.time = time;
 
-        DataHandler.Write<Data>(dat, System.IO.Path.Combine(Application.persistentDataPath, "sun.dat"));
+        if(!reset)
+            DataHandler.Write<Data>(dat, System.IO.Path.Combine(Application.persistentDataPath, "sun.dat"));
+    }
+
+    void UpdateListeners()
+    {
+        foreach(IReactToSun listener in listeners)
+        {
+            listener.ReactToTimeOfDay(timeOfDay);
+            listener.ReactToDay(days);
+        }
     }
 }

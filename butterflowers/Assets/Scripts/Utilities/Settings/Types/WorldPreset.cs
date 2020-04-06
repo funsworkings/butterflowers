@@ -24,9 +24,9 @@ namespace Settings
             }
         }
 
-        public int ConvertToDays(float seconds)
+        public float ConvertToDays(float seconds)
         {
-            return Mathf.FloorToInt(seconds / secondsPerDay);
+            return (seconds / secondsPerDay);
         }
     }
 
