@@ -38,6 +38,10 @@ namespace Settings {
         public float recoveryTime;
 
         public float minAnimationSpeed = 1f, maxAnimationSpeed = 2f;
+        public float timeDead = 1f;
+
+        public float scale = .167f;
+        public float timeToGrow = 1f;
     }
 
 }

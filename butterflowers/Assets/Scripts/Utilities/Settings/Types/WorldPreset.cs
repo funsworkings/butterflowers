@@ -6,6 +6,9 @@ namespace Settings
     [CreateAssetMenu(fileName = "New World Preset", menuName = "Settings/World Preset", order = 52)]
     public class WorldPreset : ScriptableObject
     {
+
+        [Header("Time Attributes")]
+
         public float hoursPerDay = 24f;
 
         public float minutesPerDay
@@ -28,6 +31,10 @@ namespace Settings
         {
             return (seconds / secondsPerDay);
         }
+
+        [Header("Physics Attributes")]
+
+        public Vector3 directionOfGravity = Vector3.down;
     }
 
 }
