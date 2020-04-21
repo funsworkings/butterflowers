@@ -10,6 +10,7 @@
         
         _TextureStrength ("Texture Strength", Range(0,1)) = 0.5
         _NoiseStrength ("Noise Strength", Range(0,1)) = 0.5
+        _LerpSpeed ("Lerp Speed", Float) = 1.0
         
         _DebugColor ("Debug Color", Color) = (1,1,1,1)
         _DebugStrength ("Debug Strength", Range(0,1)) = 0.5
@@ -56,6 +57,7 @@
             
             fixed4 _DebugColor;
             float _DebugStrength;
+            float _LerpSpeed;
          
             v2f vert (appdata v)
             {
@@ -83,7 +85,7 @@
                 float2 dir = (tex2D(_NoiseTex, uv.xy)).rg;
                 uv.xy = FlowUV(uv.xy, dir, _Time.y);
                 
-                float t = _Time.y;
+                float t = _Time.y * _LerpSpeed;
                 float str = 0.0;
 
                 fixed4 mid = fixed4(.5, .5, .5, .5);

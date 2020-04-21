@@ -67,6 +67,9 @@ public class Butterfly : MonoBehaviour
 
     [SerializeField] Color final;
 
+    Vector3 color0, color1;
+    public float colorSpeed = 0f;
+    bool colorized = false;
 
     #region Monobehavior callbacks
 
@@ -91,7 +94,11 @@ public class Butterfly : MonoBehaviour
         float dt = Time.deltaTime;
 
         timeSinceAlive += dt;
-        GrowOverTime();
+
+        if (timeSinceAlive <= preset.timeToGrow)
+            GrowOverTime();
+        else
+            GrowWithWand();
 
         float str = dt;
         if (state == State.Dying)
@@ -157,8 +164,6 @@ public class Butterfly : MonoBehaviour
         wand = FindObjectOfType<Wand>();
         animator = GetComponentInChildren<Animator>();
         renderers = GetComponentsInChildren<Renderer>();
-
-        StartCoroutine("UpdateAttentuationFromTexture");
     }
 
     public void Reset()
@@ -167,11 +172,15 @@ public class Butterfly : MonoBehaviour
         {
             state = State.Alive;
             transform.position = origin;
+
+            StartCoroutine("UpdateAttentuationFromTexture");
         }
         else
         {
             state = State.Hidden;
             transform.position = nest.transform.position;
+
+            StopCoroutine("UpdateAttentuationFromTexture");
         }
 
         velocity = Vector3.zero;
@@ -185,8 +194,7 @@ public class Butterfly : MonoBehaviour
         foreach (Renderer r in renderers)
             r.material.SetFloat("_Death", 0f);
 
-        StopCoroutine("UpdateAttentuationFromTexture");
-        StartCoroutine("UpdateAttentuationFromTexture");
+        colorized = false;
     }
 
     void CreateTrails()
@@ -231,7 +239,10 @@ public class Butterfly : MonoBehaviour
     public void Release()
     {
         if (state == State.Hidden)
+        {
             state = State.Easing;
+            StartCoroutine("UpdateAttentuationFromTexture");
+        }
     }
 
     public void Kill()
@@ -316,11 +327,16 @@ public class Butterfly : MonoBehaviour
 
     void GrowOverTime()
     {
-        if (timeSinceAlive > preset.timeToGrow)
-            return;
-
         float interval = timeSinceAlive / preset.timeToGrow;
         transform.localScale = Vector3.one * Mathf.Lerp(0f, preset.scale, Mathf.Pow(interval, 2f));
+    }
+
+    void GrowWithWand()
+    {
+        Vector3 dir = (wand.position - positionRelativeToCamera);
+        float magnitude = Mathf.Clamp01(1f - dir.magnitude / preset.wandRadius);
+
+        transform.localScale = Vector3.one * preset.scale * (1f + Mathf.Pow(magnitude, 2f));
     }
 
     #endregion
@@ -336,14 +352,26 @@ public class Butterfly : MonoBehaviour
 
 
     IEnumerator UpdateAttentuationFromTexture(){
-        while(state == State.Alive){
+        while(state == State.Alive || state == State.Easing){
             var viewport = driver.ConvertToViewport(transform.position);
 
             value = mother.GetColorFromCanvas(viewport);
-
             var rgb = new Vector3(value.r, value.g, value.b);
 
-            if (rgb.magnitude < .167f)
+            if (!colorized)
+            {
+                color1 = color0 = rgb;
+                colorSpeed = 0f;
+                colorized = true;
+            }
+            else
+            {
+                color1 = rgb;
+                colorSpeed = (color1 - color0).magnitude / preset.colorRefresh;
+                color0 = color1;
+            }
+
+            if (colorSpeed > preset.maximumColorSpeed)
             {
                 state = State.Dying;
                 final = value;

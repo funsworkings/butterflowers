@@ -42,6 +42,7 @@ namespace Settings {
 
         public float scale = .167f;
         public float timeToGrow = 1f;
+        public float maximumColorSpeed = .167f;
     }
 
 }
