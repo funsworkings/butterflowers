@@ -6,6 +6,8 @@ public class Nest : MonoBehaviour
 {
     public static Nest Instance = null;
 
+    ApplyGravityRelativeToCamera gravity_ext;
+    Interactable interactable;
     new Rigidbody rigidbody;
 
     [Header("Physics")]
@@ -21,6 +23,8 @@ public class Nest : MonoBehaviour
     {
         Instance = this;
 
+        gravity_ext = GetComponent<ApplyGravityRelativeToCamera>();
+        interactable = GetComponent<Interactable>();
         rigidbody = GetComponent<Rigidbody>();
     }
 
@@ -30,6 +34,8 @@ public class Nest : MonoBehaviour
 
         Butterfly.OnRegister += AddButterfly;
         Butterfly.OnUnregister += RemoveButterfly;
+
+        interactable.onGrab += Kick;
     }
 
     void OnDestroy()
@@ -38,15 +44,21 @@ public class Nest : MonoBehaviour
 
         Butterfly.OnRegister -= AddButterfly;
         Butterfly.OnUnregister -= RemoveButterfly;
+
+        interactable.onGrab -= Kick;
     }
 
-    void OnMouseDown()
-    {
-        var direction = (Random.insideUnitSphere + Vector3.up*5f).normalized;
-        rigidbody.AddForce(force * direction);
+    #region Interactable callbacks
 
+    void Kick(Vector3 origin, Vector3 direction)
+    {
+        Vector3 dir = (-direction - 3f * gravity_ext.gravity).normalized;
+
+        rigidbody.AddForceAtPosition(dir * force, origin);
         Open();
     }
+
+    #endregion
 
     #region Butterfly operations
 

@@ -2,9 +2,19 @@
 using System.Collections.Generic;
 using UnityEngine;
 
+using UnityEngine.Networking;
+
 ///<summary>Mother of all of the butterflies</summary>
 public class Mother : MonoBehaviour
 {
+    #region Events
+
+    public static System.Action<Texture> onSuccessLoadTexture;
+    public static System.Action onFailLoadTexture;
+
+    #endregion
+
+
     [SerializeField] RenderTexture canvas;
     [SerializeField] float refreshRate = .167f;
 
@@ -38,7 +48,7 @@ public class Mother : MonoBehaviour
 
         Sample();
 
-        Navigator.onSuccessReceiveImage += PushTexture;  
+        Navigator.onSuccessFileMatchFilter += LoadTexture;
 
         StartCoroutine("Refresh");   
     }
@@ -108,7 +118,41 @@ public class Mother : MonoBehaviour
         textureArray.PopulateTextureArray(textures.ToArray());
     }
 
+    void LoadTexture(string path)
+    {
+        if (!read)
+        {
+            StartCoroutine(ReadBytesFromFile(path));
+            read = true;
+        }
+    }
+
+    private bool read = false;
+    IEnumerator ReadBytesFromFile(string file)
+    {
+        Debug.Log(file);
+
+        UnityWebRequest req = UnityWebRequestTexture.GetTexture("file://" + file);
+        req.SendWebRequest();
+
+        while (!req.isDone)
+        {
+            Debug.Log(req.downloadProgress * 100f + "%");
+            yield return null;
+        }
+        read = false;
+
+        if (!(req.isHttpError || req.isNetworkError))
+        {
+            Texture texture = ((DownloadHandlerTexture)req.downloadHandler).texture;
+
+            PushTexture(texture);
+            if (onSuccessLoadTexture != null)
+                onSuccessLoadTexture(texture);
+        }
+    }
+
     void OnDestroy() {
-        Navigator.onSuccessReceiveImage -= PushTexture;    
+        Navigator.onSuccessFileMatchFilter -= LoadTexture;    
     }
 }

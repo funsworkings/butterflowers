@@ -6,6 +6,15 @@ public class ApplyGravityRelativeToCamera : ApplyCustomGravity
 {
     Camera mainCamera;
 
+    public float multiplier = 1f;
+    public Vector3 gravity
+    {
+        get
+        {
+            return -mainCamera.transform.up;
+        }
+    }
+
     void Start()
     {
         mainCamera = Camera.main;
@@ -13,7 +22,7 @@ public class ApplyGravityRelativeToCamera : ApplyCustomGravity
 
     protected override void ApplyGravity(float magnitude)
     {
-        directionOfGravity = -mainCamera.transform.up;
-        base.ApplyGravity(magnitude);
+        directionOfGravity = gravity;
+        base.ApplyGravity(magnitude * multiplier);
     }
 }

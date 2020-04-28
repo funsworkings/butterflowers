@@ -4,13 +4,14 @@ using UnityEngine;
 
 public class Cursor : MonoBehaviour
 {
+    [SerializeField] Vector3 m_position;
     public Vector3 position {
         get{
-            return Input.mousePosition;
+            return m_position;
         }
     }
 
-    Vector3 m_velocity = Vector3.zero;
+    [SerializeField] Vector3 m_velocity = Vector3.zero;
     public Vector3 velocity {
         get{
             return m_velocity;
@@ -28,6 +29,9 @@ public class Cursor : MonoBehaviour
     }
 
     void Update() {
+        m_position = Input.mousePosition;
+
+
         float dt = Time.deltaTime;
 
         b = position;

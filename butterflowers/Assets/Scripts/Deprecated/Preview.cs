@@ -22,7 +22,7 @@ public class Preview : MonoBehaviour
     }
 
     void Start() {
-         Navigator.onSuccessReceiveImage += OnReceiveImage;  
+         Mother.onSuccessLoadTexture += OnReceiveImage;  
     }
 
     void OnReceiveImage(Texture tex){
@@ -57,6 +57,6 @@ public class Preview : MonoBehaviour
     }
 
     void OnDestroy() {
-        Navigator.onSuccessReceiveImage -= OnReceiveImage;  
+        Mother.onSuccessLoadTexture -= OnReceiveImage;  
     }
 }

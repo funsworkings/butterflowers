@@ -6,9 +6,9 @@ namespace SimpleFileBrowser
     [System.Serializable]
 	public class FileSystemEntry
 	{
-		public readonly string Path;
-		public readonly string Name;
-		public readonly string Extension;
+		public  string Path;
+		public  string Name;
+		public  string Extension;
 
         [HideInInspector]
 		public readonly FileAttributes Attributes;

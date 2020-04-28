@@ -14,11 +14,10 @@ using Files = SimpleFileBrowser.FileBrowserHelpers;
 
 public class Navigator : MonoBehaviour
 {
-    public delegate void OnSuccessReceiveImage(Texture data);
-    public static event OnSuccessReceiveImage onSuccessReceiveImage;
+    public static System.Action<string> onSuccessFileMatchFilter;
+    public static System.Action<string[]> onRefreshFilesMatchingFilterInDirectory;
 
-    public delegate void OnFailReceiveImage();
-    public static event OnFailReceiveImage onFailReceiveImage;
+    public static Navigator Instance = null;
 
 
     [SerializeField] TMPro.TMP_Text targetDisplay;
@@ -63,16 +62,33 @@ public class Navigator : MonoBehaviour
         set { m_currentItem = value; }
     }
 
+    string m_root = "";
+    public string root
+    {
+        get
+        {
+            return m_root;
+        }
+        set
+        {
+            bool refresh = false;
 
+            if (m_root != value)
+                refresh = true;
 
-    private const string rootDirectory = "\ud835\udcb7\ud835\udcca\ud835\udcc9\ud835\udcc9\ud835\udc52\ud835\udcc7\ud835\udcbb\ud835\udcc1\ud835\udc5c\ud835\udccc\ud835\udc52\ud835\udcc7\ud835\udcc8";
+            m_root = value;
+            if (refresh)
+                CurrentPath = DefaultPath;
+        }
+    }
+
+  //  private const string rootDirectory = "\ud835\udcb7\ud835\udcca\ud835\udcc9\ud835\udcc9\ud835\udc52\ud835\udcc7\ud835\udcbb\ud835\udcc1\ud835\udc5c\ud835\udccc\ud835\udc52\ud835\udcc7\ud835\udcc8";
     public string DefaultPath { 
         get 
         { 
-            string dir = Path.Combine(Enviro.GetFolderPath(Enviro.SpecialFolder.Desktop), rootDirectory);
-                FileUtils.EnsureDirectory(dir); // Make sure butterflowers dir exists
-
-            return dir;
+            //string dir = Path.Combine(Enviro.GetFolderPath(Enviro.SpecialFolder.Desktop), root);
+            FileUtils.EnsureDirectory(root); // Make sure butterflowers dir exists
+            return root;
         } 
     }
 
@@ -277,6 +293,13 @@ public class Navigator : MonoBehaviour
     void RefreshFilesInDirectory()
     {
         m_files = GetFilesInDirectory(CurrentPath, ofType: typeFilter);
+
+        List<string> filepaths = new List<string>();
+        foreach(FileSystemEntry entry in m_files)
+            filepaths.Add(entry.Path);
+
+        if (onRefreshFilesMatchingFilterInDirectory != null)
+            onRefreshFilesMatchingFilterInDirectory(filepaths.ToArray());
     }
 
     void RefreshDisplay() {
@@ -314,6 +337,12 @@ public class Navigator : MonoBehaviour
 
     #endregion
 
+    #region Monobehaviour callbacks
+
+    void Awake()
+    {
+        Instance = this;
+    }
 
     // Start is called before the first frame update
     void Start()
@@ -325,7 +354,7 @@ public class Navigator : MonoBehaviour
     void Update()
     {
         if (Input.GetKeyDown(KeyCode.R))
-            Refresh();
+            Refresh("");
         if (Input.GetKeyDown(KeyCode.Escape))
             CurrentPath = DefaultPath;
 
@@ -335,60 +364,53 @@ public class Navigator : MonoBehaviour
             Descend();
     }
 
+    #endregion
+
     public void Refresh(FileSystemEntry file = null)
     {
-        CurrentPath = CurrentPath;
+        Refresh((file == null) ? null : file.Path);
+    }
 
-        var img = file;
-        if(img == null)
-            img = GetRandomFileInDirectory(null, TypeFilter.Normal);
+    public void Refresh(string path = null)
+    {
+        RefreshFilesInDirectory();
 
-        if (img != null)
+        string file = path;
+        if (string.IsNullOrEmpty(file))
         {
-            if (!allowRepeats)
-            {
-                if (visited.Contains(img.Path))
-                    return;
-            }
+            var entry = GetRandomFileInDirectory(null, TypeFilter.Normal);
 
-            OnSuccess(img.Path);
+            if (entry != null)
+                file = entry.Path;
+            else
+            {
+                OnFail();
+                return;
+            }
         }
+
+        if (!allowRepeats)
+        {
+            if (visited.Contains(file))
+                return;
+        }
+        OnSuccess(file);
     }
 
     void OnSuccess(string path){
-        Debug.Log("Successfully loaded file at path: " + path);
-        if (!read)
-        {
-            StartCoroutine(ReadBytesFromFile(path));
-            read = true;
+        Debug.Log("Successfully found file at path: " + path);
+        if (visited.Count == m_files.Length)
+            visited = new List<string>();
 
-            if (visited.Count == m_files.Length)
-                visited = new List<string>();
+        visited.Add(path);
 
-            visited.Add(path);
-        }
+        if (onSuccessFileMatchFilter != null)
+            onSuccessFileMatchFilter(path);
     }
 
-    IEnumerator ReadBytesFromFile(string file)
+    void OnFail()
     {
-        Debug.Log(file);
 
-        UnityWebRequest req = UnityWebRequestTexture.GetTexture("file://" + file);
-            req.SendWebRequest();
-
-        while (!req.isDone)
-        {
-            Debug.Log(req.downloadProgress*100f + "%");
-            yield return null;
-        }
-        read = false;
-
-        if (!(req.isHttpError || req.isNetworkError))
-        {
-            Texture texture = ((DownloadHandlerTexture)req.downloadHandler).texture;
-            if (onSuccessReceiveImage != null)
-                onSuccessReceiveImage(texture);
-        }
     }
 
     void OnCancel(){

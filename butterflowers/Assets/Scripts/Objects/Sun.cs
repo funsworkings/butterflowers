@@ -74,6 +74,7 @@ public class Sun : MonoBehaviour
 
 
     public bool reset = false;
+    public bool active = true;
 
 
     IReactToSun[] listeners;
@@ -95,12 +96,22 @@ public class Sun : MonoBehaviour
     // Update is called once per frame
     void Update()
     {
+        if (!active)
+        {
+            if (Input.GetKeyDown(KeyCode.Space))
+                active = true;
+            return;
+        }
+
         time += Time.deltaTime; // Add time to global clock
 
-        CheckForNewDay();
+        bool advanced = CheckForNewDay();
 
         AlignWithRay();
         UpdateListeners();
+
+        if (advanced)
+            active = false;
     }
 
     void AlignWithRay()
@@ -121,16 +132,22 @@ public class Sun : MonoBehaviour
         ray = Quaternion.AngleAxis(angle, axis) * origin;
     }
 
-    void CheckForNewDay()
+    bool CheckForNewDay()
     {
+        bool flag = false;
+
         var currentDays = days;
         if(currentDays > previousDays)
         {
             Debug.LogFormat("Sun advanced!  from:{0} to:{1}", previousDays, currentDays);
             if (onCycle != null)
                 onCycle();
+
+            flag = true;
         }
         previousDays = currentDays;
+
+        return flag;
     }
 
     void OnEnable()

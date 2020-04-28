@@ -214,6 +214,17 @@ public class Butterfly : MonoBehaviour
         trails_ps.Play();
     }
 
+    void DestroyTrails()
+    {
+        if (trails == null)
+            return;
+
+        var main = trails_ps.main;
+        main.loop = false;
+
+        trails = null;
+    }
+
     void AdjustAnimatorSpeed()
     {
         float speed = (state == State.Dying) ? preset.maxAnimationSpeed : preset.minAnimationSpeed;
@@ -223,7 +234,7 @@ public class Butterfly : MonoBehaviour
     void Die()
     {
         trails.transform.parent = null;
-
+        DestroyTrails();
         /*var main = trails_ps.main;
             main.loop = false;
 
@@ -323,7 +334,7 @@ public class Butterfly : MonoBehaviour
 
     #endregion
 
-    #region Appearance
+    #region Growth
 
     void GrowOverTime()
     {
@@ -337,6 +348,11 @@ public class Butterfly : MonoBehaviour
         float magnitude = Mathf.Clamp01(1f - dir.magnitude / preset.wandRadius);
 
         transform.localScale = Vector3.one * preset.scale * (1f + Mathf.Pow(magnitude, 2f));
+    }
+
+    void GrowWithPulses()
+    {
+
     }
 
     #endregion
