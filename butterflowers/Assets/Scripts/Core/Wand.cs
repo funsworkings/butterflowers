@@ -4,6 +4,8 @@ using UnityEngine;
 
 public class Wand : MonoBehaviour
 {
+    public static Wand Instance = null;
+
     new Camera camera;
     
     [SerializeField] Cursor cursor;
@@ -59,6 +61,13 @@ public class Wand : MonoBehaviour
         }
     }
 
+    #region Monobehaviour callbacks
+
+    void Awake()
+    {
+        Instance = this;
+    }
+
     // Start is called before the first frame update
     void Start()
     {
@@ -78,6 +87,8 @@ public class Wand : MonoBehaviour
         if (down || cont || up)
             Interact();
     }
+
+    #endregion
 
     #region Interaction
 

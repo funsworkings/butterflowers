@@ -58,9 +58,9 @@ public class Spawner : MonoBehaviour
         Vector3 offset = Vector3.zero, position = Vector3.zero;
 
       
-        offset = center + new Vector3(Random.Range(-extents.x, extents.x),
-                                      Random.Range(-extents.y, extents.y),
-                                      Random.Range(-extents.z, extents.z));
+        offset = m_center + new Vector3(Random.Range(-extents.x, extents.x),
+                                         Random.Range(-extents.y, extents.y),
+                                         Random.Range(-extents.z, extents.z));
 
         position = transform.TransformPoint(offset);
         pos = position;

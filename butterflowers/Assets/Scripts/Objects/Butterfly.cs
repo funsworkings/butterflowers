@@ -383,7 +383,7 @@ public class Butterfly : MonoBehaviour
             else
             {
                 color1 = rgb;
-                colorSpeed = (color1 - color0).magnitude / preset.colorRefresh;
+                colorSpeed = (color1 - color0).magnitude / 1.8f; // Divide by rough (1,1,1) magnitude
                 color0 = color1;
             }
 

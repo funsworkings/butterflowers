@@ -1615,7 +1615,7 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 91a909afbafbe48679d1cd632b93ae1b, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  force: 100
+  force: 333
   spawner: {fileID: 166675944}
   butterflies: []
   open: 0
@@ -1794,7 +1794,7 @@ GameObject:
   - component: {fileID: 792321115}
   - component: {fileID: 792321119}
   - component: {fileID: 792321118}
-  - component: {fileID: 792321117}
+  - component: {fileID: 792321116}
   m_Layer: 2
   m_Name: Room
   m_TagString: Untagged
@@ -1822,7 +1822,7 @@ Transform:
   m_Father: {fileID: 0}
   m_RootOrder: 4
   m_LocalEulerAnglesHint: {x: -26.830002, y: 0, z: 0}
---- !u!114 &792321117
+--- !u!114 &792321116
 MonoBehaviour:
   m_ObjectHideFlags: 0
   m_CorrespondingSourceObject: {fileID: 0}

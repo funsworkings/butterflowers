@@ -27,9 +27,17 @@ public class Room : Spawner
 
     #region Spawner overrides
 
-    protected override void onInstantiatePrefab(GameObject obj, bool refresh)
+    protected override void CalculateBounds()
     {
-        obj.transform.up = transform.up;
+        m_center = Vector3.zero;
+        m_extents = GetComponent<MeshFilter>().mesh.bounds.extents;
+
+        Debug.Log(extents);
+    }
+
+    protected override void DecideRotation(ref Quaternion rot)
+    {
+        rot = transform.rotation;
     }
 
     #endregion
@@ -52,11 +60,5 @@ public class Room : Spawner
                 beaconInstance.file = paths[i];
                 beaconInstance.thumbnail = Helpers.GenerateThumbnailFromPath(paths[i]);
         }
-    }
-
-    protected override void CalculateBounds()
-    {
-        m_center = Vector3.zero;
-        m_extents = GetComponent<MeshFilter>().mesh.bounds.extents;
     }
 }

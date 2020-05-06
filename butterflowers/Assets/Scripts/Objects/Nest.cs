@@ -58,6 +58,11 @@ public class Nest : MonoBehaviour
         Open();
     }
 
+    void Follow(Vector3 origin, Vector3 direction)
+    {
+        rigidbody.AddForce(-(origin - transform.position).normalized * force);
+    }
+
     #endregion
 
     #region Butterfly operations
