@@ -25,6 +25,8 @@ public class Spawner : MonoBehaviour
         }
     }
 
+    [SerializeField] protected Vector3 boundsOffset = Vector3.zero, boundsMultiplier = Vector3.one;
+
     protected virtual void Awake() {
 
     }
@@ -57,12 +59,13 @@ public class Spawner : MonoBehaviour
     {
         Vector3 offset = Vector3.zero, position = Vector3.zero;
 
+        float bx = boundsMultiplier.x, by = boundsMultiplier.y, bz = boundsMultiplier.z;
       
-        offset = m_center + new Vector3(Random.Range(-extents.x, extents.x),
-                                         Random.Range(-extents.y, extents.y),
-                                         Random.Range(-extents.z, extents.z));
+        offset = m_center + (new Vector3(Random.Range(-extents.x, extents.x)*bx,
+                                         Random.Range(-extents.y, extents.y)*by,
+                                         Random.Range(-extents.z, extents.z)*bz));
 
-        position = transform.TransformPoint(offset);
+        position = transform.TransformPoint(offset) + boundsOffset;
         pos = position;
     }
 

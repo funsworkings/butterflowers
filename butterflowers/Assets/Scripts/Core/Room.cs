@@ -2,8 +2,17 @@
 using System.Collections.Generic;
 using UnityEngine;
 
+using System.Linq;
+
 public class Room : Spawner
 {
+
+    #region Attributes
+
+    [SerializeField] int maxBeacons = 100;
+
+    #endregion
+
     #region Monobehaviour callbacks
 
     protected override void Awake()
@@ -15,12 +24,12 @@ public class Room : Spawner
 
     void OnEnable()
     {
-        Navigator.onRefreshFilesMatchingFilterInDirectory += FetchThumbnails;
+        Navigator.onRefreshFilesMatchingFilterInDirectory += FilterThumbnails;
     }
 
     void OnDisable()
     {
-        Navigator.onRefreshFilesMatchingFilterInDirectory -= FetchThumbnails;
+        Navigator.onRefreshFilesMatchingFilterInDirectory -= FilterThumbnails;
     }
 
     #endregion
@@ -31,8 +40,6 @@ public class Room : Spawner
     {
         m_center = Vector3.zero;
         m_extents = GetComponent<MeshFilter>().mesh.bounds.extents;
-
-        Debug.Log(extents);
     }
 
     protected override void DecideRotation(ref Quaternion rot)
@@ -42,7 +49,13 @@ public class Room : Spawner
 
     #endregion
 
-    void FetchThumbnails(string[] paths)
+    void FilterThumbnails(string[] paths)
+    {
+        string[] selection = paths.PickRandomSubset<string>(maxBeacons).ToArray();
+        CreateInstancesFromThumbnails(selection);
+    }
+
+    void CreateInstancesFromThumbnails(string[] paths)
     {
         int size = paths.Length;
         int capacity = instances.Count;
@@ -53,12 +66,12 @@ public class Room : Spawner
         {
             if (capacity >= size)
                 instance = InstantiatePrefab(instances[i]);
-            else 
+            else
                 instance = InstantiatePrefab();
 
             beaconInstance = instance.GetComponent<Beacon>();
-                beaconInstance.file = paths[i];
-                beaconInstance.thumbnail = Helpers.GenerateThumbnailFromPath(paths[i]);
+            beaconInstance.file = paths[i];
+            beaconInstance.thumbnail = Helpers.GenerateThumbnailFromPath(paths[i]);
         }
     }
 }

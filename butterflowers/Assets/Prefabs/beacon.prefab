@@ -47,6 +47,7 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: 
   thumbnailPanel: {fileID: 1270796099906857375}
+  m_file: 
   m_thumbnail: {fileID: 0}
 --- !u!65 &1270796099338416104
 BoxCollider:
@@ -162,7 +163,7 @@ PrefabInstance:
     m_Modifications:
     - target: {fileID: 100000, guid: 5a103a23ef73c4694b5508e034cf2d92, type: 3}
       propertyPath: m_Name
-      value: cone
+      value: mesh
       objectReference: {fileID: 0}
     - target: {fileID: 400000, guid: 5a103a23ef73c4694b5508e034cf2d92, type: 3}
       propertyPath: m_LocalPosition.x
@@ -170,7 +171,7 @@ PrefabInstance:
       objectReference: {fileID: 0}
     - target: {fileID: 400000, guid: 5a103a23ef73c4694b5508e034cf2d92, type: 3}
       propertyPath: m_LocalPosition.y
-      value: 0
+      value: 0.242
       objectReference: {fileID: 0}
     - target: {fileID: 400000, guid: 5a103a23ef73c4694b5508e034cf2d92, type: 3}
       propertyPath: m_LocalPosition.z
@@ -210,20 +211,24 @@ PrefabInstance:
       objectReference: {fileID: 0}
     - target: {fileID: 400000, guid: 5a103a23ef73c4694b5508e034cf2d92, type: 3}
       propertyPath: m_LocalScale.x
-      value: 1
+      value: 0.53929
       objectReference: {fileID: 0}
     - target: {fileID: 400000, guid: 5a103a23ef73c4694b5508e034cf2d92, type: 3}
       propertyPath: m_LocalScale.y
-      value: 1
+      value: 0.53929
       objectReference: {fileID: 0}
     - target: {fileID: 400000, guid: 5a103a23ef73c4694b5508e034cf2d92, type: 3}
       propertyPath: m_LocalScale.z
-      value: 1
+      value: 0.53929
       objectReference: {fileID: 0}
     - target: {fileID: 2300000, guid: 5a103a23ef73c4694b5508e034cf2d92, type: 3}
       propertyPath: m_Materials.Array.data[0]
       value: 
       objectReference: {fileID: 2100000, guid: a3f410bb899d34296ba560ce482c45d5, type: 2}
+    - target: {fileID: 3300000, guid: 5a103a23ef73c4694b5508e034cf2d92, type: 3}
+      propertyPath: m_Mesh
+      value: 
+      objectReference: {fileID: 4300000, guid: a8033a7e918e04463b04bcbaddcd59b9, type: 3}
     m_RemovedComponents: []
   m_SourcePrefab: {fileID: 100100000, guid: 5a103a23ef73c4694b5508e034cf2d92, type: 3}
 --- !u!4 &1270796099341961672 stripped

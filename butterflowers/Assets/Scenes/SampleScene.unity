@@ -282,6 +282,8 @@ MonoBehaviour:
   prefab: {fileID: 5556437273785765615, guid: 65b20077fa37f4d0ca2efb64c4c78518, type: 3}
   amount: 667
   spawnOnAwake: 1
+  boundsOffset: {x: 0, y: 0, z: 0}
+  boundsMultiplier: {x: 1, y: 1, z: 1}
   camera: {fileID: 534669904}
   minDistance: 10
   maxDistance: 30
@@ -653,6 +655,8 @@ MonoBehaviour:
   prefab: {fileID: 7155155772607842315, guid: a6dcaf2be01dd44e29edea554fa53b6b, type: 3}
   amount: 13
   spawnOnAwake: 1
+  boundsOffset: {x: 0, y: 0, z: 0}
+  boundsMultiplier: {x: 1, y: 1, z: 1}
 --- !u!65 &355532918
 BoxCollider:
   m_ObjectHideFlags: 0
@@ -959,7 +963,7 @@ Camera:
     height: 1
   near clip plane: 0.01
   far clip plane: 1000
-  field of view: 33
+  field of view: 26
   orthographic: 0
   orthographic size: 5
   m_Depth: -1
@@ -1837,6 +1841,9 @@ MonoBehaviour:
   prefab: {fileID: 1270796099338416119, guid: de2e7e468ca944bdf8b27b1b682da8a9, type: 3}
   amount: 100
   spawnOnAwake: 0
+  boundsOffset: {x: 0, y: 0, z: 0}
+  boundsMultiplier: {x: 0.33, y: 1, z: 0.33}
+  maxBeacons: 100
 --- !u!23 &792321118
 MeshRenderer:
   m_ObjectHideFlags: 0
