@@ -10,7 +10,8 @@ using TMPro;
 public class Beacon: MonoBehaviour {
     #region External
 
-    Room Room;
+    Manager Room;
+    Nest Nest;
 
     #endregion
 
@@ -91,8 +92,6 @@ public class Beacon: MonoBehaviour {
     #region Monobehaviour callbacks
 
     void Awake() {
-        Room = Room.Instance;
-
         interactable = GetComponent<Interactable>();
         particleSystem = GetComponent<ParticleSystem>();
         Oscillate = GetComponent<SimpleOscillate>();
@@ -100,6 +99,9 @@ public class Beacon: MonoBehaviour {
 
     void Start() {
         psTrails = particleSystem.trails;
+
+        Room = Manager.Instance;
+        Nest = Nest.Instance;
 
         CreateInfo();
     }
@@ -170,15 +172,17 @@ public class Beacon: MonoBehaviour {
 
     #endregion
 
-    #region Nest operations
+    #region Warp operations
 
-    public void Warp(Vector3 position)
+    public void WarpFromTo(Vector3 origin, Vector3 destination, bool nest = false)
     {
+        interactable.enabled = !nest;
+
         if (warping) StopCoroutine("WarpToLocation");
-        StartCoroutine(WarpToLocation(transform.position, position));
+        StartCoroutine(WarpToLocation(origin, destination, nest));
     }
 
-    IEnumerator WarpToLocation(Vector3 a, Vector3 b)
+    IEnumerator WarpToLocation(Vector3 a, Vector3 b, bool nest = false)
     {
         float t = 0f;
         float interval = 0f;
@@ -186,17 +190,21 @@ public class Beacon: MonoBehaviour {
         Vector3 dir = (b - a);
 
         warping = true;
-        while (t <= timeToWarp) 
-        {
+        while (t <= timeToWarp) {
             t += Time.deltaTime;
             interval = Mathf.Clamp01(t / timeToWarp);
 
             float h = Mathf.Sin(interval * Mathf.PI) * heightOfWarp;
+            transform.position = a + (dir * Mathf.Pow(interval, 4f)) + (Vector3.up * h);
 
-            transform.position = a + (dir * Mathf.Pow(interval, 4f)); //+ (Vector3.up * h);
+            float sa = (nest) ? 1f : 0f; float sb = (nest) ? 0f : 1f;
+            transform.localScale = Vector3.one * Mathf.Lerp(sa, sb, Mathf.Pow(interval, 2f));
+
             yield return null;
         }
         warping = false;
+
+        if (nest) Nest.ReceiveBeacon(this);
     }
 
 	#endregion

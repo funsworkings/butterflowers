@@ -5,17 +5,18 @@ using UnityEngine;
 using System.Linq;
 using TMPro;
 using FileSystemEntry = SimpleFileBrowser.FileSystemEntry;
+using System.Runtime.InteropServices;
 
-public class Room : Spawner
+public class Manager : Spawner
 {
-    public static Room Instance = null;
+    public static Manager Instance = null;
 
     #region External
 
     [SerializeField] Settings.WorldPreset Preset;
 
-    Discovery Discovery = null;
     FileNavigator Files = null;
+    Discovery Discovery = null;
     Nest Nest = null;
     Quilt Quilt = null;
 
@@ -56,21 +57,31 @@ public class Room : Spawner
         Discovery.onLoad += Initialize;
     }
 
-    void Initialize()
-    {
-        SpawnBeacons();
-
-        Beacon.Discovered += onDiscoveredBeacon;
-        Files.onRefresh += SpawnBeacons;
-    }
-
     protected override void OnDestroy(){
         base.OnDestroy();
 
         Discovery.onLoad -= Initialize;
 
+        Nest.onAddBeacon -= onIngestBeacon;
+        Nest.onRemoveBeacon -= onReleaseBeacon;
+
         Beacon.Discovered -= onDiscoveredBeacon;
         Files.onRefresh -= SpawnBeacons;
+    }
+
+    #endregion
+
+    #region Internal
+
+    void Initialize()
+    {
+        SpawnBeacons();
+
+        Nest.onAddBeacon += onIngestBeacon;
+        Nest.onRemoveBeacon += onReleaseBeacon;
+
+        Beacon.Discovered += onDiscoveredBeacon;
+        Files.onRefresh += SpawnBeacons;
     }
 
     #endregion
@@ -137,6 +148,10 @@ public class Room : Spawner
 
     void ClearBeacons(){
         beacons = new Dictionary<string, Beacon>();
+
+        Quilt.Dispose();
+        Nest.Dispose();
+
         Clear();
     }
 
@@ -149,9 +164,7 @@ public class Room : Spawner
         var file = beacon.file;
 
         Discovery.DiscoverFile(file);
-        Quilt.LoadTexture(file);
-
-        beacon.Warp(Nest.transform.position);
+        Nest.AddBeacon(beacon);
     }
 
     void onDestroyedBeacon(Beacon beacon)
@@ -159,17 +172,35 @@ public class Room : Spawner
         var file = beacon.file;
         if (beacons.ContainsKey(file))
             beacons.Remove(file);
+
+        Quilt.Pop(file); // Attempt remove from quilt if doesn't exist
     }
 
     #endregion
 
-    #region Deprecated
+    #region Nest callbacks
 
-    /*
+    void onIngestBeacon(Beacon beacon)
+    {
+        var file = beacon.file;
+        Quilt.Push(file);
+    }
+
+    void onReleaseBeacon(Beacon beacon)
+    {
+        var file = beacon.file;
+        Quilt.Pop(file);
+    }
+
+	#endregion
+
+	#region Deprecated
+
+	/*
 
     beaconInstance.thumbnail = Helpers.GenerateThumbnailFromPath(paths[i]);
 
     */
 
-    #endregion
+	#endregion
 }
