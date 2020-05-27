@@ -3,6 +3,8 @@ using System.Collections;
 using System.Collections.Generic;
 
 using UnityEngine.Networking;
+using System.Threading.Tasks;
+using UnityEngine.UI;
 
 public class Quilt : MonoBehaviour 
 {
@@ -183,8 +185,8 @@ public class Quilt : MonoBehaviour
     void LoadTexture(string path)
     {
         queue.Add(path);
-        if (!load)
-        {
+
+        if (!load) {
             StartCoroutine("LoadFromQueue");
             load = true;
         }
@@ -198,14 +200,33 @@ public class Quilt : MonoBehaviour
                 string file = queue[0];
                 queue.RemoveAt(0);
 
-                StartCoroutine("ReadBytesFromFile", file);
+                //StartCoroutine("ReadBytesFromFile", file);
+
                 read = true;
+                ReadBytes(file);
             }
 
             yield return null;
         }
 
         load = false;
+    }
+
+    async Task ReadBytes(string file)
+    {
+        var www = await new WWW(string.Format("file://{0}", file));
+
+        read = false;
+
+        if (!string.IsNullOrEmpty(www.error)) {
+            throw new System.Exception("Error reading from texture");
+        }
+
+        Debug.Log("Success load = " + file);
+        var texture = www.texture;
+
+        Add(texture);
+        lookup[file] = texture;
     }
 
     IEnumerator ReadBytesFromFile(string file)
