@@ -20,6 +20,8 @@ public class Nest : MonoBehaviour
     Interactable interactable;
     new Rigidbody rigidbody;
 
+    [SerializeField] ParticleSystem sparklesPS, cometPS;
+
 	#endregion
 
 	#region Attributes
@@ -141,11 +143,13 @@ public class Nest : MonoBehaviour
         beacon.WarpFromTo(a, b, false);
 
         beacons.Remove(beacon);
+        cometPS.Play();
         if (onRemoveBeacon != null) onRemoveBeacon(beacon);
     }
 
     public void ReceiveBeacon(Beacon beacon)
     {
+        sparklesPS.Play();
         if (onAddBeacon != null) onAddBeacon(beacon);
     }
 
