@@ -2,20 +2,36 @@
 using System.Collections.Generic;
 using UnityEngine;
 
+using TMPro;
+using UIExt;
+using UIExt.Behaviors.Visibility;
+
 public class Timeline: MonoBehaviour, IReactToSun {
 
     #region External
 
-    [SerializeField] GameDataSaveSystem Save = null;
+    GameDataSaveSystem Save = null;
 
     #endregion
 
-    [SerializeField] int index = 0;
+    #region Properties
+
+    [SerializeField] TMP_Text chapterTextField;
+    [SerializeField] ToggleOpacity chapterDisplay;
+
+	#endregion
+
+	#region Attributes
+
+	[SerializeField] int index = 0;
     [SerializeField] string chapter = "";
 	[SerializeField] string[] chapters = new string[] { };
 
-    IEnumerator Start()
+	#endregion
+
+	IEnumerator Start()
     {
+        Save = GameDataSaveSystem.Instance;
         while (!Save.load)
             yield return null;
 
@@ -29,29 +45,16 @@ public class Timeline: MonoBehaviour, IReactToSun {
     {
         if (chapters == null || chapters.Length == 0) return;
 
-        int len = chapters.Length;
-        if (len > 1) 
-        {
-            index = (days % (chapters.Length - 1));
-        }
-        else 
-        {
-            index = 0;
-        }
-        
+        index = days % chapters.Length;
         Save.chapter = index;
-
         chapter = chapters[index];
-        onMoveToNextChapter();
+
+        //chapterTextField.text = chapter;
+        //chapterDisplay.Show();
     }
 
     public void ReactToTimeOfDay(float timeOfDay)
     {
-        
-    }
-
-    void onMoveToNextChapter()
-    {
-        
+        // Do nothing
     }
 }
