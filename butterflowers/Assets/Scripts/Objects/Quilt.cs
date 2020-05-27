@@ -8,7 +8,13 @@ public class Quilt : MonoBehaviour
 {
     public static Quilt Instance = null;
 
-    [SerializeField] Material material = null;
+    #region External
+
+    Nest Nest = null;
+
+	#endregion
+
+	[SerializeField] Material material = null;
     [SerializeField] CreateTextureArray textureArray;
     
     [SerializeField] float m_speed = 0f;
@@ -17,12 +23,14 @@ public class Quilt : MonoBehaviour
     [SerializeField] int textureCap = 4;
     [SerializeField] bool allowRepeatTextures = false;
 
+    List<string> queue = new List<string>();
+
+    Dictionary<string, Texture2D> lookup = new Dictionary<string, Texture2D>();
     List<Texture2D> textures = new List<Texture2D>();
+
     int index = -1;
 
     private bool read = false, load = false;
-
-    List<string> queue = new List<string>();
 
     [SerializeField] RenderTexture canvas;
 
@@ -55,9 +63,24 @@ public class Quilt : MonoBehaviour
         ApplyTextures();
     }
 
-	#endregion
+    #endregion
 
-	#region Operations
+    #region Operations
+
+    public void Push(string file)
+    {
+        LoadTexture(file);
+    }
+
+    public void Pop(string file)
+    {
+        if (!lookup.ContainsKey(file)) return;
+
+        var texture = lookup[file];
+        Remove(texture);
+
+        lookup.Remove(file);
+    }
 
 	public void Add(Texture tex){
         var texture = (tex as Texture2D);
@@ -65,17 +88,37 @@ public class Quilt : MonoBehaviour
         ++index;
         if (index == textureCap)
         {
-            index = 0;
-
-            var _textures = textures.ToArray();
-            for (int i = 0; i < _textures.Length; i++)
-                Texture2D.Destroy(textures[i]); // Destroy all temporary textures
-
-            textures = new List<Texture2D>();
+            Dispose(false);
         }
 
         textures.Add(texture);
         ApplyTextures();
+    }
+
+    public void Remove(Texture tex) 
+    {
+        var texture = (tex as Texture2D);
+
+        if (textures.Contains(texture)) {
+            textures.Remove(texture);
+            --index;
+
+            Texture2D.Destroy(texture);
+            ApplyTextures();
+        }
+    }
+
+    public void Dispose(bool apply = true) {
+        var _textures = textures.ToArray();
+        for (int i = 0; i < _textures.Length; i++)
+            Texture2D.Destroy(textures[i]); // Destroy all temporary textures
+
+        index = 0;
+
+        textures = new List<Texture2D>();
+        lookup.Clear();
+
+        if (apply) ApplyTextures();
     }
 
     #endregion
@@ -137,7 +180,7 @@ public class Quilt : MonoBehaviour
 
     #region Texture operations
 
-    public void LoadTexture(string path)
+    void LoadTexture(string path)
     {
         queue.Add(path);
         if (!load)
@@ -179,7 +222,9 @@ public class Quilt : MonoBehaviour
 
         if (!(req.isHttpError || req.isNetworkError)) {
             Texture texture = ((DownloadHandlerTexture)req.downloadHandler).texture;
+
             Add(texture);
+            lookup[file] = (texture as Texture2D);
         }
 
         read = false;

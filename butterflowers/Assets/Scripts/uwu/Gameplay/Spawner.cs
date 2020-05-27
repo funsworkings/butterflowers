@@ -9,7 +9,7 @@ public class Spawner : MonoBehaviour
 
     [SerializeField] int count = 0;
     
-    [SerializeField] protected Transform root = null;
+    [SerializeField] protected Transform root = null, parent = null;
     [SerializeField] protected int amount = 100;
     [SerializeField] protected bool spawnOnAwake = true;
     [SerializeField] protected bool continuous = false;
@@ -33,6 +33,8 @@ public class Spawner : MonoBehaviour
     protected virtual void Awake() {
         if(root == null)
             root = transform;
+        if (parent == null)
+            parent = transform;
     }
 
     // Start is called before the first frame update
@@ -158,7 +160,7 @@ public class Spawner : MonoBehaviour
         SetPrefabAttributes(instance, pos, rot);
         onInstantiatePrefab(instance, refresh);
 
-        instance.transform.parent = root;
+        instance.transform.parent = parent;
         return instance;
     }
 

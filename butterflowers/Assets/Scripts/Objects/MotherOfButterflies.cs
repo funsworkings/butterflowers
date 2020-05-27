@@ -25,9 +25,15 @@ public class MotherOfButterflies : Spawner
 
     #endregion
 
-    #region Monobehaviour callbacks
+    #region Collections
 
-    protected override void Awake()
+    List<Butterfly> butterflies = new List<Butterfly>();
+
+	#endregion
+
+	#region Monobehaviour callbacks
+
+	protected override void Awake()
     {
         Instance = this;
         amount = preset.amountOfButterflies;
@@ -38,6 +44,9 @@ public class MotherOfButterflies : Spawner
     // Start is called before the first frame updaste
     protected override void Start()
     {
+        Butterfly.OnRegister += AddButterfly;
+        Butterfly.OnUnregister += RemoveButterfly;
+
         Butterfly.Died += ResetButterfly;
 
         base.Start(); 
@@ -50,6 +59,9 @@ public class MotherOfButterflies : Spawner
 
     protected override void OnDestroy() {
         base.OnDestroy();
+
+        Butterfly.OnRegister -= AddButterfly;
+        Butterfly.OnUnregister -= RemoveButterfly;
 
         Butterfly.Died -= ResetButterfly;
     }
@@ -88,6 +100,32 @@ public class MotherOfButterflies : Spawner
 
         butterfly.transform.localScale = Vector3.zero;
         butterfly.transform.rotation = rotation;
+    }
+
+    #endregion
+
+    #region Butterfly operations
+
+    void AddButterfly(Butterfly butterfly)
+    {
+        butterflies.Add(butterfly);
+    }
+
+    void RemoveButterfly(Butterfly butterfly)
+    {
+        butterflies.Remove(butterfly);
+    }
+
+    public void KillButterflies()
+    {
+        foreach (Butterfly butterfly in butterflies)
+            butterfly.Kill();
+    }
+
+    public void ReleaseButterflies()
+    {
+        foreach (Butterfly butterfly in butterflies)
+            butterfly.Release();
     }
 
     #endregion

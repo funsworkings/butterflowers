@@ -1,29 +1,42 @@
 ﻿using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
+using UnityEngine.Events;
 
 public class Nest : MonoBehaviour
 {
     public static Nest Instance = null;
 
-    ApplyGravityRelativeToCamera gravity_ext;
+    #region Events
+
+    public UnityEvent onOpen, onClose;
+    public System.Action<Beacon> onAddBeacon, onRemoveBeacon;
+
+	#endregion
+
+	#region Properties
+
+	ApplyGravityRelativeToCamera gravity_ext;
     Interactable interactable;
     new Rigidbody rigidbody;
 
-    public bool open = false;
+	#endregion
+
+	#region Attributes
+
+	public bool open = false, queue = false;
 
     [Header("Physics")]
-    [SerializeField] float force = 10f;
-
-    [Header("Butterflies")]
-    [SerializeField] MotherOfButterflies spawner = null;
-    [SerializeField] List<Butterfly> butterflies = new List<Butterfly>();
-    [SerializeField] bool killButterfliesOnSunCycle = true;
+        [SerializeField] float force = 10f;
 
     [Header("Beacons")]
-    [SerializeField] List<Beacon> beacons = new List<Beacon>();
+        [SerializeField] List<Beacon> beacons = new List<Beacon>();
 
-    void Awake()
+	#endregion
+
+	#region Monobehaviour callbacks
+
+	void Awake()
     {
         Instance = this;
 
@@ -34,25 +47,36 @@ public class Nest : MonoBehaviour
 
     void Start()
     {
-        if (killButterfliesOnSunCycle) Sun.onCycle += Close;
-
-        Butterfly.OnRegister += AddButterfly;
-        Butterfly.OnUnregister += RemoveButterfly;
-
+        interactable.onHover += Hover;
+        interactable.onUnhover += Unhover;
         interactable.onGrab += Kick;
+    }
+
+    void Update()
+    {
+        if (Input.GetMouseButtonDown(1) && queue) RemoveLastBeacon();
     }
 
     void OnDestroy()
     {
-        if (killButterfliesOnSunCycle) Sun.onCycle -= Close;
-
-        Butterfly.OnRegister -= AddButterfly;
-        Butterfly.OnUnregister -= RemoveButterfly;
-
+        interactable.onHover -= Hover;
+        interactable.onUnhover -= Unhover;
         interactable.onGrab -= Kick;
     }
 
+    #endregion
+
     #region Interactable callbacks
+
+    void Hover(Vector3 origin, Vector3 normal)
+    {
+        queue = true;
+    }
+
+    void Unhover(Vector3 origin, Vector3 normal)
+    {
+        queue = false;
+    }
 
     void Kick(Vector3 origin, Vector3 direction)
     {
@@ -62,67 +86,75 @@ public class Nest : MonoBehaviour
         Open();
     }
 
-    void Follow(Vector3 origin, Vector3 direction)
-    {
-        rigidbody.AddForce(-(origin - transform.position).normalized * force);
-    }
-
     #endregion
 
-    #region Butterfly operations
+    #region Operations
 
-    void AddButterfly(Butterfly butterfly)
+    public void Open()
     {
-        butterflies.Add(butterfly);
-    }
-
-    void RemoveButterfly(Butterfly butterfly)
-    {
-        butterflies.Remove(butterfly);
-    }
-
-    void KillButterflies()
-    {
-        foreach (Butterfly butterfly in butterflies)
-            butterfly.Kill();
-    }
-
-    void ReleaseButterflies()
-    {
-        foreach (Butterfly butterfly in butterflies)
-            butterfly.Release();
-    }
-
-    void Open()
-    {
-        if (!open)
-            ReleaseButterflies();
-
+        if (!open) {
+            onOpen.Invoke();
+        }
         open = true;
     }
 
-    void Close()
+    public void Close()
     {
-        if (open)
-            KillButterflies();
-
+        if (open) {
+            onClose.Invoke();
+        }
         open = false;
+    }
+
+    public void Dispose()
+    {
+        var beacons = this.beacons.ToArray();
+        for (int i = 0; i < beacons.Length; i++) 
+            RemoveBeacon(beacons[i]);
+
+        this.beacons = new List<Beacon>();
     }
 
     #endregion
 
     #region Beacon operations
 
-    public void IngestBeacon(Beacon beacon)
+    public void AddBeacon(Beacon beacon)
     {
-        var position = transform.position;
-        beacon.Warp(position);
+        if (beacons.Contains(beacon)) return;
+
+        var a = beacon.transform.position;
+        var b = transform.position;
+
+        beacon.WarpFromTo(a, b, true);
+
+        beacons.Add(beacon);
     }
 
-    public void ReleaseBeacon(Beacon beacon)
+    public void RemoveBeacon(Beacon beacon)
     {
-        var position = beacon.origin;
-        beacon.Warp(position);
+        if (!beacons.Contains(beacon)) return;
+
+        var a = transform.position;
+        var b = beacon.origin;
+
+        beacon.WarpFromTo(a, b, false);
+
+        beacons.Remove(beacon);
+        if (onRemoveBeacon != null) onRemoveBeacon(beacon);
+    }
+
+    public void ReceiveBeacon(Beacon beacon)
+    {
+        if (onAddBeacon != null) onAddBeacon(beacon);
+    }
+
+    public void RemoveLastBeacon()
+    {
+        if (beacons == null || beacons.Count == 0) return;
+
+        var beacon = beacons[beacons.Count - 1];
+        RemoveBeacon(beacon);
     }
 
 	#endregion
