@@ -78,7 +78,7 @@ public class Quilt : MonoBehaviour
     {
         if (!lookup.ContainsKey(file)) return;
 
-        var texture = lookup[file];
+        var texture = lookup[file]; 
         Remove(texture);
 
         lookup.Remove(file);
