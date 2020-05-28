@@ -11,6 +11,9 @@
         _TextureStrength ("Texture Strength", Range(0,1)) = 0.5
         _NoiseStrength ("Noise Strength", Range(0,1)) = 0.5
         _LerpSpeed ("Lerp Speed", Float) = 1.0
+
+        _Death("Death", Range(0, 1)) = 0.0
+        _DeathColor ("Death Color", Color) = (0,0,0,1)
         
         _DebugColor ("Debug Color", Color) = (1,1,1,1)
         _DebugStrength ("Debug Strength", Range(0,1)) = 0.5
@@ -54,6 +57,9 @@
             
             int _TextureCount;
             float _TextureStrength, _NoiseStrength;
+
+            float _Death;
+            fixed4 _DeathColor;
             
             fixed4 _DebugColor;
             float _DebugStrength;
@@ -103,7 +109,9 @@
 
                 // apply fog
                 UNITY_APPLY_FOG(i.fogCoord, ct);
-                return (1.0 - _DebugStrength)*ct + _DebugStrength*_DebugColor;
+                
+                return (1.0 - _Death)*ct + _DeathColor;
+                //return (1.0 - _DebugStrength)*ct + _DebugStrength*_DebugColor;
             }
             ENDCG
         }

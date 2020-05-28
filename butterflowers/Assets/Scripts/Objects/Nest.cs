@@ -10,6 +10,8 @@ public class Nest : MonoBehaviour
     #region Events
 
     public UnityEvent onOpen, onClose;
+    public UnityEvent onIngestBeacon, onReleaseBeacon;
+
     public System.Action<Beacon> onAddBeacon, onRemoveBeacon;
 
 	#endregion
@@ -148,12 +150,16 @@ public class Nest : MonoBehaviour
 
         beacons.Remove(beacon);
         cometPS.Play();
+
+        onReleaseBeacon.Invoke();
         if (onRemoveBeacon != null) onRemoveBeacon(beacon);
     }
 
     public void ReceiveBeacon(Beacon beacon)
     {
         sparklesPS.Play();
+
+        onIngestBeacon.Invoke();
         if (onAddBeacon != null) onAddBeacon(beacon);
     }
 

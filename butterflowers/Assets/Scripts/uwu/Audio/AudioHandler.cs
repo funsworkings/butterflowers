@@ -216,23 +216,22 @@ public class AudioHandler: MonoBehaviour {
 
 	#region Sound operations
 
-	public virtual void PlaySound(AudioClip sound, float volume = 1f)
+	public virtual void PlaySound(AudioClip sound)
     {
-        audioSource.PlayOneShot(sound, volume);
+        audioSource.PlayOneShot(sound, this.volume);
     }
 
-    public void PlaySoundRandomPitch(AudioClip sound, float volume = -1f)
+    public void PlaySoundRandomPitch(AudioClip sound)
     {
         if (sound == null) return;
-        if (volume < 0f) volume = this.volume;
 
         RandomizePitch(pitchRange.x, pitchRange.y);
-        audioSource.PlayOneShot(sound, volume);
+        audioSource.PlayOneShot(sound, this.volume);
     }
 
-    public void PlayRandomSound(float volume = 1f)
+    public void PlayRandomSound()
     {
-        PlayRandomSound(audioClips, volume);
+        PlayRandomSound(audioClips, this.volume);
     }
 
     public void PlayRandomSound(AudioClip[] sounds, float volume = -1f)
@@ -244,9 +243,9 @@ public class AudioHandler: MonoBehaviour {
         audioSource.PlayOneShot(sound, volume);
     }
 
-    public void PlayRandomSoundRandomPitch(float volume = -1f)
+    public void PlayRandomSoundRandomPitch()
     {
-        PlayRandomSoundRandomPitch(audioClips, volume);
+        PlayRandomSoundRandomPitch(audioClips, this.volume);
     }
 
     public void PlayRandomSoundRandomPitch(AudioClip[] sounds, float volume = -1f)
