@@ -52,6 +52,8 @@ public class Nest : MonoBehaviour
         interactable.onHover += Hover;
         interactable.onUnhover += Unhover;
         interactable.onGrab += Kick;
+
+        Beacon.Destroyed += onDestroyBeacon;
     }
 
     void Update()
@@ -64,6 +66,8 @@ public class Nest : MonoBehaviour
         interactable.onHover -= Hover;
         interactable.onUnhover -= Unhover;
         interactable.onGrab -= Kick;
+
+        Beacon.Destroyed -= onDestroyBeacon;
     }
 
     #endregion
@@ -159,6 +163,18 @@ public class Nest : MonoBehaviour
 
         var beacon = beacons[beacons.Count - 1];
         RemoveBeacon(beacon);
+    }
+
+    #endregion
+
+    #region Beacon callbacks
+
+    void onDestroyBeacon(Beacon beacon)
+    {
+        if (!beacons.Contains(beacon)) return;
+
+        beacons.Remove(beacon);
+        cometPS.Play();
     }
 
 	#endregion

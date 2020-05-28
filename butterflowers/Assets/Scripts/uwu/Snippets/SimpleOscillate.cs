@@ -5,7 +5,9 @@ using UnityEngine;
 public class SimpleOscillate : MonoBehaviour
 {
     [SerializeField] Vector3 axis = Vector3.up;
-    [SerializeField] float speed = 1f, magnitude = 1f, delay = 0f;
+    [SerializeField] float delay = 0f;
+
+    public float speed = 1f, magnitude = 1f;
 
     [SerializeField] bool randomSpeed = false, randomMagnitude = false, randomDelay = false;
 
