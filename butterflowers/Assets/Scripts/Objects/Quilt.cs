@@ -22,6 +22,18 @@ public class Quilt : MonoBehaviour
     [SerializeField] float m_speed = 0f;
     [SerializeField] float minLerpSpeed = 0f, maxLerpSpeed = 1f;
 
+    [SerializeField] float m_death = 0f, m_deathDecay = 1f;
+    public float death {
+        get
+        {
+            return m_death;
+        }
+        set
+        {
+            m_death = Mathf.Clamp01(value);
+        }
+    }
+
     [SerializeField] int textureCap = 4;
     [SerializeField] bool allowRepeatTextures = false;
 
@@ -63,6 +75,16 @@ public class Quilt : MonoBehaviour
 
         SetTextureAttributes();
         ApplyTextures();
+    }
+
+    void Update()
+    {
+        if (death > 0f) 
+        {
+            death -= (Time.deltaTime * m_deathDecay);
+        }
+         
+        material.SetFloat("_Death", (death > 0f)? 1f : 0f);
     }
 
     #endregion
@@ -108,6 +130,8 @@ public class Quilt : MonoBehaviour
             Texture2D.Destroy(texture);
             ApplyTextures();
         }
+
+        death = 1f;
     }
 
     public void Dispose(bool apply = true) {

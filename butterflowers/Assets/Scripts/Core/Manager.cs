@@ -95,7 +95,7 @@ public class Manager : Spawner
     protected override void CalculateBounds()
     {
         m_center = Vector3.zero;
-        m_extents = GetComponent<MeshFilter>().mesh.bounds.extents;
+        m_extents = root.GetComponent<MeshFilter>().mesh.bounds.extents;
     }
 
     protected override void DecideRotation(ref Quaternion rot)
@@ -126,8 +126,6 @@ public class Manager : Spawner
                 if (!target.Contains(current[i])) {
                     beacons[path].Delete(); // Remove inactive beacon
                     beacons.Remove(path);
-
-                    Debug.Log("Remove " + path);
                 }
             }
         }
@@ -161,12 +159,7 @@ public class Manager : Spawner
                 var discovered = Discovery.HasDiscoveredFile(path);
                 beaconInstance.discovered = discovered; // Set if beacon has been discovered
 
-                Debug.Log("Add " + path);
                 beacons.Add(path, beaconInstance);
-            }
-            else 
-            {
-                Debug.Log("Ignore " + path);
             }
         }
     }
