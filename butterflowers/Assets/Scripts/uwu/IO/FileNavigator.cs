@@ -189,6 +189,15 @@ public class FileNavigator : MonoBehaviour
         return entries.ToArray();
     }
 
+    public string[] GetPathsFromFiles(FileSystemEntry[] files)
+    {
+        List<string> temp = new List<string>();
+        for (int i = 0; i < files.Length; i++) 
+            temp.Add(files[i].Path);
+
+        return temp.ToArray();
+    }
+
     #endregion
 
     #region Operations

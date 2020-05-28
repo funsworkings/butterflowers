@@ -33,7 +33,7 @@ public class Beacon: MonoBehaviour {
 
     #region Attributes
 
-    [SerializeField] bool m_discovered = false, m_visible = false;
+    [SerializeField] bool m_discovered = false, m_visible = false, m_destroyed = false;
 
     [SerializeField] GameObject infoPrefab, info;
     Tooltip infoTooltip;
@@ -46,6 +46,7 @@ public class Beacon: MonoBehaviour {
     bool warping = false;
 
     [SerializeField] float timeToWarp = 1f, heightOfWarp = 1f;
+    [SerializeField] float timeToDie = 1.67f;
 
     #endregion
 
@@ -87,6 +88,13 @@ public class Beacon: MonoBehaviour {
         }
     }
 
+    public bool destroyed {
+        get
+        {
+            return m_destroyed;
+        }
+    }
+
     #endregion
 
     #region Monobehaviour callbacks
@@ -108,7 +116,7 @@ public class Beacon: MonoBehaviour {
 
     void Update()
     {
-        Oscillate.enabled = !warping;
+        Oscillate.enabled = !warping || destroyed;
         //psTrails.enabled = warping;
     }
 
@@ -130,6 +138,8 @@ public class Beacon: MonoBehaviour {
 
     public void Discover(bool events = true)
     {
+        if (destroyed) return;
+
         m_discovered = true;
         if (Discovered != null && events)
             Discovered(this);
@@ -139,6 +149,8 @@ public class Beacon: MonoBehaviour {
 
     public void Hide(bool events = true)
     {
+        if (destroyed) return;
+
         m_discovered = false;
         if (Hidden != null && events)
             Hidden(this);
@@ -146,12 +158,40 @@ public class Beacon: MonoBehaviour {
         particleSystem.Play();
     }
 
-    public void Destroy(bool events = true)
+    public void Delete(bool events = true)
     {
-        if (Destroyed != null && events)
-            Destroyed(this);
+        if (destroyed) return;
+        m_destroyed = true;
 
-        Destroy(gameObject); // Immediately destroy instance
+        HideInfo();
+        if (Destroyed != null && events) {
+            Destroyed(this);
+        }
+
+        StartCoroutine("Dying");
+    }
+
+    #endregion
+
+    #region Internal
+
+    IEnumerator Dying()
+    {
+        float t = 0f;
+        float sp = Oscillate.speed;
+
+        while (t < timeToDie) {
+
+            var offset = (timeToDie - t);
+            var str = Mathf.Pow(offset, 2f);
+
+            Oscillate.speed = sp * str;
+
+            t += Time.deltaTime;
+            yield return null;
+        }
+
+        Destroy(gameObject);
     }
 
 	#endregion
@@ -223,7 +263,8 @@ public class Beacon: MonoBehaviour {
     }
 
     void DisplayInfo(){
-        if(infoText == null)
+        if (destroyed) return;
+        if (infoText == null)
             return;
 
         infoText.text = fileEntry.ShortName;

@@ -53,6 +53,7 @@ MonoBehaviour:
   m_EditorClassIdentifier: 
   m_discovered: 0
   m_visible: 0
+  m_destroyed: 0
   infoPrefab: {fileID: 7327096736874297126, guid: 31dffb715f0d17044a8d9c9074f7f506,
     type: 3}
   info: {fileID: 0}
@@ -65,6 +66,7 @@ MonoBehaviour:
   origin: {x: 0, y: 0, z: 0}
   timeToWarp: 1.33
   heightOfWarp: 2.33
+  timeToDie: 3
 --- !u!65 &1270796099338416104
 BoxCollider:
   m_ObjectHideFlags: 0
@@ -91,9 +93,9 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: 
   axis: {x: 0, y: 1, z: 0}
-  speed: 10
-  magnitude: 2
   delay: 1
+  speed: 5
+  magnitude: 1
   randomSpeed: 1
   randomMagnitude: 1
   randomDelay: 1
