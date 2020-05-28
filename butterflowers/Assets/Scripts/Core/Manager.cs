@@ -66,6 +66,8 @@ public class Manager : Spawner
         Nest.onRemoveBeacon -= onReleaseBeacon;
 
         Beacon.Discovered -= onDiscoveredBeacon;
+        Beacon.Destroyed -= onDestroyedBeacon;
+
         Files.onRefresh -= ParseBeacons;
     }
 
@@ -81,6 +83,8 @@ public class Manager : Spawner
         Nest.onRemoveBeacon += onReleaseBeacon;
 
         Beacon.Discovered += onDiscoveredBeacon;
+        Beacon.Destroyed += onDestroyedBeacon;
+
         Files.onRefresh += ParseBeacons;
     }
 
