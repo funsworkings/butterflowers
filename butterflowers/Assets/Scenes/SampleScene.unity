@@ -166,7 +166,7 @@ MonoBehaviour:
   boundsOffset: {x: 0, y: 0, z: 0}
   boundsMultiplier: {x: 1, y: 1, z: 1}
   Preset: {fileID: 11400000, guid: 45ffdf5e02efb4848942aaeb5d029f6e, type: 2}
-  maxBeacons: 12
+  maxBeacons: 24
 --- !u!1 &62689476
 GameObject:
   m_ObjectHideFlags: 0
@@ -6244,6 +6244,7 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 3abef107115004477a1d1830b154d73a, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
+  message: 'fuck off mannnn  :i:EmojiOne_0:i:  that''s what im tryna say OK? :i:EmojiOne_0:i:'
 --- !u!114 &468500792
 MonoBehaviour:
   m_ObjectHideFlags: 0
@@ -6299,7 +6300,7 @@ MonoBehaviour:
   container: {fileID: 1210492941}
   timeBetweenSymbols: 0.067
   timeBetweenBodies: 0.33
-  autoprogress: 1
+  autoprogress: 0
   autodispose: 1
   speaking: 0
   waiting: 0
@@ -7044,10 +7045,11 @@ MonoBehaviour:
   minLerpSpeed: 0
   maxLerpSpeed: 24
   m_death: 0
-  m_deathDecay: 2
+  m_deathDecay: 3.33
   textureCap: 12
   allowRepeatTextures: 1
   canvas: {fileID: 8400000, guid: ff6f3aa6e1be04a159213d070f9b2f04, type: 2}
+  debugTexture: {fileID: 2800000, guid: 68cdf30e4c2c846d89c01aeea9d7febf, type: 3}
   refreshRate: 0.167
 --- !u!1 &730062438
 GameObject:

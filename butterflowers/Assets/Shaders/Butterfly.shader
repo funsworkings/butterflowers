@@ -155,7 +155,7 @@ Shader "Custom/Butterfly"
             
                 // apply fog
 
-                return col;
+                return actual;
             }
             ENDCG
         }

@@ -4,7 +4,7 @@ using UnityEngine;
 
 namespace Settings {
 
-    [CreateAssetMenu(fileName = "New Butterfly Preset", menuName = "Settings/Butterfly Preset", order = 52)]
+    [CreateAssetMenu(fileName = "New Butterfly Preset", menuName = "Settings/Presets/Butterfly", order = 52)]
     public class ButterflyPreset : ScriptableObject {
         public float maxSpeed;
 
@@ -38,7 +38,7 @@ namespace Settings {
         public float recoveryTime;
 
         public float minAnimationSpeed = 1f, maxAnimationSpeed = 2f;
-        public float timeDead = 1f;
+        public float timeDead = 1f, deathColorDelay = 1f, deathTransitionTime = .33f;
 
         public float scale = .167f;
         public float timeToGrow = 1f;

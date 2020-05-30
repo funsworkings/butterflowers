@@ -23,8 +23,7 @@ public class Beacon: MonoBehaviour {
 
     #region Properties
 
-    new ParticleSystem particleSystem;
-    ParticleSystem.TrailModule psTrails;
+    [SerializeField] ParticleSystem revealPS, discoveryPS;
 
     Interactable interactable;
     SimpleOscillate Oscillate;
@@ -101,13 +100,10 @@ public class Beacon: MonoBehaviour {
 
     void Awake() {
         interactable = GetComponent<Interactable>();
-        particleSystem = GetComponent<ParticleSystem>();
         Oscillate = GetComponent<SimpleOscillate>();
     }
 
     void Start() {
-        psTrails = particleSystem.trails;
-
         Room = Manager.Instance;
         Nest = Nest.Instance;
 
@@ -136,6 +132,16 @@ public class Beacon: MonoBehaviour {
 
     #region Operations
 
+    public void Appear()
+    {
+        revealPS.Play();
+    }
+
+    public void Disappear()
+    {
+        revealPS.Stop();
+    }
+
     public void Discover(bool events = true)
     {
         if (destroyed) return;
@@ -144,7 +150,7 @@ public class Beacon: MonoBehaviour {
         if (Discovered != null && events)
             Discovered(this);
 
-        particleSystem.Stop();
+        discoveryPS.Stop();
     }
 
     public void Hide(bool events = true)
@@ -155,7 +161,7 @@ public class Beacon: MonoBehaviour {
         if (Hidden != null && events)
             Hidden(this);
 
-        particleSystem.Play();
+        discoveryPS.Play();
     }
 
     public void Delete(bool events = true)

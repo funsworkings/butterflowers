@@ -48,6 +48,8 @@ public class Quilt : MonoBehaviour
 
     [SerializeField] RenderTexture canvas;
 
+    [SerializeField] Texture2D debugTexture;
+
     [SerializeField]
     float refreshRate = .167f;
 
@@ -75,10 +77,14 @@ public class Quilt : MonoBehaviour
 
         SetTextureAttributes();
         ApplyTextures();
+
+        Nest = Nest.Instance;
     }
 
     void Update()
     {
+        if (Input.GetKeyDown(KeyCode.Q)) Add(debugTexture);
+
         if (death > 0f) 
         {
             death -= (Time.deltaTime * m_deathDecay);
@@ -128,6 +134,7 @@ public class Quilt : MonoBehaviour
             --index;
 
             Texture2D.Destroy(texture);
+
             ApplyTextures();
         }
 
@@ -136,13 +143,16 @@ public class Quilt : MonoBehaviour
 
     public void Dispose(bool apply = true) {
         var _textures = textures.ToArray();
-        for (int i = 0; i < _textures.Length; i++)
+        for (int i = 0; i < _textures.Length; i++) {
             Texture2D.Destroy(textures[i]); // Destroy all temporary textures
+        }
 
         index = 0;
 
         textures = new List<Texture2D>();
         lookup.Clear();
+
+        Nest.Dispose();  // Release all beacons from nest
 
         if (apply) ApplyTextures();
     }

@@ -76,6 +76,8 @@ public class DialogueHandler : MonoBehaviour {
 
 	public void Push(string body)
     {
+        body = ParseBody(body);
+
         if (string.IsNullOrEmpty(body)) return;
         if (container == null) return;
 
@@ -120,9 +122,11 @@ public class DialogueHandler : MonoBehaviour {
         }
     }
 
-	#endregion
+    #endregion
 
-	#region Internal
+    #region Internal
+
+    protected virtual string ParseBody(string body) { return body; }
 
 	IEnumerator Speak()
     {

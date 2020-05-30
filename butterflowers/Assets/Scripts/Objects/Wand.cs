@@ -103,7 +103,7 @@ public class Wand : MonoBehaviour
 
         var hit = new RaycastHit();
         if (Physics.Raycast(ray, out hit, interactionDistance, navigationMask.value)){
-            wizard.GetComponent<NavMeshAgent>().SetDestination(hit.point); // Move wizard target to location
+            //wizard.MoveTo(hit.point); // Move wizard target to location
         }
     }
 

@@ -23,7 +23,7 @@ public class Butterfly : MonoBehaviour
 
     Animator animator;
     Renderer[] renderers;
-    Dictionary<Renderer, MaterialPropertyBlock> rendererMaterialPropertyBlocks = new Dictionary<Renderer, MaterialPropertyBlock>();
+    MaterialPropertyBlock propertyBlock; 
 
     [SerializeField] Preset preset;
     [SerializeField] GameObject trailsPrefab;
@@ -63,7 +63,6 @@ public class Butterfly : MonoBehaviour
 
     float timeSinceAlive = 0f;
     float timeSinceDeath = 0f;
-    float delayToDeath = .67f;
     float lifetime = 0f;
 
     Vector4 uv1, uv2;
@@ -115,12 +114,12 @@ public class Butterfly : MonoBehaviour
             float duration = preset.descentTime;
             str *= (1f - Mathf.Clamp01((timeSinceDeath) / duration));
 
-            float d = (timeSinceDeath - delayToDeath) / .067f; // Go full white --> .167 = time to go white
+            float d = (timeSinceDeath - preset.deathColorDelay) / preset.deathTransitionTime; // Go full white --> .167 = time to go white
             if (d >= 0f && d <= 1f)
             {
+                var prop = propertyBlock;
+                prop.SetFloat("_Death", Mathf.Clamp01(d));
                 foreach (Renderer r in renderers) {
-                    var prop = rendererMaterialPropertyBlocks[r];
-                    prop.SetFloat("_Death", Mathf.Clamp01(d));
                     r.SetPropertyBlock(prop);
                 }
             }
@@ -176,10 +175,7 @@ public class Butterfly : MonoBehaviour
         animator = GetComponentInChildren<Animator>();
 
         renderers = GetComponentsInChildren<Renderer>();
-        rendererMaterialPropertyBlocks = new Dictionary<Renderer, MaterialPropertyBlock>();
-        for (int i = 0; i < renderers.Length; i++) {
-            rendererMaterialPropertyBlocks.Add(renderers[i], new MaterialPropertyBlock());
-        }
+        propertyBlock = new MaterialPropertyBlock();
     }
 
     public void Reset()
@@ -207,9 +203,9 @@ public class Butterfly : MonoBehaviour
 
         trails = null; // Ensure new trails created for every butterfly on respawn
 
+        var prop = propertyBlock;
+        prop.SetFloat("_Death", 0f);
         foreach (Renderer r in renderers) {
-            var prop = rendererMaterialPropertyBlocks[r];
-            prop.SetFloat("_Death", 0f);
             r.SetPropertyBlock(prop);
         }
 
@@ -379,11 +375,11 @@ public class Butterfly : MonoBehaviour
     #region Appearance
 
     void UpdateMaterials() {
-        float death = (state == State.Dying) ? Mathf.Clamp01((timeSinceDeath - delayToDeath) / .33f) : 0f;
+        float death = (state == State.Dying) ? Mathf.Clamp01((timeSinceDeath - preset.deathColorDelay) / preset.deathTransitionTime) : 0f;
 
+        var prop = propertyBlock;
+        prop.SetFloat("_Death", death);
         foreach (Renderer r in renderers) {
-            var prop = rendererMaterialPropertyBlocks[r];
-            prop.SetFloat("_Death", death);
             r.SetPropertyBlock(prop);
         }
     }

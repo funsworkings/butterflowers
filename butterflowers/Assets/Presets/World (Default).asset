@@ -1,0 +1,22 @@
+%YAML 1.1
+%TAG !u! tag:unity3d.com,2011:
+--- !u!114 &11400000
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 0}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 2d1b3e60da8f84a548174644e0f114a0, type: 3}
+  m_Name: World (Default)
+  m_EditorClassIdentifier: 
+  memory: 1
+  reset: 0
+  hoursPerDay: 0.0016666667
+  startOfDay: 0.1
+  endOfDay: 0.6
+  sunHoursPerDay: 0.00067
+  directionOfGravity: {x: 0, y: -1, z: 0}
+  amountOfButterflies: 640
