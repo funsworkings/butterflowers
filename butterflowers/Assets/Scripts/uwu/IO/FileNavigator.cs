@@ -76,10 +76,10 @@ public class FileNavigator : MonoBehaviour
 
     #region Instance helpers
 
-    public bool IsFileVisible(string filename = null)
+    public bool IsFileVisible(string path = null)
     {
-        if (string.IsNullOrEmpty(filename)) return false;
-        return fileLookup.ContainsKey(filename);
+        if (string.IsNullOrEmpty(path)) return false;
+        return fileLookup.ContainsKey(path);
     }
 
 	#endregion
@@ -211,8 +211,8 @@ public class FileNavigator : MonoBehaviour
             var file = files[i];
 
             try {
-                var name = file.Name;
-                fileLookup.Add(name, file);
+                var path = file.Path;
+                fileLookup.Add(path, file);
             }
             catch(System.Exception e){
                 Debug.LogWarning(e);
