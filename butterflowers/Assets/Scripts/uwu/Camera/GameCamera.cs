@@ -48,15 +48,21 @@ public class GameCamera : MonoBehaviour
         Debug.Log("Enabled " + name);
         camera.enabled = true;
 
+        onEnabled();
         onEnable.Invoke();
     }
+
+    protected virtual void onEnabled() { }
 
     public virtual void Disable(){
         Debug.Log("Disabled " + name);
         camera.enabled = false;
 
+        onDisabled();
         onDisable.Invoke();
     }
+
+    protected virtual void onDisabled() { }
 
     #endregion
 }

@@ -10,15 +10,19 @@ public class RevolveCamera : GameCamera
 
     CinemachineOrbitalTransposer orbitTransposer = null;
 
+    float defaultAngle = 0f;
+
     [Header("Attributes")]
         [SerializeField] float radius = 1f, height = 0f;
         [SerializeField] float angle = 0f;
+        [SerializeField] bool resetOnDisable = false;
 
     protected override void Start()
     {
         base.Start();
 
         orbitTransposer = camera.GetCinemachineComponent<CinemachineOrbitalTransposer>();
+        defaultAngle = angle;
     }
 
     // Update is called once per frame
@@ -35,5 +39,15 @@ public class RevolveCamera : GameCamera
         Vector3 offset = new Vector3(Mathf.Cos(angToRad)*radius, height, Mathf.Sin(angToRad)*radius);
 
         orbitTransposer.m_FollowOffset = offset;
+    }
+
+    protected override void onDisabled()
+    {
+        base.onDisabled();
+
+        if (resetOnDisable) 
+        {
+            //angle = defaultAngle;
+        }
     }
 }
