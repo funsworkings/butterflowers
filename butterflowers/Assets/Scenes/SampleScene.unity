@@ -914,6 +914,7 @@ MonoBehaviour:
   radius: 15
   height: 3.3
   angle: -90
+  resetOnDisable: 0
 --- !u!1 &240127453
 GameObject:
   m_ObjectHideFlags: 0
@@ -7136,7 +7137,7 @@ MonoBehaviour:
   allowRepeatTextures: 1
   canvas: {fileID: 8400000, guid: ff6f3aa6e1be04a159213d070f9b2f04, type: 2}
   debugTexture: {fileID: 2800000, guid: 68cdf30e4c2c846d89c01aeea9d7febf, type: 3}
-  refreshRate: 0.167
+  refreshRate: 0.0167
 --- !u!1 &730062438
 GameObject:
   m_ObjectHideFlags: 0

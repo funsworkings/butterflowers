@@ -20,7 +20,7 @@ MonoBehaviour:
   gravity: 0.098
   descentTime: 3
   trailsSize: 0.167
-  colorRefresh: 1.67
+  colorRefresh: 0.167
   minLifetime: 1
   maxLifetime: 10
   wandRadius: 328
@@ -118,4 +118,4 @@ MonoBehaviour:
   deathTransitionTime: 0.167
   scale: 0.167
   timeToGrow: 1.67
-  maximumColorSpeed: 0.25
+  maximumColorSpeed: 0.35
