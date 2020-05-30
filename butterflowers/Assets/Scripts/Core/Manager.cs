@@ -128,12 +128,20 @@ public class Manager : Spawner
             for (int i = 0; i < current.Count; i++) 
             {
                 var path = current[i];
-                if (!target.Contains(current[i])) {
+
+                var includeNest = !(Files.IsFileVisible(path));
+                var delete = (includeNest || !target.Contains(current[i]));
+
+                if (delete) {
                     var bs = beacons[path].ToArray();
                     for (int j = 0; j < bs.Length; j++) {
                         var b = bs[j];
-                        if (!Nest.HasBeacon(b)) {
-                            b.Delete();
+
+                        if (includeNest) b.Delete();
+                        else {
+                            if (!Nest.HasBeacon(b)) {
+                                b.Delete();
+                            }
                         }
                     }
 

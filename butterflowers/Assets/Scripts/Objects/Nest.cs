@@ -216,6 +216,8 @@ public class Nest : MonoBehaviour
 
         beacons.Remove(beacon);
         cometPS.Play();
+
+        onReleaseBeacon.Invoke();
     }
 
 	#endregion
