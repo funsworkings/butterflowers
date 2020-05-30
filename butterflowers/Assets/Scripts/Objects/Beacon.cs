@@ -60,6 +60,7 @@ public class Beacon: MonoBehaviour {
         set
         {
             m_file = value;
+            UpdateInfo();
         }
     }
 
@@ -71,6 +72,7 @@ public class Beacon: MonoBehaviour {
         set
         {
             m_fileEntry = value;
+            UpdateInfo();
         }
     }
 
@@ -293,7 +295,16 @@ public class Beacon: MonoBehaviour {
         if (infoText == null)
             return;
 
-        infoText.text = fileEntry.ShortName;
+        UpdateInfo();
+    }
+
+    void UpdateInfo()
+    {
+        if (infoText == null)
+            return;
+
+        var txt = (fileEntry == null) ? file : fileEntry.ShortName;
+        infoText.text = txt;
     }
 
     void HideInfo(){
