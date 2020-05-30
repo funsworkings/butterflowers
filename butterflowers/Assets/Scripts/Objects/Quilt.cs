@@ -10,12 +10,6 @@ public class Quilt : MonoBehaviour
 {
     public static Quilt Instance = null;
 
-    #region External
-
-    Nest Nest = null;
-
-	#endregion
-
 	[SerializeField] Material material = null;
     [SerializeField] CreateTextureArray textureArray;
     
@@ -34,12 +28,9 @@ public class Quilt : MonoBehaviour
         }
     }
 
-    [SerializeField] int textureCap = 4;
-    [SerializeField] bool allowRepeatTextures = false;
+    int textureCap = 4;
 
     List<string> queue = new List<string>();
-
-    Dictionary<string, Texture2D> lookup = new Dictionary<string, Texture2D>();
     List<Texture2D> textures = new List<Texture2D>();
 
     int index = -1;
@@ -73,12 +64,12 @@ public class Quilt : MonoBehaviour
     }
 
     void Start(){
+        textureCap = Nest.Instance.capacity;
+
         textures = new List<Texture2D>();
 
         SetTextureAttributes();
         ApplyTextures();
-
-        Nest = Nest.Instance;
     }
 
     void Update()
@@ -104,22 +95,21 @@ public class Quilt : MonoBehaviour
 
     public void Pop(string file)
     {
-        if (!lookup.ContainsKey(file)) return;
-
-        var texture = lookup[file]; 
-        Remove(texture);
-
-        lookup.Remove(file);
+        var _textures = textures.ToArray();
+        for (int i = 0; i < _textures.Length; i++) 
+        {
+            var texture = _textures[i];
+            if (texture.name == file) {
+                Remove(texture);
+                break;
+            }
+        }
     }
 
 	public void Add(Texture tex){
-        var texture = (tex as Texture2D);
-
         ++index;
-        if (index == textureCap)
-        {
-            Dispose(false);
-        }
+
+        var texture = (tex as Texture2D);
 
         textures.Add(texture);
         ApplyTextures();
@@ -148,11 +138,7 @@ public class Quilt : MonoBehaviour
         }
 
         index = 0;
-
         textures = new List<Texture2D>();
-        lookup.Clear();
-
-        Nest.Dispose();  // Release all beacons from nest
 
         if (apply) ApplyTextures();
     }
@@ -237,6 +223,7 @@ public class Quilt : MonoBehaviour
                 //StartCoroutine("ReadBytesFromFile", file);
 
                 read = true;
+                
                 ReadBytes(file);
             }
 
@@ -258,31 +245,9 @@ public class Quilt : MonoBehaviour
 
         Debug.Log("Success load = " + file);
         var texture = www.texture;
+        texture.name = file;
 
         Add(texture);
-        lookup[file] = texture;
-    }
-
-    IEnumerator ReadBytesFromFile(string file)
-    {
-        Debug.LogFormat("Quilt adding = {0}", file);
-
-        UnityWebRequest req = UnityWebRequestTexture.GetTexture("file://" + file);
-        req.SendWebRequest();
-
-        while (!req.isDone) {
-            Debug.Log(req.downloadProgress * 100f + "%");
-            yield return null;
-        }
-
-        if (!(req.isHttpError || req.isNetworkError)) {
-            Texture texture = ((DownloadHandlerTexture)req.downloadHandler).texture;
-
-            Add(texture);
-            lookup[file] = (texture as Texture2D);
-        }
-
-        read = false;
     }
 
     #endregion

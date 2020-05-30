@@ -30,7 +30,8 @@ public class Manager : Spawner
 
     #region Collections
 
-    Dictionary<string, Beacon> beacons = new Dictionary<string, Beacon>();
+    Dictionary<string, List<Beacon>> beacons = new Dictionary<string, List<Beacon>>();
+    List<Beacon> allBeacons = new List<Beacon>();
 
     #endregion
 
@@ -62,14 +63,14 @@ public class Manager : Spawner
 
         Discovery.onLoad -= Initialize;
 
-        //Sun.onCycle -= RefreshBeacons;
-
         Nest.onAddBeacon -= onIngestBeacon;
         Nest.onRemoveBeacon -= onReleaseBeacon;
 
+        Beacon.OnRegister -= onRegisterBeacon;
+        Beacon.OnUnregister -= onUnregisterBeacon;
         Beacon.Discovered -= onDiscoveredBeacon;
-        Beacon.Destroyed -= onDestroyedBeacon;
 
+        //Sun.onCycle -= RefreshBeacons;
         Files.onRefresh -= RefreshBeacons;
     }
 
@@ -79,16 +80,16 @@ public class Manager : Spawner
 
     void Initialize()
     {
-        RefreshBeacons();
-
-        //Sun.onCycle += RefreshBeacons;
-
         Nest.onAddBeacon += onIngestBeacon;
         Nest.onRemoveBeacon += onReleaseBeacon;
 
+        Beacon.OnRegister += onRegisterBeacon;
+        Beacon.OnUnregister += onUnregisterBeacon;
         Beacon.Discovered += onDiscoveredBeacon;
-        Beacon.Destroyed += onDestroyedBeacon;
 
+        RefreshBeacons();
+
+        //Sun.onCycle += RefreshBeacons;
         Files.onRefresh += RefreshBeacons;
     }
 
@@ -128,10 +129,14 @@ public class Manager : Spawner
             {
                 var path = current[i];
                 if (!target.Contains(current[i])) {
-                    var beacon = beacons[path];
+                    var bs = beacons[path].ToArray();
+                    for (int j = 0; j < bs.Length; j++) {
+                        var b = bs[j];
+                        if (!Nest.HasBeacon(b)) {
+                            b.Delete();
+                        }
+                    }
 
-                    beacon.Delete(); // Remove inactive beacon
-                    beacons.Remove(path);
                 }
             }
         }
@@ -141,11 +146,6 @@ public class Manager : Spawner
 
     void CreateBeaconsFromFiles(FileSystemEntry[] files)
     {
-        int size = files.Length;
-        int capacity = instances.Count;
-
-        // Debug.LogFormat("Attempt to create {0} beacons", size);
-
         GameObject instance = null;
         Beacon beaconInstance = null;
         for (int i = 0; i < files.Length; i++) {
@@ -153,6 +153,19 @@ public class Manager : Spawner
             var path = file.Path;
 
             bool exists = (beacons.ContainsKey(path));
+            
+            if (exists) {
+                exists = false;
+
+                var bs = beacons[path];
+                for (int j = 0; j < bs.Count; j++) {
+                    if (!Nest.HasBeacon(bs[j])) {
+                        exists = true;
+                        break;
+                    }
+                }
+            }
+
             if (!exists) {
                 instance = InstantiatePrefab(); // Create new beacon prefab
 
@@ -165,26 +178,19 @@ public class Manager : Spawner
                 var discovered = Discovery.HasDiscoveredFile(path);
                 beaconInstance.discovered = discovered; // Set if beacon has been discovered
 
-                beaconInstance.Appear();
+                /* * * * * * */
+                beaconInstance.Register();
+                /* * * * * * */
 
-                beacons.Add(path, beaconInstance);
+                beaconInstance.Appear();
             }
         }
-    }
-
-    void ClearBeacons(){
-        beacons = new Dictionary<string, Beacon>();
-
-        Quilt.Dispose();
-        Nest.Dispose();
-
-        Clear();
     }
 
     public bool ActivateRandomBeacon()
     {
         var beacons = this.beacons.Values;
-        IEnumerable<Beacon> inactive = beacons.Where(beacon => !Nest.HasBeacon(beacon));
+        IEnumerable<Beacon> inactive = allBeacons.Where(beacon => !Nest.HasBeacon(beacon));
 
         int count = inactive.Count();
         if (count == 0) return false;
@@ -199,21 +205,41 @@ public class Manager : Spawner
 
     #region Beacon callbacks
 
+    void onRegisterBeacon(Beacon beacon)
+    {
+        var file = beacon.file;
+        if (beacons.ContainsKey(file)) {
+            var list = beacons[file];
+            list.Add(beacon);
+
+            beacons[file] = list;
+        }
+        else
+            beacons.Add(file, new List<Beacon>(new Beacon[] { beacon }));
+
+        allBeacons.Add(beacon);
+    }
+
+    void onUnregisterBeacon(Beacon beacon)
+    {
+        var file = beacon.file;
+        if (beacons.ContainsKey(file)) {
+            var curr = beacons[file];
+            curr.Remove(beacon);
+
+            if (curr.Count == 0) beacons.Remove(file);
+            else beacons[file] = curr;
+        }
+
+        allBeacons.Remove(beacon);
+    }
+
     void onDiscoveredBeacon(Beacon beacon)
     {
         var file = beacon.file;
 
         Discovery.DiscoverFile(file);
         Nest.AddBeacon(beacon);
-    }
-
-    void onDestroyedBeacon(Beacon beacon)
-    {
-        var file = beacon.file;
-        if (beacons.ContainsKey(file))
-            beacons.Remove(file);
-
-        Quilt.Pop(file); // Attempt remove from quilt if doesn't exist
     }
 
     #endregion

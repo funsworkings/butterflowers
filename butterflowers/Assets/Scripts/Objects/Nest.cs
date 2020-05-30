@@ -7,9 +7,15 @@ public class Nest : MonoBehaviour
 {
     public static Nest Instance = null;
 
-    #region Events
+    #region External
 
-    public UnityEvent onOpen, onClose;
+    Quilt Quilt = null;
+
+	#endregion
+
+	#region Events
+
+	public UnityEvent onOpen, onClose;
     public UnityEvent onIngestBeacon, onReleaseBeacon;
 
     public System.Action<Beacon> onAddBeacon, onRemoveBeacon;
@@ -35,6 +41,13 @@ public class Nest : MonoBehaviour
 
     [Header("Beacons")]
         [SerializeField] List<Beacon> beacons = new List<Beacon>();
+        [SerializeField] int m_capacity = 12;
+
+	#endregion
+
+	#region Accessors
+
+    public int capacity { get { return m_capacity; } }
 
 	#endregion
 
@@ -51,6 +64,8 @@ public class Nest : MonoBehaviour
 
     void Start()
     {
+        Quilt = Quilt.Instance;
+
         interactable.onHover += Hover;
         interactable.onUnhover += Unhover;
         interactable.onGrab += Kick;
@@ -114,11 +129,13 @@ public class Nest : MonoBehaviour
         open = false;
     }
 
-    public void Dispose()
+    public void Dispose(bool release = true)
     {
         var beacons = this.beacons.ToArray();
-        for (int i = 0; i < beacons.Length; i++) 
-            RemoveBeacon(beacons[i]);
+        for (int i = 0; i < beacons.Length; i++) {
+            if (release) RemoveBeacon(beacons[i]);
+            else beacons[i].Delete();
+        }
 
         this.beacons = new List<Beacon>();
     }
@@ -126,11 +143,6 @@ public class Nest : MonoBehaviour
     #endregion
 
     #region Beacon operations
-
-    public bool HasBeacon(Beacon beacon)
-    {
-        return beacons.Contains(beacon);
-    }
 
     public void AddBeacon(Beacon beacon)
     {
@@ -164,6 +176,13 @@ public class Nest : MonoBehaviour
     {
         sparklesPS.Play();
 
+        var dispose = (beacons.Count > capacity);
+        if (dispose) 
+        {
+            Dispose(true);
+            return;
+        }
+
         onIngestBeacon.Invoke();
         if (onAddBeacon != null) onAddBeacon(beacon);
     }
@@ -178,11 +197,22 @@ public class Nest : MonoBehaviour
 
     #endregion
 
+    #region Beacon helpers
+
+    public bool HasBeacon(Beacon beacon)
+    {
+        return beacons.Contains(beacon);
+    }
+
+    #endregion
+
     #region Beacon callbacks
 
     void onDestroyBeacon(Beacon beacon)
     {
         if (!beacons.Contains(beacon)) return;
+
+        Quilt.Pop(beacon.file);
 
         beacons.Remove(beacon);
         cometPS.Play();

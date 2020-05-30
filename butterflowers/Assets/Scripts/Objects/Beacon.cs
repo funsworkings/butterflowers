@@ -15,9 +15,10 @@ public class Beacon: MonoBehaviour {
 
     #endregion
 
-	#region Events
+    #region Events
 
-	public static System.Action<Beacon> Discovered, Hidden, Destroyed;
+    public static System.Action<Beacon> OnRegister, OnUnregister;
+    public static System.Action<Beacon> Discovered, Hidden, Destroyed;
 
     #endregion
 
@@ -126,13 +127,31 @@ public class Beacon: MonoBehaviour {
         interactable.onGrab -= Activate;
         interactable.onHover -= Hover;
         interactable.onUnhover -= Unhover;
+
+        Unregister();
     }
 
     #endregion
 
-    #region Operations
+    #region Internal
 
-    public void Appear()
+    public void Register()
+    {
+        if (OnRegister != null)
+            OnRegister(this);
+    }
+
+    public void Unregister()
+    {
+        if (OnUnregister != null)
+            OnUnregister(this);
+    }
+
+	#endregion
+
+	#region Operations
+
+	public void Appear()
     {
         revealPS.Play();
     }
@@ -174,7 +193,8 @@ public class Beacon: MonoBehaviour {
             Destroyed(this);
         }
 
-        StartCoroutine("Dying");
+        Destroy(gameObject); //Destroy immediately
+        //StartCoroutine("Dying");
     }
 
     #endregion
