@@ -31,6 +31,8 @@ namespace Wizard {
 
         State state = State.Idle;
 
+        [SerializeField] string message = "";
+
         #endregion
 
         #region Monobehaviour callbacks
@@ -68,20 +70,24 @@ namespace Wizard {
             //UpdateLookAt();
 
             if (Focus.focus) {
-                if (Input.GetKeyDown(KeyCode.W)) Dialogue.Push("I am truly a wizard y'know s'good <sprite name=\"EmojiOne_0\"> it is my nature");
+                if (Input.GetKeyDown(KeyCode.W)) Dialogue.Push(message);
                 if (Input.GetKeyDown(KeyCode.RightArrow)) Dialogue.Advance();
             }
             else {
                 Dialogue.Dispose();
             }
 
+            if (Input.GetKeyDown(KeyCode.S)) ActivateRandomBeacon();
+
             EvaluateState();
             UpdateAnimatorFromState(state);
         }
 
-        #endregion
+		#endregion
 
-        void EvaluateState()
+		#region Internal
+
+		void EvaluateState()
         {
             float speed = navAgent.velocity.magnitude;
 
@@ -94,7 +100,11 @@ namespace Wizard {
             }
         }
 
-        public void UpdateAnimatorFromState(State state)
+		#endregion
+
+		#region Animation
+
+		public void UpdateAnimatorFromState(State state)
         {
             switch (state) {
                 case State.Walk:
@@ -119,15 +129,27 @@ namespace Wizard {
             ik.lookAtPosition = (wand.worldPosition);
         }
 
-        #region Navigation
+		#endregion
 
-        public void MoveTo(Vector3 location)
+		#region Navigation
+
+		public void MoveTo(Vector3 location)
         {
             navAgent.SetDestination(location);
         }
 
         #endregion
 
-    }
+        #region Spells
+
+        public void ActivateRandomBeacon()
+        {
+            bool spell = Manager.Instance.ActivateRandomBeacon();
+            if(spell) animator.SetTrigger("spell");
+        }
+
+		#endregion
+
+	}
 
 }

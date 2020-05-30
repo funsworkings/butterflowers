@@ -3,7 +3,7 @@ using System.Collections;
 
 namespace Settings
 {
-    [CreateAssetMenu(fileName = "New World Preset", menuName = "Settings/World Preset", order = 52)]
+    [CreateAssetMenu(fileName = "New World Preset", menuName = "Settings/Presets/World", order = 52)]
     public class WorldPreset : ScriptableObject
     {
         [Header("Debug")]

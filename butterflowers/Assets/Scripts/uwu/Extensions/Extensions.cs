@@ -13,6 +13,7 @@ using Random = UnityEngine.Random;
 using Object = UnityEngine.Object;
 using Obj = System.Object;
 using System.Security.Cryptography;
+using System.Text.RegularExpressions;
 
 public static class Extensions
 {
@@ -445,6 +446,18 @@ public static class Extensions
           .Select(s => s[gen.Next(s.Length)]).ToArray());
     }
 
+    public static string ReplaceEnclosingPattern(string input, string flag, string replace)
+    {
+        string patt = string.Format("{0}.*?{0}", flag);
+        return Regex.Replace(input, patt, 
+
+        delegate (Match match) {
+            var val = match.Value;
+            val = val.Replace(flag, "");
+
+            return string.Format(replace, val.Trim());
+        });
+    }
 
     /// <summary>
     /// Formats the difference in time (prettify)

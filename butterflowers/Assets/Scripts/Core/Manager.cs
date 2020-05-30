@@ -62,13 +62,15 @@ public class Manager : Spawner
 
         Discovery.onLoad -= Initialize;
 
+        //Sun.onCycle -= RefreshBeacons;
+
         Nest.onAddBeacon -= onIngestBeacon;
         Nest.onRemoveBeacon -= onReleaseBeacon;
 
         Beacon.Discovered -= onDiscoveredBeacon;
         Beacon.Destroyed -= onDestroyedBeacon;
 
-        Files.onRefresh -= ParseBeacons;
+        Files.onRefresh -= RefreshBeacons;
     }
 
     #endregion
@@ -77,7 +79,9 @@ public class Manager : Spawner
 
     void Initialize()
     {
-        ParseBeacons();
+        RefreshBeacons();
+
+        //Sun.onCycle += RefreshBeacons;
 
         Nest.onAddBeacon += onIngestBeacon;
         Nest.onRemoveBeacon += onReleaseBeacon;
@@ -85,7 +89,7 @@ public class Manager : Spawner
         Beacon.Discovered += onDiscoveredBeacon;
         Beacon.Destroyed += onDestroyedBeacon;
 
-        Files.onRefresh += ParseBeacons;
+        Files.onRefresh += RefreshBeacons;
     }
 
     #endregion
@@ -110,10 +114,10 @@ public class Manager : Spawner
     // If beacon is in subset, IGNORE
     // If beacon is not in subset, DELETE
 
-    void ParseBeacons()
+    void RefreshBeacons()
     {
         var files = Files.GetFiles();
-        var subset = files.PickRandomSubset<FileSystemEntry>(maxBeacons).ToList(); // Target beacons
+        var subset = files.PickRandomSubset<FileSystemEntry>(maxBeacons).ToList(); // Target beacons        
 
         var current = (beacons != null)? beacons.Keys.ToList(): new List<string>();
         if (current.Count > 0) {
@@ -124,7 +128,9 @@ public class Manager : Spawner
             {
                 var path = current[i];
                 if (!target.Contains(current[i])) {
-                    beacons[path].Delete(); // Remove inactive beacon
+                    var beacon = beacons[path];
+
+                    beacon.Delete(); // Remove inactive beacon
                     beacons.Remove(path);
                 }
             }
@@ -159,6 +165,8 @@ public class Manager : Spawner
                 var discovered = Discovery.HasDiscoveredFile(path);
                 beaconInstance.discovered = discovered; // Set if beacon has been discovered
 
+                beaconInstance.Appear();
+
                 beacons.Add(path, beaconInstance);
             }
         }
@@ -171,6 +179,20 @@ public class Manager : Spawner
         Nest.Dispose();
 
         Clear();
+    }
+
+    public bool ActivateRandomBeacon()
+    {
+        var beacons = this.beacons.Values;
+        IEnumerable<Beacon> inactive = beacons.Where(beacon => !Nest.HasBeacon(beacon));
+
+        int count = inactive.Count();
+        if (count == 0) return false;
+
+        var _beacon = inactive.ElementAt(Random.Range(0, count));
+        _beacon.Discover();
+
+        return true;
     }
 
     #endregion

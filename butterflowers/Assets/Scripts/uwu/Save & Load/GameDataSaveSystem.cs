@@ -55,7 +55,7 @@ public class GameDataSaveSystem : Singleton<GameDataSaveSystem>
     public string[] discovered {
         get
         {
-            var discoveries = (data == null) ? new string[0] : data.discoveries;
+            var discoveries = (data == null) ? null : data.discoveries;
             if (discoveries == null) {
                 discoveries = new string[] { };
                 discovered = discoveries;
@@ -65,6 +65,22 @@ public class GameDataSaveSystem : Singleton<GameDataSaveSystem>
         set
         {
             data.discoveries = value;
+        }
+    }
+
+    public string[] wizarddiscovered {
+        get
+        {
+            var discoveries = (data == null) ? null : data.discoveries;
+            if (discoveries == null) {
+                discoveries = new string[] { };
+                wizarddiscovered = discoveries;
+            }
+            return discoveries;
+        }
+        set
+        {
+            data.wizarddiscoveries = value;
         }
     }
 
@@ -84,6 +100,7 @@ public class GameDataSaveSystem : Singleton<GameDataSaveSystem>
             if (m_dataPath == null)
                 m_dataPath = Path.Combine(dir, savefile);
 
+            Debug.LogFormat("Save data path = {0}", m_dataPath);
             return m_dataPath;
         }
     }

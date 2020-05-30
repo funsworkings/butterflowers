@@ -127,6 +127,11 @@ public class Nest : MonoBehaviour
 
     #region Beacon operations
 
+    public bool HasBeacon(Beacon beacon)
+    {
+        return beacons.Contains(beacon);
+    }
+
     public void AddBeacon(Beacon beacon)
     {
         if (beacons.Contains(beacon)) return;
