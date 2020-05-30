@@ -112,6 +112,33 @@ public class Manager : Spawner
 
     #region Beacon operations
 
+    public Beacon CreateBeacon(string path)
+    {
+        var instance = InstantiatePrefab(); // Create new beacon prefab
+
+        var beacon = instance.GetComponent<Beacon>();
+        beacon.file = path;
+        beacon.origin = instance.transform.position;
+
+        var discovered = Discovery.HasDiscoveredFile(path);
+        beacon.discovered = discovered; // Set if beacon has been discovered
+
+        beacon.Register();
+        beacon.Appear();
+
+        return beacon;
+    }
+
+    public void DeleteBeacon(Beacon beacon, bool overridenest = false)
+    {
+        if (overridenest) 
+            beacon.Delete();
+        else {
+            if (!Nest.HasBeacon(beacon))
+                beacon.Delete();
+        }
+    }
+
     // If beacon is in subset, IGNORE
     // If beacon is not in subset, DELETE
 
@@ -136,13 +163,7 @@ public class Manager : Spawner
                     var bs = beacons[path].ToArray();
                     for (int j = 0; j < bs.Length; j++) {
                         var b = bs[j];
-
-                        if (includeNest) b.Delete();
-                        else {
-                            if (!Nest.HasBeacon(b)) {
-                                b.Delete();
-                            }
-                        }
+                        DeleteBeacon(b, includeNest);
                     }
 
                 }
@@ -154,14 +175,11 @@ public class Manager : Spawner
 
     void CreateBeaconsFromFiles(FileSystemEntry[] files)
     {
-        GameObject instance = null;
-        Beacon beaconInstance = null;
         for (int i = 0; i < files.Length; i++) {
             var file = files[i];
             var path = file.Path;
 
             bool exists = (beacons.ContainsKey(path));
-            
             if (exists) {
                 exists = false;
 
@@ -175,22 +193,8 @@ public class Manager : Spawner
             }
 
             if (!exists) {
-                instance = InstantiatePrefab(); // Create new beacon prefab
-
-                beaconInstance = instance.GetComponent<Beacon>();
-                beaconInstance.file = path;
-                beaconInstance.fileEntry = file;
-                beaconInstance.origin = instance.transform.position;
-
-                //Debug.LogFormat("Discovered {0}? {1}", path, Discovery.HasDiscoveredFile(path));
-                var discovered = Discovery.HasDiscoveredFile(path);
-                beaconInstance.discovered = discovered; // Set if beacon has been discovered
-
-                /* * * * * * */
-                beaconInstance.Register();
-                /* * * * * * */
-
-                beaconInstance.Appear();
+                var beacon = CreateBeacon(path);
+                beacon.fileEntry = null;
             }
         }
     }
