@@ -138,6 +138,8 @@ public class Nest : MonoBehaviour
         }
 
         this.beacons = new List<Beacon>();
+
+        Quilt.Dispose(true);
     }
 
     #endregion
@@ -212,7 +214,7 @@ public class Nest : MonoBehaviour
     {
         if (!beacons.Contains(beacon)) return;
 
-        Quilt.Pop(beacon.file);
+        if(beacon.type != Beacon.Type.None) Quilt.Pop(beacon.file);
 
         beacons.Remove(beacon);
         cometPS.Play();

@@ -166,6 +166,7 @@ MonoBehaviour:
   boundsOffset: {x: 0, y: 0, z: 0}
   boundsMultiplier: {x: 1, y: 1, z: 1}
   Preset: {fileID: 11400000, guid: 45ffdf5e02efb4848942aaeb5d029f6e, type: 2}
+  WizardMemoryBank: {fileID: 11400000, guid: a11a7773fa9f39649b779c417d4c7b19, type: 2}
   maxBeacons: 4
 --- !u!1 &62689476
 GameObject:
@@ -6331,7 +6332,13 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 3abef107115004477a1d1830b154d73a, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
+  Memories: {fileID: 11400000, guid: a11a7773fa9f39649b779c417d4c7b19, type: 2}
   message: 'fuck off mannnn  :i:EmojiOne_0:i:  that''s what im tryna say OK? :i:EmojiOne_0:i:'
+  memories:
+  - {fileID: 2800000, guid: 358b51ab299a147dca3fc23ca2d203f1, type: 3}
+  - {fileID: 2800000, guid: 68cdf30e4c2c846d89c01aeea9d7febf, type: 3}
+  - {fileID: 2800000, guid: b6bdb6ba54c7e4b088f954c350f0d800, type: 3}
+  - {fileID: 2800000, guid: 9162d65b004ea4438a79695d7e8d326b, type: 3}
 --- !u!114 &468500792
 MonoBehaviour:
   m_ObjectHideFlags: 0
@@ -7131,6 +7138,7 @@ MonoBehaviour:
   m_speed: 0
   minLerpSpeed: 0
   maxLerpSpeed: 24
+  interval: 0
   m_death: 0
   m_deathDecay: 3.33
   canvas: {fileID: 8400000, guid: ff6f3aa6e1be04a159213d070f9b2f04, type: 2}

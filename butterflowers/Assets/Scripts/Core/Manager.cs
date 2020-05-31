@@ -5,6 +5,7 @@ using UnityEngine;
 using System.Linq;
 using TMPro;
 using FileSystemEntry = SimpleFileBrowser.FileSystemEntry;
+using Memory = Wizard.Memory;
 using System.Runtime.InteropServices;
 
 public class Manager : Spawner
@@ -14,11 +15,14 @@ public class Manager : Spawner
     #region External
 
     [SerializeField] Settings.WorldPreset Preset;
+    [SerializeField] Wizard.MemoryBank WizardMemoryBank;
 
+    Library Library = null;
     FileNavigator Files = null;
     Discovery Discovery = null;
     Nest Nest = null;
     Quilt Quilt = null;
+    Wizard.Controller Wizard = null;
 
 	#endregion
 
@@ -48,6 +52,9 @@ public class Manager : Spawner
     protected override void Start(){
         base.Start();
 
+        Library = Library.Instance;
+        Library.WizardFiles = WizardMemoryBank;
+
         Discovery = Discovery.Instance;
         Discovery.Preset = Preset;
 
@@ -55,23 +62,15 @@ public class Manager : Spawner
         Nest = Nest.Instance;
         Quilt = Quilt.Instance;
 
+        Wizard = FindObjectOfType<Wizard.Controller>();
+
         Discovery.onLoad += Initialize;
     }
 
     protected override void OnDestroy(){
         base.OnDestroy();
 
-        Discovery.onLoad -= Initialize;
-
-        Nest.onAddBeacon -= onIngestBeacon;
-        Nest.onRemoveBeacon -= onReleaseBeacon;
-
-        Beacon.OnRegister -= onRegisterBeacon;
-        Beacon.OnUnregister -= onUnregisterBeacon;
-        Beacon.Discovered -= onDiscoveredBeacon;
-
-        //Sun.onCycle -= RefreshBeacons;
-        Files.onRefresh -= RefreshBeacons;
+        UnsubscribeToEvents();
     }
 
     #endregion
@@ -80,6 +79,16 @@ public class Manager : Spawner
 
     void Initialize()
     {
+        Discovery.onLoad -= Initialize;
+
+        SubscribeToEvents();
+    }
+
+    void SubscribeToEvents()
+    {
+        //Sun.onCycle += RefreshBeacons;
+        Library.OnRefreshItems += RefreshBeacons;
+
         Nest.onAddBeacon += onIngestBeacon;
         Nest.onRemoveBeacon += onReleaseBeacon;
 
@@ -87,10 +96,24 @@ public class Manager : Spawner
         Beacon.OnUnregister += onUnregisterBeacon;
         Beacon.Discovered += onDiscoveredBeacon;
 
-        RefreshBeacons();
+        Quilt.onDisposeTexture += onDisposeQuiltTexture;
 
-        //Sun.onCycle += RefreshBeacons;
-        Files.onRefresh += RefreshBeacons;
+        Library.Initialize();
+    }
+
+    void UnsubscribeToEvents()
+    {
+        //Sun.onCycle -= RefreshBeacons;
+        Library.OnRefreshItems -= RefreshBeacons;
+
+        Nest.onAddBeacon -= onIngestBeacon;
+        Nest.onRemoveBeacon -= onReleaseBeacon;
+
+        Beacon.OnRegister -= onRegisterBeacon;
+        Beacon.OnUnregister -= onUnregisterBeacon;
+        Beacon.Discovered -= onDiscoveredBeacon;
+
+        Quilt.onDisposeTexture -= onDisposeQuiltTexture;
     }
 
     #endregion
@@ -112,13 +135,14 @@ public class Manager : Spawner
 
     #region Beacon operations
 
-    public Beacon CreateBeacon(string path)
+    public Beacon CreateBeacon(string path, Beacon.Type type = Beacon.Type.Desktop)
     {
         var instance = InstantiatePrefab(); // Create new beacon prefab
 
         var beacon = instance.GetComponent<Beacon>();
         beacon.file = path;
         beacon.origin = instance.transform.position;
+        beacon.type = type;
 
         var discovered = Discovery.HasDiscoveredFile(path);
         beacon.discovered = discovered; // Set if beacon has been discovered
@@ -144,6 +168,8 @@ public class Manager : Spawner
 
     void RefreshBeacons()
     {
+        DeleteDeprecatedBeacons();
+
         var files = Files.GetFiles();
         var subset = files.PickRandomSubset<FileSystemEntry>(maxBeacons).ToList(); // Target beacons        
 
@@ -155,15 +181,11 @@ public class Manager : Spawner
             for (int i = 0; i < current.Count; i++) 
             {
                 var path = current[i];
-
-                var includeNest = !(Files.IsFileVisible(path));
-                var delete = (includeNest || !target.Contains(current[i]));
-
-                if (delete) {
+                if (!target.Contains(current[i])) {
                     var bs = beacons[path].ToArray();
                     for (int j = 0; j < bs.Length; j++) {
                         var b = bs[j];
-                        DeleteBeacon(b, includeNest);
+                        DeleteBeacon(b);
                     }
 
                 }
@@ -194,9 +216,59 @@ public class Manager : Spawner
 
             if (!exists) {
                 var beacon = CreateBeacon(path);
-                beacon.fileEntry = null;
+                beacon.fileEntry = file;
             }
         }
+    }
+
+    void CreateBeaconsFromMemories(Memory[] memories)
+    {
+        for (int i = 0; i < memories.Length; i++) {
+            var memory = memories[i];
+            var path = memory.name;
+
+            if (!string.IsNullOrEmpty(path)) {
+                bool exists = (beacons.ContainsKey(path));
+                if (exists) {
+                    exists = false;
+
+                    var bs = beacons[path];
+                    for (int j = 0; j < bs.Count; j++) {
+                        if (!Nest.HasBeacon(bs[j])) {
+                            exists = true;
+                            break;
+                        }
+                    }
+                }
+
+                if (!exists) {
+                    var beacon = CreateBeacon(path);
+                    beacon.fileEntry = null;
+                }
+            }
+        }
+    }
+
+    void DeleteDeprecatedBeacons()
+    {
+        var current = (beacons != null) ? beacons.Keys.ToList() : new List<string>();
+
+        var path = "";
+        for (int i = 0; i < current.Count; i++) {
+            path = current[i];
+
+            if (!Library.ContainsFile(path)) {
+                var bs = beacons[path].ToArray();
+                foreach (Beacon b in bs)
+                    DeleteBeacon(b, true);
+            }
+        }
+    }
+
+    public Beacon CreateBeaconForWizard(Texture2D texture)
+    {
+        string name = texture.name;
+        return CreateBeacon(name, Beacon.Type.Wizard);
     }
 
     public bool ActivateRandomBeacon()
@@ -260,14 +332,42 @@ public class Manager : Spawner
 
     void onIngestBeacon(Beacon beacon)
     {
+        if (beacon.type == Beacon.Type.None) return;
+
         var file = beacon.file;
-        Quilt.Push(file);
+
+        if (beacon.type == Beacon.Type.Desktop) {
+            Quilt.Push(file);
+        }
+        else {
+            var mem = WizardMemoryBank.GetMemoryByName(beacon.file);
+            if(mem != null) Quilt.Add(mem.image);
+        }
     }
 
     void onReleaseBeacon(Beacon beacon)
     {
+        if(beacon.type == Beacon.Type.None) return;
+
         var file = beacon.file;
         Quilt.Pop(file);
+    }
+
+    #endregion
+
+    #region Wizard callbacks
+
+
+
+    #endregion
+
+    #region Quilt callbacks
+
+    void onDisposeQuiltTexture(Texture texture)
+    {
+        string file = texture.name;
+        if (Library.IsDesktop(file))
+            Texture2D.Destroy(texture);
     }
 
 	#endregion
