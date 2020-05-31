@@ -45,7 +45,7 @@ public class FileNavigator : MonoBehaviour
 
     [SerializeField] FileSystemEntry[] files = new FileSystemEntry[] { };
     [SerializeField] FileSystemEntry[] directories = new FileSystemEntry[] { };
-    
+
     #endregion
 
     #region Monobehaviour callbacks

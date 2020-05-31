@@ -10,11 +10,26 @@ public class Quilt : MonoBehaviour
 {
     public static Quilt Instance = null;
 
+    #region Events
+
+    public System.Action<Texture> onDisposeTexture;
+
+	#endregion
+
 	[SerializeField] Material material = null;
     [SerializeField] CreateTextureArray textureArray;
     
     [SerializeField] float m_speed = 0f;
     [SerializeField] float minLerpSpeed = 0f, maxLerpSpeed = 1f;
+
+    [SerializeField] float interval = 0f;
+    public float speedInterval {
+        get
+        {
+            interval = (m_speed - minLerpSpeed) / (maxLerpSpeed - minLerpSpeed);
+            return interval;
+        }
+    }
 
     [SerializeField] float m_death = 0f, m_deathDecay = 1f;
     public float death {
@@ -123,7 +138,8 @@ public class Quilt : MonoBehaviour
             textures.Remove(texture);
             --index;
 
-            Texture2D.Destroy(texture);
+            if (onDisposeTexture != null)
+                onDisposeTexture(texture);
 
             ApplyTextures();
         }
@@ -134,7 +150,8 @@ public class Quilt : MonoBehaviour
     public void Dispose(bool apply = true) {
         var _textures = textures.ToArray();
         for (int i = 0; i < _textures.Length; i++) {
-            Texture2D.Destroy(textures[i]); // Destroy all temporary textures
+            if (onDisposeTexture != null)
+                onDisposeTexture(_textures[i]);
         }
 
         index = 0;

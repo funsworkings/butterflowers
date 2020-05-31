@@ -45,6 +45,7 @@ namespace Settings {
 
         [Range(0f, 1f)]
         public float maximumColorSpeed = .167f;
+        public AnimationCurve deathProbabilityCurve;
     }
 
 }

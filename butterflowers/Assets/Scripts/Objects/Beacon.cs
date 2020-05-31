@@ -48,6 +48,8 @@ public class Beacon: MonoBehaviour {
     [SerializeField] float timeToWarp = 1f, heightOfWarp = 1f;
     [SerializeField] float timeToDie = 1.67f;
 
+    public Type type = Type.None;
+
     #endregion
 
     #region Accessors
@@ -136,6 +138,13 @@ public class Beacon: MonoBehaviour {
     #endregion
 
     #region Internal
+
+    public enum Type {
+        None,
+        Desktop,
+        Wizard,
+        External
+    }
 
     public void Register()
     {

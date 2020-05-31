@@ -387,6 +387,17 @@ public class Butterfly : MonoBehaviour
 
     IEnumerator UpdateAttentuationFromTexture(){
         while(state == State.Alive || state == State.Easing){
+            yield return new WaitForSeconds(preset.colorRefresh);
+
+            float prob = preset.deathProbabilityCurve.Evaluate(quilt.speedInterval);
+
+            if (Random.Range(0f, 1f) < prob) 
+            {
+                state = State.Dying;
+                final = value;
+            }
+
+            /*
             var viewport = driver.ConvertToViewport(transform.position);
 
             value = quilt.GetColorFromCanvas(viewport);
@@ -409,9 +420,9 @@ public class Butterfly : MonoBehaviour
             {
                 state = State.Dying;
                 final = value;
-            }
+            }*/
 
-            yield return new WaitForSeconds(preset.colorRefresh);
+            
         }
 
     }
