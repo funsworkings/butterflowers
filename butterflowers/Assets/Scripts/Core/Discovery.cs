@@ -8,12 +8,6 @@ using System.Linq;
 
 public class Discovery: Singleton<Discovery> {
 
-	#region Events
-
-	public System.Action onLoad;
-
-	#endregion
-
 	#region External
 
 	GameDataSaveSystem Save;
@@ -24,6 +18,18 @@ public class Discovery: Singleton<Discovery> {
 	#region Collections
 
 	[SerializeField] List<string> discoveries = new List<string>();
+
+	#endregion
+
+	#region Attributes
+
+	bool m_load = false;
+	public bool load {
+		get
+		{
+			return m_load;
+		}
+	}
 
 	#endregion
 
@@ -41,8 +47,7 @@ public class Discovery: Singleton<Discovery> {
 
 		if (!Preset.memory) discoveries = new List<string>(); // Reset memories
 
-		if (onLoad != null)
-			onLoad();
+		m_load = true;
 	}
 
 	public bool HasDiscoveredFile(string path)

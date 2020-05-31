@@ -47,18 +47,20 @@ public class Library : Singleton<Library>
 
 	void OnDestroy()
 	{
-		Files.onRefresh -= RefreshDesktopFiles;
+		Files.onRefresh -= RefreshDesktopFilesWithEvents;
 	}
 
 	#endregion
 
 	#region Internal
 
-	void RefreshDesktopFiles()
+	void RefreshDesktopFilesWithEvents() { RefreshDesktopFiles(true); }
+
+	void RefreshDesktopFiles(bool events = true)
     {
 		items_desktop = new List<string>(Files.GetPaths());
 
-		RefreshFiles(true);
+		RefreshFiles(events);
     }
 
 	void RefreshWizardFiles()
@@ -86,14 +88,17 @@ public class Library : Singleton<Library>
 
 	#region Operations
 
-	public void Initialize()
+	public void Initialize(bool refresh = true)
 	{
 		if (Files != null) return;
 
 		Files = FileNavigator.Instance;
-		Files.onRefresh += RefreshDesktopFiles;
+		Files.onRefresh += RefreshDesktopFilesWithEvents;
 
-		Files.Refresh();
+		if (refresh)
+			Files.Refresh();
+		else
+			RefreshDesktopFiles(false);
 	}
 
 	public bool ContainsFile(string file)

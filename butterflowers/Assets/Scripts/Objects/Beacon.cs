@@ -6,11 +6,13 @@ using SimpleFileBrowser;
 using UnityEngine.UI;
 using UIExt.Extras;
 using TMPro;
+using System.IO;
 
 public class Beacon: MonoBehaviour {
-    #region External
 
-    Manager Room;
+	#region External
+
+	Manager Room;
     Nest Nest;
 
     #endregion
@@ -92,6 +94,13 @@ public class Beacon: MonoBehaviour {
         }
     }
 
+    public bool visible {
+        get
+        {
+            return m_visible;
+        }
+    }
+
     public bool destroyed {
         get
         {
@@ -125,12 +134,16 @@ public class Beacon: MonoBehaviour {
         interactable.onGrab += Activate;
         interactable.onHover += Hover;
         interactable.onUnhover += Unhover;
+
+        Beacon.Discovered += CheckIfDiscovered;
     }
 
     void OnDisable() {
         interactable.onGrab -= Activate;
         interactable.onHover -= Hover;
         interactable.onUnhover -= Unhover;
+
+        Beacon.Discovered -= CheckIfDiscovered;
 
         Unregister();
     }
@@ -249,9 +262,22 @@ public class Beacon: MonoBehaviour {
 
     #endregion
 
-    #region Warp operations
+    #region Beacon callbacks
 
-    public void WarpFromTo(Vector3 origin, Vector3 destination, bool nest = false)
+    void CheckIfDiscovered(Beacon beacon)
+    {
+        if (beacon == null || beacon == this) return;
+
+        if (beacon.file == file) { // Matches file
+            Discover(false); // No fire events
+        }
+    }
+
+	#endregion
+
+	#region Warp operations
+
+	public void WarpFromTo(Vector3 origin, Vector3 destination, bool nest = false)
     {
         interactable.enabled = !nest;
 

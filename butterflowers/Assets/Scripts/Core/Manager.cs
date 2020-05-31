@@ -17,6 +17,7 @@ public class Manager : Spawner
     [SerializeField] Settings.WorldPreset Preset;
     [SerializeField] Wizard.MemoryBank WizardMemoryBank;
 
+    GameDataSaveSystem Save = null;
     Library Library = null;
     FileNavigator Files = null;
     Discovery Discovery = null;
@@ -47,6 +48,8 @@ public class Manager : Spawner
 
         Instance = this;
         spawnOnAwake = false;
+
+        Save = GameDataSaveSystem.Instance;
     }
 
     protected override void Start(){
@@ -64,7 +67,7 @@ public class Manager : Spawner
 
         Wizard = FindObjectOfType<Wizard.Controller>();
 
-        Discovery.onLoad += Initialize;
+        StartCoroutine("Initialize");
     }
 
     protected override void OnDestroy(){
@@ -77,11 +80,21 @@ public class Manager : Spawner
 
     #region Internal
 
-    void Initialize()
+    IEnumerator Initialize()
     {
-        Discovery.onLoad -= Initialize;
+        while (!Save.load) yield return null;
+        while (!Discovery.load) yield return null;
 
         SubscribeToEvents();
+
+        var dat = Save.beaconData; Debug.LogFormat("Found {0} beacons from SAVE", dat.Length);
+        var refresh = (dat == null || dat.Length == 0) || !Preset.persist;
+
+        Library.Initialize(refresh);
+        if (!refresh) {
+            RestoreBeacons(dat); // Restore from save file
+            DeleteDeprecatedBeacons();
+        }
     }
 
     void SubscribeToEvents()
@@ -97,8 +110,6 @@ public class Manager : Spawner
         Beacon.Discovered += onDiscoveredBeacon;
 
         Quilt.onDisposeTexture += onDisposeQuiltTexture;
-
-        Library.Initialize();
     }
 
     void UnsubscribeToEvents()
@@ -141,6 +152,7 @@ public class Manager : Spawner
 
         var beacon = instance.GetComponent<Beacon>();
         beacon.file = path;
+        beacon.fileEntry = null;
         beacon.origin = instance.transform.position;
         beacon.type = type;
 
@@ -193,6 +205,20 @@ public class Manager : Spawner
         }
 
         CreateBeaconsFromFiles(subset.ToArray()); // Instantiate all target files
+    }
+
+    void RestoreBeacons(string[] data)
+    {
+        for (int i = 0; i < data.Length; i++) {
+            var beacon = data[i];
+            var param = beacon.Split('\n');
+
+            string p = param[0];
+            Beacon.Type t = (Beacon.Type)(System.Int32.Parse(param[1]));
+            bool v = (System.Int32.Parse(param[2]) == 0 ? false : true);
+
+            CreateBeacon(p, t);
+        }
     }
 
     void CreateBeaconsFromFiles(FileSystemEntry[] files)
@@ -302,6 +328,7 @@ public class Manager : Spawner
             beacons.Add(file, new List<Beacon>(new Beacon[] { beacon }));
 
         allBeacons.Add(beacon);
+        Save.beacons = allBeacons.ToArray();
     }
 
     void onUnregisterBeacon(Beacon beacon)
@@ -316,6 +343,7 @@ public class Manager : Spawner
         }
 
         allBeacons.Remove(beacon);
+        Save.beacons = allBeacons.ToArray();
     }
 
     void onDiscoveredBeacon(Beacon beacon)

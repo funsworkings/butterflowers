@@ -198,6 +198,18 @@ public class FileNavigator : MonoBehaviour
         return temp.ToArray();
     }
 
+    public FileSystemEntry[] GetFilesFromPaths(string[] paths)
+    {
+        var valid = paths.Where(path => fileLookup.ContainsKey(path));
+        if (valid.Count() == 0) return null;
+
+        List<FileSystemEntry> files = new List<FileSystemEntry>();
+        foreach (string path in valid)
+            files.Add(fileLookup[path]);
+
+        return files.ToArray();
+    }
+
     #endregion
 
     #region Operations

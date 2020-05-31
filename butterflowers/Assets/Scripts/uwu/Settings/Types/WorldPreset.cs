@@ -9,6 +9,7 @@ namespace Settings
         [Header("Debug")]
             public bool memory = false;
             public bool reset = false;
+            public bool persist = false;
 
         [Header("Time Attributes")]
             public float hoursPerDay = 24f;
