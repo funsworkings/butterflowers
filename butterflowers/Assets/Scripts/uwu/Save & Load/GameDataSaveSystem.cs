@@ -68,19 +68,25 @@ public class GameDataSaveSystem : Singleton<GameDataSaveSystem>
         }
     }
 
-    public string[] wizarddiscovered {
+    public string[] beaconData {
         get
         {
-            var discoveries = (data == null) ? null : data.discoveries;
-            if (discoveries == null) {
-                discoveries = new string[] { };
-                wizarddiscovered = discoveries;
-            }
-            return discoveries;
+            return (data == null) ? new string[] { } : data.beacons;
         }
+    }
+
+    public Beacon[] beacons {
         set
         {
-            data.wizarddiscoveries = value;
+            var dat = new List<string>();
+            for (int i = 0; i < value.Length; i++) {
+                var beacon = value[i];
+                var parsed = string.Format("{0}\n{1}\n{2}", beacon.file, (int)beacon.type, beacon.visible?1:0);
+
+                dat.Add(parsed);
+            }
+
+            data.beacons = dat.ToArray();
         }
     }
 
