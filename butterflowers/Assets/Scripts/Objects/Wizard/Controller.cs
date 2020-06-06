@@ -153,8 +153,12 @@ namespace Wizard {
 
         public void ActivateRandomBeacon()
         {
-            bool spell = Manager.Instance.ActivateRandomBeacon();
-            if(spell) animator.SetTrigger("spell");
+            var beacon = Manager.Instance.FetchRandomBeacon();
+            bool spell = (beacon != null);
+            if (spell) {
+                beacon.Discover();
+                animator.SetTrigger("spell");
+            }
         }
 
         public void CreateRandomBeacon()
