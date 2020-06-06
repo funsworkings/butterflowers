@@ -42,13 +42,16 @@ public class Library : Singleton<Library>
 	#region Collections
 
 	[SerializeField] List<string> items = new List<string>();
-
 	[SerializeField] List<string> items_wizard = new List<string>();
 	[SerializeField] List<string> items_desktop = new List<string>();
-	[SerializeField] List<string> items_external = new List<string>();
 
 	[SerializeField] List<string> textureQueue = new List<string>();
 	[SerializeField] Dictionary<string, Texture2D> textures = new Dictionary<string, Texture2D>();
+
+	#endregion
+
+	#region Properties
+
 	WWW textureWWW;
 
 	#endregion
@@ -77,13 +80,27 @@ public class Library : Singleton<Library>
 		}
 	}
 
+	public string[] wizard_files {
+		get
+		{
+			return items_wizard.ToArray();
+		}
+	}
+
+	public string[] desktop_files {
+		get
+		{
+			return items_desktop.ToArray();
+		}
+	}
+
 	#endregion
 
 	#region Monobehaviour callbacks
 
 	void OnDestroy()
 	{
-		Files.onRefresh -= RefreshDesktopFilesWithEvents;
+		Files.onRefresh -= RefreshFiles;
 		Quilt.onLoadTexture -= AddTextureToLibrary;
 
 		Dispose();
@@ -93,14 +110,10 @@ public class Library : Singleton<Library>
 
 	#region Internal
 
-	void RefreshDesktopFilesWithEvents() { RefreshDesktopFiles(true); }
-
-	void RefreshDesktopFiles(bool events = true)
+	void RefreshDesktopFiles()
     {
 		items_desktop = new List<string>(Files.GetPaths());
-		
 		LoadTextures(items_desktop.ToArray());
-		RefreshFiles(events);
     }
 
 	void RefreshWizardFiles()
@@ -119,14 +132,17 @@ public class Library : Singleton<Library>
 			var mem = memories.ElementAt(i);
 			AddTextureToLibrary(mem.name, mem.image);
 		}
-
-		RefreshFiles();
 	}
 
-	void RefreshFiles(bool events = false)
+	void RefreshFiles()
 	{
+		Dispose();
+
+		RefreshDesktopFiles();
+		RefreshWizardFiles();
+
 		items = (items_desktop.Concat(items_wizard)).ToList();
-		if (OnRefreshItems != null && events)
+		if (OnRefreshItems != null)
 			OnRefreshItems();
 	}
 
@@ -209,7 +225,7 @@ public class Library : Singleton<Library>
 		if (Files != null || initialized) return;
 
 		Files = FileNavigator.Instance;
-		Files.onRefresh += RefreshDesktopFilesWithEvents;
+		Files.onRefresh += RefreshFiles;
 
 		Quilt = Quilt.Instance;
 		Quilt.onLoadTexture += AddTextureToLibrary;
@@ -227,9 +243,18 @@ public class Library : Singleton<Library>
 
 		Texture2D[] textures = this.textures.Values.ToArray();
 		for (int i = 0; i < textures.Length; i++) {
-			Destroy(textures[i]);
+			var tex = textures[i];
+			var name = tex.name;
+
+			if(items_desktop.Contains(name)) // Destroy texture if loaded from desktop
+				Destroy(textures[i]);
 		}
 		this.textures.Clear();
+		textureQueue.Clear();
+
+		items_desktop.Clear();
+		items_wizard.Clear();
+		items.Clear();
 
 		if (textureWWW != null) {
 			textureWWW.Dispose();

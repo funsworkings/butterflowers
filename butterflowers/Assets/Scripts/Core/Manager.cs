@@ -41,6 +41,8 @@ public class Manager : Spawner
     Dictionary<string, List<Beacon>> beacons = new Dictionary<string, List<Beacon>>();
     List<Beacon> allBeacons = new List<Beacon>();
 
+    [SerializeField] string[] beaconPaths = new string[] { };
+
     #endregion
 
     #region Monobehaviour callbacks
@@ -74,6 +76,15 @@ public class Manager : Spawner
         Loader = FindObjectOfType<Loading>();
 
         StartCoroutine("Initialize");
+    }
+
+    protected override void Update()
+    {
+        base.Update();
+
+        if (Input.GetKeyDown(KeyCode.R)) RefreshBeacons();
+
+        beaconPaths = allBeacons.Select(beacon => beacon.file).ToArray();
     }
 
     protected override void OnDestroy(){
@@ -192,6 +203,8 @@ public class Manager : Spawner
 
 	public Beacon CreateBeacon(string path, Beacon.Type type = Beacon.Type.Desktop)
     {
+        if (!Library.ContainsFile(path)) return null;
+
         var instance = InstantiatePrefab(); // Create new beacon prefab
 
         var beacon = instance.GetComponent<Beacon>();
@@ -230,14 +243,16 @@ public class Manager : Spawner
 
         DeleteDeprecatedBeacons();
 
-        var files = Files.GetFiles();
-        var subset = files.PickRandomSubset<FileSystemEntry>(maxBeacons).ToList(); // Target beacons        
+        var desktop = Library.desktop_files;
+        var wizard = Library.wizard_files.Where(file => Discovery.HasDiscoveredFile(file)); // Only choose 'discovered' wizard files
+
+        var files = (desktop.Concat(wizard)).ToArray();
+        var subset = files.PickRandomSubset<string>(maxBeacons).ToList(); // Random subset from aggregate collection    
 
         var current = (beacons != null)? beacons.Keys.ToList(): new List<string>();
         if (current.Count > 0) {
 
-            var target = Files.GetPathsFromFiles(subset.ToArray());
-
+            var target = subset;
             for (int i = 0; i < current.Count; i++) 
             {
                 var path = current[i];
@@ -252,7 +267,8 @@ public class Manager : Spawner
             }
         }
 
-        CreateBeaconsFromFiles(subset.ToArray()); // Instantiate all target files
+        CreateBeacons(wizard.ToArray(), Beacon.Type.Wizard);
+        CreateBeacons(desktop, Beacon.Type.Desktop);
     }
 
     void RestoreBeacons(BeaconData[] data)
@@ -270,11 +286,11 @@ public class Manager : Spawner
         }
     }
 
-    void CreateBeaconsFromFiles(FileSystemEntry[] files)
+    Beacon[] CreateBeacons(string[] files, Beacon.Type type)
     {
+        List<Beacon> instances = new List<Beacon>();
         for (int i = 0; i < files.Length; i++) {
-            var file = files[i];
-            var path = file.Path;
+            var path = files[i];
 
             bool exists = (beacons.ContainsKey(path));
             if (exists) {
@@ -290,38 +306,13 @@ public class Manager : Spawner
             }
 
             if (!exists) {
-                var beacon = CreateBeacon(path);
-                beacon.fileEntry = file;
+                var beacon = CreateBeacon(files[i], type);
+                if (beacon != null) // Could not success instantiate
+                    instances.Add(beacon);
             }
         }
-    }
 
-    void CreateBeaconsFromMemories(Memory[] memories)
-    {
-        for (int i = 0; i < memories.Length; i++) {
-            var memory = memories[i];
-            var path = memory.name;
-
-            if (!string.IsNullOrEmpty(path)) {
-                bool exists = (beacons.ContainsKey(path));
-                if (exists) {
-                    exists = false;
-
-                    var bs = beacons[path];
-                    for (int j = 0; j < bs.Count; j++) {
-                        if (!Nest.HasBeacon(bs[j])) {
-                            exists = true;
-                            break;
-                        }
-                    }
-                }
-
-                if (!exists) {
-                    var beacon = CreateBeacon(path);
-                    beacon.fileEntry = null;
-                }
-            }
-        }
+        return instances.ToArray();
     }
 
     void DeleteDeprecatedBeacons()
@@ -340,24 +331,28 @@ public class Manager : Spawner
         }
     }
 
+    public Beacon CreateBeaconForDesktop(string file)
+    {
+        string name = file;
+        return CreateBeacon(name, Beacon.Type.Desktop);
+    }
+
     public Beacon CreateBeaconForWizard(Texture2D texture)
     {
         string name = texture.name;
         return CreateBeacon(name, Beacon.Type.Wizard);
     }
 
-    public bool ActivateRandomBeacon()
+    public Beacon FetchRandomBeacon()
     {
         var beacons = this.beacons.Values;
         IEnumerable<Beacon> inactive = allBeacons.Where(beacon => !Nest.HasBeacon(beacon));
 
         int count = inactive.Count();
-        if (count == 0) return false;
+        if (count == 0) return null;
 
         var _beacon = inactive.ElementAt(Random.Range(0, count));
-        _beacon.Discover();
-
-        return true;
+        return _beacon;
     }
 
     #endregion
