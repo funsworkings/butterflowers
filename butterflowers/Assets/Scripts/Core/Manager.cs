@@ -24,6 +24,7 @@ public class Manager : Spawner
     Nest Nest = null;
     Quilt Quilt = null;
     Wizard.Controller Wizard = null;
+    Loading Loader = null;
 
 	#endregion
 
@@ -66,6 +67,7 @@ public class Manager : Spawner
         Quilt = Quilt.Instance;
 
         Wizard = FindObjectOfType<Wizard.Controller>();
+        Loader = FindObjectOfType<Loading>();
 
         StartCoroutine("Initialize");
     }
@@ -91,16 +93,25 @@ public class Manager : Spawner
         var refresh = (dat == null || dat.Length == 0) || !Preset.persist;
 
         Library.Initialize(refresh);
+
+        while (Library.loadprogress < 1f) 
+        {
+            Loader.progress = Library.loadprogress;
+            yield return null;
+        }
+        Loader.progress = 1f;
+
         if (!refresh) {
             RestoreBeacons(dat); // Restore from save file
             DeleteDeprecatedBeacons();
         }
+        else
+            RefreshBeacons();
     }
 
     void SubscribeToEvents()
     {
-        //Sun.onCycle += RefreshBeacons;
-        Library.OnRefreshItems += RefreshBeacons;
+        Sun.onCycle += RefreshBeacons;
 
         Nest.onAddBeacon += onIngestBeacon;
         Nest.onRemoveBeacon += onReleaseBeacon;
@@ -114,8 +125,7 @@ public class Manager : Spawner
 
     void UnsubscribeToEvents()
     {
-        //Sun.onCycle -= RefreshBeacons;
-        Library.OnRefreshItems -= RefreshBeacons;
+        Sun.onCycle -= RefreshBeacons;
 
         Nest.onAddBeacon -= onIngestBeacon;
         Nest.onRemoveBeacon -= onReleaseBeacon;
@@ -159,6 +169,8 @@ public class Manager : Spawner
         var discovered = Discovery.HasDiscoveredFile(path);
         beacon.discovered = discovered; // Set if beacon has been discovered
 
+        beacon.visible = true;
+
         beacon.Register();
         beacon.Appear();
 
@@ -180,6 +192,8 @@ public class Manager : Spawner
 
     void RefreshBeacons()
     {
+        if (Library.loadprogress < 1f) return; // Ignore refresh if library not finished
+
         DeleteDeprecatedBeacons();
 
         var files = Files.GetFiles();
@@ -207,17 +221,18 @@ public class Manager : Spawner
         CreateBeaconsFromFiles(subset.ToArray()); // Instantiate all target files
     }
 
-    void RestoreBeacons(string[] data)
+    void RestoreBeacons(BeaconData[] data)
     {
+        Debug.LogFormat("Recovered {0} beacons from save!", data.Length);
         for (int i = 0; i < data.Length; i++) {
             var beacon = data[i];
-            var param = beacon.Split('\n');
 
-            string p = param[0];
-            Beacon.Type t = (Beacon.Type)(System.Int32.Parse(param[1]));
-            bool v = (System.Int32.Parse(param[2]) == 0 ? false : true);
+            string p = beacon.path;
+            Beacon.Type t = (Beacon.Type)beacon.type;
+            bool v = beacon.visible;
 
-            CreateBeacon(p, t);
+            var instance = CreateBeacon(p, t);
+            if (!v) onDiscoveredBeacon(instance); // Send to nest if immediately found
         }
     }
 
@@ -360,22 +375,30 @@ public class Manager : Spawner
 
     void onIngestBeacon(Beacon beacon)
     {
+        beacon.visible = false;
+        Save.beacons = allBeacons.ToArray();
+
         if (beacon.type == Beacon.Type.None) return;
 
         var file = beacon.file;
+        var tex = Library.GetTexture(file);
 
-        if (beacon.type == Beacon.Type.Desktop) {
-            Quilt.Push(file);
+        if (tex != null) {
+            Debug.Log("Load in LIBRARY");
+            Quilt.Add(tex); // Load texture from library
         }
         else {
-            var mem = WizardMemoryBank.GetMemoryByName(beacon.file);
-            if(mem != null) Quilt.Add(mem.image);
+            Debug.Log("Load from LIBRARY");
+            Quilt.Push(file); // Load texture in quilt
         }
     }
 
     void onReleaseBeacon(Beacon beacon)
     {
-        if(beacon.type == Beacon.Type.None) return;
+        beacon.visible = true;
+        Save.beacons = allBeacons.ToArray();
+
+        if (beacon.type == Beacon.Type.None) return;
 
         var file = beacon.file;
         Quilt.Pop(file);
@@ -394,8 +417,8 @@ public class Manager : Spawner
     void onDisposeQuiltTexture(Texture texture)
     {
         string file = texture.name;
-        if (Library.IsDesktop(file))
-            Texture2D.Destroy(texture);
+        //if (Library.IsDesktop(file))
+          //  Texture2D.Destroy(texture);
     }
 
 	#endregion

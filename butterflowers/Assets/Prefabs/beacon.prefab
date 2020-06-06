@@ -54,7 +54,7 @@ MonoBehaviour:
   revealPS: {fileID: 7519155530151778121}
   discoveryPS: {fileID: 2453548540509390200}
   m_discovered: 0
-  m_visible: 0
+  m_visible: 1
   m_destroyed: 0
   infoPrefab: {fileID: 7327096736874297126, guid: 31dffb715f0d17044a8d9c9074f7f506,
     type: 3}
@@ -69,6 +69,7 @@ MonoBehaviour:
   timeToWarp: 1.33
   heightOfWarp: 2.33
   timeToDie: 3
+  type: 0
 --- !u!65 &1270796099338416104
 BoxCollider:
   m_ObjectHideFlags: 0

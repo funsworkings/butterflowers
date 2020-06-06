@@ -68,20 +68,20 @@ public class GameDataSaveSystem : Singleton<GameDataSaveSystem>
         }
     }
 
-    public string[] beaconData {
+    public BeaconData[] beaconData {
         get
         {
-            return (data == null) ? new string[] { } : data.beacons;
+            return (data == null) ? new BeaconData[] { } : data.beacons;
         }
     }
 
     public Beacon[] beacons {
         set
         {
-            var dat = new List<string>();
+            var dat = new List<BeaconData>();
             for (int i = 0; i < value.Length; i++) {
                 var beacon = value[i];
-                var parsed = string.Format("{0}\n{1}\n{2}", beacon.file, (int)beacon.type, beacon.visible?1:0);
+                var parsed = new BeaconData(beacon.file, beacon.type, beacon.visible);
 
                 dat.Add(parsed);
             }

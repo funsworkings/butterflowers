@@ -61,12 +61,16 @@ public class FileNavigator : MonoBehaviour
     }
 
     void OnApplicationPause(bool paused) {
+        return;
+
         if(!paused)
             Refresh(); // Refresh all files in directory
     }
 
     void OnApplicationFocus(bool focused)
     {
+        return;
+
         if(focused)
             Refresh();
     }
