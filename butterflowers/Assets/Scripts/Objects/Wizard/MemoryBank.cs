@@ -20,6 +20,17 @@ namespace Wizard {
             return null;
         }
 
+        public Memory GetMemoryByThumbnail(string thumbnail)
+        {
+            int len = items.Length;
+
+            if (len > 0) {
+                for (int i = 0; i < len; i++) {
+                    if (items[i].thumbnail == thumbnail) return items[i];
+                }
+            }
+            return null;
+        }
     }
 
 }

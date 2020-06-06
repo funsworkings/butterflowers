@@ -4,6 +4,8 @@ using UnityEngine;
 
 using UIExt.Behaviors.Visibility;
 using System.Text.RegularExpressions;
+using System.Reflection.Emit;
+using UnityScript.Steps;
 
 namespace Wizard {
 
@@ -11,6 +13,7 @@ namespace Wizard {
 
         #region Properties
 
+        Controller controller;
         [SerializeField] ToggleOpacity bubble = null;
 
         #endregion
@@ -18,6 +21,15 @@ namespace Wizard {
         #region Attributes
 
         public readonly string imageFlag = ":i:";
+
+        #endregion
+
+        #region Monobehaviour callbacks
+
+        void Awake()
+        {
+            controller = GetComponent<Controller>();
+        }
 
 		#endregion
 
@@ -42,24 +54,35 @@ namespace Wizard {
             bubble.Hide();
         }
 
+        protected override void OnComplete(string body)
+        {
+            var memories = ParseMemoriesFromBody(body);
+            for (int i = 0; i < memories.Length; i++) {
+                //Debug.LogFormat("Dialogue found memory = {0}", memories[i].name);
+
+                controller.CreateBeaconFromMemory(memories[i]);
+            }            
+        }
+
         #endregion
 
         #region Parsing
 
-        string InsertFromImageFlag(string body)
+        Memory[] ParseMemoriesFromBody(string body)
         {
-            string pattern = string.Format("{0}.*?{0}", imageFlag);
-            Debug.Log((Regex.Matches(body, pattern)).Count);
+            string patt = "(sprite name=\").*?(\")";
+            var matches = Regex.Matches(body, patt);
 
-            return Regex.Replace(body, pattern, ParseImageFromFlag);
-        }
+            List<Memory> parsed = new List<Memory>();
+            for (int i = 0; i < matches.Count; i++) {
+                var match = matches[i].Value;
+                match = match.Replace("sprite name=\"", "").Replace("\"", "");
 
-        string ParseImageFromFlag(Match match) 
-        {
-            var contents = match.Value;
-            contents = contents.Replace(imageFlag, "");
+                var mem = controller.Memories.GetMemoryByThumbnail(match);
+                if (mem != null) parsed.Add(mem);
+            }
 
-            return string.Format("<sprite name=\"{0}\">", contents.Trim());
+            return parsed.ToArray();
         }
 
 		#endregion
