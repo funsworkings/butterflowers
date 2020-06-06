@@ -36,6 +36,8 @@ public class Nest : MonoBehaviour
 
 	public bool open = false, queue = false;
 
+    [SerializeField] bool disposeOnClose = true;
+
     [Header("Physics")]
         [SerializeField] float force = 10f;
 
@@ -113,20 +115,28 @@ public class Nest : MonoBehaviour
 
     #region Operations
 
-    public void Open()
+    public bool Open()
     {
         if (!open) {
+            open = true;
             onOpen.Invoke();
+
+            return true;
         }
-        open = true;
+        return false;
     }
 
-    public void Close()
+    public bool Close()
     {
         if (open) {
+            if (disposeOnClose) Dispose();
+
+            open = false;
             onClose.Invoke();
+
+            return true;
         }
-        open = false;
+        return false;
     }
 
     public void Dispose(bool release = true)

@@ -21,6 +21,8 @@ public class Manager : Spawner
     Library Library = null;
     FileNavigator Files = null;
     Discovery Discovery = null;
+    MotherOfButterflies Butterflowers = null;
+    Sun Sun = null;
     Nest Nest = null;
     Quilt Quilt = null;
     Wizard.Controller Wizard = null;
@@ -63,9 +65,11 @@ public class Manager : Spawner
         Discovery.Preset = Preset;
 
         Files = FileNavigator.Instance;
+        Sun = Sun.Instance;
         Nest = Nest.Instance;
         Quilt = Quilt.Instance;
 
+        Butterflowers = FindObjectOfType<MotherOfButterflies>();
         Wizard = FindObjectOfType<Wizard.Controller>();
         Loader = FindObjectOfType<Loading>();
 
@@ -101,18 +105,24 @@ public class Manager : Spawner
         }
         Loader.progress = 1f;
 
+        RestoreNest();
+
         if (!refresh) {
             RestoreBeacons(dat); // Restore from save file
             DeleteDeprecatedBeacons();
         }
         else
             RefreshBeacons();
+
+        Sun.active = true; // Set sun into motion
     }
 
     void SubscribeToEvents()
     {
-        Sun.onCycle += RefreshBeacons;
+        Sun.onCycle += Advance;
 
+        Nest.onOpen.AddListener(onNestStateChanged);
+        Nest.onClose.AddListener(onNestStateChanged);
         Nest.onAddBeacon += onIngestBeacon;
         Nest.onRemoveBeacon += onReleaseBeacon;
 
@@ -125,8 +135,10 @@ public class Manager : Spawner
 
     void UnsubscribeToEvents()
     {
-        Sun.onCycle -= RefreshBeacons;
+        Sun.onCycle -= Advance;
 
+        Nest.onOpen.RemoveListener(onNestStateChanged);
+        Nest.onClose.RemoveListener(onNestStateChanged);
         Nest.onAddBeacon -= onIngestBeacon;
         Nest.onRemoveBeacon -= onReleaseBeacon;
 
@@ -154,9 +166,31 @@ public class Manager : Spawner
 
     #endregion
 
-    #region Beacon operations
+    #region Sun callbacks
 
-    public Beacon CreateBeacon(string path, Beacon.Type type = Beacon.Type.Desktop)
+    void Advance()
+    {
+        bool success = Nest.Close(); // Close nest
+        //if(success) Butterflowers.KillButterflies(); // Kill all butterflies (if nest was closed)
+
+        RefreshBeacons(); // Reset all beacons
+    }
+
+    #endregion
+
+    #region Nest operations
+
+    void RestoreNest()
+    {
+        if (Save.nestOpen) Nest.Open();
+        else Nest.Close();
+    }
+
+	#endregion
+
+	#region Beacon operations
+
+	public Beacon CreateBeacon(string path, Beacon.Type type = Beacon.Type.Desktop)
     {
         var instance = InstantiatePrefab(); // Create new beacon prefab
 
@@ -373,6 +407,12 @@ public class Manager : Spawner
 
     #region Nest callbacks
 
+    void onNestStateChanged()
+    {
+        Debug.LogFormat("Nest state changed to --> {0}", Nest.open);
+        Save.nestOpen = Nest.open; // Set save state in file
+    }
+
     void onIngestBeacon(Beacon beacon)
     {
         beacon.visible = false;
@@ -416,9 +456,7 @@ public class Manager : Spawner
 
     void onDisposeQuiltTexture(Texture texture)
     {
-        string file = texture.name;
-        //if (Library.IsDesktop(file))
-          //  Texture2D.Destroy(texture);
+
     }
 
 	#endregion
