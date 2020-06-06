@@ -31,7 +31,7 @@ namespace Wizard {
 
         #region Attributes
 
-        State state = State.Idle;
+        [SerializeField] State state = State.Idle;
 
         [SerializeField] string message = "";
         [SerializeField] Texture2D[] memories = new Texture2D[] { };
@@ -100,7 +100,8 @@ namespace Wizard {
                 state = State.Walk;
             }
             else {  // Set to idle state
-                state = State.Idle;
+                if(state != State.Rest)
+                    state = State.Idle;
             }
         }
 
@@ -110,15 +111,19 @@ namespace Wizard {
 
 		public void UpdateAnimatorFromState(State state)
         {
+            animator.SetBool("walking", state == State.Walk);
+            animator.SetBool("resting", state == State.Rest);
+
             switch (state) {
                 case State.Walk:
-                    animator.SetBool("walking", true);
                     break;
                 case State.Idle:
+                    break;
                 case State.Rest:
+                    break;
                 case State.Spell:
+                    break;
                 default:
-                    animator.SetBool("walking", false);
                     break;
 
             }
@@ -166,6 +171,15 @@ namespace Wizard {
                 beacon.fileEntry = null;
                 animator.SetTrigger("spell");
             }
+        }
+
+        #endregion
+
+        #region Miscellaneous
+
+        public void WakeUp()
+        {
+            state = State.Idle;
         }
 
 		#endregion

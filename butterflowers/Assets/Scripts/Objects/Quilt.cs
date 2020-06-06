@@ -12,6 +12,7 @@ public class Quilt : MonoBehaviour
 
     #region Events
 
+    public System.Action<string, Texture> onLoadTexture;
     public System.Action<Texture> onDisposeTexture;
 
 	#endregion
@@ -265,6 +266,9 @@ public class Quilt : MonoBehaviour
         texture.name = file;
 
         Add(texture);
+
+        if (onLoadTexture != null)
+            onLoadTexture(file, texture);
     }
 
     #endregion

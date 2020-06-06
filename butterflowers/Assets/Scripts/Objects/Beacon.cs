@@ -35,7 +35,7 @@ public class Beacon: MonoBehaviour {
 
     #region Attributes
 
-    [SerializeField] bool m_discovered = false, m_visible = false, m_destroyed = false;
+    [SerializeField] bool m_discovered = false, m_visible = true, m_destroyed = false;
 
     [SerializeField] GameObject infoPrefab, info;
     Tooltip infoTooltip;
@@ -98,6 +98,10 @@ public class Beacon: MonoBehaviour {
         get
         {
             return m_visible;
+        }
+        set
+        {
+            m_visible = value;
         }
     }
 

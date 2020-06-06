@@ -87,8 +87,8 @@ public class CreateTextureArray : MonoBehaviour
         }
         
         array = new Texture2DArray(width, height, count, TextureFormat.RGBA32, true, false);
-            array.filterMode = filterMode;
-            array.wrapMode = wrapMode;
+        array.filterMode = filterMode;
+        array.wrapMode = wrapMode;
 
         for(int i = 0; i < valid.Count; i++)
         {
