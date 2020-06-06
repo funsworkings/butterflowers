@@ -151,8 +151,10 @@ public class Library : Singleton<Library>
 				string file = textureQueue[0];
 				textureQueue.RemoveAt(0);
 
-				read = true;
-				ReadBytes(file);
+				if (!textures.ContainsKey(file)) {
+					read = true;
+					ReadBytes(file);
+				}
 			}
 
 			yield return null;
@@ -164,21 +166,26 @@ public class Library : Singleton<Library>
 	async Task ReadBytes(string file)
 	{
 		var www = textureWWW = new WWW(string.Format("file://{0}", file));
+		var _www = UnityWebRequestTexture.GetTexture(string.Format("file://{0}", file));
 
-		await www;
+		_www.SendWebRequest();
+
+		while (!_www.isDone)
+			await Task.Delay(100);
 
 		read = false;
-
-		if (!string.IsNullOrEmpty(www.error)) {
-			throw new System.Exception("Error reading from texture");
+		if (_www.isNetworkError || _www.isHttpError) {
+			throw new System.Exception("Error reading from texture --> NETWORK");
 		}
 
 		Debug.Log("Success load = " + file);
-		var texture = www.texture;
+		var texture = DownloadHandlerTexture.GetContent(_www);
 		texture.name = file;
 
-		textureWWW.Dispose();
-		textureWWW = null;
+		//textureWWW.Dispose();
+		//textureWWW = null;
+
+		_www.Dispose();
 
 		AddTextureToLibrary(file, texture);
 	}
