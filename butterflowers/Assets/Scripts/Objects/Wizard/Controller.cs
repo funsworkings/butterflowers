@@ -25,7 +25,7 @@ namespace Wizard {
         Dialogue Dialogue;
         Audio Audio;
 
-        [SerializeField] MemoryBank Memories;
+        public MemoryBank Memories;
 
         #endregion
 
@@ -33,7 +33,7 @@ namespace Wizard {
 
         [SerializeField] State state = State.Idle;
 
-        [SerializeField] string message = "";
+        string message = "fuck off mannnn  :i:EmojiOne_0:i:  that's what im tryna say OK? :i:EmojiOne_0:i:";
         [SerializeField] Texture2D[] memories = new Texture2D[] { };
 
         #endregion
@@ -166,15 +166,24 @@ namespace Wizard {
             if (memories.Length == 0) return;
 
             Memory memory = Memories.FetchRandomItem();
-            if (memory == null) return;
+            CreateBeaconFromMemory(memory);
+        }
 
-            Texture2D tex = memory.image;
+        public void CreateBeaconFromMemory(Memory mem)
+        {
+            if (mem == null) return;
+
+            Texture2D tex = mem.image;
             Beacon beacon = Manager.Instance.CreateBeaconForWizard(tex);
 
             if (beacon != null) {
                 beacon.fileEntry = null;
-                animator.SetTrigger("spell");
+                onCastSpell();
             }
+        }
+
+        void onCastSpell() {
+            animator.SetTrigger("spell");
         }
 
         #endregion

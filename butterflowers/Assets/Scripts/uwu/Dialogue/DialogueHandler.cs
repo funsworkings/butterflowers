@@ -11,7 +11,7 @@ public class DialogueHandler : MonoBehaviour {
     #region Events
 
     public System.Action onSpeak, onDispose;
-    public System.Action<string> onProgress;
+    public System.Action<string> onProgress, onCompleteBody;
 
     #endregion
 
@@ -157,6 +157,12 @@ public class DialogueHandler : MonoBehaviour {
                 if (onProgress != null)
                     onProgress(m_current);
             }
+            else 
+            {
+                OnComplete(current);
+                if (onCompleteBody != null) // Fire event for reached end of body
+                    onCompleteBody(current);
+            }
 
             waiting = true;  var t = 0f;
             while (waiting && t < timeBetweenBodies) {
@@ -179,6 +185,7 @@ public class DialogueHandler : MonoBehaviour {
 
     protected virtual void OnSpeak() { }
     protected virtual void OnProgress() { container.text = current; }
+    protected virtual void OnComplete(string body) { }
     protected virtual void OnDispose() { container.text = ""; }
 
     #endregion
