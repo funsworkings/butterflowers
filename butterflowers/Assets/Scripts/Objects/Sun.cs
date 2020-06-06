@@ -52,7 +52,7 @@ public class Sun : MonoBehaviour
     [SerializeField] int m_previousDays = -1, m_days = 0;
     [SerializeField] State state = State.Day;
 
-    [SerializeField] bool active = true;
+    public bool active = true;
 
 	#endregion
 
@@ -124,8 +124,6 @@ public class Sun : MonoBehaviour
 
         time = (Preset.reset)? 0f:Save.time;
         onLoadSunData();
-
-        active = true;
     }
 
     // Update is called once per frame
@@ -154,6 +152,8 @@ public class Sun : MonoBehaviour
     }
 
 	#endregion
+
+	#region Internal
 
 	void AlignWithRay()
     {
@@ -229,7 +229,19 @@ public class Sun : MonoBehaviour
         return false;
     }
 
-    void onLoadSunData(){
+    void UpdateListeners()
+    {
+        foreach (IReactToSun listener in Listeners) {
+            listener.ReactToTimeOfDay(timeOfDay);
+            listener.ReactToDay(days);
+        }
+    }
+
+	#endregion
+
+	#region Internal callbacks
+
+	void onLoadSunData(){
         if (!setTransform)
         {
             origin = transform.forward;
@@ -240,12 +252,5 @@ public class Sun : MonoBehaviour
         EvaluateTimeState(false);
     }
 
-    void UpdateListeners()
-    {
-        foreach(IReactToSun listener in Listeners)
-        {
-            listener.ReactToTimeOfDay(timeOfDay);
-            listener.ReactToDay(days);
-        }
-    }
+    #endregion
 }

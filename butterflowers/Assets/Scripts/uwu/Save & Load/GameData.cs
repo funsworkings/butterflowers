@@ -9,4 +9,5 @@ public class GameData
     public int chapter = -1;
     public string[] discoveries = new string[] { };
     public BeaconData[] beacons = new BeaconData[] { };
+    public bool nestopen = false;
 }

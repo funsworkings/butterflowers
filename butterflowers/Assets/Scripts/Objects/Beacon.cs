@@ -119,12 +119,12 @@ public class Beacon: MonoBehaviour {
     void Awake() {
         interactable = GetComponent<Interactable>();
         Oscillate = GetComponent<SimpleOscillate>();
+
+        Room = Manager.Instance;
+        Nest = Nest.Instance;
     }
 
     void Start() {
-        Room = Manager.Instance;
-        Nest = Nest.Instance;
-
         CreateInfo();
     }
 
@@ -191,6 +191,7 @@ public class Beacon: MonoBehaviour {
 
     public void Discover(bool events = true)
     {
+        if (!Nest.open) return;
         if (destroyed) return;
 
         m_discovered = true;

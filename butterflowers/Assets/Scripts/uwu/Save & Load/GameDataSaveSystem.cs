@@ -90,6 +90,17 @@ public class GameDataSaveSystem : Singleton<GameDataSaveSystem>
         }
     }
 
+    public bool nestOpen {
+        get
+        {
+            return (data == null) ? false : data.nestopen;
+        }
+        set
+        {
+            data.nestopen = value;
+        }
+    }
+
     #endregion
 
     #region Fetch data path
