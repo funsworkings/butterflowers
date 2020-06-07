@@ -6408,8 +6408,6 @@ MonoBehaviour:
   m_EditorClassIdentifier: 
   Memories: {fileID: 11400000, guid: a11a7773fa9f39649b779c417d4c7b19, type: 2}
   state: 3
-  message: 'fuck off mannnn  :i:FoxInTree:i:  that''s what im tryna say OK? :i:DarkFishEyes:i:
-    :i:WildHorse:i:'
   memories:
   - {fileID: 2800000, guid: 358b51ab299a147dca3fc23ca2d203f1, type: 3}
   - {fileID: 2800000, guid: 68cdf30e4c2c846d89c01aeea9d7febf, type: 3}
@@ -6478,6 +6476,7 @@ MonoBehaviour:
   m_current: 
   m_inprogress: 0
   DialogueTree: {fileID: 11400000, guid: 9f67b438b35ca5e49a81403d378b5a12, type: 2}
+  alert: {fileID: 911957295}
   bubble: {fileID: 1096321895}
 --- !u!114 &468500796
 MonoBehaviour:

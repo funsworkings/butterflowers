@@ -18,13 +18,21 @@ namespace Wizard {
         [SerializeField] Noder.Graphs.DialogueTree DialogueTree;
 
         Controller controller;
+
+        [SerializeField] GameObject alert = null;
         [SerializeField] ToggleOpacity bubble = null;
 
         #endregion
 
-        #region Attributes
+        #region Collections
 
-        public readonly string imageFlag = ":i:";
+        [SerializeField] List<string> temp = new List<string>();
+
+		#endregion
+
+		#region Attributes
+
+		public readonly string imageFlag = ":i:";
 
         #endregion
 
@@ -47,22 +55,48 @@ namespace Wizard {
 
         void Update()
         {
-            if (Input.GetKeyDown(KeyCode.P)) DialogueTree.Step();
+            alert.SetActive(temp.Count > 0);
         }
 
-		#endregion
+        #endregion
 
-		#region Operations
+        #region Operations
+
+        public void PushAllFromQueue()
+        {
+            for (int i = 0; i < temp.Count; i++) {
+                Push(temp[i]);
+            }
+            temp = new List<string>();
+        }
 
 		public void FetchDialogueFromTree() {
             DialogueTree.Step();
         }
 
-		#endregion
+        #endregion
 
-		#region Dialogue overrides
+        #region Dialogue overrides
 
-		protected override string ParseBody(string body)
+        public override void Push(string body)
+        {
+            if (controller.isFocused) {
+                base.Push(body);
+            }
+            else 
+            {
+                temp.Add(body); // Store temporarily 
+            }
+        }
+
+        public override void Dispose()
+        {
+            base.Dispose();
+
+            temp = new List<string>();
+        }
+
+        protected override string ParseBody(string body)
         {
             body = Extensions.ReplaceEnclosingPattern(body, imageFlag, "<sprite name=\"{0}\">"); // Replace img tag
 

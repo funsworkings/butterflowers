@@ -32,15 +32,25 @@ namespace Wizard {
         #region Attributes
 
         [SerializeField] State state = State.Idle;
-
-        [SerializeField] [TextArea(1, 10)] string message = "fuck off mannnn  :i:EmojiOne_0:i:  that's what im tryna say OK? :i:EmojiOne_0:i:";
         [SerializeField] Texture2D[] memories = new Texture2D[] { };
 
-        #endregion
+		#endregion
 
-        #region Monobehaviour callbacks
+		#region Accessors
 
-        void Awake()
+        public bool isFocused {
+            get
+            {
+                if (Focus == null) return false;
+                return Focus.focus;
+            }
+        }
+
+		#endregion
+
+		#region Monobehaviour callbacks
+
+		void Awake()
         {
             ik = GetComponentInChildren<IK>();
             animator = GetComponentInChildren<Animator>();
@@ -53,12 +63,14 @@ namespace Wizard {
 
         void OnEnable()
         {
-
+            Focus.onFocus += PushDialogue;
+            Focus.onLoseFocus += ClearDialogue;
         }
 
         void OnDisable()
         {
-
+            Focus.onFocus -= PushDialogue;
+            Focus.onLoseFocus -= ClearDialogue;
         }
 
         // Start is called before the first frame update
@@ -73,13 +85,9 @@ namespace Wizard {
             //UpdateLookAt();
 
             if (Focus.focus) {
-                if (Input.GetKeyDown(KeyCode.W)) Dialogue.Push(message);
                 if (Input.GetKeyDown(KeyCode.RightArrow)) Dialogue.Advance();
-                if (Input.GetKeyDown(KeyCode.X)) Dialogue.FetchDialogueFromTree();
             }
-            else {
-                Dialogue.Dispose();
-            }
+            if (Input.GetKeyDown(KeyCode.X)) Dialogue.FetchDialogueFromTree();
 
             if (Input.GetKeyDown(KeyCode.S)) ActivateRandomBeacon();
             if (Input.GetKeyDown(KeyCode.T)) CreateRandomBeacon();
@@ -194,6 +202,20 @@ namespace Wizard {
         public void WakeUp()
         {
             state = State.Idle;
+        }
+
+        #endregion
+
+        #region Dialogue
+
+        void PushDialogue()
+        {
+            Dialogue.PushAllFromQueue();
+        }
+
+        void ClearDialogue()
+        {
+            Dialogue.Dispose();
         }
 
 		#endregion

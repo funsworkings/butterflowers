@@ -74,7 +74,7 @@ public class DialogueHandler : MonoBehaviour {
 
 	#region Operations
 
-	public void Push(string body)
+	public virtual void Push(string body)
     {
         Debug.Log("receive = " + body);
         body = ParseBody(body);
@@ -94,7 +94,7 @@ public class DialogueHandler : MonoBehaviour {
         }
     }
 
-    public void Dispose()
+    public virtual void Dispose()
     {
         if (speaking) {
             OnDispose();
