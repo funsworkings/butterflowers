@@ -9,7 +9,7 @@ namespace Noder.Nodes.Types {
 
     public class Dialogue: State {
 
-        public string body = null;
+        [TextArea(2, 30)] public string body = null;
 
         protected override void OnEnter()
         {
