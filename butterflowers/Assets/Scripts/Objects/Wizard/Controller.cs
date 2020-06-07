@@ -6,7 +6,7 @@ using UnityEngine.AI;
 namespace Wizard {
 
     public class Controller: MonoBehaviour {
-        Wand wand;
+        [SerializeField] Wand wand;
 
         IK ik;
 
@@ -71,12 +71,6 @@ namespace Wizard {
         {
             Focus.onFocus -= PushDialogue;
             Focus.onLoseFocus -= ClearDialogue;
-        }
-
-        // Start is called before the first frame update
-        void Start()
-        {
-            wand = FindObjectOfType<Wand>();
         }
 
         // Update is called once per frame

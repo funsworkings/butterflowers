@@ -19,7 +19,7 @@ public class Butterfly : MonoBehaviour
     Nest nest;
     MotherOfButterflies mother;
     Quilt quilt;
-    Wand wand;
+    Wand[] wands;
 
     Animator animator;
     Renderer[] renderers;
@@ -103,8 +103,13 @@ public class Butterfly : MonoBehaviour
 
         if (timeSinceAlive <= preset.timeToGrow)
             GrowOverTime();
-        else
-            GrowWithWand();
+        else 
+        {
+            foreach (Wand wand in wands) 
+            {
+                GrowWithWand(wand);
+            }
+        }
 
         float str = dt;
         if (state == State.Dying)
@@ -135,7 +140,10 @@ public class Butterfly : MonoBehaviour
             MoveTowardsSpawn(str);
         else if(state == State.Alive)
         {
-            if(!wand.spells) MoveWithWand(str);
+            foreach (Wand wand in wands) 
+            {
+                if(wand.spells) MoveWithWand(wand, str);
+            }
             MoveTowardsCenter(str);
             MoveWithNoise(str);
         }
@@ -171,7 +179,7 @@ public class Butterfly : MonoBehaviour
         nest = Nest.Instance;
         quilt = FindObjectOfType<Quilt>();
         mother = FindObjectOfType<MotherOfButterflies>();
-        wand = FindObjectOfType<Wand>();
+        wands = FindObjectsOfType<Wand>();
         animator = GetComponentInChildren<Animator>();
 
         renderers = GetComponentsInChildren<Renderer>();
@@ -309,7 +317,7 @@ public class Butterfly : MonoBehaviour
        return speed;
     }
 
-    void MoveWithWand(float dt){
+    void MoveWithWand(Wand wand, float dt){
         Vector3 target = wand.position;
         Vector3 current = positionRelativeToCamera;
 
@@ -357,7 +365,7 @@ public class Butterfly : MonoBehaviour
         transform.localScale = Vector3.one * Mathf.Lerp(0f, preset.scale, Mathf.Pow(interval, 2f));
     }
 
-    void GrowWithWand()
+    void GrowWithWand(Wand wand)
     {
         Vector3 dir = (wand.position - positionRelativeToCamera);
         float magnitude = Mathf.Clamp01(1f - dir.magnitude / preset.wandRadius);
