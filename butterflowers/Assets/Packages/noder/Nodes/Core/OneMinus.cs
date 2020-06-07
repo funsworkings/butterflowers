@@ -7,7 +7,7 @@ using Noder.Nodes.Abstract;
 
 namespace Noder.Nodes.Core.Operations {
 
-    public class OneMinus: SimpleEntry<float>
+    public class OneMinus: Entry<float>
     {
         [Input(ShowBackingValue.Unconnected, ConnectionType.Override)]  public float input;
 

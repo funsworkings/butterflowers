@@ -7,11 +7,15 @@ using System.Text.RegularExpressions;
 using System.Reflection.Emit;
 using UnityScript.Steps;
 
+using Noder;
+
 namespace Wizard {
 
     public class Dialogue: DialogueHandler {
 
         #region Properties
+
+        [SerializeField] Noder.Graphs.DialogueTree DialogueTree;
 
         Controller controller;
         [SerializeField] ToggleOpacity bubble = null;
@@ -29,6 +33,29 @@ namespace Wizard {
         void Awake()
         {
             controller = GetComponent<Controller>();
+        }
+
+        void Start()
+        {
+            DialogueTree.dialogueHandler = this;
+        }
+
+        void OnEnable()
+        {
+            DialogueTree.onUpdateNode += onUpdateNode;
+        }
+
+        void Update()
+        {
+            if (Input.GetKeyDown(KeyCode.P)) DialogueTree.Step();
+        }
+
+		#endregion
+
+		#region Operations
+
+		public void FetchDialogueFromTree() {
+            DialogueTree.Step();
         }
 
 		#endregion
@@ -66,9 +93,18 @@ namespace Wizard {
 
         #endregion
 
-        #region Parsing
+        #region Graph callbacks
 
-        Memory[] ParseMemoriesFromBody(string body)
+        void onUpdateNode(Node node)
+        {
+            
+        }
+
+		#endregion
+
+		#region Parsing
+
+		Memory[] ParseMemoriesFromBody(string body)
         {
             string patt = "(sprite name=\").*?(\")";
             var matches = Regex.Matches(body, patt);

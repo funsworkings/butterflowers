@@ -76,6 +76,7 @@ public class DialogueHandler : MonoBehaviour {
 
 	public void Push(string body)
     {
+        Debug.Log("receive = " + body);
         body = ParseBody(body);
 
         if (string.IsNullOrEmpty(body)) return;

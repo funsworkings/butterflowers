@@ -15,6 +15,14 @@ namespace Wizard {
 			}
 		}
 
+		public string body = "";
+		public string body_formatted {
+			get
+			{
+				return body.Replace(":m:", string.Format(":i:{0}:i:", thumbnail));
+			}
+		}
+
 		public string thumbnail;
 		public Texture2D image;
 	}

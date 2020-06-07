@@ -7,7 +7,7 @@ using Noder.Nodes.Abstract;
 
 namespace Noder.Nodes.Core.Operations {
 
-    public class Not : SimpleEntry<bool>
+    public class Not : Entry<bool>
     {
         [Input(ShowBackingValue.Unconnected, ConnectionType.Override, TypeConstraint.Strict)]  public bool input;
 

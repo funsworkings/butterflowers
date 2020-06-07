@@ -7,9 +7,9 @@ using XNode;
 namespace Noder.Nodes.Abstract
 {
 
-    public abstract class Constant<E> : SimpleEntry<E>
+    public abstract class Constant<E> : Entry<E>
     {
-        [Input(ShowBackingValue.Always, ConnectionType.Override, TypeConstraint.Strict)] public E input;
+        public E input;
 
         string description = "Constant";
         public string Description {
@@ -23,9 +23,6 @@ namespace Noder.Nodes.Abstract
 
         protected override E ValueProvider()
 		{
-            E val = GetInputValue<E>("input", input);
-                input = val;
-
             return input;
         }
     }

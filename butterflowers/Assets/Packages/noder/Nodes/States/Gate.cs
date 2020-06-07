@@ -21,12 +21,14 @@ namespace Noder.Nodes.States
                 port = GetOutputPort("pass");
             else  // fails!
                 port = GetOutputPort("fail");
- 
-            SendSignalToOutputs(new NodePort[]{ port });
-            Exit();
-         }
 
-        protected override void OnExit(){}
+            if (port != null) {
+                SendSignalToOutputs(new NodePort[] { port });
+                Exit();
+            }
+            else
+                base.Next();
+         }
     }
 }
 
