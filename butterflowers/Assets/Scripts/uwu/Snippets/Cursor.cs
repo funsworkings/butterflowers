@@ -28,9 +28,8 @@ public class Cursor : MonoBehaviour
         m_velocity = Vector3.zero;    
     }
 
-    void Update() {
-        m_position = Input.mousePosition;
-
+    protected virtual void Update() {
+        m_position = Position();
 
         float dt = Time.deltaTime;
 
@@ -39,5 +38,10 @@ public class Cursor : MonoBehaviour
         a = b;
 
         speed = velocity.magnitude;    
+    }
+
+    protected virtual Vector3 Position()
+    {
+        return Input.mousePosition;
     }
 }

@@ -3,14 +3,12 @@ using System.Collections.Generic;
 using UnityEngine;
 using UnityEngine.AI;
 
-using Wiz = Wizard.Controller;
-
 public class Wand : MonoBehaviour
 {
-    public static Wand Instance = null;
     new Camera camera;
 
-    [SerializeField] Wiz wizard;
+    [SerializeField] bool m_spells = true;
+
     [SerializeField] Cursor cursor;
     [SerializeField] float distanceFromCamera = 10f;
 
@@ -50,7 +48,7 @@ public class Wand : MonoBehaviour
     public bool spells
     {
         get {
-            return Input.GetMouseButton(0);
+            return m_spells;
         }
     }
 
@@ -67,11 +65,6 @@ public class Wand : MonoBehaviour
     }
 
     #region Monobehaviour callbacks
-
-    void Awake()
-    {
-        Instance = this;
-    }
 
     // Start is called before the first frame update
     void Start()

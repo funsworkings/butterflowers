@@ -271,8 +271,10 @@ public class Beacon: MonoBehaviour {
         float val = 0f;
 
         Color.RGBToHSV(material.color, out hue, out sat, out val);
-
-        material.color = Color.HSVToRGB(hue, Mathf.Lerp(sat, t_sat, Time.deltaTime), val);
+        Color actual = Color.HSVToRGB(hue, Mathf.Lerp(sat, t_sat, Time.deltaTime), val);
+        actual.a = material.color.a;
+        
+        material.color = actual;
     }
 
 	#endregion
