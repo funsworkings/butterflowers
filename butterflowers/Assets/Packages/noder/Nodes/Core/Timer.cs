@@ -7,7 +7,7 @@ using Noder.Nodes.Abstract;
 
 namespace Noder.Nodes.Core {
 
-    public class Timer : SimpleEntry<float>, ITick, IReset
+    public class Timer : Entry<float>, ITick, IReset
     {
         public float time;
 

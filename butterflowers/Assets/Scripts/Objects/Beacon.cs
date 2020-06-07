@@ -30,10 +30,13 @@ public class Beacon: MonoBehaviour {
 
     Interactable interactable;
     SimpleOscillate Oscillate;
+    Material material;
 
     #endregion
 
     #region Attributes
+
+    bool active = false;
 
     [SerializeField] bool m_discovered = false, m_visible = true, m_destroyed = false;
 
@@ -119,6 +122,7 @@ public class Beacon: MonoBehaviour {
     void Awake() {
         interactable = GetComponent<Interactable>();
         Oscillate = GetComponent<SimpleOscillate>();
+        material = GetComponentInChildren<MeshRenderer>().material;
 
         Room = Manager.Instance;
         Nest = Nest.Instance;
@@ -130,8 +134,13 @@ public class Beacon: MonoBehaviour {
 
     void Update()
     {
-        Oscillate.enabled = !warping || destroyed;
-        //psTrails.enabled = warping;
+        active = (Nest.open && visible);
+
+        Oscillate.enabled = !warping || destroyed || !active;
+
+        if (!active) HideInfo();
+
+        UpdateColor();
     }
 
     void OnEnable() {
@@ -249,19 +258,39 @@ public class Beacon: MonoBehaviour {
         Destroy(gameObject);
     }
 
+    #endregion
+
+    #region Appearance
+
+    void UpdateColor() 
+    {
+        if (material == null) return;
+
+        float hue = 0f;
+        float sat = 0f, t_sat = (Nest.open) ? 1f : 0f;
+        float val = 0f;
+
+        Color.RGBToHSV(material.color, out hue, out sat, out val);
+
+        material.color = Color.HSVToRGB(hue, Mathf.Lerp(sat, t_sat, Time.deltaTime), val);
+    }
+
 	#endregion
 
 	#region Interactable callbacks
 
 	void Activate(Vector3 point, Vector3 normal){
+        if (!active) return;
         Discover();
     }
 
     void Hover(Vector3 point, Vector3 normal){
+        if (!active) return;
         DisplayInfo();
     }
 
     void Unhover(Vector3 point, Vector3 normal){
+        if (!active) return;
         HideInfo();
     }
 

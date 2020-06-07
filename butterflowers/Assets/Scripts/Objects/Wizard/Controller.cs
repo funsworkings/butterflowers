@@ -33,7 +33,7 @@ namespace Wizard {
 
         [SerializeField] State state = State.Idle;
 
-        string message = "fuck off mannnn  :i:EmojiOne_0:i:  that's what im tryna say OK? :i:EmojiOne_0:i:";
+        [SerializeField] [TextArea(1, 10)] string message = "fuck off mannnn  :i:EmojiOne_0:i:  that's what im tryna say OK? :i:EmojiOne_0:i:";
         [SerializeField] Texture2D[] memories = new Texture2D[] { };
 
         #endregion
@@ -75,6 +75,7 @@ namespace Wizard {
             if (Focus.focus) {
                 if (Input.GetKeyDown(KeyCode.W)) Dialogue.Push(message);
                 if (Input.GetKeyDown(KeyCode.RightArrow)) Dialogue.Advance();
+                if (Input.GetKeyDown(KeyCode.X)) Dialogue.FetchDialogueFromTree();
             }
             else {
                 Dialogue.Dispose();

@@ -8,5 +8,5 @@ using Noder.Nodes.Core;
 
 namespace Noder.Nodes.Core.Constants
 {
-    public class Condition : Constant<Operations.Condition> { }
+    public class Condition : Constant<Noder.Condition> { }
 }

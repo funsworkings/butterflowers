@@ -7,9 +7,14 @@ using XNode;
 namespace Noder.Nodes.Abstract
 {
 
-    public abstract class Fetch<E> : SimpleEntry<E>
+    public class Fetch : Entry<Data>
     {
-        
+        public Data dat;
+
+        protected override Data ValueProvider()
+        {
+            return dat;
+        }
     }
     
 }
