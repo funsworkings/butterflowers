@@ -1,9 +1,9 @@
 ﻿using System.Collections;
 using System.Collections.Generic;
-using Noder.Nodes.Types;
 using UnityEngine;
 
 using XNode;
+using Noder.Nodes.External;
 
 namespace Noder.Graphs {
 
@@ -21,7 +21,17 @@ namespace Noder.Graphs {
                 m_dialogueHandler = value;
             }
         }
-       
+
+        public void Step(int value)
+        {
+            if (activeNode != null) {
+                (activeNode as BaseDialogueNode).Next(value);
+                return;
+            }
+
+            Step();
+        }
+
     }
 
 }

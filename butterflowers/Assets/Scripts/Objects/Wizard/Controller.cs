@@ -1,5 +1,6 @@
 ﻿using System.Collections;
 using System.Collections.Generic;
+using Settings;
 using UnityEngine;
 using UnityEngine.AI;
 
@@ -10,22 +11,31 @@ namespace Wizard {
 
         IK ik;
 
-        #region Internal
+        #region External
 
-        public enum State { Idle, Walk, Spell, Rest }
+        GameDataSaveSystem Save;
+
+		#endregion
+
+		#region Internal
+
+		public enum State { Idle, Walk, Spell, Rest }
 
         #endregion
 
         #region Properties
 
+        [SerializeField] WorldPreset Preset;
+
         Animator animator;
         NavMeshAgent navAgent;
 
         FocalPoint Focus;
+        Brain Brain;
         Dialogue Dialogue;
         Audio Audio;
 
-        public MemoryBank Memories;
+        [SerializeField] Memories m_memories;
 
         #endregion
 
@@ -33,6 +43,9 @@ namespace Wizard {
 
         [SerializeField] State state = State.Idle;
         [SerializeField] Texture2D[] memories = new Texture2D[] { };
+        [SerializeField] int dialogueRoute = 0;
+
+        bool load = false;
 
 		#endregion
 
@@ -46,19 +59,37 @@ namespace Wizard {
             }
         }
 
-		#endregion
+        public Memories Memories {
+            get
+            {
+                return m_memories;
+            }
+        }
 
-		#region Monobehaviour callbacks
+        #endregion
 
-		void Awake()
+        #region Monobehaviour callbacks
+
+        void Awake()
         {
             ik = GetComponentInChildren<IK>();
             animator = GetComponentInChildren<Animator>();
             navAgent = GetComponent<NavMeshAgent>();
 
             Focus = GetComponent<FocalPoint>();
+            Brain = GetComponent<Brain>();
             Dialogue = GetComponent<Dialogue>();
             Audio = GetComponent<Audio>();
+        }
+
+        IEnumerator Start()
+        {
+            Save = GameDataSaveSystem.Instance;
+            while (Save == null || !Save.load) yield return null;
+
+            Dialogue.nodeID = Save.dialogueNode;
+
+            load = true;
         }
 
         void OnEnable()
@@ -76,18 +107,23 @@ namespace Wizard {
         // Update is called once per frame
         void Update()
         {
+            if (!load) return;
+
             //UpdateLookAt();
 
             if (Focus.focus) {
                 if (Input.GetKeyDown(KeyCode.RightArrow)) Dialogue.Advance();
             }
-            if (Input.GetKeyDown(KeyCode.X)) Dialogue.FetchDialogueFromTree();
+            if (Input.GetKeyDown(KeyCode.X)) Dialogue.FetchDialogueFromTree(dialogueRoute);
 
             if (Input.GetKeyDown(KeyCode.S)) ActivateRandomBeacon();
             if (Input.GetKeyDown(KeyCode.T)) CreateRandomBeacon();
 
             EvaluateState();
             UpdateAnimatorFromState(state);
+
+            if (Input.GetKeyDown(KeyCode.Semicolon))
+                Brain.AddMemory(memories[0]);
         }
 
 		#endregion
@@ -210,6 +246,14 @@ namespace Wizard {
         void ClearDialogue()
         {
             Dialogue.Dispose();
+        }
+
+        public void UpdateCurrentDialogueNode(int nodeID)
+        {
+            if (!Preset.reset)
+                Save.dialogueNode = nodeID;
+            else
+                Save.dialogueNode = -1;
         }
 
 		#endregion

@@ -8,7 +8,7 @@ namespace Noder.Nodes.Abstract {
 
     public abstract class State : Node
     {
-        [Input(ShowBackingValue.Never, ConnectionType.Multiple, TypeConstraint.Inherited)] public Node input;
+        [Input(ShowBackingValue.Never, ConnectionType.Multiple)] public Node input;
         [Output(ShowBackingValue.Never, ConnectionType.Override)] public Node output;
 
         public override void Next()

@@ -13,25 +13,27 @@ public class ScriptableDatabase<E> : ScriptableObject where E:ScriptableObject
         }
     }
 
-    public void Add(E item){
-        if(Contains(item)) return;
+    public bool Add(E item){
+        if(Contains(item)) return false;
 
         List<E> temp = m_items.ToList();
         temp.Add(item);
 
         m_items = temp.ToArray();
+        return true;
     }
 
-    public void Remove(E item){
-        if(!Contains(item)) return;
+    public bool Remove(E item){
+        if(!Contains(item)) return false;
 
         List<E> temp = m_items.ToList();
         temp.Remove(item);
 
         m_items = temp.ToArray();
+        return true;
     }
 
-    public bool Contains(E item){
+    public virtual bool Contains(E item){
         if(item == null || m_items == null)
             return false;
 

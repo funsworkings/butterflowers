@@ -127,7 +127,8 @@ public class DialogueHandler : MonoBehaviour {
 
     #region Internal
 
-    protected virtual string ParseBody(string body) { return body; }
+    protected virtual string ParseBody(string body) { return FilterBody(body); }
+    protected virtual string FilterBody(string body) { return body; }
 
 	IEnumerator Speak()
     {
@@ -136,6 +137,8 @@ public class DialogueHandler : MonoBehaviour {
         {
             m_body = queue[0];
             m_current = "";
+
+            OnStart(m_body);
 
             /*
              * Parse existing body by symbol 
@@ -158,12 +161,10 @@ public class DialogueHandler : MonoBehaviour {
                 if (onProgress != null)
                     onProgress(m_current);
             }
-            else 
-            {
-                OnComplete(current);
-                if (onCompleteBody != null) // Fire event for reached end of body
-                    onCompleteBody(current);
-            }
+
+            OnComplete(current);
+            if (onCompleteBody != null) // Fire event for reached end of body
+                onCompleteBody(current);
 
             waiting = true;  var t = 0f;
             while (waiting && t < timeBetweenBodies) {
@@ -185,6 +186,7 @@ public class DialogueHandler : MonoBehaviour {
     #region Internal callbacks
 
     protected virtual void OnSpeak() { }
+    protected virtual void OnStart(string body) { }
     protected virtual void OnProgress() { container.text = current; }
     protected virtual void OnComplete(string body) { }
     protected virtual void OnDispose() { container.text = ""; }
