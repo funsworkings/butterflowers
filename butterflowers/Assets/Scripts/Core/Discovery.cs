@@ -10,7 +10,7 @@ public class Discovery: Singleton<Discovery> {
 
 	#region Events
 
-	public static System.Action onDiscoverNew;
+	public static System.Action onDiscover;
 
 	#endregion
 
@@ -51,7 +51,7 @@ public class Discovery: Singleton<Discovery> {
 		var d = Save.discovered;
 		discoveries = new List<string>(d);
 
-		if (!Preset.memory) discoveries = new List<string>(); // Reset memories
+		if (!Preset.persistDiscoveries) discoveries = new List<string>(); // Reset memories
 
 		m_load = true;
 	}
@@ -61,15 +61,17 @@ public class Discovery: Singleton<Discovery> {
 		return discoveries.Contains(path);
 	}
 
-	public void DiscoverFile(string path)
+	public bool DiscoverFile(string path)
 	{
-		if (HasDiscoveredFile(path)) return;
+		if (HasDiscoveredFile(path)) return false;
 
 		discoveries.Add(path);
 		SendDiscoveries();
 
-		if (onDiscoverNew != null)
-			onDiscoverNew();
+		if (onDiscover != null)
+			onDiscover();
+
+		return true;
 	}
 
 	void SendDiscoveries()

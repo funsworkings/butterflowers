@@ -47,7 +47,8 @@ namespace Noder {
             if (len == 0) return null;
 
             for (int i = 0; i < len; i++) {
-                if (nodes[i].GetInstanceID() == id)
+                var node = nodes[i];
+                if (node != null && node.GetInstanceID() == id)
                     return (nodes[i] as Node);
             }
             return null;
@@ -56,7 +57,7 @@ namespace Noder {
         public List<T> GetNodes<T>() where T : Node {
             List<T> nodes = new List<T>();
             foreach (Node node in this.nodes) {
-                if (node as T) 
+                if (node != null && node as T) 
                     nodes.Add((T) node);
             }
             return nodes;
@@ -65,7 +66,7 @@ namespace Noder {
         public List<ITick> GetTimers() {
             List<ITick> timers = new List<ITick>();
             foreach(Node node in this.nodes){
-                if (node is ITick)
+                if (node != null && node is ITick)
                     timers.Add((node as ITick));
             }
 
@@ -79,10 +80,10 @@ namespace Noder {
         }
 
         public void Step(){
-            if(activeNode != null)
+            if (activeNode != null)
                 activeNode.Next();
             else
-                Start();
+                Restart();
         }
 
         public void Restart(){
@@ -92,7 +93,6 @@ namespace Noder {
         public void Dispose()
         {
             Reset();
-
             activeNode = null;
         }
 

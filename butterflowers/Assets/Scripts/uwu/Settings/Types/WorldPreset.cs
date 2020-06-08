@@ -7,9 +7,10 @@ namespace Settings
     public class WorldPreset : ScriptableObject
     {
         [Header("Debug")]
-            public bool memory = false;
-            public bool reset = false;
-            public bool persist = false;
+            public bool persistDiscoveries = false;
+            public bool resetWorldClock = false;
+            public bool persistDialogue = false;
+            public bool persistBeacons = false;
 
         [Header("Time Attributes")]
             public float hoursPerDay = 24f;

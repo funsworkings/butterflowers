@@ -92,7 +92,7 @@ namespace Wizard {
             Save = GameDataSaveSystem.Instance;
             while (Save == null || !Save.load) yield return null;
 
-            Dialogue.nodeID = (Preset.reset)? -1 : Save.dialogueNode;
+            Dialogue.nodeID = (!Preset.persistDialogue)? -1 : Save.dialogueNode;
 
             load = true;
         }
