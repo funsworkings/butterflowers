@@ -9,11 +9,15 @@ namespace Wizard {
     public class Controller: MonoBehaviour {
         [SerializeField] Wand wand;
 
-        IK ik;
+        #region Events
 
-        #region External
+        public System.Action<Memory> onDiscoverMemory;
 
-        GameDataSaveSystem Save;
+		#endregion
+
+		#region External
+
+		GameDataSaveSystem Save;
 
 		#endregion
 
@@ -25,17 +29,20 @@ namespace Wizard {
 
         #region Properties
 
-        [SerializeField] WorldPreset Preset;
+        [SerializeField] 
+        WorldPreset Preset;
+
+        [SerializeField] 
+        Memories m_Memories;
 
         Animator animator;
+        IK ik;
         NavMeshAgent navAgent;
 
         FocalPoint Focus;
-        Brain Brain;
-        Dialogue Dialogue;
+        Brain m_Brain;
+        Dialogue m_Dialogue; 
         Audio Audio;
-
-        [SerializeField] Memories m_memories;
 
         #endregion
 
@@ -47,22 +54,20 @@ namespace Wizard {
 
         bool load = false;
 
-		#endregion
+        #endregion
 
-		#region Accessors
+        #region Accessors
+
+        // Core functionality accessors
+        public Brain Brain => m_Brain;
+        public Dialogue Dialogue => m_Dialogue;
+        public Memories Memories => m_Memories;
 
         public bool isFocused {
             get
             {
                 if (Focus == null) return false;
                 return Focus.focus;
-            }
-        }
-
-        public Memories Memories {
-            get
-            {
-                return m_memories;
             }
         }
 
@@ -77,8 +82,8 @@ namespace Wizard {
             navAgent = GetComponent<NavMeshAgent>();
 
             Focus = GetComponent<FocalPoint>();
-            Brain = GetComponent<Brain>();
-            Dialogue = GetComponent<Dialogue>();
+            m_Brain = GetComponent<Brain>();
+            m_Dialogue = GetComponent<Dialogue>();
             Audio = GetComponent<Audio>();
         }
 
@@ -87,7 +92,7 @@ namespace Wizard {
             Save = GameDataSaveSystem.Instance;
             while (Save == null || !Save.load) yield return null;
 
-            Dialogue.nodeID = Save.dialogueNode;
+            Dialogue.nodeID = (Preset.reset)? -1 : Save.dialogueNode;
 
             load = true;
         }
@@ -186,11 +191,11 @@ namespace Wizard {
             navAgent.SetDestination(location);
         }
 
-        #endregion
+		#endregion
 
-        #region Spells
+		#region Spells
 
-        public void ActivateRandomBeacon()
+		public void ActivateRandomBeacon()
         {
             var beacon = Manager.Instance.FetchRandomBeacon();
             bool spell = (beacon != null);
@@ -250,10 +255,14 @@ namespace Wizard {
 
         public void UpdateCurrentDialogueNode(int nodeID)
         {
-            if (!Preset.reset)
-                Save.dialogueNode = nodeID;
-            else
-                Save.dialogueNode = -1;
+            Save.dialogueNode = nodeID;
+        }
+
+        public void DiscoverMemory(Memory memory)
+        {
+            Debug.LogFormat("FOUND memory = {0}", memory.name);
+            if (onDiscoverMemory != null)
+                onDiscoverMemory(memory);
         }
 
 		#endregion

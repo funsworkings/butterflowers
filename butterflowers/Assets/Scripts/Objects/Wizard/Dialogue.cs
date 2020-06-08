@@ -29,8 +29,6 @@ namespace Wizard {
 
         [SerializeField] List<string> temp = new List<string>();
 
-        Dictionary<string, Memory[]> mems = new Dictionary<string, Memory[]>();
-
 		#endregion
 
 		#region Attributes
@@ -123,7 +121,6 @@ namespace Wizard {
         {
             if (controller.isFocused) 
             {
-                AddMemoriesFromBody(body);   
                 base.Push(body);
             }
             else 
@@ -137,14 +134,12 @@ namespace Wizard {
             base.Dispose();
 
             temp = new List<string>();
-            mems.Clear();
         }
 
         protected override string ParseBody(string body)
         {
             body = Extensions.ReplaceEnclosingPattern(body, imageFlag, "<sprite name=\"{0}\">"); // Replace img tag
-            body = Extensions.ReplaceEnclosingPattern(body, memoryFlag, "");
-
+            
             return body;
         }
 
@@ -160,16 +155,10 @@ namespace Wizard {
             bubble.Hide();
         }
 
-        protected override void OnComplete(string body)
+        protected override void OnStart(string body)
         {
-            var memories = mems[body];
-            if (memories != null) {
-                for (int i = 0; i < memories.Length; i++) {
-                    Debug.LogFormat("Dialogue found memory = {0}", memories[i].name);
-                    controller.CreateBeaconFromMemory(memories[i]);
-                }
-                mems.Remove(body); // Remove item from dictionary
-            }
+            DiscoveryMemoriesFromBody(body);
+            m_body = FilterMemories(body);
         }
 
         #endregion
@@ -190,17 +179,17 @@ namespace Wizard {
 
         #region Parsing
 
-        void AddMemoriesFromBody(string body)
+        string FilterMemories(string body)
+        {
+            body = Extensions.ReplaceEnclosingPattern(body, memoryFlag, "");
+            return body;
+        }
+
+        void DiscoveryMemoriesFromBody(string body)
         {
             var memories = ParseMemoriesFromBody(body);
-            var parsed = ParseBody(body);
-
-            if (!mems.ContainsKey(parsed)) {
-                mems.Add(parsed, memories);
-            }
-            else {
-                mems[parsed] = memories;
-            }
+            for (int i = 0; i < memories.Length; i++)
+                controller.DiscoverMemory(memories[i]);
         }
 
 		Memory[] ParseMemoriesFromBody(string body)

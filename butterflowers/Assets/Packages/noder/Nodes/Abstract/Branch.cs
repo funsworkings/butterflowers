@@ -50,7 +50,11 @@ namespace Noder.Nodes.Abstract {
         void Route(int index)
         {
             NodePort port = GetOutputPort("routes " + index);
-            if (port == null) return;
+            if (port == null) 
+            {
+                base.Next();
+                return;
+            }
 
             SendSignalToOutputs(new NodePort[] { port });
         }

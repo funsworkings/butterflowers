@@ -35,7 +35,7 @@ public class DialogueHandler : MonoBehaviour {
 
     [SerializeField] bool speaking = false, waiting = false;
 
-    [SerializeField] string m_body = "", m_current = "";
+    [SerializeField] protected string m_body = "", m_current = "";
 
     #endregion
 
