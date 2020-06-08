@@ -122,7 +122,7 @@ public class Sun : MonoBehaviour
         while(!Save.load)
             yield return null;
 
-        time = (Preset.reset)? 0f:Save.time;
+        time = (Preset.resetWorldClock)? 0f:Save.time;
         onLoadSunData();
     }
 

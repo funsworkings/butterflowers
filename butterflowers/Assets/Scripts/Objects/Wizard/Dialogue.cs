@@ -49,16 +49,11 @@ namespace Wizard {
             }
             set
             {
-                bool refresh = (node_id != value);
                 node_id = value;
 
                 Debug.LogFormat("Attempt set {0} as node", node_id);
-                if (refresh) {
-                    var node = DialogueTree.GetNodeByInstanceId(node_id);
-                    if (node == null) node = DialogueTree.rootNode;
-
-                    DialogueTree.activeNode = node;
-                }
+                var node = DialogueTree.GetNodeByInstanceId(node_id);
+                DialogueTree.activeNode = node;
             }
         }
 
@@ -167,9 +162,7 @@ namespace Wizard {
 
         void onUpdateNode(Node node)
         {
-            if (node == null) return;
-
-            int instance_id = node.GetInstanceID();
+            int instance_id = (node == null)? -1:node.GetInstanceID();
             Debug.Log("node = " + instance_id);
 
             controller.UpdateCurrentDialogueNode(instance_id);

@@ -1,27 +1,27 @@
 ﻿using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
+using UnityEngine.UI;
 
 public class Flares : MonoBehaviour
 {
-    LensFlare flare;
+    RawImage rawImage;
+    Material mat;
 
-    [SerializeField] float brightness = 0f, t_brightness = 1f;
+    float brightness = 0f, t_brightness = 1f;
+
+    [SerializeField] float minBrightness, maxBrightness = 1f;
     [SerializeField] float fadeSpeed = 1f;
 
     void Awake()
     {
-        flare = GetComponent<LensFlare>();
+        rawImage = GetComponent<RawImage>();
     }
 
-    void OnEnable()
+    void Start()
     {
-        Discovery.onDiscoverNew += Show;
-    }
-
-    void OnDisable()
-    {
-        Discovery.onDiscoverNew -= Show;
+        mat = rawImage.material;
+        brightness = t_brightness = minBrightness;
     }
 
     void Update()
@@ -29,15 +29,15 @@ public class Flares : MonoBehaviour
         Fade();
     }
 
-    void Show()
+    public void Show()
     {
-        t_brightness = 1f;
+        t_brightness = maxBrightness;
     }
 
     void Fade()
     {
-        if (brightness == 1f) 
-            t_brightness = 0f;
+        if (brightness == maxBrightness) 
+            t_brightness = minBrightness;
 
         float diff = Mathf.Abs(t_brightness - brightness);
         if (diff > .1f) {
@@ -46,6 +46,6 @@ public class Flares : MonoBehaviour
         else
             brightness = t_brightness;
 
-        flare.color = Color.HSVToRGB(0f, 0f, Mathf.Clamp01(brightness));
+        mat.SetFloat("_Threshold", brightness);
     }
 }

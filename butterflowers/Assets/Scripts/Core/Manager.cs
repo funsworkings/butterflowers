@@ -8,13 +8,21 @@ using FileSystemEntry = SimpleFileBrowser.FileSystemEntry;
 using Memory = Wizard.Memory;
 using System.Runtime.InteropServices;
 
+using UnityEngine.Events;
+
 public class Manager : Spawner
 {
     public static Manager Instance = null;
 
-    #region External
+    #region Events
 
-    [SerializeField] Settings.WorldPreset Preset;
+    public UnityEvent onDiscovery;
+
+	#endregion
+
+	#region External
+
+	[SerializeField] Settings.WorldPreset Preset;
     [SerializeField] Wizard.Memories WizardMemoryBank;
 
     GameDataSaveSystem Save = null;
@@ -105,7 +113,7 @@ public class Manager : Spawner
         SubscribeToEvents();
 
         var dat = Save.beaconData; Debug.LogFormat("Found {0} beacons from SAVE", dat.Length);
-        var refresh = (dat == null || dat.Length == 0) || !Preset.persist;
+        var refresh = (dat == null || dat.Length == 0) || !Preset.persistBeacons;
 
         Library.Initialize(refresh);
 
@@ -132,6 +140,8 @@ public class Manager : Spawner
     {
         Sun.onCycle += Advance;
 
+        Discovery.onDiscover += delegate { onDiscovery.Invoke(); };
+
         Nest.onOpen.AddListener(onNestStateChanged);
         Nest.onClose.AddListener(onNestStateChanged);
         Nest.onAddBeacon += onIngestBeacon;
@@ -149,6 +159,8 @@ public class Manager : Spawner
     void UnsubscribeToEvents()
     {
         Sun.onCycle -= Advance;
+
+        Discovery.onDiscover -= delegate { onDiscovery.Invoke(); };
 
         Nest.onOpen.RemoveListener(onNestStateChanged);
         Nest.onClose.RemoveListener(onNestStateChanged);
@@ -463,5 +475,5 @@ public class Manager : Spawner
 
     }
 
-	#endregion
+    #endregion
 }
