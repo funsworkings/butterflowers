@@ -141,6 +141,8 @@ public class Manager : Spawner
         Beacon.OnUnregister += onUnregisterBeacon;
         Beacon.Discovered += onDiscoveredBeacon;
 
+        Wizard.onDiscoverMemory += onDiscoveredMemory;
+
         Quilt.onDisposeTexture += onDisposeQuiltTexture;
     }
 
@@ -156,6 +158,8 @@ public class Manager : Spawner
         Beacon.OnRegister -= onRegisterBeacon;
         Beacon.OnUnregister -= onUnregisterBeacon;
         Beacon.Discovered -= onDiscoveredBeacon;
+
+        Wizard.onDiscoverMemory -= onDiscoveredMemory;
 
         Quilt.onDisposeTexture -= onDisposeQuiltTexture;
     }
@@ -443,7 +447,12 @@ public class Manager : Spawner
 
     #region Wizard callbacks
 
+    void onDiscoveredMemory(Memory memory)
+    {
+        var file = memory.name;
 
+        Discovery.DiscoverFile(file);
+    }
 
     #endregion
 

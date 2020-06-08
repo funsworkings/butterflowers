@@ -8,6 +8,12 @@ using System.Linq;
 
 public class Discovery: Singleton<Discovery> {
 
+	#region Events
+
+	public static System.Action onDiscoverNew;
+
+	#endregion
+
 	#region External
 
 	GameDataSaveSystem Save;
@@ -61,6 +67,9 @@ public class Discovery: Singleton<Discovery> {
 
 		discoveries.Add(path);
 		SendDiscoveries();
+
+		if (onDiscoverNew != null)
+			onDiscoverNew();
 	}
 
 	void SendDiscoveries()
