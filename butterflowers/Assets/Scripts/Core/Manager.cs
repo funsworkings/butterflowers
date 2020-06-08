@@ -15,7 +15,7 @@ public class Manager : Spawner
     #region External
 
     [SerializeField] Settings.WorldPreset Preset;
-    [SerializeField] Wizard.MemoryBank WizardMemoryBank;
+    [SerializeField] Wizard.Memories WizardMemoryBank;
 
     GameDataSaveSystem Save = null;
     Library Library = null;
@@ -286,7 +286,7 @@ public class Manager : Spawner
         }
     }
 
-    Beacon[] CreateBeacons(string[] files, Beacon.Type type)
+    Beacon[] CreateBeacons(string[] files, Beacon.Type type, bool overrides = false)
     {
         List<Beacon> instances = new List<Beacon>();
         for (int i = 0; i < files.Length; i++) {
@@ -305,7 +305,7 @@ public class Manager : Spawner
                 }
             }
 
-            if (!exists) {
+            if (!exists || overrides) {
                 var beacon = CreateBeacon(files[i], type);
                 if (beacon != null) // Could not success instantiate
                     instances.Add(beacon);
@@ -361,7 +361,7 @@ public class Manager : Spawner
 
     void onRegisterBeacon(Beacon beacon)
     {
-        var file = beacon.file;
+        var file = beacon.file; Debug.LogFormat("ADDED beacon -> {0}", file);
         if (beacons.ContainsKey(file)) {
             var list = beacons[file];
             list.Add(beacon);
@@ -377,7 +377,7 @@ public class Manager : Spawner
 
     void onUnregisterBeacon(Beacon beacon)
     {
-        var file = beacon.file;
+        var file = beacon.file; Debug.LogFormat("REMOVED beacon -> {0}", file);
         if (beacons.ContainsKey(file)) {
             var curr = beacons[file];
             curr.Remove(beacon);

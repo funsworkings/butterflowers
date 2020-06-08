@@ -8,7 +8,7 @@ using UnityEngine.Video;
 using UnityEngine.Networking;
 using System.Threading.Tasks;
 
-using MemoryBank = Wizard.MemoryBank;
+using Memories = Wizard.Memories;
 using UnityEditor;
 using System.Security.Cryptography;
 
@@ -24,8 +24,8 @@ public class Library : Singleton<Library>
 
 	FileNavigator Files = null;
 
-	MemoryBank m_WizardFiles = null;
-	public MemoryBank WizardFiles {
+	Memories m_WizardFiles = null;
+	public Memories WizardFiles {
 		get { return m_WizardFiles; }
 		set {
 			bool refresh = (m_WizardFiles != value);

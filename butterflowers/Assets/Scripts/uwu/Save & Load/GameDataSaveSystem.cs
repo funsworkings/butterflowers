@@ -101,6 +101,17 @@ public class GameDataSaveSystem : Singleton<GameDataSaveSystem>
         }
     }
 
+    public int dialogueNode {
+        get
+        {
+            return (data == null) ? -1 : data.dialoguenode;
+        }
+        set
+        {
+            data.dialoguenode = value;
+        }
+    }
+
     #endregion
 
     #region Fetch data path

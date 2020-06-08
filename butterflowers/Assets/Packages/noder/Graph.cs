@@ -44,7 +44,7 @@ namespace Noder {
         public Node GetNodeByInstanceId(int id)
         {
             int len = nodes.Count;
-            if (len == 0) 
+            if (len == 0) return null;
 
             for (int i = 0; i < len; i++) {
                 if (nodes[i].GetInstanceID() == id)
@@ -87,7 +87,14 @@ namespace Noder {
 
         public void Restart(){
             Start(); // Set active node to root node
-        } 
+        }
+
+        public void Dispose()
+        {
+            Reset();
+
+            activeNode = null;
+        }
 
         public void Reset(){
             foreach(Node node in this.nodes){

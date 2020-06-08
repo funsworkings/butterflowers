@@ -15,7 +15,7 @@ namespace Wizard {
 			}
 		}
 
-		public string body = "";
+		[TextArea(2, 30)] public string body = "";
 		public string body_formatted {
 			get
 			{
