@@ -6487,9 +6487,11 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: 
   container: {fileID: 1210492941}
-  timeBetweenSymbols: 0.067
+  symbol: 1
+  includeSpaces: 0
+  timeBetweenSymbols: 1
   timeBetweenBodies: 0.33
-  autoprogress: 0
+  autoprogress: 1
   autodispose: 1
   speaking: 0
   waiting: 0

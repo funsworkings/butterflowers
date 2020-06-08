@@ -19,6 +19,12 @@ public class DialogueHandler : MonoBehaviour {
 
 	[SerializeField] TMP_Text container = null;
 
+    #endregion
+
+    #region Internal
+
+    public enum SymbolType { Letter, Word }
+
 	#endregion
 
 	#region Collections
@@ -28,6 +34,9 @@ public class DialogueHandler : MonoBehaviour {
     #endregion
 
     #region Attributes
+
+    [SerializeField] SymbolType symbol = SymbolType.Letter;
+    [SerializeField] bool includeSpaces = true;
 
     [SerializeField] float timeBetweenSymbols = 1f;
     [SerializeField] float timeBetweenBodies = 1f;
@@ -146,7 +155,7 @@ public class DialogueHandler : MonoBehaviour {
 
             int i = 0;
             while(!reachedEndOfBody) {
-                m_current += GetCharacter(ref i, m_body);
+                m_current += GetSymbol(ref i, m_body);
 
                 OnProgress();
                 if (onProgress != null)
@@ -195,22 +204,62 @@ public class DialogueHandler : MonoBehaviour {
 
     #region Helpers
 
-    string GetCharacter(ref int index, string body)
+    string GetSymbol(ref int index, string body)
     {
-        char current = body[index];
+        int ind = index;
+        char current = body[ind];
 
-        int start = index;
-        int end = index;
+        int start = ind;
+        int end = ind;
 
         // Detected rich text
-        if (current == '<') {
+        /*if (current == '<') {
             for (int i = index; i < body.Length; i++) {
                 if (body[i] == '>') {
                     end = i;
                     break;
                 }
             }
+            current = body[end];
+        }*/
+
+        if (!includeSpaces) {
+            if (char.IsWhiteSpace(current)) {
+                for (int i = ind; i < body.Length; i++) {
+                    if (!char.IsWhiteSpace(body[i])) {
+                        end = i - 1;
+                        break;
+                    }
+                    else {
+                        if (i == body.Length - 1)
+                            end = i;
+                    }
+                }
+                current = body[end];
+                ind = end;
+            }
         }
+
+        if (symbol == SymbolType.Word) 
+        {
+            if (!char.IsWhiteSpace(current) || includeSpaces) {
+                for (int i = ind; i < body.Length; i++) {
+                    var isspace = char.IsWhiteSpace(current);
+
+                    if (isspace != char.IsWhiteSpace(body[i])) {
+                        end = i - 1;
+                        break;
+                    }
+                    else {
+                        if (i == body.Length - 1) 
+                            end = i;
+                    }
+                }
+                current = body[end];
+                ind = end;
+            }
+        }
+        
         var offset = (end - start) + 1;
         index += offset;
            
