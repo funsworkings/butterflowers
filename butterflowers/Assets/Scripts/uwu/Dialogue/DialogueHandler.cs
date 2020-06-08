@@ -207,8 +207,8 @@ public class DialogueHandler : MonoBehaviour {
     string GetSymbol(ref int index, string body)
     {
         int ind = index;
-        char current = body[ind];
 
+        char current = body[ind];
         int start = ind;
         int end = ind;
 
@@ -227,7 +227,7 @@ public class DialogueHandler : MonoBehaviour {
             if (char.IsWhiteSpace(current)) {
                 for (int i = ind; i < body.Length; i++) {
                     if (!char.IsWhiteSpace(body[i])) {
-                        end = i - 1;
+                        end = i;
                         break;
                     }
                     else {
@@ -235,8 +235,9 @@ public class DialogueHandler : MonoBehaviour {
                             end = i;
                     }
                 }
-                current = body[end];
+
                 ind = end;
+                current = body[end];
             }
         }
 
