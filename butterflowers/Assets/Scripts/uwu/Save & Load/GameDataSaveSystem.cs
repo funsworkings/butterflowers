@@ -4,7 +4,7 @@ using UnityEngine;
 
 using System.IO;
 using System.Linq;
-
+using Wizard;
 
 public class GameDataSaveSystem : Singleton<GameDataSaveSystem>
 {
@@ -109,6 +109,28 @@ public class GameDataSaveSystem : Singleton<GameDataSaveSystem>
         set
         {
             data.dialoguenode = value;
+        }
+    }
+
+    public float enviro_knowledge {
+        get
+        {
+            return (data == null) ? 0f : data.enviro_knowledge;
+        }
+        set
+        {
+            data.enviro_knowledge = value;
+        }
+    }
+
+    public Knowledge[] file_knowledge {
+        get
+        {
+            return (data == null) ? new Knowledge[] { } : data.file_knowledge;
+        }
+        set
+        {
+            data.file_knowledge = value;
         }
     }
 

@@ -273,6 +273,9 @@ public class Library : Singleton<Library>
 		return items.Contains(file);
 	}
 
+	public bool IsDesktop(Beacon beacon) { return (beacon == null) ? false : IsDesktop(beacon.file); }
+	public bool IsWizard(Beacon beacon) { return (beacon == null) ? false : IsWizard(beacon.file); }
+
 	public bool IsDesktop(string file)
 	{
 		return items_desktop.Contains(file);

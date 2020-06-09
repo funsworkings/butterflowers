@@ -42,7 +42,7 @@ public class Nest : MonoBehaviour
         [SerializeField] float force = 10f;
 
     [Header("Beacons")]
-        [SerializeField] List<Beacon> beacons = new List<Beacon>();
+        [SerializeField] List<Beacon> m_beacons = new List<Beacon>();
         [SerializeField] int m_capacity = 12;
 
 	#endregion
@@ -50,6 +50,7 @@ public class Nest : MonoBehaviour
 	#region Accessors
 
     public int capacity { get { return m_capacity; } }
+    public Beacon[] beacons { get { return m_beacons.ToArray(); } }
 
 	#endregion
 
@@ -141,13 +142,13 @@ public class Nest : MonoBehaviour
 
     public void Dispose(bool release = true)
     {
-        var beacons = this.beacons.ToArray();
+        var beacons = this.m_beacons.ToArray();
         for (int i = 0; i < beacons.Length; i++) {
             if (release) RemoveBeacon(beacons[i]);
             else beacons[i].Delete();
         }
 
-        this.beacons = new List<Beacon>();
+        this.m_beacons = new List<Beacon>();
 
         Quilt.Dispose(true);
     }
@@ -158,26 +159,26 @@ public class Nest : MonoBehaviour
 
     public void AddBeacon(Beacon beacon)
     {
-        if (beacons.Contains(beacon)) return;
+        if (m_beacons.Contains(beacon)) return;
 
         var a = beacon.transform.position;
         var b = transform.position;
 
         beacon.WarpFromTo(a, b, true);
 
-        beacons.Add(beacon);
+        m_beacons.Add(beacon);
     }
 
     public void RemoveBeacon(Beacon beacon)
     {
-        if (!beacons.Contains(beacon)) return;
+        if (!m_beacons.Contains(beacon)) return;
 
         var a = transform.position;
         var b = beacon.origin;
 
         beacon.WarpFromTo(a, b, false);
 
-        beacons.Remove(beacon);
+        m_beacons.Remove(beacon);
         cometPS.Play();
 
         onReleaseBeacon.Invoke();
@@ -188,7 +189,7 @@ public class Nest : MonoBehaviour
     {
         sparklesPS.Play();
 
-        var dispose = (beacons.Count > capacity);
+        var dispose = (m_beacons.Count > capacity);
         if (dispose) 
         {
             Dispose(true);
@@ -201,9 +202,9 @@ public class Nest : MonoBehaviour
 
     public void RemoveLastBeacon()
     {
-        if (beacons == null || beacons.Count == 0) return;
+        if (m_beacons == null || m_beacons.Count == 0) return;
 
-        var beacon = beacons[beacons.Count - 1];
+        var beacon = m_beacons[m_beacons.Count - 1];
         RemoveBeacon(beacon);
     }
 
@@ -213,7 +214,7 @@ public class Nest : MonoBehaviour
 
     public bool HasBeacon(Beacon beacon)
     {
-        return beacons.Contains(beacon);
+        return m_beacons.Contains(beacon);
     }
 
     #endregion
@@ -222,11 +223,11 @@ public class Nest : MonoBehaviour
 
     void onDestroyBeacon(Beacon beacon)
     {
-        if (!beacons.Contains(beacon)) return;
+        if (!m_beacons.Contains(beacon)) return;
 
         if(beacon.type != Beacon.Type.None) Quilt.Pop(beacon.file);
 
-        beacons.Remove(beacon);
+        m_beacons.Remove(beacon);
         cometPS.Play();
 
         onReleaseBeacon.Invoke();

@@ -38,8 +38,8 @@ public class DialogueHandler : MonoBehaviour {
     [SerializeField] SymbolType symbol = SymbolType.Letter;
     [SerializeField] bool includeSpaces = true;
 
-    [SerializeField] float timeBetweenSymbols = 1f;
-    [SerializeField] float timeBetweenBodies = 1f;
+    [SerializeField] float m_timeBetweenSymbols = 1f;
+    [SerializeField] float m_timeBetweenBodies = 1f;
     [SerializeField] bool autoprogress = false, autodispose = false;
 
     [SerializeField] bool speaking = false, waiting = false;
@@ -76,6 +76,20 @@ public class DialogueHandler : MonoBehaviour {
         get
         {
             return m_current;
+        }
+    }
+
+    public virtual float timeBetweenSymbols {
+        get
+        {
+            return m_timeBetweenSymbols;
+        }
+    }
+
+    public virtual float timeBetweenBodies {
+        get
+        {
+            return m_timeBetweenBodies;
         }
     }
 
@@ -161,7 +175,8 @@ public class DialogueHandler : MonoBehaviour {
                 if (onProgress != null)
                     onProgress(m_current);
 
-                if (!reachedEndOfBody) yield return new WaitForSeconds(timeBetweenSymbols);
+                float t_symbol = timeBetweenSymbols;
+                if (!reachedEndOfBody) yield return new WaitForSeconds(t_symbol);
             }
 
             m_current = m_body;
@@ -175,8 +190,8 @@ public class DialogueHandler : MonoBehaviour {
             if (onCompleteBody != null) // Fire event for reached end of body
                 onCompleteBody(current);
 
-            waiting = true;  var t = 0f;
-            while (waiting && t < timeBetweenBodies) {
+            waiting = true;  var t = 0f; var t_body = timeBetweenBodies;
+            while (waiting && t < t_body) {
                 if (autoprogress) 
                 {
                     t += Time.deltaTime;
