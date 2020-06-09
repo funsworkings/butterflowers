@@ -90,9 +90,15 @@ namespace Wizard {
         IEnumerator Start()
         {
             Save = GameDataSaveSystem.Instance;
+
             while (Save == null || !Save.load) yield return null;
 
             Dialogue.nodeID = (!Preset.persistDialogue)? -1 : Save.dialogueNode;
+
+            var enviro_knowledge = (!Preset.persistKnowledge) ? 0f : Save.enviro_knowledge;
+            var file_knowledge = (!Preset.persistKnowledge) ? new Knowledge[] { } : Save.file_knowledge;
+
+            Brain.Load(enviro_knowledge, file_knowledge);
 
             load = true;
         }
@@ -101,12 +107,22 @@ namespace Wizard {
         {
             Focus.onFocus += PushDialogue;
             Focus.onLoseFocus += ClearDialogue;
+
+            Sun.onDayBegin += onDayBegin;
+            Sun.onDayEnd += onDayEnd;
+            Sun.onNightBegin += onNightBegin;
+            Sun.onNightEnd += onNightEnd;
         }
 
         void OnDisable()
         {
             Focus.onFocus -= PushDialogue;
             Focus.onLoseFocus -= ClearDialogue;
+
+            Sun.onDayBegin -= onDayBegin;
+            Sun.onDayEnd -= onDayEnd;
+            Sun.onNightBegin -= onNightBegin;
+            Sun.onNightEnd -= onNightEnd;
         }
 
         // Update is called once per frame
@@ -126,9 +142,6 @@ namespace Wizard {
 
             EvaluateState();
             UpdateAnimatorFromState(state);
-
-            if (Input.GetKeyDown(KeyCode.Semicolon))
-                Brain.AddMemory(memories[0]);
         }
 
 		#endregion
@@ -261,9 +274,31 @@ namespace Wizard {
         public void DiscoverMemory(Memory memory)
         {
             Debug.LogFormat("FOUND memory = {0}", memory.name);
+
+            Brain.EncounterMemory(memory);
+
             if (onDiscoverMemory != null)
                 onDiscoverMemory(memory);
         }
+
+        #endregion
+
+        #region Brain
+
+        public void UpdateKnowledgeBase(float enviro, Knowledge[] files)
+        {
+            Save.enviro_knowledge = enviro;
+            Save.file_knowledge = files;
+        }
+
+		#endregion
+
+		#region Sun callbacks
+
+		void onDayBegin() { }
+        void onDayEnd() { }
+        void onNightBegin() { }
+        void onNightEnd() { }
 
 		#endregion
 

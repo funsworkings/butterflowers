@@ -38,6 +38,9 @@ namespace Wizard {
 
         [SerializeField] int node_id = -1;
 
+        [SerializeField] float minSymDelay = 0f, maxSymDelay = 1f;
+        [SerializeField] float minBodyDelay = 0f, maxBodyDelay = 1f;
+
 		#endregion
 
 		#region Accessors
@@ -111,6 +114,9 @@ namespace Wizard {
         #endregion
 
         #region Dialogue overrides
+
+        public override float timeBetweenSymbols => Random.Range(minSymDelay, maxSymDelay);
+        public override float timeBetweenBodies => Random.Range(minBodyDelay, maxBodyDelay);
 
         public override void Push(string body)
         {

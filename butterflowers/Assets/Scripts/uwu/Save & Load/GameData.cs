@@ -1,6 +1,7 @@
 ﻿using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
+using Wizard;
 
 [System.Serializable]
 public class GameData
@@ -12,4 +13,6 @@ public class GameData
     public bool nestopen = false;
 
     public int dialoguenode = -1;
+    public float enviro_knowledge = 0f;
+    public Knowledge[] file_knowledge = new Knowledge[] { };
 }

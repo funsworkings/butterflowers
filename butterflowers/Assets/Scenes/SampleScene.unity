@@ -181,7 +181,7 @@ MonoBehaviour:
         m_CallState: 2
   Preset: {fileID: 11400000, guid: 45ffdf5e02efb4848942aaeb5d029f6e, type: 2}
   WizardMemoryBank: {fileID: 11400000, guid: a11a7773fa9f39649b779c417d4c7b19, type: 2}
-  maxBeacons: 4
+  maxBeacons: 12
   beaconPaths: []
 --- !u!1 &62689476
 GameObject:
@@ -6487,10 +6487,10 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: 
   container: {fileID: 1210492941}
-  symbol: 1
+  symbol: 0
   includeSpaces: 0
-  timeBetweenSymbols: 0.33
-  timeBetweenBodies: 0.87
+  m_timeBetweenSymbols: 1
+  m_timeBetweenBodies: 1
   autoprogress: 1
   autodispose: 1
   speaking: 0
@@ -6503,6 +6503,10 @@ MonoBehaviour:
   bubble: {fileID: 1096321895}
   temp: []
   node_id: -1
+  minSymDelay: 0
+  maxSymDelay: 0.167
+  minBodyDelay: 0.5
+  maxBodyDelay: 1
 --- !u!114 &468500796
 MonoBehaviour:
   m_ObjectHideFlags: 0
@@ -6543,6 +6547,14 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: fa90edc80d8da3f4c9ae7586a74c43c3, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
+  Manager: {fileID: 58810647}
+  Nest: {fileID: 735639530}
+  Preset: {fileID: 11400000, guid: 599fca27826da9a469476dcff92e983f, type: 2}
+  WorldPreset: {fileID: 11400000, guid: 45ffdf5e02efb4848942aaeb5d029f6e, type: 2}
+  m_mood: 0
+  m_stance: 0
+  m_environmentKnowledge: 0
+  knowledge: []
 --- !u!1 &485146877
 GameObject:
   m_ObjectHideFlags: 0
@@ -7816,7 +7828,7 @@ MonoBehaviour:
   queue: 0
   disposeOnClose: 0
   force: 333
-  beacons: []
+  m_beacons: []
   m_capacity: 12
 --- !u!114 &735639531
 MonoBehaviour:

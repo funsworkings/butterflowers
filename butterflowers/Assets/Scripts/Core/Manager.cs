@@ -18,6 +18,8 @@ public class Manager : Spawner
 
     public UnityEvent onDiscovery;
 
+    public System.Action onRefreshBeacons;
+
 	#endregion
 
 	#region External
@@ -53,9 +55,15 @@ public class Manager : Spawner
 
     #endregion
 
-    #region Monobehaviour callbacks
+    #region Accessors
 
-    protected override void Awake()
+    public Beacon[] AllBeacons => allBeacons.ToArray();
+
+	#endregion
+
+	#region Monobehaviour callbacks
+
+	protected override void Awake()
     {
         base.Awake();
 
@@ -129,6 +137,9 @@ public class Manager : Spawner
         if (!refresh) {
             RestoreBeacons(dat); // Restore from save file
             DeleteDeprecatedBeacons();
+
+            if (onRefreshBeacons != null) // Fire event during initialization
+                onRefreshBeacons();
         }
         else
             RefreshBeacons();
@@ -281,10 +292,17 @@ public class Manager : Spawner
 
                 }
             }
+
         }
+
+        wizard = wizard.Intersect(subset);
+        desktop = desktop.Intersect(subset).ToArray();
 
         CreateBeacons(wizard.ToArray(), Beacon.Type.Wizard);
         CreateBeacons(desktop, Beacon.Type.Desktop);
+
+        if (onRefreshBeacons != null)
+            onRefreshBeacons();
     }
 
     void RestoreBeacons(BeaconData[] data)
@@ -462,7 +480,6 @@ public class Manager : Spawner
     void onDiscoveredMemory(Memory memory)
     {
         var file = memory.name;
-
         Discovery.DiscoverFile(file);
     }
 
