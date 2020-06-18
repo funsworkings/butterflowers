@@ -13,8 +13,25 @@ using System.Linq;
 public class CameraManager: MonoBehaviour {
     [SerializeField] GameCamera defaultCamera, previousCamera, currentCamera;
 
+    [SerializeField] Camera m_mainCamera = null;
+
+
     int virtualCameraIndex = -1;
     List<GameCamera> virtualCameras = new List<GameCamera>();
+
+    public Camera MainCamera {
+        get
+        {
+            if (m_mainCamera == null)
+                m_mainCamera = Camera.main;
+
+            return m_mainCamera;
+        }
+        set
+        {
+            m_mainCamera = value;
+        }
+    }
 
     public GameCamera ActiveCamera {
         get

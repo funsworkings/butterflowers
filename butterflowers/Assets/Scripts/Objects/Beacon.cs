@@ -26,11 +26,13 @@ public class Beacon: MonoBehaviour {
 
     #region Properties
 
-    [SerializeField] ParticleSystem revealPS, discoveryPS;
+    [SerializeField] ParticleSystem revealPS, discoveryPS, deathPS;
 
     Interactable interactable;
     SimpleOscillate Oscillate;
     Material material;
+
+    [SerializeField] GameObject pr_impactPS;
 
     #endregion
 
@@ -190,12 +192,12 @@ public class Beacon: MonoBehaviour {
 
 	public void Appear()
     {
-        revealPS.Play();
+        //revealPS.Play();
     }
 
     public void Disappear()
     {
-        revealPS.Stop();
+        //revealPS.Stop();
     }
 
     public void Discover(bool events = true)
@@ -208,6 +210,9 @@ public class Beacon: MonoBehaviour {
             Discovered(this);
 
         discoveryPS.Stop();
+
+        var impact = Instantiate(pr_impactPS, transform.position, transform.rotation);
+        impact.GetComponent<ParticleSystem>().Play();
     }
 
     public void Hide(bool events = true)
@@ -221,40 +226,38 @@ public class Beacon: MonoBehaviour {
         discoveryPS.Play();
     }
 
-    public void Delete(bool events = true)
+    public void Delete(bool events = true, bool particles = false)
     {
         if (destroyed) return;
         m_destroyed = true;
+
+        Unregister();
 
         HideInfo();
         if (Destroyed != null && events) {
             Destroyed(this);
         }
-
-        Destroy(gameObject); //Destroy immediately
-        //StartCoroutine("Dying");
+        
+        StartCoroutine("Dying", particles);
     }
 
     #endregion
 
     #region Internal
 
-    IEnumerator Dying()
+    IEnumerator Dying(bool particles = false)
     {
         float t = 0f;
         float sp = Oscillate.speed;
 
-        while (t < timeToDie) {
+        if (particles) 
+        {
+            deathPS.Play();
+            deathPS.transform.parent = null;
 
-            var offset = (timeToDie - t);
-            var str = Mathf.Pow(offset, 2f);
-
-            Oscillate.speed = sp * str;
-
-            t += Time.deltaTime;
-            yield return null;
+            yield return new WaitForSeconds(timeToDie);
         }
-
+        
         Destroy(gameObject);
     }
 

@@ -11,6 +11,7 @@ public class Focus : MonoBehaviour
     [SerializeField] FocusCamera Camera;
 
     [SerializeField] AudioHandler BackgroundAudio;
+    [SerializeField] AudioHandler MemoryAudio;
 
     #endregion
 
@@ -26,6 +27,9 @@ public class Focus : MonoBehaviour
 
     [SerializeField] float minBGPitch = .4f, maxBGPitch = 1f;
     [SerializeField] float minBGLP = 300f, maxBGLP = 5000f;
+    [SerializeField] float minBGVol = 0f, maxBGVol = 1f;
+
+    [SerializeField] float minMemVol = 0f, maxMemVol = 1f;
 
     [SerializeField] float lowpass = 0f, lowPassSmoothSpeed = .1f;
     [SerializeField] string lowPassFilterParam = null;
@@ -62,10 +66,14 @@ public class Focus : MonoBehaviour
         }
 
         if (BackgroundAudio != null) {
-            if (active)
+            if (active) {
                 SetBackgroundAudioFromDistance();
+                SetBackgroundVolumeFromDistance();
+            }
             else {
                 BackgroundAudio.pitch = 1f;
+                BackgroundAudio.volume = 1f;
+
                 lowpass = maxBGLP;
             }
 
@@ -97,6 +105,28 @@ public class Focus : MonoBehaviour
         focus = null;
 
         CameraManager.ResetToDefault();
+    }
+
+    #endregion
+
+    #region Audio
+
+    public void SetMemoryVolumeWithDistance(float baseline)
+    {
+        if (MemoryAudio == null || Camera == null) return;
+
+        if (active) {
+
+            float dist = Vector3.Distance(focus.transform.position, Camera.transform.position);
+            float vol = dist.RemapNRB(minFocusDistance, maxFocusDistance, maxMemVol, minMemVol);
+            vol = Mathf.Max(minMemVol, vol * baseline);
+
+            MemoryAudio.volume = vol;
+        }
+        else {
+            MemoryAudio.volume = minMemVol;
+        }
+        
     }
 
     #endregion
@@ -135,6 +165,16 @@ public class Focus : MonoBehaviour
 
         float target = Mathf.Lerp(current, lowpass, Time.deltaTime * lowPassSmoothSpeed);
         mixer.SetFloat(lowPassFilterParam, target);
+    }
+
+    void SetBackgroundVolumeFromDistance()
+    {
+        if (BackgroundAudio == null || Camera == null) return;
+
+        float dist = Vector3.Distance(focus.transform.position, Camera.transform.position);
+
+        float vol = dist.RemapNRB(minFocusDistance, maxFocusDistance, minBGVol, maxBGVol);
+        BackgroundAudio.volume = vol;
     }
 
     #endregion

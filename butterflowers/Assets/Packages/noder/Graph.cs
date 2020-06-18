@@ -93,6 +93,7 @@ namespace Noder {
         public void Dispose()
         {
             Reset();
+
             activeNode = null;
         }
 

@@ -10,6 +10,25 @@ public class GameDataSaveSystem : Singleton<GameDataSaveSystem>
 {
 
     private const string savefile = "save.dat";
+    private const float refreshrate = 15f;
+
+    private bool m_autosave = false;
+    public bool autosave {
+        get
+        {
+            return m_autosave;
+        }
+        set
+        {
+            if (autosave != value) 
+            {
+                if (!value) StopCoroutine("Autosave");
+                else StartCoroutine("Autosave");
+            }
+            m_autosave = value;
+        }
+    }
+
 
     [SerializeField] GameData m_data = null;
     public GameData data
@@ -112,6 +131,17 @@ public class GameDataSaveSystem : Singleton<GameDataSaveSystem>
         }
     }
 
+    public int[] dialogueVisited {
+        get
+        {
+            return (data == null) ? new int[] { } : data.dialoguevisited;
+        }
+        set
+        {
+            data.dialoguevisited = value;
+        }
+    }
+
     public float enviro_knowledge {
         get
         {
@@ -131,6 +161,17 @@ public class GameDataSaveSystem : Singleton<GameDataSaveSystem>
         set
         {
             data.file_knowledge = value;
+        }
+    }
+
+    public string[] shared_files {
+        get
+        {
+            return (data == null) ? new string[] { } : data.shared_files;
+        }
+        set
+        {
+            data.shared_files = value;
         }
     }
 
@@ -157,11 +198,6 @@ public class GameDataSaveSystem : Singleton<GameDataSaveSystem>
 
     #endregion
 
-    void Awake()
-    {
-        
-    }
-
     private void OnEnable()
     {
         LoadGameData();
@@ -170,14 +206,26 @@ public class GameDataSaveSystem : Singleton<GameDataSaveSystem>
     private void OnDisable()
     {
         SaveGameData();
+        autosave = false;
     }
 
     private void OnApplicationPause(bool pause)
     {
-        if (pause)
+        if (pause) {
             SaveGameData();
+            autosave = false;
+        }
         else
             LoadGameData();
+    }
+
+    IEnumerator Autosave()
+    {
+        while (true) 
+        {
+            yield return new WaitForSeconds(refreshrate);
+            SaveGameData();
+        }
     }
 
     void SaveGameData()
@@ -202,9 +250,9 @@ public class GameDataSaveSystem : Singleton<GameDataSaveSystem>
         m_load = true;
     }
 
-    #region Save/load callbacks
+	#region Save/load callbacks
 
-    void onSaveGameData()
+	void onSaveGameData()
     {
         Debug.LogFormat("~~Save file was SAVED on {0}~~", System.DateTime.Now.ToShortTimeString());
     }
@@ -212,6 +260,7 @@ public class GameDataSaveSystem : Singleton<GameDataSaveSystem>
     void onLoadGameData()
     {
         Debug.LogFormat("~~Save file was LOADED on {0}~~", System.DateTime.Now.ToShortTimeString());
+        autosave = (refreshrate > 0f);
     }
 
     #endregion

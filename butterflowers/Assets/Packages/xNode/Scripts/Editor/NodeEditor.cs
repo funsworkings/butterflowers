@@ -24,7 +24,19 @@ namespace XNodeEditor {
             // serializedObject.Update(); must go at the start of an inspector gui, and
             // serializedObject.ApplyModifiedProperties(); goes at the end.
             serializedObject.Update();
+
+            OnNodePropertyGUI(null);
+            OnDynamicPortListGUI();
+
+            serializedObject.ApplyModifiedProperties();
+        }
+
+        protected void OnNodePropertyGUI(string[] excl)
+        {
             string[] excludes = { "m_Script", "graph", "position", "ports" };
+
+            if (excl != null && excl.Length > 0) 
+                excludes = excludes.Union(excl).ToArray(); // Append new exclude flags
 
             // Iterate through serialized properties and draw them like the Inspector (But with ports)
             SerializedProperty iterator = serializedObject.GetIterator();
@@ -35,14 +47,15 @@ namespace XNodeEditor {
                 if (excludes.Contains(iterator.name)) continue;
                 NodeEditorGUILayout.PropertyField(iterator, true);
             }
+        }
 
+        protected void OnDynamicPortListGUI()
+        {
             // Iterate through dynamic ports and draw them in the order in which they are serialized
             foreach (XNode.NodePort dynamicPort in target.DynamicPorts) {
                 if (NodeEditorGUILayout.IsDynamicPortListPort(dynamicPort)) continue;
                 NodeEditorGUILayout.PortField(dynamicPort);
             }
-
-            serializedObject.ApplyModifiedProperties();
         }
 
         public virtual int GetWidth() {

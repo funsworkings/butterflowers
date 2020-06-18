@@ -10,6 +10,7 @@ namespace Settings
             public bool persistDiscoveries = false;
             public bool resetWorldClock = false;
             public bool persistDialogue = false;
+            public bool persistDialogueVisited = false;
             public bool persistKnowledge = false;
             public bool persistBeacons = false;
 

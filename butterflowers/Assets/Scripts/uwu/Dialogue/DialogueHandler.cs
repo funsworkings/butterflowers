@@ -6,7 +6,7 @@ using TMPro;
 using UIExt.Behaviors.Visibility;
 using UnityEngine.Experimental.UIElements;
 
-public class DialogueHandler : MonoBehaviour {
+public class DialogueHandler: MonoBehaviour {
 
     #region Events
 
@@ -17,7 +17,8 @@ public class DialogueHandler : MonoBehaviour {
 
     #region External
 
-	[SerializeField] TMP_Text container = null;
+    [SerializeField] UnityEngine.UI.Text txt_container = null;
+    [SerializeField] TMP_Text tmp_container = null;
 
     #endregion
 
@@ -25,11 +26,11 @@ public class DialogueHandler : MonoBehaviour {
 
     public enum SymbolType { Letter, Word }
 
-	#endregion
+    #endregion
 
-	#region Collections
+    #region Collections
 
-	List<string> queue = new List<string>();
+    List<string> queue = new List<string>();
 
     #endregion
 
@@ -51,7 +52,7 @@ public class DialogueHandler : MonoBehaviour {
     #region Accessors
 
     [SerializeField] bool m_inprogress = false;
-	public bool inprogress {
+    public bool inprogress {
         get
         {
             return queue.Count > 0;
@@ -93,6 +94,8 @@ public class DialogueHandler : MonoBehaviour {
         }
     }
 
+    public bool container => (tmp_container != null || txt_container != null);
+
 	#endregion
 
 	#region Operations
@@ -103,7 +106,6 @@ public class DialogueHandler : MonoBehaviour {
         body = ParseBody(body);
 
         if (string.IsNullOrEmpty(body)) return;
-        if (container == null) return;
 
         queue.Add(body);
 
@@ -152,6 +154,20 @@ public class DialogueHandler : MonoBehaviour {
 
     protected virtual string ParseBody(string body) { return FilterBody(body); }
     protected virtual string FilterBody(string body) { return body; }
+
+    protected virtual void SendBody(string body)
+    {
+        if (tmp_container != null) 
+        {
+            tmp_container.text = body;
+            return;
+        }
+        if (txt_container != null) 
+        {
+            txt_container.text = body;
+            return;
+        }
+    }
 
 	IEnumerator Speak()
     {
@@ -211,9 +227,9 @@ public class DialogueHandler : MonoBehaviour {
 
     protected virtual void OnSpeak() { }
     protected virtual void OnStart(string body) { }
-    protected virtual void OnProgress() { container.text = current; }
+    protected virtual void OnProgress() { SendBody(current); }
     protected virtual void OnComplete(string body) { }
-    protected virtual void OnDispose() { container.text = ""; }
+    protected virtual void OnDispose() { SendBody(""); }
 
     #endregion
 

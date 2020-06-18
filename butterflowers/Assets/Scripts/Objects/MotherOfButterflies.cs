@@ -22,6 +22,9 @@ public class MotherOfButterflies : Spawner
     #region Attributes
 
     [SerializeField] float minDistance = 0f, maxDistance = 1f;
+    [SerializeField] int alive = 0, dead = 0;
+
+    public float minKillDistance => minDistance/2f;
 
     #endregion
 
@@ -47,6 +50,7 @@ public class MotherOfButterflies : Spawner
         Butterfly.OnRegister += AddButterfly;
         Butterfly.OnUnregister += RemoveButterfly;
 
+        Butterfly.Dying += ButterflyDying;
         Butterfly.Died += ResetButterfly;
 
         base.Start(); 
@@ -63,6 +67,7 @@ public class MotherOfButterflies : Spawner
         Butterfly.OnRegister -= AddButterfly;
         Butterfly.OnUnregister -= RemoveButterfly;
 
+        Butterfly.Dying -= ButterflyDying;
         Butterfly.Died -= ResetButterfly;
     }
 
@@ -102,19 +107,17 @@ public class MotherOfButterflies : Spawner
         butterfly.transform.rotation = rotation;
     }
 
+    protected override void onInstantiatePrefab(GameObject obj, bool refresh)
+    {
+        base.onInstantiatePrefab(obj, refresh);
+
+        alive++;
+        if (refresh) dead--;
+    }
+
     #endregion
 
     #region Butterfly operations
-
-    void AddButterfly(Butterfly butterfly)
-    {
-        butterflies.Add(butterfly);
-    }
-
-    void RemoveButterfly(Butterfly butterfly)
-    {
-        butterflies.Remove(butterfly);
-    }
 
     public void KillButterflies()
     {
@@ -129,4 +132,41 @@ public class MotherOfButterflies : Spawner
     }
 
     #endregion
+
+    #region Butterfly callbacks
+
+    void AddButterfly(Butterfly butterfly)
+    {
+        butterflies.Add(butterfly);
+    }
+
+    void RemoveButterfly(Butterfly butterfly)
+    {
+        butterflies.Remove(butterfly);
+
+        if (butterfly.state == Butterfly.State.Dying)
+            dead--;
+        else
+            alive--;
+    }
+
+    void ButterflyDying(Butterfly butterfly)
+    {
+        ++dead;
+        --alive;
+    }
+
+    #endregion
+
+    #region Health operations
+
+    public float GetHealth()
+    {
+        int total = (alive + dead);
+        if (total == 0) return 1f;
+
+        return ((float)alive / total);
+    }
+
+	#endregion
 }

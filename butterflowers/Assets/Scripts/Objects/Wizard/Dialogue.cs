@@ -8,42 +8,52 @@ using System.Reflection.Emit;
 using UnityScript.Steps;
 
 using Noder;
+using Noder.Nodes.External;
 
 namespace Wizard {
 
     public class Dialogue: DialogueHandler {
 
-		#region Properties
+        #region Properties
 
-		[SerializeField] Noder.Graphs.DialogueTree DialogueTree;
+        [SerializeField] Noder.Graphs.DialogueTree DialogueTree;
 
         Controller controller;
         Memories memories;
+        Brain brain;
 
         [SerializeField] GameObject alert = null;
         [SerializeField] ToggleOpacity bubble = null;
+        [SerializeField] ToggleOpacity advancer = null;
 
         #endregion
 
         #region Collections
 
         [SerializeField] List<string> temp = new List<string>();
+        [SerializeField] List<int> tempvisited = new List<int>();
 
-		#endregion
+        #endregion
 
-		#region Attributes
+        #region Attributes
 
-		public readonly string imageFlag = ":i:";
+        public readonly string imageFlag = ":i:";
         public readonly string memoryFlag = ":m:";
+        public readonly string daysFlag = ":d:";
 
         [SerializeField] int node_id = -1;
 
-        [SerializeField] float minSymDelay = 0f, maxSymDelay = 1f;
-        [SerializeField] float minBodyDelay = 0f, maxBodyDelay = 1f;
+        [SerializeField] [Range(0f, 1f)] float m_minRandomness = .1f, m_maxRandomness = 1f;
+        [SerializeField] float m_minSymbolDelay = 0f, m_maxSymbolDelay = 1f;
 
-		#endregion
+        #endregion
 
-		#region Accessors
+        #region Accessors
+
+        public float minRandomness => m_minRandomness;
+        public float maxRandomness => m_maxRandomness;
+        public float minSymbolDelay => m_minSymbolDelay;
+        public float maxSymbolDelay => m_maxSymbolDelay;
 
         public int nodeID {
             get
@@ -60,11 +70,23 @@ namespace Wizard {
             }
         }
 
-		#endregion
+        public int[] nodeIDsVisited {
+            get
+            {
+                return tempvisited.ToArray();
+            }
+            set
+            {
+                tempvisited = new List<int>(value);
+                DialogueTree.FlagTemporaryDialogue(value);
+            }
+        }
 
-		#region Monobehaviour callbacks
+        #endregion
 
-		void Awake()
+        #region Monobehaviour callbacks
+
+        void Awake()
         {
             controller = GetComponent<Controller>();
         }
@@ -72,6 +94,8 @@ namespace Wizard {
         void Start()
         {
             memories = controller.Memories;
+            brain = controller.Brain;
+
             DialogueTree.dialogueHandler = this;
         }
 
@@ -102,7 +126,7 @@ namespace Wizard {
             temp = new List<string>();
         }
 
-		public void FetchDialogueFromTree() {
+        public void FetchDialogueFromTree() {
             DialogueTree.Step();
         }
 
@@ -115,8 +139,65 @@ namespace Wizard {
 
         #region Dialogue overrides
 
-        public override float timeBetweenSymbols => Random.Range(minSymDelay, maxSymDelay);
-        public override float timeBetweenBodies => Random.Range(minBodyDelay, maxBodyDelay);
+        [SerializeField] bool debug = false;
+        [SerializeField] [Range(0f, 1f)] float m_randomBetweenSymbols = 0f, m_anchorBetweenSymbols = .5f;
+        [SerializeField] float m_rangeBetweenSymbols = 0f, m_minBetweenSymbols = 0f, m_maxBetweenSymbols = 0f;
+
+        public override float timeBetweenSymbols {
+            get
+            {
+                if (debug) 
+                {
+                    float range = m_randomBetweenSymbols * (maxSymbolDelay - minSymbolDelay);
+                    float range_2 = range / 2f;
+                    float center = m_anchorBetweenSymbols.RemapNRB(0f, 1f, minSymbolDelay, maxSymbolDelay);
+
+                    float min = center - range_2;
+                    float max = center + range_2;
+
+                    var loffset = -Mathf.Max(0f, minSymbolDelay - min);
+                    var roffset = Mathf.Min(0f, maxSymbolDelay - max);
+
+                    min += (loffset + roffset);
+                    max += (loffset + roffset);
+
+                    Debug.LogFormat("mood={0} stance={1}  random={2}  range={3}  min={4}  max={5}", 0f, 0f, m_randomBetweenSymbols, range, min, max);
+
+                    return Random.Range(min, max);
+                }
+
+                return Random.Range(m_minBetweenSymbols, m_maxBetweenSymbols);
+            }
+        }
+
+        protected void UpdateTimeBetweenSymbols()
+        {
+            float mood = brain.mood;
+            float stance = brain.stance;
+
+            float random = (1f - stance).RemapNRB(0f, 1f, minRandomness, maxRandomness); // Inverse mood 
+
+            float dist = (maxSymbolDelay - minSymbolDelay);
+            float range = dist * random;
+            float range_2 = range / 2f;
+            float center = (-mood).RemapNRB(-1f, 1f, minSymbolDelay, maxSymbolDelay);
+
+            float min = center - range_2;
+            float max = center + range_2;
+
+            var loffset = -Mathf.Max(0f, minSymbolDelay - min);
+            var roffset = Mathf.Min(0f, maxSymbolDelay - max);
+
+            min += (loffset + roffset);
+            max += (loffset + roffset);
+
+            //Debug.LogFormat("mood={0} stance={1}  random={2}  range={3}  min={4}  max={5}", mood, stance, random, range, min, max);
+            m_randomBetweenSymbols = random;
+            m_rangeBetweenSymbols = range;
+
+            m_minBetweenSymbols = min;
+            m_maxBetweenSymbols = max;
+        }
 
         public override void Push(string body)
         {
@@ -140,7 +221,8 @@ namespace Wizard {
         protected override string ParseBody(string body)
         {
             body = Extensions.ReplaceEnclosingPattern(body, imageFlag, "<sprite name=\"{0}\">"); // Replace img tag
-            
+            body = body.Replace(daysFlag, Sun.Instance.days.ToString());
+
             return body;
         }
 
@@ -153,13 +235,27 @@ namespace Wizard {
         protected override void OnDispose()
         {
             base.OnDispose();
+
             bubble.Hide();
+            advancer.Hide();
         }
 
         protected override void OnStart(string body)
         {
             DiscoveryMemoriesFromBody(body);
             m_body = FilterMemories(body);
+
+            if(!debug) UpdateTimeBetweenSymbols();
+
+            advancer.Hide();
+        }
+
+        protected override void OnComplete(string body)
+        {
+            if (controller.isFocused) {
+                FetchDialogueFromTree();
+                advancer.Show();
+            }
         }
 
         #endregion
@@ -170,6 +266,15 @@ namespace Wizard {
         {
             int instance_id = (node == null)? -1:node.GetInstanceID();
             Debug.Log("node = " + instance_id);
+
+            if (node is TemporaryDialogue) 
+            {
+                if (!tempvisited.Contains(instance_id)) {
+                    tempvisited.Add(instance_id);
+
+                    controller.UpdateDialogueVisited(tempvisited.ToArray());
+                }
+            }
 
             controller.UpdateCurrentDialogueNode(instance_id);
         }

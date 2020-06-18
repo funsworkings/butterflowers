@@ -4,6 +4,7 @@ using UnityEngine;
 
 using XNode;
 using Noder.Nodes.External;
+using System.Linq;
 
 namespace Noder.Graphs {
 
@@ -22,8 +23,18 @@ namespace Noder.Graphs {
             }
         }
 
+        public void FlagTemporaryDialogue(int[] node_ids)
+        {
+            TemporaryDialogue[] temp = GetNodes<TemporaryDialogue>().ToArray();
+            foreach (TemporaryDialogue t in temp) {
+                int id = t.GetInstanceID();
+                t.visited = (node_ids.Contains(id));
+            }
+        }
+
         public void Step(int value)
         {
+            Debug.Log("Move to = " + value);
             if (activeNode != null) {
                 (activeNode as BaseDialogueNode).Next(value);
                 return;

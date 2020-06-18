@@ -23,6 +23,8 @@ public class Quilt : MonoBehaviour
     [SerializeField] float m_speed = 0f;
     [SerializeField] float minLerpSpeed = 0f, maxLerpSpeed = 1f;
 
+    [SerializeField] float offset = 0f;
+
     [SerializeField] float interval = 0f;
     public float speedInterval {
         get
@@ -96,8 +98,23 @@ public class Quilt : MonoBehaviour
         {
             death -= (Time.deltaTime * m_deathDecay);
         }
-         
+
+        material.SetFloat("_Interval", offset);
         material.SetFloat("_Death", (death > 0f)? 1f : 0f);
+        //material.SetInt("_TextureRange", textures.Count);
+
+        if(wait <= 0f)
+            offset = Mathf.Repeat(offset + (Time.deltaTime * m_speed), 1f);
+    }
+
+    float wait = 0f;
+    IEnumerator Wait()
+    {
+        while (wait > 0f) {
+            wait = Mathf.Max(0f, wait - Time.deltaTime);
+            yield return null;
+        }
+
     }
 
     #endregion
@@ -281,8 +298,11 @@ public class Quilt : MonoBehaviour
 
         textureArray.PopulateTextureArray(textures.ToArray());
         UpdateLerpSpeed();
-    }
 
+        offset = 1f; // Snap back immediately to last added
+        
+    }
+    
     void UpdateLerpSpeed(){
         float percent = (float)textures.Count / textureCap;
         m_speed = percent.Remap(0f, 1f, minLerpSpeed, maxLerpSpeed);

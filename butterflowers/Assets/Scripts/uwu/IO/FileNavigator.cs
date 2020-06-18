@@ -284,6 +284,8 @@ public class FileNavigator : MonoBehaviour
 
     #region Accessors
 
+    public string Path => path;
+
     public FileSystemEntry[] GetFiles(){ return files; }
     public string[] GetPaths() { return fileLookup.Keys.ToArray(); }
     public FileSystemEntry[] GetDirectories() { return directories; }

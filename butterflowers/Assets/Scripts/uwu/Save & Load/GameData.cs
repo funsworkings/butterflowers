@@ -13,6 +13,8 @@ public class GameData
     public bool nestopen = false;
 
     public int dialoguenode = -1;
+    public int[] dialoguevisited = new int[] { };
     public float enviro_knowledge = 0f;
     public Knowledge[] file_knowledge = new Knowledge[] { };
+    public string[] shared_files = new string[] { };
 }

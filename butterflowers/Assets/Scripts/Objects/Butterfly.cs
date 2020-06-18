@@ -13,6 +13,8 @@ public class Butterfly : MonoBehaviour
     public delegate void OnDeath(Butterfly butterfly);
     public static event OnDeath Died;
 
+    public delegate void OnDying(Butterfly butterfly);
+    public static event OnDying Dying;
 
     CameraDriver driver;
 
@@ -29,6 +31,9 @@ public class Butterfly : MonoBehaviour
     [SerializeField] GameObject trailsPrefab;
                      GameObject trails = null;
                      ParticleSystem trails_ps;
+
+    [SerializeField] Wand m_wand = null;
+    public Wand wand => m_wand;
 
     public Vector3 positionRelativeToCamera
     {
@@ -51,6 +56,7 @@ public class Butterfly : MonoBehaviour
     Vector3 velocity = Vector3.zero;
     Color value = Color.white;
 
+    public float depth => driver.camera.transform.InverseTransformPoint(transform.position).z;
 
     public enum State
     {
@@ -83,6 +89,8 @@ public class Butterfly : MonoBehaviour
     }
 
     void OnDestroy(){
+        StopCoroutine("RefreshWand");
+
         Unregister();
     }
 
@@ -101,15 +109,17 @@ public class Butterfly : MonoBehaviour
 
         timeSinceAlive += dt;
 
+        float scale = preset.scale;
         if (timeSinceAlive <= preset.timeToGrow)
-            GrowOverTime();
+            GrowOverTime(ref scale);
         else 
         {
-            foreach (Wand wand in wands) 
-            {
-                GrowWithWand(wand);
-            }
+            if(wand != null) 
+                GrowWithWand(wand, ref scale);
+            if (nest.energy > 0f)
+                GrowWithNest(ref scale);
         }
+        transform.localScale = Vector3.one * scale;
 
         float str = dt;
         if (state == State.Dying)
@@ -140,10 +150,8 @@ public class Butterfly : MonoBehaviour
             MoveTowardsSpawn(str);
         else if(state == State.Alive)
         {
-            foreach (Wand wand in wands) 
-            {
-                if(wand.spells) MoveWithWand(wand, str);
-            }
+            if(wand != null && wand.spells) MoveWithWand(wand, str);
+  
             MoveTowardsCenter(str);
             MoveWithNoise(str);
         }
@@ -157,7 +165,6 @@ public class Butterfly : MonoBehaviour
     }
 
     #endregion
-
 
     #region Operations
 
@@ -184,6 +191,8 @@ public class Butterfly : MonoBehaviour
 
         renderers = GetComponentsInChildren<Renderer>();
         propertyBlock = new MaterialPropertyBlock();
+
+        StartCoroutine("RefreshWand");
     }
 
     public void Reset()
@@ -281,11 +290,10 @@ public class Butterfly : MonoBehaviour
 
     public void Kill()
     {
-        state = State.Dying;
+        onDeath();
     }
 
     #endregion
-
 
     #region Movement
 
@@ -324,19 +332,24 @@ public class Butterfly : MonoBehaviour
         Vector3 direction = (target - current);
 
         float radius = preset.wandRadius;
-        float magnitude = preset.attractionCurve.Evaluate(Mathf.Clamp(radius - direction.magnitude, 0f, radius) / radius);
+        float dist = direction.magnitude;
+        float offset = (radius - dist);
+        float offset_int = offset / radius;
 
-        if (magnitude > 0f)
+        if (offset_int > 0f)
         {
+            float magnitude = preset.attractionCurve.Evaluate(Mathf.Clamp01(offset_int));
+
             //Check if killing butterfly
             if (wand.speed >= preset.wandRepelSpeed)
             {
-                state = State.Dying; // Flag butterfly for death
+                onDeath(); // Flag butterfly for death
                 magnitude *= -1f;
             }
+
+            velocity += driver.MoveRelativeToCamera(direction.normalized) * magnitude * preset.attraction * dt;
+           // velocity += driver.MoveRelativeToCamera(wand.velocity.normalized) * Mathf.Pow((1f - magnitude), 2f) * preset.follow * dt;
         }
-        
-        velocity += driver.MoveRelativeToCamera(direction.normalized) * magnitude * preset.attraction * dt;
     }
 
     void MoveTowardsCenter(float dt){
@@ -359,23 +372,24 @@ public class Butterfly : MonoBehaviour
 
     #region Growth
 
-    void GrowOverTime()
+    void GrowOverTime(ref float scale)
     {
         float interval = timeSinceAlive / preset.timeToGrow;
-        transform.localScale = Vector3.one * Mathf.Lerp(0f, preset.scale, Mathf.Pow(interval, 2f));
+        scale = Mathf.Lerp(0f, preset.scale, Mathf.Pow(interval, 2f));
     }
 
-    void GrowWithWand(Wand wand)
+    void GrowWithWand(Wand wand, ref float scale)
     {
         Vector3 dir = (wand.position - positionRelativeToCamera);
-        float magnitude = Mathf.Clamp01(1f - dir.magnitude / preset.wandRadius);
+        float magnitude = Mathf.Clamp01(1f - dir.magnitude / preset.wandRadius) + nest.energy*2f;
 
-        transform.localScale = Vector3.one * preset.scale * (1f + Mathf.Pow(magnitude, 2f));
+        scale *= (1f + Mathf.Pow(magnitude, 2f));
     }
 
-    void GrowWithPulses()
+    void GrowWithNest(ref float scale)
     {
-
+        //float magnitude = nest.energy;
+        //scale *= (1f + magnitude*2f);
     }
 
     #endregion
@@ -401,7 +415,7 @@ public class Butterfly : MonoBehaviour
 
             if (Random.Range(0f, 1f) < prob) 
             {
-                state = State.Dying;
+                onDeath();
                 final = value;
             }
 
@@ -436,4 +450,51 @@ public class Butterfly : MonoBehaviour
     }
 
     #endregion
+
+    #region Wands
+
+    IEnumerator RefreshWand()
+    {
+        Wand temp = null;
+
+        while (true) {
+            temp = null;
+
+            if (wands.Length == 1) temp = wands[0];
+            if (state == State.Alive && wands.Length > 1) 
+            {
+                float d = preset.wandRadius;
+                
+                for (int i = 0; i < wands.Length; i++) 
+                {
+                    var w = wands[i];
+                    float dist = (w.position - positionRelativeToCamera).magnitude;
+                    if (dist <= d) 
+                    {
+                        temp = w;
+                        d = dist;
+                    }
+                }
+            }
+
+            m_wand = temp;
+
+            yield return new WaitForSeconds(.33f);
+        }
+    }
+
+	#endregion
+
+	#region Internal callbacks
+
+	void onDeath()
+    {
+        bool flag = (state != State.Dying);
+
+        state = State.Dying;
+        if (flag && Dying != null)
+            Dying(this);
+    }
+
+	#endregion
 }

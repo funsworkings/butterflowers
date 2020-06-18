@@ -4,10 +4,11 @@ using UnityEngine;
 
 public class CameraDriver : Singleton<CameraDriver>
 {
-    new Camera camera;
+    Camera m_camera;
+    public new Camera camera => m_camera;
 
     void Awake() {
-        camera = Camera.main; 
+        m_camera = Camera.main; 
     }
 
     public Vector3 MoveRelativeToCamera(Vector2 vector){
@@ -16,14 +17,14 @@ public class CameraDriver : Singleton<CameraDriver>
 
     public Vector3 MoveRelativeToCamera(Vector3 vector){
         vector.z = 0f;
-        return camera.transform.TransformVector(vector);
+        return m_camera.transform.TransformVector(vector);
     }
 
     public Vector3 ConvertToScreen(Vector3 position){
-        return camera.WorldToScreenPoint(position);
+        return m_camera.WorldToScreenPoint(position);
     }
 
     public Vector3 ConvertToViewport(Vector3 position){
-        return camera.WorldToViewportPoint(position);
+        return m_camera.WorldToViewportPoint(position);
     }
 }

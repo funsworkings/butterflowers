@@ -7,7 +7,7 @@ public class FocalPoint : MonoBehaviour
 {
     #region Events
 
-    public static System.Action<FocalPoint> FocusOnPoint;
+    public static System.Action<FocalPoint> FocusOnPoint, LostFocusOnPoint;
     public System.Action onFocus, onLoseFocus;
 
     #endregion
@@ -91,6 +91,9 @@ public class FocalPoint : MonoBehaviour
 
         if (onLoseFocus != null)
             onLoseFocus();
+
+        if (LostFocusOnPoint != null)
+            LostFocusOnPoint(this);
     }
 
     #region Interactable callbacks
