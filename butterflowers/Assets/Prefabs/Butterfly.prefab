@@ -46,7 +46,7 @@ Transform:
   m_GameObject: {fileID: 5556437273785765615}
   m_LocalRotation: {x: 0, y: 0, z: 0, w: 1}
   m_LocalPosition: {x: 0, y: 0, z: 0}
-  m_LocalScale: {x: 0.167, y: 0.167, z: 0.167}
+  m_LocalScale: {x: 0.1, y: 0.1, z: 0.1}
   m_Children:
   - {fileID: 4212495206180586943}
   m_Father: {fileID: 0}
@@ -67,6 +67,7 @@ MonoBehaviour:
   preset: {fileID: 11400000, guid: d61cb4af776ad4144b8d58cf71187d87, type: 2}
   trailsPrefab: {fileID: 382550191870845936, guid: fee354e8b11564a1c84451cf147ab5b4,
     type: 3}
+  m_wand: {fileID: 0}
   origin: {x: 0, y: 0, z: 0}
   spawn: {x: 0, y: 0, z: 0}
   state: 0
@@ -84,7 +85,6 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 4b07e1ca857be497c959db8b96d84008, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  camera: {fileID: 0}
 --- !u!1001 &4212495206180200249
 PrefabInstance:
   m_ObjectHideFlags: 0

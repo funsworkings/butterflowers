@@ -1,5 +1,6 @@
 ﻿using System.Collections;
 using System.Collections.Generic;
+using System.Security.Cryptography;
 using UnityEngine;
 
 using Wizard;
@@ -12,17 +13,36 @@ public class BrainPreset : ScriptableObject
         public float daysUntilFileKnowledge = 7f;
 
     [Header("Multipliers")]
+        public float defaultLearningMultiplier = 1f;
         public float nestLearningMultiplier = 1f;
+        [Range(0f, 1f)] public float defaultShortTermMemoryEffect = 1f;
+        [Range(0f, 1f)] public float nestShortTermMemoryEffect = 1f;
 
     [Header("Stance")]
         public float environmentWeight = 1f;
         public float filesWeight = 1f;
 
     [Header("Mood")]
-        public float shortTermMemoryDuration = 3f;
+        public float moodSmoothSpeed = 1f;
+        public float shortTermMemoryDecaySpeed = 3f;
+        [Range(0f, 1f)] public float shortTermMemoryWeightTriggerThreshold = 0f;
         
         public float shortTermMemoryWeight = 1f;
         public float butterflyHealthWeight = 1f;
         public float stanceWeight = 1f;
 
+    [Header("Actions")]
+        public float minimumTimeBetweenActions = 1f;
+        public float maximumTimeBetweenActions = 3f;
+
+        [Range(0f, 1f)] public float minimumBeaconActivateKnowledge = .5f;
+        [Range(0f, 1f)] public float maximumBeaconDeleteKnowledge = .5f;
+
+        [Range(0f, 1f)] public float minimumDayNightActionProbability = .5f, maximumDayNightActionProbability = .5f;
+        public AnimationCurve actionProbabilityStanceCurve;
+
+        public Brain.ActionTypeThreshold[] actionTypeThresholdLookup;
+        public Brain.BeaconOpWeight[] beaconOpWeightLookup;
+        public Brain.NestOpWeight[] nestOpWeightLookup;
+        public Brain.EmoteWeight[] emoteWeightLookup;
 }

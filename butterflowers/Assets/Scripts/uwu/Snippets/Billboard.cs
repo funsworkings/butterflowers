@@ -4,21 +4,18 @@ using UnityEngine;
 
 public class Billboard : MonoBehaviour
 {
-    [SerializeField] new Camera camera;
+    CameraManager CameraManager;
 
     // Start is called before the first frame update
     void Start()
     {
-        if(camera == null)
-            camera = Camera.main;
+        CameraManager = FindObjectOfType<CameraManager>();
     }
 
     // Update is called once per frame
     void Update()
     {
-        if(camera == null)
-            return;
-            
+        var camera = CameraManager.MainCamera;
         transform.forward = (camera.transform.position - transform.position).normalized;
     }
 }

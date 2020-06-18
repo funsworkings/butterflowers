@@ -8,14 +8,20 @@ public class IK : MonoBehaviour
 {
     Animator animator;
 
-    float body = 2f, head = 1f;
+    float body = 3f, head = 1f;
 
-    [SerializeField] float m_lookAtWeight = 0f;
+    [SerializeField] float smoothLookAtWeightSpeed = 1f;
+
+    [SerializeField] float m_lookAtWeight = 0f, t_lookAtWeight = 0f;
     public float lookAtWeight
     {
+        get
+        {
+            return m_lookAtWeight;
+        }
         set
         {
-            m_lookAtWeight = value;
+            t_lookAtWeight = value;
         }
     }
 
@@ -37,9 +43,9 @@ public class IK : MonoBehaviour
 
     void OnAnimatorIK(int layerIndex)
     {
-        var weight = m_lookAtWeight;
+        var weight = m_lookAtWeight = Mathf.Lerp(m_lookAtWeight, t_lookAtWeight, Time.deltaTime * smoothLookAtWeightSpeed);
 
-        animator.SetLookAtWeight(weight, body, head);
         animator.SetLookAtPosition(m_lookAtPosition);
+        animator.SetLookAtWeight(weight, body, head);
     }
 }

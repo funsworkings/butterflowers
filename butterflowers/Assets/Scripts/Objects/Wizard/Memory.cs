@@ -25,6 +25,9 @@ namespace Wizard {
 
 		public string thumbnail;
 		public Texture2D image;
+		public AudioClip audio;
+
+		[Range(-1f, 1f)] public float weight = 0f;
 	}
 
 }

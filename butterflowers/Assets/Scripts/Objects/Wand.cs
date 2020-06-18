@@ -1,16 +1,28 @@
 ﻿using System.Collections;
 using System.Collections.Generic;
+using System.Linq;
 using UnityEngine;
 using UnityEngine.AI;
 
+using UnityEngine.Events;
+
 public class Wand : MonoBehaviour
 {
-    new Camera camera;
+    #region Events
+
+    public System.Action<Gesture> onGestureBegin, onGestureEnd;
+    public UnityEvent GestureStart, GestureEnd;
+
+	#endregion
+
+	new Camera camera;
 
     [SerializeField] bool m_spells = true;
 
     [SerializeField] Cursor cursor;
     [SerializeField] float distanceFromCamera = 10f;
+
+    Animator animator;
 
     [Header("Interaction")]
         Ray ray;
@@ -23,8 +35,12 @@ public class Wand : MonoBehaviour
 
         [SerializeField] List<Interactable> interacting = new List<Interactable>();
 
-        [SerializeField] bool down, cont, up;   
+        [SerializeField] bool down, cont, up;
 
+    [Header("Gestures")]
+        [SerializeField] Gesture[] m_gestures = new Gesture[] { };
+        [SerializeField] Gesture m_queueGesture, m_currentGesture;
+        [SerializeField] bool gesture = false, waitforgesture = false;
 
     public Vector3 position {
         get{
@@ -50,6 +66,10 @@ public class Wand : MonoBehaviour
         get {
             return m_spells;
         }
+        set
+        {
+            m_spells = value;
+        }
     }
 
     public Vector3 velocity {
@@ -64,10 +84,30 @@ public class Wand : MonoBehaviour
         }
     }
 
+    public Gesture[] gestures => m_gestures;
+
+    #region Internal
+
+    [System.Serializable]
+    public struct Gesture 
+    {
+        public string trigger;
+
+        [Range(0f, 1f)] 
+        public float weight;
+    }
+
+    #endregion
+
     #region Monobehaviour callbacks
 
-    // Start is called before the first frame update
-    void Start()
+    void Awake()
+    {
+        animator = GetComponent<Animator>();
+    }
+
+	// Start is called before the first frame update
+	void Start()
     {
         camera = Camera.main;
     }
@@ -88,9 +128,88 @@ public class Wand : MonoBehaviour
 
     #endregion
 
-    #region Navigation
+    #region Gestures
 
-    void Waypoint()
+    public void DoRandomGesture()
+    {
+        var t_gesture = gestures[Random.Range(0, gestures.Length)];
+        bool success = EnactGesture(t_gesture);
+    }
+
+    public bool EnactGesture(Gesture t_gesture, float speed = 1f)
+    {
+        if (animator == null) return false;
+        if (gesture || waitforgesture) return false;
+
+        animator.speed = speed;
+        animator.SetTrigger(t_gesture.trigger);
+
+        waitforgesture = true;
+        m_queueGesture = t_gesture;
+
+        StartCoroutine("TimeoutGesture");
+
+        return true;
+    }
+
+    IEnumerator TimeoutGesture()
+    {
+        float t = 0f;
+        float timeout = .167f;
+
+        while (t < timeout && waitforgesture) 
+        {
+            t += Time.deltaTime;
+            yield return null;
+        }
+
+        if (t < timeout) {
+            Debug.Log("Gesture SUCCESS!");
+
+            m_currentGesture = m_queueGesture;
+            m_queueGesture = new Gesture();
+
+            GestureStart.Invoke();
+            if (onGestureBegin != null)
+                onGestureBegin(m_currentGesture);
+
+            gesture = spells = true;
+        }
+        else {
+            Debug.Log("Gesture FAIL!");
+
+            m_queueGesture = m_currentGesture = new Gesture();
+            gesture = spells = false;
+
+            GestureEnd.Invoke();
+        }
+
+        waitforgesture = false;
+    }
+
+    public void BeginGesture()
+    {
+        if (waitforgesture) 
+            waitforgesture = false;
+    }
+
+    public void EndGesture()
+    {
+        GestureEnd.Invoke();
+        if (onGestureEnd != null)
+            onGestureEnd(m_currentGesture);
+
+        m_queueGesture = m_currentGesture = new Gesture();
+
+        gesture = false;
+        spells = false;
+    }
+
+	#endregion
+
+	#region Navigation
+
+	void Waypoint()
     {
         ray = camera.ScreenPointToRay(position);
 

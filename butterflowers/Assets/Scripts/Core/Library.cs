@@ -17,6 +17,7 @@ public class Library : Singleton<Library>
 	#region Events
 
 	public System.Action OnRefreshItems;
+	public System.Action<string> OnAddItem;
 
 	#endregion
 
@@ -36,6 +37,7 @@ public class Library : Singleton<Library>
 	}
 
 	Quilt Quilt = null;
+	GameDataSaveSystem Save;
 
 	#endregion
 
@@ -44,8 +46,10 @@ public class Library : Singleton<Library>
 	[SerializeField] List<string> items = new List<string>();
 	[SerializeField] List<string> items_wizard = new List<string>();
 	[SerializeField] List<string> items_desktop = new List<string>();
+	[SerializeField] List<string> items_shared = new List<string>();
 
 	[SerializeField] List<string> textureQueue = new List<string>();
+	[SerializeField] List<Texture2D> temp_textures = new List<Texture2D>();
 	[SerializeField] Dictionary<string, Texture2D> textures = new Dictionary<string, Texture2D>();
 
 	#endregion
@@ -94,6 +98,13 @@ public class Library : Singleton<Library>
 		}
 	}
 
+	public string[] shared_files {
+		get
+		{
+			return items_shared.ToArray();
+		}
+	}
+
 	#endregion
 
 	#region Monobehaviour callbacks
@@ -113,7 +124,10 @@ public class Library : Singleton<Library>
 	void RefreshDesktopFiles()
     {
 		items_desktop = new List<string>(Files.GetPaths());
+
+#if !UNITY_EDITOR
 		LoadTextures(items_desktop.ToArray());
+#endif
     }
 
 	void RefreshWizardFiles()
@@ -134,21 +148,28 @@ public class Library : Singleton<Library>
 		}
 	}
 
+	void RefreshSharedFiles()
+	{
+		if (Save == null) return;
+		items_shared = new List<string>(Save.shared_files);
+	}
+
 	void RefreshFiles()
 	{
 		Dispose();
 
 		RefreshDesktopFiles();
 		RefreshWizardFiles();
+		RefreshSharedFiles();
 
-		items = (items_desktop.Concat(items_wizard)).ToList();
+		items = (items_desktop.Concat(items_wizard).Concat(items_shared)).ToList();
 		if (OnRefreshItems != null)
 			OnRefreshItems();
 	}
 
-	#endregion
+#endregion
 
-	#region Textures
+#region Textures
 
 	void LoadTextures(string[] paths)
 	{
@@ -216,9 +237,9 @@ public class Library : Singleton<Library>
 		Debug.LogFormat("Added {0} to library", file);
 	}
 
-	#endregion
+#endregion
 
-	#region Operations
+#region Operations
 
 	public void Initialize(bool refresh = true)
 	{
@@ -229,6 +250,8 @@ public class Library : Singleton<Library>
 
 		Quilt = Quilt.Instance;
 		Quilt.onLoadTexture += AddTextureToLibrary;
+
+		Save = GameDataSaveSystem.Instance;
 
 		Files.Refresh();
 		initialized = true;
@@ -254,7 +277,13 @@ public class Library : Singleton<Library>
 
 		items_desktop.Clear();
 		items_wizard.Clear();
+		items_shared.Clear();
 		items.Clear();
+
+		Texture2D[] temptextures = temp_textures.ToArray();
+		for (int i = 0; i < temptextures.Length; i++) {
+			Destroy(temptextures[i]);
+		}
 
 		if (textureWWW != null) {
 			textureWWW.Dispose();
@@ -268,6 +297,28 @@ public class Library : Singleton<Library>
 		return textures[path];
 	}
 
+	public void SaveTexture(string name, Texture2D image)
+	{
+		var root = Files.Path;
+		var path = Path.Combine(root, string.Format("{0}.jpg", name));
+
+		if (items.Contains(path)) return;
+
+		var bytes = image.EncodeToJPG();
+		File.WriteAllBytes(path, bytes);
+
+		items.Add(path);
+		items_shared.Add(path);
+
+		textures.Add(path, image);
+		temp_textures.Add(image);
+
+		if (OnAddItem != null)
+			OnAddItem(path);
+
+		Save.shared_files = items_shared.ToArray();
+	}
+
 	public bool ContainsFile(string file)
 	{
 		return items.Contains(file);
@@ -275,6 +326,7 @@ public class Library : Singleton<Library>
 
 	public bool IsDesktop(Beacon beacon) { return (beacon == null) ? false : IsDesktop(beacon.file); }
 	public bool IsWizard(Beacon beacon) { return (beacon == null) ? false : IsWizard(beacon.file); }
+	public bool IsShared(Beacon beacon) { return (beacon == null) ? false : IsShared(beacon.file); }
 
 	public bool IsDesktop(string file)
 	{
@@ -286,5 +338,10 @@ public class Library : Singleton<Library>
 		return items_wizard.Contains(file);
 	}
 
-	#endregion
+	public bool IsShared(string file)
+	{
+		return items_shared.Contains(file);
+	}
+
+#endregion
 }

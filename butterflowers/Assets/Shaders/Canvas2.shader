@@ -7,6 +7,7 @@
     
         _Textures ("Textures", 2DArray) = ""{}
         _TextureCount ("Texture Count", int) = 0
+        _TextureRange("Texture Range", int) = 1
         
         _TextureStrength ("Texture Strength", Range(0,1)) = 0.5
         _NoiseStrength ("Noise Strength", Range(0,1)) = 0.5
@@ -14,6 +15,8 @@
 
         _Death("Death", Range(0, 1)) = 0.0
         _DeathColor ("Death Color", Color) = (0,0,0,1)
+
+        _Interval ("Interval", Float) = 0.0
         
         _DebugColor ("Debug Color", Color) = (1,1,1,1)
         _DebugStrength ("Debug Strength", Range(0,1)) = 0.5
@@ -29,6 +32,7 @@
             CGPROGRAM
             #pragma vertex vert
             #pragma fragment frag
+            #pragma target 4.0
             // make fog work
             #pragma multi_compile_fog
 
@@ -55,7 +59,7 @@
             
             float4 _MainTex_ST;
             
-            int _TextureCount;
+            int _TextureCount, _TextureRange;
             float _TextureStrength, _NoiseStrength;
 
             float _Death;
@@ -64,6 +68,8 @@
             fixed4 _DebugColor;
             float _DebugStrength;
             float _LerpSpeed;
+
+            float _Interval;
          
             v2f vert (appdata v)
             {
@@ -94,18 +100,37 @@
                 float t = _Time.y * _LerpSpeed;
                 float str = 0.0;
 
+                float r = _TextureRange * 1.0;
+                float maxrange = 0.0;
+
+
                 fixed4 mid = fixed4(.5, .5, .5, .5);
                 fixed4 ct = fixed4(1.0, 1.0, 1.0, 1.0);
+
+                if(_TextureCount == 0) ct = fixed4(1.0, 1.0, 1.0, 1.0);
+                else 
+                    maxrange = r / _TextureCount * 1.0;
                 
                 fixed4 c = fixed4(1.0, 1.0, 1.0, 1.0);
                 for(int i = 0; i < _TextureCount; i++){
                     uv.z = i;
                 
                     c = UNITY_SAMPLE_TEX2DARRAY(_Textures, uv);
+
+                    float index = ((i + 1)*1.0)/_TextureCount;
+                    float offset = fmod(t, 1.0) - index;
+                    float dist = abs(offset);
+
+                    str = 0.0;
+                    if(_TextureCount == 1) str = 1.0;
+                    else {
+                        if(dist <= maxrange)
+                            str += _TextureStrength*cos(t * 3.14 * (1.0 / _TextureRange*2.0) + i);
+                    }
                     
-                    str = _TextureStrength*(( sin( t + (i*1.0)/_TextureCount*6.28 )));
                     ct += ((c)*str);
                 }
+                ct.a = 1.0;
 
                 // apply fog
                 UNITY_APPLY_FOG(i.fogCoord, ct);

@@ -286,11 +286,20 @@ namespace XNodeEditor {
                 case EventType.KeyDown:
                     if (EditorGUIUtility.editingTextField) break;
                     else if (e.keyCode == KeyCode.F) Home();
+
+
+                    var keymove = 32f;
+                    if(e.keyCode == KeyCode.W) panOffset += new Vector2(0f, keymove) * zoom;
+                    if (e.keyCode == KeyCode.S) panOffset += new Vector2(0f, -keymove) * zoom;
+                    if (e.keyCode == KeyCode.A) panOffset += new Vector2(keymove, 0f) * zoom;
+                    if (e.keyCode == KeyCode.D) panOffset += new Vector2(-keymove, 0f) * zoom;
+
                     if (IsMac()) {
                         if (e.keyCode == KeyCode.Return) RenameSelectedNode();
                     } else {
                         if (e.keyCode == KeyCode.F2) RenameSelectedNode();
                     }
+
                     break;
                 case EventType.ValidateCommand:
                 case EventType.ExecuteCommand:

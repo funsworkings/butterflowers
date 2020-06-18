@@ -136,6 +136,8 @@ public class Sun : MonoBehaviour
             return;
         }
 
+        if (Input.GetKeyDown(KeyCode.RightBracket)) time += Preset.secondsPerDay;
+
         time += Time.deltaTime; // Add time to global clock
         Save.time = time;
 

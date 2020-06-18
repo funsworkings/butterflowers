@@ -91,11 +91,11 @@ public class AudioHandler: MonoBehaviour {
                 if (overrideMixer) {
                     var mixer = Mixer;
                     if (mixer != null) {
-                        float volume = 1f;
-                        bool success = mixer.GetFloat(volumeParam, out volume);
+                        float vol = 1f;
+                        bool success = mixer.GetFloat(volumeParam, out vol);
 
                         if (success)
-                            return volume;
+                            return vol;
                     }
                 }
 
@@ -125,7 +125,9 @@ public class AudioHandler: MonoBehaviour {
         }
     }
 
-	#endregion
+    #endregion
+
+    public float cv = 0f;
 
 	#region Monobehaviour callbacks
 
@@ -176,7 +178,12 @@ public class AudioHandler: MonoBehaviour {
         if (overrideMixer) {
             var mixer = Mixer;
             if (mixer != null) {
-                mixer.SetFloat(pitchParam, pitch);
+                try {
+                    mixer.SetFloat(pitchParam, pitch);
+                }
+                catch (System.Exception e) {
+
+                }
             }                
             return;
         }
@@ -190,7 +197,7 @@ public class AudioHandler: MonoBehaviour {
 
     void SmoothVolume()
     {
-        var current = currentVolume;
+        var current = FromDecibels(currentVolume);
         var target = Mathf.Lerp(current, volume, Time.deltaTime * volumeSmoothSpeed);
 
         SetVolume(target);
@@ -203,8 +210,8 @@ public class AudioHandler: MonoBehaviour {
         if (overrideMixer) {
             var mixer = Mixer;
             if (mixer != null) {
-                float attenuation = (volume >= 1f) ? 0f : -80f; // Remap to attenuation instead of raw volume 
-                //mixer.SetFloat(volumeParam, attenuation);
+                float attenuation = ToDecibels(volume); // Remap to attenuation instead of raw volume    
+                mixer.SetFloat(volumeParam, attenuation);
             }
             return;
         }
@@ -284,6 +291,16 @@ public class AudioHandler: MonoBehaviour {
 	float ClampPitchToRange(float value)
     {
         return Mathf.Clamp(value, pitchRange.x, pitchRange.y);
+    }
+
+    float ToDecibels(float volume)
+    {
+        return volume.RemapNRB(0f, 1f, -80f, 0f);
+    }
+
+    float FromDecibels(float decibels)
+    {
+        return decibels.RemapNRB(-80f, 0f, 0f, 1f);
     }
 
 	#endregion

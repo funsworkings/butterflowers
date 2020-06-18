@@ -13,6 +13,7 @@ namespace Settings {
 
         public float moveAmount;
         public float attraction;
+        public float follow;
 
         public float gravity = .98f;
         public float descentTime;
@@ -22,6 +23,7 @@ namespace Settings {
         public float minLifetime, maxLifetime; 
 
         public float wandRadius;
+        public float wandAttractSpeed;
         public float wandRepelSpeed;
 
         [Tooltip("Decay measured based on speed / max speed")]
@@ -30,6 +32,7 @@ namespace Settings {
         public AnimationCurve energyGrowthCurve;
 
         public AnimationCurve attractionCurve;
+        public AnimationCurve followCurve;
 
         public float centerStrength;
         public float minCenterDistance;

@@ -12,14 +12,15 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 2d1b3e60da8f84a548174644e0f114a0, type: 3}
   m_Name: World (Default)
   m_EditorClassIdentifier: 
-  persistDiscoveries: 1
+  persistDiscoveries: 0
   resetWorldClock: 0
   persistDialogue: 1
+  persistDialogueVisited: 1
   persistKnowledge: 1
-  persistBeacons: 0
-  hoursPerDay: 0.083333336
+  persistBeacons: 1
+  hoursPerDay: 0.08333335
   startOfDay: 0.1
   endOfDay: 0.6
   sunHoursPerDay: 0.00067
   directionOfGravity: {x: 0, y: -1, z: 0}
-  amountOfButterflies: 640
+  amountOfButterflies: 960

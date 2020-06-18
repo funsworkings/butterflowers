@@ -12,10 +12,11 @@ Shader "Custom/Butterfly"
         _DeathColor ("Death Color", Color) = (1,1,1,1)
         
         _Tiling ("Tiling", Float) = 1.0
+        _ZOffset("Depth Offset", Float) = 0.0
     }
     SubShader
     {       
-        Pass
+       /* Pass
         {
             ZTest Greater
             Blend DstColor OneMinusSrcAlpha
@@ -73,11 +74,13 @@ Shader "Custom/Butterfly"
 
             ENDCG
       
-		}
+		}*/
         Pass
         {
             Tags { "Queue"="Transparent" "RenderType"="Transparent" }
             LOD 100
+
+            ZTest LEqual
 
             CGPROGRAM
 

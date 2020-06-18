@@ -59,11 +59,14 @@ public class Manager : Spawner
 
     public Beacon[] AllBeacons => allBeacons.ToArray();
 
-	#endregion
+    public Beacon[] ActiveBeacons   => allBeacons.Where(beacon => Nest.HasBeacon(beacon)).ToArray();
+    public Beacon[] InactiveBeacons => allBeacons.Where(beacon => !Nest.HasBeacon(beacon)).ToArray();
 
-	#region Monobehaviour callbacks
+    #endregion
 
-	protected override void Awake()
+    #region Monobehaviour callbacks
+
+    protected override void Awake()
     {
         base.Awake();
 
@@ -165,6 +168,8 @@ public class Manager : Spawner
         Wizard.onDiscoverMemory += onDiscoveredMemory;
 
         Quilt.onDisposeTexture += onDisposeQuiltTexture;
+
+        Library.OnAddItem += onAddLibraryItem;
     }
 
     void UnsubscribeToEvents()
@@ -185,6 +190,8 @@ public class Manager : Spawner
         Wizard.onDiscoverMemory -= onDiscoveredMemory;
 
         Quilt.onDisposeTexture -= onDisposeQuiltTexture;
+
+        Library.OnAddItem -= onAddLibraryItem;
     }
 
     #endregion
@@ -272,6 +279,7 @@ public class Manager : Spawner
 
         var desktop = Library.desktop_files;
         var wizard = Library.wizard_files.Where(file => Discovery.HasDiscoveredFile(file)); // Only choose 'discovered' wizard files
+        var shared = Library.shared_files;
 
         var files = (desktop.Concat(wizard)).ToArray();
         var subset = files.PickRandomSubset<string>(maxBeacons).ToList(); // Random subset from aggregate collection    
@@ -377,15 +385,15 @@ public class Manager : Spawner
         return CreateBeacon(name, Beacon.Type.Wizard);
     }
 
-    public Beacon FetchRandomBeacon()
+    public Beacon FetchRandomBeacon(bool active = false)
     {
         var beacons = this.beacons.Values;
-        IEnumerable<Beacon> inactive = allBeacons.Where(beacon => !Nest.HasBeacon(beacon));
+        IEnumerable<Beacon> collection = (active) ? ActiveBeacons : InactiveBeacons;
 
-        int count = inactive.Count();
+        int count = collection.Count();
         if (count == 0) return null;
 
-        var _beacon = inactive.ElementAt(Random.Range(0, count));
+        var _beacon = collection.ElementAt(Random.Range(0, count));
         return _beacon;
     }
 
@@ -480,7 +488,16 @@ public class Manager : Spawner
     void onDiscoveredMemory(Memory memory)
     {
         var file = memory.name;
-        Discovery.DiscoverFile(file);
+        bool success = Discovery.DiscoverFile(file);
+
+        if (success) 
+        {
+            var beacon = CreateBeaconForWizard(memory.image);
+            if (beacon != null) 
+            {
+                beacon.Discover();
+            }
+        }
     }
 
     #endregion
@@ -493,4 +510,13 @@ public class Manager : Spawner
     }
 
     #endregion
+
+    #region Library callbacks
+
+    void onAddLibraryItem(string item)
+    {
+
+    }
+
+	#endregion
 }

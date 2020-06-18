@@ -14,10 +14,77 @@ MonoBehaviour:
   m_EditorClassIdentifier: 
   daysUntilEnvironmentKnowledge: 7
   daysUntilFileKnowledge: 7
-  nestLearningMultiplier: 1.33
-  environmentWeight: 1
+  defaultLearningMultiplier: 1
+  nestLearningMultiplier: 1.67
+  defaultShortTermMemoryEffect: 1
+  nestShortTermMemoryEffect: 1
+  environmentWeight: 2
   filesWeight: 1
-  shortTermMemoryDuration: 3
-  shortTermMemoryWeight: 1
+  moodSmoothSpeed: 0.5
+  shortTermMemoryDecaySpeed: 0.0167
+  shortTermMemoryWeightTriggerThreshold: 0.191
+  shortTermMemoryWeight: 3
   butterflyHealthWeight: 1
-  stanceWeight: 1
+  stanceWeight: 2
+  minimumTimeBetweenActions: 1
+  maximumTimeBetweenActions: 2
+  minimumBeaconActivateKnowledge: 0.39
+  maximumBeaconDeleteKnowledge: 0.37
+  minimumDayNightActionProbability: 0.26
+  maximumDayNightActionProbability: 0.76
+  actionProbabilityStanceCurve:
+    serializedVersion: 2
+    m_Curve:
+    - serializedVersion: 3
+      time: 0
+      value: 0
+      inSlope: 0
+      outSlope: 0
+      tangentMode: 0
+      weightedMode: 0
+      inWeight: 0
+      outWeight: 0
+    - serializedVersion: 3
+      time: 1
+      value: 1
+      inSlope: 0
+      outSlope: 0
+      tangentMode: 0
+      weightedMode: 0
+      inWeight: 0
+      outWeight: 0
+    m_PreInfinity: 2
+    m_PostInfinity: 2
+    m_RotationOrder: 4
+  actionTypeThresholdLookup:
+  - type: 1
+    threshold: 0.849
+  - type: 2
+    threshold: 0
+  - type: 3
+    threshold: 0.15
+  - type: 4
+    threshold: 0.34
+  - type: 5
+    threshold: 0.682
+  - type: 6
+    threshold: 0.86
+  beaconOpWeightLookup:
+  - type: 1
+    weight: 0.55
+  - type: 2
+    weight: -0.45
+  nestOpWeightLookup:
+  - type: 1
+    weight: 0
+  - type: 2
+    weight: -0.67
+  - type: 3
+    weight: -0.26
+  - type: 4
+    weight: -0.85
+  emoteWeightLookup:
+  - emote: 1
+    weight: 1
+  - emote: 2
+    weight: -1
