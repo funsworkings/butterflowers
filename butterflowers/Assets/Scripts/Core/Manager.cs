@@ -30,12 +30,13 @@ public class Manager : Spawner
     GameDataSaveSystem Save = null;
     Library Library = null;
     FileNavigator Files = null;
+    Scribe Scribe = null;
     Discovery Discovery = null;
     MotherOfButterflies Butterflowers = null;
     Sun Sun = null;
     Nest Nest = null;
     Quilt Quilt = null;
-    Wizard.Controller Wizard = null;
+    [SerializeField] Wizard.Controller Wizard = null;
     Loading Loader = null;
 
 	#endregion
@@ -46,9 +47,15 @@ public class Manager : Spawner
 
     #endregion
 
-    #region Collections
+    #region Properties
 
-    Dictionary<string, List<Beacon>> beacons = new Dictionary<string, List<Beacon>>();
+    [SerializeField] Transform m_beaconInfoContainer = null;
+
+	#endregion
+
+	#region Collections
+
+	Dictionary<string, List<Beacon>> beacons = new Dictionary<string, List<Beacon>>();
     List<Beacon> allBeacons = new List<Beacon>();
 
     [SerializeField] string[] beaconPaths = new string[] { };
@@ -61,6 +68,8 @@ public class Manager : Spawner
 
     public Beacon[] ActiveBeacons   => allBeacons.Where(beacon => Nest.HasBeacon(beacon)).ToArray();
     public Beacon[] InactiveBeacons => allBeacons.Where(beacon => !Nest.HasBeacon(beacon)).ToArray();
+
+    public Transform BeaconInfoContainer => m_beaconInfoContainer;
 
     #endregion
 
@@ -86,12 +95,13 @@ public class Manager : Spawner
         Discovery.Preset = Preset;
 
         Files = FileNavigator.Instance;
+        Scribe = Scribe.Instance;
         Sun = Sun.Instance;
         Nest = Nest.Instance;
         Quilt = Quilt.Instance;
 
         Butterflowers = FindObjectOfType<MotherOfButterflies>();
-        Wizard = FindObjectOfType<Wizard.Controller>();
+
         Loader = FindObjectOfType<Loading>();
 
         StartCoroutine("Initialize");
@@ -119,6 +129,12 @@ public class Manager : Spawner
     IEnumerator Initialize()
     {
         while (!Save.load) yield return null;
+
+        if (Save.wizard) Wizard.gameObject.SetActive(true);
+        
+        Scribe.Restore(Save.logs);
+        Nest.RestoreCapacity(Save.nestcapacity);
+
         while (!Discovery.load) yield return null;
 
         SubscribeToEvents();
@@ -154,7 +170,7 @@ public class Manager : Spawner
     {
         Sun.onCycle += Advance;
 
-        Discovery.onDiscover += delegate { onDiscovery.Invoke(); };
+        Discovery.onDiscover += onDiscoveredSomethingNew;
 
         Nest.onOpen.AddListener(onNestStateChanged);
         Nest.onClose.AddListener(onNestStateChanged);
@@ -176,7 +192,7 @@ public class Manager : Spawner
     {
         Sun.onCycle -= Advance;
 
-        Discovery.onDiscover -= delegate { onDiscovery.Invoke(); };
+        Discovery.onDiscover -= onDiscoveredSomethingNew;
 
         Nest.onOpen.RemoveListener(onNestStateChanged);
         Nest.onClose.RemoveListener(onNestStateChanged);
@@ -219,6 +235,12 @@ public class Manager : Spawner
         //if(success) Butterflowers.KillButterflies(); // Kill all butterflies (if nest was closed)
 
         RefreshBeacons(); // Reset all beacons
+
+        if (Sun.days == 1) 
+        {
+            Wizard.gameObject.SetActive(true);
+            Save.wizard = true;
+        }
     }
 
     #endregion
@@ -255,17 +277,26 @@ public class Manager : Spawner
         beacon.Register();
         beacon.Appear();
 
+        Events.ReceiveEvent(EVENTCODE.BEACONADD, AGENT.World, AGENT.Beacon, details: beacon.file.AbbreviateFilename());
+
         return beacon;
     }
-
+    
     public void DeleteBeacon(Beacon beacon, bool overridenest = false)
     {
+        bool success = true;
+
         if (overridenest) 
             beacon.Delete();
         else {
             if (!Nest.HasBeacon(beacon))
                 beacon.Delete();
+            else
+                success = false;
         }
+
+        if(success)
+            Events.ReceiveEvent(EVENTCODE.BEACONDELETE, AGENT.World, AGENT.Beacon, details: beacon.file.AbbreviateFilename());
     }
 
     // If beacon is in subset, IGNORE
@@ -324,7 +355,10 @@ public class Manager : Spawner
             bool v = beacon.visible;
 
             var instance = CreateBeacon(p, t);
-            if (!v) onDiscoveredBeacon(instance); // Send to nest if immediately found
+            if (!v) {
+                onDiscoveredBeacon(instance); // Send to nest if immediately found
+                Events.ReceiveEvent(EVENTCODE.BEACONACTIVATE, AGENT.World, AGENT.Beacon, details: instance.file.AbbreviateFilename());
+            }
         }
     }
 
@@ -403,7 +437,7 @@ public class Manager : Spawner
 
     void onRegisterBeacon(Beacon beacon)
     {
-        var file = beacon.file; Debug.LogFormat("ADDED beacon -> {0}", file);
+        var file = beacon.file;
         if (beacons.ContainsKey(file)) {
             var list = beacons[file];
             list.Add(beacon);
@@ -419,7 +453,7 @@ public class Manager : Spawner
 
     void onUnregisterBeacon(Beacon beacon)
     {
-        var file = beacon.file; Debug.LogFormat("REMOVED beacon -> {0}", file);
+        var file = beacon.file;
         if (beacons.ContainsKey(file)) {
             var curr = beacons[file];
             curr.Remove(beacon);
@@ -436,7 +470,7 @@ public class Manager : Spawner
     {
         var file = beacon.file;
 
-        Discovery.DiscoverFile(file);
+        bool success = Discovery.DiscoverFile(file);
         Nest.AddBeacon(beacon);
     }
 
@@ -490,6 +524,7 @@ public class Manager : Spawner
         var file = memory.name;
         bool success = Discovery.DiscoverFile(file);
 
+        Debug.LogFormat("discovery = {0}", file);
         if (success) 
         {
             var beacon = CreateBeaconForWizard(memory.image);
@@ -516,6 +551,16 @@ public class Manager : Spawner
     void onAddLibraryItem(string item)
     {
 
+    }
+
+    #endregion
+
+    #region Discovery callbacks
+
+    void onDiscoveredSomethingNew(string file)
+    {
+        onDiscovery.Invoke();
+        Events.ReceiveEvent(EVENTCODE.DISCOVERY, AGENT.Inhabitants, AGENT.Beacon, details:file.AbbreviateFilename());
     }
 
 	#endregion

@@ -7,6 +7,7 @@ using UnityEngine.UI;
 using UIExt.Extras;
 using TMPro;
 using System.IO;
+using System.Linq;
 
 public class Beacon: MonoBehaviour {
 
@@ -50,7 +51,11 @@ public class Beacon: MonoBehaviour {
     [SerializeField] FileSystemEntry m_fileEntry;
 
     public Vector3 origin = Vector3.zero;
+    Vector3 warp_a, warp_b;
+
     bool warping = false;
+    bool warp_nest = false;
+    float warp_t = 0f;
 
     [SerializeField] float timeToWarp = 1f, heightOfWarp = 1f;
     [SerializeField] float timeToDie = 1.67f;
@@ -143,6 +148,27 @@ public class Beacon: MonoBehaviour {
         if (!active) HideInfo();
 
         UpdateColor();
+
+        if (warping) {
+            var interval = 0f;
+
+            Vector3 dir = (warp_b - warp_a);
+
+            if (warp_t <= timeToWarp) {
+                warp_t += Time.deltaTime;
+                interval = Mathf.Clamp01(warp_t / timeToWarp);
+
+                float h = Mathf.Sin(interval * Mathf.PI) * heightOfWarp;
+                transform.position = warp_a + (dir * Mathf.Pow(interval, 4f)) + (Vector3.up * h);
+
+                float sa = (warp_nest) ? 1f : 0f; float sb = (warp_nest) ? 0f : 1f;
+                transform.localScale = Vector3.one * Mathf.Lerp(sa, sb, Mathf.Pow(interval, 2f));
+            }
+            else {
+                warping = false;
+                if (warp_nest) Nest.ReceiveBeacon(this);
+            }
+        }
     }
 
     void OnEnable() {
@@ -200,10 +226,10 @@ public class Beacon: MonoBehaviour {
         //revealPS.Stop();
     }
 
-    public void Discover(bool events = true)
+    public bool Discover(bool events = true)
     {
-        if (!Nest.open) return;
-        if (destroyed) return;
+        if (!Nest.open) return false;
+        if (destroyed) return false;
 
         m_discovered = true;
         if (Discovered != null && events)
@@ -213,22 +239,26 @@ public class Beacon: MonoBehaviour {
 
         var impact = Instantiate(pr_impactPS, transform.position, transform.rotation);
         impact.GetComponent<ParticleSystem>().Play();
+
+        return true;
     }
 
-    public void Hide(bool events = true)
+    public bool Hide(bool events = true)
     {
-        if (destroyed) return;
+        if (destroyed) return false;
 
         m_discovered = false;
         if (Hidden != null && events)
             Hidden(this);
 
         discoveryPS.Play();
+
+        return true;
     }
 
-    public void Delete(bool events = true, bool particles = false)
+    public bool Delete(bool events = true, bool particles = false)
     {
-        if (destroyed) return;
+        if (destroyed) return false;
         m_destroyed = true;
 
         Unregister();
@@ -239,6 +269,8 @@ public class Beacon: MonoBehaviour {
         }
         
         StartCoroutine("Dying", particles);
+
+        return true;
     }
 
     #endregion
@@ -286,7 +318,10 @@ public class Beacon: MonoBehaviour {
 
 	void Activate(Vector3 point, Vector3 normal){
         if (!active) return;
-        Discover();
+
+        bool success = Discover();
+        if(success)
+            Events.ReceiveEvent(EVENTCODE.BEACONACTIVATE, AGENT.Inhabitant0, AGENT.Beacon, details: file.AbbreviateFilename());
     }
 
     void Hover(Vector3 point, Vector3 normal){
@@ -316,37 +351,17 @@ public class Beacon: MonoBehaviour {
 
 	#region Warp operations
 
-	public void WarpFromTo(Vector3 origin, Vector3 destination, bool nest = false)
+	public void WarpFromTo(bool nest = false)
     {
         interactable.enabled = !nest;
 
-        if (warping) StopCoroutine("WarpToLocation");
-        StartCoroutine(WarpToLocation(origin, destination, nest));
-    }
+        warp_t = 0f;
+        warp_nest = true;
 
-    IEnumerator WarpToLocation(Vector3 a, Vector3 b, bool nest = false)
-    {
-        float t = 0f;
-        float interval = 0f;
-
-        Vector3 dir = (b - a);
+        warp_a = transform.position;
+        warp_b = (nest) ? Nest.Instance.transform.position : origin;
 
         warping = true;
-        while (t <= timeToWarp) {
-            t += Time.deltaTime;
-            interval = Mathf.Clamp01(t / timeToWarp);
-
-            float h = Mathf.Sin(interval * Mathf.PI) * heightOfWarp;
-            transform.position = a + (dir * Mathf.Pow(interval, 4f)) + (Vector3.up * h);
-
-            float sa = (nest) ? 1f : 0f; float sb = (nest) ? 0f : 1f;
-            transform.localScale = Vector3.one * Mathf.Lerp(sa, sb, Mathf.Pow(interval, 2f));
-
-            yield return null;
-        }
-        warping = false;
-
-        if (nest) Nest.ReceiveBeacon(this);
     }
 
 	#endregion
@@ -354,9 +369,7 @@ public class Beacon: MonoBehaviour {
 	#region Info operations
 
 	void CreateInfo(){
-        var canvas = FindObjectOfType<Canvas>();
-
-        info = Instantiate(infoPrefab, canvas.transform);
+        info = Instantiate(infoPrefab, Room.BeaconInfoContainer);
         infoTooltip = info.GetComponent<Tooltip>();
         infoTooltip.target = transform;
         infoText = info.GetComponent<TMP_Text>();

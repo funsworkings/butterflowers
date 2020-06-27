@@ -5,6 +5,7 @@ using UnityEngine;
 using XNode;
 using Noder.Nodes.External;
 using System.Linq;
+using Wizard;
 
 namespace Noder.Graphs {
 
@@ -23,6 +24,8 @@ namespace Noder.Graphs {
             }
         }
 
+        [SerializeField] Memories Memories;
+
         public void FlagTemporaryDialogue(int[] node_ids)
         {
             TemporaryDialogue[] temp = GetNodes<TemporaryDialogue>().ToArray();
@@ -30,6 +33,11 @@ namespace Noder.Graphs {
                 int id = t.GetInstanceID();
                 t.visited = (node_ids.Contains(id));
             }
+        }
+
+        public void AddMemoryToDatabase(Wizard.Memory mem)
+        {
+            Memories.Add(mem);
         }
 
         public void Step(int value)

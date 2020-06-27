@@ -12,8 +12,6 @@ namespace Wizard {
 	using Action = Actions.Action;
 
 	using ActionType = Actions.Type;
-	using BeaconOpType = Actions.BeaconOp.Type;
-	using NestOpType = Actions.NestOp.Type;
 	using Gesture = Wand.Gesture;
 	using Emote = Actions.Emote;
 
@@ -81,7 +79,7 @@ namespace Wizard {
 
 		[System.Serializable]
 		public struct BeaconOpWeight {
-			public BeaconOpType type;
+			public ActionType type;
 
 			[Range(-1f, 1f)]
 			public float weight;
@@ -89,7 +87,7 @@ namespace Wizard {
 
 		[System.Serializable]
 		public struct NestOpWeight {
-			public NestOpType type;
+			public ActionType type;
 
 			[Range(-1f, 1f)]
 			public float weight;
@@ -398,19 +396,6 @@ namespace Wizard {
 			return el;
 		}
 
-		public BeaconOpType DecideBeaconOpType()
-		{
-
-
-			return BeaconOpType.None;
-		}
-
-		public NestOpType DecideNestOpType()
-		{
-
-			return NestOpType.None;
-		}
-
 		#endregion
 
 		#region Actions
@@ -424,50 +409,46 @@ namespace Wizard {
 			action.type = ActionType.None;
 
 			ActionType choice = available.PickRandomSubset(1)[0];
-			if (choice == ActionType.BeaconOp) {
+			string name = System.Enum.GetName(typeof(ActionType), choice);
+
+			if (name.StartsWith("Beacon")) {
 				var ops = GetPossibleBeaconOps();
 				if (ops.Length > 0) {
 					var op = ops.PickRandomSubset(1)[0];
-					var beacon_op = new Actions.BeaconOp();
 
 					var beacon = GetActionableBeaconForBeaconOp(op);
 					bool success = (beacon != null);
 
 					if (success) {
-						beacon_op.type = op;
-						beacon_op.target = beacon;
-
-						action.type = ActionType.BeaconOp;
-						action.dat = beacon_op;
+						action.type = op;
+						action.dat = beacon;
 					}
 				}
 			}
-			if (choice == ActionType.NestOp) {
+			if (name.StartsWith("Nest")) {
 				var ops = GetPossibleNestOps();
 				if (ops.Length > 0) {
 					var op = ops.PickRandomSubset(1)[0];
-					var nest_op = new Actions.NestOp();
+					Beacon bdat = null;
 
 					bool success = true;
-					if (op != NestOpType.Kick) {
+					if (op != ActionType.NestKick) {
 						var beacons = Manager.ActiveBeacons;
 
 						if (beacons.Length == 0)
 							success = false;
 						else {
-							if (op == NestOpType.Remove) {
+							if (op == ActionType.NestPop) 
+							{
 								var beacon = beacons.PickRandomSubset(1)[0];
-								nest_op.target = beacon;
+								bdat = beacon;
 							}
 						}
 					}
-					else {
-						nest_op.type = NestOpType.Kick;
-					}
 
 					if (success) {
-						action.type = ActionType.NestOp;
-						action.dat = nest_op;
+						action.type = op;
+						action.dat = bdat;
 					}
 				}
 			}
@@ -509,12 +490,13 @@ namespace Wizard {
 
 			for (int i = 0; i < raw.Count(); i++) {
 				var type = raw.ElementAt(i);
+				var name = System.Enum.GetName(typeof(ActionType), type);
 
-				if (type == ActionType.BeaconOp) {
+				if (name.StartsWith("Beacon")) {
 					if (!ExistsActionableBeaconOp())
 						continue;
 				}
-				if (type == ActionType.NestOp) {
+				if (name.StartsWith("Nest")) {
 					if (!ExistsActionableNestOp())
 						continue;
 				}
@@ -526,6 +508,10 @@ namespace Wizard {
 					if (!ExistsActionableEmote())
 						continue;
 				}
+				if (type == ActionType.Dialogue) 
+				{
+					continue;
+				}
 
 				filtered.Add(type);
 			}
@@ -533,12 +519,12 @@ namespace Wizard {
 			return filtered.ToArray();
 		}
 
-		public BeaconOpType[] GetPossibleBeaconOps()
+		public ActionType[] GetPossibleBeaconOps()
 		{
 			return Preset.beaconOpWeightLookup.Where(beaconOp => MatchesMood(beaconOp.weight)).Select(beaconOp => beaconOp.type).ToArray();
 		}
 
-		public NestOpType[] GetPossibleNestOps()
+		public ActionType[] GetPossibleNestOps()
 		{
 			return Preset.nestOpWeightLookup.Where(nestOp => MatchesMood(nestOp.weight)).Select(nestOp => nestOp.type).ToArray();
 		}
@@ -554,13 +540,13 @@ namespace Wizard {
 			return Preset.emoteWeightLookup.Where(emote => MatchesMood(emote.weight)).Select(emote => emote.emote).ToArray();
 		}
 
-		public Beacon GetActionableBeaconForBeaconOp(BeaconOpType op)
+		public Beacon GetActionableBeaconForBeaconOp(ActionType op)
 		{
 			var beacons = Manager.InactiveBeacons;
 
 			Beacon _beacon = null;
 
-			if (op == BeaconOpType.Activate) {
+			if (op == ActionType.BeaconActivate) {
 				if (Nest.open) 
 				{
 					var possible = beacons.Where(beacon => FetchKnowledgeFromBeacon(beacon) >= Preset.minimumBeaconActivateKnowledge).ToArray();
@@ -568,7 +554,7 @@ namespace Wizard {
 						_beacon = possible.PickRandomSubset(1)[0];
 				}
 			}
-			else if (op == BeaconOpType.Delete) 
+			else if (op == ActionType.BeaconDestroy) 
 			{
 				var possible = beacons.Where(beacon => FetchKnowledgeFromBeacon(beacon) <= Preset.maximumBeaconDeleteKnowledge).ToArray();
 				if (possible.Length > 0)
@@ -587,11 +573,11 @@ namespace Wizard {
 			return Preset.beaconOpWeightLookup.Any(beaconOp => MatchesMood(beaconOp.weight));
 		}
 
-		public bool ExistsActionableBeacon(BeaconOpType op)
+		public bool ExistsActionableBeacon(ActionType op)
 		{
-			if (op == BeaconOpType.Activate)
+			if (op == ActionType.BeaconActivate)
 				return Manager.InactiveBeacons.Where(beacon => FetchKnowledgeFromBeacon(beacon) >= Preset.minimumBeaconActivateKnowledge).Count() > 0;
-			if (op == BeaconOpType.Delete)
+			if (op == ActionType.BeaconDestroy)
 				return Manager.InactiveBeacons.Where(beacon => FetchKnowledgeFromBeacon(beacon) <= Preset.maximumBeaconDeleteKnowledge).Count() > 0;
 
 			return false;

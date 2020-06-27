@@ -24,22 +24,22 @@ MonoBehaviour:
         m_PreInfinity: 0
         m_PostInfinity: 0
         m_RotationOrder: 0
-  - m_From: Wizard Camera
-    m_To: Scene Camera
+  - m_From: Scene Camera
+    m_To: Tabula Rasa Camera
     m_Blend:
-      m_Style: 0
-      m_Time: 2
+      m_Style: 1
+      m_Time: 3.33
       m_CustomCurve:
         serializedVersion: 2
         m_Curve: []
         m_PreInfinity: 0
         m_PostInfinity: 0
         m_RotationOrder: 0
-  - m_From: Beacon Camera
-    m_To: Scene Camera
+  - m_From: Scene Camera
+    m_To: Nest Camera
     m_Blend:
       m_Style: 1
-      m_Time: 10
+      m_Time: 1.33
       m_CustomCurve:
         serializedVersion: 2
         m_Curve: []

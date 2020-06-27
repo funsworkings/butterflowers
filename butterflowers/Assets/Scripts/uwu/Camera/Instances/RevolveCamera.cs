@@ -7,6 +7,7 @@ using Cinemachine;
 public class RevolveCamera : GameCamera
 {
     [SerializeField] Transform target = null;
+    [SerializeField] bool controls = false;
 
     CinemachineOrbitalTransposer orbitTransposer = null;
 
@@ -32,8 +33,10 @@ public class RevolveCamera : GameCamera
 
         float dt = Time.deltaTime;
 
-        if (Input.GetKey(KeyCode.LeftArrow)) angle += 90f * dt;
-        if (Input.GetKey(KeyCode.RightArrow)) angle -= 90f * dt;
+        if (controls) {
+            if (Input.GetKey(KeyCode.LeftArrow)) angle += 90f * dt;
+            if (Input.GetKey(KeyCode.RightArrow)) angle -= 90f * dt;
+        }
 
         float angToRad = angle * Mathf.Deg2Rad;
         Vector3 offset = new Vector3(Mathf.Cos(angToRad)*radius, height, Mathf.Sin(angToRad)*radius);

@@ -33,6 +33,8 @@ public class CameraManager: MonoBehaviour {
         }
     }
 
+    public GameCamera DefaultCamera => defaultCamera;
+
     public GameCamera ActiveCamera {
         get
         {

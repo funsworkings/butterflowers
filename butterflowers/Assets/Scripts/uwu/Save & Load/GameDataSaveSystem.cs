@@ -5,9 +5,12 @@ using UnityEngine;
 using System.IO;
 using System.Linq;
 using Wizard;
+using UnityEditor;
 
 public class GameDataSaveSystem : Singleton<GameDataSaveSystem>
 {
+    public static System.Action<bool> onLoad;
+
 
     private const string savefile = "save.dat";
     private const float refreshrate = 15f;
@@ -50,12 +53,34 @@ public class GameDataSaveSystem : Singleton<GameDataSaveSystem>
 
     #region External access
 
+    public bool wizard {
+        get
+        {
+            return (data == null) ? false : data.wizard;
+        }
+        set
+        {
+            data.wizard = true;
+        }
+    }
+
     public float time {
         get {
             return (data == null)? 0f:data.time;
         }
         set {
             data.time = value;
+        }
+    }
+
+    public Scribe.Log[] logs {
+        get
+        {
+            return (data == null) ? new Scribe.Log[] { } : data.logs;
+        }
+        set
+        {
+            data.logs = value;
         }
     }
 
@@ -68,6 +93,17 @@ public class GameDataSaveSystem : Singleton<GameDataSaveSystem>
         set
         {
             data.chapter = value;
+        }
+    }
+
+    public int nestcapacity {
+        get
+        {
+            return (data == null) ? 6 : data.nestcapacity;
+        }
+        set
+        {
+            data.nestcapacity = value;
         }
     }
 
@@ -211,7 +247,8 @@ public class GameDataSaveSystem : Singleton<GameDataSaveSystem>
 
     private void OnApplicationPause(bool pause)
     {
-        if (pause) {
+        if (pause) 
+        {
             SaveGameData();
             autosave = false;
         }
@@ -230,24 +267,53 @@ public class GameDataSaveSystem : Singleton<GameDataSaveSystem>
 
     void SaveGameData()
     {
+        if (data == null) 
+        {
+            Debug.LogWarning("Attempted to save when no data available!");
+            return;
+        }
+
         onSaveGameData();
+
+        string version = Application.version;
+        string timestamp = string.Format("{0} - {1}", System.DateTime.Now.ToShortDateString(), System.DateTime.Now.ToShortTimeString());
+
+        data.BUILD_VERSION = version;
+        data.TIMESTAMP = timestamp;
 
         DataHandler.Write<GameData>(m_data, dataPath);
     }
 
-    public void LoadGameData()
+    public void ResetGameData()
     {
+        m_data = new GameData();
+        SaveGameData();
+    }
+
+    public void LoadGameData(bool events = false, bool create = false)
+    {
+        bool previous = false;
+
         GameData load = DataHandler.Read<GameData>(dataPath);
-        if (load == null)
+        if (load == null) 
         {
             Debug.LogWarning("No save file located, initializing data file...");
-            m_data = new GameData();
+            if(create) m_data = new GameData();
         }
-        else
+        else 
+        {
             m_data = load;
+            previous = true;
+        }
 
         onLoadGameData();
         m_load = true;
+
+        if (events) 
+        {
+            if (onLoad != null)
+                onLoad(previous);
+        }
     }
 
 	#region Save/load callbacks

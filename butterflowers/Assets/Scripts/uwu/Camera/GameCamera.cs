@@ -15,8 +15,15 @@ public class GameCamera : MonoBehaviour
 
     public UnityEvent onEnable, onDisable;
 
-	#endregion
+    #endregion
 
+    #region Accessors
+
+    public float fov => camera.m_Lens.FieldOfView;
+    public float nearClipPlane => camera.m_Lens.NearClipPlane;
+    public float farClipPlane => camera.m_Lens.FarClipPlane;
+
+	#endregion
 
 	protected CameraManager manager;
 

@@ -1,4 +1,5 @@
-﻿using System.Collections;
+﻿using Noder.Graphs;
+using System.Collections;
 using System.Collections.Generic;
 using UnityEditor;
 using UnityEditor.Experimental.Networking.PlayerConnection;
@@ -95,6 +96,7 @@ namespace Noder.Nodes.External.Editor {
                             ScriptableObject.Destroy(wmem);
 
                             serializedObject.FindProperty("memory").objectReferenceValue = inst;
+                            (node.Graph as DialogueTree).AddMemoryToDatabase(inst);
                         }
                     }
                 }

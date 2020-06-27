@@ -9,8 +9,6 @@ using UnityEngine.AI;
 namespace Wizard {
 
     using ActionType = Actions.Type;
-    using NestOp = Actions.NestOp;
-    using BeaconOp = Actions.BeaconOp;
     using Action = Actions.Action;
 
     public class Controller: MonoBehaviour {
@@ -64,8 +62,6 @@ namespace Wizard {
         #region Attributes
 
         [SerializeField] State state = State.Idle;
-        [SerializeField] Texture2D[] memories = new Texture2D[] { };
-        [SerializeField] int dialogueRoute = 0;
 
         bool load = false;
         bool debug = false;
@@ -91,7 +87,7 @@ namespace Wizard {
             get
             {
                 if (FocalPoint == null) return false;
-                return FocalPoint.focus;
+                return FocalPoint.isFocused;
             }
         }
 
@@ -131,34 +127,32 @@ namespace Wizard {
 
         void OnEnable()
         {
-            FocalPoint.onFocus += PushDialogue;
-            FocalPoint.onLoseFocus += ClearDialogue;
+            FocalPoint.onFocus += onFocus;
+            FocalPoint.onLoseFocus += onLoseFocus;
 
             Sun.onDayBegin += onDayNightCycle;
-            //Sun.onDayEnd += onDayNightCycle;
             Sun.onNightBegin += onDayNightCycle;
-            //Sun.onNightEnd += onDayNightCycle;
-            Sun.onCycle += onCycle;
 
             Nest.onAddBeacon += onIngestBeacon;
 
             Actions.onEnact += onEnactAction;
+
+            Events.onFireEvent += onFireEvent;
         }
 
         void OnDisable()
         {
-            FocalPoint.onFocus -= PushDialogue;
-            FocalPoint.onLoseFocus -= ClearDialogue;
+            FocalPoint.onFocus -= onFocus;
+            FocalPoint.onLoseFocus -= onLoseFocus;
 
             Sun.onDayBegin -= onDayNightCycle;
-            //Sun.onDayEnd -= onDayNightCycle;
             Sun.onNightBegin -= onDayNightCycle;
-            //Sun.onNightEnd -= onDayNightCycle;
-            Sun.onCycle -= onCycle;
 
             Nest.onAddBeacon -= onIngestBeacon;
 
             Actions.onEnact -= onEnactAction;
+
+            Events.onFireEvent -= onFireEvent;
         }
 
         // Update is called once per frame
@@ -166,7 +160,7 @@ namespace Wizard {
         {
             if (!load) return;
 
-            if (FocalPoint.focus) 
+            if (FocalPoint.isFocused) 
                 if (Input.GetKeyDown(KeyCode.RightArrow)) Dialogue.Advance();
 
             EvaluateState();
@@ -177,10 +171,7 @@ namespace Wizard {
             debugwindow.alpha = (debug) ? 1f : 0f;
             if (debug) DebugAttributes();
 
-            if (Input.GetKeyDown(KeyCode.S))
-                Actions.Push(ActionType.Picture, Extensions.RandomString(12));
-
-            /*
+            
             if (Input.GetKeyDown(KeyCode.S))
                 Actions.Push(ActionType.Picture, Extensions.RandomString(12));
             if (Input.GetKeyDown(KeyCode.D))
@@ -188,54 +179,40 @@ namespace Wizard {
             if (Input.GetKeyDown(KeyCode.E))
                 Actions.Push(ActionType.Emote);
             if (Input.GetKey(KeyCode.N)) {
-                var op = new NestOp();
-
                 if (Input.GetKeyDown(KeyCode.Alpha0)) {
-                    op.type = NestOp.Type.Kick;
-                    Actions.Push(ActionType.NestOp, op);
+                    Actions.Push(ActionType.NestKick);
                 }
                 if (Input.GetKeyDown(KeyCode.Alpha1)) {
-                    op.type = NestOp.Type.Pop;
-                    Actions.Push(ActionType.NestOp, op);
+                    Actions.Push(ActionType.NestPop);
                 }
                 if (Input.GetKeyDown(KeyCode.Alpha2)) {
-                    op.type = NestOp.Type.Remove;
-
                     var opts = Manager.Instance.ActiveBeacons.PickRandomSubset(1);
-                    op.target = opts.Count() > 0 ? opts.ElementAt(0) : null;
+                    var beacon = opts.Count() > 0 ? opts.ElementAt(0) : null;
 
-                    Actions.Push(ActionType.NestOp, op);
+                    Actions.Push(ActionType.NestPop, beacon);
                 }
                 if (Input.GetKeyDown(KeyCode.Alpha3)) {
-                    op.type = NestOp.Type.Clear;
-
-                    Actions.Push(ActionType.NestOp, op);
+                    Actions.Push(ActionType.NestClear);
                 }
             }
             if (Input.GetKey(KeyCode.B)){
-                var op = new BeaconOp();
-
                 if (Input.GetKeyDown(KeyCode.Alpha0)) {
-                    op.type = BeaconOp.Type.Activate;
-
                     var opts = Manager.Instance.InactiveBeacons.PickRandomSubset(1);
-                    op.target = opts.Count() > 0 ? opts.ElementAt(0) : null;
+                    var beacon = opts.Count() > 0 ? opts.ElementAt(0) : null;
 
-                    Actions.Push(ActionType.BeaconOp, op);
+                    Actions.Push(ActionType.BeaconActivate, beacon);
                 }
                 if (Input.GetKeyDown(KeyCode.Alpha1)) {
-                    op.type = BeaconOp.Type.Delete;
-
                     var opts = Manager.Instance.InactiveBeacons.PickRandomSubset(1);
-                    op.target = opts.Count() > 0 ? opts.ElementAt(0) : null;
+                    var beacon = opts.Count() > 0 ? opts.ElementAt(0) : null;
 
-                    Actions.Push(ActionType.BeaconOp, op);
+                    Actions.Push(ActionType.BeaconDestroy, beacon);
                 }
             }
             if (Input.GetKeyDown(KeyCode.G)) {
                 wand.DoRandomGesture();
             }
-            */
+            
         }
 
 		#endregion
@@ -275,6 +252,35 @@ namespace Wizard {
             }
         }
 
+        void RespondToPlayerAction(EVENTCODE @event)
+        {
+            float base_probability = 1f - BrainPreset.actionProbabilityStanceCurve.Evaluate(Brain.stance);
+            float min = BrainPreset.minimumResponseActionProbability;
+            float max = BrainPreset.maximumResponseActionProbability;
+
+            float prob = Mathf.Clamp(base_probability, min, max);
+            if (Random.Range(0f, 1f) <= prob) 
+            {
+                switch (@event) 
+                {
+                    case EVENTCODE.BEACONACTIVATE:
+                        if (Brain.mood < 0f) Actions.Push(ActionType.NestPop, immediate: true);
+                        else Actions.Push(ActionType.BeaconActivate, immediate: true);
+                        break;
+                    case EVENTCODE.NESTKICK:
+                        Actions.Push(ActionType.NestKick, immediate: true);
+                        Actions.Push(ActionType.Dialogue, "I like to kick nests too, y'know????", immediate: true);
+                        break;
+                    case EVENTCODE.NESTSPILL:
+                        if (Brain.mood > 0f) Actions.Push(ActionType.BeaconActivate, immediate: true);
+                        else Actions.Push(ActionType.NestKick, immediate: true);
+                        break;
+                    default:
+                        break;
+                }
+            }
+        }
+
 		#endregion
 
 		#region Animation
@@ -302,13 +308,19 @@ namespace Wizard {
 
         #region Dialogue
 
-        void PushDialogue()
+        void onFocus()
         {
-            Dialogue.PushAllFromQueue();
-            Dialogue.FetchDialogueFromTree();
+            if (Dialogue.queue.Length > 0) {
+                Dialogue.autoprogress = true;
+                Dialogue.PushAllFromQueue();
+            }
+            else {
+                Dialogue.autoprogress = false;
+                Dialogue.FetchDialogueFromTree();
+            }
         }
 
-        void ClearDialogue()
+        void onLoseFocus()
         {
             Dialogue.Dispose();
         }
@@ -392,7 +404,7 @@ namespace Wizard {
 
         void onDayNightCycle() 
         {
-            float base_probability = 1f - BrainPreset.actionProbabilityStanceCurve.Evaluate(Brain.environmentKnowledge);
+            float base_probability = BrainPreset.actionProbabilityStanceCurve.Evaluate(Brain.stance);
             float min = BrainPreset.minimumDayNightActionProbability;
             float max = BrainPreset.maximumDayNightActionProbability;
 
@@ -401,18 +413,21 @@ namespace Wizard {
                 EnactAction();
         }
 
-        void onCycle() 
-        {
-            float prob = BrainPreset.actionProbabilityStanceCurve.Evaluate(Brain.environmentKnowledge);
-            if (Random.Range(0f, 1f) <= prob)
-                EnactAction();
-        }
-
         #endregion
 
-        #region Debug
+        #region Event callbacks
 
-        void DebugAttributes()
+        void onFireEvent(EVENTCODE @event, AGENT a, AGENT b, string detail) 
+        {
+            if (a != AGENT.Inhabitant0) return; // Ignore all non-player events
+            RespondToPlayerAction(@event);
+        }
+
+		#endregion
+
+		#region Debug
+
+		void DebugAttributes()
         {
             string debug = "";
 

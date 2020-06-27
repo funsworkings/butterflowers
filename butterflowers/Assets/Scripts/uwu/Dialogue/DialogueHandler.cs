@@ -41,7 +41,8 @@ public class DialogueHandler: MonoBehaviour {
 
     [SerializeField] float m_timeBetweenSymbols = 1f;
     [SerializeField] float m_timeBetweenBodies = 1f;
-    [SerializeField] bool autoprogress = false, autodispose = false;
+    
+    public bool autoprogress = false, autodispose = false;
 
     [SerializeField] bool speaking = false, waiting = false;
 
@@ -102,7 +103,6 @@ public class DialogueHandler: MonoBehaviour {
 
 	public virtual void Push(string body)
     {
-        Debug.Log("receive = " + body);
         body = ParseBody(body);
 
         if (string.IsNullOrEmpty(body)) return;

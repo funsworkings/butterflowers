@@ -1,0 +1,47 @@
+%YAML 1.1
+%TAG !u! tag:unity3d.com,2011:
+--- !u!319 &31900000
+AvatarMask:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_Name: Wizard Action Layer
+  m_Mask: 00000000010000000100000000000000000000000100000001000000010000000100000000000000000000000100000001000000
+  m_Elements:
+  - m_Path: 
+    m_Weight: 1
+  - m_Path: joint15
+    m_Weight: 1
+  - m_Path: joint15/joint5
+    m_Weight: 1
+  - m_Path: joint15/joint5/joint6
+    m_Weight: 1
+  - m_Path: joint15/joint5/joint6/joint7
+    m_Weight: 1
+  - m_Path: joint15/joint8
+    m_Weight: 1
+  - m_Path: joint15/joint8/joint61
+    m_Weight: 1
+  - m_Path: joint15/joint8/joint61/joint71
+    m_Weight: 1
+  - m_Path: joint15/joint16
+    m_Weight: 1
+  - m_Path: joint15/joint16/joint9
+    m_Weight: 1
+  - m_Path: joint15/joint16/joint9/joint10
+    m_Weight: 1
+  - m_Path: joint15/joint16/joint9/joint10/joint11
+    m_Weight: 1
+  - m_Path: joint15/joint16/joint12
+    m_Weight: 1
+  - m_Path: joint15/joint16/joint12/joint101
+    m_Weight: 1
+  - m_Path: joint15/joint16/joint12/joint101/joint111
+    m_Weight: 1
+  - m_Path: joint15/joint16/joint13
+    m_Weight: 1
+  - m_Path: joint15/joint16/joint13/joint14
+    m_Weight: 1
+  - m_Path: wizard_combine
+    m_Weight: 1
