@@ -9,6 +9,7 @@ using UnityScript.Steps;
 
 using Noder;
 using Noder.Nodes.External;
+using System.Linq;
 
 namespace Wizard {
 
@@ -81,6 +82,8 @@ namespace Wizard {
                 DialogueTree.FlagTemporaryDialogue(value);
             }
         }
+
+        public string[] queue => temp.ToArray();
 
         #endregion
 
@@ -161,8 +164,6 @@ namespace Wizard {
                     min += (loffset + roffset);
                     max += (loffset + roffset);
 
-                    Debug.LogFormat("mood={0} stance={1}  random={2}  range={3}  min={4}  max={5}", 0f, 0f, m_randomBetweenSymbols, range, min, max);
-
                     return Random.Range(min, max);
                 }
 
@@ -207,7 +208,11 @@ namespace Wizard {
             }
             else 
             {
-                temp.Add(body); // Store temporarily 
+
+                if (temp.Count == 0)
+                    temp.Add(body); // Store temporarily 
+                else
+                    temp[0] = body;
             }
         }
 
@@ -252,7 +257,7 @@ namespace Wizard {
 
         protected override void OnComplete(string body)
         {
-            if (controller.isFocused) {
+            if (controller.isFocused && !autoprogress) {
                 FetchDialogueFromTree();
                 advancer.Show();
             }
@@ -265,7 +270,7 @@ namespace Wizard {
         void onUpdateNode(Node node)
         {
             int instance_id = (node == null)? -1:node.GetInstanceID();
-            Debug.Log("node = " + instance_id);
+            //Debug.Log("node = " + instance_id);
 
             if (node is TemporaryDialogue) 
             {
@@ -292,6 +297,8 @@ namespace Wizard {
         void DiscoveryMemoriesFromBody(string body)
         {
             var memories = ParseMemoriesFromBody(body);
+            Debug.LogFormat("FOUND {0} MEMORIES FROM BODY={1}", memories.Length, body);
+
             for (int i = 0; i < memories.Length; i++)
                 controller.DiscoverMemory(memories[i]);
         }

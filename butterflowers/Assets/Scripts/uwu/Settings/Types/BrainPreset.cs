@@ -39,7 +39,9 @@ public class BrainPreset : ScriptableObject
         [Range(0f, 1f)] public float maximumBeaconDeleteKnowledge = .5f;
 
         [Range(0f, 1f)] public float minimumDayNightActionProbability = .5f, maximumDayNightActionProbability = .5f;
-        public AnimationCurve actionProbabilityStanceCurve;
+        [Range(0f, 1f)] public float minimumResponseActionProbability = .5f, maximumResponseActionProbability = .5f;
+
+    public AnimationCurve actionProbabilityStanceCurve;
 
         public Brain.ActionTypeThreshold[] actionTypeThresholdLookup;
         public Brain.BeaconOpWeight[] beaconOpWeightLookup;

@@ -10,7 +10,7 @@ public class Discovery: Singleton<Discovery> {
 
 	#region Events
 
-	public static System.Action onDiscover;
+	public static System.Action<string> onDiscover;
 
 	#endregion
 
@@ -69,7 +69,7 @@ public class Discovery: Singleton<Discovery> {
 		SendDiscoveries();
 
 		if (onDiscover != null)
-			onDiscover();
+			onDiscover(path);
 
 		return true;
 	}

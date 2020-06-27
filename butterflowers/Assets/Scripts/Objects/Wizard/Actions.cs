@@ -32,7 +32,28 @@ namespace Wizard {
 
         #region Internal
 
-        public enum Type { None, Dialogue, Emote, BeaconOp, NestOp, Gesture, Picture }
+        public enum Type 
+        { 
+            None, 
+
+            Dialogue, 
+            Emote,
+            Gesture,
+            Picture,
+
+            BeaconActivate,
+            BeaconDestroy,
+
+            NestKick,
+            NestPop,
+            NestClear
+        }
+
+        private string parseTypeName(Type type)
+        {
+            if (type == Type.None) return null;
+            return System.Enum.GetName(typeof(Type), type);
+        }
 
         public enum Emote 
         {
@@ -41,24 +62,6 @@ namespace Wizard {
             Sad,
             Confused,
             Tired
-        }
-
-        [System.Serializable]
-        public struct BeaconOp 
-        {
-            public enum Type { None, Activate, Delete }
-
-            public Beacon target;
-            public Type type;
-        }
-
-        [System.Serializable]
-        public struct NestOp 
-        {
-            public enum Type { None, Kick, Remove, Pop, Clear }
-
-            public Beacon target;
-            public Type type;
         }
 
         [System.Serializable]
@@ -74,17 +77,11 @@ namespace Wizard {
                 {
                     if (dat == null) return "NULL";
 
-                    if (type == Type.BeaconOp) {
-                        return ((BeaconOp)dat).type.ToString();
-                    }
-                    if (type == Type.NestOp) {
-                        return ((NestOp)dat).type.ToString();
-                    }
                     if (type == Type.Emote) {
                         return ((Emote)dat).ToString();
                     }
                     if (type == Type.Gesture) {
-                        return ((Gesture)dat).trigger;
+                        return ((Gesture)dat).clip.name;
                     }
 
                     return "???";
@@ -93,7 +90,13 @@ namespace Wizard {
 
             /* * * * * */
 
-            public bool cast => (type == Type.BeaconOp || type == Type.NestOp);
+            public bool cast {
+                get
+                {
+                    var name = System.Enum.GetName(typeof(Type), type);
+                    return name.StartsWith("Beacon") || name.StartsWith("Nest");
+                }
+            }
             public bool passive => (type != Type.Gesture && type != Type.Picture);
         }
 
@@ -305,51 +308,70 @@ namespace Wizard {
         void ParseAction(Action action)
         {
             var dat = action.dat;
+            var type = action.type;
+            var t = System.Enum.GetName(typeof(Type), type);
 
-            if (action.type == Type.Dialogue) {
-                string body = (string)dat;
+            if (t.StartsWith("Beacon")) 
+            {
+                Beacon beacon = (Beacon)dat;
 
-                if (string.IsNullOrEmpty(body)) {
-                    var mood = brain.mood;
-                    dialogue.FetchDialogueFromTree(Mathf.RoundToInt(mood));
-                }
-                else {
-                    dialogue.Push(body);
-                }
+                if (type == Type.BeaconActivate)
+                    wand.ActivateBeacon(beacon);
+                else if (type == Type.BeaconDestroy)
+                    wand.DestroyBeacon(beacon);
+                
             }
-            else if (action.type == Type.Picture) {
-                TakePicture();
-            }
-            else if (action.type == Type.Emote) {
-                Emote[] emotes = brain.GetPossibleEmotes();
-
-                if (emotes.Length > 0) 
+            else if (t.StartsWith("Nest")) 
+            {
+                if (type == Type.NestPop) 
                 {
-                    Emote emote = emotes.PickRandomSubset(1)[0];
-                    HandleEmote(emote);
+                    Beacon beacon = (Beacon)dat;
+
+                    if (beacon == null)
+                        wand.PopLastBeaconFromNest();
+                    else
+                        wand.PopBeaconFromNest(beacon);
+                }
+                else 
+                {
+                    if (type == Type.NestKick)
+                        wand.KickNest();
+                    else if (type == Type.NestClear)
+                        wand.ClearNest();
                 }
             }
-            else if (action.type == Type.BeaconOp) {
-                BeaconOp op = (BeaconOp)dat;
-                if (op.type == BeaconOp.Type.Activate)
-                    ActivateBeacon(op.target);
-                else
-                    DestroyBeacon(op.target);
-            }
-            else if (action.type == Type.NestOp) {
-                NestOp op = (NestOp)dat;
-                if (op.type == NestOp.Type.Kick)
-                    KickNest();
-                else if (op.type == NestOp.Type.Clear)
-                    ClearNest();
-                else if (op.type == NestOp.Type.Pop)
-                    PopLastBeaconFromNest();
-                else
-                    PopBeaconFromNest(op.target);
-            }
-            else if (action.type == Type.Gesture) {
-                Gesture gesture = (Gesture)dat;
-                DoGesture(gesture);
+            else // Miscellaneous
+            {
+                if (action.type == Type.Dialogue) 
+                {
+                    string body = (string)dat;
+
+                    if (string.IsNullOrEmpty(body)) {
+                        var mood = brain.mood;
+                        dialogue.FetchDialogueFromTree(Mathf.RoundToInt(mood));
+                    }
+                    else {
+                        dialogue.Push(body);
+                    }
+                }
+                else if (action.type == Type.Picture) 
+                {
+                    TakePicture();
+                }
+                else if (action.type == Type.Emote) 
+                {
+                    Emote[] emotes = brain.GetPossibleEmotes();
+
+                    if (emotes.Length > 0) {
+                        Emote emote = emotes.PickRandomSubset(1)[0];
+                        HandleEmote(emote);
+                    }
+                }
+                else if (action.type == Type.Gesture) 
+                {
+                    Gesture gesture = (Gesture)dat;
+                    DoGesture(gesture);
+                }
             }
 
             if(!action.wait) inprogress = false;
@@ -393,22 +415,6 @@ namespace Wizard {
             if(currentAction.type == Type.Picture && inprogress) 
                 inprogress = false;
         }
-
-        #endregion
-
-        #region Beacon operations
-
-        void ActivateBeacon(Beacon beacon) { if(beacon != null) beacon.Discover(); }
-        void DestroyBeacon(Beacon beacon) { if (beacon != null) beacon.Delete(particles: true); }
-
-        #endregion
-
-        #region Nest operations
-
-        void KickNest() { Nest.RandomKick(); }
-        void PopBeaconFromNest(Beacon beacon) { if (beacon != null) Nest.RemoveBeacon(beacon); }
-        void PopLastBeaconFromNest() { Nest.RemoveLastBeacon(); }
-        void ClearNest() { Nest.Dispose(); }
 
         #endregion
 

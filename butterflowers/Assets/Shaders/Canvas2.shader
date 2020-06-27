@@ -95,9 +95,9 @@
                 uv.xy = i.uv.xy;
                 
                 float2 dir = (tex2D(_NoiseTex, uv.xy)).rg;
-                uv.xy = FlowUV(uv.xy, dir, _Time.y);
+                uv.xy = FlowUV(uv.xy, dir, _Interval);
                 
-                float t = _Time.y * _LerpSpeed;
+                float t = _Interval;
                 float str = 0.0;
 
                 float r = _TextureRange * 1.0;
@@ -105,11 +105,12 @@
 
 
                 fixed4 mid = fixed4(.5, .5, .5, .5);
-                fixed4 ct = fixed4(1.0, 1.0, 1.0, 1.0);
+                fixed4 ct = fixed4(0.0, 0.0, 0.0, 1.0);
 
-                if(_TextureCount == 0) ct = fixed4(1.0, 1.0, 1.0, 1.0);
+                if(_TextureCount == 0) 
+                    ct = fixed4(1.0, 1.0, 1.0, 1.0);
                 else 
-                    maxrange = r / _TextureCount * 1.0;
+                    maxrange = saturate(r / _TextureCount) * 1.0;
                 
                 fixed4 c = fixed4(1.0, 1.0, 1.0, 1.0);
                 for(int i = 0; i < _TextureCount; i++){
@@ -117,15 +118,18 @@
                 
                     c = UNITY_SAMPLE_TEX2DARRAY(_Textures, uv);
 
-                    float index = ((i + 1)*1.0)/_TextureCount;
-                    float offset = fmod(t, 1.0) - index;
+                    float index = 0.0;
+                    if(_TextureCount > 1)
+                        index = ((i)*1.0)/(_TextureCount - 1);
+
+                    float offset = t - index;
                     float dist = abs(offset);
 
                     str = 0.0;
                     if(_TextureCount == 1) str = 1.0;
                     else {
-                        if(dist <= maxrange)
-                            str += _TextureStrength*cos(t * 3.14 * (1.0 / _TextureRange*2.0) + i);
+                        //if(dist <= maxrange)
+                            str += _TextureStrength*(saturate(1.0 - pow(offset * r, 4.0)));
                     }
                     
                     ct += ((c)*str);

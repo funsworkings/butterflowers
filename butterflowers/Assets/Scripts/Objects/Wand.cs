@@ -5,6 +5,7 @@ using UnityEngine;
 using UnityEngine.AI;
 
 using UnityEngine.Events;
+using UnityEngine.EventSystems;
 
 public class Wand : MonoBehaviour
 {
@@ -17,12 +18,14 @@ public class Wand : MonoBehaviour
 
 	new Camera camera;
 
+    public AGENT agent = AGENT.Inhabitant0;
     [SerializeField] bool m_spells = true;
 
     [SerializeField] Cursor cursor;
     [SerializeField] float distanceFromCamera = 10f;
 
-    Animator animator;
+    Animation animator;
+    Gestures Gestures;
 
     [Header("Interaction")]
         Ray ray;
@@ -86,12 +89,14 @@ public class Wand : MonoBehaviour
 
     public Gesture[] gestures => m_gestures;
 
+    public bool inprogress => animator.isPlaying;
+
     #region Internal
 
     [System.Serializable]
     public struct Gesture 
     {
-        public string trigger;
+        public AnimationClip clip;
 
         [Range(0f, 1f)] 
         public float weight;
@@ -103,7 +108,8 @@ public class Wand : MonoBehaviour
 
     void Awake()
     {
-        animator = GetComponent<Animator>();
+        animator = GetComponent<Animation>();
+        Gestures = GetComponent<Gestures>();
     }
 
 	// Start is called before the first frame update
@@ -141,13 +147,13 @@ public class Wand : MonoBehaviour
         if (animator == null) return false;
         if (gesture || waitforgesture) return false;
 
-        animator.speed = speed;
-        animator.SetTrigger(t_gesture.trigger);
+        Gestures.PlayAnimation(t_gesture.clip);
 
         waitforgesture = true;
         m_queueGesture = t_gesture;
 
         StartCoroutine("TimeoutGesture");
+        BeginGesture();
 
         return true;
     }
@@ -185,6 +191,11 @@ public class Wand : MonoBehaviour
         }
 
         waitforgesture = false;
+
+        while (inprogress)
+            yield return null;
+
+        EndGesture();
     }
 
     public void BeginGesture()
@@ -273,6 +284,60 @@ public class Wand : MonoBehaviour
         }
 
         interacting = current;
+    }
+
+    #endregion
+
+    #region Beacon operations
+
+    public void ActivateBeacon(Beacon beacon) 
+    {
+        if (beacon == null) return;
+
+        bool success = beacon.Discover();
+        if (success)
+            Events.ReceiveEvent(EVENTCODE.BEACONACTIVATE, agent, AGENT.Beacon, details: beacon.file.AbbreviateFilename());
+    }
+    public void DestroyBeacon(Beacon beacon) 
+    {
+        if (beacon == null) return;
+
+        bool success = beacon.Delete(particles: true);
+        if (success)
+            Events.ReceiveEvent(EVENTCODE.BEACONDELETE, agent, AGENT.Beacon, details: beacon.file.AbbreviateFilename());
+    }
+
+    #endregion
+
+    #region Nest operations
+
+    public void KickNest() 
+    { 
+        Nest.Instance.RandomKick(agent); 
+    }
+
+    public void PopBeaconFromNest(Beacon beacon) 
+    {
+        if (beacon == null) return;
+
+        bool success = Nest.Instance.RemoveBeacon(beacon);
+        if (success)
+            Events.ReceiveEvent(EVENTCODE.NESTPOP, agent, AGENT.Beacon, details: beacon.file.AbbreviateFilename());
+    }
+
+    public void PopLastBeaconFromNest() 
+    { 
+        var beacon = Nest.Instance.RemoveLastBeacon();
+        bool success = beacon != null;
+        if (success)
+            Events.ReceiveEvent(EVENTCODE.NESTPOP, agent, AGENT.Beacon, details: beacon.file.AbbreviateFilename());
+    }
+
+    public void ClearNest() 
+    { 
+        bool success = Nest.Instance.Dispose();
+        if(success)
+            Events.ReceiveEvent(EVENTCODE.NESTCLEAR, agent, AGENT.Nest);
     }
 
     #endregion

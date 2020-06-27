@@ -14,7 +14,10 @@ public class FocalPoint : MonoBehaviour
 
     #region Attributes
 
-    [SerializeField] bool m_focus = false, m_queued = false;
+    [SerializeField] bool focused = false, queued = false, focusinprogress = false;
+    
+    [SerializeField] float timetofocus = 1f;
+    float t_focustime = 0f;
 
     #endregion
 
@@ -28,10 +31,10 @@ public class FocalPoint : MonoBehaviour
 
 	#region Accessors
 
-    public bool focus {
+    public bool isFocused {
         get
         {
-            return m_focus;
+            return focused;
         }
     }
 
@@ -41,6 +44,8 @@ public class FocalPoint : MonoBehaviour
             return overrideCamera;
         }
     }
+
+    public bool isFocusing => focusinprogress;
 
 	#endregion
 
@@ -57,6 +62,7 @@ public class FocalPoint : MonoBehaviour
 
         interactable.onHover += Hover;
         interactable.onUnhover += Unhover;
+        interactable.onGrab += Grab;
     }
 
     void OnDisable()
@@ -65,20 +71,35 @@ public class FocalPoint : MonoBehaviour
 
         interactable.onHover -= Hover;
         interactable.onUnhover -= Unhover;
+        interactable.onGrab -= Grab;
     }
 
     void Update()
     {
-        if (m_focus) return;
+        if ((focused || !focusinprogress) || (focusinprogress && Input.GetMouseButtonUp(0))) 
+        {
+            t_focustime = 0f;
+            focusinprogress = false;
 
-        if (m_queued && Input.GetMouseButtonDown(0))
+            return;
+        }
+
+        if (t_focustime >= timetofocus) 
+        {
+            focusinprogress = false;
+            t_focustime = 0f;
+
             Focus();
+        }
+        else
+            t_focustime += Time.deltaTime;
     }
 
     public void Focus()
     {
-        m_focus = true;
+        focused = true;
 
+        Debug.Log("Focus on " + gameObject.name);
         if (onFocus != null)
             onFocus();
 
@@ -87,7 +108,7 @@ public class FocalPoint : MonoBehaviour
     }
 
     public void LoseFocus() {
-        m_focus = false;
+        focused = false;
 
         if (onLoseFocus != null)
             onLoseFocus();
@@ -99,11 +120,17 @@ public class FocalPoint : MonoBehaviour
     #region Interactable callbacks
 
     void Hover(Vector3 point, Vector3 normal) {
-        m_queued = true;
+        queued = true;
     }
 
     void Unhover(Vector3 point, Vector3 normal) {
-        m_queued = false;
+        queued = false;
+    }
+
+    void Grab(Vector3 point, Vector3 normal)
+    {
+        if (!queued || isFocused) return;
+        focusinprogress = true;
     }
 
     #endregion 

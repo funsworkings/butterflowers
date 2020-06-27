@@ -15,6 +15,12 @@ public class Quilt : MonoBehaviour
     public System.Action<string, Texture> onLoadTexture;
     public System.Action<Texture> onDisposeTexture;
 
+    #endregion
+
+    #region External
+
+    [SerializeField] Nest Nest;
+
 	#endregion
 
 	[SerializeField] Material material = null;
@@ -81,6 +87,16 @@ public class Quilt : MonoBehaviour
         }
     }
 
+    void OnEnable()
+    {
+        Nest.onUpdateCapacity += UpdateTextureCap;
+    }
+
+    void OnDisable()
+    {
+        Nest.onUpdateCapacity -= UpdateTextureCap;
+    }
+
     void Start(){
         textureCap = Nest.Instance.capacity;
 
@@ -101,8 +117,9 @@ public class Quilt : MonoBehaviour
 
         material.SetFloat("_Interval", offset);
         material.SetFloat("_Death", (death > 0f)? 1f : 0f);
-        //material.SetInt("_TextureRange", textures.Count);
+        material.SetInt("_TextureRange", textures.Count);
 
+        UpdateLerpSpeed();
         if(wait <= 0f)
             offset = Mathf.Repeat(offset + (Time.deltaTime * m_speed), 1f);
     }
@@ -300,7 +317,11 @@ public class Quilt : MonoBehaviour
         UpdateLerpSpeed();
 
         offset = 1f; // Snap back immediately to last added
-        
+
+        if (wait <= 0f) {
+            wait = 1.67f;
+            StartCoroutine("Wait");
+        }
     }
     
     void UpdateLerpSpeed(){
@@ -308,6 +329,15 @@ public class Quilt : MonoBehaviour
         m_speed = percent.Remap(0f, 1f, minLerpSpeed, maxLerpSpeed);
 
         material.SetFloat("_LerpSpeed", m_speed);
+    }
+
+    #endregion
+
+    #region Nest callbacks
+
+    void UpdateTextureCap(int capacity)
+    {
+        textureCap = capacity;
     }
 
 	#endregion

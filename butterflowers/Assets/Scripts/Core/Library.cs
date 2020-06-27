@@ -169,7 +169,7 @@ public class Library : Singleton<Library>
 
 #endregion
 
-#region Textures
+	#region Textures
 
 	void LoadTextures(string[] paths)
 	{
@@ -237,9 +237,9 @@ public class Library : Singleton<Library>
 		Debug.LogFormat("Added {0} to library", file);
 	}
 
-#endregion
+	#endregion
 
-#region Operations
+	#region Operations
 
 	public void Initialize(bool refresh = true)
 	{
@@ -343,5 +343,5 @@ public class Library : Singleton<Library>
 		return items_shared.Contains(file);
 	}
 
-#endregion
+	#endregion
 }

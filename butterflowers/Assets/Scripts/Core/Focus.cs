@@ -1,13 +1,23 @@
 ﻿using System.Collections;
 using System.Collections.Generic;
+using System.Linq;
 using UnityEngine;
+
+using UnityEngine.Events;
+using UnityEngine.EventSystems;
 
 public class Focus : MonoBehaviour
 {
 
-    #region External
+    #region Events
 
-    [SerializeField] CameraManager CameraManager;
+    public UnityEvent onFocus, onLoseFocus;
+
+	#endregion
+
+	#region External
+
+	[SerializeField] CameraManager CameraManager;
     [SerializeField] FocusCamera Camera;
 
     [SerializeField] AudioHandler BackgroundAudio;
@@ -18,6 +28,8 @@ public class Focus : MonoBehaviour
     #region Properties
 
     [SerializeField] FocalPoint focus = null;
+    [SerializeField] FocalPoint[] focalPoints;
+    [SerializeField] CameraVisualBlend CameraBlend;
 
     #endregion
 
@@ -33,6 +45,12 @@ public class Focus : MonoBehaviour
 
     [SerializeField] float lowpass = 0f, lowPassSmoothSpeed = .1f;
     [SerializeField] string lowPassFilterParam = null;
+
+    [SerializeField] float timeToLoseFocus = 1f;
+                     float t_losefocus = 0f;
+                     bool focus_ready = false;
+
+    [SerializeField] CameraVisualBlendDefinition[] loseFocusBlends;
 
 	#endregion
 
@@ -58,11 +76,33 @@ public class Focus : MonoBehaviour
         FocalPoint.FocusOnPoint -= SetFocus;
     }
 
+    void Start()
+    {
+        focalPoints = FindObjectsOfType<FocalPoint>();
+    }
+
     // Update is called once per frame
     void Update()
     {
-        if (active) {
-            if (Input.GetKeyDown(KeyCode.Escape)) LoseFocus();
+        if (active && !focalPoints.Any(focal => focal.isFocusing)) {
+            if (!focus_ready) {
+                if (Input.GetMouseButtonUp(0))
+                    focus_ready = true;
+
+                return;
+            }
+
+            if (Input.GetMouseButton(0) && !EventSystem.current.IsPointerOverGameObject()) {
+                t_losefocus += Time.deltaTime;
+                if (t_losefocus >= timeToLoseFocus) 
+                        LoseFocus();
+            }
+            else
+                t_losefocus = 0f;
+        }
+        else {
+            t_losefocus = 0f;
+            focus_ready = false;
         }
 
         if (BackgroundAudio != null) {
@@ -96,7 +136,11 @@ public class Focus : MonoBehaviour
         if (Camera == null) return;
 
         Camera.Focus(focus.transform);
-        CameraManager.SetCamera(Camera);
+
+        CameraBlend.blendDefinition = null;
+        CameraBlend.BlendTo(Camera);
+
+        onFocus.Invoke();
     }
 
     public void LoseFocus()
@@ -104,7 +148,13 @@ public class Focus : MonoBehaviour
         Dispose();
         focus = null;
 
-        CameraManager.ResetToDefault();
+
+        var loseFocusBlend = loseFocusBlends.PickRandomSubset(1)[0];
+
+        CameraBlend.blendDefinition = loseFocusBlend;
+        CameraBlend.BlendTo(CameraManager.DefaultCamera);
+
+        onLoseFocus.Invoke();
     }
 
     #endregion

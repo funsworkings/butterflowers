@@ -10,6 +10,7 @@ public class Nest : MonoBehaviour
     #region External
 
     Quilt Quilt = null;
+    GameDataSaveSystem Save;
 
 	#endregion
 
@@ -19,6 +20,7 @@ public class Nest : MonoBehaviour
     public UnityEvent onIngestBeacon, onReleaseBeacon;
 
     public System.Action<Beacon> onAddBeacon, onRemoveBeacon;
+    public System.Action<int> onUpdateCapacity;
 
 	#endregion
 
@@ -77,9 +79,20 @@ public class Nest : MonoBehaviour
         mat = GetComponent<Renderer>().material;
     }
 
+    void OnEnable()
+    {
+        Sun.onCycle += AttemptUpdateCapacity;
+    }
+
+    void OnDisable()
+    {
+        Sun.onCycle -= AttemptUpdateCapacity;
+    }
+
     void Start()
     {
         Quilt = Quilt.Instance;
+        Save = GameDataSaveSystem.Instance;
 
         interactable.onHover += Hover;
         interactable.onUnhover += Unhover;
@@ -90,7 +103,12 @@ public class Nest : MonoBehaviour
 
     void Update()
     {
-        if (Input.GetMouseButtonDown(1) && queue) RemoveLastBeacon();
+        /*if (Input.GetMouseButtonDown(1) && queue) {
+            var beacon = RemoveLastBeacon();
+            bool success = beacon != null;
+            if(success)
+                Events.ReceiveEvent(beacon.file_abbreviated, "removed from NEST", Agent.Inhabitant0);
+        }*/
 
         if (energy > 0f)
         {
@@ -127,10 +145,10 @@ public class Nest : MonoBehaviour
     void Kick(Vector3 origin, Vector3 direction)
     {
         Vector3 dir = (-direction - 3f * gravity_ext.gravity).normalized;
-        AddForceAndOpen(origin, dir, force);
+        AddForceAndOpen(origin, dir, force, AGENT.Inhabitant0);
     }
 
-    void AddForceAndOpen(Vector3 point, Vector3 direction, float force)
+    void AddForceAndOpen(Vector3 point, Vector3 direction, float force, AGENT agent = AGENT.Inhabitants)
     {
         rigidbody.AddForceAtPosition(direction * force, point);
 
@@ -139,6 +157,8 @@ public class Nest : MonoBehaviour
         impact.GetComponent<ParticleSystem>().Play();
 
         Open();
+
+        Events.ReceiveEvent(EVENTCODE.NESTKICK, agent, AGENT.Nest);
     }
 
     #endregion
@@ -169,8 +189,10 @@ public class Nest : MonoBehaviour
         return false;
     }
 
-    public void Dispose(bool release = true)
+    public bool Dispose(bool release = true)
     {
+        bool success = this.m_beacons.Count > 0;
+
         var beacons = this.m_beacons.ToArray();
         for (int i = 0; i < beacons.Length; i++) {
             if (release) RemoveBeacon(beacons[i]);
@@ -180,9 +202,11 @@ public class Nest : MonoBehaviour
         this.m_beacons = new List<Beacon>();
 
         Quilt.Dispose(true);
+
+        return success;
     }
 
-    public void RandomKick()
+    public void RandomKick(AGENT agent = AGENT.Inhabitants)
     {
         Vector3 sphere_pos = Random.insideUnitSphere;
         Vector3 ray_origin = sphere_pos * 5f;
@@ -198,8 +222,19 @@ public class Nest : MonoBehaviour
             Vector3 origin = hit.point;
             Vector3 dir = (-normal - 3f * gravity_ext.gravity).normalized;
 
-            AddForceAndOpen(origin, dir, force);
+            AddForceAndOpen(origin, dir, force, agent);
         }
+    }
+
+    public void RestoreCapacity(int capacity)
+    {
+        m_capacity = capacity;
+
+        if (capacity > 6f)
+            StartCoroutine("Scale");
+
+        if (onUpdateCapacity != null)
+            onUpdateCapacity(capacity);
     }
 
     #endregion
@@ -223,32 +258,36 @@ public class Nest : MonoBehaviour
 
 	#region Beacon operations
 
-	public void AddBeacon(Beacon beacon)
+	public bool AddBeacon(Beacon beacon)
     {
-        if (m_beacons.Contains(beacon)) return;
+        if (m_beacons.Contains(beacon)) return false;
 
-        var a = beacon.transform.position;
+        var a = beacon.origin;
         var b = transform.position;
 
-        beacon.WarpFromTo(a, b, true);
+        beacon.WarpFromTo(true);
 
         m_beacons.Add(beacon);
+
+        return true;
     }
 
-    public void RemoveBeacon(Beacon beacon)
+    public bool RemoveBeacon(Beacon beacon)
     {
-        if (!m_beacons.Contains(beacon)) return;
+        if (!m_beacons.Contains(beacon)) return false;
 
         var a = transform.position;
         var b = beacon.origin;
 
-        beacon.WarpFromTo(a, b, false);
+        beacon.WarpFromTo(false);
 
         m_beacons.Remove(beacon);
         cometPS.Play();
 
         onReleaseBeacon.Invoke();
         if (onRemoveBeacon != null) onRemoveBeacon(beacon);
+
+        return true;
     }
 
     public void ReceiveBeacon(Beacon beacon)
@@ -259,6 +298,9 @@ public class Nest : MonoBehaviour
         if (dispose) 
         {
             Dispose(true);
+
+            Events.ReceiveEvent(EVENTCODE.NESTSPILL, AGENT.Inhabitants, AGENT.Nest);
+
             return;
         }
 
@@ -269,12 +311,14 @@ public class Nest : MonoBehaviour
         if (onAddBeacon != null) onAddBeacon(beacon);
     }
 
-    public void RemoveLastBeacon()
+    public Beacon RemoveLastBeacon()
     {
-        if (m_beacons == null || m_beacons.Count == 0) return;
+        if (m_beacons == null || m_beacons.Count == 0) return null;
 
         var beacon = m_beacons[m_beacons.Count - 1];
         RemoveBeacon(beacon);
+
+        return beacon;
     }
 
     #endregion
@@ -300,6 +344,62 @@ public class Nest : MonoBehaviour
         cometPS.Play();
 
         onReleaseBeacon.Invoke();
+    }
+
+    #endregion
+
+    #region Sun callbacks
+
+    void AttemptUpdateCapacity()
+    {
+        bool resize = false;
+
+        int curr_size = beacons.Length;
+        if (curr_size == capacity) 
+        {
+            Events.ReceiveEvent(EVENTCODE.NESTGROW, AGENT.Inhabitants, AGENT.Nest);
+
+            m_capacity += 6;
+            resize = true;
+        }
+        else {
+            Events.ReceiveEvent(EVENTCODE.NESTSHRINK, AGENT.Inhabitants, AGENT.Nest);
+
+            if (capacity != 6)
+                resize = true;
+
+            m_capacity = 6;
+            Dispose();
+        }
+
+        if(resize)
+            StartCoroutine("Scale");
+
+        Save.nestcapacity = capacity;
+        if (onUpdateCapacity != null)
+            onUpdateCapacity(capacity);
+    }
+
+    IEnumerator Scale()
+    {
+        float t = 0f;
+        float dur = .067f;
+
+        Vector3 a_scale = transform.localScale;
+        Vector3 t_scale = (1f + .167f*((capacity-6f) / 6f)) * Vector3.one;
+
+        transform.localScale = t_scale * 2f;
+
+        yield return new WaitForSeconds(.0033f);
+
+        while (t <= dur) {
+            t += Time.deltaTime;
+
+            var interval = Mathf.Clamp01(t / dur);
+            transform.localScale = Vector3.Lerp(a_scale, t_scale, Mathf.Pow(interval, 2f));
+
+            yield return null;
+        }
     }
 
 	#endregion

@@ -70,6 +70,16 @@ public static class Extensions
         return results;
     }
 
+    public static T[] SubArray<T>(this T[] data, int index, int length)
+    {
+        if (length > data.Length)
+            length = data.Length;
+
+        T[] result = new T[length];
+        Array.Copy(data, index, result, 0, length);
+        return result;
+    }
+
     #endregion
 
     #region Transforms
@@ -84,18 +94,28 @@ public static class Extensions
         }
     }
 
-    public static void CopyTransformValues(GameObject from, ref GameObject to, bool local){
+    public static void CopyTransformValuesFrom(this Transform to, Transform from, bool local = false){
         if(local){
-            to.transform.localPosition = from.transform.localPosition;
-            to.transform.localRotation = from.transform.localRotation;
-            to.transform.localScale = from.transform.localScale;
+            to.localPosition = from.localPosition;
+            to.localRotation = from.localRotation;
+            to.localScale = from.localScale;
         }
         else{
-            to.transform.position = from.transform.position;
-            to.transform.rotation = from.transform.rotation;
-            to.transform.localScale = from.transform.localScale;
+            to.position = from.position;
+            to.rotation = from.rotation;
+            to.localScale = from.localScale;
         }
         
+    }
+
+    public static void ResetTransformValues(this Transform t)
+    {
+        if (t is RectTransform)
+            (t as RectTransform).pivot = Vector3.one * .5f;
+
+        t.localScale = Vector3.one;
+        t.localEulerAngles = Vector3.zero;
+        t.localPosition = Vector3.zero;
     }
 
     #endregion
@@ -457,6 +477,39 @@ public static class Extensions
 
             return string.Format(replace, val.Trim());
         });
+    }
+
+    public static string AbbreviateFilename(this string file)
+    {
+        var _file = file;
+        var len = (_file == null) ? 0 : _file.Length;
+
+        if (len == 0) return "";
+
+        var split = new string[] { };
+
+        if (Application.platform == RuntimePlatform.OSXPlayer || Application.platform == RuntimePlatform.OSXEditor) {
+            split = _file.Split('/');
+        }
+        else {
+            split = _file.Split('\\');
+        }
+
+
+        if (split.Length > 0) {
+            _file = split[split.Length - 1];
+            len = _file.Length;
+        }
+
+        var max = 36;
+
+        if (len <= max)
+            return _file;
+
+        var abbrev = Mathf.Min(max, len);
+        var start = len - abbrev;
+
+        return "..." + _file.Substring(start, abbrev);
     }
 
     /// <summary>
