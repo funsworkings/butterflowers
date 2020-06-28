@@ -74,6 +74,9 @@ public class FocalPoint : MonoBehaviour
         interactable.onHover -= Hover;
         interactable.onUnhover -= Unhover;
         interactable.onGrab -= Grab;
+
+        if (focused)
+            LoseFocus(); // Dispose when disabled
     }
 
     void Update()
