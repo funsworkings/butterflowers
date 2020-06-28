@@ -209,10 +209,10 @@ namespace Wizard {
             else 
             {
 
-                if (temp.Count == 0)
+                //if (temp.Count == 0)
                     temp.Add(body); // Store temporarily 
-                else
-                    temp[0] = body;
+                //else
+                  //  temp[0] = body;
             }
         }
 

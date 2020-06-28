@@ -60,6 +60,8 @@ public class FocalPoint : MonoBehaviour
     {
         if (interactable == null) return;
 
+        focused = focusinprogress = queued =  false;
+
         interactable.onHover += Hover;
         interactable.onUnhover += Unhover;
         interactable.onGrab += Grab;
@@ -97,6 +99,7 @@ public class FocalPoint : MonoBehaviour
 
     public void Focus()
     {
+        if (focused) return;
         focused = true;
 
         Debug.Log("Focus on " + gameObject.name);
@@ -108,6 +111,7 @@ public class FocalPoint : MonoBehaviour
     }
 
     public void LoseFocus() {
+        if (!focused) return;
         focused = false;
 
         if (onLoseFocus != null)

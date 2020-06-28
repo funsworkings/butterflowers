@@ -43,6 +43,7 @@ public class Scribe : Logger
 
 	#region Collections
 
+	public List<Log> save_caches = new List<Log>();
 	public List<Log> caches = new List<Log>();
 
 	#endregion
@@ -144,13 +145,18 @@ public class Scribe : Logger
 	public void Restore(Log[] logs)
 	{
 		if (logs == null) return;
-		for (int i = 0; i < logs.Length; i++)
-			Push(logs[i]);
 
-		//navigator.MoveToBottom();
+		save_caches = new List<Log>(logs);
+		for (int i = 0; i < logs.Length; i++)
+			Push(logs[i], save:false);
 	}
 
 	public void Push(EVENTCODE @event, AGENT a, AGENT b, string detail)
+	{
+		Push(@event, a, b, detail, true);
+	}
+
+	public void Push(EVENTCODE @event, AGENT a, AGENT b, string detail, bool save = true)
 	{
 		Log log = new Log();
 		log.paramx = (byte)@event;
@@ -158,14 +164,15 @@ public class Scribe : Logger
 		log.paramz = (byte)b;
 		log.detail = detail;
 
-		Push(log);
+		Push(log, save);
 	}
 
-	void Push(Log log)
+	void Push(Log log, bool save = true)
 	{
+		if (save) save_caches.Add(log);
 		caches.Add(log);
-		Save.logs = caches.ToArray();
 
+		Save.logs = save_caches.ToArray();
 		Push(parseLog(log));
 	}
 

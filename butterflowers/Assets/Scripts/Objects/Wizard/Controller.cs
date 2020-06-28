@@ -10,6 +10,7 @@ namespace Wizard {
 
     using ActionType = Actions.Type;
     using Action = Actions.Action;
+    using ActionSequence = Actions.ActionSequence;
 
     public class Controller: MonoBehaviour {
         
@@ -68,6 +69,8 @@ namespace Wizard {
 
         [SerializeField] CanvasGroup debugwindow;
         [SerializeField] UnityEngine.UI.Text debugtext;
+
+        [SerializeField] ActionSequence[] sequences;
 
         #endregion
 
@@ -173,7 +176,7 @@ namespace Wizard {
 
             
             if (Input.GetKeyDown(KeyCode.S))
-                Actions.Push(ActionType.Picture, Extensions.RandomString(12));
+                Actions.Push(ActionType.Picture, Extensions.RandomString(12), true);
             if (Input.GetKeyDown(KeyCode.D))
                 Actions.Push(ActionType.Dialogue);
             if (Input.GetKeyDown(KeyCode.E))
@@ -212,6 +215,26 @@ namespace Wizard {
             if (Input.GetKeyDown(KeyCode.G)) {
                 wand.DoRandomGesture();
             }
+            if (Input.GetKeyDown(KeyCode.M)) {
+                var opts = Manager.Instance.InactiveBeacons.PickRandomSubset(1);
+                var beacon = opts.Count() > 0 ? opts.ElementAt(0) : null;
+
+                if (beacon != null) {
+                    var first = new Action();
+                    first.type = ActionType.MoveTo;
+                    first.dat = beacon.origin;
+
+                    var sec = new Action();
+                    sec.type = ActionType.Inspect;
+                    sec.dat = beacon.transform;
+
+                    var seq = new ActionSequence();
+                    seq.actions = new Action[] { first, sec };
+                    seq.immediate = true;
+
+                    Actions.Push(seq);
+                }
+            }
             
         }
 
@@ -231,9 +254,10 @@ namespace Wizard {
 
                 if (state != State.Rest) 
                 {
-                    if (Wand.spells) state = State.Spell;
-                    else if (Actions.currentAction.type == ActionType.Picture && Actions.inprogress) state = State.Picture;
-                    else state = State.Idle;
+                    if (Wand.spells) 
+                        state = State.Spell;
+                    else 
+                        state = State.Idle;
                 }
             }
         }
@@ -290,9 +314,6 @@ namespace Wizard {
             animator.SetBool("walking", state == State.Walk);
             animator.SetBool("resting", state == State.Rest);
             animator.SetBool("spell", state == State.Spell);
-
-            ik.lookAtWeight = (state == State.Picture) ? 1f : 0f;
-            ik.lookAtPosition = Look.transform.position;
         }
 
 		#endregion
@@ -396,6 +417,11 @@ namespace Wizard {
         public void DidCastSpell()
         {
             Actions.onCastSpell();
+        }
+
+        public void DidInspect()
+        {
+            Actions.onInspect();
         }
 
 		#endregion

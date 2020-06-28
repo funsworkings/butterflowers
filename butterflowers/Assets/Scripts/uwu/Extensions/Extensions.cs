@@ -368,6 +368,11 @@ public static class Extensions
 						   Mathf.Clamp(v.z, -z, z));
 	}
 
+    public static Vector3 MatchY(this Vector3 val, Vector3 compare)
+    {
+        return new Vector3(val.x, compare.y, val.z);
+    }
+
     #endregion
 
     #region Colors

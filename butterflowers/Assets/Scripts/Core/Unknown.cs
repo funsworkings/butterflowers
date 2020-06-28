@@ -46,7 +46,7 @@ public class Unknown : MonoBehaviour
             updateRiver();
 
             var @string = fetchRiver();
-            Scribe.Instance.Push(EVENTCODE.UNKNOWN, AGENT.Unknown, AGENT.World, @string);
+            Scribe.Instance.Push(EVENTCODE.UNKNOWN, AGENT.Unknown, AGENT.World, @string, false);
 
             yield return new WaitForSeconds(Mathf.Max(0f, scribeInterval));
         }
