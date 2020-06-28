@@ -55,6 +55,8 @@ namespace Wizard {
 		[SerializeField] ActionType[] m_possibleActionsFilter = new ActionType[] { };
 		[SerializeField] ActionType[] m_possibleActionsRaw = new ActionType[] { };
 
+		[SerializeField] ActionType[] excludes;
+
 		#endregion
 
 		#region Collections
@@ -492,6 +494,10 @@ namespace Wizard {
 				var type = raw.ElementAt(i);
 				var name = System.Enum.GetName(typeof(ActionType), type);
 
+				if (excludes.Contains(type))
+					continue;
+
+
 				if (name.StartsWith("Beacon")) {
 					if (!ExistsActionableBeaconOp())
 						continue;
@@ -507,10 +513,6 @@ namespace Wizard {
 				if (type == ActionType.Emote) {
 					if (!ExistsActionableEmote())
 						continue;
-				}
-				if (type == ActionType.Dialogue) 
-				{
-					continue;
 				}
 
 				filtered.Add(type);

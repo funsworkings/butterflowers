@@ -46,7 +46,10 @@ namespace Wizard {
 
             NestKick,
             NestPop,
-            NestClear
+            NestClear,
+
+            MoveTo,
+            Inspect
         }
 
         private string parseTypeName(Type type)
@@ -68,8 +71,6 @@ namespace Wizard {
         public class Action {
             public Type type = Type.None;
             public obj dat = null;
-
-            public bool wait = false;
             public bool immediate = false;
 
             public string debug {
@@ -90,6 +91,8 @@ namespace Wizard {
 
             /* * * * * */
 
+            public bool wait => (cast || type == Type.Picture || type == Type.Gesture || type == Type.MoveTo || type == Type.Inspect);
+
             public bool cast {
                 get
                 {
@@ -98,6 +101,13 @@ namespace Wizard {
                 }
             }
             public bool passive => (type != Type.Gesture && type != Type.Picture);
+        }
+
+        [System.Serializable]
+        public class ActionSequence 
+        {
+            public Action[] actions;
+            public bool immediate = false;
         }
 
         #endregion
@@ -111,6 +121,8 @@ namespace Wizard {
         Brain brain;
         Dialogue dialogue;
         Memories memories;
+        Navigation navigation;
+        Animator animator;
 
         [SerializeField] Snapshot snapshot;
         [SerializeField] ParticleSystem spells_ps;
@@ -126,9 +138,21 @@ namespace Wizard {
         #region Attributes
 
         [SerializeField] bool m_inprogress = false;
-        [SerializeField] Action m_currentAction = null;
+        Action m_currentAction = null;
 
+        // Tracking emote
+        Emote currentEmote;
+
+        // Tracking gesture
+        Gesture currentGesture;
+
+        // Tracking camera
         Camera previousMainCamera = null;
+        [SerializeField] Transform cameraFocalPoint = null;
+        bool lookingAtCamera = false;
+
+        // Tracking movement
+        Vector3 currentWaypoint = Vector3.zero;
 
         #endregion
 
@@ -181,7 +205,7 @@ namespace Wizard {
             brain = controller.Brain;
             dialogue = controller.Dialogue;
             memories = controller.Memories;
-            wand = controller.Wand;
+            animator = controller.Animator;
 
             Manager = Manager.Instance;
             Library = Library.Instance;
@@ -196,6 +220,10 @@ namespace Wizard {
             wand = controller.Wand;
             wand.onGestureEnd += onCompleteGesture;
 
+            navigation = GetComponent<Navigation>();
+            navigation.onMoveToPoint += onMoveToLocation;
+            navigation.onLookAtPoint += onLookAtLocation;
+
             StartCoroutine("Refresh");
         }
 
@@ -203,6 +231,10 @@ namespace Wizard {
         {
             snapshot.onSuccess -= onReceivePicture;
             wand.onGestureEnd -= onCompleteGesture;
+
+            wand.onGestureEnd -= onCompleteGesture;
+            navigation.onMoveToPoint -= onMoveToLocation;
+            navigation.onLookAtPoint -= onLookAtLocation;
 
             StopCoroutine("Refresh");
         }
@@ -221,11 +253,8 @@ namespace Wizard {
 
                     if (available && action != null) 
                     {
-                        if (!nextAction.immediate) 
-                        {
-                            float delay = Random.Range(Preset.minimumTimeBetweenActions, Preset.maximumTimeBetweenActions);
-                            yield return new WaitForSeconds(delay);
-                        }
+                        float delay = Random.Range(Preset.minimumTimeBetweenActions, Preset.maximumTimeBetweenActions);
+                        yield return new WaitForSeconds(delay);
 
                         Pop(action);
                     }
@@ -245,20 +274,41 @@ namespace Wizard {
             Push(action.type, action.dat, action.immediate);
         }
 
+        public void Push(ActionSequence actions)
+        {
+            var seq = actions.actions;
+            var immediate = actions.immediate;
+
+            for (int i = 0; i < seq.Length; i++) {
+                var action = seq[i];
+                action.immediate = false;
+
+                if (immediate)
+                    m_queue.Insert(i, action);
+                else
+                    m_queue.Add(action);
+            }
+        }
+
 		public void Push(Type type, obj dat = null, bool immediate = false)
         {
             Action action = new Action();
             action.type = type;
             action.dat = dat;
             action.immediate = immediate;
-            action.wait = (action.cast || type == Type.Picture || type == Type.Gesture);
 
             if (immediate) 
             {
-                if (available)
+                if (available) 
                     m_queue.Insert(0, action);
                 else
                     m_queue.Add(action);
+
+                if (currentAction != null && inprogress) 
+                {
+                    bool cancel = CancelAction(currentAction);
+                    inprogress = !cancel;
+                }
 
                 Pop();
             }
@@ -272,23 +322,42 @@ namespace Wizard {
             if (inprogress) return;
 
             int index = 0;
-            if (action != null)
+            if (action != null) {
                 index = queue.ToList().IndexOf(action);
 
-            var _action = m_currentAction = m_queue[index];
-            if (!_action.wait)
-                ParseAction(_action);
-            else {
-                inprogress = true;
-                if (_action.type == Type.Picture)
-                    TakePicture();
-                else if (_action.type == Type.Gesture)
-                    DoGesture((Gesture)_action.dat);
-            }
+                var _action = m_currentAction = m_queue[index];
+                if (!_action.wait)
+                    ParseAction(_action);
+                else {
+                    inprogress = true;
 
-            if (_action.type != Type.None) {
-                if (onEnact != null)
-                    onEnact(_action);
+                    if (_action.type == Type.Picture)
+                        TakePicture();
+                    else if (_action.type == Type.Gesture) {
+                        currentGesture = (Gesture)_action.dat;
+                        DoGesture(currentGesture);
+                    }
+                    else if (_action.type == Type.MoveTo) {
+                        currentWaypoint = (Vector3)_action.dat;
+
+                        animator.SetTrigger("reset_to_idle");
+
+                        navigation.MoveTo(currentWaypoint);
+                        navigation.LookAt(null);
+                    }
+                    else if (action.type == Type.Inspect) {
+                        animator.SetTrigger("inspect");
+
+                        var target = (Transform)_action.dat;
+                        navigation.LookAt(target);
+                    }
+                }
+
+                if (_action.type != Type.None) {
+                    if (onEnact != null)
+                        onEnact(_action);
+                }
+
             }
 
             m_queue.RemoveAt(index); // Remove el from queue
@@ -297,8 +366,15 @@ namespace Wizard {
         public void Dispose()
         {
             m_queue.Clear();
-            m_currentAction = null;
-            inprogress = false;
+
+            if (inprogress) 
+            {
+                bool clear = CancelAction(currentAction);
+                if (clear) {
+                    m_currentAction = null;
+                    inprogress = false;
+                }
+            }
         }
 
         #endregion
@@ -342,8 +418,7 @@ namespace Wizard {
             }
             else // Miscellaneous
             {
-                if (action.type == Type.Dialogue) 
-                {
+                if (action.type == Type.Dialogue) {
                     string body = (string)dat;
 
                     if (string.IsNullOrEmpty(body)) {
@@ -354,27 +429,40 @@ namespace Wizard {
                         dialogue.Push(body);
                     }
                 }
-                else if (action.type == Type.Picture) 
-                {
-                    TakePicture();
-                }
                 else if (action.type == Type.Emote) 
                 {
                     Emote[] emotes = brain.GetPossibleEmotes();
 
                     if (emotes.Length > 0) {
                         Emote emote = emotes.PickRandomSubset(1)[0];
+                        currentEmote = emote;
+
                         HandleEmote(emote);
                     }
-                }
-                else if (action.type == Type.Gesture) 
-                {
-                    Gesture gesture = (Gesture)dat;
-                    DoGesture(gesture);
                 }
             }
 
             if(!action.wait) inprogress = false;
+        }
+
+        bool CancelAction(Action action)
+        {
+            bool success = false;
+
+            if (action.type == Type.MoveTo) {
+                navigation.Stop();
+                success = true;
+            }
+            else if (action.type == Type.Emote || action.type == Type.Inspect) {
+                animator.SetTrigger("reset_to_idle");
+                success = true;
+            }
+            else if (action.type == Type.Gesture) {
+                bool flag = wand.CancelGesture();
+                success = flag;
+            }
+
+            return success;
         }
 
         #endregion
@@ -389,14 +477,19 @@ namespace Wizard {
             CameraManager.MainCamera = camera;
             camera.enabled = true;
 
+            lookingAtCamera = false;
+            currentWaypoint = cameraFocalPoint.position;
+            navigation.LookAt(cameraFocalPoint);
+
             StartCoroutine("TakingPicture");
         }
 
         IEnumerator TakingPicture()
         {
-            var ik = controller.GetComponentInChildren<IK>();
-            while (ik.lookAtWeight < .87f) yield return null;
+            while (!lookingAtCamera) 
+                yield return null;
 
+            yield return new WaitForSeconds(.167f);
             snapshot.Capture();
         }
 
@@ -412,13 +505,15 @@ namespace Wizard {
             camera.enabled = false;
             previousMainCamera = null;
 
+            navigation.LookAt(null);
+
             if(currentAction.type == Type.Picture && inprogress) 
                 inprogress = false;
         }
 
         #endregion
 
-        #region Wand callbacks
+        #region Animation callbacks
 
         public void onCastSpell()
         {
@@ -436,9 +531,22 @@ namespace Wizard {
 
         void onCompleteGesture(Gesture gesture)
         {
+            if (currentGesture.clip != gesture.clip) return;
+
             if (inprogress) {
                 if (currentAction.type == Type.Gesture) {
                     inprogress = false;
+                }
+            }
+        }
+
+        public void onInspect()
+        {
+            if (inprogress) {
+                if (currentAction.type == Type.Inspect) {
+                    inprogress = false;
+
+                    navigation.ResetLookAtToDefault();
                 }
             }
         }
@@ -481,6 +589,28 @@ namespace Wizard {
         }
 
         #endregion
+
+        #region Navigation callbacks
+
+        void onMoveToLocation(Vector3 location)
+        {
+            if (location != currentWaypoint) return;
+
+            if (currentAction.type == Type.MoveTo && inprogress) {
+                inprogress = false;
+                navigation.ResetLookAtToDefault();
+            }
+        }
+
+        void onLookAtLocation(Vector3 location)
+        {
+            if (location != currentWaypoint) return;
+
+            if (currentAction.type == Type.Picture) 
+                lookingAtCamera = true;
+        }
+
+		#endregion
 
 		#region Deprecated
 

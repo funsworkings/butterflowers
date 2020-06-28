@@ -18,6 +18,7 @@ public class RelayWizardEvents : MonoBehaviour
 	#region Callbacks
 
 	public void OnCastSpell() { wizard.DidCastSpell(); }
+	public void OnDidInspect() { wizard.DidInspect(); }
 
 	#endregion
 }

@@ -158,6 +158,14 @@ public class Wand : MonoBehaviour
         return true;
     }
 
+    public bool CancelGesture()
+    {
+        if (!inprogress) return false;
+
+        Gestures.StopAnimation();
+        return true;
+    }
+
     IEnumerator TimeoutGesture()
     {
         float t = 0f;
