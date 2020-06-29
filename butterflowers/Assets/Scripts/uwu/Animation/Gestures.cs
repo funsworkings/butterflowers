@@ -210,10 +210,16 @@ public class Gestures: MonoBehaviour {
         animation.clip = clip;
 
 #if UNITY_EDITOR
-        timeSincePreview = EditorApplication.timeSinceStartup;
-        previewClip = clip;
 
-        EditorApplication.update += onEditorUpdate;
+        if (!Application.isPlaying) {
+
+            timeSincePreview = EditorApplication.timeSinceStartup;
+            previewClip = clip;
+
+            EditorApplication.update += onEditorUpdate;
+        }
+        else
+            animation.Play();
 
 #else
         animation.Play();

@@ -355,9 +355,13 @@ public class Manager : Spawner
             bool v = beacon.visible;
 
             var instance = CreateBeacon(p, t);
+            if (instance == null)
+                continue; // Bypass null beacon
+
             if (!v) {
                 onDiscoveredBeacon(instance); // Send to nest if immediately found
                 Events.ReceiveEvent(EVENTCODE.BEACONACTIVATE, AGENT.World, AGENT.Beacon, details: instance.file.AbbreviateFilename());
+
             }
         }
     }
