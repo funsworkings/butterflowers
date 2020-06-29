@@ -37,6 +37,9 @@ namespace Wizard {
 
 		public bool debug = false;
 
+		[Header("Debug attributes")]
+		[SerializeField] float angleBetween = 0f;
+
 		#endregion
 
 		#region Accessors
@@ -105,7 +108,7 @@ namespace Wizard {
 
 			Quaternion lookRot = Quaternion.LookRotation(dir, transform.up);
 			float angle = Quaternion.Angle(transform.rotation, lookRot);
-			Debug.Log(angle);
+			angleBetween = angle;
 
 			turning = (angle >= turnThreshold);
 

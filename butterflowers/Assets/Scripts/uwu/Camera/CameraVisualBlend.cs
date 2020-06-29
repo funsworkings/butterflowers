@@ -162,6 +162,9 @@ public class CameraVisualBlend: MonoBehaviour {
 			else {
 				var duration = anim.length;
 
+				if (planeAnimation.GetClip(clip_name) == null)
+					planeAnimation.AddClip(def.animation, clip_name);
+
 				planeAnimation[clip_name].time = (interval * duration);
 				planeAnimation.Sample();
 			}
