@@ -7,7 +7,7 @@ public class FocalPoint : MonoBehaviour
 {
     #region Events
 
-    public static System.Action<FocalPoint> FocusOnPoint, LostFocusOnPoint;
+    public static System.Action<FocalPoint> FocusOnPoint, LostFocusOnPoint, BeginFocus;
     public System.Action onFocus, onLoseFocus;
 
     #endregion
@@ -79,27 +79,6 @@ public class FocalPoint : MonoBehaviour
             LoseFocus(); // Dispose when disabled
     }
 
-    void Update()
-    {
-        if ((focused || !focusinprogress) || (focusinprogress && Input.GetMouseButtonUp(0))) 
-        {
-            t_focustime = 0f;
-            focusinprogress = false;
-
-            return;
-        }
-
-        if (t_focustime >= timetofocus) 
-        {
-            focusinprogress = false;
-            t_focustime = 0f;
-
-            Focus();
-        }
-        else
-            t_focustime += Time.deltaTime;
-    }
-
     public void Focus()
     {
         if (focused) return;
@@ -137,6 +116,10 @@ public class FocalPoint : MonoBehaviour
     void Grab(Vector3 point, Vector3 normal)
     {
         if (!queued || isFocused) return;
+
+        if (BeginFocus != null)
+            BeginFocus(this);
+
         focusinprogress = true;
     }
 

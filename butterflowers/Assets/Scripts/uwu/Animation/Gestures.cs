@@ -93,12 +93,6 @@ public class Gestures: MonoBehaviour {
         init = (xcurve != null && ycurve != null && zcurve != null);
     }
 
-    public void StopAnimation()
-    {
-        if (!previewing) return;
-        timeSincePreview -= previewClip.length;
-    }
-
     public void SnapToLastFrameOfAnimation()
     {
         if (clip == null) return;
@@ -196,6 +190,25 @@ public class Gestures: MonoBehaviour {
         if (clip == null) return;
 
         PlayAnimation(clip);
+    }
+
+    public void StopAnimation()
+    {
+
+#if UNITY_EDITOR
+
+        if (!Application.isPlaying) {
+            if (!previewing) return;
+            timeSincePreview -= previewClip.length;
+        }
+        else
+            animation.Stop();
+
+#else
+        animation.Stop();
+
+#endif
+
     }
 
     public void PlayAnimation(AnimationClip clip)
