@@ -200,7 +200,7 @@ Transform:
   m_GameObject: {fileID: 2418046}
   m_LocalRotation: {x: 0, y: 0, z: 0, w: 1}
   m_LocalPosition: {x: 0, y: 0, z: 0.115}
-  m_LocalScale: {x: 0.074652165, y: 0.061628316, z: 0.01}
+  m_LocalScale: {x: 0.105686, y: 0.061628316, z: 0.01}
   m_Children:
   - {fileID: 2015572246}
   m_Father: {fileID: 534669905}
@@ -28825,7 +28825,7 @@ MonoBehaviour:
   lowpass: 0
   lowPassSmoothSpeed: 0.5
   lowPassFilterParam: LPCutoff_BackgroundMusic
-  timeToFocus: 0
+  timeToFocus: 1.67
   timeToLoseFocus: 1
   loseFocusBlends:
   - {fileID: 11400000, guid: 367df76d735b52746872c9853cd8c029, type: 2}
@@ -33832,7 +33832,7 @@ Transform:
   m_GameObject: {fileID: 2015572245}
   m_LocalRotation: {x: 0, y: 0, z: 0, w: 1}
   m_LocalPosition: {x: 21.7, y: 19.1, z: 0}
-  m_LocalScale: {x: 0.0044205016, y: 0.0053546815, z: 0.033}
+  m_LocalScale: {x: 0.003122457, y: 0.0053546815, z: 0.033}
   m_Children:
   - {fileID: 474465336}
   m_Father: {fileID: 2418050}
