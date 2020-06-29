@@ -1,8 +1,11 @@
 ﻿using System.Collections;
 using System.Collections.Generic;
+using System.Drawing;
 using System.Linq;
+using UIExt.Behaviors.Visibility;
 using UnityEngine;
 
+using ui = UnityEngine.UI;
 using UnityEngine.Events;
 using UnityEngine.EventSystems;
 
@@ -28,8 +31,13 @@ public class Focus : MonoBehaviour
     #region Properties
 
     [SerializeField] FocalPoint focus = null;
+    [SerializeField] FocalPoint focusInQueue = null;
+
     [SerializeField] FocalPoint[] focalPoints;
     [SerializeField] CameraVisualBlend CameraBlend;
+
+    [SerializeField] ToggleOpacity loading;
+    [SerializeField] ui.Image loadingFill;
 
     #endregion
 
@@ -46,8 +54,8 @@ public class Focus : MonoBehaviour
     [SerializeField] float lowpass = 0f, lowPassSmoothSpeed = .1f;
     [SerializeField] string lowPassFilterParam = null;
 
-    [SerializeField] float timeToLoseFocus = 1f;
-                     float t_losefocus = 0f;
+    [SerializeField] float timeToFocus, timeToLoseFocus = 1f;
+                     float t_focus = 0f, t_losefocus = 0f;
                      bool focus_ready = false;
 
     [SerializeField] CameraVisualBlendDefinition[] loseFocusBlends;
@@ -63,17 +71,22 @@ public class Focus : MonoBehaviour
         }
     }
 
+    public bool focusing => focusInQueue != null && focus_ready && t_focus < timeToFocus;
+    public bool losing_focus => focus != null && focus_ready && t_losefocus < timeToLoseFocus;
+
     #endregion
 
     #region Monobehaviour callbacks
 
     void OnEnable() {
         FocalPoint.FocusOnPoint += SetFocus;
+        FocalPoint.BeginFocus += NewFocus;
     }
 
     void OnDisable()
     {
         FocalPoint.FocusOnPoint -= SetFocus;
+        FocalPoint.BeginFocus -= NewFocus;
     }
 
     void Start()
@@ -84,26 +97,34 @@ public class Focus : MonoBehaviour
     // Update is called once per frame
     void Update()
     {
-        if (active && !focalPoints.Any(focal => focal.isFocusing)) {
-            if (!focus_ready) {
-                if (Input.GetMouseButtonUp(0))
-                    focus_ready = true;
+        if (Input.GetMouseButtonDown(0)) focus_ready = true;
+        if (Input.GetMouseButtonUp(0)) focus_ready = false;
 
-                return;
+        if (!focus_ready) 
+        {
+            t_focus = t_losefocus = 0f;
+        }
+
+        if (active) 
+        {
+            if (focus_ready) {
+                if (focusInQueue == null)
+                    LosingFocus();
+                else
+                    SettingFocus();
             }
-
-            if (Input.GetMouseButton(0) && !EventSystem.current.IsPointerOverGameObject()) {
-                t_losefocus += Time.deltaTime;
-                if (t_losefocus >= timeToLoseFocus) 
-                        LoseFocus();
+        }
+        else 
+        {
+            if (focus_ready) 
+            {
+                if (focusInQueue != null)
+                    SettingFocus();
             }
             else
-                t_losefocus = 0f;
+                focusInQueue = null;
         }
-        else {
-            t_losefocus = 0f;
-            focus_ready = false;
-        }
+        UpdateLoadingBar();
 
         if (BackgroundAudio != null) {
             if (active) {
@@ -118,6 +139,57 @@ public class Focus : MonoBehaviour
             }
 
             SmoothLowPassFilter();
+        }
+    }
+
+    #endregion
+
+    #region Focusing
+
+    void SettingFocus()
+    {
+        if (focusInQueue == null) return;
+
+        if (t_focus >= timeToFocus) {
+            focusInQueue.Focus();
+
+            focusInQueue = null;
+            focus_ready = false;
+            t_focus = 0f;
+        }
+        else {
+            t_focus += Time.deltaTime;
+        }
+    }
+
+    void LosingFocus()
+    {
+        if (focus == null) return;
+
+        if (t_losefocus >= timeToLoseFocus) {
+            LoseFocus();
+
+            focus_ready = false;
+            t_losefocus = 0f;
+        }
+        else
+            t_losefocus += Time.deltaTime;
+    }
+
+    void UpdateLoadingBar()
+    {
+        if (focusing || losing_focus) {
+            loading.Show();
+
+            var len = (focusing) ? t_focus : t_losefocus;
+            var dur = (focusing) ? timeToFocus : timeToLoseFocus;
+
+            loadingFill.fillAmount = Mathf.Clamp01(len / dur);
+        }
+        else {
+            loading.Hide();
+
+            loadingFill.fillAmount = 0f;
         }
     }
 
@@ -141,6 +213,12 @@ public class Focus : MonoBehaviour
         CameraBlend.BlendTo(Camera);
 
         onFocus.Invoke();
+    }
+
+    void NewFocus(FocalPoint focus)
+    {
+        focusInQueue = focus;
+        t_focus = 0f;
     }
 
     public void LoseFocus()

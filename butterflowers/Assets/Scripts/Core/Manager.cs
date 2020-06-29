@@ -130,7 +130,7 @@ public class Manager : Spawner
     {
         while (!Save.load) yield return null;
 
-        if (Save.wizard) Wizard.gameObject.SetActive(true);
+        //if (Save.wizard) Wizard.gameObject.SetActive(true);
         
         Scribe.Restore(Save.logs);
         Nest.RestoreCapacity(Save.nestcapacity);
@@ -238,7 +238,7 @@ public class Manager : Spawner
 
         if (Sun.days == 1) 
         {
-            Wizard.gameObject.SetActive(true);
+            //Wizard.gameObject.SetActive(true);
             Save.wizard = true;
         }
     }
