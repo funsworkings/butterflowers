@@ -286,8 +286,8 @@ namespace Wizard {
                         else Actions.Push(ActionType.BeaconActivate, immediate: true);
                         break;
                     case EVENTCODE.NESTKICK:
-                        Actions.Push(ActionType.NestKick, immediate: true);
-                        Actions.Push(ActionType.Dialogue, "I like to kick nests too, y'know????", immediate: true);
+                        Dialogue.Push("I like to kick nests too, y'know????");
+                        Actions.Push(ActionType.NestKick, immediate: true, delay:.2f);
                         break;
                     case EVENTCODE.NESTSPILL:
                         if (Brain.mood > 0f) Actions.Push(ActionType.BeaconActivate, immediate: true);
@@ -325,7 +325,7 @@ namespace Wizard {
 
         void onFocus()
         {
-            if (Dialogue.queue.Length > 0) {
+            if (Dialogue.temporaryqueue.Length > 0) {
                 Dialogue.autoprogress = true;
                 Dialogue.PushAllFromQueue();
             }
@@ -395,10 +395,12 @@ namespace Wizard {
 
         void onEnactAction(Action action)
         {
-            if (!action.passive) 
+            /*if (!action.passive) 
             {
                 if (isFocused) Focus.LoseFocus();
-            }
+            }   
+            
+            allow active/passive actions ALWAYS  */
 
             if (action.cast) 
                 animator.SetTrigger("cast");
