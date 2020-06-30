@@ -14,10 +14,8 @@ public class FocalPoint : MonoBehaviour
 
     #region Attributes
 
-    [SerializeField] bool focused = false, queued = false, focusinprogress = false;
-    
-    [SerializeField] float timetofocus = 1f;
-    float t_focustime = 0f;
+    [SerializeField] bool focused = false, queued = false;
+    public float timetofocus = 1f;
 
     #endregion
 
@@ -45,8 +43,6 @@ public class FocalPoint : MonoBehaviour
         }
     }
 
-    public bool isFocusing => focusinprogress;
-
 	#endregion
 
 	void Awake()
@@ -60,7 +56,7 @@ public class FocalPoint : MonoBehaviour
     {
         if (interactable == null) return;
 
-        focused = focusinprogress = queued =  false;
+        focused = queued =  false;
 
         interactable.onHover += Hover;
         interactable.onUnhover += Unhover;
@@ -116,11 +112,8 @@ public class FocalPoint : MonoBehaviour
     void Grab(Vector3 point, Vector3 normal)
     {
         if (!queued || isFocused) return;
-
         if (BeginFocus != null)
             BeginFocus(this);
-
-        focusinprogress = true;
     }
 
     #endregion 
