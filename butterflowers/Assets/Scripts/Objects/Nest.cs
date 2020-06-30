@@ -228,8 +228,6 @@ public class Nest : MonoBehaviour
     public void RestoreCapacity(int capacity)
     {
         m_capacity = capacity;
-        Quilt.UpdateTextureCap(capacity);
-
         if (capacity > 6f)
             StartCoroutine("Scale");
     }
@@ -357,8 +355,6 @@ public class Nest : MonoBehaviour
             Events.ReceiveEvent(EVENTCODE.NESTGROW, AGENT.Inhabitants, AGENT.Nest);
 
             m_capacity += 6;
-            Quilt.UpdateTextureCap(capacity);
-
             resize = true;
         }
         else {
@@ -368,8 +364,6 @@ public class Nest : MonoBehaviour
                 resize = true;
 
             m_capacity = 6;
-            Quilt.UpdateTextureCap(capacity);
-
             Dispose();
         }
 
