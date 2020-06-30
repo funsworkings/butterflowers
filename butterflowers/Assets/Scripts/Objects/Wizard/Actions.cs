@@ -477,17 +477,17 @@ namespace Wizard {
             CameraManager.MainCamera = camera;
             camera.enabled = true;
 
-            lookingAtCamera = false;
-            currentWaypoint = cameraFocalPoint.position;
-            navigation.LookAt(cameraFocalPoint);
+            //lookingAtCamera = false;
+            //currentWaypoint = cameraFocalPoint.position;
+            //navigation.LookAt(cameraFocalPoint);
 
             StartCoroutine("TakingPicture");
         }
 
         IEnumerator TakingPicture()
         {
-            while (!lookingAtCamera) 
-                yield return null;
+            //while (!lookingAtCamera) 
+              //  yield return null;
 
             yield return new WaitForSeconds(.167f);
             snapshot.Capture();
@@ -505,7 +505,7 @@ namespace Wizard {
             camera.enabled = false;
             previousMainCamera = null;
 
-            navigation.LookAt(null);
+            //navigation.LookAt(null);
 
             if(currentAction.type == Type.Picture && inprogress) 
                 inprogress = false;
