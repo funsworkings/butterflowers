@@ -9,7 +9,7 @@ public class Nest : MonoBehaviour
 
     #region External
 
-    Quilt Quilt = null;
+    [SerializeField] Quilt Quilt = null;
     GameDataSaveSystem Save;
 
 	#endregion
@@ -91,7 +91,6 @@ public class Nest : MonoBehaviour
 
     void Start()
     {
-        Quilt = Quilt.Instance;
         Save = GameDataSaveSystem.Instance;
 
         interactable.onHover += Hover;
@@ -229,12 +228,10 @@ public class Nest : MonoBehaviour
     public void RestoreCapacity(int capacity)
     {
         m_capacity = capacity;
+        Quilt.UpdateTextureCap(capacity);
 
         if (capacity > 6f)
             StartCoroutine("Scale");
-
-        if (onUpdateCapacity != null)
-            onUpdateCapacity(capacity);
     }
 
     #endregion
@@ -360,6 +357,8 @@ public class Nest : MonoBehaviour
             Events.ReceiveEvent(EVENTCODE.NESTGROW, AGENT.Inhabitants, AGENT.Nest);
 
             m_capacity += 6;
+            Quilt.UpdateTextureCap(capacity);
+
             resize = true;
         }
         else {
@@ -369,6 +368,8 @@ public class Nest : MonoBehaviour
                 resize = true;
 
             m_capacity = 6;
+            Quilt.UpdateTextureCap(capacity);
+
             Dispose();
         }
 

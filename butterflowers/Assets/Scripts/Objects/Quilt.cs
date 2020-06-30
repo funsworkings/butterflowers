@@ -335,7 +335,7 @@ public class Quilt : MonoBehaviour
 
     #region Nest callbacks
 
-    void UpdateTextureCap(int capacity)
+    public void UpdateTextureCap(int capacity)
     {
         textureCap = capacity;
     }
