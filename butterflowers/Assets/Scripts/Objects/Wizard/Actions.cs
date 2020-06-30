@@ -509,6 +509,7 @@ namespace Wizard {
             camera.enabled = false;
             previousMainCamera = null;
 
+            controller.Dialogue.Push("I thought you might like this photo I took! Hope it's not too blurry :/");
             //navigation.LookAt(null);
 
             if(currentAction.type == Type.Picture && inprogress) 
