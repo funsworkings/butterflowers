@@ -57,6 +57,8 @@ public class Focus : MonoBehaviour
     [SerializeField] float timeToFocus, timeToLoseFocus = 1f;
                      float t_focus = 0f, t_losefocus = 0f;
                      bool focus_ready = false;
+    [SerializeField] float focusDelay = 0f;
+                     bool delay = false;
 
     [SerializeField] CameraVisualBlendDefinition[] loseFocusBlends;
 
@@ -73,8 +75,8 @@ public class Focus : MonoBehaviour
 
     public FocalPoint focus => m_focus;
 
-    public bool focusing => focusInQueue != null && focus_ready && t_focus < timeToFocus;
-    public bool losing_focus => m_focus != null && focus_ready && t_losefocus < timeToLoseFocus;
+    public bool focusing => focusInQueue != null && focus_ready && t_focus-focusDelay < timeToFocus;
+    public bool losing_focus => m_focus != null && focus_ready && t_losefocus-focusDelay < timeToLoseFocus;
 
     #endregion
 
@@ -102,9 +104,17 @@ public class Focus : MonoBehaviour
         if (Input.GetMouseButtonDown(0)) focus_ready = true;
         if (Input.GetMouseButtonUp(0)) focus_ready = false;
 
+
         if (!focus_ready) 
         {
             t_focus = t_losefocus = 0f;
+            delay = true;
+        }
+        else {
+            if (active)
+                delay = (t_losefocus < focusDelay);
+            else
+                delay = (t_focus < focusDelay);
         }
 
         if (active) 
@@ -129,11 +139,13 @@ public class Focus : MonoBehaviour
         UpdateLoadingBar();
 
         if (BackgroundAudio != null) {
-            if (active) {
+            if (active) 
+            {
                 SetBackgroundAudioFromDistance();
                 SetBackgroundVolumeFromDistance();
             }
-            else {
+            else 
+            {
                 BackgroundAudio.pitch = 1f;
                 BackgroundAudio.volume = 1f;
 
@@ -152,7 +164,9 @@ public class Focus : MonoBehaviour
     {
         if (focusInQueue == null) return;
 
-        if (t_focus >= timeToFocus) {
+        float t = (t_focus - focusDelay);
+
+        if (t >= timeToFocus) {
             focusInQueue.Focus();
 
             focusInQueue = null;
@@ -168,7 +182,9 @@ public class Focus : MonoBehaviour
     {
         if (m_focus == null) return;
 
-        if (t_losefocus >= timeToLoseFocus) {
+        float t = (t_losefocus - focusDelay);
+
+        if (t >= timeToLoseFocus) {
             LoseFocus();
 
             focus_ready = false;
@@ -180,17 +196,17 @@ public class Focus : MonoBehaviour
 
     void UpdateLoadingBar()
     {
-        if (focusing || losing_focus) {
+        if ((focusing || losing_focus) && !delay) {
             loading.Show();
 
-            var len = (focusing) ? t_focus : t_losefocus;
+            var len = (focusing) ? t_focus-focusDelay : t_losefocus-focusDelay;
             var dur = (focusing) ? timeToFocus : timeToLoseFocus;
 
             loadingFill.fillAmount = Mathf.Clamp01(len / dur);
         }
         else {
-            loading.Hide();
 
+            loading.Hide();
             loadingFill.fillAmount = 0f;
         }
     }
@@ -206,7 +222,7 @@ public class Focus : MonoBehaviour
         Dispose();
         this.m_focus = focus;
 
-        var Camera = PullCamera();
+        Camera = focus.camera;
         if (Camera == null) return;
 
         Camera.Focus(focus.transform);
@@ -265,11 +281,6 @@ public class Focus : MonoBehaviour
 
     #region Internal
 
-    FocusCamera PullCamera()
-    {
-        return (m_focus == null || m_focus.camera == null) ? this.Camera : m_focus.camera;
-    }
-
 	void Dispose()
     {
         if (m_focus != null) m_focus.LoseFocus(); // Clear default focus
@@ -306,6 +317,7 @@ public class Focus : MonoBehaviour
         float dist = Vector3.Distance(m_focus.transform.position, Camera.transform.position);
 
         float vol = dist.RemapNRB(minFocusDistance, maxFocusDistance, minBGVol, maxBGVol);
+        Debug.Log(vol);
         BackgroundAudio.volume = vol;
     }
 

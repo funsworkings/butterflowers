@@ -421,7 +421,7 @@ MonoBehaviour:
         m_MethodName: PlaySoundRandomPitch
         m_Mode: 2
         m_Arguments:
-          m_ObjectArgument: {fileID: 8300000, guid: 8e26251d892b85341a6330a961140f02,
+          m_ObjectArgument: {fileID: 8300000, guid: 4f81aca33c1203644a6eef618ff1c4b2,
             type: 3}
           m_ObjectArgumentAssemblyTypeName: UnityEngine.AudioClip, UnityEngine
           m_IntArgument: 0
@@ -1540,7 +1540,7 @@ Transform:
   m_PrefabInstance: {fileID: 0}
   m_PrefabAsset: {fileID: 0}
   m_GameObject: {fileID: 201810246}
-  m_LocalRotation: {x: -0.22025323, y: 2.4103189e-15, z: -3.087657e-15, w: 0.97544277}
+  m_LocalRotation: {x: -0.22025321, y: -0.000000013505881, z: 0.000000006295696, w: 0.97544277}
   m_LocalPosition: {x: 0, y: -4.7999983, z: -19.199999}
   m_LocalScale: {x: 1, y: 1, z: 1}
   m_Children:
@@ -1834,7 +1834,7 @@ MonoBehaviour:
   m_pitch: 1.32
   smoothPitch: 0
   pitchSmoothSpeed: 1
-  m_volume: 0.45
+  m_volume: 1
   smoothVolume: 0
   volumeSmoothSpeed: 1
   pitchParam: 
@@ -8054,6 +8054,7 @@ MonoBehaviour:
   m_current: 
   m_inprogress: 0
   dialogueTree: {fileID: 11400000, guid: 9f67b438b35ca5e49a81403d378b5a12, type: 2}
+  focusDialogueTree: {fileID: 0}
   bubble: {fileID: 1096321895}
   bubble_pos: {fileID: 1096321899}
   advancer: {fileID: 478646750}
@@ -13394,7 +13395,7 @@ Transform:
   m_PrefabInstance: {fileID: 0}
   m_PrefabAsset: {fileID: 0}
   m_GameObject: {fileID: 534669902}
-  m_LocalRotation: {x: -0.22025323, y: 2.4103189e-15, z: -3.087657e-15, w: 0.97544277}
+  m_LocalRotation: {x: -0.22025321, y: -0.000000013505881, z: 0.000000006295696, w: 0.97544277}
   m_LocalPosition: {x: 0, y: -4.7999983, z: -30.55278}
   m_LocalScale: {x: 1, y: 1, z: 1}
   m_Children:
@@ -29438,7 +29439,7 @@ MonoBehaviour:
   maxBGPitch: 1
   minBGLP: 333
   maxBGLP: 3333
-  minBGVol: 0.93
+  minBGVol: 0.87
   maxBGVol: 1
   minMemVol: 0.67
   maxMemVol: 0.9
@@ -29447,6 +29448,7 @@ MonoBehaviour:
   lowPassFilterParam: LPCutoff_BackgroundMusic
   timeToFocus: 1.67
   timeToLoseFocus: 1
+  focusDelay: 0.167
   loseFocusBlends:
   - {fileID: 11400000, guid: 367df76d735b52746872c9853cd8c029, type: 2}
   - {fileID: 11400000, guid: 2113ca8d6483ed6498d9518bc5032a52, type: 2}
