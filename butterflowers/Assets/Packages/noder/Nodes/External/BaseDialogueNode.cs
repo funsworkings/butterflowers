@@ -11,19 +11,11 @@ namespace Noder.Nodes.External {
         
         public abstract string body { get; }
 
-        public bool dispose = false;
-
         protected override void OnEnter()
         {
             DialogueTree tree = (graph as DialogueTree);
             if (tree != null) {
-
-                DialogueHandler handler = tree.dialogueHandler;
-                if (handler != null) {
-                    handler.Push(body);
-                    handler.autoprogress = dispose;
-                }
-
+                tree.Push(body);
                 base.OnEnter();
             }
         }

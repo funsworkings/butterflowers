@@ -1,6 +1,7 @@
 ﻿using System.Collections;
 using System.Collections.Generic;
 using System.Linq;
+using Noder.Graphs;
 using Noder.Nodes.Abstract;
 using Settings;
 using UnityEngine;
@@ -34,6 +35,13 @@ namespace Wizard {
 		#region Internal
 
 		public enum State { Idle, Walk, Spell, Rest, Picture }
+
+        [System.Serializable]
+        public struct DialogueTreeMap 
+        {
+            public FocalPoint focalPoint;
+            public DialogueTree dialogueTree;
+        }
 
         #endregion
 
@@ -70,6 +78,8 @@ namespace Wizard {
         [SerializeField] UnityEngine.UI.Text debugtext;
 
         [SerializeField] ActionSequence[] sequences;
+
+        [SerializeField] List<DialogueTreeMap> dialogueMappings = new List<DialogueTreeMap>();
 
         #endregion
 
@@ -325,14 +335,16 @@ namespace Wizard {
 
         void onFocus()
         {
-            if (Dialogue.temporaryqueue.Length > 0) {
-                Dialogue.autoprogress = true;
-                Dialogue.PushAllFromQueue();
-            }
-            else {
-                Dialogue.autoprogress = false;
-                Dialogue.FetchDialogueFromTree();
-            }
+            var focalPoint = Focus.focus;
+            if (focalPoint == null) return;
+
+            var trees = dialogueMappings.Where(map => map.focalPoint == focalPoint);
+            DialogueTree tree = (trees.Count() > 0) ? trees.ElementAt(0).dialogueTree : null;
+
+            Dialogue.focusDialogueTree = tree;
+
+            Dialogue.autoprogress = false;
+            Dialogue.FetchDialogueFromTree(tree);
         }
 
         void onLoseFocus()

@@ -30,7 +30,7 @@ public class Focus : MonoBehaviour
 
     #region Properties
 
-    [SerializeField] FocalPoint focus = null;
+    [SerializeField] FocalPoint m_focus = null;
     [SerializeField] FocalPoint focusInQueue = null;
 
     [SerializeField] FocalPoint[] focalPoints;
@@ -67,12 +67,14 @@ public class Focus : MonoBehaviour
     public bool active {
         get
         {
-            return (focus != null);
+            return (m_focus != null);
         }
     }
 
+    public FocalPoint focus => m_focus;
+
     public bool focusing => focusInQueue != null && focus_ready && t_focus < timeToFocus;
-    public bool losing_focus => focus != null && focus_ready && t_losefocus < timeToLoseFocus;
+    public bool losing_focus => m_focus != null && focus_ready && t_losefocus < timeToLoseFocus;
 
     #endregion
 
@@ -164,7 +166,7 @@ public class Focus : MonoBehaviour
 
     void LosingFocus()
     {
-        if (focus == null) return;
+        if (m_focus == null) return;
 
         if (t_losefocus >= timeToLoseFocus) {
             LoseFocus();
@@ -199,10 +201,10 @@ public class Focus : MonoBehaviour
 
 	public void SetFocus(FocalPoint focus)
     {
-        if (focus == this.focus) return;
+        if (focus == this.m_focus) return;
 
         Dispose();
-        this.focus = focus;
+        this.m_focus = focus;
 
         var Camera = PullCamera();
         if (Camera == null) return;
@@ -226,7 +228,7 @@ public class Focus : MonoBehaviour
     public void LoseFocus()
     {
         Dispose();
-        focus = null;
+        m_focus = null;
 
 
         var loseFocusBlend = loseFocusBlends.PickRandomSubset(1)[0];
@@ -247,7 +249,7 @@ public class Focus : MonoBehaviour
 
         if (active) {
 
-            float dist = Vector3.Distance(focus.transform.position, Camera.transform.position);
+            float dist = Vector3.Distance(m_focus.transform.position, Camera.transform.position);
             float vol = dist.RemapNRB(minFocusDistance, maxFocusDistance, maxMemVol, minMemVol);
             vol = Mathf.Max(minMemVol, vol * baseline);
 
@@ -265,19 +267,19 @@ public class Focus : MonoBehaviour
 
     FocusCamera PullCamera()
     {
-        return (focus == null || focus.camera == null) ? this.Camera : focus.camera;
+        return (m_focus == null || m_focus.camera == null) ? this.Camera : m_focus.camera;
     }
 
 	void Dispose()
     {
-        if (focus != null) focus.LoseFocus(); // Clear default focus
+        if (m_focus != null) m_focus.LoseFocus(); // Clear default focus
     }
 
     void SetBackgroundAudioFromDistance()
     {
         if (BackgroundAudio == null || Camera == null) return;
 
-        float dist = Vector3.Distance(focus.transform.position, Camera.transform.position);
+        float dist = Vector3.Distance(m_focus.transform.position, Camera.transform.position);
 
         float pitch = dist.RemapNRB(minFocusDistance, maxFocusDistance, minBGPitch, maxBGPitch);
         BackgroundAudio.pitch = pitch;
@@ -301,7 +303,7 @@ public class Focus : MonoBehaviour
     {
         if (BackgroundAudio == null || Camera == null) return;
 
-        float dist = Vector3.Distance(focus.transform.position, Camera.transform.position);
+        float dist = Vector3.Distance(m_focus.transform.position, Camera.transform.position);
 
         float vol = dist.RemapNRB(minFocusDistance, maxFocusDistance, minBGVol, maxBGVol);
         BackgroundAudio.volume = vol;

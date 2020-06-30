@@ -73,6 +73,15 @@ namespace Noder {
             return timers;
         }
 
+        public void JumpToNode(Node node, bool enter = false)
+        {
+            if (!nodes.Contains(node)) return;
+
+            activeNode = node;
+            if (enter)
+                activeNode.Enter();
+        }
+
         void Start(){
             activeNode = rootNode;
             if (activeNode != null)
