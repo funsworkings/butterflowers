@@ -218,7 +218,9 @@ public class Focus : MonoBehaviour
     void NewFocus(FocalPoint focus)
     {
         focusInQueue = focus;
+
         t_focus = 0f;
+        timeToFocus = focus.timetofocus;
     }
 
     public void LoseFocus()
