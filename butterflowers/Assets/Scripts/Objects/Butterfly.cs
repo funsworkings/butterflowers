@@ -129,7 +129,7 @@ public class Butterfly : MonoBehaviour
             CreateTrails();
 
             float duration = preset.descentTime;
-            str *= (1f - Mathf.Clamp01((timeSinceDeath) / duration));
+            dt *= (1f - Mathf.Clamp01((timeSinceDeath) / duration));
 
             float d = (timeSinceDeath - preset.deathColorDelay) / preset.deathTransitionTime; // Go full white --> .167 = time to go white
             if (d >= 0f && d <= 1f)
@@ -142,18 +142,21 @@ public class Butterfly : MonoBehaviour
             }
 
             MoveTowardsGround(timeSinceDeath);
-            if (positionRelativeToCamera.y <= 64f && timeSinceDeath > preset.timeDead)
+            if (positionRelativeToCamera.y <= 64f || timeSinceDeath > preset.timeDead)
                 Die();
 
             timeSinceDeath += dt;
         }
 
         if (state == State.Easing) {
-            MoveTowardsSpawn(str);
+            MoveTowardsSpawn(dt);
             distance = (origin.z - driver.transform.position.z);
         }
         else if (state == State.Alive) {
-            if (wand != null && wand.spells) MoveWithWand(wand, str);
+            if (wand != null && wand.spells) {
+                float attract = MoveTowardsWand(wand,str);
+               // MoveWithWand(wand, dt, attract);
+            }
 
             MoveTowardsCenter(str);
             MoveWithNoise(str);
@@ -313,7 +316,7 @@ public class Butterfly : MonoBehaviour
         if (dir.magnitude < 1f)
             state = State.Alive; // Break out out Ease State if close enough to origin
 
-        transform.position = Vector3.Lerp(transform.position, origin, .5f * dt);
+        transform.position = Vector3.Lerp(transform.position, origin, .5f * dt); // GOOD
     }
 
     void MoveWithNoise(float dt){
@@ -326,7 +329,7 @@ public class Butterfly : MonoBehaviour
         velocity += (new Vector3(dir.x, dir.y, 0f) * speed * dt);
     }
 
-    void MoveWithWand(Wand wand, float dt){
+    float MoveTowardsWand(Wand wand, float dt){
         Vector3 target = wand.position;
         Vector3 current = positionRelativeToCamera;
 
@@ -337,9 +340,10 @@ public class Butterfly : MonoBehaviour
         float offset = (radius - dist);
         float offset_int = offset / radius;
 
+        float magnitude = 0f;
         if (offset_int > 0f)
         {
-            float magnitude = preset.attractionCurve.Evaluate(Mathf.Clamp01(offset_int));
+            magnitude = preset.attractionCurve.Evaluate(Mathf.Clamp01(offset_int));
 
             //Check if killing butterfly
             if (wand.speed >= preset.wandRepelSpeed)
@@ -348,9 +352,22 @@ public class Butterfly : MonoBehaviour
                 magnitude *= -1f;
             }
 
-            Vector3 dir = direction.normalized;
-            velocity += new Vector3(dir.x, dir.y, 0f) * magnitude * preset.attraction * dt;
+            Vector3 dir = driver.MoveRelativeToCamera(direction.normalized);
+            velocity += dir * magnitude * preset.attraction * dt;
         }
+
+        return magnitude;
+    }
+
+    void MoveWithWand(Wand wand, float dt, float multiplier)
+    {
+        Vector3 vel = wand.velocity;
+        float speed = vel.magnitude;
+
+        float magnitude = 1f - Mathf.Pow(speed / preset.wandRepelSpeed, 2f);
+
+        Vector3 dir = driver.MoveRelativeToCamera(vel.normalized);
+        velocity += dir * magnitude * preset.follow * multiplier * dt;
     }
 
     void MoveTowardsCenter(float dt){
@@ -362,8 +379,8 @@ public class Butterfly : MonoBehaviour
         float distanceFromCenter = direction.magnitude;
         float magnitude = Mathf.Max(0f, (distanceFromCenter - preset.minCenterDistance));
 
-        Vector3 dir = (center - viewPosition).normalized;
-        velocity +=  new Vector3(dir.x, dir.y, 0f) * preset.centerStrength * Mathf.Pow(magnitude, 2f);
+        Vector3 dir = direction.normalized;
+        velocity +=  dir * preset.centerStrength * Mathf.Pow(magnitude, 2f);
     }
 
     void MoveTowardsGround(float t){

@@ -122,6 +122,8 @@ public class Quilt : MonoBehaviour
         UpdateLerpSpeed();
         if(wait <= 0f)
             offset = Mathf.Repeat(offset + (Time.deltaTime * m_speed), 1f);
+
+        textureCap = Nest.capacity;
     }
 
     float wait = 0f;

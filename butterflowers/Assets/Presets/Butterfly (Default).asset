@@ -24,8 +24,8 @@ MonoBehaviour:
   colorRefresh: 1
   minLifetime: 1
   maxLifetime: 10
-  wandRadius: 328
-  wandAttractSpeed: 128
+  wandRadius: 164
+  wandAttractSpeed: 96
   wandRepelSpeed: 1280
   energyDecayCurve:
     serializedVersion: 2
@@ -139,7 +139,7 @@ MonoBehaviour:
   recoveryTime: 3
   minAnimationSpeed: 1
   maxAnimationSpeed: 10
-  timeDead: 4.5
+  timeDead: 9
   deathColorDelay: 0.33
   deathTransitionTime: 0.167
   scale: 0.1
