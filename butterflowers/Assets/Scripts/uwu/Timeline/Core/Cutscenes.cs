@@ -58,7 +58,6 @@ public class Cutscenes : MonoBehaviour
 	void Awake()
 	{
 		playableDirector = GetComponent<PlayableDirector>();
-		playableDirector.playOnAwake = false;
 	}
 
 	void OnEnable()
