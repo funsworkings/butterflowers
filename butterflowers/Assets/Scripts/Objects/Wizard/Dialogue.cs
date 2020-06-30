@@ -83,7 +83,7 @@ namespace Wizard {
             }
         }
 
-        public string[] queue => temp.ToArray();
+        public string[] temporaryqueue => temp.ToArray();
 
         #endregion
 
@@ -195,22 +195,6 @@ namespace Wizard {
             m_maxBetweenSymbols = max;
         }
 
-        public override void Push(string body)
-        {
-            if (controller.isFocused) 
-            {
-                base.Push(body);
-            }
-            else 
-            {
-
-                //if (temp.Count == 0)
-                    temp.Add(body); // Store temporarily 
-                //else
-                  //  temp[0] = body;
-            }
-        }
-
         public override void Dispose()
         {
             base.Dispose();
@@ -256,9 +240,22 @@ namespace Wizard {
 
         protected override void OnComplete(string body)
         {
-            if (controller.isFocused && !autoprogress) {
-                FetchDialogueFromTree();
+            if (available) 
+            {
+                autoprogress = false;
                 advancer.Show();
+
+                Debug.Log("more");
+            }
+            else {
+                if (controller.isFocused) {
+                    autoprogress = false;
+
+                    FetchDialogueFromTree();
+                    advancer.Show();
+                }
+                else
+                    autoprogress = true;
             }
         }
 

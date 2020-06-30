@@ -30,7 +30,7 @@ public class DialogueHandler: MonoBehaviour {
 
     #region Collections
 
-    List<string> queue = new List<string>();
+    [SerializeField] protected List<string> queue = new List<string>();
 
     #endregion
 
@@ -59,6 +59,8 @@ public class DialogueHandler: MonoBehaviour {
             return queue.Count > 0;
         }
     }
+
+    public bool available => queue.Count > 1;
 
     public bool reachedEndOfBody {
         get

@@ -167,7 +167,7 @@ public class Butterfly : MonoBehaviour
         if (state != State.Dying)
             ClampVelocity();
 
-        transform.position += velocity * dt;
+        transform.localPosition += velocity * dt;
     }
 
     #endregion
@@ -352,8 +352,8 @@ public class Butterfly : MonoBehaviour
                 magnitude *= -1f;
             }
 
-            Vector3 dir = driver.MoveRelativeToCamera(direction.normalized);
-            velocity += dir * magnitude * preset.attraction * dt;
+            Vector3 dir = direction.normalized;
+            velocity += new Vector3(dir.x, dir.y, 0f) * magnitude * preset.attraction * dt;
         }
 
         return magnitude;
@@ -379,12 +379,12 @@ public class Butterfly : MonoBehaviour
         float distanceFromCenter = direction.magnitude;
         float magnitude = Mathf.Max(0f, (distanceFromCenter - preset.minCenterDistance));
 
-        Vector3 dir = direction.normalized;
-        velocity +=  dir * preset.centerStrength * Mathf.Pow(magnitude, 2f);
+        Vector3 dir = (center - viewPosition).normalized;
+        velocity +=  new Vector3(dir.x, dir.y, 0f) * preset.centerStrength * Mathf.Pow(magnitude, 2f);
     }
 
     void MoveTowardsGround(float t){
-        velocity += driver.MoveRelativeToCamera(Vector3.down) * Mathf.Pow(t, 2f) * preset.gravity;
+        velocity += Vector3.down * Mathf.Pow(t, 2f) * preset.gravity;
     }
 
     #endregion
