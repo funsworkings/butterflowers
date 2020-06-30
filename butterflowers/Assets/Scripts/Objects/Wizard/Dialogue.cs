@@ -23,8 +23,8 @@ namespace Wizard {
         Memories memories;
         Brain brain;
 
-        [SerializeField] GameObject alert = null;
         [SerializeField] ToggleOpacity bubble = null;
+        [SerializeField] TogglePosition bubble_pos = null;
         [SerializeField] ToggleOpacity advancer = null;
 
         #endregion
@@ -105,11 +105,6 @@ namespace Wizard {
         void OnEnable()
         {
             DialogueTree.onUpdateNode += onUpdateNode;
-        }
-
-        void Update()
-        {
-            alert.SetActive(temp.Count > 0);
         }
 
         void OnDestroy()
@@ -234,7 +229,9 @@ namespace Wizard {
         protected override void OnSpeak()
         {
             base.OnSpeak();
+
             bubble.Show();
+            bubble_pos.Show();
         }
 
         protected override void OnDispose()
@@ -242,6 +239,8 @@ namespace Wizard {
             base.OnDispose();
 
             bubble.Hide();
+            bubble_pos.Hide();
+
             advancer.Hide();
         }
 

@@ -51,7 +51,6 @@ namespace Wizard {
         Animator animator;
         IK ik;
 
-        FocalPoint FocalPoint;
         Brain m_Brain;
         Navigation m_Navigation;
         Actions m_Actions;
@@ -89,8 +88,7 @@ namespace Wizard {
         public bool isFocused {
             get
             {
-                if (FocalPoint == null) return false;
-                return FocalPoint.isFocused;
+                return Focus.active;
             }
         }
 
@@ -103,7 +101,6 @@ namespace Wizard {
             ik = GetComponentInChildren<IK>();
             animator = GetComponentInChildren<Animator>();
 
-            FocalPoint = GetComponent<FocalPoint>();
             m_Brain = GetComponent<Brain>();
             m_Navigation = GetComponent<Navigation>();
             m_Actions = GetComponent<Actions>();
@@ -130,8 +127,8 @@ namespace Wizard {
 
         void OnEnable()
         {
-            FocalPoint.onFocus += onFocus;
-            FocalPoint.onLoseFocus += onLoseFocus;
+            Focus.onFocus.AddListener(onFocus);
+            Focus.onLoseFocus.AddListener(onLoseFocus);
 
             Sun.onDayBegin += onDayNightCycle;
             Sun.onNightBegin += onDayNightCycle;
@@ -145,8 +142,8 @@ namespace Wizard {
 
         void OnDisable()
         {
-            FocalPoint.onFocus -= onFocus;
-            FocalPoint.onLoseFocus -= onLoseFocus;
+            Focus.onFocus.RemoveListener(onFocus);
+            Focus.onLoseFocus.RemoveListener(onLoseFocus);
 
             Sun.onDayBegin -= onDayNightCycle;
             Sun.onNightBegin -= onDayNightCycle;
@@ -162,9 +159,6 @@ namespace Wizard {
         void Update()
         {
             if (!load) return;
-
-            if (FocalPoint.isFocused) 
-                if (Input.GetKeyDown(KeyCode.RightArrow)) Dialogue.Advance();
 
             EvaluateState();
             UpdateAnimatorFromState(state);
