@@ -12,6 +12,287 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 3359aadbeb7091a46a89e6004b9b51ba, type: 3}
   m_Name: Tabula Rasa
   m_EditorClassIdentifier: 
-  nodes: []
-  m_rootNode: {fileID: 0}
-  Memories: {fileID: 0}
+  nodes:
+  - {fileID: 114114256649649648}
+  - {fileID: 114741051191598750}
+  - {fileID: 114892689969641196}
+  - {fileID: 114759617654783852}
+  m_rootNode: {fileID: 114114256649649648}
+  m_externalTree: {fileID: 11400000, guid: 9f67b438b35ca5e49a81403d378b5a12, type: 2}
+  Memories: {fileID: 11400000, guid: a11a7773fa9f39649b779c417d4c7b19, type: 2}
+--- !u!114 &114114256649649648
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 0}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: a799c0d06957e9b4b9e855208ac7f78b, type: 3}
+  m_Name: Dialogue
+  m_EditorClassIdentifier: 
+  graph: {fileID: 11400000}
+  position: {x: -456, y: -248}
+  ports:
+    keys:
+    - value
+    - routes
+    - input
+    - output
+    values:
+    - _fieldName: value
+      _node: {fileID: 114114256649649648}
+      _typeQualifiedName: System.Int32, mscorlib, Version=4.0.0.0, Culture=neutral,
+        PublicKeyToken=b77a5c561934e089
+      connections: []
+      _direction: 0
+      _connectionType: 0
+      _typeConstraint: 2
+      _dynamic: 0
+    - _fieldName: routes
+      _node: {fileID: 114114256649649648}
+      _typeQualifiedName: System.Int32[], mscorlib, Version=4.0.0.0, Culture=neutral,
+        PublicKeyToken=b77a5c561934e089
+      connections: []
+      _direction: 1
+      _connectionType: 0
+      _typeConstraint: 0
+      _dynamic: 0
+    - _fieldName: input
+      _node: {fileID: 114114256649649648}
+      _typeQualifiedName: Noder.Node, Assembly-CSharp, Version=0.0.0.0, Culture=neutral,
+        PublicKeyToken=null
+      connections:
+      - fieldName: output
+        node: {fileID: 114759617654783852}
+        reroutePoints: []
+      _direction: 0
+      _connectionType: 0
+      _typeConstraint: 0
+      _dynamic: 0
+    - _fieldName: output
+      _node: {fileID: 114114256649649648}
+      _typeQualifiedName: Noder.Node, Assembly-CSharp, Version=0.0.0.0, Culture=neutral,
+        PublicKeyToken=null
+      connections:
+      - fieldName: input
+        node: {fileID: 114741051191598750}
+        reroutePoints: []
+      _direction: 1
+      _connectionType: 1
+      _typeConstraint: 0
+      _dynamic: 0
+  input: {fileID: 0}
+  output: {fileID: 0}
+  value: 0
+  routes: 
+  m_body: blahahhahhhahahahah
+--- !u!114 &114741051191598750
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 0}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: d6f10733c0e774b4299d321b04534a11, type: 3}
+  m_Name: Linked Memory
+  m_EditorClassIdentifier: 
+  graph: {fileID: 11400000}
+  position: {x: -184, y: -136}
+  ports:
+    keys:
+    - value
+    - routes
+    - input
+    - output
+    values:
+    - _fieldName: value
+      _node: {fileID: 114741051191598750}
+      _typeQualifiedName: System.Int32, mscorlib, Version=4.0.0.0, Culture=neutral,
+        PublicKeyToken=b77a5c561934e089
+      connections: []
+      _direction: 0
+      _connectionType: 0
+      _typeConstraint: 2
+      _dynamic: 0
+    - _fieldName: routes
+      _node: {fileID: 114741051191598750}
+      _typeQualifiedName: System.Int32[], mscorlib, Version=4.0.0.0, Culture=neutral,
+        PublicKeyToken=b77a5c561934e089
+      connections: []
+      _direction: 1
+      _connectionType: 0
+      _typeConstraint: 0
+      _dynamic: 0
+    - _fieldName: input
+      _node: {fileID: 114741051191598750}
+      _typeQualifiedName: Noder.Node, Assembly-CSharp, Version=0.0.0.0, Culture=neutral,
+        PublicKeyToken=null
+      connections:
+      - fieldName: output
+        node: {fileID: 114114256649649648}
+        reroutePoints: []
+      _direction: 0
+      _connectionType: 0
+      _typeConstraint: 0
+      _dynamic: 0
+    - _fieldName: output
+      _node: {fileID: 114741051191598750}
+      _typeQualifiedName: Noder.Node, Assembly-CSharp, Version=0.0.0.0, Culture=neutral,
+        PublicKeyToken=null
+      connections:
+      - fieldName: input
+        node: {fileID: 114892689969641196}
+        reroutePoints: []
+      _direction: 1
+      _connectionType: 1
+      _typeConstraint: 0
+      _dynamic: 0
+  input: {fileID: 0}
+  output: {fileID: 0}
+  value: 0
+  routes: 
+  m_body: 
+  memoryNode: {fileID: 114958620065622516, guid: 9f67b438b35ca5e49a81403d378b5a12,
+    type: 2}
+--- !u!114 &114759617654783852
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 0}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: d6f10733c0e774b4299d321b04534a11, type: 3}
+  m_Name: Linked Memory
+  m_EditorClassIdentifier: 
+  graph: {fileID: 11400000}
+  position: {x: 376, y: 72}
+  ports:
+    keys:
+    - value
+    - routes
+    - input
+    - output
+    values:
+    - _fieldName: value
+      _node: {fileID: 114759617654783852}
+      _typeQualifiedName: System.Int32, mscorlib, Version=4.0.0.0, Culture=neutral,
+        PublicKeyToken=b77a5c561934e089
+      connections: []
+      _direction: 0
+      _connectionType: 0
+      _typeConstraint: 2
+      _dynamic: 0
+    - _fieldName: routes
+      _node: {fileID: 114759617654783852}
+      _typeQualifiedName: System.Int32[], mscorlib, Version=4.0.0.0, Culture=neutral,
+        PublicKeyToken=b77a5c561934e089
+      connections: []
+      _direction: 1
+      _connectionType: 0
+      _typeConstraint: 0
+      _dynamic: 0
+    - _fieldName: input
+      _node: {fileID: 114759617654783852}
+      _typeQualifiedName: Noder.Node, Assembly-CSharp, Version=0.0.0.0, Culture=neutral,
+        PublicKeyToken=null
+      connections:
+      - fieldName: output
+        node: {fileID: 114892689969641196}
+        reroutePoints: []
+      _direction: 0
+      _connectionType: 0
+      _typeConstraint: 0
+      _dynamic: 0
+    - _fieldName: output
+      _node: {fileID: 114759617654783852}
+      _typeQualifiedName: Noder.Node, Assembly-CSharp, Version=0.0.0.0, Culture=neutral,
+        PublicKeyToken=null
+      connections:
+      - fieldName: input
+        node: {fileID: 114114256649649648}
+        reroutePoints: []
+      _direction: 1
+      _connectionType: 1
+      _typeConstraint: 0
+      _dynamic: 0
+  input: {fileID: 0}
+  output: {fileID: 0}
+  value: 0
+  routes: 
+  m_body: 
+  memoryNode: {fileID: 114132704990736644, guid: 9f67b438b35ca5e49a81403d378b5a12,
+    type: 2}
+--- !u!114 &114892689969641196
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 0}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: a799c0d06957e9b4b9e855208ac7f78b, type: 3}
+  m_Name: Dialogue
+  m_EditorClassIdentifier: 
+  graph: {fileID: 11400000}
+  position: {x: 120, y: -8}
+  ports:
+    keys:
+    - value
+    - routes
+    - input
+    - output
+    values:
+    - _fieldName: value
+      _node: {fileID: 114892689969641196}
+      _typeQualifiedName: System.Int32, mscorlib, Version=4.0.0.0, Culture=neutral,
+        PublicKeyToken=b77a5c561934e089
+      connections: []
+      _direction: 0
+      _connectionType: 0
+      _typeConstraint: 2
+      _dynamic: 0
+    - _fieldName: routes
+      _node: {fileID: 114892689969641196}
+      _typeQualifiedName: System.Int32[], mscorlib, Version=4.0.0.0, Culture=neutral,
+        PublicKeyToken=b77a5c561934e089
+      connections: []
+      _direction: 1
+      _connectionType: 0
+      _typeConstraint: 0
+      _dynamic: 0
+    - _fieldName: input
+      _node: {fileID: 114892689969641196}
+      _typeQualifiedName: Noder.Node, Assembly-CSharp, Version=0.0.0.0, Culture=neutral,
+        PublicKeyToken=null
+      connections:
+      - fieldName: output
+        node: {fileID: 114741051191598750}
+        reroutePoints: []
+      _direction: 0
+      _connectionType: 0
+      _typeConstraint: 0
+      _dynamic: 0
+    - _fieldName: output
+      _node: {fileID: 114892689969641196}
+      _typeQualifiedName: Noder.Node, Assembly-CSharp, Version=0.0.0.0, Culture=neutral,
+        PublicKeyToken=null
+      connections:
+      - fieldName: input
+        node: {fileID: 114759617654783852}
+        reroutePoints: []
+      _direction: 1
+      _connectionType: 1
+      _typeConstraint: 0
+      _dynamic: 0
+  input: {fileID: 0}
+  output: {fileID: 0}
+  value: 0
+  routes: 
+  m_body: you know the deal

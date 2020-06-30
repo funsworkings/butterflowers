@@ -1,4 +1,5 @@
-﻿using System.Collections;
+﻿using Noder.Nodes.Abstract;
+using System.Collections;
 using System.Collections.Generic;
 using UnityEditor;
 using UnityEditor.Experimental.Networking.PlayerConnection;
@@ -14,12 +15,22 @@ namespace Noder.Nodes.External.Editor {
     public class BaseDialogueNodeEditor: NodeEditor {
 
         private BaseDialogueNode node;
+        private State state_node;
 
         private int textAreaHeight = 8;
 
+        GUIStyle editorstyle;
+
         public override void OnBodyGUI()
         {
-            if (node == null) node = target as BaseDialogueNode;
+            if (node == null) 
+                node = target as BaseDialogueNode;
+
+            if (editorstyle == null) 
+                editorstyle = new GUIStyle(EditorStyles.label);
+
+            if (node.isActive)
+                EditorStyles.label.normal.textColor = Color.yellow;
 
             // Update serialized object's representation
             serializedObject.Update();
@@ -39,6 +50,8 @@ namespace Noder.Nodes.External.Editor {
 
             // Apply property modifications
             serializedObject.ApplyModifiedProperties();
+
+            EditorStyles.label.normal = editorstyle.normal;
         }
     }
 

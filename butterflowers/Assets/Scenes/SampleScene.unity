@@ -1540,7 +1540,7 @@ Transform:
   m_PrefabInstance: {fileID: 0}
   m_PrefabAsset: {fileID: 0}
   m_GameObject: {fileID: 201810246}
-  m_LocalRotation: {x: -0.22025321, y: -0.000000013505881, z: 0.000000006295696, w: 0.97544277}
+  m_LocalRotation: {x: -0.22025323, y: 2.4103189e-15, z: -3.087657e-15, w: 0.97544277}
   m_LocalPosition: {x: 0, y: -4.7999983, z: -19.199999}
   m_LocalScale: {x: 1, y: 1, z: 1}
   m_Children:
@@ -2000,7 +2000,6 @@ MonoBehaviour:
   m_EditorClassIdentifier: 
   focused: 0
   queued: 0
-  focusinprogress: 0
   timetofocus: 0.5
   overrideCamera: {fileID: 27335034}
 --- !u!23 &283568908
@@ -8000,6 +7999,9 @@ MonoBehaviour:
   debugwindow: {fileID: 391654774}
   debugtext: {fileID: 1391669192}
   sequences: []
+  dialogueMappings:
+  - focalPoint: {fileID: 283568907}
+    dialogueTree: {fileID: 11400000, guid: d68b340a6d3fb304e9b7bf653ea3e16b, type: 2}
 --- !u!135 &468500793
 SphereCollider:
   m_ObjectHideFlags: 0
@@ -8039,6 +8041,7 @@ MonoBehaviour:
   m_EditorClassIdentifier: 
   txt_container: {fileID: 1210492941}
   tmp_container: {fileID: 0}
+  queue: []
   symbol: 1
   includeSpaces: 0
   m_timeBetweenSymbols: 1
@@ -8050,7 +8053,7 @@ MonoBehaviour:
   m_body: 
   m_current: 
   m_inprogress: 0
-  DialogueTree: {fileID: 11400000, guid: 9f67b438b35ca5e49a81403d378b5a12, type: 2}
+  dialogueTree: {fileID: 11400000, guid: 9f67b438b35ca5e49a81403d378b5a12, type: 2}
   bubble: {fileID: 1096321895}
   bubble_pos: {fileID: 1096321899}
   advancer: {fileID: 478646750}
@@ -13391,7 +13394,7 @@ Transform:
   m_PrefabInstance: {fileID: 0}
   m_PrefabAsset: {fileID: 0}
   m_GameObject: {fileID: 534669902}
-  m_LocalRotation: {x: -0.22025321, y: -0.000000013505881, z: 0.000000006295696, w: 0.97544277}
+  m_LocalRotation: {x: -0.22025323, y: 2.4103189e-15, z: -3.087657e-15, w: 0.97544277}
   m_LocalPosition: {x: 0, y: -4.7999983, z: -30.55278}
   m_LocalScale: {x: 1, y: 1, z: 1}
   m_Children:
@@ -14566,7 +14569,6 @@ MonoBehaviour:
   m_EditorClassIdentifier: 
   focused: 0
   queued: 0
-  focusinprogress: 0
   timetofocus: 0.33
   overrideCamera: {fileID: 1964096156}
 --- !u!114 &735639536
@@ -29424,7 +29426,7 @@ MonoBehaviour:
   Camera: {fileID: 0}
   BackgroundAudio: {fileID: 730062441}
   MemoryAudio: {fileID: 1848652306}
-  focus: {fileID: 0}
+  m_focus: {fileID: 0}
   focusInQueue: {fileID: 0}
   focalPoints: []
   CameraBlend: {fileID: 155698731}
@@ -34418,7 +34420,6 @@ MonoBehaviour:
   m_EditorClassIdentifier: 
   focused: 0
   queued: 0
-  focusinprogress: 0
   timetofocus: 1
   overrideCamera: {fileID: 164604285}
 --- !u!4 &1995632989 stripped
