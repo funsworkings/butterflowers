@@ -12,16 +12,17 @@
 using UnityEngine;
 using System.Collections;
 
-
+[ExecuteInEditMode]
 public class CameraFacingBillboard : MonoBehaviour
 {
     Camera mainCam;
-	
-	void Awake(){
-        mainCam = Camera.main;
-	}
 
 	void Update(){
+		if (mainCam == null) {
+			mainCam = Camera.main;
+			return;
+		}
+
         transform.LookAt(mainCam.transform.position, Vector3.up);
 	}
 

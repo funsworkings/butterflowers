@@ -10,6 +10,7 @@ using UnityScript.Steps;
 using Noder;
 using Noder.Nodes.External;
 using System.Linq;
+using Noder.Graphs;
 
 namespace Wizard {
 
@@ -17,14 +18,15 @@ namespace Wizard {
 
         #region Properties
 
-        [SerializeField] Noder.Graphs.DialogueTree DialogueTree;
+        [SerializeField] DialogueTree dialogueTree;
+        public DialogueTree focusDialogueTree;
 
         Controller controller;
         Memories memories;
         Brain brain;
 
-        [SerializeField] GameObject alert = null;
         [SerializeField] ToggleOpacity bubble = null;
+        [SerializeField] TogglePosition bubble_pos = null;
         [SerializeField] ToggleOpacity advancer = null;
 
         #endregion
@@ -66,8 +68,8 @@ namespace Wizard {
                 node_id = value;
 
                 Debug.LogFormat("Attempt set {0} as node", node_id);
-                var node = DialogueTree.GetNodeByInstanceId(node_id);
-                DialogueTree.activeNode = node;
+                var node = dialogueTree.GetNodeByInstanceId(node_id);
+                dialogueTree.activeNode = node;
             }
         }
 
@@ -79,11 +81,11 @@ namespace Wizard {
             set
             {
                 tempvisited = new List<int>(value);
-                DialogueTree.FlagTemporaryDialogue(value);
+                dialogueTree.FlagTemporaryDialogue(value);
             }
         }
 
-        public string[] queue => temp.ToArray();
+        public string[] temporaryqueue => temp.ToArray();
 
         #endregion
 
@@ -99,22 +101,24 @@ namespace Wizard {
             memories = controller.Memories;
             brain = controller.Brain;
 
-            DialogueTree.dialogueHandler = this;
+            dialogueTree.dialogueHandler = this;
         }
 
         void OnEnable()
         {
-            DialogueTree.onUpdateNode += onUpdateNode;
+            dialogueTree.onUpdateNode += onUpdateNode;
+            DialogueTree.onReceiveDialogue += onReceiveDialogue;
         }
 
-        void Update()
+        void OnDisable()
         {
-            alert.SetActive(temp.Count > 0);
+            dialogueTree.onUpdateNode -= onUpdateNode;
+            DialogueTree.onReceiveDialogue -= onReceiveDialogue;
         }
 
         void OnDestroy()
         {
-            DialogueTree.Dispose();
+            dialogueTree.Dispose();
         }
 
         #endregion
@@ -129,13 +133,31 @@ namespace Wizard {
             temp = new List<string>();
         }
 
-        public void FetchDialogueFromTree() {
-            DialogueTree.Step();
+        public void FetchDialogueFromTree(DialogueTree tree = null)
+        {
+            if (tree == null)
+            {
+                if(controller.isFocused)
+                    tree = focusDialogueTree;
+
+                if (tree == null)
+                    tree = dialogueTree;
+            }
+
+            tree.Step();
         }
 
-        public void FetchDialogueFromTree(int value)
+        public void FetchDialogueFromTree(int value, DialogueTree tree = null)
         {
-            DialogueTree.Step(value);
+            if (tree == null) {
+                if (controller.isFocused)
+                    tree = focusDialogueTree;
+
+                if (tree == null)
+                    tree = dialogueTree;
+            }
+
+            tree.Step(value);
         }
 
         #endregion
@@ -200,22 +222,6 @@ namespace Wizard {
             m_maxBetweenSymbols = max;
         }
 
-        public override void Push(string body)
-        {
-            if (controller.isFocused) 
-            {
-                base.Push(body);
-            }
-            else 
-            {
-
-                //if (temp.Count == 0)
-                    temp.Add(body); // Store temporarily 
-                //else
-                  //  temp[0] = body;
-            }
-        }
-
         public override void Dispose()
         {
             base.Dispose();
@@ -234,7 +240,9 @@ namespace Wizard {
         protected override void OnSpeak()
         {
             base.OnSpeak();
+
             bubble.Show();
+            bubble_pos.Show();
         }
 
         protected override void OnDispose()
@@ -242,6 +250,8 @@ namespace Wizard {
             base.OnDispose();
 
             bubble.Hide();
+            bubble_pos.Hide();
+
             advancer.Hide();
         }
 
@@ -257,9 +267,20 @@ namespace Wizard {
 
         protected override void OnComplete(string body)
         {
-            if (controller.isFocused && !autoprogress) {
-                FetchDialogueFromTree();
+            if (available) 
+            {
+                autoprogress = false;
                 advancer.Show();
+            }
+            else {
+                if (controller.isFocused) {
+                    autoprogress = false;
+
+                    FetchDialogueFromTree(focusDialogueTree);
+                    advancer.Show();
+                }
+                else
+                    autoprogress = true;
             }
         }
 
@@ -282,6 +303,11 @@ namespace Wizard {
             }
 
             controller.UpdateCurrentDialogueNode(instance_id);
+        }
+
+        void onReceiveDialogue(DialogueTree tree, string body)
+        {
+            Push(body);
         }
 
         #endregion

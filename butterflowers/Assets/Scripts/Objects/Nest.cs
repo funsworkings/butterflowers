@@ -33,7 +33,7 @@ public class Nest : MonoBehaviour
     new Rigidbody rigidbody;
 
     [SerializeField] ParticleSystem sparklesPS, cometPS;
-    [SerializeField] GameObject pr_impactPS;
+    [SerializeField] GameObject pr_impactPS, pr_shinePS;
 
 	#endregion
 
@@ -155,6 +155,9 @@ public class Nest : MonoBehaviour
         impact.transform.up = direction.normalized;
         impact.GetComponent<ParticleSystem>().Play();
 
+        var shine = Instantiate(pr_shinePS, point, pr_impactPS.transform.rotation);
+        shine.GetComponent<ParticleSystem>().Play();
+
         Open();
 
         Events.ReceiveEvent(EVENTCODE.NESTKICK, agent, AGENT.Nest);
@@ -228,10 +231,11 @@ public class Nest : MonoBehaviour
     public void RestoreCapacity(int capacity)
     {
         m_capacity = capacity;
-        Quilt.UpdateTextureCap(capacity);
-
         if (capacity > 6f)
             StartCoroutine("Scale");
+
+        if (onUpdateCapacity != null)
+            onUpdateCapacity(capacity);
     }
 
     #endregion
@@ -357,8 +361,6 @@ public class Nest : MonoBehaviour
             Events.ReceiveEvent(EVENTCODE.NESTGROW, AGENT.Inhabitants, AGENT.Nest);
 
             m_capacity += 6;
-            Quilt.UpdateTextureCap(capacity);
-
             resize = true;
         }
         else {
@@ -368,9 +370,7 @@ public class Nest : MonoBehaviour
                 resize = true;
 
             m_capacity = 6;
-            Quilt.UpdateTextureCap(capacity);
-
-            Dispose();
+            Dispose(true);
         }
 
         if(resize)
