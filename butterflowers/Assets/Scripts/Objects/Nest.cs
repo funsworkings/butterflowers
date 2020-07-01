@@ -230,6 +230,9 @@ public class Nest : MonoBehaviour
         m_capacity = capacity;
         if (capacity > 6f)
             StartCoroutine("Scale");
+
+        if (onUpdateCapacity != null)
+            onUpdateCapacity(capacity);
     }
 
     #endregion
@@ -364,7 +367,7 @@ public class Nest : MonoBehaviour
                 resize = true;
 
             m_capacity = 6;
-            Dispose();
+            Dispose(true);
         }
 
         if(resize)

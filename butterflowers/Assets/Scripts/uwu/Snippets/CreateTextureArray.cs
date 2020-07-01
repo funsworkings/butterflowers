@@ -48,7 +48,7 @@ public class CreateTextureArray : MonoBehaviour
 
     public void PopulateTextureArray(Texture2D[] _textures)
     {
-        textures.Clear();
+        textures = new List<Texture2D>();
         foreach (Texture2D tex in _textures)
         {
             //tex.Compress(true);
