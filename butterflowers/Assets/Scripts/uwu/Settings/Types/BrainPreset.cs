@@ -41,10 +41,12 @@ public class BrainPreset : ScriptableObject
         [Range(0f, 1f)] public float minimumDayNightActionProbability = .5f, maximumDayNightActionProbability = .5f;
         [Range(0f, 1f)] public float minimumResponseActionProbability = .5f, maximumResponseActionProbability = .5f;
 
-    public AnimationCurve actionProbabilityStanceCurve;
+        public AnimationCurve actionProbabilityStanceCurve;
 
-        public Brain.ActionTypeThreshold[] actionTypeThresholdLookup;
-        public Brain.BeaconOpWeight[] beaconOpWeightLookup;
-        public Brain.NestOpWeight[] nestOpWeightLookup;
-        public Brain.EmoteWeight[] emoteWeightLookup;
+    [Header("Action thresholds")]
+
+        public Brain.ActionStanceThreshold[] actionStanceThresholds;
+        public Brain.BeaconOpMoodThreshold[] beaconOpMoodThresholds;
+        public Brain.NestOpMoodThreshold[] nestOpMoodThresholds;
+        public Brain.EmoteMoodThreshold[] emoteMoodThresholds;
 }

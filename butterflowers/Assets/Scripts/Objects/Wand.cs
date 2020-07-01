@@ -99,7 +99,7 @@ public class Wand : MonoBehaviour
         public AnimationClip clip;
 
         [Range(0f, 1f)] 
-        public float weight;
+        public float mood;
     }
 
     #endregion

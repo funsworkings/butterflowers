@@ -58,39 +58,7 @@ MonoBehaviour:
     m_PreInfinity: 2
     m_PostInfinity: 2
     m_RotationOrder: 4
-  actionTypeThresholdLookup:
-  - type: 1
-    threshold: 0.849
-  - type: 2
-    threshold: 0
-  - type: 3
-    threshold: 0.15
-  - type: 4
-    threshold: 0.34
-  - type: 5
-    threshold: 0.5
-  - type: 6
-    threshold: 0.86
-  - type: 7
-    threshold: 0
-  - type: 8
-    threshold: 0.177
-  - type: 9
-    threshold: 0.467
-  beaconOpWeightLookup:
-  - type: 5
-    weight: 0.55
-  - type: 6
-    weight: -0.45
-  nestOpWeightLookup:
-  - type: 7
-    weight: 0
-  - type: 8
-    weight: -0.67
-  - type: 9
-    weight: -0.864
-  emoteWeightLookup:
-  - emote: 1
-    weight: 1
-  - emote: 2
-    weight: -1
+  actionStanceThresholds: []
+  beaconOpMoodThresholds: []
+  nestOpMoodThresholds: []
+  emoteMoodThresholds: []

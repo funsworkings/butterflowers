@@ -33,7 +33,7 @@ public class Nest : MonoBehaviour
     new Rigidbody rigidbody;
 
     [SerializeField] ParticleSystem sparklesPS, cometPS;
-    [SerializeField] GameObject pr_impactPS;
+    [SerializeField] GameObject pr_impactPS, pr_shinePS;
 
 	#endregion
 
@@ -154,6 +154,9 @@ public class Nest : MonoBehaviour
         var impact = Instantiate(pr_impactPS, point, pr_impactPS.transform.rotation);
         impact.transform.up = direction.normalized;
         impact.GetComponent<ParticleSystem>().Play();
+
+        var shine = Instantiate(pr_shinePS, point, pr_impactPS.transform.rotation);
+        shine.GetComponent<ParticleSystem>().Play();
 
         Open();
 
