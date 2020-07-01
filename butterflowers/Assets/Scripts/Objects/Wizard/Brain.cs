@@ -84,39 +84,15 @@ namespace Wizard {
 
 
 
-		#region Internal
+		#region Threshold type definitions
 
-		[System.Serializable]
-		public struct ActionTypeThreshold {
-			public ActionType type;
+		[System.Serializable]  public class StanceThreshold<E> { public E type; [Range(-1f, 1f)] public float stance = 0f; }
+		[System.Serializable]  public class MoodThreshold<E> { public E type; [Range(-1f, 1f)] public float mood = 0f; }
 
-			[Range(0f, 1f)]
-			public float threshold;
-		}
-
-		[System.Serializable]
-		public struct BeaconOpWeight {
-			public ActionType type;
-
-			[Range(-1f, 1f)]
-			public float weight;
-		}
-
-		[System.Serializable]
-		public struct NestOpWeight {
-			public ActionType type;
-
-			[Range(-1f, 1f)]
-			public float weight;
-		}
-
-		[System.Serializable]
-		public struct EmoteWeight {
-			public Actions.Emote emote;
-
-			[Range(-1f, 1f)]
-			public float weight;
-		}
+		[System.Serializable] public class ActionStanceThreshold: StanceThreshold<ActionType> { }
+		[System.Serializable] public class BeaconOpMoodThreshold : MoodThreshold<ActionType> { }
+		[System.Serializable] public class NestOpMoodThreshold : MoodThreshold<ActionType> { }
+		[System.Serializable] public class EmoteMoodThreshold : MoodThreshold<Actions.Emote> { }
 
 		#endregion
 
@@ -465,7 +441,7 @@ namespace Wizard {
 
 		public ActionType[] GetPossibleActions()
 		{
-			IEnumerable<ActionType> raw = Preset.actionTypeThresholdLookup.Where(typeThreshold => stance >= typeThreshold.threshold).Select(typeThreshold => typeThreshold.type);
+			IEnumerable<ActionType> raw = Preset.actionStanceThresholds.Where(typeThreshold => stance >= typeThreshold.stance).Select(typeThreshold => typeThreshold.type);
 			List<ActionType> filtered = new List<ActionType>();
 
 			m_possibleActionsRaw = raw.ToArray();
@@ -564,23 +540,23 @@ namespace Wizard {
 
 		public ActionType[] GetPossibleBeaconOps()
 		{
-			return Preset.beaconOpWeightLookup.Where(beaconOp => MatchesMood(beaconOp.weight)).Select(beaconOp => beaconOp.type).ToArray();
+			return Preset.beaconOpMoodThresholds.Where(beaconOp => MatchesMood(beaconOp.mood)).Select(beaconOp => beaconOp.type).ToArray();
 		}
 
 		public ActionType[] GetPossibleNestOps()
 		{
-			return Preset.nestOpWeightLookup.Where(nestOp => MatchesMood(nestOp.weight)).Select(nestOp => nestOp.type).ToArray();
+			return Preset.nestOpMoodThresholds.Where(nestOp => MatchesMood(nestOp.mood)).Select(nestOp => nestOp.type).ToArray();
 		}
 
 		public Gesture[] GetPossibleGestures()
 		{
 			if (!Nest.Instance.open) return new Gesture[] { };
-			return wand.gestures.Where(gesture => MatchesMood(gesture.weight)).ToArray();
+			return wand.gestures.Where(gesture => MatchesMood(gesture.mood)).ToArray();
 		}
 
 		public Emote[] GetPossibleEmotes()
 		{
-			return Preset.emoteWeightLookup.Where(emote => MatchesMood(emote.weight)).Select(emote => emote.emote).ToArray();
+			return Preset.emoteMoodThresholds.Where(emote => MatchesMood(emote.mood)).Select(emote => emote.type).ToArray();
 		}
 
 
@@ -590,7 +566,7 @@ namespace Wizard {
 
 		public bool ExistsActionableBeaconOp()
 		{
-			return Preset.beaconOpWeightLookup.Any(beaconOp => MatchesMood(beaconOp.weight));
+			return Preset.beaconOpMoodThresholds.Any(beaconOp => MatchesMood(beaconOp.mood));
 		}
 
 		public bool ExistsActionableBeacon(ActionType op)
@@ -605,17 +581,17 @@ namespace Wizard {
 
 		public bool ExistsActionableNestOp()
 		{
-			return Preset.nestOpWeightLookup.Any(nestOp => MatchesMood(nestOp.weight));
+			return Preset.nestOpMoodThresholds.Any(nestOp => MatchesMood(nestOp.mood));
 		}
 
 		public bool ExistsActionableGesture()
 		{
-			return wand.gestures.Any(gesture => MatchesMood(gesture.weight));
+			return wand.gestures.Any(gesture => MatchesMood(gesture.mood));
 		}
 
 		public bool ExistsActionableEmote()
 		{
-			return Preset.emoteWeightLookup.Any(emote => MatchesMood(emote.weight));
+			return Preset.emoteMoodThresholds.Any(emote => MatchesMood(emote.mood));
 		}
 
 		public bool MatchesMood(float weight)

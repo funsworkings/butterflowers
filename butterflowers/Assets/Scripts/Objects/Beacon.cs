@@ -33,7 +33,7 @@ public class Beacon: MonoBehaviour {
     SimpleOscillate Oscillate;
     Material material;
 
-    [SerializeField] GameObject pr_impactPS;
+    [SerializeField] GameObject pr_impactPS, pr_shinePS;
 
     #endregion
 
@@ -241,6 +241,9 @@ public class Beacon: MonoBehaviour {
 
         var impact = Instantiate(pr_impactPS, transform.position, transform.rotation);
         impact.GetComponent<ParticleSystem>().Play();
+
+        var shine = Instantiate(pr_shinePS, transform.position, transform.rotation);
+        shine.GetComponent<ParticleSystem>().Play();
 
         return true;
     }
