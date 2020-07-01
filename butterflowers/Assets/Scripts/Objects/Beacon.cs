@@ -164,8 +164,10 @@ public class Beacon: MonoBehaviour {
                 float sa = (warp_nest) ? 1f : 0f; float sb = (warp_nest) ? 0f : 1f;
                 transform.localScale = Vector3.one * Mathf.Lerp(sa, sb, Mathf.Pow(interval, 2f));
             }
-            else {
+            else 
+            {
                 warping = false;
+
                 if (warp_nest) Nest.ReceiveBeacon(this);
             }
         }
@@ -356,7 +358,7 @@ public class Beacon: MonoBehaviour {
         interactable.enabled = !nest;
 
         warp_t = 0f;
-        warp_nest = true;
+        warp_nest = nest;
 
         warp_a = transform.position;
         warp_b = (nest) ? Nest.Instance.transform.position : origin;

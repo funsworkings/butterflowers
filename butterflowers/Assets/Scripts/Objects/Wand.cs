@@ -342,7 +342,9 @@ public class Wand : MonoBehaviour
     }
 
     public void ClearNest() 
-    { 
+    {
+        return;
+
         bool success = Nest.Instance.Dispose();
         if(success)
             Events.ReceiveEvent(EVENTCODE.NESTCLEAR, agent, AGENT.Nest);
