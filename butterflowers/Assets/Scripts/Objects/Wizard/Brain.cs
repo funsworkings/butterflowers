@@ -69,42 +69,6 @@ namespace Wizard {
 
 		#endregion
 
-		#region Internal
-
-		[System.Serializable]
-		public struct ActionTypeThreshold {
-			public ActionType type;
-
-			[Range(0f, 1f)]
-			public float threshold;
-		}
-
-		[System.Serializable]
-		public struct BeaconOpWeight {
-			public ActionType type;
-
-			[Range(-1f, 1f)]
-			public float weight;
-		}
-
-		[System.Serializable]
-		public struct NestOpWeight {
-			public ActionType type;
-
-			[Range(-1f, 1f)]
-			public float weight;
-		}
-
-		[System.Serializable]
-		public struct EmoteWeight {
-			public Actions.Emote emote;
-
-			[Range(-1f, 1f)]
-			public float weight;
-		}
-
-		#endregion
-
 		#region Accessors
 
 		public float mood => m_mood;
@@ -115,6 +79,20 @@ namespace Wizard {
 
 		public float shortterm_weight => m_shortterm_weight;
 		public Memory shortterm_memory => m_shortterm_memory;
+
+		#endregion
+
+
+
+		#region Threshold type definitions
+
+		[System.Serializable]  public class StanceThreshold<E> { public E type; [Range(-1f, 1f)] public float stance = 0f; }
+		[System.Serializable]  public class MoodThreshold<E> { public E type; [Range(-1f, 1f)] public float mood = 0f; }
+
+		[System.Serializable] public class ActionStanceThreshold: StanceThreshold<ActionType> { }
+		[System.Serializable] public class BeaconOpMoodThreshold : MoodThreshold<ActionType> { }
+		[System.Serializable] public class NestOpMoodThreshold : MoodThreshold<ActionType> { }
+		[System.Serializable] public class EmoteMoodThreshold : MoodThreshold<Actions.Emote> { }
 
 		#endregion
 
@@ -175,46 +153,43 @@ namespace Wizard {
 
 			Refresh(beacons);
 
-			m_stance = EvaluateStance();
+			m_stance = EvaluateStance(); // Reset stance
 		}
 
 		#endregion
 
-		#region Internal
+		#region Operations
 
-		void LearnFromEnvironment(float dt)
+		public void Dispose()
 		{
-			m_environmentKnowledge += dt;
+			all_beacons.Clear();
+			wiz_beacons.Clear();
+			dsktop_beacons.Clear();
 		}
 
-		void LearnFromBeacons(float dt)
+		public void Load(float enviro, Knowledge[] files)
 		{
-			if (dsktop_beacons == null) return;
+			m_environmentKnowledge = 0f;
+			m_fileKnowledge = new Dictionary<string, Knowledge>();
 
-			for (int i = 0; i < dsktop_beacons.Count; i++) {
-				var beacon = dsktop_beacons[i];
-				var accel = Nest.HasBeacon(beacon);
+			m_environmentKnowledge = enviro;
+			if (files != null) {
+				for (int i = 0; i < files.Length; i++) {
+					var k = files[i];
+					var file = k.file;
 
-				float multiplier = (accel) ? Preset.nestLearningMultiplier : Preset.defaultLearningMultiplier;
-				Learn(beacon, dt, multiplier); //todo: accelerate beacon learning when inside nest
+					if (!fileKnowledge.ContainsKey(file))
+						fileKnowledge.Add(file, k);
+				}
 			}
 		}
 
-		void FeelMemory(float dt)
-		{
-			if (shortterm_memory == null) {
-				m_shortterm_weight = 0f;
-				return;
-			}
+		#endregion
 
-			float decay = Preset.shortTermMemoryDecaySpeed * dt;
-			m_shortterm_weight -= decay;
 
-			if (m_shortterm_weight <= 0f) {
-				m_shortterm_weight = 0f;
-				m_shortterm_memory = null;
-			}
-		}
+
+
+		#region Evaluate mood/stance
 
 		float EvaluateStance()
 		{
@@ -265,36 +240,71 @@ namespace Wizard {
 
 		#endregion
 
-		#region Helpers
+		#region Shortterm memory effects
 
-		float FetchKnowledgeFromEnvironment()
+		// Affects mood temporarily
+		public void EncounterMemory(Memory memory, bool nest = false)
 		{
-			var e = environmentKnowledge;
-			float days_e = WorldPreset.ConvertToDays(e);
+			if (memory == null) return;
 
-			return Mathf.Clamp01(days_e / Preset.daysUntilEnvironmentKnowledge);
+			float startweight = (nest) ? Preset.nestShortTermMemoryEffect : Preset.defaultShortTermMemoryEffect;
+
+			float str = Mathf.Abs(memory.weight);
+			if (str >= Preset.shortTermMemoryWeightTriggerThreshold) {
+				float curr_str = 0f;
+
+				if (shortterm_memory != null) {
+					curr_str = Mathf.Abs(shortterm_memory.weight);
+					if (shortterm_memory == memory) {
+						curr_str = 0f; // Refresh current memory
+						startweight = Mathf.Max(startweight, shortterm_weight); // Choose larger memory weight
+					}
+				}
+
+				if (str > curr_str) {
+					m_shortterm_memory = memory;
+					m_shortterm_weight = startweight;
+				}
+			}
 		}
 
-		public float FetchKnowledgeFromBeacon(Beacon beacon)
+		void FeelMemory(float dt)
 		{
-			var file = beacon.file;
-			return FetchKnowledgeFromFile(file);
-		}
+			if (shortterm_memory == null) {
+				m_shortterm_weight = 0f;
+				return;
+			}
 
-		public float FetchKnowledgeFromFile(string file)
-		{
-			if (string.IsNullOrEmpty(file) || !fileKnowledge.ContainsKey(file)) return 0f;
-			if (Library.IsShared(file) || Library.IsWizard(file)) return 1f;
+			float decay = Preset.shortTermMemoryDecaySpeed * dt;
+			m_shortterm_weight -= decay;
 
-			var k = fileKnowledge[file];
-			float days_k = WorldPreset.ConvertToDays(k.time);
-
-			return Mathf.Clamp01(days_k / Preset.daysUntilFileKnowledge);
+			if (m_shortterm_weight <= 0f) {
+				m_shortterm_weight = 0f;
+				m_shortterm_memory = null;
+			}
 		}
 
 		#endregion
 
 		#region Learning
+
+		void LearnFromEnvironment(float dt)
+		{
+			m_environmentKnowledge += dt;
+		}
+
+		void LearnFromBeacons(float dt)
+		{
+			if (dsktop_beacons == null) return;
+
+			for (int i = 0; i < dsktop_beacons.Count; i++) {
+				var beacon = dsktop_beacons[i];
+				var accel = Nest.HasBeacon(beacon);
+
+				float multiplier = (accel) ? Preset.nestLearningMultiplier : Preset.defaultLearningMultiplier;
+				Learn(beacon, dt, multiplier);
+			}
+		}
 
 		void Learn(Beacon beacon, float dt, float multiplier = 1f)
 		{
@@ -337,57 +347,7 @@ namespace Wizard {
 
 		#endregion
 
-		#region Operations
-
-		public void Dispose()
-		{
-			all_beacons.Clear();
-			wiz_beacons.Clear();
-			dsktop_beacons.Clear();
-		}
-
-		public void Load(float enviro, Knowledge[] files)
-		{
-			m_environmentKnowledge = 0f;
-			m_fileKnowledge = new Dictionary<string, Knowledge>();
-
-			m_environmentKnowledge = enviro;
-			if (files != null) {
-				for (int i = 0; i < files.Length; i++) {
-					var k = files[i];
-					var file = k.file;
-
-					if (!fileKnowledge.ContainsKey(file))
-						fileKnowledge.Add(file, k);
-				}
-			}
-		}
-
-		// Affects mood temporarily
-		public void EncounterMemory(Memory memory, bool nest = false)
-		{
-			if (memory == null) return;
-
-			float startweight = (nest) ? Preset.nestShortTermMemoryEffect : Preset.defaultShortTermMemoryEffect;
-
-			float str = Mathf.Abs(memory.weight);
-			if (str >= Preset.shortTermMemoryWeightTriggerThreshold) {
-				float curr_str = 0f;
-
-				if (shortterm_memory != null) {
-					curr_str = Mathf.Abs(shortterm_memory.weight);
-					if (shortterm_memory == memory) {
-						curr_str = 0f; // Refresh current memory
-						startweight = Mathf.Max(startweight, shortterm_weight); // Choose larger memory weight
-					}
-				}
-
-				if (str > curr_str) {
-					m_shortterm_memory = memory;
-					m_shortterm_weight = startweight;
-				}
-			}
-		}
+		#region Actions
 
 		public ActionType DecideActionType()
 		{
@@ -397,10 +357,6 @@ namespace Wizard {
 			var el = possible.PickRandomSubset(1)[0];
 			return el;
 		}
-
-		#endregion
-
-		#region Actions
 
 		public Action ChooseBestAction()
 		{
@@ -485,7 +441,7 @@ namespace Wizard {
 
 		public ActionType[] GetPossibleActions()
 		{
-			IEnumerable<ActionType> raw = Preset.actionTypeThresholdLookup.Where(typeThreshold => stance >= typeThreshold.threshold).Select(typeThreshold => typeThreshold.type);
+			IEnumerable<ActionType> raw = Preset.actionStanceThresholds.Where(typeThreshold => stance >= typeThreshold.stance).Select(typeThreshold => typeThreshold.type);
 			List<ActionType> filtered = new List<ActionType>();
 
 			m_possibleActionsRaw = raw.ToArray();
@@ -521,27 +477,7 @@ namespace Wizard {
 			return filtered.ToArray();
 		}
 
-		public ActionType[] GetPossibleBeaconOps()
-		{
-			return Preset.beaconOpWeightLookup.Where(beaconOp => MatchesMood(beaconOp.weight)).Select(beaconOp => beaconOp.type).ToArray();
-		}
-
-		public ActionType[] GetPossibleNestOps()
-		{
-			return Preset.nestOpWeightLookup.Where(nestOp => MatchesMood(nestOp.weight)).Select(nestOp => nestOp.type).ToArray();
-		}
-
-		public Gesture[] GetPossibleGestures()
-		{
-			if (!Nest.Instance.open) return new Gesture[] { };
-			return wand.gestures.Where(gesture => MatchesMood(gesture.weight)).ToArray();
-		}
-
-		public Emote[] GetPossibleEmotes()
-		{
-			return Preset.emoteWeightLookup.Where(emote => MatchesMood(emote.weight)).Select(emote => emote.emote).ToArray();
-		}
-
+		
 		public Beacon GetActionableBeaconForBeaconOp(ActionType op)
 		{
 			var beacons = Manager.InactiveBeacons;
@@ -568,11 +504,69 @@ namespace Wizard {
 
 		#endregion
 
-		#region Helpers
+
+
+
+		#region Knowledge accessors
+
+		float FetchKnowledgeFromEnvironment()
+		{
+			var e = environmentKnowledge;
+			float days_e = WorldPreset.ConvertToDays(e);
+
+			return Mathf.Clamp01(days_e / Preset.daysUntilEnvironmentKnowledge);
+		}
+
+		public float FetchKnowledgeFromBeacon(Beacon beacon)
+		{
+			var file = beacon.file;
+			return FetchKnowledgeFromFile(file);
+		}
+
+		public float FetchKnowledgeFromFile(string file)
+		{
+			if (string.IsNullOrEmpty(file) || !fileKnowledge.ContainsKey(file)) return 0f;
+			if (Library.IsShared(file) || Library.IsWizard(file)) return 1f;
+
+			var k = fileKnowledge[file];
+			float days_k = WorldPreset.ConvertToDays(k.time);
+
+			return Mathf.Clamp01(days_k / Preset.daysUntilFileKnowledge);
+		}
+
+		#endregion
+
+		#region Possible action checks
+
+		public ActionType[] GetPossibleBeaconOps()
+		{
+			return Preset.beaconOpMoodThresholds.Where(beaconOp => MatchesMood(beaconOp.mood)).Select(beaconOp => beaconOp.type).ToArray();
+		}
+
+		public ActionType[] GetPossibleNestOps()
+		{
+			return Preset.nestOpMoodThresholds.Where(nestOp => MatchesMood(nestOp.mood)).Select(nestOp => nestOp.type).ToArray();
+		}
+
+		public Gesture[] GetPossibleGestures()
+		{
+			if (!Nest.Instance.open) return new Gesture[] { };
+			return wand.gestures.Where(gesture => MatchesMood(gesture.mood)).ToArray();
+		}
+
+		public Emote[] GetPossibleEmotes()
+		{
+			return Preset.emoteMoodThresholds.Where(emote => MatchesMood(emote.mood)).Select(emote => emote.type).ToArray();
+		}
+
+
+		#endregion
+
+		#region Actionable item checks
 
 		public bool ExistsActionableBeaconOp()
 		{
-			return Preset.beaconOpWeightLookup.Any(beaconOp => MatchesMood(beaconOp.weight));
+			return Preset.beaconOpMoodThresholds.Any(beaconOp => MatchesMood(beaconOp.mood));
 		}
 
 		public bool ExistsActionableBeacon(ActionType op)
@@ -587,17 +581,17 @@ namespace Wizard {
 
 		public bool ExistsActionableNestOp()
 		{
-			return Preset.nestOpWeightLookup.Any(nestOp => MatchesMood(nestOp.weight));
+			return Preset.nestOpMoodThresholds.Any(nestOp => MatchesMood(nestOp.mood));
 		}
 
 		public bool ExistsActionableGesture()
 		{
-			return wand.gestures.Any(gesture => MatchesMood(gesture.weight));
+			return wand.gestures.Any(gesture => MatchesMood(gesture.mood));
 		}
 
 		public bool ExistsActionableEmote()
 		{
-			return Preset.emoteWeightLookup.Any(emote => MatchesMood(emote.weight));
+			return Preset.emoteMoodThresholds.Any(emote => MatchesMood(emote.mood));
 		}
 
 		public bool MatchesMood(float weight)

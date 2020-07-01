@@ -12,6 +12,11 @@ namespace Noder.Graphs {
     [CreateAssetMenu(fileName = "New Noder Dialogue Tree", menuName = "Noder/Graphs/Dialogue Tree", order = 53)]
     public class DialogueTree: Graph {
 
+        public static System.Action<DialogueTree, string> onReceiveDialogue;
+
+        [SerializeField] DialogueTree m_externalTree;
+        public DialogueTree externalTree => m_externalTree; 
+
         DialogueHandler m_dialogueHandler = null;
         public DialogueHandler dialogueHandler {
             get
@@ -42,7 +47,6 @@ namespace Noder.Graphs {
 
         public void Step(int value)
         {
-            Debug.Log("Move to = " + value);
             if (activeNode != null) {
                 (activeNode as BaseDialogueNode).Next(value);
                 return;
@@ -51,6 +55,14 @@ namespace Noder.Graphs {
             Step();
         }
 
+        public void Push(string dialogue)
+        {
+            if (string.IsNullOrEmpty(dialogue))
+                return;
+
+            if (onReceiveDialogue != null)
+                onReceiveDialogue(this, dialogue);
+        }
     }
 
 }

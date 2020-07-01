@@ -12,7 +12,7 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: eba2f930bfa9d4a9ea9c6cac90fd8107, type: 3}
   m_Name: Butterfly (Default)
   m_EditorClassIdentifier: 
-  maxSpeed: 3.33
+  maxSpeed: 5.67
   noiseAmount: 3
   noiseSize: 50.51
   moveAmount: 0.67
@@ -20,12 +20,12 @@ MonoBehaviour:
   follow: 1
   gravity: 0.098
   descentTime: 3
-  trailsSize: 0.167
+  trailsSize: 0.33
   colorRefresh: 1
   minLifetime: 1
   maxLifetime: 10
-  wandRadius: 328
-  wandAttractSpeed: 128
+  wandRadius: 164
+  wandAttractSpeed: 96
   wandRepelSpeed: 1280
   energyDecayCurve:
     serializedVersion: 2
@@ -139,10 +139,10 @@ MonoBehaviour:
   recoveryTime: 3
   minAnimationSpeed: 1
   maxAnimationSpeed: 10
-  timeDead: 4.5
+  timeDead: 9
   deathColorDelay: 0.33
   deathTransitionTime: 0.167
-  scale: 0.1
+  scale: 0.167
   timeToGrow: 1.67
   maximumColorSpeed: 0.838
   deathProbabilityCurve:

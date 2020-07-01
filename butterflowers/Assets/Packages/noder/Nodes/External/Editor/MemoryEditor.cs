@@ -21,9 +21,17 @@ namespace Noder.Nodes.External.Editor {
         private int textureWidth = 64, width = 72, textAreaHeight = 72;
         private Vector2 scroll;
 
+        private GUIStyle editorstyle;
+
         public override void OnBodyGUI()
         {
             if (node == null) node = target as Memory;
+
+            if (editorstyle == null)
+                editorstyle = new GUIStyle(EditorStyles.label);
+
+            if (node.isActive)
+                EditorStyles.label.normal.textColor = Color.yellow;
 
             // Update serialized object's representation
             serializedObject.Update();
@@ -100,6 +108,8 @@ namespace Noder.Nodes.External.Editor {
                         }
                     }
                 }
+
+                EditorStyles.label.normal = editorstyle.normal;
             }
             
 

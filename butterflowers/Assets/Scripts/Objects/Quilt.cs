@@ -54,8 +54,8 @@ public class Quilt : MonoBehaviour
 
     int textureCap = 4;
 
-    List<string> queue = new List<string>();
-    List<Texture2D> textures = new List<Texture2D>();
+    [SerializeField] List<string> queue = new List<string>();
+    [SerializeField] List<Texture2D> textures = new List<Texture2D>();
 
     int index = -1;
 
@@ -122,6 +122,8 @@ public class Quilt : MonoBehaviour
         UpdateLerpSpeed();
         if(wait <= 0f)
             offset = Mathf.Repeat(offset + (Time.deltaTime * m_speed), 1f);
+
+        textureCap = Nest.capacity;
     }
 
     float wait = 0f;
@@ -271,8 +273,6 @@ public class Quilt : MonoBehaviour
             if (!read) {
                 string file = queue[0];
                 queue.RemoveAt(0);
-
-                //StartCoroutine("ReadBytesFromFile", file);
 
                 read = true;
                 

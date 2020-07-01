@@ -72,6 +72,7 @@ namespace Wizard {
             public Type type = Type.None;
             public obj dat = null;
             public bool immediate = false;
+            public float delay = 0f;
 
             public string debug {
                 get
@@ -253,7 +254,9 @@ namespace Wizard {
 
                     if (available && action != null) 
                     {
-                        float delay = Random.Range(Preset.minimumTimeBetweenActions, Preset.maximumTimeBetweenActions);
+                        var next = queue[0];
+                        float delay = next.delay;
+
                         yield return new WaitForSeconds(delay);
 
                         Pop(action);
@@ -290,12 +293,13 @@ namespace Wizard {
             }
         }
 
-		public void Push(Type type, obj dat = null, bool immediate = false)
+		public void Push(Type type, obj dat = null, bool immediate = false, float delay = 0f)
         {
             Action action = new Action();
             action.type = type;
             action.dat = dat;
             action.immediate = immediate;
+            action.delay = (delay < 0f)? Random.Range(Preset.minimumTimeBetweenActions, Preset.maximumTimeBetweenActions) : delay;
 
             if (immediate) 
             {
@@ -310,7 +314,7 @@ namespace Wizard {
                     inprogress = !cancel;
                 }
 
-                Pop();
+                if(action.delay == 0f) Pop();
             }
             else
                 m_queue.Add(action);
@@ -477,17 +481,17 @@ namespace Wizard {
             CameraManager.MainCamera = camera;
             camera.enabled = true;
 
-            lookingAtCamera = false;
-            currentWaypoint = cameraFocalPoint.position;
-            navigation.LookAt(cameraFocalPoint);
+            //lookingAtCamera = false;
+            //currentWaypoint = cameraFocalPoint.position;
+            //navigation.LookAt(cameraFocalPoint);
 
             StartCoroutine("TakingPicture");
         }
 
         IEnumerator TakingPicture()
         {
-            while (!lookingAtCamera) 
-                yield return null;
+            //while (!lookingAtCamera) 
+              //  yield return null;
 
             yield return new WaitForSeconds(.167f);
             snapshot.Capture();
@@ -505,7 +509,8 @@ namespace Wizard {
             camera.enabled = false;
             previousMainCamera = null;
 
-            navigation.LookAt(null);
+            controller.Dialogue.Push("I thought you might like this photo I took! Hope it's not too blurry :/");
+            //navigation.LookAt(null);
 
             if(currentAction.type == Type.Picture && inprogress) 
                 inprogress = false;
