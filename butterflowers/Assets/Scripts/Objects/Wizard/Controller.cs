@@ -349,7 +349,7 @@ namespace Wizard {
 
         void onLoseFocus()
         {
-            Dialogue.Dispose();
+            //Dialogue.Dispose();
         }
 
         void OnCompleteDialogue()

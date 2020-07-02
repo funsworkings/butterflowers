@@ -121,6 +121,12 @@ public class DialogueHandler: MonoBehaviour {
         }
     }
 
+    public void Push(string[] bodies)
+    {
+        foreach (string body in bodies)
+            Push(body);
+    }
+
     public virtual void Dispose()
     {
         if (speaking) {
@@ -208,12 +214,22 @@ public class DialogueHandler: MonoBehaviour {
             if (onCompleteBody != null) // Fire event for reached end of body
                 onCompleteBody(current);
 
-            waiting = true;  var t = 0f; var t_body = timeBetweenBodies;
+            waiting = true;  
+            
+            var t = 0f; 
+            var t_body = timeBetweenBodies;
+
+            var pr_autoprogress = autoprogress;
+
             while (waiting && t < t_body) {
                 if (autoprogress) 
                 {
                     t += Time.deltaTime;
                 }
+
+                if (autoprogress != pr_autoprogress) // IMMEDIATELY BREAK FROM LOOP IF AUTOPROGRESS PARAM HAS CHANGED
+                    break;
+
                 yield return null;
             }
 

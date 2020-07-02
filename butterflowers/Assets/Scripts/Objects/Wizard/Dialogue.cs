@@ -87,6 +87,8 @@ namespace Wizard {
 
         public string[] temporaryqueue => temp.ToArray();
 
+        [SerializeField] string[] debugBodies = new string[] { };
+
         #endregion
 
         #region Monobehaviour callbacks
@@ -114,6 +116,12 @@ namespace Wizard {
         {
             dialogueTree.onUpdateNode -= onUpdateNode;
             DialogueTree.onReceiveDialogue -= onReceiveDialogue;
+        }
+
+        void Update()
+        {
+            if (Input.GetKeyDown(KeyCode.Alpha9))
+                Push(debugBodies);
         }
 
         void OnDestroy()
@@ -267,20 +275,16 @@ namespace Wizard {
 
         protected override void OnComplete(string body)
         {
-            if (available) 
-            {
+            if (controller.isFocused) {
                 autoprogress = false;
                 advancer.Show();
+
+                if (!available) 
+                    FetchDialogueFromTree(focusDialogueTree);
             }
             else {
-                if (controller.isFocused) {
-                    autoprogress = false;
-
-                    FetchDialogueFromTree(focusDialogueTree);
-                    advancer.Show();
-                }
-                else
-                    autoprogress = true;
+                autoprogress = true;
+                advancer.Hide();
             }
         }
 
