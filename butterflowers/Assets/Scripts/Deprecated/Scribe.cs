@@ -22,7 +22,7 @@ public class Scribe : Logger
 	public class Log 
 	{
 		public byte paramx, paramy, paramz;
-		public string detail;
+		public int detail_lookup = -1;
 	}
 
 	#endregion
@@ -43,7 +43,9 @@ public class Scribe : Logger
 
 	#region Collections
 
+	public List<string> save_keys = new List<string>();
 	public List<Log> save_caches = new List<Log>();
+
 	public List<Log> caches = new List<Log>();
 
 	#endregion
@@ -142,13 +144,22 @@ public class Scribe : Logger
 
 	#region Logs
 
-	public void Restore(Log[] logs)
+	public void Restore(LogData dat)
 	{
-		if (logs == null) return;
+		if (dat == null) return;
 
-		save_caches = new List<Log>(logs);
-		for (int i = 0; i < logs.Length; i++)
-			Push(logs[i], save:false);
+		var logs = dat.logs;
+
+		save_keys = new List<string>(dat.keys);
+		save_caches = new List<Log>(dat.logs);
+
+		for (int i = 0; i < logs.Length; i++) {
+			var log = logs[i];
+			var detail = log.detail_lookup;
+
+			string info = (detail == -1) ? "" : save_keys[detail];
+			Push(logs[i], info, save: false);
+		}
 	}
 
 	public void Push(EVENTCODE @event, AGENT a, AGENT b, string detail)
@@ -162,17 +173,33 @@ public class Scribe : Logger
 		log.paramx = (byte)@event;
 		log.paramy = (byte)a;
 		log.paramz = (byte)b;
-		log.detail = detail;
 
-		Push(log, save);
+		Push(log, detail, save);
 	}
 
-	void Push(Log log, bool save = true)
+	void Push(Log log, string detail, bool save = true)
 	{
-		if (save) save_caches.Add(log);
-		caches.Add(log);
+		if (save) 
+		{
+			if (!string.IsNullOrEmpty(detail)) 
+			{
+				int index = save_keys.IndexOf(detail);
+				log.detail_lookup = index;
 
-		Save.logs = save_caches.ToArray();
+				if (index < 0) 
+				{
+					save_keys.Add(detail);
+					log.detail_lookup = save_keys.Count - 1; // Add new key, assign key to log
+				}
+
+				Save.log_keys = save_keys.ToArray();
+			}
+
+			save_caches.Add(log);
+			Save.log_entries = save_caches.ToArray();
+		}
+		caches.Add(log);
+		
 		Push(parseLog(log));
 	}
 
@@ -229,7 +256,8 @@ public class Scribe : Logger
 
 	private string parseLog(Log log)
 	{
-		var detail = log.detail;
+		var detail_lookup = log.detail_lookup;
+		var detail = (detail_lookup == -1) ? "" : save_keys[detail_lookup];
 
 		var @event = (EVENTCODE)((int)log.paramx);
 		var agA = (AGENT)((int)log.paramy);
@@ -259,8 +287,14 @@ public class Scribe : Logger
 		if (agent == AGENT.NULL) return null;
 
 		string @base = System.Enum.GetName(typeof(AGENT), agent).ToUpper();
-		if (agent == AGENT.Beacon && !string.IsNullOrEmpty(detail))
+		if (agent == AGENT.Beacon) {
+			if (string.IsNullOrEmpty(detail))
+				detail = "?????????????";
+			else
+				detail = detail.AbbreviateFilename();
+
 			@base = detail;
+		}
 
 		string color = "";
 

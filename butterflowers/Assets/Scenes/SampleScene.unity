@@ -1540,7 +1540,7 @@ Transform:
   m_PrefabInstance: {fileID: 0}
   m_PrefabAsset: {fileID: 0}
   m_GameObject: {fileID: 201810246}
-  m_LocalRotation: {x: -0.22025323, y: 2.4103189e-15, z: -3.087657e-15, w: 0.97544277}
+  m_LocalRotation: {x: -0.22025321, y: -0.000000013505881, z: 0.000000006295696, w: 0.97544277}
   m_LocalPosition: {x: 0, y: -4.7999983, z: -19.199999}
   m_LocalScale: {x: 1, y: 1, z: 1}
   m_Children:
@@ -13397,7 +13397,7 @@ Transform:
   m_PrefabInstance: {fileID: 0}
   m_PrefabAsset: {fileID: 0}
   m_GameObject: {fileID: 534669902}
-  m_LocalRotation: {x: -0.22025323, y: 2.4103189e-15, z: -3.087657e-15, w: 0.97544277}
+  m_LocalRotation: {x: -0.22025321, y: -0.000000013505881, z: 0.000000006295696, w: 0.97544277}
   m_LocalPosition: {x: 0, y: -4.7999983, z: -30.55278}
   m_LocalScale: {x: 1, y: 1, z: 1}
   m_Children:
@@ -15835,8 +15835,8 @@ RectTransform:
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
   m_AnchorMin: {x: 0, y: 0}
   m_AnchorMax: {x: 1, y: 1}
-  m_AnchoredPosition: {x: 0, y: 0}
-  m_SizeDelta: {x: 0, y: 0}
+  m_AnchoredPosition: {x: -1, y: 5.63}
+  m_SizeDelta: {x: 34.5, y: 59.54}
   m_Pivot: {x: 0.5, y: 0.5}
 --- !u!114 &926987482
 MonoBehaviour:
@@ -16244,7 +16244,7 @@ MonoBehaviour:
   m_OnCullStateChanged:
     m_PersistentCalls:
       m_Calls: []
-  m_Sprite: {fileID: 21300000, guid: 95cde97b2c3817149b2aed00a5515134, type: 3}
+  m_Sprite: {fileID: 21300000, guid: 11751a99c6e27274e967507ea3d59cf5, type: 3}
   m_Type: 3
   m_PreserveAspect: 0
   m_FillCenter: 1
@@ -24414,8 +24414,8 @@ RectTransform:
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
   m_AnchorMin: {x: 0, y: 0}
   m_AnchorMax: {x: 1, y: 1}
-  m_AnchoredPosition: {x: 0, y: 0}
-  m_SizeDelta: {x: 0, y: 0}
+  m_AnchoredPosition: {x: 2.45, y: -5.44}
+  m_SizeDelta: {x: 44.72, y: 29.44}
   m_Pivot: {x: 0.5, y: 0.5}
 --- !u!114 &1896873799
 MonoBehaviour:
@@ -30397,6 +30397,7 @@ MonoBehaviour:
   downArrow: {fileID: 899139112}
   scroll: {fileID: 2045015201}
   navigator: {fileID: 0}
+  save_keys: []
   save_caches: []
   caches: []
   defaultColor: {r: 0.92300004, g: 0.92300004, b: 0.92300004, a: 1}
