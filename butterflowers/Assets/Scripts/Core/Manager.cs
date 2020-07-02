@@ -277,7 +277,7 @@ public class Manager : Spawner
         beacon.Register();
         beacon.Appear();
 
-        Events.ReceiveEvent(EVENTCODE.BEACONADD, AGENT.World, AGENT.Beacon, details: beacon.file.AbbreviateFilename());
+        Events.ReceiveEvent(EVENTCODE.BEACONADD, AGENT.World, AGENT.Beacon, details: beacon.file);
 
         return beacon;
     }
@@ -296,7 +296,7 @@ public class Manager : Spawner
         }
 
         if(success)
-            Events.ReceiveEvent(EVENTCODE.BEACONDELETE, AGENT.World, AGENT.Beacon, details: beacon.file.AbbreviateFilename());
+            Events.ReceiveEvent(EVENTCODE.BEACONDELETE, AGENT.World, AGENT.Beacon, details: beacon.file);
     }
 
     // If beacon is in subset, IGNORE
@@ -360,7 +360,7 @@ public class Manager : Spawner
 
             if (!v) {
                 onDiscoveredBeacon(instance); // Send to nest if immediately found
-                Events.ReceiveEvent(EVENTCODE.BEACONACTIVATE, AGENT.World, AGENT.Beacon, details: instance.file.AbbreviateFilename());
+                Events.ReceiveEvent(EVENTCODE.BEACONACTIVATE, AGENT.World, AGENT.Beacon, details: instance.file);
 
             }
         }
@@ -564,7 +564,7 @@ public class Manager : Spawner
     void onDiscoveredSomethingNew(string file)
     {
         onDiscovery.Invoke();
-        Events.ReceiveEvent(EVENTCODE.DISCOVERY, AGENT.Inhabitants, AGENT.Beacon, details:file.AbbreviateFilename());
+        Events.ReceiveEvent(EVENTCODE.DISCOVERY, AGENT.Inhabitants, AGENT.Beacon, details:file);
     }
 
 	#endregion

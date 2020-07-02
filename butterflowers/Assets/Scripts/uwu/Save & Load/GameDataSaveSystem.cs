@@ -73,14 +73,36 @@ public class GameDataSaveSystem : Singleton<GameDataSaveSystem>
         }
     }
 
-    public Scribe.Log[] logs {
+    public LogData logs {
         get
         {
-            return (data == null) ? new Scribe.Log[] { } : data.logs;
+            return (data == null) ? new LogData() : data.logs;
         }
         set
         {
             data.logs = value;
+        }
+    }
+
+    public string[] log_keys {
+        get
+        {
+            return (data == null) ? new string[] { } : data.logs.keys;
+        }
+        set
+        {
+            data.logs.keys = value;
+        }
+    }
+
+    public Scribe.Log[] log_entries {
+        get
+        {
+            return (data == null) ? new Scribe.Log[] { } : data.logs.logs;
+        }
+        set
+        {
+            data.logs.logs = value;
         }
     }
 

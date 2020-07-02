@@ -22,7 +22,7 @@ public class GameData
     public string[] shared_files = new string[] { };
 
     public bool wizard = false;
-    public Scribe.Log[] logs = new Scribe.Log[] { };
+    public LogData logs = new LogData();
 
     public int nestcapacity = 6;
 }

@@ -304,7 +304,7 @@ public class Wand : MonoBehaviour
 
         bool success = beacon.Discover();
         if (success)
-            Events.ReceiveEvent(EVENTCODE.BEACONACTIVATE, agent, AGENT.Beacon, details: beacon.file.AbbreviateFilename());
+            Events.ReceiveEvent(EVENTCODE.BEACONACTIVATE, agent, AGENT.Beacon, details: beacon.file);
     }
     public void DestroyBeacon(Beacon beacon) 
     {
@@ -312,7 +312,7 @@ public class Wand : MonoBehaviour
 
         bool success = beacon.Delete(particles: true);
         if (success)
-            Events.ReceiveEvent(EVENTCODE.BEACONDELETE, agent, AGENT.Beacon, details: beacon.file.AbbreviateFilename());
+            Events.ReceiveEvent(EVENTCODE.BEACONDELETE, agent, AGENT.Beacon, details: beacon.file);
     }
 
     #endregion
@@ -330,7 +330,7 @@ public class Wand : MonoBehaviour
 
         bool success = Nest.Instance.RemoveBeacon(beacon);
         if (success)
-            Events.ReceiveEvent(EVENTCODE.NESTPOP, agent, AGENT.Beacon, details: beacon.file.AbbreviateFilename());
+            Events.ReceiveEvent(EVENTCODE.NESTPOP, agent, AGENT.Beacon, details: beacon.file);
     }
 
     public void PopLastBeaconFromNest() 
@@ -338,7 +338,7 @@ public class Wand : MonoBehaviour
         var beacon = Nest.Instance.RemoveLastBeacon();
         bool success = beacon != null;
         if (success)
-            Events.ReceiveEvent(EVENTCODE.NESTPOP, agent, AGENT.Beacon, details: beacon.file.AbbreviateFilename());
+            Events.ReceiveEvent(EVENTCODE.NESTPOP, agent, AGENT.Beacon, details: beacon.file);
     }
 
     public void ClearNest() 

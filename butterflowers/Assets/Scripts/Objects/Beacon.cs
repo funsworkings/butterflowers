@@ -326,7 +326,7 @@ public class Beacon: MonoBehaviour {
 
         bool success = Discover();
         if(success)
-            Events.ReceiveEvent(EVENTCODE.BEACONACTIVATE, AGENT.Inhabitant0, AGENT.Beacon, details: file.AbbreviateFilename());
+            Events.ReceiveEvent(EVENTCODE.BEACONACTIVATE, AGENT.Inhabitant0, AGENT.Beacon, details: file);
     }
 
     void Hover(Vector3 point, Vector3 normal){
