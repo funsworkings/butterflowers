@@ -317,7 +317,6 @@ public class Focus : MonoBehaviour
         float dist = Vector3.Distance(m_focus.transform.position, Camera.transform.position);
 
         float vol = dist.RemapNRB(minFocusDistance, maxFocusDistance, minBGVol, maxBGVol);
-        Debug.Log(vol);
         BackgroundAudio.volume = vol;
     }
 

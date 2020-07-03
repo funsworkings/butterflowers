@@ -38,15 +38,20 @@ public class Library : Singleton<Library>
 
 	Quilt Quilt = null;
 	GameDataSaveSystem Save;
+	Manager Manager;
 
 	#endregion
 
 	#region Collections
 
+	public List<string> ALL_FILES = new List<string>();
+
 	[SerializeField] List<string> items = new List<string>();
 	[SerializeField] List<string> items_wizard = new List<string>();
 	[SerializeField] List<string> items_desktop = new List<string>();
+
 	[SerializeField] List<string> items_shared = new List<string>();
+	[SerializeField] List<int> items_shared_indices = new List<int>();
 
 	[SerializeField] List<string> textureQueue = new List<string>();
 	[SerializeField] List<Texture2D> temp_textures = new List<Texture2D>();
@@ -123,7 +128,14 @@ public class Library : Singleton<Library>
 
 	void RefreshDesktopFiles()
     {
-		items_desktop = new List<string>(Files.GetPaths());
+		var paths = Files.GetPaths();
+		for (int i = 0; i < paths.Length; i++) {
+			var path = paths[i];
+			if (!ALL_FILES.Contains(path))
+				ALL_FILES.Add(path);
+		}
+
+		items_desktop = new List<string>(paths);
 
 #if !UNITY_EDITOR
 		LoadTextures(items_desktop.ToArray());
@@ -144,6 +156,11 @@ public class Library : Singleton<Library>
 		// Add wizard memory images to texture lookup
 		for (int i = 0; i < memories.Count(); i++) {
 			var mem = memories.ElementAt(i);
+			
+			var file = mem.name;
+			if (!ALL_FILES.Contains(file))
+				ALL_FILES.Add(file);
+
 			AddTextureToLibrary(mem.name, mem.image);
 		}
 	}
@@ -151,7 +168,17 @@ public class Library : Singleton<Library>
 	void RefreshSharedFiles()
 	{
 		if (Save == null) return;
-		items_shared = new List<string>(Save.shared_files);
+
+		var indices = Save.shared_files;
+		items_shared_indices = new List<int>(indices);
+
+		var items = new List<string>();
+		for (int i = 0; i < indices.Length; i++) {
+			var index = indices[i];
+			items.Add(ALL_FILES[index]);
+		}
+
+		items_shared = new List<string>(items);
 	}
 
 	void RefreshFiles()
@@ -161,6 +188,8 @@ public class Library : Singleton<Library>
 		RefreshDesktopFiles();
 		RefreshWizardFiles();
 		RefreshSharedFiles();
+
+		Save.files = ALL_FILES.ToArray();
 
 		items = (items_desktop.Concat(items_wizard).Concat(items_shared)).ToList();
 		if (OnRefreshItems != null)
@@ -253,6 +282,10 @@ public class Library : Singleton<Library>
 
 		Save = GameDataSaveSystem.Instance;
 
+		Manager = Manager.Instance;
+
+		ALL_FILES = new List<string>(Save.files);
+
 		Files.Refresh();
 		initialized = true;
 	}
@@ -303,6 +336,7 @@ public class Library : Singleton<Library>
 		var path = Path.Combine(root, string.Format("{0}.jpg", name));
 
 		if (items.Contains(path)) return;
+		if (ALL_FILES.Contains(path)) return;
 
 		var bytes = image.EncodeToJPG();
 		File.WriteAllBytes(path, bytes);
@@ -316,7 +350,12 @@ public class Library : Singleton<Library>
 		if (OnAddItem != null)
 			OnAddItem(path);
 
-		Save.shared_files = items_shared.ToArray();
+
+		ALL_FILES.Add(path);
+		items_shared_indices.Add(ALL_FILES.Count - 1);
+
+		Save.files = ALL_FILES.ToArray();
+		Save.shared_files = items_shared_indices.ToArray();
 	}
 
 	public bool ContainsFile(string file)

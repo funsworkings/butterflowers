@@ -7,6 +7,5 @@ using Log = Scribe.Log;
 [System.Serializable] 
 public class LogData 
 {
-    public string[] keys = new string[] { };
     public Log[] logs = new Log[] { };
 }

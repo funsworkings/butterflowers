@@ -17,13 +17,15 @@ public class Discovery: Singleton<Discovery> {
 	#region External
 
 	GameDataSaveSystem Save;
+	Library Library;
+
 	public Settings.WorldPreset Preset = null;
 
 	#endregion
 
 	#region Collections
 
-	[SerializeField] List<string> discoveries = new List<string>();
+	[SerializeField] List<int> discoveries = new List<int>();
 
 	#endregion
 
@@ -42,6 +44,7 @@ public class Discovery: Singleton<Discovery> {
 	void Awake()
 	{
 		Save = GameDataSaveSystem.Instance;
+		Library = Library.Instance;
 	}
 
 	IEnumerator Start() {
@@ -49,23 +52,26 @@ public class Discovery: Singleton<Discovery> {
 			yield return null;
 
 		var d = Save.discovered;
-		discoveries = new List<string>(d);
+		discoveries = new List<int>(d);
 
-		if (!Preset.persistDiscoveries) discoveries = new List<string>(); // Reset memories
+		if (!Preset.persistDiscoveries) discoveries = new List<int>(); // Reset memories
 
 		m_load = true;
 	}
 
 	public bool HasDiscoveredFile(string path)
 	{
-		return discoveries.Contains(path);
+		int index = Library.ALL_FILES.IndexOf(path);
+		return index < 0;
 	}
 
 	public bool DiscoverFile(string path)
 	{
 		if (HasDiscoveredFile(path)) return false;
 
-		discoveries.Add(path);
+		int index = Library.ALL_FILES.IndexOf(path);
+		discoveries.Add(index);
+
 		SendDiscoveries();
 
 		if (onDiscover != null)
