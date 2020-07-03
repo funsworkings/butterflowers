@@ -130,9 +130,6 @@ public class Manager : Spawner
     {
         while (!Save.load) yield return null;
 
-        //if (Save.wizard) Wizard.gameObject.SetActive(true);
-        
-        Scribe.Restore(Save.logs);
         Nest.RestoreCapacity(Save.nestcapacity);
 
         while (!Discovery.load) yield return null;
@@ -150,6 +147,8 @@ public class Manager : Spawner
             yield return null;
         }
         Loader.progress = 1f;
+
+        Scribe.Restore(Save.logs);
 
         RestoreNest();
 

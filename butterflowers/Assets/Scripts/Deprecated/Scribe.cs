@@ -13,6 +13,7 @@ public class Scribe : Logger
 	#region External
 
 	GameDataSaveSystem Save;
+	Library Library;
 
 	#endregion
 
@@ -43,9 +44,7 @@ public class Scribe : Logger
 
 	#region Collections
 
-	public List<string> save_keys = new List<string>();
 	public List<Log> save_caches = new List<Log>();
-
 	public List<Log> caches = new List<Log>();
 
 	#endregion
@@ -70,7 +69,9 @@ public class Scribe : Logger
 		resize = true;
 
 		Instance = this;
+
 		Save = GameDataSaveSystem.Instance;
+		Library = Library.Instance;
 
 		rect = GetComponent<RectTransform>();
 
@@ -150,14 +151,13 @@ public class Scribe : Logger
 
 		var logs = dat.logs;
 
-		save_keys = new List<string>(dat.keys);
 		save_caches = new List<Log>(dat.logs);
 
 		for (int i = 0; i < logs.Length; i++) {
 			var log = logs[i];
 			var detail = log.detail_lookup;
 
-			string info = (detail == -1) ? "" : save_keys[detail];
+			string info = (detail < 0) ? "" : Library.ALL_FILES[detail];
 			Push(logs[i], info, save: false);
 		}
 	}
@@ -183,16 +183,8 @@ public class Scribe : Logger
 		{
 			if (!string.IsNullOrEmpty(detail)) 
 			{
-				int index = save_keys.IndexOf(detail);
+				int index = Library.ALL_FILES.IndexOf(detail);
 				log.detail_lookup = index;
-
-				if (index < 0) 
-				{
-					save_keys.Add(detail);
-					log.detail_lookup = save_keys.Count - 1; // Add new key, assign key to log
-				}
-
-				Save.log_keys = save_keys.ToArray();
 			}
 
 			save_caches.Add(log);
@@ -257,7 +249,7 @@ public class Scribe : Logger
 	private string parseLog(Log log)
 	{
 		var detail_lookup = log.detail_lookup;
-		var detail = (detail_lookup == -1) ? "" : save_keys[detail_lookup];
+		var detail = (detail_lookup == -1) ? "" : Library.ALL_FILES[detail_lookup];
 
 		var @event = (EVENTCODE)((int)log.paramx);
 		var agA = (AGENT)((int)log.paramy);

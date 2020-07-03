@@ -7,8 +7,7 @@ using System.Linq;
 using Wizard;
 using UnityEditor;
 
-public class GameDataSaveSystem : Singleton<GameDataSaveSystem>
-{
+public class GameDataSaveSystem: Singleton<GameDataSaveSystem> {
     public static System.Action<bool> onLoad;
 
 
@@ -23,8 +22,7 @@ public class GameDataSaveSystem : Singleton<GameDataSaveSystem>
         }
         set
         {
-            if (autosave != value) 
-            {
+            if (autosave != value) {
                 if (!value) StopCoroutine("Autosave");
                 else StartCoroutine("Autosave");
             }
@@ -34,8 +32,7 @@ public class GameDataSaveSystem : Singleton<GameDataSaveSystem>
 
 
     [SerializeField] GameData m_data = null;
-    public GameData data
-    {
+    public GameData data {
         get
         {
             return m_data;
@@ -43,8 +40,7 @@ public class GameDataSaveSystem : Singleton<GameDataSaveSystem>
     }
 
     bool m_load = false;
-    public bool load
-    {
+    public bool load {
         get
         {
             return m_load;
@@ -61,6 +57,17 @@ public class GameDataSaveSystem : Singleton<GameDataSaveSystem>
         set
         {
             data.wizard = true;
+        }
+    }
+
+    public string[] files {
+        get
+        {
+            return (data == null) ? new string[] { } : data.files;
+        }
+        set
+        {
+            data.files = value;
         }
     }
 
@@ -81,17 +88,6 @@ public class GameDataSaveSystem : Singleton<GameDataSaveSystem>
         set
         {
             data.logs = value;
-        }
-    }
-
-    public string[] log_keys {
-        get
-        {
-            return (data == null) ? new string[] { } : data.logs.keys;
-        }
-        set
-        {
-            data.logs.keys = value;
         }
     }
 
@@ -129,12 +125,12 @@ public class GameDataSaveSystem : Singleton<GameDataSaveSystem>
         }
     }
 
-    public string[] discovered {
+    public int[] discovered {
         get
         {
             var discoveries = (data == null) ? null : data.discoveries;
             if (discoveries == null) {
-                discoveries = new string[] { };
+                discoveries = new int[] { };
                 discovered = discoveries;
             }
             return discoveries;
@@ -222,10 +218,10 @@ public class GameDataSaveSystem : Singleton<GameDataSaveSystem>
         }
     }
 
-    public string[] shared_files {
+    public int[] shared_files {
         get
         {
-            return (data == null) ? new string[] { } : data.shared_files;
+            return (data == null) ? new int[] { } : data.shared_files;
         }
         set
         {
