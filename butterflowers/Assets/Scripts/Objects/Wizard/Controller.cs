@@ -176,7 +176,7 @@ namespace Wizard {
             if (Input.GetKeyDown(KeyCode.Z)) debug = !debug;
 
             debugwindow.alpha = (debug) ? 1f : 0f;
-            if (debug) DebugAttributes();
+            //if (debug) DebugAttributes();
 
             
             if (Input.GetKeyDown(KeyCode.S))
@@ -215,9 +215,6 @@ namespace Wizard {
 
                     Actions.Push(ActionType.BeaconDestroy, beacon);
                 }
-            }
-            if (Input.GetKeyDown(KeyCode.G)) {
-                wand.DoRandomGesture();
             }
             if (Input.GetKeyDown(KeyCode.M)) {
                 var opts = Manager.Instance.InactiveBeacons.PickRandomSubset(1);
@@ -282,7 +279,10 @@ namespace Wizard {
 
         void RespondToPlayerAction(EVENTCODE @event)
         {
-            float base_probability = 1f - BrainPreset.actionProbabilityStanceCurve.Evaluate(Brain.stance);
+            return; //IGNORE PLAYER EVENTS FOR NOW
+
+
+            float base_probability = 1f - Mathf.Pow(Brain.stance, 2f);
             float min = BrainPreset.minimumResponseActionProbability;
             float max = BrainPreset.maximumResponseActionProbability;
 
@@ -438,7 +438,9 @@ namespace Wizard {
 
         void onDayNightCycle() 
         {
-            float base_probability = BrainPreset.actionProbabilityStanceCurve.Evaluate(Brain.stance);
+            return; // IGNORE SUN CYCLE FOR NOW
+
+            float base_probability = Mathf.Pow(Brain.stance, 2f);
             float min = BrainPreset.minimumDayNightActionProbability;
             float max = BrainPreset.maximumDayNightActionProbability;
 

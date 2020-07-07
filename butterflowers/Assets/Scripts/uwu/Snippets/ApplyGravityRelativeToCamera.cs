@@ -11,6 +11,9 @@ public class ApplyGravityRelativeToCamera : ApplyCustomGravity
     {
         get
         {
+            if (mainCamera == null)
+                mainCamera = Camera.main;
+
             return -mainCamera.transform.up;
         }
     }

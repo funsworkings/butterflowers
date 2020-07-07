@@ -59,9 +59,21 @@ public class Nest : MonoBehaviour
 
 	#region Accessors
 
+    public float fill {
+        get
+        {
+            int cap = capacity;
+            int amt = beacons.Length;
+
+            return (1f * amt) / cap;
+        }
+    }
+
     public int capacity { get { return m_capacity; } }
     public Beacon[] beacons { get { return m_beacons.ToArray(); } }
     public float energy => m_energy;
+
+    public Vector3 trajectory => rigidbody.velocity.normalized;
 
 	#endregion
 
@@ -211,14 +223,20 @@ public class Nest : MonoBehaviour
     public void RandomKick(AGENT agent = AGENT.Inhabitants)
     {
         Vector3 sphere_pos = Random.insideUnitSphere;
-        Vector3 ray_origin = sphere_pos * 5f;
-        Vector3 ray_dir = -sphere_pos;
+        Vector3 dir = -sphere_pos;
+
+        Kick(dir, agent);
+    }
+
+    public void Kick(Vector3 direction, AGENT agent = AGENT.Inhabitants)
+    {
+        Vector3 ray_origin = -direction * 5f;
+        Vector3 ray_dir = direction;
 
         var ray = new Ray(transform.position + ray_origin, ray_dir);
         var hit = new RaycastHit();
 
-        if (collider.Raycast(ray, out hit, 10f)) 
-        {
+        if (collider.Raycast(ray, out hit, 10f)) {
             var normal = hit.normal;
 
             Vector3 origin = hit.point;

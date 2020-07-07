@@ -7,13 +7,12 @@ using System.IO;
 using obj = System.Object;
 using System.Linq;
 using System.Resources;
-using Gesture = Wand.Gesture;
 using UIExt;
 using UIExt.Behaviors.Visibility;
 
 namespace Wizard {
 
-    public class Actions: MonoBehaviour {
+    public class Actions : MonoBehaviour {
 
         #region Events
 
@@ -249,6 +248,7 @@ namespace Wizard {
             while (true) {
 
                 if (!inprogress) {
+                    m_currentAction = null;
 
                     var action = nextAction;
 
@@ -293,7 +293,7 @@ namespace Wizard {
             }
         }
 
-		public void Push(Type type, obj dat = null, bool immediate = false, float delay = 0f)
+		public void Push(Type type, obj dat = null, bool immediate = false, float delay = -1f)
         {
             Action action = new Action();
             action.type = type;
@@ -357,7 +357,8 @@ namespace Wizard {
                     }
                 }
 
-                if (_action.type != Type.None) {
+                if (_action.type != Type.None) 
+                {
                     if (onEnact != null)
                         onEnact(_action);
                 }
@@ -414,8 +415,10 @@ namespace Wizard {
                 }
                 else 
                 {
-                    if (type == Type.NestKick)
-                        wand.KickNest();
+                    if (type == Type.NestKick) {
+                        Wand.Kick kick = (Wand.Kick)dat;
+                        wand.KickNest(kick);
+                    }
                     else if (type == Type.NestClear)
                         wand.ClearNest();
                 }
@@ -586,11 +589,6 @@ namespace Wizard {
         void DoGesture(Gesture gesture)
         {
             bool success = wand.EnactGesture(gesture);
-        }
-
-        void DoRandomGesture()
-        {
-            wand.DoRandomGesture();
         }
 
         #endregion

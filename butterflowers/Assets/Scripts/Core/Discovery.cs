@@ -62,7 +62,12 @@ public class Discovery: Singleton<Discovery> {
 	public bool HasDiscoveredFile(string path)
 	{
 		int index = Library.ALL_FILES.IndexOf(path);
-		return index < 0;
+		if (index >= 0) 
+		{
+			return discoveries.Contains(index);
+		}
+
+		return false;
 	}
 
 	public bool DiscoverFile(string path)

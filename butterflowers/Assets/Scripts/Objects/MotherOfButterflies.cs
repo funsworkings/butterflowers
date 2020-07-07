@@ -24,6 +24,13 @@ public class MotherOfButterflies : Spawner
     [SerializeField] float minDistance = 0f, maxDistance = 1f;
     [SerializeField] int alive = 0, dead = 0;
 
+    [SerializeField] int player_kills = 0, wizard_kills = 0, shared_kills = 0, misc_kills = 0;
+
+    public float player_hatred => (dead > 0) ? (float)(player_kills + shared_kills/2F) / dead: 0F;
+    public float wiz_hatred => (dead > 0)? (float)(wizard_kills + shared_kills/2F) / dead: 0F;
+    public float shared_hatred => (dead > 0)? (float)shared_kills / dead: 0F;
+    public float enviro_hated => (dead > 0) ? (float)misc_kills / dead : 0F;
+
     public float minKillDistance => minDistance/2f;
 
     #endregion
@@ -112,7 +119,12 @@ public class MotherOfButterflies : Spawner
         base.onInstantiatePrefab(obj, refresh);
 
         alive++;
-        if (refresh) dead--;
+        if (refresh) {
+            dead--;
+
+            var b = obj.GetComponent<Butterfly>();
+            SubDying(b);
+        }
     }
 
     #endregion
@@ -144,8 +156,10 @@ public class MotherOfButterflies : Spawner
     {
         butterflies.Remove(butterfly);
 
-        if (butterfly.state == Butterfly.State.Dying)
+        if (butterfly.state == Butterfly.State.Dying) {
             dead--;
+            SubDying(butterfly);
+        }
         else
             alive--;
     }
@@ -153,12 +167,38 @@ public class MotherOfButterflies : Spawner
     void ButterflyDying(Butterfly butterfly)
     {
         ++dead;
+        AddDying(butterfly);
+
         --alive;
     }
 
     #endregion
 
     #region Health operations
+
+    void AddDying(Butterfly butterfly)
+    {
+        if (butterfly.agent == AGENT.Inhabitant0)
+            ++player_kills;
+        else if (butterfly.agent == AGENT.Inhabitant1)
+            ++wizard_kills;
+        else if (butterfly.agent == AGENT.Inhabitants)
+            ++shared_kills;
+        else
+            ++misc_kills;
+    }
+
+    void SubDying(Butterfly butterfly)
+    {
+        if (butterfly.agent == AGENT.Inhabitant0)
+            --player_kills;
+        else if (butterfly.agent == AGENT.Inhabitant1)
+            --wizard_kills;
+        else if (butterfly.agent == AGENT.Inhabitants)
+            --shared_kills;
+        else
+            --misc_kills;
+    }
 
     public float GetHealth()
     {

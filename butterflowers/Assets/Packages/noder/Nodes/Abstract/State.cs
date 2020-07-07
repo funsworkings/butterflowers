@@ -23,6 +23,8 @@ namespace Noder.Nodes.Abstract {
         protected override void OnEnter()
         {
             Graph.activeNode = (this as Node);
+            if (Graph.auto)
+                Next();
         }
 
         protected override void OnExit() { }

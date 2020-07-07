@@ -10,9 +10,10 @@ namespace Noder.Nodes.Abstract {
     [NodeTint(.33f, 1f, .33f)]
     public abstract class Entry<E> : Node
     {
-        [Output(connectionType: ConnectionType.Override)] public E value;
+        [Output(connectionType: ConnectionType.Multiple)] public E value;
 
         public override void Next(){}
+
         protected override void OnEnter(){}
         protected override void OnExit(){}
 

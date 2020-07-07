@@ -35,6 +35,8 @@ public class Butterfly : MonoBehaviour
     [SerializeField] Wand m_wand = null;
     public Wand wand => m_wand;
 
+    public AGENT agent = AGENT.NULL;
+
     public Vector3 positionRelativeToCamera
     {
         get
@@ -348,7 +350,7 @@ public class Butterfly : MonoBehaviour
             //Check if killing butterfly
             if (wand.speed >= preset.wandRepelSpeed)
             {
-                onDeath(); // Flag butterfly for death
+                onDeath(wand.agent); // Flag butterfly for death
                 magnitude *= -1f;
             }
 
@@ -434,7 +436,7 @@ public class Butterfly : MonoBehaviour
 
             if (Random.Range(0f, 1f) < prob) 
             {
-                onDeath();
+                onDeath(AGENT.Inhabitants);
                 final = value;
             }
 
@@ -506,13 +508,15 @@ public class Butterfly : MonoBehaviour
 
 	#region Internal callbacks
 
-	void onDeath()
+	void onDeath(AGENT agent = AGENT.World)
     {
         bool flag = (state != State.Dying);
 
         state = State.Dying;
-        if (flag && Dying != null)
+        if (flag && Dying != null) {
+            this.agent = agent;
             Dying(this);
+        }
     }
 
 	#endregion
