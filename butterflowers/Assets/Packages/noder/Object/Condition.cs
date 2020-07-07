@@ -1,4 +1,5 @@
-﻿using System.Collections;
+﻿using System;
+using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
 
@@ -18,27 +19,30 @@ namespace Noder {
         }
         [NodeEnum] public Type type = Type.Equal;
 
-        public bool Satisfies(float a, float b)
+        public bool Satisfies<E>(E a, E b) where E:IComparable
         {
+
+            int comparison = a.CompareTo(b);
+
             bool passes = false;
             switch (type) {
                 case Type.GreaterThan:
-                    passes = (a > b);
+                    passes = comparison > 0;
                     break;
                 case Type.GreaterThanOrEqual:
-                    passes = (a >= b);
+                    passes = comparison >= 0;
                     break;
                 case Type.LessThan:
-                    passes = (a < b);
+                    passes = comparison < 0;
                     break;
                 case Type.LessThanOrEqual:
-                    passes = (a <= b);
+                    passes = comparison <= 0;
                     break;
                 case Type.Equal:
-                    passes = (a == b);
+                    passes = comparison == 0;
                     break;
                 case Type.NotEqual:
-                    passes = (a != b);
+                    passes = !(comparison == 0);
                     break;
                 default:
                     passes = false;

@@ -11,6 +11,9 @@ namespace Noder {
 
         public System.Action<Node> onUpdateNode;
 
+        public bool debug = false;
+        public bool auto = false;
+
         [SerializeField] Node m_rootNode = null;
         public Node rootNode {
             get
@@ -23,7 +26,7 @@ namespace Noder {
             }
         }
 
-        Node m_activeNode = null;
+        [SerializeField] Node m_activeNode = null;
         public Node activeNode {
             get
             {
@@ -35,6 +38,10 @@ namespace Noder {
 
                 m_activeNode = value;
                 if (flag) {
+
+                    if (debug) 
+                        Debug.LogFormat("graph = {0}   node = {1}", name, (activeNode != null) ? activeNode.name : "NULL");
+
                     if (onUpdateNode != null)
                         onUpdateNode(value);
                 }

@@ -1,0 +1,48 @@
+%YAML 1.1
+%TAG !u! tag:unity3d.com,2011:
+--- !u!114 &11400000
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 0}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 1b16e73a6221af747a4aa1581e4455b8, type: 3}
+  m_Name: Brain (Default)
+  m_EditorClassIdentifier: 
+  fileKnowledgeStanceWeight: 1
+  playerKnowledgeStanceWeight: 1
+  enviroKnowledgeStanceWeight: 1
+  stanceMoodWeight: 3
+  shortTermMemoryMoodWeight: 1
+  healthOfButterflowersMoodWeight: 3
+  daysUntilEnvironmentKnowledge: 21
+  daysUntilFileKnowledge: 7
+  defaultLearningMultiplier: 1
+  nestLearningMultiplier: 1.67
+  defaultShortTermMemoryEffect: 1
+  nestShortTermMemoryEffect: 1
+  shortTermMemoryWeightTriggerThreshold: 0.191
+  lowStanceThreshold: 0.22
+  highStanceThreshold: 0.47
+  lowMoodThreshold: -0.26
+  highMoodThreshold: 0.42
+  needsComfortThreshold: -0.5
+  moodSmoothSpeed: 0.5
+  shortTermMemoryDecaySpeed: 0.0167
+  minimumTimeBetweenActions: 3.33
+  maximumTimeBetweenActions: 5
+  minimumBeaconActivateKnowledge: 0.016
+  maximumBeaconDeleteKnowledge: 0.37
+  minimumDayNightActionProbability: 0.1
+  maximumDayNightActionProbability: 0.67
+  minimumResponseActionProbability: 0.067
+  maximumResponseActionProbability: 0.67
+  actionStanceThresholds: []
+  beaconOpMoodThresholds: []
+  nestOpMoodThresholds: []
+  emoteMoodThresholds: []
+  absorptionThreshold: 0.95
+  healthOfButterflowersGestureThreshold: 0.5

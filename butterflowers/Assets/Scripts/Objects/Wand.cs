@@ -41,7 +41,6 @@ public class Wand : MonoBehaviour
         [SerializeField] bool down, cont, up;
 
     [Header("Gestures")]
-        [SerializeField] Gesture[] m_gestures = new Gesture[] { };
         [SerializeField] Gesture m_queueGesture, m_currentGesture;
         [SerializeField] bool gesture = false, waitforgesture = false;
 
@@ -87,19 +86,15 @@ public class Wand : MonoBehaviour
         }
     }
 
-    public Gesture[] gestures => m_gestures;
-
     public bool inprogress => animator.isPlaying;
 
     #region Internal
 
     [System.Serializable]
-    public struct Gesture 
+    public struct Kick 
     {
-        public AnimationClip clip;
-
-        [Range(0f, 1f)] 
-        public float mood;
+        public bool useDirection;
+        public Vector3 direction;
     }
 
     #endregion
@@ -135,12 +130,6 @@ public class Wand : MonoBehaviour
     #endregion
 
     #region Gestures
-
-    public void DoRandomGesture()
-    {
-        var t_gesture = gestures[Random.Range(0, gestures.Length)];
-        bool success = EnactGesture(t_gesture);
-    }
 
     public bool EnactGesture(Gesture t_gesture, float speed = 1f)
     {
@@ -181,7 +170,7 @@ public class Wand : MonoBehaviour
             Debug.Log("Gesture SUCCESS!");
 
             m_currentGesture = m_queueGesture;
-            m_queueGesture = new Gesture();
+            m_queueGesture = null;
 
             GestureStart.Invoke();
             if (onGestureBegin != null)
@@ -192,7 +181,7 @@ public class Wand : MonoBehaviour
         else {
             Debug.Log("Gesture FAIL!");
 
-            m_queueGesture = m_currentGesture = new Gesture();
+            m_queueGesture = m_currentGesture = null;
             gesture = spells = false;
 
             GestureEnd.Invoke();
@@ -218,7 +207,7 @@ public class Wand : MonoBehaviour
         if (onGestureEnd != null)
             onGestureEnd(m_currentGesture);
 
-        m_queueGesture = m_currentGesture = new Gesture();
+        m_queueGesture = m_currentGesture = null;
 
         gesture = false;
         spells = false;
@@ -324,6 +313,16 @@ public class Wand : MonoBehaviour
         Nest.Instance.RandomKick(agent); 
     }
 
+    public void KickNest(Kick kick)
+    {
+        var nest = Nest.Instance;
+
+        if (kick.useDirection)
+            nest.Kick(kick.direction, agent);
+        else
+            nest.RandomKick(agent);
+    }
+
     public void PopBeaconFromNest(Beacon beacon) 
     {
         if (beacon == null) return;
@@ -343,7 +342,6 @@ public class Wand : MonoBehaviour
 
     public void ClearNest() 
     {
-        return;
 
         bool success = Nest.Instance.Dispose();
         if(success)

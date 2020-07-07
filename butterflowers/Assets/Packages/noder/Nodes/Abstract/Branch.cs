@@ -47,7 +47,7 @@ namespace Noder.Nodes.Abstract {
             Route(index);
         }
 
-        void Route(int index)
+        protected void Route(int index)
         {
             NodePort port = GetOutputPort("routes " + index);
             if (port == null) 

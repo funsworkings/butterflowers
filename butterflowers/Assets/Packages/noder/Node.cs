@@ -4,7 +4,7 @@ using UnityEngine;
 
 namespace Noder {
 
-    public abstract class Node : XNode.Node { 
+    public abstract class Node : XNode.Node {
 
         public Graph Graph { get{ return (graph as Graph); } }
 

@@ -326,7 +326,9 @@ public class Library : Singleton<Library>
 
 	public Texture2D GetTexture(string path)
 	{
-		if (!textures.ContainsKey(path)) return null;
+		if (!textures.ContainsKey(path)) {
+			return Manager.DEFAULT_NULL_TEXTURE;
+		}
 		return textures[path];
 	}
 

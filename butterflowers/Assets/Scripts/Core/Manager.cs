@@ -45,6 +45,8 @@ public class Manager : Spawner
 
 	[SerializeField] int maxBeacons = 100;
 
+    public Texture2D DEFAULT_NULL_TEXTURE;
+
     #endregion
 
     #region Properties
