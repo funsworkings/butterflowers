@@ -25,7 +25,8 @@ namespace Settings
         [Header("Spawn Attributes")]
             public int amountOfButterflies = 100;
 
-
+        [Header("Unknown Attributes")]
+            [Range(0f, 1f)] public float unknownPersistenceThreshold = .5f;
 
         #region Time conversions
 

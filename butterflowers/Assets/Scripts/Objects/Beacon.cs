@@ -242,8 +242,8 @@ public class Beacon: MonoBehaviour {
         var impact = Instantiate(pr_impactPS, transform.position, transform.rotation);
         impact.GetComponent<ParticleSystem>().Play();
 
-        var shine = Instantiate(pr_shinePS, transform.position, transform.rotation);
-        shine.GetComponent<ParticleSystem>().Play();
+        //var shine = Instantiate(pr_shinePS, transform.position, transform.rotation);
+        //shine.GetComponent<ParticleSystem>().Play();
 
         return true;
     }

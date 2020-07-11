@@ -178,7 +178,7 @@ namespace Wizard {
             debugwindow.alpha = (debug) ? 1f : 0f;
             //if (debug) DebugAttributes();
 
-            
+            /*
             if (Input.GetKeyDown(KeyCode.S))
                 Actions.Push(ActionType.Picture, Extensions.RandomString(12), true);
             if (Input.GetKeyDown(KeyCode.D))
@@ -236,7 +236,7 @@ namespace Wizard {
                     Actions.Push(seq);
                 }
             }
-            
+            */
         }
 
 		#endregion

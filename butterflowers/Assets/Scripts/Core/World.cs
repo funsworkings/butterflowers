@@ -28,6 +28,7 @@ public class World : Spawner
 
 	[SerializeField] Settings.WorldPreset Preset;
     [SerializeField] Wizard.Memories Memories;
+    [SerializeField] CameraManager CameraManager;
 
     GameDataSaveSystem Save = null;
     Library Library = null;
@@ -54,6 +55,9 @@ public class World : Spawner
     #region Properties
 
     [SerializeField] Transform m_beaconInfoContainer = null;
+
+    [SerializeField] Snapshot WorldCamera;
+    [SerializeField] Camera previousMainCamera = null;
 
 	#endregion
 
@@ -242,16 +246,12 @@ public class World : Spawner
 
     void Advance()
     {
+        TakePicture();
+
         bool success = Nest.Close(); // Close nest
         //if(success) Butterflowers.KillButterflies(); // Kill all butterflies (if nest was closed)
 
         RefreshBeacons(); // Reset all beacons
-
-        if (Sun.days == 1) 
-        {
-            //Wizard.gameObject.SetActive(true);
-            Save.wizard = true;
-        }
     }
 
     #endregion
@@ -456,6 +456,7 @@ public class World : Spawner
         float max = -1f;
 
         suggestion = SUGGESTION.ENDOW_KINDNESS;
+        max = (1f - Butterflowers.GetHealth());
 
         float nest = (1f - Nest.fill);
         if (nest > max) {
@@ -485,13 +486,50 @@ public class World : Spawner
         return (float)current / total;
     }
 
-	#endregion
+    #endregion
+
+    #region Camera operations
+
+    void TakePicture()
+    {
+        var camera = WorldCamera.camera;
+
+        previousMainCamera = CameraManager.MainCamera;
+        CameraManager.MainCamera = camera;
+        camera.enabled = true;
+
+        WorldCamera.onSuccess += onReceivePicture;
+
+        StartCoroutine("TakingPicture");
+    }
+
+    IEnumerator TakingPicture()
+    {
+        yield return new WaitForSeconds(.167f);
+        WorldCamera.Capture();
+    }
+
+    void onReceivePicture(Texture2D image)
+    {
+        var name = Extensions.RandomString(12);
+        var camera = WorldCamera.camera;
+
+        Library.SaveTexture(name, image);
+
+        CameraManager.MainCamera = previousMainCamera;
+
+        camera.enabled = false;
+        previousMainCamera = null;
+
+        WorldCamera.onSuccess -= onReceivePicture;
+    }
+
+    #endregion
 
 
+    #region Beacon callbacks
 
-	#region Beacon callbacks
-
-	void onRegisterBeacon(Beacon beacon)
+    void onRegisterBeacon(Beacon beacon)
     {
         var file = beacon.file;
         if (beacons.ContainsKey(file)) {

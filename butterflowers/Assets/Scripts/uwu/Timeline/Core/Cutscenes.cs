@@ -76,6 +76,7 @@ public class Cutscenes : MonoBehaviour
 
 	void Update()
 	{
+		/*
 		if (Input.GetKeyDown(KeyCode.LeftControl)) 
 		{
 			if (!playing)
@@ -83,6 +84,7 @@ public class Cutscenes : MonoBehaviour
 			else
 				Pause();
 		}
+		*/
 	}
 
 	#endregion

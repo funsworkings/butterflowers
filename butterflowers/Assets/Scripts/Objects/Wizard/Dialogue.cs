@@ -120,12 +120,6 @@ namespace Wizard {
             DialogueTree.onReceiveDialogue -= onReceiveDialogue;
         }
 
-        void Update()
-        {
-            if (Input.GetKeyDown(KeyCode.Alpha9))
-                Push(debugBodies);
-        }
-
         void OnDestroy()
         {
             dialogueTree.Dispose();
