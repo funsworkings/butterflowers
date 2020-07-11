@@ -1,5 +1,4 @@
-﻿using System;
-using System.Collections;
+﻿using System.Collections;
 using System.Collections.Generic;
 using System.IO;
 using System.Linq;
@@ -23,7 +22,7 @@ namespace Wizard {
 
 		#region External
 
-		[SerializeField] Manager Manager;
+		[SerializeField] World Manager;
 
 
 		Sun Sun;
@@ -40,6 +39,12 @@ namespace Wizard {
 		public enum Sub_MoodState { NULL, Mischief, Violence, Happy, Elation }
 
 		public enum StanceState { Neutral, Unknown, Confidence }
+
+		[System.Serializable]
+		public struct ReactionMapping {
+			public EVENTCODE @event;
+			public DialogueCollection reactions;
+		}
 
 		#endregion
 
@@ -63,8 +68,9 @@ namespace Wizard {
 
 		#region Attributes
 
-		[SerializeField] float m_mood = 0f;
-		[SerializeField] float m_stance = 0f;
+		[SerializeField] [Range(-1f, 1f)] float m_mood = 0f;
+		[SerializeField] [Range(0f, 1f)] float m_stance = 0f;
+		[SerializeField] [Range(0f, 1f)] float m_absorption = 0f;
 
 		[SerializeField] float m_environmentKnowledge = 0f;
 		[SerializeField] Knowledge[] knowledge = new Knowledge[] { };
@@ -104,12 +110,15 @@ namespace Wizard {
 		int RECEIVE_NEST_EVENT = -1;
 		public EVENTCODE LAST_NEST_EVENT => (NEST_EVENTS.Count > 0) ? NEST_EVENTS.Last() : EVENTCODE.NULL;
 
+		public ReactionMapping[] reactionMappings = new ReactionMapping[] { };
+
 		#endregion
 
 		#region Accessors
 
 		public float mood => m_mood;
 		public float stance => m_stance;
+		public float absorption => m_absorption;
 
 		public float environmentKnowledge => m_environmentKnowledge;
 		public Dictionary<string, Knowledge> fileKnowledge => m_fileKnowledge;
@@ -166,6 +175,7 @@ namespace Wizard {
 		public TMP_Text nestFillUI;
 
 		public TMP_Text playerIntentUI;
+		public TMP_Text suggestionUI;
 
 		#endregion
 
@@ -278,6 +288,8 @@ namespace Wizard {
 			float t_mood = EvaluateMood();
 			m_mood = Mathf.Lerp(mood, t_mood, Time.deltaTime * Preset.moodSmoothSpeed);
 
+			m_absorption = Manager.GetAbsorption();
+
 			DebugResources();
 			DebugActionQueue();
 			DebugWorld();
@@ -373,6 +385,11 @@ namespace Wizard {
 			m = m.RemapNRB(0f, 1f, -1f, 1f, true);
 
 			return m;
+		}
+
+		float EvaluateAbsorption()
+		{
+			return Manager.GetAbsorption();
 		}
 
 		#endregion
@@ -535,160 +552,21 @@ namespace Wizard {
 			}
 		}
 
-
-
-
-		public ActionType DecideActionType()
+		public void ReactToEvent()
 		{
-			var possible = GetPossibleActions();
-			if (possible.Length == 0) return ActionType.None;
+			var rand = Random.Range(0f, 1f);
+			if (rand >= Preset.reactionProbability)
+				return;
 
-			var el = possible.PickRandomSubset(1)[0];
-			return el;
-		}
+			EVENTCODE @event = Events.LAST_EVENT;
 
-		public Action ChooseBestAction()
-		{
-			ActionType[] available = m_possibleActionsFilter = GetPossibleActions();
-			if (available.Length == 0) return null;
+			var mappings = reactionMappings.Where(m => m.@event == @event);
+			if (mappings.Count() == 0) return;
 
-			var action = new Action();
-			action.type = ActionType.None;
+			var map = mappings.ElementAt(0); // Get first mapping
+			var reaction = map.reactions.elements.PickRandomSubset(1)[0];
 
-			ActionType choice = available.PickRandomSubset(1)[0];
-			string name = System.Enum.GetName(typeof(ActionType), choice);
-
-			if (name.StartsWith("Beacon")) {
-				var ops = GetPossibleBeaconOps();
-				if (ops.Length > 0) {
-					var op = ops.PickRandomSubset(1)[0];
-
-					var beacon = GetActionableBeaconForBeaconOp(op);
-					bool success = (beacon != null);
-
-					if (success) {
-						action.type = op;
-						action.dat = beacon;
-					}
-				}
-			}
-			if (name.StartsWith("Nest")) {
-				var ops = GetPossibleNestOps();
-				if (ops.Length > 0) {
-					var op = ops.PickRandomSubset(1)[0];
-					Beacon bdat = null;
-
-					bool success = true;
-					if (op != ActionType.NestKick) {
-						var beacons = Manager.ActiveBeacons;
-
-						if (beacons.Length == 0)
-							success = false;
-						else {
-							if (op == ActionType.NestPop) 
-							{
-								var beacon = beacons.PickRandomSubset(1)[0];
-								bdat = beacon;
-							}
-						}
-					}
-
-					if (success) {
-						action.type = op;
-						action.dat = bdat;
-					}
-				}
-			}
-			if (choice == ActionType.Gesture) {
-				var gestures = GetPossibleGestures();
-				if (gestures.Length > 0) {
-					var gesture = gestures.PickRandomSubset(1)[0];
-
-					action.type = ActionType.Gesture;
-					action.dat = gesture;
-				}
-			}
-			if (choice == ActionType.Picture) {
-				action.type = ActionType.Picture;
-			}
-			if (choice == ActionType.Dialogue) {
-				action.type = ActionType.Dialogue;
-				action.dat = null;
-			}
-			if (choice == ActionType.Emote) {
-				var emotes = GetPossibleEmotes();
-				if (emotes.Length > 0) {
-					var emote = emotes.PickRandomSubset(1)[0];
-
-					action.type = ActionType.Emote;
-					action.dat = emote;
-				}
-			}
-
-			return action;
-		}
-
-		public ActionType[] GetPossibleActions()
-		{
-			IEnumerable<ActionType> raw = Preset.actionStanceThresholds.Where(typeThreshold => stance >= typeThreshold.stance).Select(typeThreshold => typeThreshold.type);
-			List<ActionType> filtered = new List<ActionType>();
-
-			m_possibleActionsRaw = raw.ToArray();
-
-			for (int i = 0; i < raw.Count(); i++) {
-				var type = raw.ElementAt(i);
-				var name = System.Enum.GetName(typeof(ActionType), type);
-
-				if (excludes.Contains(type))
-					continue;
-
-
-				if (name.StartsWith("Beacon")) {
-					if (!ExistsActionableBeaconOp())
-						continue;
-				}
-				if (name.StartsWith("Nest")) {
-					if (!ExistsActionableNestOp())
-						continue;
-				}
-				if (type == ActionType.Gesture) {
-					if (!ExistsActionableGesture())
-						continue;
-				}
-				if (type == ActionType.Emote) {
-					if (!ExistsActionableEmote())
-						continue;
-				}
-
-				filtered.Add(type);
-			}
-
-			return filtered.ToArray();
-		}
-
-		
-		public Beacon GetActionableBeaconForBeaconOp(ActionType op)
-		{
-			var beacons = Manager.InactiveBeacons;
-
-			Beacon _beacon = null;
-
-			if (op == ActionType.BeaconActivate) {
-				if (Nest.open) 
-				{
-					var possible = beacons.Where(beacon => FetchKnowledgeFromBeacon(beacon) >= Preset.minimumBeaconActivateKnowledge).ToArray();
-					if (possible.Length > 0)
-						_beacon = possible.PickRandomSubset(1)[0];
-				}
-			}
-			else if (op == ActionType.BeaconDestroy) 
-			{
-				var possible = beacons.Where(beacon => FetchKnowledgeFromBeacon(beacon) <= Preset.maximumBeaconDeleteKnowledge).ToArray();
-				if (possible.Length > 0)
-					_beacon = possible.PickRandomSubset(1)[0];
-			}
-
-			return _beacon;
+			dialogue.Push(reaction, true);
 		}
 
 		#endregion
@@ -728,7 +606,6 @@ namespace Wizard {
 		void onReceiveEvent(ModuleTree tree, EVENTCODE @event, object data)
 		{
 			string type = System.Enum.GetName(typeof(EVENTCODE), @event);
-
 			if (type.Contains("BEACON")) 
 			{
 				ParseBeaconEvent(@event, data);
@@ -748,7 +625,7 @@ namespace Wizard {
 
 		void onReceiveDialogue(ModuleTree tree, string dialogue, float delay)
 		{
-			this.dialogue.Push(dialogue);
+			actions.Push(ActionType.Dialogue, dialogue, delay:delay);
 		}
 
 		#endregion
@@ -819,29 +696,38 @@ namespace Wizard {
 
 		public SUGGESTION getSuggestion()
 		{
-			//TODO
-			return SUGGESTION.NULL;
+			var possible = Manager.GetSuggestions();
+			return possible.PickRandomSubset(1)[0];
 		}
 
 
 		// INITIAL IMPL FOR INTENT -- todo (better one)
 		public INTENT getPlayerIntent()
 		{
-			float impact = 0f;
+			float action_impact = 0f;
 
 			int total = 0;
 			foreach (EVENTCODE e in PLAYER_EVENTS) 
 			{
-				impact += EVENT_WEIGHT_LOOKUP.WEIGHTS[e];
+				action_impact += EVENT_WEIGHT_LOOKUP.WEIGHTS[e];
 				++total;
 			}
-			impact /= total;
+			action_impact /= total;
 
-			impact = Mathf.Clamp(impact + .33f * mood, -1f, 1f); // mood impacts how they read player intent
+			float mood_impact = mood;
+			float hob_impact = (1f - Mother.player_hatred).RemapNRB(0f, 1f, -1f, 1f); // Invert HoB hatred => more hatred, more negative impact
 
-			if (impact < -.45f)
+			float impact_total = Preset.impactActionWeight + Preset.impactMoodWeight + Preset.impactHoBWeight;
+
+			float ia = Preset.impactActionWeight / impact_total;
+			float im = Preset.impactMoodWeight / impact_total;
+			float ihob = Preset.impactHoBWeight / impact_total;
+
+			float impact = action_impact*ia + mood_impact*im + hob_impact*ihob;
+
+			if (impact < -.33f)
 				return INTENT.FOIL;
-			if (impact > .45f)
+			if (impact > .33f)
 				return INTENT.PLAY;
 			if (Mathf.Abs(impact) < .167f)
 				return INTENT.OBSERVE;
@@ -1056,6 +942,7 @@ namespace Wizard {
 			// DEBUG
 			stanceUI.text = string.Format("{0} ({1})", stance, System.Enum.GetName(typeof(StanceState), s_state));
 			moodUI.text = string.Format("{0} ({1})", mood, System.Enum.GetName(typeof(MoodState), m_state));
+			absorbUI.text = string.Format("{0}%", Mathf.RoundToInt(absorption * 100f));
 
 			enviroKUI.text = FetchKnowledgeFromEnvironment() + "";
 			fileKUI.text = FetchKnowledgeFromFiles() + "";
@@ -1111,7 +998,177 @@ namespace Wizard {
 		{
 			var intent = getPlayerIntent();
 			playerIntentUI.text = System.Enum.GetName(typeof(INTENT), intent);
+
+			var suggestion = getSuggestion();
+			suggestionUI.text = System.Enum.GetName(typeof(SUGGESTION), suggestion);
 		}
+
+		#endregion
+
+
+
+
+		#region Deprecated
+
+		/*
+		 * 
+		 * 
+		 * 		public ActionType DecideActionType()
+		{
+			var possible = GetPossibleActions();
+			if (possible.Length == 0) return ActionType.None;
+
+			var el = possible.PickRandomSubset(1)[0];
+			return el;
+		}
+
+		public Action ChooseBestAction()
+		{
+			ActionType[] available = m_possibleActionsFilter = GetPossibleActions();
+			if (available.Length == 0) return null;
+
+			var action = new Action();
+			action.type = ActionType.None;
+
+			ActionType choice = available.PickRandomSubset(1)[0];
+			string name = System.Enum.GetName(typeof(ActionType), choice);
+
+			if (name.StartsWith("Beacon")) {
+				var ops = GetPossibleBeaconOps();
+				if (ops.Length > 0) {
+					var op = ops.PickRandomSubset(1)[0];
+
+					var beacon = GetActionableBeaconForBeaconOp(op);
+					bool success = (beacon != null);
+
+					if (success) {
+						action.type = op;
+						action.dat = beacon;
+					}
+				}
+			}
+			if (name.StartsWith("Nest")) {
+				var ops = GetPossibleNestOps();
+				if (ops.Length > 0) {
+					var op = ops.PickRandomSubset(1)[0];
+					Beacon bdat = null;
+
+					bool success = true;
+					if (op != ActionType.NestKick) {
+						var beacons = Manager.ActiveBeacons;
+
+						if (beacons.Length == 0)
+							success = false;
+						else {
+							if (op == ActionType.NestPop) 
+							{
+								var beacon = beacons.PickRandomSubset(1)[0];
+								bdat = beacon;
+							}
+						}
+					}
+
+					if (success) {
+						action.type = op;
+						action.dat = bdat;
+					}
+				}
+			}
+			if (choice == ActionType.Gesture) {
+				var gestures = GetPossibleGestures();
+				if (gestures.Length > 0) {
+					var gesture = gestures.PickRandomSubset(1)[0];
+
+					action.type = ActionType.Gesture;
+					action.dat = gesture;
+				}
+			}
+			if (choice == ActionType.Picture) {
+				action.type = ActionType.Picture;
+			}
+			if (choice == ActionType.Dialogue) {
+				action.type = ActionType.Dialogue;
+				action.dat = null;
+			}
+			if (choice == ActionType.Emote) {
+				var emotes = GetPossibleEmotes();
+				if (emotes.Length > 0) {
+					var emote = emotes.PickRandomSubset(1)[0];
+
+					action.type = ActionType.Emote;
+					action.dat = emote;
+				}
+			}
+
+			return action;
+		}
+
+		public ActionType[] GetPossibleActions()
+		{
+			IEnumerable<ActionType> raw = Preset.actionStanceThresholds.Where(typeThreshold => stance >= typeThreshold.stance).Select(typeThreshold => typeThreshold.type);
+			List<ActionType> filtered = new List<ActionType>();
+
+			m_possibleActionsRaw = raw.ToArray();
+
+			for (int i = 0; i < raw.Count(); i++) {
+				var type = raw.ElementAt(i);
+				var name = System.Enum.GetName(typeof(ActionType), type);
+
+				if (excludes.Contains(type))
+					continue;
+
+
+				if (name.StartsWith("Beacon")) {
+					if (!ExistsActionableBeaconOp())
+						continue;
+				}
+				if (name.StartsWith("Nest")) {
+					if (!ExistsActionableNestOp())
+						continue;
+				}
+				if (type == ActionType.Gesture) {
+					if (!ExistsActionableGesture())
+						continue;
+				}
+				if (type == ActionType.Emote) {
+					if (!ExistsActionableEmote())
+						continue;
+				}
+
+				filtered.Add(type);
+			}
+
+			return filtered.ToArray();
+		}
+
+		
+		public Beacon GetActionableBeaconForBeaconOp(ActionType op)
+		{
+			var beacons = Manager.InactiveBeacons;
+
+			Beacon _beacon = null;
+
+			if (op == ActionType.BeaconActivate) {
+				if (Nest.open) 
+				{
+					var possible = beacons.Where(beacon => FetchKnowledgeFromBeacon(beacon) >= Preset.minimumBeaconActivateKnowledge).ToArray();
+					if (possible.Length > 0)
+						_beacon = possible.PickRandomSubset(1)[0];
+				}
+			}
+			else if (op == ActionType.BeaconDestroy) 
+			{
+				var possible = beacons.Where(beacon => FetchKnowledgeFromBeacon(beacon) <= Preset.maximumBeaconDeleteKnowledge).ToArray();
+				if (possible.Length > 0)
+					_beacon = possible.PickRandomSubset(1)[0];
+			}
+
+			return _beacon;
+		}
+		 * 
+		 * 
+		 * 
+		 */
 
 		#endregion
 	}

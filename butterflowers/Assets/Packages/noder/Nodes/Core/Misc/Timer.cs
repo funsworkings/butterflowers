@@ -5,7 +5,7 @@ using UnityEngine;
 using XNode;
 using Noder.Nodes.Abstract;
 
-namespace Noder.Nodes.Core {
+namespace Noder.Nodes.Core.Miscellaneous {
 
     public class Timer : Entry<float>, ITick, IReset
     {

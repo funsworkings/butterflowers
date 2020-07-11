@@ -82,12 +82,6 @@ MonoBehaviour:
         PublicKeyToken=null
       connections:
       - fieldName: output
-        node: {fileID: 114227931886382936}
-        reroutePoints: []
-      - fieldName: output
-        node: {fileID: 0}
-        reroutePoints: []
-      - fieldName: output
         node: {fileID: 114326652487481008}
         reroutePoints: []
       _direction: 0
@@ -467,7 +461,7 @@ MonoBehaviour:
   m_Name: Basic
   m_EditorClassIdentifier: 
   graph: {fileID: 11400000}
-  position: {x: -952, y: -440}
+  position: {x: -1000, y: -456}
   ports:
     keys:
     - input

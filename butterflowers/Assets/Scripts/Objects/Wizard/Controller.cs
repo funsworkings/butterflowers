@@ -193,7 +193,7 @@ namespace Wizard {
                     Actions.Push(ActionType.NestPop);
                 }
                 if (Input.GetKeyDown(KeyCode.Alpha2)) {
-                    var opts = Manager.Instance.ActiveBeacons.PickRandomSubset(1);
+                    var opts = World.Instance.ActiveBeacons.PickRandomSubset(1);
                     var beacon = opts.Count() > 0 ? opts.ElementAt(0) : null;
 
                     Actions.Push(ActionType.NestPop, beacon);
@@ -204,20 +204,20 @@ namespace Wizard {
             }
             if (Input.GetKey(KeyCode.B)){
                 if (Input.GetKeyDown(KeyCode.Alpha0)) {
-                    var opts = Manager.Instance.InactiveBeacons.PickRandomSubset(1);
+                    var opts = World.Instance.InactiveBeacons.PickRandomSubset(1);
                     var beacon = opts.Count() > 0 ? opts.ElementAt(0) : null;
 
                     Actions.Push(ActionType.BeaconActivate, beacon);
                 }
                 if (Input.GetKeyDown(KeyCode.Alpha1)) {
-                    var opts = Manager.Instance.InactiveBeacons.PickRandomSubset(1);
+                    var opts = World.Instance.InactiveBeacons.PickRandomSubset(1);
                     var beacon = opts.Count() > 0 ? opts.ElementAt(0) : null;
 
                     Actions.Push(ActionType.BeaconDestroy, beacon);
                 }
             }
             if (Input.GetKeyDown(KeyCode.M)) {
-                var opts = Manager.Instance.InactiveBeacons.PickRandomSubset(1);
+                var opts = World.Instance.InactiveBeacons.PickRandomSubset(1);
                 var beacon = opts.Count() > 0 ? opts.ElementAt(0) : null;
 
                 if (beacon != null) {
@@ -265,6 +265,7 @@ namespace Wizard {
 
         void EnactAction()
         {
+            /*
             var action = Brain.ChooseBestAction();
             if (action != null) 
             {
@@ -275,10 +276,12 @@ namespace Wizard {
                 Debug.LogFormat("FALLBACK action => NONE");
                 //Actions.Push(ActionType.Emote);
             }
+            */
         }
 
         void RespondToPlayerAction(EVENTCODE @event)
         {
+            /*
             return; //IGNORE PLAYER EVENTS FOR NOW
 
 
@@ -307,6 +310,7 @@ namespace Wizard {
                         break;
                 }
             }
+            */
         }
 
 		#endregion
@@ -438,6 +442,7 @@ namespace Wizard {
 
         void onDayNightCycle() 
         {
+            /*
             return; // IGNORE SUN CYCLE FOR NOW
 
             float base_probability = Mathf.Pow(Brain.stance, 2f);
@@ -447,6 +452,7 @@ namespace Wizard {
             float prob = Mathf.Clamp(base_probability, min, max);
             if (Random.Range(0f, 1f) <= prob)
                 EnactAction();
+            */
         }
 
         #endregion
@@ -455,6 +461,9 @@ namespace Wizard {
 
         void onFireEvent(EVENTCODE @event, AGENT a, AGENT b, string detail) 
         {
+            if (a == AGENT.Inhabitant1)
+                Brain.ReactToEvent();
+
             if (a != AGENT.Inhabitant0) return; // Ignore all non-player events
             RespondToPlayerAction(@event);
         }

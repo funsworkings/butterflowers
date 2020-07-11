@@ -34,7 +34,11 @@ public enum EVENTCODE {
 
     GESTURE = 30,
     PHOTOGRAPH = 31,
-    SLAUGHTER = 32
+    SLAUGHTER = 32,
+
+    DAY = 41,
+    NIGHT = 42,
+    CYCLE = 43
 }
 
 public enum SUGGESTION {

@@ -14,6 +14,9 @@ using System.Security.Cryptography;
 
 public class Library : Singleton<Library>
 {
+	public const bool READ_IN_EDITOR_MODE = false;
+
+
 	#region Events
 
 	public System.Action OnRefreshItems;
@@ -38,7 +41,7 @@ public class Library : Singleton<Library>
 
 	Quilt Quilt = null;
 	GameDataSaveSystem Save;
-	Manager Manager;
+	World Manager;
 
 	#endregion
 
@@ -139,8 +142,11 @@ public class Library : Singleton<Library>
 
 #if !UNITY_EDITOR
 		LoadTextures(items_desktop.ToArray());
+#else
+		if (READ_IN_EDITOR_MODE)
+			LoadTextures(items_desktop.ToArray());
 #endif
-    }
+	}
 
 	void RefreshWizardFiles()
 	{
@@ -282,7 +288,7 @@ public class Library : Singleton<Library>
 
 		Save = GameDataSaveSystem.Instance;
 
-		Manager = Manager.Instance;
+		Manager = World.Instance;
 
 		ALL_FILES = new List<string>(Save.files);
 

@@ -196,14 +196,20 @@ public class Sun : MonoBehaviour
         if (previousState != state) {
             if (events) {
                 if (previousState == State.Day) { // Day --> Night
+
                     if (onDayEnd != null)
                         onDayEnd();
+
+                    Events.ReceiveEvent(EVENTCODE.NIGHT, AGENT.World, AGENT.Terrain);
                     if (onNightBegin != null)
                         onNightBegin();
                 }
                 else { // Night --> Day
+
                     if (onNightEnd != null)
                         onNightEnd();
+
+                    Events.ReceiveEvent(EVENTCODE.DAY, AGENT.World, AGENT.Terrain);
                     if (onDayBegin != null)
                         onDayBegin();
                 }
@@ -223,6 +229,7 @@ public class Sun : MonoBehaviour
         if (days > previousDays) {
             Debug.LogFormat("Sun advanced!  from:{0} to:{1}", days-1, days);
 
+            Events.ReceiveEvent(EVENTCODE.CYCLE, AGENT.World, AGENT.Terrain, days + "");
             if (onCycle != null)
                 onCycle();
 
