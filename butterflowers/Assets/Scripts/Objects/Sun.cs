@@ -130,11 +130,7 @@ public class Sun : MonoBehaviour
     void Update()
     {
         if (!active)
-        {
-            if (Input.GetKeyDown(KeyCode.Space)) // Override active state (debug)
-                active = true;
             return;
-        }
 
         if (Input.GetKeyDown(KeyCode.RightBracket)) time += Preset.secondsPerDay;
 

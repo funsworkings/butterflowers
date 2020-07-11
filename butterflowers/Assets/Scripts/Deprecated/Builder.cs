@@ -19,14 +19,6 @@ public class Builder : MonoBehaviour
         CalculateBounds();
     }
 
-    void Update()
-    {
-        if (Input.GetKeyDown(KeyCode.LeftArrow))
-            Build(Vector3.left);
-        else if(Input.GetKeyDown(KeyCode.RightArrow))
-            Build(Vector3.right);
-    }
-
     void CalculateBounds()
     {
         Collider col = origin.GetComponentInChildren<Collider>();

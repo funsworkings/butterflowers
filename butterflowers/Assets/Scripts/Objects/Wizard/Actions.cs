@@ -509,6 +509,8 @@ namespace Wizard {
 
         void onReceivePicture(Texture2D image) 
         {
+            return;
+
             var name = Extensions.RandomString(12);
             var camera = snapshot.camera;
 

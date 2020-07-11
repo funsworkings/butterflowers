@@ -31,12 +31,14 @@ public class RevolveCamera : GameCamera
     {
         if (orbitTransposer == null) return;
 
+        /*
         float dt = Time.deltaTime;
-
+        
         if (controls) {
             if (Input.GetKey(KeyCode.LeftArrow)) angle += 90f * dt;
             if (Input.GetKey(KeyCode.RightArrow)) angle -= 90f * dt;
         }
+        */
 
         float angToRad = angle * Mathf.Deg2Rad;
         Vector3 offset = new Vector3(Mathf.Cos(angToRad)*radius, height, Mathf.Sin(angToRad)*radius);

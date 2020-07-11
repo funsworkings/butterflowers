@@ -75,6 +75,8 @@ public class Nest : MonoBehaviour
 
     public Vector3 trajectory => rigidbody.velocity.normalized;
 
+    public int LEVEL => Mathf.FloorToInt(capacity / 6f) - 1;
+
 	#endregion
 
 	#region Monobehaviour callbacks
@@ -167,8 +169,8 @@ public class Nest : MonoBehaviour
         impact.transform.up = direction.normalized;
         impact.GetComponent<ParticleSystem>().Play();
 
-        var shine = Instantiate(pr_shinePS, point, pr_impactPS.transform.rotation);
-        shine.GetComponent<ParticleSystem>().Play();
+        //var shine = Instantiate(pr_shinePS, point, pr_impactPS.transform.rotation);
+        //shine.GetComponent<ParticleSystem>().Play();
 
         Open();
 

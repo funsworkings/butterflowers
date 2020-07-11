@@ -1,4 +1,5 @@
-﻿using System.Collections;
+﻿using Settings;
+using System.Collections;
 using System.Collections.Generic;
 using System.Data;
 using UnityEngine;
@@ -10,12 +11,20 @@ public class Unknown : MonoBehaviour
     #region External
 
     [SerializeField] MotherOfButterflies Butterflies;
+    [SerializeField] Nest Nest;
+    [SerializeField] World World;
 
     #endregion
 
     #region Internal
 
     public enum Pattern { None, River, Perlin, Feed }
+
+    #endregion
+
+    #region Properties
+
+    [SerializeField] WorldPreset Preset;
 
 	#endregion
 
@@ -57,14 +66,35 @@ public class Unknown : MonoBehaviour
 
 	bool plague = false;
 
-    void Update()
+    void OnEnable()
     {
-        if (Input.GetKeyDown(KeyCode.U)) {
-            plague = !plague;
+        Events.onFireEvent += onFireEvent;
+    }
 
-            if (plague) StartCoroutine("Plague");
-            else StopCoroutine("Plague");
+    void OnDisable()
+    {
+        Events.onFireEvent -= onFireEvent;
+    }
+
+    void onFireEvent(EVENTCODE @event, AGENT a, AGENT b, string details)
+    {
+        if (@event != EVENTCODE.NESTGROW) return;
+
+        if (World.GetAbsorption() < 1f) {
+            int level = Nest.LEVEL;
+
+            // Evaluate PATTERN
+            if (level == 0)
+                patt = Pattern.None;
+            else if (level == 1)
+                patt = Pattern.Perlin;
+            else 
+                patt = Pattern.River;
         }
+        else
+            patt = Pattern.Feed;
+
+        StartCoroutine("Plague");
     }
 
     void OnDestroy()
@@ -74,14 +104,20 @@ public class Unknown : MonoBehaviour
 
     IEnumerator Plague()
     {
-        while (true) 
+        bool healthy = false;
+
+        float health = Butterflies.GetHealth();
+        while (!healthy || health > Preset.unknownPersistenceThreshold) 
         {
             var patt = fetchPattern();
             var @string = patt();
 
             Scribe.Instance.Push(EVENTCODE.UNKNOWN, AGENT.Unknown, AGENT.World, @string, false);
-
             yield return new WaitForSeconds(Mathf.Max(0f, scribeInterval));
+
+            health = Butterflies.GetHealth();
+            if (!healthy && health > Preset.unknownPersistenceThreshold)
+                healthy = true;
         }
     }
 

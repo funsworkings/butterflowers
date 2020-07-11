@@ -55,11 +55,6 @@ public class CameraManager: MonoBehaviour {
         }
     }
 
-    void Update()
-    {
-        if (Input.GetKeyDown(KeyCode.C)) CycleCameras();
-    }
-
     #endregion
 
     void Enable(GameCamera camera){

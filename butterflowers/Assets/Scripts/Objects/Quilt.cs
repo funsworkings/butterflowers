@@ -108,8 +108,6 @@ public class Quilt : MonoBehaviour
 
     void Update()
     {
-        if (Input.GetKeyDown(KeyCode.Q)) Add(debugTexture);
-
         if (death > 0f) 
         {
             death -= (Time.deltaTime * m_deathDecay);

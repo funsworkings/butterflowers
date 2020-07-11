@@ -80,14 +80,6 @@ public class Scribe : Logger
 		defaultColorHex = Extensions.ParseColor(defaultColor);
 	}
 
-	void Update()
-	{
-		if (Input.GetKeyDown(KeyCode.S)) {
-			string msg = Extensions.RandomString(Random.Range(16, 64));
-			Push(msg);
-		}
-	}
-
 	void OnEnable() 
 	{
 		Events.onFireEvent += Push;
