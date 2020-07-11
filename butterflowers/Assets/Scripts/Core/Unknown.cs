@@ -202,7 +202,7 @@ public class Unknown : MonoBehaviour
         {
             x = (w * _y);
 
-            var _i = (Mathf.FloorToInt(i*xi) + x);
+            var _i = (sample.Length-1) - (Mathf.FloorToInt((chars.Length - i)*xi) + x);
             if (sample[_i].a > 0f)
                 chars[i] = wiz_char;
         }
