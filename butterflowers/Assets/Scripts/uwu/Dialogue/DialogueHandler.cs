@@ -103,13 +103,34 @@ public class DialogueHandler: MonoBehaviour {
 
 	#region Operations
 
-	public virtual void Push(string body)
+	public virtual void Push(string body, bool immediate = false)
     {
         body = ParseBody(body);
 
         if (string.IsNullOrEmpty(body)) return;
 
-        queue.Add(body);
+        if (immediate) 
+        {
+            if (inprogress) 
+            {
+                if (available)
+                    queue.Insert(1, body);
+                else
+                    queue.Add(body);
+
+                Advance();
+            }
+            else 
+            {
+                if (available)
+                    queue.Insert(0, body);
+                else
+                    queue.Add(body);
+            }
+        }  
+        else
+            queue.Add(body);
+
 
         if (!speaking) 
         {

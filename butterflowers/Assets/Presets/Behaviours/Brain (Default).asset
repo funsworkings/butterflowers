@@ -40,9 +40,13 @@ MonoBehaviour:
   maximumDayNightActionProbability: 0.67
   minimumResponseActionProbability: 0.067
   maximumResponseActionProbability: 0.67
+  reactionProbability: 0.35
+  impactActionWeight: 1.33
+  impactMoodWeight: 0.5
+  impactHoBWeight: 3
+  absorptionThreshold: 0.95
+  healthOfButterflowersGestureThreshold: 0.5
   actionStanceThresholds: []
   beaconOpMoodThresholds: []
   nestOpMoodThresholds: []
   emoteMoodThresholds: []
-  absorptionThreshold: 0.95
-  healthOfButterflowersGestureThreshold: 0.5

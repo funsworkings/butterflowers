@@ -16,14 +16,14 @@ namespace Wizard {
 
         #region Events
 
-        public System.Action<Action> onEnact, onDispose;
+        public System.Action<Action> onEnact, onComplete;
 
         #endregion
 
         #region External
 
         Library Library;
-        Manager Manager;
+        World Manager;
         CameraManager CameraManager;
         Nest Nest;
 
@@ -91,7 +91,7 @@ namespace Wizard {
 
             /* * * * * */
 
-            public bool wait => (cast || type == Type.Picture || type == Type.Gesture || type == Type.MoveTo || type == Type.Inspect);
+            public bool wait => (cast || type == Type.Picture || type == Type.Gesture || type == Type.MoveTo || type == Type.Inspect || type == Type.Dialogue);
 
             public bool cast {
                 get
@@ -154,6 +154,8 @@ namespace Wizard {
         // Tracking movement
         Vector3 currentWaypoint = Vector3.zero;
 
+        string currentBody = null;
+
         #endregion
 
         #region Accessors
@@ -203,11 +205,10 @@ namespace Wizard {
         void Start()
         {
             brain = controller.Brain;
-            dialogue = controller.Dialogue;
             memories = controller.Memories;
             animator = controller.Animator;
 
-            Manager = Manager.Instance;
+            Manager = World.Instance;
             Library = Library.Instance;
             Nest = Nest.Instance;
             CameraManager = FindObjectOfType<CameraManager>();
@@ -224,6 +225,9 @@ namespace Wizard {
             navigation.onMoveToPoint += onMoveToLocation;
             navigation.onLookAtPoint += onLookAtLocation;
 
+            dialogue = controller.Dialogue;
+            dialogue.onCompleteBody += onCompleteDialogue;
+
             StartCoroutine("Refresh");
         }
 
@@ -235,6 +239,8 @@ namespace Wizard {
             wand.onGestureEnd -= onCompleteGesture;
             navigation.onMoveToPoint -= onMoveToLocation;
             navigation.onLookAtPoint -= onLookAtLocation;
+
+            dialogue.onCompleteBody -= onCompleteDialogue;
 
             StopCoroutine("Refresh");
         }
@@ -355,6 +361,18 @@ namespace Wizard {
                         var target = (Transform)_action.dat;
                         navigation.LookAt(target);
                     }
+                    else if (action.type == Type.Dialogue) {
+                        string body = (string)_action.dat;
+
+                        if (string.IsNullOrEmpty(body)) {
+                            var mood = brain.mood;
+                            currentBody = dialogue.FetchDialogueFromTree(Mathf.RoundToInt(mood));
+                        }
+                        else {
+                            currentBody = body;
+                            dialogue.Push(body);
+                        }
+                    }
                 }
 
                 if (_action.type != Type.None) 
@@ -425,18 +443,7 @@ namespace Wizard {
             }
             else // Miscellaneous
             {
-                if (action.type == Type.Dialogue) {
-                    string body = (string)dat;
-
-                    if (string.IsNullOrEmpty(body)) {
-                        var mood = brain.mood;
-                        dialogue.FetchDialogueFromTree(Mathf.RoundToInt(mood));
-                    }
-                    else {
-                        dialogue.Push(body);
-                    }
-                }
-                else if (action.type == Type.Emote) 
+                if (action.type == Type.Emote) 
                 {
                     Emote[] emotes = brain.GetPossibleEmotes();
 
@@ -449,7 +456,7 @@ namespace Wizard {
                 }
             }
 
-            if(!action.wait) inprogress = false;
+            if (!action.wait) inprogress = false;
         }
 
         bool CancelAction(Action action)
@@ -512,9 +519,7 @@ namespace Wizard {
             camera.enabled = false;
             previousMainCamera = null;
 
-            controller.Dialogue.Push("I thought you might like this photo I took! Hope it's not too blurry :/");
-            //navigation.LookAt(null);
-
+            Events.ReceiveEvent(EVENTCODE.PHOTOGRAPH, AGENT.Inhabitant1, AGENT.World, details: name+".jpg");
             if(currentAction.type == Type.Picture && inprogress) 
                 inprogress = false;
         }
@@ -593,9 +598,23 @@ namespace Wizard {
 
         #endregion
 
-        #region Navigation callbacks
+        #region Dialogue
 
-        void onMoveToLocation(Vector3 location)
+        void onCompleteDialogue(string body)
+        {
+            Debug.Log(body);
+            if (inprogress) {
+                if (currentAction.type == Type.Dialogue && body == currentBody) {
+                    inprogress = false;
+                }
+            }
+        }
+
+		#endregion
+
+		#region Navigation callbacks
+
+		void onMoveToLocation(Vector3 location)
         {
             if (location != currentWaypoint) return;
 
@@ -628,7 +647,7 @@ namespace Wizard {
             if (mem == null) return;
 
             Texture2D tex = mem.image;
-            Beacon beacon = Manager.Instance.CreateBeaconForWizard(tex);
+            Beacon beacon = World.Instance.CreateBeaconForWizard(tex);
 
             if (beacon != null) {
                 beacon.fileEntry = null;

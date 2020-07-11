@@ -11,6 +11,7 @@ using Noder;
 using Noder.Nodes.External;
 using System.Linq;
 using Noder.Graphs;
+using System.Text;
 
 namespace Wizard {
 
@@ -43,6 +44,7 @@ namespace Wizard {
         public readonly string imageFlag = ":i:";
         public readonly string memoryFlag = ":m:";
         public readonly string daysFlag = ":d:";
+        public readonly string eventFlag = ":e:";
 
         [SerializeField] int node_id = -1;
 
@@ -155,7 +157,7 @@ namespace Wizard {
             tree.Step();
         }
 
-        public void FetchDialogueFromTree(int value, DialogueTree tree = null)
+        public string FetchDialogueFromTree(int value, DialogueTree tree = null)
         {
             if (tree == null) {
                 if (controller.isFocused)
@@ -166,6 +168,11 @@ namespace Wizard {
             }
 
             tree.Step(value);
+
+            var node = tree.activeNode;
+            string body = (node != null) ? (node as BaseDialogueNode).body : "";
+
+            return body;
         }
 
         #endregion
@@ -242,6 +249,9 @@ namespace Wizard {
             body = Extensions.ReplaceEnclosingPattern(body, imageFlag, "<sprite name=\"{0}\">"); // Replace img tag
             body = body.Replace(daysFlag, Sun.Instance.days.ToString());
 
+            var @event = Events.LAST_EVENT_DETAIL;
+            body = body.Replace(eventFlag, @event);
+
             return body;
         }
 
@@ -279,8 +289,10 @@ namespace Wizard {
                 autoprogress = false;
                 advancer.Show();
 
-                if (!available) 
-                    FetchDialogueFromTree(focusDialogueTree);
+                if (!available) {
+                    var mood = Mathf.RoundToInt(brain.mood);
+                    FetchDialogueFromTree(mood, focusDialogueTree);
+                }
             }
             else {
                 autoprogress = true;

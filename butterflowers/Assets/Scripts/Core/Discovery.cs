@@ -25,7 +25,7 @@ public class Discovery: Singleton<Discovery> {
 
 	#region Collections
 
-	[SerializeField] List<int> discoveries = new List<int>();
+	public List<int> discoveries = new List<int>();
 
 	#endregion
 

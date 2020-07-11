@@ -1,6 +1,8 @@
 ﻿using System.Collections;
 using System.Collections.Generic;
+using System.Data;
 using UnityEngine;
+using UnityEngine.Profiling;
 
 public class Unknown : MonoBehaviour
 {
@@ -9,25 +11,51 @@ public class Unknown : MonoBehaviour
 
     [SerializeField] MotherOfButterflies Butterflies;
 
+    #endregion
+
+    #region Internal
+
+    public enum Pattern { None, River, Perlin, Feed }
+
 	#endregion
 
 	#region Attributes
 
+	[Header("Global attributes")]
 	[SerializeField] float scribeInterval = 1f;
-    [SerializeField] int river = 0;
-
-    [SerializeField] int riverwidth = 8, minriverwidth = 2, maxriverwidth = 16;
     [SerializeField] int totalwidth = 32;
+    [SerializeField] Pattern patt = Pattern.None;
 
+
+    [Header("River")]
+    [SerializeField] int riverposition = 0;
+    [SerializeField] int riverwidth = 8, minriverwidth = 2, maxriverwidth = 16;
     [SerializeField] float minriverwavelength = 0f, maxriverwavelength = 3.33f;
     [SerializeField] float riverspeed = 1f;
 
     [SerializeField] char riverchar = '~';
     [SerializeField] char normalchar = '0';
 
+    [Header("Perlin")]
+    [SerializeField] Vector2 noiseSize = Vector2.one;
+    [SerializeField] char[] noise_chars = new char[] { };
+
+    [Header("Feed")]
+    [SerializeField] RenderTexture feedTexture;
+    [SerializeField] Texture2D sampler;
+    [SerializeField] char wiz_char = '+';
+    [SerializeField] int _y = 0;
+    [SerializeField] float feedSpeed = 1f;
+
     #endregion
 
-    bool plague = false;
+    #region Internal
+
+    public delegate string patternFunction();
+
+	#endregion
+
+	bool plague = false;
 
     void Update()
     {
@@ -39,38 +67,68 @@ public class Unknown : MonoBehaviour
         }
     }
 
+    void OnDestroy()
+    {
+        Texture2D.Destroy(sampler);
+    }
+
     IEnumerator Plague()
     {
         while (true) 
         {
-            updateRiver();
+            var patt = fetchPattern();
+            var @string = patt();
 
-            var @string = fetchRiver();
             Scribe.Instance.Push(EVENTCODE.UNKNOWN, AGENT.Unknown, AGENT.World, @string, false);
 
             yield return new WaitForSeconds(Mathf.Max(0f, scribeInterval));
         }
     }
 
-    void updateRiver()
+    patternFunction fetchPattern()
+    {
+        patternFunction a = none;
+
+        if (patt == Pattern.River)
+            a = river;
+        else if (patt == Pattern.Perlin)
+            a = perlin;
+        else if (patt == Pattern.Feed)
+            a = feed;
+
+        return a;
+    }
+
+    #region None
+
+    string none()
+    {
+        var row = new string(normalchar, totalwidth);
+        return row;
+    }
+
+	#endregion
+
+	#region River
+
+	string river()
     {
         float health = Butterflies.GetHealth();
 
         float wavelength = health.RemapNRB(0f, 1f, minriverwavelength, maxriverwavelength);
         float slope = -(wavelength * Mathf.Sin(Time.time * riverspeed));
 
-        river += Mathf.RoundToInt(slope);
+        riverposition += Mathf.RoundToInt(slope);
 
         float size = Random.Range(-1f, 1f);
         riverwidth = Mathf.Clamp(riverwidth + Mathf.RoundToInt(size), minriverwidth, maxriverwidth);
-    }
 
-    string fetchRiver()
-    {
+        /* * * * * * * * * * * * * * * * */
+
         var row = new string(normalchar, totalwidth);
 
-        int start = Mathf.Clamp(river - riverwidth/2, 0, totalwidth-1);
-        int end = Mathf.Clamp(river + riverwidth / 2, 0, totalwidth-1);
+        int start = Mathf.Clamp(riverposition - riverwidth/2, 0, totalwidth-1);
+        int end = Mathf.Clamp(riverposition + riverwidth / 2, 0, totalwidth-1);
 
         if (start == end) return row;
 
@@ -80,4 +138,84 @@ public class Unknown : MonoBehaviour
 
         return new string(chars);
     }
+
+    #endregion
+
+    #region Perlin
+
+    string perlin()
+    {
+        var row = new string(normalchar, totalwidth);
+        var chars = row.ToCharArray();
+        var len = noise_chars.Length-1;
+        float t = Time.time;
+
+        if (noise_chars.Length > 0) 
+        {
+            for (int i = 0; i < totalwidth; i++) {
+                float perl = Mathf.PerlinNoise((i+t) * noiseSize.x, (i+t) * noiseSize.y);
+                float ramp = perl * len;
+                int round = Mathf.RoundToInt(ramp);
+
+                chars[i] = noise_chars[round];
+            }
+        }
+
+        return new string(chars);
+    }
+
+    #endregion
+
+    #region Feed
+
+    string feed()
+    {
+        var row = new string(normalchar, totalwidth);
+        var chars = row.ToCharArray();
+
+
+        var render = RenderTexture.active;
+
+        var w = feedTexture.width;
+        var h = feedTexture.height;
+        var x = 0;
+
+        RenderTexture.active = feedTexture;
+
+        if (sampler == null){
+            sampler = new Texture2D(w, h, TextureFormat.ARGB32, false, true);
+            sampler.ReadPixels(new Rect(0, 0, w, h), 0, 0, false);
+            sampler.Apply();
+        }
+
+        if (_y == 0) 
+        {
+            sampler.ReadPixels(new Rect(0, 0, w, h), 0, 0, false);
+            sampler.Apply();
+        }
+
+        var sample = sampler.GetPixels();
+        RenderTexture.active = render;
+
+        float xi = (float)w / chars.Length;
+        for (int i = 0; i < chars.Length; i++) 
+        {
+            x = (w * _y);
+
+            var _i = (Mathf.FloorToInt(i*xi) + x);
+            if (sample[_i].a > 0f)
+                chars[i] = wiz_char;
+        }
+
+        float uh = chars.Length * ((float)h / w);
+        float hi = (float)h / uh; print(hi);
+
+        _y += ((int)(hi * feedSpeed));
+        if (_y >= h)
+            _y = 0;
+
+        return new string(chars);
+    }
+
+	#endregion
 }

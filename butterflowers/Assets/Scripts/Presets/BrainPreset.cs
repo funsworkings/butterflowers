@@ -44,7 +44,6 @@ public class BrainPreset : ScriptableObject
 
     #endregion
 
-
     #region Mechanics
 
     [Header("STANCE (MECHANICS)")]
@@ -70,7 +69,12 @@ public class BrainPreset : ScriptableObject
         [Range(0f, 1f)] public float minimumDayNightActionProbability = .5f, maximumDayNightActionProbability = .5f;
         [Range(0f, 1f)] public float minimumResponseActionProbability = .5f, maximumResponseActionProbability = .5f;
 
+    [Header("MISCELLANEOUS (MECHANICS)")]
+        [Range(0f, 1f)] public float reactionProbability = .5f;
 
+        public float impactActionWeight = 1f;
+        public float impactMoodWeight = 1f;
+        public float impactHoBWeight = 1f;
 
 	#endregion
 
@@ -81,15 +85,18 @@ public class BrainPreset : ScriptableObject
 
 	#endregion
 
-	[Header("Action thresholds")]
+	#region Miscellaneouss
+
+	[Header("MISCELLANEOUS")]
+        [Range(0f, 1f)] public float absorptionThreshold = .95f;
+        [Range(0f, 1f)] public float healthOfButterflowersGestureThreshold = .5f;
+
+	#endregion
+
+	[Header("DEPRECATED")]
 
         public Brain.ActionStanceThreshold[] actionStanceThresholds;
         public Brain.BeaconOpMoodThreshold[] beaconOpMoodThresholds;
         public Brain.NestOpMoodThreshold[] nestOpMoodThresholds;
         public Brain.EmoteMoodThreshold[] emoteMoodThresholds;
-
-
-    [Header("MISCELLANEOUS")]
-        [Range(0f, 1f)] public float absorptionThreshold = .95f;
-        [Range(0f, 1f)] public float healthOfButterflowersGestureThreshold = .5f;
 }

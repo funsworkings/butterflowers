@@ -13,7 +13,7 @@ public class Beacon: MonoBehaviour {
 
 	#region External
 
-	Manager Room;
+	World Room;
     Nest Nest;
 
     #endregion
@@ -131,7 +131,7 @@ public class Beacon: MonoBehaviour {
         Oscillate = GetComponent<SimpleOscillate>();
         material = GetComponentInChildren<MeshRenderer>().material;
 
-        Room = Manager.Instance;
+        Room = World.Instance;
         Nest = Nest.Instance;
     }
 

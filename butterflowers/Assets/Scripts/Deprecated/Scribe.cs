@@ -58,6 +58,8 @@ public class Scribe : Logger
 	[SerializeField] int maxLines = 16;
 	[SerializeField] int position = 0;
 
+	[SerializeField] EVENTCODE[] excludes = new EVENTCODE[] { };
+
 	#endregion
 
 	#region Monobehaviour callbacks
@@ -164,6 +166,8 @@ public class Scribe : Logger
 
 	public void Push(EVENTCODE @event, AGENT a, AGENT b, string detail)
 	{
+		if (excludes.Contains(@event)) return; //Ignore
+
 		Push(@event, a, b, detail, true);
 	}
 
@@ -174,10 +178,10 @@ public class Scribe : Logger
 		log.paramy = (byte)a;
 		log.paramz = (byte)b;
 
-		Push(log, detail, save);
+		Push(log, detail, save, (@event == EVENTCODE.UNKNOWN));
 	}
 
-	void Push(Log log, string detail, bool save = true)
+	void Push(Log log, string detail, bool save = true, bool unknown = false)
 	{
 		if (save) 
 		{
@@ -191,8 +195,12 @@ public class Scribe : Logger
 			Save.log_entries = save_caches.ToArray();
 		}
 		caches.Add(log);
-		
-		Push(parseLog(log));
+
+
+		if (unknown)
+			Push(detail);
+		else
+			Push(parseLog(log));
 	}
 
 	#endregion
@@ -246,29 +254,18 @@ public class Scribe : Logger
 
 	#region Helpers
 
-	private string parseLog(Log log)
+	private string parseLog(Log log, bool useDetailLookup = true)
 	{
-		var detail_lookup = log.detail_lookup;
-		var detail = (detail_lookup == -1) ? "" : Library.ALL_FILES[detail_lookup];
-
 		var @event = (EVENTCODE)((int)log.paramx);
 		var agA = (AGENT)((int)log.paramy);
 		var agB = (AGENT)((int)log.paramz);
 
+		var detail_lookup = log.detail_lookup;
+		var detail = (detail_lookup == -1) ? "" : Library.ALL_FILES[detail_lookup];
+
 		string e = parseEventcode(@event);
 		string agent_a = formatAgent(agA);
 		string agent_b = formatAgent(agB, detail);
-
-		if (@event == EVENTCODE.UNKNOWN) // ??????????
-		{
-			/*string color = "";
-
-			bool success = COLOR_LOOKUP.AGENTS.TryGetValue(agA, out color);
-			if (!success) color = defaultColorHex;
-
-			string a = string.Format("<color={0}>{1}<color={2}>", color, detail, defaultColorHex);*/
-			return detail;
-		}
 
 		// NORMAL PARSE
 		return string.Format("{2} was {1} by {0}<i>!</i>", agent_a, e, agent_b);
