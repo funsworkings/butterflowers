@@ -83,7 +83,7 @@ namespace Wizard {
 
 		[SerializeField] ActionType[] excludes;
 
-		private const int EVENT_WAIT = 36;
+		private const int EVENT_WAIT = 72;
 		private const int EVENT_STACK_HEIGHT = 12;
 
 		#endregion

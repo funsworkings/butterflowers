@@ -542,6 +542,8 @@ public class World : Spawner
         WorldCamera.onSuccess -= onReceivePicture;
 
         photo = false;
+
+        Events.ReceiveEvent(EVENTCODE.PHOTOGRAPH, AGENT.World, AGENT.Terrain);
     }
 
     #endregion

@@ -88,8 +88,10 @@ public class Unknown : MonoBehaviour
                 patt = Pattern.None;
             else if (level == 1)
                 patt = Pattern.Perlin;
-            else 
+            else if (level == 2)
                 patt = Pattern.River;
+            else
+                patt = Pattern.Feed;
         }
         else
             patt = Pattern.Feed;
