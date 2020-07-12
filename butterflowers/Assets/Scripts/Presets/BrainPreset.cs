@@ -78,13 +78,6 @@ public class BrainPreset : ScriptableObject
 
 	#endregion
 
-	#region  Modules
-
-    
-    [Header("LEARNING (MODULE)")]
-
-	#endregion
-
 	#region Miscellaneouss
 
 	[Header("MISCELLANEOUS")]

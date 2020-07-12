@@ -93,16 +93,6 @@ public class Nest : MonoBehaviour
         mat = GetComponent<Renderer>().material;
     }
 
-    void OnEnable()
-    {
-        Sun.onCycle += AttemptUpdateCapacity;
-    }
-
-    void OnDisable()
-    {
-        Sun.onCycle -= AttemptUpdateCapacity;
-    }
-
     void Start()
     {
         Save = GameDataSaveSystem.Instance;
@@ -371,7 +361,7 @@ public class Nest : MonoBehaviour
 
     #region Sun callbacks
 
-    void AttemptUpdateCapacity()
+    public void AttemptUpdateCapacity()
     {
         bool resize = false;
 

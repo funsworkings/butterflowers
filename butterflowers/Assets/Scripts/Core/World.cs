@@ -250,13 +250,25 @@ public class World : Spawner
 
     #region Sun callbacks
 
+    bool photo = false;
+
     void Advance()
     {
+        StartCoroutine("Advancing");
+    }
+
+    IEnumerator Advancing()
+    {
         TakePicture();
+        photo = true;
+
+        yield return new WaitForEndOfFrame();
+        while (photo)
+            yield return null;
+
+        Nest.AttemptUpdateCapacity();
 
         bool success = Nest.Close(); // Close nest
-        //if(success) Butterflowers.KillButterflies(); // Kill all butterflies (if nest was closed)
-
         RefreshBeacons(); // Reset all beacons
     }
 
@@ -528,6 +540,8 @@ public class World : Spawner
         previousMainCamera = null;
 
         WorldCamera.onSuccess -= onReceivePicture;
+
+        photo = false;
     }
 
     #endregion
