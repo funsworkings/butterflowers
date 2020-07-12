@@ -782,7 +782,7 @@ namespace Wizard {
 					source = source.Where(b => b.visible).ToList();
 					break;
 				case FilterBeacons.Filter.Unknown:
-					source = source.Where(b => FetchKnowledgeFromBeacon(b) <= .5f).ToList();
+					source = source.Where(b => FetchKnowledgeFromBeacon(b) <= .9f).ToList();
 					break;
 				case FilterBeacons.Filter.Comfortable:
 					source = source.Where(b => FetchKnowledgeFromBeacon(b) > .5f).ToList();
@@ -792,6 +792,8 @@ namespace Wizard {
 					break;
 				case FilterBeacons.Filter.Playable:
 				case FilterBeacons.Filter.Actionable:
+					source = source.Where(b => FetchKnowledgeFromBeacon(b) > stance).ToList();
+					break;
 				default:
 					break;
 			}

@@ -55,7 +55,7 @@ MonoBehaviour:
   debug: 1
   auto: 1
   m_rootNode: {fileID: 114406319115094738}
-  m_activeNode: {fileID: 0}
+  m_activeNode: {fileID: 114885533274102282}
 --- !u!114 &114030159340604852
 MonoBehaviour:
   m_ObjectHideFlags: 0
@@ -402,7 +402,7 @@ MonoBehaviour:
   m_Name: Gesture Set
   m_EditorClassIdentifier: 
   graph: {fileID: 11400000}
-  position: {x: 888, y: 760}
+  position: {x: 888, y: 792}
   ports:
     keys:
     - value

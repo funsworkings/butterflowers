@@ -26,15 +26,15 @@ MonoBehaviour:
   - {fileID: 114378492979189518}
   - {fileID: 114018662936101532}
   - {fileID: 114089421226286844}
-  - {fileID: 0}
   - {fileID: 114243977767025624}
   - {fileID: 114820541415738204}
   - {fileID: 114983129539447544}
   - {fileID: 114505675672491782}
+  - {fileID: 0}
   debug: 1
   auto: 1
   m_rootNode: {fileID: 114743894213030194}
-  m_activeNode: {fileID: 0}
+  m_activeNode: {fileID: 114505675672491782}
 --- !u!114 &114018662936101532
 MonoBehaviour:
   m_ObjectHideFlags: 0
@@ -82,7 +82,10 @@ MonoBehaviour:
       _node: {fileID: 114018662936101532}
       _typeQualifiedName: Noder.Node, Assembly-CSharp, Version=0.0.0.0, Culture=neutral,
         PublicKeyToken=null
-      connections: []
+      connections:
+      - fieldName: success
+        node: {fileID: 114715347036424610}
+        reroutePoints: []
       _direction: 0
       _connectionType: 0
       _typeConstraint: 0
@@ -93,7 +96,7 @@ MonoBehaviour:
         PublicKeyToken=null
       connections:
       - fieldName: input
-        node: {fileID: 114505675672491782}
+        node: {fileID: 114720999771664778}
         reroutePoints: []
       _direction: 1
       _connectionType: 1
@@ -345,9 +348,6 @@ MonoBehaviour:
       - fieldName: success
         node: {fileID: 114018662936101532}
         reroutePoints: []
-      - fieldName: success
-        node: {fileID: 114715347036424610}
-        reroutePoints: []
       _direction: 0
       _connectionType: 0
       _typeConstraint: 0
@@ -439,9 +439,6 @@ MonoBehaviour:
         reroutePoints: []
       - fieldName: output
         node: {fileID: 114720999771664778}
-        reroutePoints: []
-      - fieldName: fail
-        node: {fileID: 114018662936101532}
         reroutePoints: []
       _direction: 0
       _connectionType: 0
@@ -702,7 +699,7 @@ MonoBehaviour:
         PublicKeyToken=null
       connections:
       - fieldName: input
-        node: {fileID: 114432457094935728}
+        node: {fileID: 114018662936101532}
         reroutePoints: []
       _direction: 1
       _connectionType: 1
@@ -812,6 +809,9 @@ MonoBehaviour:
         reroutePoints: []
       - fieldName: fail
         node: {fileID: 114715347036424610}
+        reroutePoints: []
+      - fieldName: fail
+        node: {fileID: 114018662936101532}
         reroutePoints: []
       _direction: 0
       _connectionType: 0
