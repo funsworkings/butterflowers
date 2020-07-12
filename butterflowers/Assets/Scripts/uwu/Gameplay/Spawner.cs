@@ -120,7 +120,7 @@ public class Spawner : MonoBehaviour
         }
     }
 
-    protected virtual void DecidePosition(ref Vector3 pos)
+    public virtual void DecidePosition(ref Vector3 pos)
     {
         Vector3 offset = Vector3.zero, position = Vector3.zero;
 
@@ -134,7 +134,7 @@ public class Spawner : MonoBehaviour
         pos = position;
     }
 
-    protected virtual void DecideRotation(ref Quaternion rot)
+    public virtual void DecideRotation(ref Quaternion rot)
     {
         rot = prefab.transform.rotation;
     }
