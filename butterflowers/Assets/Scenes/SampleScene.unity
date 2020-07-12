@@ -200,7 +200,7 @@ Transform:
   m_GameObject: {fileID: 2418046}
   m_LocalRotation: {x: 0, y: 0, z: 0, w: 1}
   m_LocalPosition: {x: 0, y: 0, z: 0.115}
-  m_LocalScale: {x: 0.10968563, y: 0.061628316, z: 0.01}
+  m_LocalScale: {x: 0.09850951, y: 0.061628316, z: 0.01}
   m_Children:
   - {fileID: 2015572246}
   m_Father: {fileID: 534669905}
@@ -626,6 +626,9 @@ MonoBehaviour:
   Wizard: {fileID: 468500791}
   maxBeacons: 24
   DEFAULT_NULL_TEXTURE: {fileID: 2800000, guid: 48b99aa691dd8744f9adf73fba436432,
+    type: 3}
+  positiveSpawner: {fileID: 58810647}
+  pr_PositivePS: {fileID: 1311559724632354285, guid: 3ed5efbaf97b2a94989b8edf335c7b76,
     type: 3}
   m_beaconInfoContainer: {fileID: 2032687484}
   WorldCamera: {fileID: 875157282}
@@ -3164,7 +3167,7 @@ Transform:
   m_PrefabInstance: {fileID: 0}
   m_PrefabAsset: {fileID: 0}
   m_GameObject: {fileID: 201810246}
-  m_LocalRotation: {x: -0.22025323, y: -2.4103189e-15, z: 3.087657e-15, w: 0.97544277}
+  m_LocalRotation: {x: -0.22025321, y: 0.000000013505881, z: -0.000000006295696, w: 0.97544277}
   m_LocalPosition: {x: 0, y: -4.7999983, z: -19.199999}
   m_LocalScale: {x: 1, y: 1, z: 1}
   m_Children:
@@ -5036,7 +5039,7 @@ RectTransform:
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
   m_AnchorMin: {x: 0, y: 0}
   m_AnchorMax: {x: 1, y: 1}
-  m_AnchoredPosition: {x: -264.69995, y: -105.72986}
+  m_AnchoredPosition: {x: -264.69995, y: -105.72998}
   m_SizeDelta: {x: -529.4, y: -211.09998}
   m_Pivot: {x: 1, y: 1}
 --- !u!225 &391654774
@@ -11058,6 +11061,7 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 3abef107115004477a1d1830b154d73a, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
+  World: {fileID: 58810647}
   wand: {fileID: 2015572249}
   Nest: {fileID: 735639530}
   Focus: {fileID: 1969311502}
@@ -16798,7 +16802,7 @@ Transform:
   m_PrefabInstance: {fileID: 0}
   m_PrefabAsset: {fileID: 0}
   m_GameObject: {fileID: 534669902}
-  m_LocalRotation: {x: -0.22025323, y: -2.4103189e-15, z: 3.087657e-15, w: 0.97544277}
+  m_LocalRotation: {x: -0.22025321, y: 0.000000013505881, z: -0.000000006295696, w: 0.97544277}
   m_LocalPosition: {x: 0, y: -4.7999983, z: -30.55278}
   m_LocalScale: {x: 1, y: 1, z: 1}
   m_Children:
@@ -31307,7 +31311,7 @@ MonoBehaviour:
   m_EditorClassIdentifier: 
   Butterflies: {fileID: 247339871}
   Nest: {fileID: 735639530}
-  World: {fileID: 0}
+  World: {fileID: 58810647}
   Preset: {fileID: 11400000, guid: 45ffdf5e02efb4848942aaeb5d029f6e, type: 2}
   scribeInterval: 0.067
   totalwidth: 64
@@ -44189,14 +44193,14 @@ Transform:
   m_PrefabInstance: {fileID: 0}
   m_PrefabAsset: {fileID: 0}
   m_GameObject: {fileID: 1977719253}
-  m_LocalRotation: {x: 0.10923849, y: -0.89061904, z: 0.30358747, w: -0.3204674}
+  m_LocalRotation: {x: -0.06440256, y: -0.9274726, z: 0.31614986, w: 0.18893446}
   m_LocalPosition: {x: 0, y: 3.50564, z: -13.098755}
   m_LocalScale: {x: 0.09008251, y: 0.05426606, z: 0.106380016}
   m_Children:
   - {fileID: 875157281}
   m_Father: {fileID: 740166510}
   m_RootOrder: 3
-  m_LocalEulerAnglesHint: {x: 28.083002, y: -226.235, z: -26.173}
+  m_LocalEulerAnglesHint: {x: 34.202003, y: -151.772, z: 16.791}
 --- !u!114 &1977719255
 MonoBehaviour:
   m_ObjectHideFlags: 0
@@ -44536,7 +44540,7 @@ Transform:
   m_GameObject: {fileID: 2015572245}
   m_LocalRotation: {x: 0, y: 0, z: 0, w: 1}
   m_LocalPosition: {x: 21.7, y: 19.1, z: 0}
-  m_LocalScale: {x: 0.0030085985, y: 0.005354681, z: 0.033}
+  m_LocalScale: {x: 0.0033499305, y: 0.005354681, z: 0.033}
   m_Children:
   - {fileID: 474465336}
   m_Father: {fileID: 2418050}

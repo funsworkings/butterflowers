@@ -50,6 +50,9 @@ public class World : Spawner
 
     public Texture2D DEFAULT_NULL_TEXTURE;
 
+    [SerializeField] Spawner positiveSpawner;
+    [SerializeField] GameObject pr_PositivePS;
+
     #endregion
 
     #region Properties
@@ -126,6 +129,9 @@ public class World : Spawner
         base.Update();
 
         beaconPaths = allBeacons.Select(beacon => beacon.file).ToArray();
+
+        if (Input.GetKeyDown(KeyCode.W))
+            PositiveBurst();
     }
 
     protected override void OnDestroy(){
@@ -235,7 +241,7 @@ public class World : Spawner
         m_extents = root.GetComponent<MeshFilter>().mesh.bounds.extents;
     }
 
-    protected override void DecideRotation(ref Quaternion rot)
+    public override void DecideRotation(ref Quaternion rot)
     {
         rot = transform.rotation;
     }
@@ -526,10 +532,28 @@ public class World : Spawner
 
     #endregion
 
+    #region Miscellaneous operations
 
-    #region Beacon callbacks
+    public void PositiveBurst()
+    {
+        Vector3 pos = Vector3.zero;
+        positiveSpawner.DecidePosition(ref pos);
 
-    void onRegisterBeacon(Beacon beacon)
+        Quaternion rot = Quaternion.identity;
+        positiveSpawner.DecideRotation(ref rot);
+
+        var instance = Instantiate(pr_PositivePS, pos, rot);
+        var ps = instance.GetComponent<ParticleSystem>();
+
+        ps.Play();
+    }
+
+	#endregion
+
+
+	#region Beacon callbacks
+
+	void onRegisterBeacon(Beacon beacon)
     {
         var file = beacon.file;
         if (beacons.ContainsKey(file)) {

@@ -82,7 +82,7 @@ public class MotherOfButterflies : Spawner
 
     #region Spawner overrides
 
-    protected override void DecidePosition(ref Vector3 pos)
+    public override void DecidePosition(ref Vector3 pos)
     {
         if (camera != null)
         {

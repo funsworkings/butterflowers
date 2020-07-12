@@ -605,6 +605,10 @@ namespace Wizard {
 
 		void onReceiveEvent(ModuleTree tree, EVENTCODE @event, object data)
 		{
+			bool absorb = (tree.name == "AUTO ACTION MODULE");
+			controller.SetAbsorbState(absorb);
+
+
 			string type = System.Enum.GetName(typeof(EVENTCODE), @event);
 			if (type.Contains("BEACON")) 
 			{
@@ -794,6 +798,8 @@ namespace Wizard {
 
 			return source.Select(beacon => beacon.file).ToArray();
 		}
+
+		public void Burst() { Manager.PositiveBurst(); }
 
 		#endregion
 

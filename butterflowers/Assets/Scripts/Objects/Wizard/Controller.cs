@@ -25,6 +25,7 @@ namespace Wizard {
 
 		GameDataSaveSystem Save;
 
+        [SerializeField] World World;
         [SerializeField] Wand wand;
         [SerializeField] Nest Nest;
         [SerializeField] Focus Focus;
@@ -64,6 +65,9 @@ namespace Wizard {
         Actions m_Actions;
         Dialogue m_Dialogue; 
         Audio Audio;
+
+        SkinnedMeshRenderer Renderer;
+        Material DefaultMaterial;
 
         #endregion
 
@@ -116,6 +120,9 @@ namespace Wizard {
             m_Actions = GetComponent<Actions>();
             m_Dialogue = GetComponent<Dialogue>();
             Audio = GetComponent<Audio>();
+
+            Renderer = GetComponentInChildren<SkinnedMeshRenderer>();
+            DefaultMaterial = Renderer.sharedMaterial;
         }
 
         IEnumerator Start()
@@ -137,6 +144,8 @@ namespace Wizard {
 
         void OnEnable()
         {
+            World = World.Instance;
+
             Focus.onFocus.AddListener(onFocus);
             Focus.onLoseFocus.AddListener(onLoseFocus);
 
@@ -466,6 +475,23 @@ namespace Wizard {
 
             if (a != AGENT.Inhabitant0) return; // Ignore all non-player events
             RespondToPlayerAction(@event);
+        }
+
+        #endregion
+
+        #region Appearance
+
+        public void SetAbsorbState(bool absorbed)
+        {
+            if (World.GetAbsorption() >= 1f) {
+                Renderer.material = null;
+                return;
+            }
+
+            if (absorbed)
+                Renderer.material = null;
+            else
+                Renderer.material = DefaultMaterial;
         }
 
 		#endregion
