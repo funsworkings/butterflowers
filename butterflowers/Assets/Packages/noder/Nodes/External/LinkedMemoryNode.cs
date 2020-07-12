@@ -9,6 +9,7 @@ namespace Noder.Nodes.External
     public class LinkedMemoryNode: Dialogue {
 
         public Memory memoryNode;
+        public bool random = false;
 
         protected override void OnEnter()
         {
@@ -22,8 +23,12 @@ namespace Noder.Nodes.External
                 {
                     DialogueTree ext_tree = tree.externalTree;
 
-                    if (ext_tree != null)
-                        ext_tree.JumpToNode(memoryNode, true);
+                    if (ext_tree != null) {
+                        if (!random)
+                            ext_tree.JumpToNode(memoryNode, true);
+                        else
+                            ext_tree.JumpToRandomNode(true);
+                    }
                 }
             }
         }

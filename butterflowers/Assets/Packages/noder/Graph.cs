@@ -80,6 +80,16 @@ namespace Noder {
             return timers;
         }
 
+        public void JumpToRandomNode(bool enter = false)
+        {
+            var nodes = GetNodes<Node>();
+            var node = nodes.ToArray().PickRandomSubset(1)[0];
+
+            activeNode = node;
+            if (enter)
+                activeNode.Enter();
+        }
+
         public void JumpToNode(Node node, bool enter = false)
         {
             if (!nodes.Contains(node)) return;

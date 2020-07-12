@@ -336,6 +336,9 @@ public class Scribe : Logger
 
 				e = string.Format("<i>DELETED</i> from <color={0}>TERRAIN</color>", col);
 				break;
+			case EVENTCODE.PHOTOGRAPH:
+				e = "<i>CAPTURED</i>";
+				break;
 			default:
 				break;
 		}

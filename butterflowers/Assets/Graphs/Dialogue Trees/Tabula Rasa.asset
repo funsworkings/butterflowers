@@ -17,7 +17,10 @@ MonoBehaviour:
   - {fileID: 114741051191598750}
   - {fileID: 114892689969641196}
   - {fileID: 114759617654783852}
+  debug: 0
+  auto: 0
   m_rootNode: {fileID: 114114256649649648}
+  m_activeNode: {fileID: 114759617654783852}
   m_externalTree: {fileID: 11400000, guid: 9f67b438b35ca5e49a81403d378b5a12, type: 2}
   Memories: {fileID: 11400000, guid: a11a7773fa9f39649b779c417d4c7b19, type: 2}
 --- !u!114 &114114256649649648
@@ -158,6 +161,7 @@ MonoBehaviour:
   m_body: KSUSLLSLSSUUSUSS
   memoryNode: {fileID: 114958620065622516, guid: 9f67b438b35ca5e49a81403d378b5a12,
     type: 2}
+  random: 1
 --- !u!114 &114759617654783852
 MonoBehaviour:
   m_ObjectHideFlags: 0
@@ -228,6 +232,7 @@ MonoBehaviour:
   m_body: ded :p
   memoryNode: {fileID: 114132704990736644, guid: 9f67b438b35ca5e49a81403d378b5a12,
     type: 2}
+  random: 1
 --- !u!114 &114892689969641196
 MonoBehaviour:
   m_ObjectHideFlags: 0
