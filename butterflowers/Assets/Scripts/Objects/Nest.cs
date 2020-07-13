@@ -44,7 +44,7 @@ public class Nest : MonoBehaviour
     [SerializeField] bool disposeOnClose = true;
 
     [Header("Physics")]
-        [SerializeField] float force = 10f, m_energy = 0f;
+        [SerializeField] float force = 10f, m_energy = 0f, m_globalEnergy = 0f;
         [SerializeField] float energyDecaySpeed = 1f, timeSinceEnergyBoost = 0f;
 
     [Header("Beacons")]
@@ -71,6 +71,7 @@ public class Nest : MonoBehaviour
 
     public int capacity { get { return m_capacity; } }
     public Beacon[] beacons { get { return m_beacons.ToArray(); } }
+
     public float energy => m_energy;
 
     public Vector3 trajectory => rigidbody.velocity.normalized;
@@ -315,8 +316,7 @@ public class Nest : MonoBehaviour
             return;
         }
 
-        timeSinceEnergyBoost = 0f;
-        m_energy = 1f;
+        Pulse();
 
         onIngestBeacon.Invoke();
         if (onAddBeacon != null) onAddBeacon(beacon);
@@ -330,6 +330,12 @@ public class Nest : MonoBehaviour
         RemoveBeacon(beacon);
 
         return beacon;
+    }
+
+    public void Pulse()
+    {
+        timeSinceEnergyBoost = 0f;
+        m_energy = 1f;
     }
 
     #endregion

@@ -8,6 +8,7 @@ public class SimpleOscillate : MonoBehaviour
     [SerializeField] float delay = 0f;
 
     public float speed = 1f, magnitude = 1f;
+    public bool local = false;
 
     [SerializeField] bool randomSpeed = false, randomMagnitude = false, randomDelay = false;
 
@@ -28,8 +29,11 @@ public class SimpleOscillate : MonoBehaviour
 
         //axis = transform.InverseTransformDirection(axis.normalized
 
-        root = transform.localPosition;
+        root = transform.position;
         axis = axis.normalized;
+
+        if (local)
+            axis = transform.TransformDirection(axis);
 
         oscillating = true;
     }
@@ -44,7 +48,7 @@ public class SimpleOscillate : MonoBehaviour
     {
         if(!oscillating) return;
 
-        transform.localPosition = root + magnitude * Mathf.Sin(t) * axis;
+        transform.position = root + magnitude * Mathf.Sin(t) * axis;
         t += (Time.deltaTime * speed);
     }
 }

@@ -14,6 +14,8 @@ public class World : Spawner
 {
     public static World Instance = null;
 
+    public static bool LOAD = false;
+
     #region Events
 
     public UnityEvent onDiscovery;
@@ -185,6 +187,7 @@ public class World : Spawner
             RefreshBeacons();
 
         Sun.active = true; // Set sun into motion
+        LOAD = true;
     }
 
     void SubscribeToEvents()
@@ -259,6 +262,9 @@ public class World : Spawner
 
     IEnumerator Advancing()
     {
+        Nest.Pulse();
+        yield return new WaitForEndOfFrame();
+
         TakePicture();
         photo = true;
 
