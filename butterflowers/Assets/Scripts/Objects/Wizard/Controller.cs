@@ -184,6 +184,11 @@ namespace Wizard {
 
             if (Input.GetKeyDown(KeyCode.Z)) debug = !debug;
 
+            if (Brain.absorption >= 1f) 
+            {
+                SetAbsorbState(true); // Always set self to NULL
+            }
+
             debugwindow.alpha = (debug) ? 1f : 0f;
             //if (debug) DebugAttributes();
 
@@ -483,15 +488,13 @@ namespace Wizard {
 
         public void SetAbsorbState(bool absorbed)
         {
-            if (World.GetAbsorption() >= 1f) {
+            if (Brain.absorption >= 1f) {
                 Renderer.material = null;
                 return;
             }
 
-            if (absorbed)
-                Renderer.material = null;
-            else
-                Renderer.material = DefaultMaterial;
+            if (absorbed) Renderer.material = null;
+            else Renderer.material = DefaultMaterial;
         }
 
 		#endregion

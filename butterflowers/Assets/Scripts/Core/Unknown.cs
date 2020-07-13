@@ -246,7 +246,7 @@ public class Unknown : MonoBehaviour
         }
 
         float uh = chars.Length * ((float)h / w);
-        float hi = (float)h / uh; print(hi);
+        float hi = (float)h / uh;
 
         _y += ((int)(hi * feedSpeed));
         if (_y >= h)

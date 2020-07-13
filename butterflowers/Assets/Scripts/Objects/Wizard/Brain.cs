@@ -235,6 +235,8 @@ namespace Wizard {
 
 		IEnumerator Cycle()
 		{
+			while (!World.LOAD) yield return null;
+
 			while (true) {
 				RECEIVE_PLAYER_EVENT++;
 				RECEIVE_WORLD_EVENT++;
