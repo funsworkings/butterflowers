@@ -200,7 +200,7 @@ Transform:
   m_GameObject: {fileID: 2418046}
   m_LocalRotation: {x: 0, y: 0, z: 0, w: 1}
   m_LocalPosition: {x: 0, y: 0, z: 0.115}
-  m_LocalScale: {x: 0.11652289, y: 0.061628316, z: 0.01}
+  m_LocalScale: {x: 0.088270485, y: 0.061628316, z: 0.01}
   m_Children:
   - {fileID: 2015572246}
   m_Father: {fileID: 534669905}
@@ -11327,14 +11327,19 @@ MonoBehaviour:
   NEST_EVENTS: 
   reactionMappings:
   - event: 10
+    mood: 2
     reactions: {fileID: 11400000, guid: ca882ce3e653f95459f5676115b10161, type: 2}
   - event: 20
+    mood: 2
     reactions: {fileID: 11400000, guid: 57d73cb3d8732184f965ed1a35c9ba74, type: 2}
   - event: 31
+    mood: 0
     reactions: {fileID: 11400000, guid: 9e8b50d1d3096c6479f36014cf44a461, type: 2}
   - event: 11
+    mood: 2
     reactions: {fileID: 11400000, guid: b1ec44ea356472542b5ca2df80a88d4c, type: 2}
   - event: 12
+    mood: 2
     reactions: {fileID: 11400000, guid: f1aee736b55417947b6e0216e8eb1b25, type: 2}
   stanceUI: {fileID: 1597402196}
   moodUI: {fileID: 1576223866}
@@ -44829,7 +44834,7 @@ Transform:
   m_GameObject: {fileID: 2015572245}
   m_LocalRotation: {x: 0, y: 0, z: 0, w: 1}
   m_LocalPosition: {x: 21.7, y: 19.1, z: 0}
-  m_LocalScale: {x: 0.0028320616, y: 0.005354681, z: 0.033}
+  m_LocalScale: {x: 0.003738509, y: 0.005354681, z: 0.033}
   m_Children:
   - {fileID: 474465336}
   m_Father: {fileID: 2418050}
