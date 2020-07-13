@@ -43,6 +43,7 @@ namespace Wizard {
 		[System.Serializable]
 		public struct ReactionMapping {
 			public EVENTCODE @event;
+			public MoodState mood;
 			public DialogueCollection reactions;
 		}
 
@@ -561,8 +562,9 @@ namespace Wizard {
 				return;
 
 			EVENTCODE @event = Events.LAST_EVENT;
+			MoodState state = getMoodState();
 
-			var mappings = reactionMappings.Where(m => m.@event == @event);
+			var mappings = reactionMappings.Where(m => (m.@event == @event && m.mood == state) );
 			if (mappings.Count() == 0) return;
 
 			var map = mappings.ElementAt(0); // Get first mapping
