@@ -52,9 +52,11 @@ public class Library : Singleton<Library>
 	[SerializeField] List<string> items = new List<string>();
 	[SerializeField] List<string> items_wizard = new List<string>();
 	[SerializeField] List<string> items_desktop = new List<string>();
+	[SerializeField] List<string> items_enviro = new List<string>();
 
 	[SerializeField] List<string> items_shared = new List<string>();
 	[SerializeField] List<int> items_shared_indices = new List<int>();
+
 
 	[SerializeField] List<string> textureQueue = new List<string>();
 	[SerializeField] List<Texture2D> temp_textures = new List<Texture2D>();
@@ -110,6 +112,13 @@ public class Library : Singleton<Library>
 		get
 		{
 			return items_shared.ToArray();
+		}
+	}
+
+	public string[] enviro_files {
+		get
+		{
+			return items_enviro.ToArray();
 		}
 	}
 
@@ -171,6 +180,27 @@ public class Library : Singleton<Library>
 		}
 	}
 
+	void RefreshEnvironmentFiles()
+	{
+		var enviro = Manager.StarterPack;
+		if (enviro == null) 
+		{
+			items_enviro = new List<string>();
+			return;
+		}
+
+		items_enviro = new List<string>(enviro.Select(tex => tex.name));
+
+		for (int i = 0; i < items_enviro.Count(); i++) {
+
+			var file = items_enviro[i];
+			if (!ALL_FILES.Contains(file))
+				ALL_FILES.Add(file);
+
+			AddTextureToLibrary(file, enviro[i]);
+		}
+	}
+
 	void RefreshSharedFiles()
 	{
 		if (Save == null) return;
@@ -193,11 +223,12 @@ public class Library : Singleton<Library>
 
 		RefreshDesktopFiles();
 		RefreshWizardFiles();
+		RefreshEnvironmentFiles();
 		RefreshSharedFiles();
 
 		Save.files = ALL_FILES.ToArray();
 
-		items = (items_desktop.Concat(items_wizard).Concat(items_shared)).ToList();
+		items = ALL_FILES;
 		if (OnRefreshItems != null)
 			OnRefreshItems();
 	}

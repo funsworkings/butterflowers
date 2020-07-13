@@ -64,9 +64,11 @@ public class World : Spawner
     [SerializeField] Snapshot WorldCamera;
     [SerializeField] Camera previousMainCamera = null;
 
-	#endregion
+    #endregion
 
-	#region Collections
+    #region Collections
+
+    public Texture2D[] StarterPack = new Texture2D[] { };
 
 	Dictionary<string, List<Beacon>> beacons = new Dictionary<string, List<Beacon>>();
     List<Beacon> allBeacons = new List<Beacon>();
@@ -346,8 +348,9 @@ public class World : Spawner
         var desktop = Library.desktop_files;
         var wizard = Library.wizard_files.Where(file => Discovery.HasDiscoveredFile(file)); // Only choose 'discovered' wizard files
         var shared = Library.shared_files;
+        var enviro = Library.enviro_files;
 
-        var files = (desktop.Concat(wizard)).ToArray();
+        var files = ((desktop.Concat(wizard)).Concat(enviro)).ToArray();
         var subset = files.PickRandomSubset<string>(maxBeacons).ToList(); // Random subset from aggregate collection    
 
         var current = (beacons != null)? beacons.Keys.ToList(): new List<string>();
@@ -371,9 +374,11 @@ public class World : Spawner
 
         wizard = wizard.Intersect(subset);
         desktop = desktop.Intersect(subset).ToArray();
+        enviro = enviro.Intersect(subset).ToArray();
 
         CreateBeacons(wizard.ToArray(), Beacon.Type.Wizard);
         CreateBeacons(desktop, Beacon.Type.Desktop);
+        CreateBeacons(enviro, Beacon.Type.External);
 
         if (onRefreshBeacons != null)
             onRefreshBeacons();
