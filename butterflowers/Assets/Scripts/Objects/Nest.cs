@@ -45,7 +45,7 @@ public class Nest : MonoBehaviour
 
     [Header("Physics")]
         [SerializeField] float force = 10f, m_energy = 0f, m_globalEnergy = 0f;
-        [SerializeField] float energyDecaySpeed = 1f, timeSinceEnergyBoost = 0f;
+        [SerializeField] float energyDecaySpeed = 1f, energyDecayDelay = 0f, timeSinceEnergyBoost = 0f;
 
     [Header("Beacons")]
         [SerializeField] List<Beacon> m_beacons = new List<Beacon>();
@@ -117,7 +117,9 @@ public class Nest : MonoBehaviour
         if (energy > 0f)
         {
             timeSinceEnergyBoost += Time.deltaTime;
-            m_energy = Mathf.Max(0f, m_energy - Time.deltaTime * energyDecaySpeed * Mathf.Pow(timeSinceEnergyBoost, 2f));
+
+            float t = Mathf.Max(0f, timeSinceEnergyBoost - energyDecayDelay);
+            m_energy = Mathf.Max(0f, m_energy - Time.deltaTime * energyDecaySpeed * Mathf.Pow(t, 2f));
         }
 
         UpdateColorFromState();
