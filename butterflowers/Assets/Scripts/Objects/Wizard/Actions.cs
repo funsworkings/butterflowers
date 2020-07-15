@@ -228,6 +228,7 @@ namespace Wizard {
 
             dialogue = controller.Dialogue;
             dialogue.onCompleteBody += onCompleteDialogue;
+            dialogue.onDispose += onDisposeDialogue;
 
             StartCoroutine("Refresh");
         }
@@ -242,6 +243,7 @@ namespace Wizard {
             navigation.onLookAtPoint -= onLookAtLocation;
 
             dialogue.onCompleteBody -= onCompleteDialogue;
+            dialogue.onDispose -= onDisposeDialogue;
 
             StopCoroutine("Refresh");
         }
@@ -606,12 +608,18 @@ namespace Wizard {
 
         void onCompleteDialogue(string body)
         {
-            Debug.Log(body);
             if (inprogress) {
-                if (currentAction.type == Type.Dialogue && body == currentBody) {
+                if (currentAction.type == Type.Dialogue && body == currentBody) 
+                {
                     inprogress = false;
                 }
             }
+        }
+
+        void onDisposeDialogue()
+        {
+            if (inprogress && currentAction.type == Type.Dialogue)
+                inprogress = false;
         }
 
 		#endregion

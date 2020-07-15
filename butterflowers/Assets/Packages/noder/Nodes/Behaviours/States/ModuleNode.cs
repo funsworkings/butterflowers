@@ -18,6 +18,8 @@ namespace Noder.Nodes.Behaviours.States {
 
             if (val != null) 
             {
+                Debug.Log("MOVE TO " + val.name);
+
                 val.Restart(); // Move into sub-tree
                 (graph as ModuleTree).Reset(); // Reset current tree
             }
