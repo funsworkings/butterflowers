@@ -8,15 +8,20 @@ public class FocalPoint : MonoBehaviour
 {
     #region Events
 
-    public static System.Action<FocalPoint> FocusOnPoint, LostFocusOnPoint, BeginFocus;
+    public static System.Action<FocalPoint> FocusOnPoint, LostFocusOnPoint, BeginFocus, HoverFocus, UnhoverFocus;
     public System.Action onFocus, onLoseFocus;
 
     #endregion
 
     #region Attributes
 
+    Camera mainCamera;
+
     [SerializeField] bool focused = false, queued = false;
     public float timetofocus = 1f;
+    public Sprite focusIcon;
+
+    public Vector3 anchor, screen_anchor;
 
     #endregion
 
@@ -49,6 +54,7 @@ public class FocalPoint : MonoBehaviour
 	void Awake()
     {
         interactable = GetComponent<Interactable>();
+        mainCamera = Camera.main;
     }
 
     protected virtual void Start() { }
@@ -104,15 +110,25 @@ public class FocalPoint : MonoBehaviour
 
     void Hover(Vector3 point, Vector3 normal) {
         queued = true;
+
+        if (HoverFocus != null)
+            HoverFocus(this);
     }
 
     void Unhover(Vector3 point, Vector3 normal) {
         queued = false;
+
+        if (UnhoverFocus != null)
+            UnhoverFocus(this);
     }
 
     void Grab(Vector3 point, Vector3 normal)
     {
         if (!queued || isFocused) return;
+
+        anchor = point;
+        screen_anchor = mainCamera.WorldToScreenPoint(anchor);
+
         if (BeginFocus != null)
             BeginFocus(this);
     }

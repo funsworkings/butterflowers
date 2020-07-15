@@ -425,13 +425,7 @@ namespace Wizard {
 
         void onEnactAction(Action action)
         {
-            /*if (!action.passive) 
-            {
-                if (isFocused) Focus.LoseFocus();
-            }   
-            
-            allow active/passive actions ALWAYS  */
-
+            SetAbsorbState(action.auto);
             if (action.cast) 
                 animator.SetTrigger("cast");
         }

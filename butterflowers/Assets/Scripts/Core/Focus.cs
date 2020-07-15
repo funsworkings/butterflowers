@@ -38,6 +38,10 @@ public class Focus : MonoBehaviour
 
     [SerializeField] ToggleOpacity loading;
     [SerializeField] ui.Image loadingFill;
+    [SerializeField] ui.Image tooltip;
+
+    [SerializeField] TrajectoryLine trajectory;
+    [SerializeField] Transform trajectory_root;
 
     #endregion
 
@@ -85,12 +89,18 @@ public class Focus : MonoBehaviour
     void OnEnable() {
         FocalPoint.FocusOnPoint += SetFocus;
         FocalPoint.BeginFocus += NewFocus;
+
+        FocalPoint.HoverFocus += QueueFocus;
+        FocalPoint.UnhoverFocus += UnqueueFocus;
     }
 
     void OnDisable()
     {
         FocalPoint.FocusOnPoint -= SetFocus;
         FocalPoint.BeginFocus -= NewFocus;
+
+        FocalPoint.HoverFocus -= QueueFocus;
+        FocalPoint.UnhoverFocus -= UnqueueFocus;
     }
 
     void Start()
@@ -137,6 +147,7 @@ public class Focus : MonoBehaviour
                 focusInQueue = null;
         }
         UpdateLoadingBar();
+        UpdateTrajectory();
 
         if (BackgroundAudio != null) {
             if (active) 
@@ -159,6 +170,24 @@ public class Focus : MonoBehaviour
     #endregion
 
     #region Focusing
+
+    void QueueFocus(FocalPoint focus)
+    {
+        return;
+
+        var icon = (this.focus != focus)? focus.focusIcon:null;
+
+        tooltip.enabled = (icon != null);
+        tooltip.sprite = icon;
+    }
+
+    void UnqueueFocus(FocalPoint focus)
+    {
+        return;
+
+        tooltip.enabled = false;
+        tooltip.sprite = null;
+    }
 
     void SettingFocus()
     {
@@ -197,6 +226,8 @@ public class Focus : MonoBehaviour
     void UpdateLoadingBar()
     {
         if ((focusing || losing_focus) && !delay) {
+            loading.transform.position = (focusing)? focusInQueue.screen_anchor : Input.mousePosition;
+
             loading.Show();
 
             var len = (focusing) ? t_focus-focusDelay : t_losefocus-focusDelay;
@@ -209,6 +240,19 @@ public class Focus : MonoBehaviour
             loading.Hide();
             loadingFill.fillAmount = 0f;
         }
+    }
+
+    void UpdateTrajectory()
+    {
+        if (focusing && !delay) 
+        {
+            trajectory.Line.enabled = true;
+
+            float t = Mathf.Clamp01((t_focus - focusDelay) / timeToFocus);
+            trajectory.DrawArc(trajectory_root.position, focusInQueue.anchor, t);
+        }
+        else
+            trajectory.Line.enabled = false;
     }
 
 	#endregion

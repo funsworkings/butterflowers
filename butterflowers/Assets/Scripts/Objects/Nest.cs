@@ -100,7 +100,7 @@ public class Nest : MonoBehaviour
 
         interactable.onHover += Hover;
         interactable.onUnhover += Unhover;
-        interactable.onGrab += Kick;
+        interactable.onRelease += Kick;
 
         Beacon.Destroyed += onDestroyBeacon;
     }
@@ -129,7 +129,7 @@ public class Nest : MonoBehaviour
     {
         interactable.onHover -= Hover;
         interactable.onUnhover -= Unhover;
-        interactable.onGrab -= Kick;
+        interactable.onRelease -= Kick;
 
         Beacon.Destroyed -= onDestroyBeacon;
     }

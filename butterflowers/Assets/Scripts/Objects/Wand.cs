@@ -39,6 +39,7 @@ public class Wand : MonoBehaviour
         [SerializeField] List<Interactable> interacting = new List<Interactable>();
 
         [SerializeField] bool down, cont, up;
+         [SerializeField] CustomCursor cursor_icon;
 
     [Header("Gestures")]
         [SerializeField] Gesture m_queueGesture, m_currentGesture;
@@ -267,6 +268,15 @@ public class Wand : MonoBehaviour
                 }
 
                 //Debug.LogFormat("Collided with {0}", hit.collider.gameObject.name);
+            }
+
+            if (cursor_icon != null) 
+            {
+                // Update cursor
+                if (hits.Length > 0) 
+                    cursor_icon.state = CustomCursor.State.Hover;
+                else
+                    cursor_icon.state = CustomCursor.State.Normal;
             }
         }
 

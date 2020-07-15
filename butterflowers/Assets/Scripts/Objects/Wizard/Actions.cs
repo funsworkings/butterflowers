@@ -72,6 +72,7 @@ namespace Wizard {
             public obj dat = null;
             public bool immediate = false;
             public float delay = 0f;
+            public bool auto = false;
 
             public string debug {
                 get
@@ -299,13 +300,14 @@ namespace Wizard {
             }
         }
 
-		public void Push(Type type, obj dat = null, bool immediate = false, float delay = -1f)
+		public void Push(Type type, obj dat = null, bool immediate = false, float delay = -1f, bool auto = false)
         {
             Action action = new Action();
             action.type = type;
             action.dat = dat;
             action.immediate = immediate;
             action.delay = (delay < 0f)? Random.Range(Preset.minimumTimeBetweenActions, Preset.maximumTimeBetweenActions) : delay;
+            action.auto = auto;
 
             if (immediate) 
             {
