@@ -510,7 +510,7 @@ namespace Wizard {
 
 		#region Actions
 
-		public void ParseBeaconEvent(EVENTCODE @event, object dat) 
+		public void ParseBeaconEvent(EVENTCODE @event, object dat, bool auto = false) 
 		{
 			var file = (string)dat;
 			Beacon beacon = null;
@@ -521,37 +521,37 @@ namespace Wizard {
 				bool immediate = !EnsureNestActive();
 
 				if(@event == EVENTCODE.BEACONACTIVATE)
-					actions.Push(ActionType.BeaconActivate, beacon);
+					actions.Push(ActionType.BeaconActivate, beacon, auto: auto);
 				if (@event == EVENTCODE.NESTPOP)
-					actions.Push(ActionType.NestPop, beacon);
+					actions.Push(ActionType.NestPop, beacon, auto: auto);
 			}
 		}
 
-		public void ParseNestEvent(EVENTCODE @event, object dat) 
+		public void ParseNestEvent(EVENTCODE @event, object dat, bool auto = false) 
 		{
 			if (@event == EVENTCODE.NESTPOP)
 				ParseBeaconEvent(@event, dat);
 			if (@event == EVENTCODE.NESTCLEAR) 
 			{
 				bool immediate = !EnsureNestActive();
-				actions.Push(ActionType.NestClear, null);
+				actions.Push(ActionType.NestClear, null, auto: auto);
 			}
 			if (@event == EVENTCODE.NESTKICK) 
 			{
 				Wand.Kick kick = (Wand.Kick)dat;
-				actions.Push(ActionType.NestKick, kick);
+				actions.Push(ActionType.NestKick, kick, auto: auto);
 			}
 		}
 
-		public void ParseMiscellaneousEvent(EVENTCODE @event, object dat) 
+		public void ParseMiscellaneousEvent(EVENTCODE @event, object dat, bool auto = false) 
 		{
 			if (@event == EVENTCODE.GESTURE) {
 				Gesture gesture = (Gesture)dat;
-				actions.Push(ActionType.Gesture, gesture);
+				actions.Push(ActionType.Gesture, gesture, auto:auto);
 			}
 			if (@event == EVENTCODE.PHOTOGRAPH) {
 				string name = (string)dat;
-				actions.Push(ActionType.Picture, name);
+				actions.Push(ActionType.Picture, name, auto: auto);
 			}
 		}
 
@@ -610,21 +610,19 @@ namespace Wizard {
 		void onReceiveEvent(ModuleTree tree, EVENTCODE @event, object data)
 		{
 			bool absorb = (tree.name == "AUTO ACTION MODULE");
-			controller.SetAbsorbState(absorb);
-
 
 			string type = System.Enum.GetName(typeof(EVENTCODE), @event);
 			if (type.Contains("BEACON")) 
 			{
-				ParseBeaconEvent(@event, data);
+				ParseBeaconEvent(@event, data, absorb);
 			}
 			else if (type.Contains("NEST")) 
 			{
-				ParseNestEvent(@event, data);
+				ParseNestEvent(@event, data, absorb);
 			}
 			else
 			{
-				ParseMiscellaneousEvent(@event, data);
+				ParseMiscellaneousEvent(@event, data, absorb);
 			}
 
 			treeUI.text = tree.name;
@@ -633,7 +631,9 @@ namespace Wizard {
 
 		void onReceiveDialogue(ModuleTree tree, string dialogue, float delay)
 		{
-			actions.Push(ActionType.Dialogue, dialogue, delay:delay);
+			bool absorb = (tree.name == "AUTO ACTION MODULE");
+
+			actions.Push(ActionType.Dialogue, dialogue, delay:delay, auto:absorb);
 		}
 
 		#endregion

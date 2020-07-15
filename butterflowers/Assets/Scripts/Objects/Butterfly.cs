@@ -402,7 +402,7 @@ public class Butterfly : MonoBehaviour
     void GrowWithWand(Wand wand, ref float scale)
     {
         Vector3 dir = (wand.position - positionRelativeToCamera);
-        float magnitude = Mathf.Clamp01(1f - dir.magnitude / preset.wandRadius) + nest.energy*2f;
+        float magnitude = Mathf.Clamp01(1f - dir.magnitude / (preset.wandRadius*6f)) + nest.energy*2f;
 
         scale *= (1f + Mathf.Pow(magnitude, 2f));
     }
