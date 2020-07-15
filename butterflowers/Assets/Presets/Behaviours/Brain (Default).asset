@@ -17,19 +17,19 @@ MonoBehaviour:
   enviroKnowledgeStanceWeight: 1
   stanceMoodWeight: 3
   shortTermMemoryMoodWeight: 1
-  healthOfButterflowersMoodWeight: 3
-  daysUntilEnvironmentKnowledge: 21
+  healthOfButterflowersMoodWeight: 7
+  daysUntilEnvironmentKnowledge: 7
   daysUntilFileKnowledge: 7
   defaultLearningMultiplier: 1
-  nestLearningMultiplier: 1.67
+  nestLearningMultiplier: 1.5
   defaultShortTermMemoryEffect: 1
   nestShortTermMemoryEffect: 1
   shortTermMemoryWeightTriggerThreshold: 0.191
   lowStanceThreshold: 0.22
-  highStanceThreshold: 0.47
-  lowMoodThreshold: -0.26
+  highStanceThreshold: 0.65
+  lowMoodThreshold: -0.278
   highMoodThreshold: 0.42
-  needsComfortThreshold: -0.5
+  needsComfortThreshold: -0.185
   moodSmoothSpeed: 0.5
   shortTermMemoryDecaySpeed: 0.0167
   minimumTimeBetweenActions: 3.33

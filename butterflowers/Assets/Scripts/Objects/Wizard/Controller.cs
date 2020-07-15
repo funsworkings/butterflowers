@@ -139,7 +139,14 @@ namespace Wizard {
 
             Brain.Load(enviro_knowledge, file_knowledge);
 
+            StartCoroutine("Absorbing");
+
             load = true;
+        }
+
+        void OnDestroy()
+        {
+            StopCoroutine("Absorbing");
         }
 
         void OnEnable()
@@ -487,8 +494,34 @@ namespace Wizard {
                 return;
             }
 
+            override_absorb = absorbed;
+
             if (absorbed) Renderer.material = null;
             else Renderer.material = DefaultMaterial;
+        }
+
+        bool override_absorb = false;
+
+        IEnumerator Absorbing()
+        {
+            while (true) 
+            {
+                var absorb = Brain.absorption;
+
+                if (absorb >= 1f || override_absorb)
+                    Renderer.material = null;
+                else 
+                {
+                    yield return new WaitForSeconds(.067f);
+
+                    if (Random.Range(0f, 1f) < absorb)
+                        Renderer.material = null;
+                    else
+                        Renderer.material = DefaultMaterial;
+                }
+
+                yield return null;
+            }
         }
 
 		#endregion
