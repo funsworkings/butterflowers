@@ -17,9 +17,14 @@ namespace Wizard {
 
     public class Dialogue: DialogueHandler {
 
+        World world;
+
         #region Properties
 
         [SerializeField] DialogueTree dialogueTree;
+        [SerializeField] DialogueTree introTree;
+        [SerializeField] DialogueTree discoveryTree;
+
         public DialogueTree focusDialogueTree;
 
         Controller controller;
@@ -106,10 +111,14 @@ namespace Wizard {
             brain = controller.Brain;
 
             dialogueTree.dialogueHandler = this;
+            introTree.dialogueHandler = this;
+            //discoveryTree.dialogueHandler = this;
         }
 
         void OnEnable()
         {
+            world = World.Instance;
+
             dialogueTree.onUpdateNode += onUpdateNode;
             DialogueTree.onReceiveDialogue += onReceiveDialogue;
         }
@@ -123,6 +132,8 @@ namespace Wizard {
         void OnDestroy()
         {
             dialogueTree.Dispose();
+            introTree.Dispose();
+            //discoveryTree.Dispose();
         }
 
         #endregion
@@ -141,12 +152,16 @@ namespace Wizard {
         {
             if (tree == null)
             {
-                if(controller.isFocused)
-                    tree = focusDialogueTree;
-
-                if (tree == null)
-                    tree = dialogueTree;
+                if (world.STATE == GAMESTATE.INTRO)
+                    tree = introTree;
+                else {
+                    if (controller.isFocused)
+                        tree = focusDialogueTree;
+                }
             }
+
+            if (tree == null)
+                tree = dialogueTree;
 
             tree.Step();
         }
@@ -156,10 +171,10 @@ namespace Wizard {
             if (tree == null) {
                 if (controller.isFocused)
                     tree = focusDialogueTree;
-
-                if (tree == null)
-                    tree = dialogueTree;
             }
+
+            if(tree == null)
+                    tree = dialogueTree;
 
             tree.Step(value);
 
@@ -279,18 +294,26 @@ namespace Wizard {
 
         protected override void OnComplete(string body)
         {
-            if (controller.isFocused) {
-                autoprogress = false;
-                advancer.Show();
+            if (world.STATE == GAMESTATE.GAME) {
+                if (controller.isFocused) {
+                    autoprogress = false;
+                    advancer.Show();
 
-                if (!available) {
-                    var mood = Mathf.RoundToInt(brain.mood);
-                    FetchDialogueFromTree(mood, focusDialogueTree);
+                    if (!available) {
+                        var mood = Mathf.RoundToInt(brain.mood);
+                        FetchDialogueFromTree(mood, focusDialogueTree);
+
+                        controller.SetAbsorbState(false);
+                    }
+                }
+                else {
+                    autoprogress = true;
+                    advancer.Hide();
                 }
             }
-            else {
-                autoprogress = true;
-                advancer.Hide();
+            else 
+            {
+                advancer.Show();
             }
         }
 

@@ -13,6 +13,18 @@ namespace Noder.Nodes.External {
         [TextArea(2, 30)] public string m_body = null;
         public override string body => m_body;
 
+        public bool flag = false;
+
+        protected override void OnEnter()
+        {
+            DialogueTree tree = (graph as DialogueTree);
+            if (tree != null) {
+                base.OnEnter();
+
+                if (flag)
+                    tree.FlagEndOfTree();
+            }
+        }
     }
 
 }

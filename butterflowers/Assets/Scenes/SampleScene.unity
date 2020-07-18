@@ -200,7 +200,7 @@ Transform:
   m_GameObject: {fileID: 2418046}
   m_LocalRotation: {x: 0, y: 0, z: 0, w: 1}
   m_LocalPosition: {x: 0, y: 0, z: 0.115}
-  m_LocalScale: {x: 0.111728005, y: 0.061628316, z: 0.01}
+  m_LocalScale: {x: 0.078805566, y: 0.061628316, z: 0.01}
   m_Children:
   - {fileID: 2015572246}
   m_Father: {fileID: 534669905}
@@ -594,6 +594,7 @@ MonoBehaviour:
   continuous: 0
   boundsOffset: {x: 0, y: 0, z: 0}
   boundsMultiplier: {x: 1, y: 1, z: 1}
+  m_STATE: 3
   onDiscovery:
     m_PersistentCalls:
       m_Calls:
@@ -634,16 +635,6 @@ MonoBehaviour:
   m_beaconInfoContainer: {fileID: 2032687484}
   WorldCamera: {fileID: 875157282}
   previousMainCamera: {fileID: 0}
-  StarterPack:
-  - {fileID: 2800000, guid: 15207dc4ce6f9a34b97ef20fa6c6a3b8, type: 3}
-  - {fileID: 2800000, guid: 511a3fee19f2c354199e1af31314e365, type: 3}
-  - {fileID: 2800000, guid: c56e241dbddb37042b7e4842b8e38323, type: 3}
-  - {fileID: 2800000, guid: 829518c6f4e635a43b720731c0b5a237, type: 3}
-  - {fileID: 2800000, guid: b46611f38ed300f489e3f29f25e754ad, type: 3}
-  - {fileID: 2800000, guid: 703a3eeb9914d8d4b9ab59c31a142c2f, type: 3}
-  - {fileID: 2800000, guid: b13a9990dbdd9f34bb9177f394564a80, type: 3}
-  - {fileID: 2800000, guid: b648ac1f82151a04fbe7f5b79e628a6e, type: 3}
-  - {fileID: 2800000, guid: 46c9e198c2325b24290e2685c4052e63, type: 3}
   beaconPaths: []
   wizardDiscoveries: 
 --- !u!1 &62689476
@@ -3272,7 +3263,7 @@ Transform:
   m_PrefabInstance: {fileID: 0}
   m_PrefabAsset: {fileID: 0}
   m_GameObject: {fileID: 201810246}
-  m_LocalRotation: {x: -0.22025321, y: 0.000000013505881, z: -0.000000006295696, w: 0.97544277}
+  m_LocalRotation: {x: -0.22025323, y: -2.4103189e-15, z: 3.087657e-15, w: 0.97544277}
   m_LocalPosition: {x: 0, y: -4.7999983, z: -19.199999}
   m_LocalScale: {x: 1, y: 1, z: 1}
   m_Children:
@@ -4066,6 +4057,9 @@ MonoBehaviour:
   continuous: 1
   boundsOffset: {x: 0, y: 0, z: 0}
   boundsMultiplier: {x: 1, y: 1, z: 1}
+  onAllDead:
+    m_PersistentCalls:
+      m_Calls: []
   preset: {fileID: 11400000, guid: 45ffdf5e02efb4848942aaeb5d029f6e, type: 2}
   camera: {fileID: 534669904}
   minDistance: 17
@@ -11187,6 +11181,8 @@ MonoBehaviour:
     dialogueTree: {fileID: 11400000, guid: d68b340a6d3fb304e9b7bf653ea3e16b, type: 2}
   - focalPoint: {fileID: 735639535}
     dialogueTree: {fileID: 11400000, guid: d68b340a6d3fb304e9b7bf653ea3e16b, type: 2}
+  introDialogueTree: {fileID: 11400000, guid: b26009607a2ee7e4f8f87cd972d80eef, type: 2}
+  discoveryDialogueTree: {fileID: 0}
 --- !u!135 &468500793
 SphereCollider:
   m_ObjectHideFlags: 0
@@ -11239,6 +11235,8 @@ MonoBehaviour:
   m_current: 
   m_inprogress: 0
   dialogueTree: {fileID: 11400000, guid: 9f67b438b35ca5e49a81403d378b5a12, type: 2}
+  introTree: {fileID: 11400000, guid: b26009607a2ee7e4f8f87cd972d80eef, type: 2}
+  discoveryTree: {fileID: 0}
   focusDialogueTree: {fileID: 0}
   bubble: {fileID: 1096321895}
   bubble_pos: {fileID: 1096321899}
@@ -11332,31 +11330,31 @@ MonoBehaviour:
   NEST_EVENTS: 
   reactionMappings:
   - event: 10
-    mood: 
+    mood: 01000000
     reactions: {fileID: 11400000, guid: e5cfff65c4634074dbf7b45e09fe05a4, type: 2}
   - event: 10
-    mood: 
+    mood: 00000000
     reactions: {fileID: 11400000, guid: 908bc77d6accfd24cbb1ac5c12e35669, type: 2}
   - event: 10
-    mood: 
+    mood: 02000000
     reactions: {fileID: 11400000, guid: ca882ce3e653f95459f5676115b10161, type: 2}
   - event: 20
-    mood: 
+    mood: 01000000
     reactions: {fileID: 11400000, guid: 803b94507cadc1f458461aa2e50508e4, type: 2}
   - event: 20
-    mood: 
+    mood: 00000000
     reactions: {fileID: 11400000, guid: 0bb4f0181bc079e49ad3ecf8a914a161, type: 2}
   - event: 20
-    mood: 
+    mood: 02000000
     reactions: {fileID: 11400000, guid: 57d73cb3d8732184f965ed1a35c9ba74, type: 2}
   - event: 12
-    mood: 
+    mood: 01000000
     reactions: {fileID: 11400000, guid: 1f6f38ed4c291294db970ae64f10f537, type: 2}
   - event: 12
-    mood: 
+    mood: 00000000
     reactions: {fileID: 11400000, guid: 5c497a62b1e78ce438be36fb17328487, type: 2}
   - event: 12
-    mood: 
+    mood: 02000000
     reactions: {fileID: 11400000, guid: f1aee736b55417947b6e0216e8eb1b25, type: 2}
   stanceUI: {fileID: 1597402196}
   moodUI: {fileID: 1576223866}
@@ -16930,7 +16928,7 @@ Transform:
   m_PrefabInstance: {fileID: 0}
   m_PrefabAsset: {fileID: 0}
   m_GameObject: {fileID: 534669902}
-  m_LocalRotation: {x: -0.22025321, y: 0.000000013505881, z: -0.000000006295696, w: 0.97544277}
+  m_LocalRotation: {x: -0.22025323, y: -2.4103189e-15, z: 3.087657e-15, w: 0.97544277}
   m_LocalPosition: {x: 0, y: -4.7999983, z: -30.55278}
   m_LocalScale: {x: 1, y: 1, z: 1}
   m_Children:
@@ -19045,6 +19043,7 @@ MonoBehaviour:
   interval: 0
   m_death: 0
   m_deathDecay: 3.33
+  textureCap: 4
   queue: []
   textures: []
   canvas: {fileID: 8400000, guid: ff6f3aa6e1be04a159213d070f9b2f04, type: 2}
@@ -22009,7 +22008,7 @@ Transform:
   m_PrefabAsset: {fileID: 0}
   m_GameObject: {fileID: 875157280}
   m_LocalRotation: {x: 0, y: 0, z: 0, w: 1}
-  m_LocalPosition: {x: -0, y: 74, z: -389}
+  m_LocalPosition: {x: -0, y: 74, z: -278}
   m_LocalScale: {x: 222.0522, y: 334.11652, z: 222.4107}
   m_Children:
   - {fileID: 1970994501}
@@ -22101,7 +22100,7 @@ Camera:
     y: 0
     width: 1
     height: 1
-  near clip plane: 0.1
+  near clip plane: 12
   far clip plane: 5000
   field of view: 14
   orthographic: 0
@@ -44879,7 +44878,7 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: 
   axis: {x: 0, y: 1, z: 0}
-  speed: 12
+  speed: 36
   global: 0
   randomSpeed: 0
   randomAxis: 0
@@ -45208,7 +45207,7 @@ Transform:
   m_GameObject: {fileID: 2015572245}
   m_LocalRotation: {x: 0, y: 0, z: 0, w: 1}
   m_LocalPosition: {x: 21.7, y: 19.1, z: 0}
-  m_LocalScale: {x: 0.0029536015, y: 0.005354681, z: 0.033}
+  m_LocalScale: {x: 0.0041875215, y: 0.005354681, z: 0.033}
   m_Children:
   - {fileID: 474465336}
   m_Father: {fileID: 2418050}
@@ -45309,7 +45308,7 @@ MeshRenderer:
   m_PrefabInstance: {fileID: 0}
   m_PrefabAsset: {fileID: 0}
   m_GameObject: {fileID: 2015572245}
-  m_Enabled: 1
+  m_Enabled: 0
   m_CastShadows: 1
   m_ReceiveShadows: 1
   m_DynamicOccludee: 1

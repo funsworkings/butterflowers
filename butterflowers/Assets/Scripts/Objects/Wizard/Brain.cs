@@ -10,6 +10,7 @@ using Noder.Nodes.Behaviours.Fetch;
 using Settings;
 using UnityEngine;
 using TMPro;
+using Noder.Nodes.Abstract;
 
 namespace Wizard {
 
@@ -244,12 +245,23 @@ namespace Wizard {
 				RECEIVE_NEST_EVENT++;
 
 
-				if (!actions.inprogress) {
-					if (actions.queue.Length == 0) {
-						CoreBehaviourTree.Restart();
-					}
-				}
+				switch (Manager.STATE) 
+				{
+					case GAMESTATE.INTRO:
+						break;
+					case GAMESTATE.DISCOVERY:
+						break;
+					case GAMESTATE.GAME:
+					case GAMESTATE.ABSORB:
+					default:
+						if (!actions.inprogress) {
+							if (actions.queue.Length == 0) {
+								CoreBehaviourTree.Restart();
+							}
+						}
+						break;
 
+				}
 
 				yield return new WaitForEndOfFrame();
 
@@ -558,14 +570,17 @@ namespace Wizard {
 		public void ReactToEvent()
 		{
 			var rand = Random.Range(0f, 1f);
-			if (rand <= Preset.reactionProbability)
+			if (rand > Preset.reactionProbability)
 				return;
 
 			EVENTCODE @event = Events.LAST_EVENT;
 			MoodState state = getMoodState();
 
 			var mappings = reactionMappings.Where(m => (m.@event == @event && m.mood.Contains(state)) );
-			if (mappings.Count() == 0) return;
+			if (mappings.Count() == 0) {
+				Debug.LogFormat("Found no matching reactions for event = {0} mood = {1}", @event, state);  
+				return;
+			}
 
 			var map = mappings.ElementAt(0); // Get first mapping
 			var reaction = map.reactions.FetchRandomItem();
@@ -786,10 +801,10 @@ namespace Wizard {
 					source = source.Where(b => b.visible).ToList();
 					break;
 				case FilterBeacons.Filter.Unknown:
-					source = source.Where(b => FetchKnowledgeFromBeacon(b) <= .9f).ToList();
+					source = source.Where(b => FetchKnowledgeFromBeacon(b) <= Preset.unknownBeaconThreshold).ToList();
 					break;
 				case FilterBeacons.Filter.Comfortable:
-					source = source.Where(b => FetchKnowledgeFromBeacon(b) > .15f).ToList();
+					source = source.Where(b => FetchKnowledgeFromBeacon(b) > Preset.actionableBeaconThreshold).ToList();
 					break;
 				case FilterBeacons.Filter.Memory:
 					source = source.Intersect(wiz_beacons).ToList();

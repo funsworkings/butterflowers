@@ -69,6 +69,11 @@ public class BrainPreset : ScriptableObject
         [Range(0f, 1f)] public float minimumDayNightActionProbability = .5f, maximumDayNightActionProbability = .5f;
         [Range(0f, 1f)] public float minimumResponseActionProbability = .5f, maximumResponseActionProbability = .5f;
 
+    [Header("BEACON FILTERS (MECHANICS)")]
+        [Range(0f, 1f)] public float unknownBeaconThreshold = .9f;
+        [Range(0f, 1f)] public float actionableBeaconThreshold = .15f;
+
+
     [Header("MISCELLANEOUS (MECHANICS)")]
         [Range(0f, 1f)] public float reactionProbability = .5f;
 

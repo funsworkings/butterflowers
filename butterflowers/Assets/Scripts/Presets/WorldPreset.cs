@@ -13,6 +13,7 @@ namespace Settings
             public bool persistDialogueVisited = false;
             public bool persistKnowledge = false;
             public bool persistBeacons = false;
+            public bool alwaysIntro = false;
 
         [Header("Time Attributes")]
             public float hoursPerDay = 24f;
