@@ -6,7 +6,9 @@ using UnityEngine.Timeline;
 [Serializable]
 public class PushDialogueBehaviour : PlayableBehaviour
 {
+    [TextArea(3, 12)]
     public string[] dialogueParams;
+
     public bool autoprogress = false;
 
     bool sent = false;

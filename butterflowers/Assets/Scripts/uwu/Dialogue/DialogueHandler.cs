@@ -99,7 +99,7 @@ public class DialogueHandler: MonoBehaviour {
 
     public bool container => (tmp_container != null || txt_container != null);
 
-	#endregion
+    #endregion
 
 	#region Operations
 

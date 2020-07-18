@@ -43,7 +43,7 @@ namespace Wizard {
 		[System.Serializable]
 		public struct ReactionMapping {
 			public EVENTCODE @event;
-			public MoodState mood;
+			public MoodState[] mood;
 			public DialogueCollection reactions;
 		}
 
@@ -558,17 +558,17 @@ namespace Wizard {
 		public void ReactToEvent()
 		{
 			var rand = Random.Range(0f, 1f);
-			if (rand >= Preset.reactionProbability)
+			if (rand <= Preset.reactionProbability)
 				return;
 
 			EVENTCODE @event = Events.LAST_EVENT;
 			MoodState state = getMoodState();
 
-			var mappings = reactionMappings.Where(m => (m.@event == @event && m.mood == state) );
+			var mappings = reactionMappings.Where(m => (m.@event == @event && m.mood.Contains(state)) );
 			if (mappings.Count() == 0) return;
 
 			var map = mappings.ElementAt(0); // Get first mapping
-			var reaction = map.reactions.elements.PickRandomSubset(1)[0];
+			var reaction = map.reactions.FetchRandomItem();
 
 			dialogue.Push(reaction, true);
 		}

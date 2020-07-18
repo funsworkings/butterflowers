@@ -55,31 +55,42 @@ public class CameraManager: MonoBehaviour {
         }
     }
 
+    void Update()
+    {
+        if (Input.GetKeyDown(KeyCode.C)) 
+        {
+            CycleCameras();
+        }
+    }
+
     #endregion
 
     void Enable(GameCamera camera){
         if(camera == null) return;
-             
-        if(currentCamera != camera){
-            previousCamera = currentCamera;
-            Disable(previousCamera);
 
-            camera.Enable();
-            currentCamera = camera;
-            onUpdateGameCamera();
-        }
+        camera.Enable();
+
+        GameCamera @ref = (camera != currentCamera) ? currentCamera : null;
+        onUpdateActiveCamera(camera);
+
+        if (@ref != null)
+            Disable(@ref);
     }
 
     void Disable(GameCamera camera){
         if(camera == null) return;
 
         camera.Disable();
-        if(currentCamera == camera){
-            previousCamera = currentCamera;
+        if (currentCamera == camera)
+            onUpdateActiveCamera(null);
+    }
 
-            currentCamera = null;
-            onUpdateGameCamera();
-        }
+    void onUpdateActiveCamera(GameCamera camera)
+    {
+        previousCamera = currentCamera;
+        currentCamera = camera;
+
+        onUpdateGameCamera();
     }
 
     #region Operations

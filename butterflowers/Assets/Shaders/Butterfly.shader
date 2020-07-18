@@ -13,6 +13,9 @@ Shader "Custom/Butterfly"
         
         _Tiling ("Tiling", Float) = 1.0
         _ZOffset("Depth Offset", Float) = 0.0
+
+        _OverrideColorWeight("Override Weight", Float) = 0.0
+        _OverrideColor ("Override Color", Color) = (1,1,1,1)
     }
     SubShader
     {       
@@ -114,11 +117,13 @@ Shader "Custom/Butterfly"
         
             fixed4 _Color;
             fixed4 _DeathColor;
+            fixed4 _OverrideColor;
 
             sampler2D _MainTex;
             float4 _MainTex_ST;
             
             float _Tiling;
+            float _OverrideColorWeight;
 
             // Per instance properties must be declared in this block.
 			UNITY_INSTANCING_BUFFER_START(Props)
@@ -146,19 +151,24 @@ Shader "Custom/Butterfly"
             {
                 UNITY_SETUP_INSTANCE_ID(i);
 
-                float2 screenPos = i.vertex;
-                float2 screen = float2(screenPos.x / _ScreenParams.x, screenPos.y / _ScreenParams.y);
+                //if(_OverrideColorWeight < 1.0){
+                    float2 screenPos = i.vertex;
+                    float2 screen = float2(screenPos.x / _ScreenParams.x, screenPos.y / _ScreenParams.y);
                
-                //coords = TRANSFORM_TEX(coords, _MainTex);
+                    //coords = TRANSFORM_TEX(coords, _MainTex);
 
-                float death = UNITY_ACCESS_INSTANCED_PROP(Props, _Death);
+                    float death = UNITY_ACCESS_INSTANCED_PROP(Props, _Death);
             
-                fixed4 col = tex2D(_MainTex, screen) * _Color;
-                fixed4 actual = (1.0 - death)*col + (death)*_DeathColor;
+                    fixed4 col = tex2D(_MainTex, screen) * _Color;
+                    fixed4 actual = (1.0 - death)*col + (death)*_DeathColor;
             
-                // apply fog
+                    // apply fog
 
-                return actual;
+                    actual.a = 1.0;
+                    return actual;
+              /*  }
+                else
+                    return _OverrideColor;*/
             }
             ENDCG
         }

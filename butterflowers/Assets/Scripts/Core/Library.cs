@@ -128,6 +128,9 @@ public class Library : Singleton<Library>
 
 	void OnDestroy()
 	{
+		if (!initialized)
+			return;
+
 		Files.onRefresh -= RefreshFiles;
 		Quilt.onLoadTexture -= AddTextureToLibrary;
 

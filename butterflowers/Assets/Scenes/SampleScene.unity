@@ -200,7 +200,7 @@ Transform:
   m_GameObject: {fileID: 2418046}
   m_LocalRotation: {x: 0, y: 0, z: 0, w: 1}
   m_LocalPosition: {x: 0, y: 0, z: 0.115}
-  m_LocalScale: {x: 0.088270485, y: 0.061628316, z: 0.01}
+  m_LocalScale: {x: 0.111728005, y: 0.061628316, z: 0.01}
   m_Children:
   - {fileID: 2015572246}
   m_Father: {fileID: 534669905}
@@ -630,6 +630,7 @@ MonoBehaviour:
   positiveSpawner: {fileID: 58810647}
   pr_PositivePS: {fileID: 1311559724632354285, guid: 3ed5efbaf97b2a94989b8edf335c7b76,
     type: 3}
+  initializeOnAwake: 1
   m_beaconInfoContainer: {fileID: 2032687484}
   WorldCamera: {fileID: 875157282}
   previousMainCamera: {fileID: 0}
@@ -3271,7 +3272,7 @@ Transform:
   m_PrefabInstance: {fileID: 0}
   m_PrefabAsset: {fileID: 0}
   m_GameObject: {fileID: 201810246}
-  m_LocalRotation: {x: -0.22025323, y: -2.4103189e-15, z: 3.087657e-15, w: 0.97544277}
+  m_LocalRotation: {x: -0.22025321, y: 0.000000013505881, z: -0.000000006295696, w: 0.97544277}
   m_LocalPosition: {x: 0, y: -4.7999983, z: -19.199999}
   m_LocalScale: {x: 1, y: 1, z: 1}
   m_Children:
@@ -11331,19 +11332,31 @@ MonoBehaviour:
   NEST_EVENTS: 
   reactionMappings:
   - event: 10
-    mood: 2
+    mood: 
+    reactions: {fileID: 11400000, guid: e5cfff65c4634074dbf7b45e09fe05a4, type: 2}
+  - event: 10
+    mood: 
+    reactions: {fileID: 11400000, guid: 908bc77d6accfd24cbb1ac5c12e35669, type: 2}
+  - event: 10
+    mood: 
     reactions: {fileID: 11400000, guid: ca882ce3e653f95459f5676115b10161, type: 2}
   - event: 20
-    mood: 2
+    mood: 
+    reactions: {fileID: 11400000, guid: 803b94507cadc1f458461aa2e50508e4, type: 2}
+  - event: 20
+    mood: 
+    reactions: {fileID: 11400000, guid: 0bb4f0181bc079e49ad3ecf8a914a161, type: 2}
+  - event: 20
+    mood: 
     reactions: {fileID: 11400000, guid: 57d73cb3d8732184f965ed1a35c9ba74, type: 2}
-  - event: 31
-    mood: 0
-    reactions: {fileID: 11400000, guid: 9e8b50d1d3096c6479f36014cf44a461, type: 2}
-  - event: 11
-    mood: 2
-    reactions: {fileID: 11400000, guid: b1ec44ea356472542b5ca2df80a88d4c, type: 2}
   - event: 12
-    mood: 2
+    mood: 
+    reactions: {fileID: 11400000, guid: 1f6f38ed4c291294db970ae64f10f537, type: 2}
+  - event: 12
+    mood: 
+    reactions: {fileID: 11400000, guid: 5c497a62b1e78ce438be36fb17328487, type: 2}
+  - event: 12
+    mood: 
     reactions: {fileID: 11400000, guid: f1aee736b55417947b6e0216e8eb1b25, type: 2}
   stanceUI: {fileID: 1597402196}
   moodUI: {fileID: 1576223866}
@@ -16917,7 +16930,7 @@ Transform:
   m_PrefabInstance: {fileID: 0}
   m_PrefabAsset: {fileID: 0}
   m_GameObject: {fileID: 534669902}
-  m_LocalRotation: {x: -0.22025323, y: -2.4103189e-15, z: 3.087657e-15, w: 0.97544277}
+  m_LocalRotation: {x: -0.22025321, y: 0.000000013505881, z: -0.000000006295696, w: 0.97544277}
   m_LocalPosition: {x: 0, y: -4.7999983, z: -30.55278}
   m_LocalScale: {x: 1, y: 1, z: 1}
   m_Children:
@@ -45195,7 +45208,7 @@ Transform:
   m_GameObject: {fileID: 2015572245}
   m_LocalRotation: {x: 0, y: 0, z: 0, w: 1}
   m_LocalPosition: {x: 21.7, y: 19.1, z: 0}
-  m_LocalScale: {x: 0.003738509, y: 0.005354681, z: 0.033}
+  m_LocalScale: {x: 0.0029536015, y: 0.005354681, z: 0.033}
   m_Children:
   - {fileID: 474465336}
   m_Father: {fileID: 2418050}

@@ -1,16 +1,20 @@
 ﻿using System.Collections;
 using System.Collections.Generic;
+using UIExt.Behaviors.Visibility;
 using UnityEngine;
 
 using UnityEngine.Events;
 
 public class MainMenu : MonoBehaviour
 {
-    public UnityEvent onBeginGame;
+    public UnityEvent onBeginGame, onContinueGame;
 
     GameDataSaveSystem Save;
 
     [SerializeField] GameObject continuePanel;
+    [SerializeField] ToggleOpacity opacity;
+
+    bool @continue = false;
 
     void Awake()
     {
@@ -41,11 +45,20 @@ public class MainMenu : MonoBehaviour
     public void NewGame()
     {
         Save.ResetGameData();
-        onBeginGame.Invoke();
+        opacity.Hide();
     }
 
     public void ContinueGame()
     {
-        onBeginGame.Invoke();
+        @continue = true;
+        opacity.Hide();
+    }
+
+    public void TriggerSelection()
+    {
+        if(@continue)
+            onContinueGame.Invoke();
+        else
+            onBeginGame.Invoke();
     }
 }
