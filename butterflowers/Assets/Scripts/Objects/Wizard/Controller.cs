@@ -73,7 +73,7 @@ namespace Wizard {
 
         #region Attributes
 
-        [SerializeField] State state = State.Idle;
+        public State state = State.Idle;
 
         bool load = false;
         bool debug = false;
@@ -84,6 +84,7 @@ namespace Wizard {
         [SerializeField] ActionSequence[] sequences;
 
         [SerializeField] List<DialogueTreeMap> dialogueMappings = new List<DialogueTreeMap>();
+        [SerializeField] DialogueTree introDialogueTree, discoveryDialogueTree;
 
         #endregion
 
@@ -152,6 +153,7 @@ namespace Wizard {
         void OnEnable()
         {
             World = World.Instance;
+            World.UPDATE_GAMESTATE += onUpdateGameState;
 
             Focus.onFocus.AddListener(onFocus);
             Focus.onLoseFocus.AddListener(onLoseFocus);
@@ -164,10 +166,14 @@ namespace Wizard {
             Actions.onEnact += onEnactAction;
 
             Events.onFireEvent += onFireEvent;
+
+            DialogueTree.onCompleteTree += onCompleteDialogueTree;
         }
 
         void OnDisable()
         {
+            World.UPDATE_GAMESTATE -= onUpdateGameState;
+
             Focus.onFocus.RemoveListener(onFocus);
             Focus.onLoseFocus.RemoveListener(onLoseFocus);
 
@@ -179,6 +185,8 @@ namespace Wizard {
             Actions.onEnact -= onEnactAction;
 
             Events.onFireEvent -= onFireEvent;
+
+            DialogueTree.onCompleteTree -= onCompleteDialogueTree;
         }
 
         // Update is called once per frame
@@ -302,6 +310,17 @@ namespace Wizard {
 
         void RespondToPlayerAction(EVENTCODE @event)
         {
+            if (@event == EVENTCODE.NESTKICK) 
+            {
+                if (World.STATE == GAMESTATE.INTRO) {
+                    Dialogue.FetchDialogueFromTree(introDialogueTree); // Move to next dialogue node in intro
+                    if (Dialogue.inprogress) Dialogue.Advance();
+                }
+                else if (World.STATE == GAMESTATE.DISCOVERY) {
+                    Dialogue.FetchDialogueFromTree(discoveryDialogueTree); // Move to next dialogue node in discovery
+                }
+            }
+
             /*
             return; //IGNORE PLAYER EVENTS FOR NOW
 
@@ -360,6 +379,8 @@ namespace Wizard {
 
         void onFocus()
         {
+            if (World.STATE != GAMESTATE.GAME) return;
+
             var focalPoint = Focus.focus;
             if (focalPoint == null) return;
 
@@ -374,6 +395,8 @@ namespace Wizard {
 
         void onLoseFocus()
         {
+            if (World.STATE != GAMESTATE.GAME) return;
+
             Dialogue.Dispose();
         }
 
@@ -404,6 +427,17 @@ namespace Wizard {
                 onDiscoverMemory(memory);
         }
 
+        void NormalDialogueBehaviour()
+        {
+            Dialogue.autoprogress = true;
+        }
+
+        void IntroDialogueBehaviour()
+        {
+            Dialogue.autoprogress = false;
+            Dialogue.FetchDialogueFromTree(introDialogueTree); // Move to next dialogue node in intro
+        }
+
         #endregion
 
         #region Nest callbacks
@@ -414,6 +448,16 @@ namespace Wizard {
             var mem = Memories.GetMemoryByName(file);
 
             if (mem != null) Brain.EncounterMemory(mem, true);
+        }
+
+        #endregion
+
+        #region Dialogue callbacks
+
+        void onCompleteDialogueTree(DialogueTree tree)
+        {
+            if (tree == introDialogueTree)
+                World.MoveToState(GAMESTATE.GAME); // Move to game state
         }
 
 		#endregion
@@ -451,11 +495,23 @@ namespace Wizard {
             Actions.onInspect();
         }
 
+        #endregion
+
+        #region World callbacks
+
+        public void onUpdateGameState(GAMESTATE state)
+        {
+            if (state == GAMESTATE.INTRO)
+                IntroDialogueBehaviour();
+            else
+                NormalDialogueBehaviour();
+        }
+
 		#endregion
 
 		#region Sun callbacks
 
-        void onDayNightCycle() 
+		void onDayNightCycle() 
         {
             /*
             return; // IGNORE SUN CYCLE FOR NOW
@@ -512,9 +568,10 @@ namespace Wizard {
                     Renderer.material = null;
                 else 
                 {
-                    yield return new WaitForSeconds(.067f);
+                    yield return new WaitForSeconds(.0067f);
 
-                    if (Random.Range(0f, 1f) < absorb)
+                    float threshold = Mathf.Pow(absorb, 3f);
+                    if (Random.Range(0f, 1f) < threshold)
                         Renderer.material = null;
                     else
                         Renderer.material = DefaultMaterial;

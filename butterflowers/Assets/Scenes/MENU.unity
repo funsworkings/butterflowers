@@ -669,7 +669,7 @@ CanvasGroup:
   m_PrefabAsset: {fileID: 0}
   m_GameObject: {fileID: 161908812}
   m_Enabled: 1
-  m_Alpha: 0.05755547
+  m_Alpha: 0
   m_Interactable: 1
   m_BlocksRaycasts: 1
   m_IgnoreParentGroups: 0
@@ -4461,7 +4461,7 @@ MonoBehaviour:
   textureArray: {fileID: 245673827}
   m_speed: 0
   minLerpSpeed: 0
-  maxLerpSpeed: 1
+  maxLerpSpeed: 0.237
   offset: 0
   interval: 0
   m_death: 0
@@ -4882,7 +4882,7 @@ Camera:
     height: 1
   near clip plane: 0.1
   far clip plane: 5000
-  field of view: 52
+  field of view: 42.4
   orthographic: 0
   orthographic size: 5
   m_Depth: -1
@@ -4907,8 +4907,8 @@ Transform:
   m_PrefabInstance: {fileID: 0}
   m_PrefabAsset: {fileID: 0}
   m_GameObject: {fileID: 450671733}
-  m_LocalRotation: {x: -0, y: -0, z: -0, w: 1}
-  m_LocalPosition: {x: 0, y: 0, z: -10}
+  m_LocalRotation: {x: -0.078763396, y: -0, z: -0, w: 0.99689335}
+  m_LocalPosition: {x: 0, y: -1.2126408, z: -12.852782}
   m_LocalScale: {x: 1, y: 1, z: 1}
   m_Children:
   - {fileID: 915540378}

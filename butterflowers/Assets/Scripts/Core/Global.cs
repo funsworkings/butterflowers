@@ -3,9 +3,9 @@ using UnityEngine;
 
 public enum GAMESTATE {
     INTRO = 0,
-    WIZARD_INTRO = 1,
-    WIZARD_DISCOVERY = 2,
-    GAME = 3
+    DISCOVERY = 2,
+    GAME = 3,
+    ABSORB = 4
 }
 
 public enum AGENT {

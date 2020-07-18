@@ -13,6 +13,7 @@ namespace Noder.Graphs {
     public class DialogueTree: Graph {
 
         public static System.Action<DialogueTree, string> onReceiveDialogue;
+        public static System.Action<DialogueTree> onCompleteTree;
 
         [SerializeField] DialogueTree m_externalTree;
         public DialogueTree externalTree => m_externalTree; 
@@ -38,6 +39,12 @@ namespace Noder.Graphs {
                 int id = t.GetInstanceID();
                 t.visited = (node_ids.Contains(id));
             }
+        }
+
+        public void FlagEndOfTree()
+        {
+            if (onCompleteTree != null)
+                onCompleteTree(this);
         }
 
         public void AddMemoryToDatabase(Wizard.Memory mem)

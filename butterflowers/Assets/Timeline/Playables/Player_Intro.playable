@@ -3210,8 +3210,8 @@ AnimationClip:
       serializedVersion: 2
       m_Curve:
       - serializedVersion: 3
-        time: 0.8666667
-        value: 1.1417465
+        time: 0
+        value: -0.15729904
         inSlope: 0
         outSlope: 0
         tangentMode: 136
@@ -3268,8 +3268,8 @@ AnimationClip:
       serializedVersion: 2
       m_Curve:
       - serializedVersion: 3
-        time: 0.8666667
-        value: 1.1417465
+        time: 0
+        value: -0.15729904
         inSlope: 0
         outSlope: 0
         tangentMode: 136
@@ -3737,7 +3737,7 @@ MonoBehaviour:
     m_PreExtrapolationTime: 0
     m_DisplayName: CanvasGroupTrackClip
     m_Version: 1
-  - m_Start: 32.6
+  - m_Start: 41.03333333333333
     m_ClipIn: 0
     m_Asset: {fileID: 114380868630848320}
     m_Duration: 5
@@ -4395,7 +4395,7 @@ MonoBehaviour:
   m_Name: CanvasGroupTrackClip
   m_EditorClassIdentifier: 
   template:
-    alpha: -0.092347145
+    alpha: -0.15729904
 --- !u!114 &114381339860980386
 MonoBehaviour:
   m_ObjectHideFlags: 1

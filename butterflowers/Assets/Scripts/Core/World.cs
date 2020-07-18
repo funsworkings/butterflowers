@@ -16,14 +16,38 @@ public class World : Spawner
 
     public static bool LOAD = false;
 
+    [SerializeField] GAMESTATE m_STATE = GAMESTATE.GAME;
+    public GAMESTATE STATE {
+        get
+        {
+            return m_STATE;
+        }
+        set
+        {
+            m_STATE = value;
+            Save.data.GAMESTATE = (int)m_STATE;
+        }
+    }
+
+    public void MoveToState(GAMESTATE state)
+    {
+        if (STATE != state) 
+        {
+            STATE = state;
+            if (UPDATE_GAMESTATE != null)
+                UPDATE_GAMESTATE(STATE);
+        }
+    }
+
+
     #region Events
 
     public UnityEvent onDiscovery;
 
     public System.Action onRefreshBeacons;
+    public System.Action<GAMESTATE> UPDATE_GAMESTATE;
 
-	#endregion
-
+    #endregion
 
 
 	#region External
@@ -156,6 +180,12 @@ public class World : Spawner
     IEnumerator Initialize()
     {
         while (!Save.load) yield return null;
+
+        if (Preset.alwaysIntro) m_STATE = GAMESTATE.INTRO;
+        else m_STATE = (GAMESTATE)Save.data.GAMESTATE;
+
+        if (UPDATE_GAMESTATE != null)
+            UPDATE_GAMESTATE(STATE);
 
         Nest.RestoreCapacity(Save.nestcapacity);
 
