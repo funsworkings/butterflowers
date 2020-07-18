@@ -55,6 +55,8 @@ public class World : Spawner
     [SerializeField] Spawner positiveSpawner;
     [SerializeField] GameObject pr_PositivePS;
 
+    [SerializeField] bool initializeOnAwake = true;
+
     #endregion
 
     #region Properties
@@ -68,7 +70,7 @@ public class World : Spawner
 
     #region Collections
 
-    public Texture2D[] StarterPack = new Texture2D[] { };
+    public Texture2D[] StarterPack => Preset.worldTextures.elements;
 
 	Dictionary<string, List<Beacon>> beacons = new Dictionary<string, List<Beacon>>();
     List<Beacon> allBeacons = new List<Beacon>();
@@ -122,8 +124,9 @@ public class World : Spawner
         Quilt = Quilt.Instance;
 
         Butterflowers = FindObjectOfType<MotherOfButterflies>();
-
         Loader = FindObjectOfType<Loading>();
+
+        if (!initializeOnAwake) return;
 
         StartCoroutine("Initialize");
     }

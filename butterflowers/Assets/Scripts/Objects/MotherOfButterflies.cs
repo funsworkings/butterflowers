@@ -4,11 +4,14 @@ using UnityEngine;
 
 using UnityEngine.Networking;
 using Settings;
+using UnityEngine.Events;
 
 ///<summary>Mother of all of the butterflies</summary>
 public class MotherOfButterflies : Spawner
 {
     public static MotherOfButterflies Instance = null;
+
+    public UnityEvent onAllDead;
 
     [SerializeField] 
     WorldPreset preset = null;
@@ -20,6 +23,8 @@ public class MotherOfButterflies : Spawner
     #endregion
 
     #region Attributes
+
+    bool respawn = true;
 
     [SerializeField] float minDistance = 0f, maxDistance = 1f;
     [SerializeField] int alive = 0, dead = 0;
@@ -46,7 +51,9 @@ public class MotherOfButterflies : Spawner
 	protected override void Awake()
     {
         Instance = this;
-        amount = preset.amountOfButterflies;
+
+        if(preset != null)
+            amount = preset.amountOfButterflies;
 
         base.Awake();
     }
@@ -65,7 +72,9 @@ public class MotherOfButterflies : Spawner
 
     protected override void Update(){
         base.Update();
-        amount = preset.amountOfButterflies;
+
+        if(preset != null)
+            amount = preset.amountOfButterflies;
     }
 
     protected override void OnDestroy() {
@@ -101,6 +110,11 @@ public class MotherOfButterflies : Spawner
 
     void ResetButterfly(Butterfly butterfly)
     {
+        if (alive == 0)
+            onAllDead.Invoke();
+
+        if (!respawn) return;
+
         InstantiatePrefab(butterfly.gameObject);
         butterfly.Reset();
     }
@@ -131,8 +145,9 @@ public class MotherOfButterflies : Spawner
 
     #region Butterfly operations
 
-    public void KillButterflies()
+    public void KillButterflies(bool infinite = true)
     {
+        respawn = infinite;
         foreach (Butterfly butterfly in butterflies)
             butterfly.Kill();
     }

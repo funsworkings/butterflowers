@@ -25,6 +25,7 @@ public class Butterfly : MonoBehaviour
 
     Animator animator;
     Renderer[] renderers;
+    new Material material;
     MaterialPropertyBlock propertyBlock; 
 
     [SerializeField] Preset preset;
@@ -120,7 +121,7 @@ public class Butterfly : MonoBehaviour
         {
             if(wand != null) 
                 GrowWithWand(wand, ref scale);
-            if (nest.energy > 0f)
+            if (nest != null && nest.energy > 0f)
                 GrowWithNest(ref scale);
         }
         transform.localScale = Vector3.one * scale;
@@ -200,12 +201,15 @@ public class Butterfly : MonoBehaviour
         renderers = GetComponentsInChildren<Renderer>();
         propertyBlock = new MaterialPropertyBlock();
 
+        material = renderers[0].sharedMaterial;
+        material.SetFloat("_OverrideColorWeight", (quilt == null) ? 1f : 0f);
+
         StartCoroutine("RefreshWand");
     }
 
     public void Reset()
     {
-        if (nest.open)
+        if (nest == null || nest.open)
         {
             state = State.Alive;
             transform.position = origin;
@@ -402,7 +406,7 @@ public class Butterfly : MonoBehaviour
     void GrowWithWand(Wand wand, ref float scale)
     {
         Vector3 dir = (wand.position - positionRelativeToCamera);
-        float magnitude = Mathf.Clamp01(1f - dir.magnitude / (preset.wandRadius*6f)) + nest.energy*2f;
+        float magnitude = Mathf.Clamp01(1f - dir.magnitude / (preset.wandRadius*6f)) + ((nest == null)?0f:nest.energy*2f);
 
         scale *= (1f + Mathf.Pow(magnitude, 2f));
     }
@@ -432,7 +436,7 @@ public class Butterfly : MonoBehaviour
         while(state == State.Alive || state == State.Easing){
             yield return new WaitForSeconds(preset.colorRefresh);
 
-            float prob = preset.deathProbabilityCurve.Evaluate(quilt.speedInterval);
+            float prob = preset.deathProbabilityCurve.Evaluate((quilt == null)?0f:quilt.speedInterval);
 
             if (Random.Range(0f, 1f) < prob) 
             {

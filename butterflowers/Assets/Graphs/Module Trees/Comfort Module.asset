@@ -50,12 +50,11 @@ MonoBehaviour:
   - {fileID: 114917904127976682}
   - {fileID: 114909537524897704}
   - {fileID: 114725214556136598}
-  - {fileID: 114522942330560432}
   - {fileID: 114521693230172352}
   debug: 1
   auto: 1
   m_rootNode: {fileID: 114406319115094738}
-  m_activeNode: {fileID: 114885533274102282}
+  m_activeNode: {fileID: 0}
 --- !u!114 &114030159340604852
 MonoBehaviour:
   m_ObjectHideFlags: 0
@@ -1007,51 +1006,6 @@ MonoBehaviour:
   output: {fileID: 0}
   data: 
   delay: 0
---- !u!114 &114522942330560432
-MonoBehaviour:
-  m_ObjectHideFlags: 0
-  m_CorrespondingSourceObject: {fileID: 0}
-  m_PrefabInstance: {fileID: 0}
-  m_PrefabAsset: {fileID: 0}
-  m_GameObject: {fileID: 0}
-  m_Enabled: 1
-  m_EditorHideFlags: 0
-  m_Script: {fileID: 11500000, guid: 9527b6592bf1d3b4b8e3faea13200461, type: 3}
-  m_Name: Dialogues
-  m_EditorClassIdentifier: 
-  graph: {fileID: 11400000}
-  position: {x: 2072, y: 1352}
-  ports:
-    keys:
-    - value
-    - collection
-    values:
-    - _fieldName: value
-      _node: {fileID: 114522942330560432}
-      _typeQualifiedName: System.String[], mscorlib, Version=4.0.0.0, Culture=neutral,
-        PublicKeyToken=b77a5c561934e089
-      connections:
-      - fieldName: elements
-        node: {fileID: 114909537524897704}
-        reroutePoints: []
-      _direction: 1
-      _connectionType: 0
-      _typeConstraint: 0
-      _dynamic: 0
-    - _fieldName: collection
-      _node: {fileID: 114522942330560432}
-      _typeQualifiedName: DialogueCollection, Assembly-CSharp, Version=0.0.0.0, Culture=neutral,
-        PublicKeyToken=null
-      connections:
-      - fieldName: value
-        node: {fileID: 114725214556136598}
-        reroutePoints: []
-      _direction: 0
-      _connectionType: 1
-      _typeConstraint: 0
-      _dynamic: 0
-  value: []
-  collection: {fileID: 0}
 --- !u!114 &114536519029447198
 MonoBehaviour:
   m_ObjectHideFlags: 0
@@ -1432,7 +1386,7 @@ MonoBehaviour:
         PublicKeyToken=null
       connections:
       - fieldName: collection
-        node: {fileID: 114522942330560432}
+        node: {fileID: 114909537524897704}
         reroutePoints: []
       _direction: 1
       _connectionType: 0
@@ -2079,19 +2033,19 @@ MonoBehaviour:
   position: {x: 2312, y: 1272}
   ports:
     keys:
-    - elements
+    - collection
     - input
     - success
     - fail
     - value
     values:
-    - _fieldName: elements
+    - _fieldName: collection
       _node: {fileID: 114909537524897704}
-      _typeQualifiedName: System.String[], mscorlib, Version=4.0.0.0, Culture=neutral,
-        PublicKeyToken=b77a5c561934e089
+      _typeQualifiedName: DialogueCollection, Assembly-CSharp, Version=0.0.0.0, Culture=neutral,
+        PublicKeyToken=null
       connections:
       - fieldName: value
-        node: {fileID: 114522942330560432}
+        node: {fileID: 114725214556136598}
         reroutePoints: []
       _direction: 0
       _connectionType: 1
@@ -2146,7 +2100,7 @@ MonoBehaviour:
   input: {fileID: 0}
   success: {fileID: 0}
   fail: {fileID: 0}
-  elements: []
+  collection: {fileID: 0}
 --- !u!114 &114917904127976682
 MonoBehaviour:
   m_ObjectHideFlags: 0

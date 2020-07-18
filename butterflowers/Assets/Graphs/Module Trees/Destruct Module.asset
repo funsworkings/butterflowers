@@ -51,7 +51,6 @@ MonoBehaviour:
   - {fileID: 114217836602098740}
   - {fileID: 114300051050719198}
   - {fileID: 114042140787454670}
-  - {fileID: 114457774550841528}
   - {fileID: 114858825611940964}
   - {fileID: 114149387643598898}
   debug: 1
@@ -752,20 +751,17 @@ MonoBehaviour:
   position: {x: 2968, y: 1032}
   ports:
     keys:
-    - elements
+    - collection
     - input
     - success
     - fail
     - value
     values:
-    - _fieldName: elements
+    - _fieldName: collection
       _node: {fileID: 114149387643598898}
-      _typeQualifiedName: System.String[], mscorlib, Version=4.0.0.0, Culture=neutral,
-        PublicKeyToken=b77a5c561934e089
-      connections:
-      - fieldName: value
-        node: {fileID: 114457774550841528}
-        reroutePoints: []
+      _typeQualifiedName: DialogueCollection, Assembly-CSharp, Version=0.0.0.0, Culture=neutral,
+        PublicKeyToken=null
+      connections: []
       _direction: 0
       _connectionType: 1
       _typeConstraint: 0
@@ -819,7 +815,7 @@ MonoBehaviour:
   input: {fileID: 0}
   success: {fileID: 0}
   fail: {fileID: 0}
-  elements: []
+  collection: {fileID: 11400000, guid: 221a458afbaab52468dd55d10635275f, type: 2}
 --- !u!114 &114159514210177574
 MonoBehaviour:
   m_ObjectHideFlags: 0
@@ -1442,48 +1438,6 @@ MonoBehaviour:
   success: {fileID: 0}
   fail: {fileID: 0}
   elements: []
---- !u!114 &114457774550841528
-MonoBehaviour:
-  m_ObjectHideFlags: 0
-  m_CorrespondingSourceObject: {fileID: 0}
-  m_PrefabInstance: {fileID: 0}
-  m_PrefabAsset: {fileID: 0}
-  m_GameObject: {fileID: 0}
-  m_Enabled: 1
-  m_EditorHideFlags: 0
-  m_Script: {fileID: 11500000, guid: 9527b6592bf1d3b4b8e3faea13200461, type: 3}
-  m_Name: Dialogues
-  m_EditorClassIdentifier: 
-  graph: {fileID: 11400000}
-  position: {x: 2728, y: 1112}
-  ports:
-    keys:
-    - collection
-    - value
-    values:
-    - _fieldName: collection
-      _node: {fileID: 114457774550841528}
-      _typeQualifiedName: DialogueCollection, Assembly-CSharp, Version=0.0.0.0, Culture=neutral,
-        PublicKeyToken=null
-      connections: []
-      _direction: 0
-      _connectionType: 1
-      _typeConstraint: 0
-      _dynamic: 0
-    - _fieldName: value
-      _node: {fileID: 114457774550841528}
-      _typeQualifiedName: System.String[], mscorlib, Version=4.0.0.0, Culture=neutral,
-        PublicKeyToken=b77a5c561934e089
-      connections:
-      - fieldName: elements
-        node: {fileID: 114149387643598898}
-        reroutePoints: []
-      _direction: 1
-      _connectionType: 0
-      _typeConstraint: 0
-      _dynamic: 0
-  value: []
-  collection: {fileID: 11400000, guid: 221a458afbaab52468dd55d10635275f, type: 2}
 --- !u!114 &114477865719216740
 MonoBehaviour:
   m_ObjectHideFlags: 0

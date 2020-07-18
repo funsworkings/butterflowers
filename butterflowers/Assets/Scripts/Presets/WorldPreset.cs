@@ -28,6 +28,9 @@ namespace Settings
         [Header("Unknown Attributes")]
             [Range(0f, 1f)] public float unknownPersistenceThreshold = .5f;
 
+        [Header("Miscellaneous Attributes")]
+            public TextureCollection worldTextures;
+
         #region Time conversions
 
         public float minutesPerDay {

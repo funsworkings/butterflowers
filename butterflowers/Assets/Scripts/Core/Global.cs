@@ -1,6 +1,13 @@
 ﻿using System.Collections.Generic;
 using UnityEngine;
 
+public enum GAMESTATE {
+    INTRO = 0,
+    WIZARD_INTRO = 1,
+    WIZARD_DISCOVERY = 2,
+    GAME = 3
+}
+
 public enum AGENT {
     NULL,
 

@@ -52,7 +52,7 @@ public class Quilt : MonoBehaviour
         }
     }
 
-    int textureCap = 4;
+    public int textureCap = 4;
 
     [SerializeField] List<string> queue = new List<string>();
     [SerializeField] List<Texture2D> textures = new List<Texture2D>();
@@ -89,16 +89,19 @@ public class Quilt : MonoBehaviour
 
     void OnEnable()
     {
-        Nest.onUpdateCapacity += UpdateTextureCap;
+        if(Nest != null)
+            Nest.onUpdateCapacity += UpdateTextureCap;
     }
 
     void OnDisable()
     {
-        Nest.onUpdateCapacity -= UpdateTextureCap;
+        if(Nest != null)
+            Nest.onUpdateCapacity -= UpdateTextureCap;
     }
 
     void Start(){
-        textureCap = Nest.Instance.capacity;
+        if(Nest != null)
+            textureCap = Nest.Instance.capacity;
 
         textures = new List<Texture2D>();
 
@@ -121,7 +124,8 @@ public class Quilt : MonoBehaviour
         if(wait <= 0f)
             offset = Mathf.Repeat(offset + (Time.deltaTime * m_speed), 1f);
 
-        textureCap = Nest.capacity;
+        if(Nest != null)
+            textureCap = Nest.capacity;
     }
 
     float wait = 0f;
