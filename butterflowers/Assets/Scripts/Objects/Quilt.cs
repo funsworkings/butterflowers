@@ -208,12 +208,15 @@ public class Quilt : MonoBehaviour
         w = canvas.width;
         h = canvas.height;
 
+        /*
         sampler = new Texture2D(w, h, TextureFormat.ARGB32, false, true);
         Sample();
 
         StartCoroutine("Refresh");
+        */
     }
 
+    /*
     IEnumerator Refresh()
     {
         while (true) {
@@ -236,6 +239,7 @@ public class Quilt : MonoBehaviour
         sample = sampler.GetPixels();
         RenderTexture.active = render;
     }
+    
 
     // BL = (0,0) TR = (1,1)
 
@@ -253,6 +257,7 @@ public class Quilt : MonoBehaviour
         var ind = Mathf.FloorToInt((1f - vy) * w) + x;//Debug.Log("x: " + x + "  y: " + y + "index: " + ind + "  cap: " + sample.Length);
         return sampler.GetPixel(x, y);
     }
+    */
 
     #endregion
 
