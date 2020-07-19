@@ -25,6 +25,9 @@ namespace Wizard {
 
 		[SerializeField] World Manager;
 
+		public int REFRESH = 0;
+		public int REFRESH_RATE = 16;
+
 
 		Sun Sun;
 		Library Library;
@@ -232,6 +235,7 @@ namespace Wizard {
 
 			actionQueueUI = actionQueueUI_root.GetComponentsInChildren<TMP_Text>();
 
+			REFRESH = REFRESH_RATE + 1;
 			StartCoroutine("Cycle");
 		}
 
@@ -254,9 +258,14 @@ namespace Wizard {
 					case GAMESTATE.GAME:
 					case GAMESTATE.ABSORB:
 					default:
-						if (!actions.inprogress) {
-							if (actions.queue.Length == 0) {
-								CoreBehaviourTree.Restart();
+						if (!actions.inprogress) 
+						{
+							if (actions.queue.Length == 0) 
+							{
+								if (++REFRESH > REFRESH_RATE) {
+									CoreBehaviourTree.Restart();
+									REFRESH = 0;
+								}
 							}
 						}
 						break;

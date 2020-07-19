@@ -200,7 +200,7 @@ Transform:
   m_GameObject: {fileID: 2418046}
   m_LocalRotation: {x: 0, y: 0, z: 0, w: 1}
   m_LocalPosition: {x: 0, y: 0, z: 0.115}
-  m_LocalScale: {x: 0.078805566, y: 0.061628316, z: 0.01}
+  m_LocalScale: {x: 0.10175228, y: 0.061628316, z: 0.01}
   m_Children:
   - {fileID: 2015572246}
   m_Father: {fileID: 534669905}
@@ -3263,7 +3263,7 @@ Transform:
   m_PrefabInstance: {fileID: 0}
   m_PrefabAsset: {fileID: 0}
   m_GameObject: {fileID: 201810246}
-  m_LocalRotation: {x: -0.22025323, y: -2.4103189e-15, z: 3.087657e-15, w: 0.97544277}
+  m_LocalRotation: {x: -0.22025321, y: 0.000000013505881, z: -0.000000006295696, w: 0.97544277}
   m_LocalPosition: {x: 0, y: -4.7999983, z: -19.199999}
   m_LocalScale: {x: 1, y: 1, z: 1}
   m_Children:
@@ -4053,14 +4053,15 @@ MonoBehaviour:
   root: {fileID: 166675946}
   parent: {fileID: 0}
   amount: 1280
-  spawnOnAwake: 0
-  continuous: 1
+  spawnOnAwake: 1
+  continuous: 0
   boundsOffset: {x: 0, y: 0, z: 0}
   boundsMultiplier: {x: 1, y: 1, z: 1}
   onAllDead:
     m_PersistentCalls:
       m_Calls: []
   preset: {fileID: 11400000, guid: 45ffdf5e02efb4848942aaeb5d029f6e, type: 2}
+  butterfly_preset: {fileID: 11400000, guid: d61cb4af776ad4144b8d58cf71187d87, type: 2}
   camera: {fileID: 534669904}
   minDistance: 17
   maxDistance: 43
@@ -11299,6 +11300,8 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: 
   Manager: {fileID: 58810647}
+  REFRESH: 0
+  REFRESH_RATE: 16
   Nest: {fileID: 735639530}
   Mother: {fileID: 0}
   Preset: {fileID: 11400000, guid: 599fca27826da9a469476dcff92e983f, type: 2}
@@ -16928,7 +16931,7 @@ Transform:
   m_PrefabInstance: {fileID: 0}
   m_PrefabAsset: {fileID: 0}
   m_GameObject: {fileID: 534669902}
-  m_LocalRotation: {x: -0.22025323, y: -2.4103189e-15, z: 3.087657e-15, w: 0.97544277}
+  m_LocalRotation: {x: -0.22025321, y: 0.000000013505881, z: -0.000000006295696, w: 0.97544277}
   m_LocalPosition: {x: 0, y: -4.7999983, z: -30.55278}
   m_LocalScale: {x: 1, y: 1, z: 1}
   m_Children:
@@ -45207,7 +45210,7 @@ Transform:
   m_GameObject: {fileID: 2015572245}
   m_LocalRotation: {x: 0, y: 0, z: 0, w: 1}
   m_LocalPosition: {x: 21.7, y: 19.1, z: 0}
-  m_LocalScale: {x: 0.0041875215, y: 0.005354681, z: 0.033}
+  m_LocalScale: {x: 0.0032431707, y: 0.005354681, z: 0.033}
   m_Children:
   - {fileID: 474465336}
   m_Father: {fileID: 2418050}
