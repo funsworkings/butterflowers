@@ -7,10 +7,10 @@ namespace Wizard {
     [System.Serializable]
     public class Knowledge {
 
-        public string file;
+        public int file;
         public float time;
 
-        public void AddTime(float dt) { time += dt; }
+        public float AddTime(float dt) { time += dt; return time; }
         public void Forget() { time = 0f; }
     }
 

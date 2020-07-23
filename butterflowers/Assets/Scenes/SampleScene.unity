@@ -200,7 +200,7 @@ Transform:
   m_GameObject: {fileID: 2418046}
   m_LocalRotation: {x: 0, y: 0, z: 0, w: 1}
   m_LocalPosition: {x: 0, y: 0, z: 0.115}
-  m_LocalScale: {x: 0.10175228, y: 0.061628316, z: 0.01}
+  m_LocalScale: {x: 0.08952324, y: 0.061628316, z: 0.01}
   m_Children:
   - {fileID: 2015572246}
   m_Father: {fileID: 534669905}
@@ -633,6 +633,8 @@ MonoBehaviour:
     type: 3}
   initializeOnAwake: 1
   m_beaconInfoContainer: {fileID: 2032687484}
+  m_wizardCamera: {fileID: 582910691}
+  m_playerCamera: {fileID: 534669904}
   WorldCamera: {fileID: 875157282}
   previousMainCamera: {fileID: 0}
   beaconPaths: []
@@ -1678,6 +1680,7 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 449a530d6535c45f693035c8b7a9908c, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
+  camera: {fileID: 0}
   target: {fileID: 468500789}
   offset: {x: 96, y: 180, z: 0}
   globalOffset: 1
@@ -4061,7 +4064,6 @@ MonoBehaviour:
     m_PersistentCalls:
       m_Calls: []
   preset: {fileID: 11400000, guid: 45ffdf5e02efb4848942aaeb5d029f6e, type: 2}
-  butterfly_preset: {fileID: 11400000, guid: d61cb4af776ad4144b8d58cf71187d87, type: 2}
   camera: {fileID: 534669904}
   minDistance: 17
   maxDistance: 43
@@ -16912,7 +16914,7 @@ Camera:
   m_Depth: 0
   m_CullingMask:
     serializedVersion: 2
-    m_Bits: 3383
+    m_Bits: 60727
   m_RenderingPath: -1
   m_TargetTexture: {fileID: 0}
   m_TargetDisplay: 0
@@ -18203,6 +18205,7 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 449a530d6535c45f693035c8b7a9908c, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
+  camera: {fileID: 0}
   target: {fileID: 468500789}
   offset: {x: 72, y: -156, z: 0}
   globalOffset: 1
@@ -22111,7 +22114,7 @@ Camera:
   m_Depth: -18
   m_CullingMask:
     serializedVersion: 2
-    m_Bits: 7991
+    m_Bits: 4294967295
   m_RenderingPath: -1
   m_TargetTexture: {fileID: 0}
   m_TargetDisplay: 0
@@ -22997,6 +23000,7 @@ MonoBehaviour:
   GestureEnd:
     m_PersistentCalls:
       m_Calls: []
+  camera: {fileID: 0}
   agent: 1
   m_spells: 1
   cursor: {fileID: 900886787}
@@ -24683,7 +24687,7 @@ Camera:
   m_Depth: 0
   m_CullingMask:
     serializedVersion: 2
-    m_Bits: 7479
+    m_Bits: 64823
   m_RenderingPath: -1
   m_TargetTexture: {fileID: 0}
   m_TargetDisplay: 0
@@ -25342,6 +25346,7 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 449a530d6535c45f693035c8b7a9908c, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
+  camera: {fileID: 0}
   target: {fileID: 468500789}
   offset: {x: 0, y: 156, z: 0}
   globalOffset: 1
@@ -31801,6 +31806,7 @@ MonoBehaviour:
   Nest: {fileID: 735639530}
   World: {fileID: 58810647}
   Preset: {fileID: 11400000, guid: 45ffdf5e02efb4848942aaeb5d029f6e, type: 2}
+  feedCamera: {fileID: 582910691}
   scribeInterval: 0.067
   totalwidth: 64
   patt: 3
@@ -45210,7 +45216,7 @@ Transform:
   m_GameObject: {fileID: 2015572245}
   m_LocalRotation: {x: 0, y: 0, z: 0, w: 1}
   m_LocalPosition: {x: 21.7, y: 19.1, z: 0}
-  m_LocalScale: {x: 0.0032431707, y: 0.005354681, z: 0.033}
+  m_LocalScale: {x: 0.0036861936, y: 0.005354681, z: 0.033}
   m_Children:
   - {fileID: 474465336}
   m_Father: {fileID: 2418050}
@@ -45284,6 +45290,7 @@ MonoBehaviour:
           m_StringArgument: 
           m_BoolArgument: 0
         m_CallState: 2
+  camera: {fileID: 0}
   agent: 2
   m_spells: 0
   cursor: {fileID: 2015572252}
@@ -51553,6 +51560,7 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 449a530d6535c45f693035c8b7a9908c, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
+  camera: {fileID: 0}
   target: {fileID: 468500789}
   offset: {x: 164, y: 252, z: 0}
   globalOffset: 1

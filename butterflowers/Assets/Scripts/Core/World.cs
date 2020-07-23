@@ -9,6 +9,7 @@ using Memory = Wizard.Memory;
 using System.Runtime.InteropServices;
 
 using UnityEngine.Events;
+using UnityEngine.Experimental.UIElements;
 
 public class World : Spawner
 {
@@ -87,6 +88,9 @@ public class World : Spawner
 
     [SerializeField] Transform m_beaconInfoContainer = null;
 
+    [SerializeField] Camera m_wizardCamera = null;
+    [SerializeField] Camera m_playerCamera = null;
+
     [SerializeField] Snapshot WorldCamera;
     [SerializeField] Camera previousMainCamera = null;
 
@@ -115,6 +119,9 @@ public class World : Spawner
     public Beacon[] InactiveBeacons => allBeacons.Where(beacon => !Nest.HasBeacon(beacon)).ToArray();
 
     public Transform BeaconInfoContainer => m_beaconInfoContainer;
+
+    public Camera WizardCamera => m_wizardCamera;
+    public Camera PlayerCamera => m_playerCamera;
 
     #endregion
 
@@ -179,6 +186,7 @@ public class World : Spawner
 
     IEnumerator Initialize()
     {
+        Save = GameDataSaveSystem.Instance;
         while (!Save.load) yield return null;
 
         if (Preset.alwaysIntro) m_STATE = GAMESTATE.INTRO;
@@ -508,6 +516,20 @@ public class World : Spawner
         return _beacon;
     }
 
+    public Beacon.Status FetchBeaconStatus(Beacon beacon)
+    {
+        var brain = Wizard.Brain;
+
+        if (brain.isUnknown(beacon))
+            return Beacon.Status.UNKNOWN;
+        else if (brain.isComfortable(beacon))
+            return Beacon.Status.COMFORTABLE;
+        else if (brain.isActionable(beacon))
+            return Beacon.Status.ACTIONABLE;
+
+        return Beacon.Status.NULL;
+    }
+
     #endregion
 
     #region World operations
@@ -703,14 +725,14 @@ public class World : Spawner
         bool success = Discovery.DiscoverFile(file);
 
         Debug.LogFormat("discovery = {0}", file);
-        if (success) 
-        {
+        //if (success) 
+        //{
             var beacon = CreateBeaconForWizard(memory.image);
             if (beacon != null) 
             {
                 beacon.Discover();
             }
-        }
+        //}
     }
 
     #endregion

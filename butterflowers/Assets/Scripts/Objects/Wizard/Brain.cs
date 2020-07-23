@@ -21,9 +21,16 @@ namespace Wizard {
 
 	public class Brain: MonoBehaviour {
 
+		#region Events
+
+		public System.Action<MoodState, StanceState> onUpdateState;
+
+		#endregion
+
+
 		#region External
 
-		[SerializeField] World Manager;
+		[SerializeField] World World;
 
 		public int REFRESH = 0;
 		public int REFRESH_RATE = 16;
@@ -39,17 +46,10 @@ namespace Wizard {
 
 		#region Internal
 
-		public enum MoodState { Neutral, Depression, Joyous }
+		public enum MoodState { NULL, Neutral, Depression, Joyous }
 		public enum Sub_MoodState { NULL, Mischief, Violence, Happy, Elation }
 
-		public enum StanceState { Neutral, Unknown, Confidence }
-
-		[System.Serializable]
-		public struct ReactionMapping {
-			public EVENTCODE @event;
-			public MoodState[] mood;
-			public DialogueCollection reactions;
-		}
+		public enum StanceState { NULL, Neutral, Unknown, Confidence }
 
 		#endregion
 
@@ -88,15 +88,20 @@ namespace Wizard {
 
 		[SerializeField] ActionType[] excludes;
 
+		[SerializeField] StanceState m_stanceState = StanceState.NULL;
+		[SerializeField] MoodState m_moodState = MoodState.NULL;
+
 		private const int EVENT_WAIT = 72;
 		private const int EVENT_STACK_HEIGHT = 12;
+
+		float TIMETOLEARN = -1f;
 
 		#endregion
 
 		#region Collections
 
-		public List<Beacon> wiz_beacons = new List<Beacon>();
-		public List<Beacon> dsktop_beacons = new List<Beacon>();
+		public List<Beacon> self_beacons = new List<Beacon>();
+		public List<Beacon> ext_beacons = new List<Beacon>();
 		public List<Beacon> all_beacons = new List<Beacon>();
 
 		Dictionary<string, Beacon> beacon_lookup = new Dictionary<string, Beacon>();
@@ -115,8 +120,6 @@ namespace Wizard {
 		int RECEIVE_NEST_EVENT = -1;
 		public EVENTCODE LAST_NEST_EVENT => (NEST_EVENTS.Count > 0) ? NEST_EVENTS.Last() : EVENTCODE.NULL;
 
-		public ReactionMapping[] reactionMappings = new ReactionMapping[] { };
-
 		#endregion
 
 		#region Accessors
@@ -124,6 +127,10 @@ namespace Wizard {
 		public float mood => m_mood;
 		public float stance => m_stance;
 		public float absorption => m_absorption;
+
+		public MoodState moodState => m_moodState;
+		public StanceState stanceState => m_stanceState;
+
 
 		public float environmentKnowledge => m_environmentKnowledge;
 		public Dictionary<string, Knowledge> fileKnowledge => m_fileKnowledge;
@@ -193,7 +200,7 @@ namespace Wizard {
 
 		void OnEnable()
 		{
-			Manager.onRefreshBeacons += Reset;
+			World.onRefreshBeacons += Reset;
 
 			ModuleTree.onReceiveEvent += onReceiveEvent;
 			ModuleTree.onReceiveDialogue += onReceiveDialogue;
@@ -203,7 +210,7 @@ namespace Wizard {
 
 		void OnDisable()
 		{
-			Manager.onRefreshBeacons -= Reset;
+			World.onRefreshBeacons -= Reset;
 
 			ModuleTree.onReceiveEvent -= onReceiveEvent;
 			ModuleTree.onReceiveDialogue -= onReceiveDialogue;
@@ -249,7 +256,7 @@ namespace Wizard {
 				RECEIVE_NEST_EVENT++;
 
 
-				switch (Manager.STATE) 
+				switch (World.STATE) 
 				{
 					case GAMESTATE.INTRO:
 						break;
@@ -298,6 +305,8 @@ namespace Wizard {
 		{
 			if (!Sun.active) return;
 
+			TIMETOLEARN = Preset.daysUntilFileKnowledge * WorldPreset.secondsPerDay;
+
 			float dt = Time.deltaTime;
 
 			LearnFromEnvironment(dt);
@@ -312,7 +321,7 @@ namespace Wizard {
 			float t_mood = EvaluateMood();
 			m_mood = Mathf.Lerp(mood, t_mood, Time.deltaTime * Preset.moodSmoothSpeed);
 
-			m_absorption = Manager.GetAbsorption();
+			m_absorption = World.GetAbsorption();
 
 			DebugResources();
 			DebugActionQueue();
@@ -330,7 +339,7 @@ namespace Wizard {
 		{
 			Dispose();
 
-			var beacons = Manager.AllBeacons;
+			var beacons = World.AllBeacons;
 			if (beacons == null || beacons.Length == 0) return;
 
 			Refresh(beacons);
@@ -345,8 +354,8 @@ namespace Wizard {
 		public void Dispose()
 		{
 			all_beacons.Clear();
-			wiz_beacons.Clear();
-			dsktop_beacons.Clear();
+			self_beacons.Clear();
+			ext_beacons.Clear();
 
 			beacon_lookup.Clear();
 		}
@@ -362,8 +371,12 @@ namespace Wizard {
 					var k = files[i];
 					var file = k.file;
 
-					if (!fileKnowledge.ContainsKey(file))
-						fileKnowledge.Add(file, k);
+					string file_name = null;
+					Library.Instance.FetchFile(file, out file_name);
+
+					if (file_name != null && !fileKnowledge.ContainsKey(file_name)) {
+						fileKnowledge.Add(file_name, k);
+					}
 				}
 			}
 		}
@@ -413,7 +426,7 @@ namespace Wizard {
 
 		float EvaluateAbsorption()
 		{
-			return Manager.GetAbsorption();
+			return World.GetAbsorption();
 		}
 
 		#endregion
@@ -473,26 +486,42 @@ namespace Wizard {
 
 		void LearnFromBeacons(float dt)
 		{
-			if (dsktop_beacons == null) return;
+			if (ext_beacons == null) return;
 
-			for (int i = 0; i < dsktop_beacons.Count; i++) {
-				var beacon = dsktop_beacons[i];
-				var accel = Nest.HasBeacon(beacon);
+			var cam = World.PlayerCamera;
+
+			for (int i = 0; i < ext_beacons.Count; i++) {
+				var beacon = ext_beacons[i];
+				var visible = false;
+
+				var accel = visible = Nest.HasBeacon(beacon);
+				if (!visible) 
+				{
+					Vector2 screen_pos = Vector2.zero;
+					visible = beacon.transform.IsVisible(cam, out screen_pos);
+
+					beacon.learning = visible;
+				}
+
+				if (!visible) {
+					//Debug.LogFormat("beacon {0} is not visible, IGNORE", beacon.file.AbbreviateFilename());
+					continue; // Move past beacon if not visible
+				}
 
 				float multiplier = (accel) ? Preset.nestLearningMultiplier : Preset.defaultLearningMultiplier;
 				Learn(beacon, dt, multiplier);
 			}
 		}
 
-		void Learn(Beacon beacon, float dt, float multiplier = 1f)
+		float Learn(Beacon beacon, float dt, float multiplier = 1f)
 		{
-			if (beacon == null) return;
+			if (beacon == null) return -1f;
 
 			var file = beacon.file;
-			if (!fileKnowledge.ContainsKey(file)) return;
+			if (!fileKnowledge.ContainsKey(file)) return 0f;
 
 			var k = fileKnowledge[file];
-			k.AddTime(dt * multiplier);
+			return k.AddTime(dt * multiplier);
 		}
 
 		void Refresh(Beacon[] beacons)
@@ -504,8 +533,8 @@ namespace Wizard {
 				if (beacon != null) {
 					AddKnowledge(beacon.file);
 
-					if (Library.IsDesktop(beacon)) dsktop_beacons.Add(beacon);
-					else if (Library.IsWizard(beacon) || Library.IsShared(beacon)) wiz_beacons.Add(beacon);
+					if (Library.IsDesktop(beacon) || Library.IsEnviro(beacon)) ext_beacons.Add(beacon);
+					else if (Library.IsWizard(beacon) || Library.IsShared(beacon)) self_beacons.Add(beacon);
 
 					var file = beacon.file;
 					if (!beacon_lookup.ContainsKey(file))
@@ -520,8 +549,11 @@ namespace Wizard {
 		{
 			if (fileKnowledge.ContainsKey(file)) return;
 
+			var ind = Library.FetchFileIndex(file);
+			if (ind < 0) return;
+
 			var k = new Knowledge();
-			k.file = file;
+			k.file = ind;
 			k.time = 0f;
 
 			fileKnowledge.Add(file, k);
@@ -576,27 +608,6 @@ namespace Wizard {
 			}
 		}
 
-		public void ReactToEvent()
-		{
-			var rand = Random.Range(0f, 1f);
-			if (rand > Preset.reactionProbability)
-				return;
-
-			EVENTCODE @event = Events.LAST_EVENT;
-			MoodState state = getMoodState();
-
-			var mappings = reactionMappings.Where(m => (m.@event == @event && m.mood.Contains(state)) );
-			if (mappings.Count() == 0) {
-				Debug.LogFormat("Found no matching reactions for event = {0} mood = {1}", @event, state);  
-				return;
-			}
-
-			var map = mappings.ElementAt(0); // Get first mapping
-			var reaction = map.reactions.FetchRandomItem();
-
-			dialogue.Push(reaction, true);
-		}
-
 		#endregion
 
 		#region Events
@@ -608,7 +619,7 @@ namespace Wizard {
 				AddEventToQueue(@event, ref NEST_EVENTS);
 				RECEIVE_NEST_EVENT = -EVENT_WAIT;
 			}
-			if (a == AGENT.Inhabitant0 || a == AGENT.Inhabitants) {
+			if (a == AGENT.User || a == AGENT.Inhabitants) {
 				AddEventToQueue(@event, ref PLAYER_EVENTS);
 				RECEIVE_PLAYER_EVENT = -EVENT_WAIT;
 			}
@@ -624,6 +635,33 @@ namespace Wizard {
 				arr.RemoveAt(0);
 
 			arr.Add(@event);
+		}
+
+		#endregion
+
+		#region Mood/stance
+
+		void CheckForUpdateToMoodOrStance(MoodState mood = MoodState.NULL, StanceState stance = StanceState.NULL)
+		{
+			if (mood == MoodState.NULL) mood = getMoodState(checkForUpdates:false);
+			if (stance == StanceState.NULL) stance = getStanceState(checkForUpdates:false);
+
+			bool flag = false;
+
+			if (m_moodState != mood) 
+			{
+				m_moodState = mood;
+				flag = true;
+			}
+
+			if (m_stanceState != stance) 
+			{
+				m_stanceState = stance;
+				flag = true;
+			}
+
+			if (flag && onUpdateState != null)
+				onUpdateState(mood, stance);
 		}
 
 		#endregion
@@ -664,14 +702,18 @@ namespace Wizard {
 
 		#region Behaviour tree (FETCH)
 
-		public MoodState getMoodState()
+		public MoodState getMoodState(bool checkForUpdates = true)
 		{
-			if (mood >= Preset.highMoodThreshold)
-				return MoodState.Joyous;
-			if (mood <= Preset.lowMoodThreshold)
-				return MoodState.Depression;
+			var state = MoodState.Neutral;
 
-			return MoodState.Neutral;
+			if (mood >= Preset.highMoodThreshold)
+				state = MoodState.Joyous;
+			if (mood <= Preset.lowMoodThreshold)
+				state = MoodState.Depression;
+
+			if(checkForUpdates) CheckForUpdateToMoodOrStance(mood: state);
+
+			return state;
 		}
 
 		public Sub_MoodState getSubMoodState()
@@ -706,7 +748,7 @@ namespace Wizard {
 		}
 
 
-		public StanceState getStanceState(AGENT agent = AGENT.NULL)
+		public StanceState getStanceState(AGENT agent = AGENT.NULL, bool checkForUpdates = true)
 		{
 			float stance = this.stance;
 
@@ -714,21 +756,23 @@ namespace Wizard {
 				stance = FetchKnowledgeFromEnvironment(); // Pull down enviro knowledge instead
 
 
-			if (stance >= Preset.highStanceThreshold)
-				return StanceState.Confidence;
-			if (stance <= Preset.lowStanceThreshold)
-				return StanceState.Unknown;
+			var state = StanceState.Neutral;
 
-			return StanceState.Neutral;
+			if (stance >= Preset.highStanceThreshold)
+				state = StanceState.Confidence;
+			if (stance <= Preset.lowStanceThreshold)
+				state = StanceState.Unknown;
+
+			return state;
 		}
 
-		public string[] getBeacons() { return Manager.AllBeacons.Select(beacon => beacon.file).ToArray(); }
+		public string[] getBeacons() { return World.AllBeacons.Select(beacon => beacon.file).ToArray(); }
 
 
 
 		public SUGGESTION getSuggestion()
 		{
-			var possible = Manager.GetSuggestions();
+			var possible = World.GetSuggestions();
 			return possible.PickRandomSubset(1)[0];
 		}
 
@@ -775,7 +819,7 @@ namespace Wizard {
 		{
 			List<string> filtered = new List<string>();
 
-			var intersect  = raw.Intersect(wiz_beacons.Select(beacon => beacon.file));
+			var intersect  = raw.Intersect(self_beacons.Select(beacon => beacon.file));
 			float test_sign = Mathf.Sign(mood);
 
 			foreach (string beacon in intersect) {
@@ -810,17 +854,17 @@ namespace Wizard {
 					source = source.Where(b => b.visible).ToList();
 					break;
 				case FilterBeacons.Filter.Unknown:
-					source = source.Where(b => FetchKnowledgeFromBeacon(b) <= Preset.unknownBeaconThreshold).ToList();
+					source = source.Where(b => isUnknown(b)).ToList();
 					break;
 				case FilterBeacons.Filter.Comfortable:
-					source = source.Where(b => FetchKnowledgeFromBeacon(b) > Preset.actionableBeaconThreshold).ToList();
+					source = source.Where(b => isComfortable(b)).ToList();
 					break;
 				case FilterBeacons.Filter.Memory:
-					source = source.Intersect(wiz_beacons).ToList();
+					source = source.Intersect(self_beacons).ToList();
 					break;
 				case FilterBeacons.Filter.Playable:
 				case FilterBeacons.Filter.Actionable:
-					source = source.Where(b => FetchKnowledgeFromBeacon(b) > FetchKnowledgeFromEnvironment()).ToList();
+					source = source.Where(b => isActionable(b)).ToList();
 					break;
 				default:
 					break;
@@ -829,7 +873,7 @@ namespace Wizard {
 			return source.Select(beacon => beacon.file).ToArray();
 		}
 
-		public void Burst() { Manager.PositiveBurst(); }
+		public void Burst() { World.PositiveBurst(); }
 
 		#endregion
 
@@ -932,9 +976,9 @@ namespace Wizard {
 		public bool ExistsActionableBeacon(ActionType op)
 		{
 			if (op == ActionType.BeaconActivate)
-				return Manager.InactiveBeacons.Where(beacon => FetchKnowledgeFromBeacon(beacon) >= Preset.minimumBeaconActivateKnowledge).Count() > 0;
+				return World.InactiveBeacons.Where(beacon => FetchKnowledgeFromBeacon(beacon) >= Preset.minimumBeaconActivateKnowledge).Count() > 0;
 			if (op == ActionType.BeaconDestroy)
-				return Manager.InactiveBeacons.Where(beacon => FetchKnowledgeFromBeacon(beacon) <= Preset.maximumBeaconDeleteKnowledge).Count() > 0;
+				return World.InactiveBeacons.Where(beacon => FetchKnowledgeFromBeacon(beacon) <= Preset.maximumBeaconDeleteKnowledge).Count() > 0;
 
 			return false;
 		}
@@ -1042,6 +1086,24 @@ namespace Wizard {
 		#endregion
 
 
+		#region Helpers
+
+		public bool isActionable(Beacon beacon)
+		{
+			return FetchKnowledgeFromBeacon(beacon) > FetchKnowledgeFromEnvironment();
+		}
+
+		public bool isComfortable(Beacon beacon)
+		{
+			return FetchKnowledgeFromBeacon(beacon) > Preset.actionableBeaconThreshold;
+		}
+
+		public bool isUnknown(Beacon beacon)
+		{
+			return FetchKnowledgeFromBeacon(beacon) <= Preset.unknownBeaconThreshold;
+		}
+
+		#endregion
 
 
 		#region Deprecated

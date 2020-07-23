@@ -30,7 +30,7 @@ GameObject:
   - component: {fileID: 5556437273785765610}
   - component: {fileID: 5556437273785765614}
   - component: {fileID: 114254769642422460}
-  m_Layer: 0
+  m_Layer: 15
   m_Name: Butterfly
   m_TagString: Untagged
   m_Icon: {fileID: 0}
@@ -68,8 +68,10 @@ MonoBehaviour:
   trailsPrefab: {fileID: 382550191870845936, guid: fee354e8b11564a1c84451cf147ab5b4,
     type: 3}
   m_wand: {fileID: 0}
+  agent: 0
   origin: {x: 0, y: 0, z: 0}
   spawn: {x: 0, y: 0, z: 0}
+  velocity: {x: 0, y: 0, z: 0}
   state: 0
   final: {r: 0, g: 0, b: 0, a: 0}
   colorSpeed: 0
@@ -85,6 +87,8 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 4b07e1ca857be497c959db8b96d84008, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
+  refresh: 0
+  continuous: 1
 --- !u!1001 &4212495206180200249
 PrefabInstance:
   m_ObjectHideFlags: 0
@@ -95,6 +99,30 @@ PrefabInstance:
     - target: {fileID: 100006, guid: 6e943f0813e29414e8ab4091fbb01f47, type: 3}
       propertyPath: m_Name
       value: butterfly_east
+      objectReference: {fileID: 0}
+    - target: {fileID: 100006, guid: 6e943f0813e29414e8ab4091fbb01f47, type: 3}
+      propertyPath: m_Layer
+      value: 15
+      objectReference: {fileID: 0}
+    - target: {fileID: 100000, guid: 6e943f0813e29414e8ab4091fbb01f47, type: 3}
+      propertyPath: m_Layer
+      value: 15
+      objectReference: {fileID: 0}
+    - target: {fileID: 100002, guid: 6e943f0813e29414e8ab4091fbb01f47, type: 3}
+      propertyPath: m_Layer
+      value: 15
+      objectReference: {fileID: 0}
+    - target: {fileID: 100004, guid: 6e943f0813e29414e8ab4091fbb01f47, type: 3}
+      propertyPath: m_Layer
+      value: 15
+      objectReference: {fileID: 0}
+    - target: {fileID: 100012, guid: 6e943f0813e29414e8ab4091fbb01f47, type: 3}
+      propertyPath: m_Layer
+      value: 15
+      objectReference: {fileID: 0}
+    - target: {fileID: 100014, guid: 6e943f0813e29414e8ab4091fbb01f47, type: 3}
+      propertyPath: m_Layer
+      value: 15
       objectReference: {fileID: 0}
     - target: {fileID: 400006, guid: 6e943f0813e29414e8ab4091fbb01f47, type: 3}
       propertyPath: m_LocalPosition.x

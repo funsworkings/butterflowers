@@ -76,6 +76,7 @@ public class BrainPreset : ScriptableObject
 
     [Header("MISCELLANEOUS (MECHANICS)")]
         [Range(0f, 1f)] public float reactionProbability = .5f;
+        [Range(0f, 1f)] public float commentProbabilty = .5f;
 
         public float impactActionWeight = 1f;
         public float impactMoodWeight = 1f;

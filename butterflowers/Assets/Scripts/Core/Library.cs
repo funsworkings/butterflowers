@@ -405,9 +405,26 @@ public class Library : Singleton<Library>
 		return items.Contains(file);
 	}
 
+	public int FetchFileIndex(string filename)
+	{
+		return ALL_FILES.IndexOf(filename);
+	}
+
+	public bool FetchFile(int index, out string filename) 
+	{
+		if (index >= 0 && index < ALL_FILES.Count){
+			filename = ALL_FILES[index];
+			return true;
+		}
+
+		filename = null;
+		return false;
+	}
+
 	public bool IsDesktop(Beacon beacon) { return (beacon == null) ? false : IsDesktop(beacon.file); }
 	public bool IsWizard(Beacon beacon) { return (beacon == null) ? false : IsWizard(beacon.file); }
 	public bool IsShared(Beacon beacon) { return (beacon == null) ? false : IsShared(beacon.file); }
+	public bool IsEnviro(Beacon beacon) { return (beacon == null) ? false : IsEnviro(beacon.file); }
 
 	public bool IsDesktop(string file)
 	{
@@ -424,5 +441,10 @@ public class Library : Singleton<Library>
 		return items_shared.Contains(file);
 	}
 
-	#endregion
-}
+	public bool IsEnviro(string file)
+	{
+		return items_enviro.Contains(file);
+	}
+
+		#endregion
+	}

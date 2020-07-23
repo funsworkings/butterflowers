@@ -15,31 +15,55 @@ using System.Text;
 
 namespace Wizard {
 
+    using Mood = Brain.MoodState;
+    using Stance = Brain.StanceState;
+
     public class Dialogue: DialogueHandler {
 
         World world;
 
         #region Properties
 
-        [SerializeField] DialogueTree dialogueTree;
-        [SerializeField] DialogueTree introTree;
-        [SerializeField] DialogueTree discoveryTree;
-
-        public DialogueTree focusDialogueTree;
+        [SerializeField] DialogueTree[] dialogueTrees;
+        [SerializeField] DialogueTree coreDialogueTree;
 
         Controller controller;
         Memories memories;
         Brain brain;
 
+        [SerializeField] Text_WiggleEffect memoryTextEffect;
+
         [SerializeField] ToggleOpacity bubble = null;
         [SerializeField] TogglePosition bubble_pos = null;
         [SerializeField] ToggleOpacity advancer = null;
 
+        [SerializeField] GameObject alert;
+
         #endregion
 
-        #region Collections
+        #region Internal
 
-        [SerializeField] List<string> temp = new List<string>();
+        [System.Serializable]
+        public struct CommentMapping 
+        {
+            public Mood mood;
+            public Stance stance;
+            public DialogueCollection dialogue;
+        }
+
+        [System.Serializable]
+        public struct ReactionMapping 
+        {
+            public EVENTCODE @event;
+            public Mood mood;
+            public DialogueCollection dialogue;
+        }
+
+		#endregion
+
+		#region Collections
+
+		[SerializeField] List<string> temp = new List<string>();
         [SerializeField] List<int> tempvisited = new List<int>();
 
         #endregion
@@ -55,6 +79,9 @@ namespace Wizard {
 
         [SerializeField] [Range(0f, 1f)] float m_minRandomness = .1f, m_maxRandomness = 1f;
         [SerializeField] float m_minSymbolDelay = 0f, m_maxSymbolDelay = 1f;
+
+        [SerializeField] CommentMapping[] commentaries = new CommentMapping[] { };
+        [SerializeField] ReactionMapping[] reactions = new ReactionMapping[] { };
 
         #endregion
 
@@ -75,8 +102,8 @@ namespace Wizard {
                 node_id = value;
 
                 Debug.LogFormat("Attempt set {0} as node", node_id);
-                var node = dialogueTree.GetNodeByInstanceId(node_id);
-                dialogueTree.activeNode = node;
+                var node = coreDialogueTree.GetNodeByInstanceId(node_id);
+                coreDialogueTree.activeNode = node;
             }
         }
 
@@ -88,13 +115,15 @@ namespace Wizard {
             set
             {
                 tempvisited = new List<int>(value);
-                dialogueTree.FlagTemporaryDialogue(value);
+                coreDialogueTree.FlagTemporaryDialogue(value);
             }
         }
 
         public string[] temporaryqueue => temp.ToArray();
 
         [SerializeField] string[] debugBodies = new string[] { };
+
+        public bool isAlertActive => alert.activeSelf;
 
         #endregion
 
@@ -110,30 +139,28 @@ namespace Wizard {
             memories = controller.Memories;
             brain = controller.Brain;
 
-            dialogueTree.dialogueHandler = this;
-            introTree.dialogueHandler = this;
-            //discoveryTree.dialogueHandler = this;
+            foreach (DialogueTree tree in dialogueTrees)
+                tree.dialogueHandler = this;
         }
 
         void OnEnable()
         {
             world = World.Instance;
 
-            dialogueTree.onUpdateNode += onUpdateNode;
+            coreDialogueTree.onUpdateNode += onUpdateNode;
             DialogueTree.onReceiveDialogue += onReceiveDialogue;
         }
 
         void OnDisable()
         {
-            dialogueTree.onUpdateNode -= onUpdateNode;
+            coreDialogueTree.onUpdateNode -= onUpdateNode;
             DialogueTree.onReceiveDialogue -= onReceiveDialogue;
         }
 
         void OnDestroy()
         {
-            dialogueTree.Dispose();
-            introTree.Dispose();
-            //discoveryTree.Dispose();
+            foreach (DialogueTree tree in dialogueTrees)
+                tree.Dispose();
         }
 
         #endregion
@@ -151,30 +178,15 @@ namespace Wizard {
         public void FetchDialogueFromTree(DialogueTree tree = null)
         {
             if (tree == null)
-            {
-                if (world.STATE == GAMESTATE.INTRO)
-                    tree = introTree;
-                else {
-                    if (controller.isFocused)
-                        tree = focusDialogueTree;
-                }
-            }
-
-            if (tree == null)
-                tree = dialogueTree;
+                tree = coreDialogueTree;
 
             tree.Step();
         }
 
         public string FetchDialogueFromTree(int value, DialogueTree tree = null)
         {
-            if (tree == null) {
-                if (controller.isFocused)
-                    tree = focusDialogueTree;
-            }
-
-            if(tree == null)
-                    tree = dialogueTree;
+            if (tree == null)
+                tree = coreDialogueTree;
 
             tree.Step(value);
 
@@ -182,6 +194,41 @@ namespace Wizard {
             string body = (node != null) ? (node as BaseDialogueNode).body : "";
 
             return body;
+        }
+
+
+        public void QueueComment() { alert.SetActive(true); }
+
+        public void React(EVENTCODE @event, Mood mood)
+        {
+            var mappings = reactions.Where(r => (r.@event == @event && (r.mood == Mood.NULL || r.mood == mood)) );
+            if (mappings.Count() == 0) {
+                Debug.LogErrorFormat("Found no matching reactions for event = {0} mood = {1}", @event, mood);
+                return;
+            }
+
+            var map = mappings.First(); // Get first mapping
+            var collection = map.dialogue;
+
+            string reaction = collection.FetchRandomItem();
+            Push(reaction, true);
+        }
+
+        public void Comment(Mood mood, Stance stance)
+        {
+            if (commentaries.Length == 0) return;
+
+            var mappings = commentaries.Where(c => c.stance == stance && c.mood == mood);
+            if (mappings.Count() == 0) {
+                Debug.LogErrorFormat("Unable to find commentary mapping for ->  mood = {0} stance = {1}", mood, stance);
+                return;
+            }
+
+            var mapping = mappings.First();
+            var collection = mapping.dialogue;
+
+            string comment = collection.FetchRandomItem();
+            Push(comment, true);
         }
 
         #endregion
@@ -284,19 +331,18 @@ namespace Wizard {
 
         protected override void OnStart(string body)
         {
-            DiscoveryMemoriesFromBody(body);
-            m_body = FilterMemories(body);
+            bool found = DiscoveryMemoriesFromBody(body);
+            m_body = FilterMemories(body, found);
 
             if(!debug) UpdateTimeBetweenSymbols();
 
+            memoryTextEffect.magnitude = (found)? 8f:0f;
             advancer.Hide();
         }
 
-        protected override void OnComplete(string body)
-        {
-            if (world.STATE == GAMESTATE.GAME) {
-                if (controller.isFocused) {
-                    autoprogress = false;
+        /* previous focus dialogue behaviour
+         * 
+         * autoprogress = false;
                     advancer.Show();
 
                     if (!available) {
@@ -305,16 +351,19 @@ namespace Wizard {
 
                         controller.SetAbsorbState(false);
                     }
-                }
-                else {
-                    autoprogress = true;
-                    advancer.Hide();
-                }
+         * 
+         * 
+         */
+
+        protected override void OnComplete(string body)
+        {
+            if (world.STATE == GAMESTATE.GAME) 
+            {
+                autoprogress = true;
+                advancer.Hide();
             }
             else 
-            {
                 advancer.Show();
-            }
         }
 
         #endregion
@@ -347,19 +396,23 @@ namespace Wizard {
 
         #region Parsing
 
-        string FilterMemories(string body)
+        string FilterMemories(string body, bool found = false)
         {
             body = Extensions.ReplaceEnclosingPattern(body, memoryFlag, "");
+            if (found) body = string.Format("<i><color=#27FFF8>{0}",  body); // Italicize memory
+
             return body;
         }
 
-        void DiscoveryMemoriesFromBody(string body)
+        bool DiscoveryMemoriesFromBody(string body)
         {
             var memories = ParseMemoriesFromBody(body);
             Debug.LogFormat("FOUND {0} MEMORIES FROM BODY={1}", memories.Length, body);
 
             for (int i = 0; i < memories.Length; i++)
                 controller.DiscoverMemory(memories[i]);
+
+            return (memories.Length > 0);
         }
 
 		Memory[] ParseMemoriesFromBody(string body)
