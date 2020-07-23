@@ -25,6 +25,7 @@ public class Unknown : MonoBehaviour
     #region Properties
 
     [SerializeField] WorldPreset Preset;
+    [SerializeField] Camera feedCamera;
 
 	#endregion
 
@@ -69,6 +70,7 @@ public class Unknown : MonoBehaviour
     void OnEnable()
     {
         Events.onFireEvent += onFireEvent;
+        //feedCamera.enabled = false;
     }
 
     void OnDisable()
@@ -126,6 +128,8 @@ public class Unknown : MonoBehaviour
     patternFunction fetchPattern()
     {
         patternFunction a = none;
+
+        //feedCamera.enabled = (patt == Pattern.Feed);
 
         if (patt == Pattern.River)
             a = river;

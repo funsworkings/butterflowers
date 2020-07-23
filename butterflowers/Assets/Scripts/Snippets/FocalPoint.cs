@@ -6,6 +6,8 @@ using UnityEngine.Experimental.UIElements;
 
 public class FocalPoint : MonoBehaviour
 {
+    World world;
+
     #region Events
 
     public static System.Action<FocalPoint> FocusOnPoint, LostFocusOnPoint, BeginFocus, HoverFocus, UnhoverFocus;
@@ -68,6 +70,8 @@ public class FocalPoint : MonoBehaviour
         interactable.onHover += Hover;
         interactable.onUnhover += Unhover;
         interactable.onGrab += Grab;
+
+        world = World.Instance;
     }
 
     void OnDisable()
@@ -127,7 +131,7 @@ public class FocalPoint : MonoBehaviour
         if (!queued || isFocused) return;
 
         anchor = point;
-        screen_anchor = mainCamera.WorldToScreenPoint(anchor);
+        screen_anchor = world.PlayerCamera.WorldToScreenPoint(anchor);
 
         if (BeginFocus != null)
             BeginFocus(this);

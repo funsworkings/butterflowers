@@ -151,7 +151,7 @@ public class Nest : MonoBehaviour
     void Kick(Vector3 origin, Vector3 direction)
     {
         Vector3 dir = (-direction - 3f * gravity_ext.gravity).normalized;
-        AddForceAndOpen(origin, dir, force, AGENT.Inhabitant0);
+        AddForceAndOpen(origin, dir, force, AGENT.User);
     }
 
     void AddForceAndOpen(Vector3 point, Vector3 direction, float force, AGENT agent = AGENT.Inhabitants)

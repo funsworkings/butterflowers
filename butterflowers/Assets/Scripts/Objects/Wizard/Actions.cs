@@ -126,6 +126,10 @@ namespace Wizard {
         Animator animator;
 
         [SerializeField] Snapshot snapshot;
+
+        
+        [SerializeField] Transform spells_root;
+        [SerializeField] GameObject pr_spell;
         [SerializeField] ParticleSystem spells_ps;
 
         #endregion
@@ -154,6 +158,8 @@ namespace Wizard {
 
         // Tracking movement
         Vector3 currentWaypoint = Vector3.zero;
+
+        Transform spell_target = null;
 
         string currentBody = null;
 
@@ -230,6 +236,8 @@ namespace Wizard {
             dialogue.onCompleteBody += onCompleteDialogue;
             dialogue.onDispose += onDisposeDialogue;
 
+            Spell.Arrived += onSpellArrived;
+
             StartCoroutine("Refresh");
         }
 
@@ -244,6 +252,8 @@ namespace Wizard {
 
             dialogue.onCompleteBody -= onCompleteDialogue;
             dialogue.onDispose -= onDisposeDialogue;
+
+            Spell.Arrived -= onSpellArrived;
 
             StopCoroutine("Refresh");
         }
@@ -418,10 +428,13 @@ namespace Wizard {
             {
                 Beacon beacon = (Beacon)dat;
 
-                if (type == Type.BeaconActivate)
-                    wand.ActivateBeacon(beacon);
-                else if (type == Type.BeaconDestroy)
-                    wand.DestroyBeacon(beacon);
+                if (beacon != null) {
+
+                    if (type == Type.BeaconActivate)
+                        wand.ActivateBeacon(beacon);
+                    else if (type == Type.BeaconDestroy)
+                        wand.DestroyBeacon(beacon);
+                }
                 
             }
             else if (t.StartsWith("Nest")) 
@@ -525,7 +538,7 @@ namespace Wizard {
             camera.enabled = false;
             previousMainCamera = null;
 
-            Events.ReceiveEvent(EVENTCODE.PHOTOGRAPH, AGENT.Inhabitant1, AGENT.World, details: name+".jpg");
+            Events.ReceiveEvent(EVENTCODE.PHOTOGRAPH, AGENT.Wizard, AGENT.World, details: name+".jpg");
             if(currentAction.type == Type.Picture && inprogress) 
                 inprogress = false;
         }
@@ -540,10 +553,25 @@ namespace Wizard {
             {
                 if (currentAction.cast)
                 {
-                    ParseAction(currentAction);
-                    inprogress = false;
+                    var t = System.Enum.GetName(typeof(Type), currentAction.type);
 
-                    spells_ps.Play();
+                    if (t.StartsWith("Beacon")) 
+                    {
+                        Beacon b = (Beacon)currentAction.dat;
+
+                        if (b != null) 
+                        {
+                            CastSpell(b.transform);
+                            return;
+                        }
+                    }
+                    else if (t.StartsWith("Nest")) 
+                    {
+                        CastSpell(Nest.transform, true);
+                        return;
+                    }
+
+                    inprogress = false; // Force quit action
                 }
             }
         }
@@ -620,6 +648,33 @@ namespace Wizard {
         {
             if (inprogress && currentAction.type == Type.Dialogue)
                 inprogress = false;
+        }
+
+        #endregion
+
+        #region Spells
+
+        void CastSpell(Transform target, bool track = false)
+        {
+            Vector3 waypoint = target.position;
+
+            GameObject spell_instance = Instantiate(pr_spell, spells_root.position, pr_spell.transform.rotation, spells_root);
+            Spell spell = spell_instance.GetComponent<Spell>();
+
+            spell.MoveTo(target, track);
+            spell_target = target;
+        }
+
+        void onSpellArrived(Transform target, bool success)
+        {
+            if (inprogress && currentAction.cast && target == spell_target) 
+            {
+                if (success) // target object was there
+                    ParseAction(currentAction);
+
+                spell_target = null;
+                inprogress = false;
+            }
         }
 
 		#endregion

@@ -5,6 +5,7 @@ using UnityEngine;
 public static class Events
 {
     public static System.Action<EVENTCODE, AGENT, AGENT, string> onFireEvent;
+    public static System.Action<EVENTCODE> onGlobalEvent;
 
     public static EVENTCODE LAST_EVENT;
     public static string LAST_EVENT_DETAIL = "";
@@ -21,5 +22,17 @@ public static class Events
 
         if (onFireEvent != null)
             onFireEvent(@event, a, b, details);
+
+        if (@event.isGlobalEvent()) 
+        {
+            if (onGlobalEvent != null)
+                onGlobalEvent(@event);
+        }
+    }
+
+
+    public static bool isGlobalEvent(this EVENTCODE @event)
+    {
+        return (@event == EVENTCODE.NESTSPILL || @event == EVENTCODE.SLAUGHTER || @event == EVENTCODE.NESTGROW || @event == EVENTCODE.NESTSHRINK);
     }
 }

@@ -11,8 +11,8 @@ public enum GAMESTATE {
 public enum AGENT {
     NULL,
 
-    Inhabitant0,
-    Inhabitant1,
+    User,
+    Wizard,
     Inhabitants,
     Beacon,
     Nest,
@@ -98,8 +98,8 @@ public static class COLOR_LOOKUP
         { AGENT.Nest, "#FF00FF" },
         { AGENT.Beacon, "#00FF00" },
         { AGENT.Terrain, "#FFB742" },
-        { AGENT.Inhabitant0, "#FF0000" },
-        { AGENT.Inhabitant1, "#27FFF8" },
+        { AGENT.User, "#FF0000" },
+        { AGENT.Wizard, "#27FFF8" },
         { AGENT.Inhabitants, "#E1C2FF" },
 
         { AGENT.Unknown, "#BEFFD7" }

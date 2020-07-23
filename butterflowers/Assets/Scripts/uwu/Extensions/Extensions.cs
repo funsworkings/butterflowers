@@ -288,6 +288,22 @@ public static class Extensions
 		return (points * dpi) / 163f;
 	}
 
+    public static bool IsVisible(this Transform target, Camera cam, out Vector2 screen)
+    {
+        if (cam == null) {
+            screen = Vector2.zero;
+            return false;
+        }
+
+        Vector2 screenPosition = cam.WorldToScreenPoint(target.position);
+
+        var x = screenPosition.x;
+        var y = screenPosition.y;
+
+        screen = screenPosition;
+        return (x >= 0f && x <= Screen.width && y >= 0f && y <= Screen.height);
+    }
+
     #endregion
 
     #region Vectors

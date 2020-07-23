@@ -13,6 +13,9 @@ namespace Wizard {
     using Action = Actions.Action;
     using ActionSequence = Actions.ActionSequence;
 
+    using Mood = Brain.MoodState;
+    using Stance = Brain.StanceState;
+
     public class Controller: MonoBehaviour {
         
         #region Events
@@ -36,13 +39,6 @@ namespace Wizard {
 		#region Internal
 
 		public enum State { Idle, Walk, Spell, Rest, Picture }
-
-        [System.Serializable]
-        public struct DialogueTreeMap 
-        {
-            public FocalPoint focalPoint;
-            public DialogueTree dialogueTree;
-        }
 
         #endregion
 
@@ -83,8 +79,7 @@ namespace Wizard {
 
         [SerializeField] ActionSequence[] sequences;
 
-        [SerializeField] List<DialogueTreeMap> dialogueMappings = new List<DialogueTreeMap>();
-        [SerializeField] DialogueTree introDialogueTree, discoveryDialogueTree;
+        [SerializeField] DialogueTree introDialogueTree;
 
         #endregion
 
@@ -130,7 +125,8 @@ namespace Wizard {
         {
             Save = GameDataSaveSystem.Instance;
 
-            while (Save == null || !Save.load) yield return null;
+            while (!World.LOAD)
+                yield return null;
 
             Dialogue.nodeID = (!Preset.persistDialogue)? -1 : Save.dialogueNode;
             Dialogue.nodeIDsVisited = (!Preset.persistDialogueVisited) ? new int[] { } : Save.dialogueVisited;
@@ -155,17 +151,16 @@ namespace Wizard {
             World = World.Instance;
             World.UPDATE_GAMESTATE += onUpdateGameState;
 
-            Focus.onFocus.AddListener(onFocus);
-            Focus.onLoseFocus.AddListener(onLoseFocus);
-
             Sun.onDayBegin += onDayNightCycle;
             Sun.onNightBegin += onDayNightCycle;
 
             Nest.onAddBeacon += onIngestBeacon;
 
             Actions.onEnact += onEnactAction;
+            Brain.onUpdateState += onUpdateBrainState;
 
             Events.onFireEvent += onFireEvent;
+            Events.onGlobalEvent += onGlobalEvent;
 
             DialogueTree.onCompleteTree += onCompleteDialogueTree;
         }
@@ -174,17 +169,16 @@ namespace Wizard {
         {
             World.UPDATE_GAMESTATE -= onUpdateGameState;
 
-            Focus.onFocus.RemoveListener(onFocus);
-            Focus.onLoseFocus.RemoveListener(onLoseFocus);
-
             Sun.onDayBegin -= onDayNightCycle;
             Sun.onNightBegin -= onDayNightCycle;
 
             Nest.onAddBeacon -= onIngestBeacon;
 
             Actions.onEnact -= onEnactAction;
+            Brain.onUpdateState -= onUpdateBrainState;
 
             Events.onFireEvent -= onFireEvent;
+            Events.onGlobalEvent -= onGlobalEvent;
 
             DialogueTree.onCompleteTree -= onCompleteDialogueTree;
         }
@@ -197,17 +191,19 @@ namespace Wizard {
             EvaluateState();
             UpdateAnimatorFromState(state);
 
-            if (Input.GetKeyDown(KeyCode.Z)) debug = !debug;
-
+            
             if (Brain.absorption >= 1f) 
             {
                 SetAbsorbState(true); // Always set self to NULL
             }
 
-            debugwindow.alpha = (debug) ? 1f : 0f;
-            //if (debug) DebugAttributes();
 
-            /*
+            // Debug window toggle
+            if (Input.GetKeyDown(KeyCode.Z)) debug = !debug;
+            debugwindow.alpha = (debug) ? 1f : 0f;
+
+			#region Action overrides (DEBUG)
+			/*
             if (Input.GetKeyDown(KeyCode.S))
                 Actions.Push(ActionType.Picture, Extensions.RandomString(12), true);
             if (Input.GetKeyDown(KeyCode.D))
@@ -266,7 +262,8 @@ namespace Wizard {
                 }
             }
             */
-        }
+			#endregion
+		}
 
 		#endregion
 
@@ -315,9 +312,6 @@ namespace Wizard {
                 if (World.STATE == GAMESTATE.INTRO) {
                     Dialogue.FetchDialogueFromTree(introDialogueTree); // Move to next dialogue node in intro
                     if (Dialogue.inprogress) Dialogue.Advance();
-                }
-                else if (World.STATE == GAMESTATE.DISCOVERY) {
-                    Dialogue.FetchDialogueFromTree(discoveryDialogueTree); // Move to next dialogue node in discovery
                 }
             }
 
@@ -377,32 +371,12 @@ namespace Wizard {
 
         #region Dialogue
 
-        void onFocus()
+        void TriggerDialogue()
         {
-            if (World.STATE != GAMESTATE.GAME) return;
-
-            var focalPoint = Focus.focus;
-            if (focalPoint == null) return;
-
-            var trees = dialogueMappings.Where(map => map.focalPoint == focalPoint);
-            DialogueTree tree = (trees.Count() > 0) ? trees.ElementAt(0).dialogueTree : null;
-
-            Dialogue.focusDialogueTree = tree;
+            var mood = Mathf.RoundToInt(Brain.mood);
 
             Dialogue.autoprogress = false;
-            Dialogue.FetchDialogueFromTree(tree);
-        }
-
-        void onLoseFocus()
-        {
-            if (World.STATE != GAMESTATE.GAME) return;
-
-            Dialogue.Dispose();
-        }
-
-        void OnCompleteDialogue()
-        {
-
+            Dialogue.FetchDialogueFromTree(mood);
         }
 
         public void UpdateCurrentDialogueNode(int nodeID)
@@ -413,6 +387,31 @@ namespace Wizard {
         public void UpdateDialogueVisited(int[] nodeIDs)
         {
             Save.dialogueVisited = nodeIDs;
+        }
+
+
+        public void React()
+        {
+            var rand = Random.Range(0f, 1f);
+            if (rand > BrainPreset.reactionProbability)
+                return;
+
+            EVENTCODE @event = Events.LAST_EVENT;
+            Mood state = Brain.moodState;
+        }
+
+        public void Comment()
+        {
+            bool comment = true;
+
+            if (!Dialogue.isAlertActive) 
+            {
+                float r = Random.Range(0f, 1f);
+                comment = (r <= BrainPreset.commentProbabilty);
+            }
+
+            if(comment)
+                Dialogue.Comment(Brain.moodState, Brain.stanceState);
         }
 
         public void DiscoverMemory(Memory memory)
@@ -483,9 +482,19 @@ namespace Wizard {
 
         #endregion
 
-        #region Animator callbacks
+        #region Brain callbacks
 
-        public void DidCastSpell()
+        void onUpdateBrainState(Mood mood, Stance stance)
+        {
+            Debug.LogFormat("Wizard became {0} and {1}", mood, stance);
+            Dialogue.QueueComment();
+        }
+
+		#endregion
+
+		#region Animator callbacks
+
+		public void DidCastSpell()
         {
             Actions.onCastSpell();
         }
@@ -532,11 +541,18 @@ namespace Wizard {
 
         void onFireEvent(EVENTCODE @event, AGENT a, AGENT b, string detail) 
         {
-            if (a == AGENT.Inhabitant1)
-                Brain.ReactToEvent();
+            if (a == AGENT.Wizard)
+                React(); // React to last event
 
-            if (a != AGENT.Inhabitant0) return; // Ignore all non-player events
+            if (a != AGENT.User) return; // Ignore all non-player events
             RespondToPlayerAction(@event);
+        }
+
+        void onGlobalEvent(EVENTCODE @event)
+        {
+            if (World.STATE == GAMESTATE.INTRO) return;
+
+            TriggerDialogue();
         }
 
         #endregion

@@ -193,9 +193,9 @@ public class MotherOfButterflies : Spawner
 
     void AddDying(Butterfly butterfly)
     {
-        if (butterfly.agent == AGENT.Inhabitant0)
+        if (butterfly.agent == AGENT.User)
             ++player_kills;
-        else if (butterfly.agent == AGENT.Inhabitant1)
+        else if (butterfly.agent == AGENT.Wizard)
             ++wizard_kills;
         else if (butterfly.agent == AGENT.Inhabitants)
             ++shared_kills;
@@ -205,9 +205,9 @@ public class MotherOfButterflies : Spawner
 
     void SubDying(Butterfly butterfly)
     {
-        if (butterfly.agent == AGENT.Inhabitant0)
+        if (butterfly.agent == AGENT.User)
             --player_kills;
-        else if (butterfly.agent == AGENT.Inhabitant1)
+        else if (butterfly.agent == AGENT.Wizard)
             --wizard_kills;
         else if (butterfly.agent == AGENT.Inhabitants)
             --shared_kills;

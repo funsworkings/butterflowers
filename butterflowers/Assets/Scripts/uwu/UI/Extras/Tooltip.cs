@@ -10,6 +10,8 @@ namespace UIExt.Extras {
     {
         Camera mainCamera;
 
+        public new Camera camera;
+
         public Transform target = null;
 
         [SerializeField] Vector3 offset = Vector3.zero;
@@ -20,7 +22,8 @@ namespace UIExt.Extras {
 
         bool set = false;
 
-        void Awake() {
+        void Awake() 
+        {
             mainCamera = Camera.main;  
         }
 
@@ -41,10 +44,13 @@ namespace UIExt.Extras {
         }
 
         Vector3 CalculatePosition() {
+
+            var cam = (camera == null) ? mainCamera : camera;
+
             if (globalOffset)
-                return mainCamera.WorldToScreenPoint(target.position) + offset;
+                return cam.WorldToScreenPoint(target.position) + offset;
             else
-                return mainCamera.WorldToScreenPoint(target.position + target.TransformVector(offset));
+                return cam.WorldToScreenPoint(target.position + target.TransformVector(offset));
         }
     }
 

@@ -18,9 +18,24 @@ public class Beacon: MonoBehaviour {
 
     #endregion
 
-    #region Events
+    #region Internal
 
-    public static System.Action<Beacon> OnRegister, OnUnregister;
+    public enum Status 
+    {
+        NULL,
+
+        UNKNOWN,
+        COMFORTABLE,
+        ACTIONABLE
+    }
+
+    public Status status => Room.FetchBeaconStatus(this);
+
+	#endregion
+
+	#region Events
+
+	public static System.Action<Beacon> OnRegister, OnUnregister;
     public static System.Action<Beacon> Discovered, Hidden, Destroyed;
 
     #endregion
@@ -44,8 +59,8 @@ public class Beacon: MonoBehaviour {
     [SerializeField] bool m_discovered = false, m_visible = true, m_destroyed = false;
 
     [SerializeField] GameObject infoPrefab, info;
+    public BeaconInfo beaconInfo;
     Tooltip infoTooltip;
-    TMP_Text infoText;
 
     [SerializeField] string m_file = null;
     [SerializeField] FileSystemEntry m_fileEntry;
@@ -61,6 +76,8 @@ public class Beacon: MonoBehaviour {
     [SerializeField] float timeToDie = 1.67f;
 
     public Type type = Type.None;
+
+    public bool learning = false;
 
     #endregion
 
@@ -280,7 +297,7 @@ public class Beacon: MonoBehaviour {
 
     #endregion
 
-    #region Internal
+    #region Death
 
     IEnumerator Dying(bool particles = false)
     {
@@ -326,7 +343,7 @@ public class Beacon: MonoBehaviour {
 
         bool success = Discover();
         if(success)
-            Events.ReceiveEvent(EVENTCODE.BEACONACTIVATE, AGENT.Inhabitant0, AGENT.Beacon, details: file);
+            Events.ReceiveEvent(EVENTCODE.BEACONACTIVATE, AGENT.User, AGENT.Beacon, details: file);
     }
 
     void Hover(Vector3 point, Vector3 normal){
@@ -375,35 +392,37 @@ public class Beacon: MonoBehaviour {
 
 	void CreateInfo(){
         info = Instantiate(infoPrefab, Room.BeaconInfoContainer);
+        beaconInfo = info.GetComponent<BeaconInfo>();
+        
         infoTooltip = info.GetComponent<Tooltip>();
         infoTooltip.target = transform;
-        infoText = info.GetComponent<TMP_Text>();
+        infoTooltip.camera = Room.PlayerCamera;
         
+        UpdateInfo();
         HideInfo();
     }
 
     void DisplayInfo(){
         if (destroyed) return;
-        if (infoText == null)
+        if (beaconInfo == null)
             return;
 
-        UpdateInfo();
+        beaconInfo.Show();
     }
 
     void UpdateInfo()
     {
-        if (infoText == null)
+        if (beaconInfo == null)
             return;
 
-        var txt = (fileEntry == null) ? file : fileEntry.ShortName;
-        infoText.text = txt;
+        beaconInfo.beacon = this;
     }
 
     void HideInfo(){
-        if(infoText == null)
+        if(beaconInfo == null)
             return;
 
-        infoText.text = "";
+        beaconInfo.Hide();
     }
 
 	#endregion

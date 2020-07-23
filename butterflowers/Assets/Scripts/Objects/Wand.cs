@@ -16,9 +16,9 @@ public class Wand : MonoBehaviour
 
 	#endregion
 
-	new Camera camera;
+	[SerializeField] new Camera camera;
 
-    public AGENT agent = AGENT.Inhabitant0;
+    public AGENT agent = AGENT.User;
     [SerializeField] bool m_spells = true;
 
     [SerializeField] Cursor cursor;
@@ -111,7 +111,8 @@ public class Wand : MonoBehaviour
 	// Start is called before the first frame update
 	void Start()
     {
-        camera = Camera.main;
+        if(camera == null)
+            camera = Camera.main;
     }
 
     void Update()

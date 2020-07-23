@@ -16,13 +16,16 @@ MonoBehaviour:
   - {fileID: 114334170281451744}
   - {fileID: 114958620065622516}
   - {fileID: 114955449485281100}
-  - {fileID: 114305446393389252}
   - {fileID: 114760372875229352}
   - {fileID: 114655679464062020}
   - {fileID: 114710930130751968}
   - {fileID: 114132704990736644}
   - {fileID: 0}
+  debug: 0
+  auto: 0
   m_rootNode: {fileID: 114334170281451744}
+  m_activeNode: {fileID: 0}
+  m_externalTree: {fileID: 0}
   Memories: {fileID: 11400000, guid: a11a7773fa9f39649b779c417d4c7b19, type: 2}
 --- !u!114 &114125972575321802
 MonoBehaviour:
@@ -134,77 +137,7 @@ MonoBehaviour:
   output: {fileID: 0}
   value: 0
   routes: 
-  dispose: 0
   memory: {fileID: 11400000, guid: 822ad72994461154788bb938a6ebbe66, type: 2}
---- !u!114 &114305446393389252
-MonoBehaviour:
-  m_ObjectHideFlags: 0
-  m_CorrespondingSourceObject: {fileID: 0}
-  m_PrefabInstance: {fileID: 0}
-  m_PrefabAsset: {fileID: 0}
-  m_GameObject: {fileID: 0}
-  m_Enabled: 1
-  m_EditorHideFlags: 0
-  m_Script: {fileID: 11500000, guid: 3ce85cc4c91873f4c893b54b022eeb54, type: 3}
-  m_Name: Memory
-  m_EditorClassIdentifier: 
-  graph: {fileID: 11400000}
-  position: {x: 200, y: 280}
-  ports:
-    keys:
-    - value
-    - routes
-    - input
-    - output
-    values:
-    - _fieldName: value
-      _node: {fileID: 114305446393389252}
-      _typeQualifiedName: System.Int32, mscorlib, Version=4.0.0.0, Culture=neutral,
-        PublicKeyToken=b77a5c561934e089
-      connections: []
-      _direction: 0
-      _connectionType: 0
-      _typeConstraint: 2
-      _dynamic: 0
-    - _fieldName: routes
-      _node: {fileID: 114305446393389252}
-      _typeQualifiedName: System.Int32[], mscorlib, Version=4.0.0.0, Culture=neutral,
-        PublicKeyToken=b77a5c561934e089
-      connections: []
-      _direction: 1
-      _connectionType: 0
-      _typeConstraint: 0
-      _dynamic: 0
-    - _fieldName: input
-      _node: {fileID: 114305446393389252}
-      _typeQualifiedName: Noder.Node, Assembly-CSharp, Version=0.0.0.0, Culture=neutral,
-        PublicKeyToken=null
-      connections:
-      - fieldName: routes 0
-        node: {fileID: 114955449485281100}
-        reroutePoints: []
-      _direction: 0
-      _connectionType: 0
-      _typeConstraint: 0
-      _dynamic: 0
-    - _fieldName: output
-      _node: {fileID: 114305446393389252}
-      _typeQualifiedName: Noder.Node, Assembly-CSharp, Version=0.0.0.0, Culture=neutral,
-        PublicKeyToken=null
-      connections:
-      - fieldName: input
-        node: {fileID: 114760372875229352}
-        reroutePoints: []
-      _direction: 1
-      _connectionType: 1
-      _typeConstraint: 0
-      _dynamic: 0
-  input: {fileID: 0}
-  output: {fileID: 0}
-  value: 0
-  routes: 
-  dispose: 0
-  memory: {fileID: 11400000, guid: f484899c9ca97dd49bd2142067264f92, type: 2}
 --- !u!114 &114334170281451744
 MonoBehaviour:
   m_ObjectHideFlags: 0
@@ -301,7 +234,6 @@ MonoBehaviour:
   output: {fileID: 0}
   value: 0
   routes: ffffffff01000000
-  dispose: 0
   memory: {fileID: 11400000, guid: 688cac4dcc8e55f4185427d836dfa427, type: 2}
 --- !u!114 &114575980249270996
 MonoBehaviour:
@@ -538,7 +470,6 @@ MonoBehaviour:
   output: {fileID: 0}
   value: 0
   routes: ffffffff01000000
-  dispose: 0
   memory: {fileID: 11400000, guid: 926ddaa4cab78914c9dbeb75bde55d20, type: 2}
 --- !u!114 &114710930130751968
 MonoBehaviour:
@@ -610,7 +541,6 @@ MonoBehaviour:
   output: {fileID: 0}
   value: 0
   routes: 
-  dispose: 0
   memory: {fileID: 11400000, guid: 8f206c26d99d2504ba64fa0c0ee1e3f4, type: 2}
 --- !u!114 &114760372875229352
 MonoBehaviour:
@@ -657,9 +587,9 @@ MonoBehaviour:
         PublicKeyToken=null
       connections:
       - fieldName: output
-        node: {fileID: 114305446393389252}
+        node: {fileID: 114955449485281100}
         reroutePoints: []
-      - fieldName: output
+      - fieldName: routes 0
         node: {fileID: 114955449485281100}
         reroutePoints: []
       _direction: 0
@@ -682,7 +612,6 @@ MonoBehaviour:
   output: {fileID: 0}
   value: 0
   routes: 
-  dispose: 0
   memory: {fileID: 11400000, guid: bc414134cb6433f4fb0ab037f674efc9, type: 2}
 --- !u!114 &114955449485281100
 MonoBehaviour:
@@ -757,7 +686,7 @@ MonoBehaviour:
         PublicKeyToken=b77a5c561934e089
       connections:
       - fieldName: input
-        node: {fileID: 114305446393389252}
+        node: {fileID: 114760372875229352}
         reroutePoints: []
       _direction: 1
       _connectionType: 0
@@ -767,7 +696,6 @@ MonoBehaviour:
   output: {fileID: 0}
   value: 0
   routes: 01000000
-  dispose: 0
   memory: {fileID: 11400000, guid: 191864f18e79766499d08a1055f38ea0, type: 2}
 --- !u!114 &114958620065622516
 MonoBehaviour:
@@ -849,5 +777,4 @@ MonoBehaviour:
   output: {fileID: 0}
   value: 0
   routes: ffffffff
-  dispose: 0
   memory: {fileID: 11400000, guid: 3cd9275396a5aaa45a97678435667f2d, type: 2}

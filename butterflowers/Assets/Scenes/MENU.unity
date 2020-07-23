@@ -5911,6 +5911,7 @@ MonoBehaviour:
   GestureEnd:
     m_PersistentCalls:
       m_Calls: []
+  camera: {fileID: 0}
   agent: 1
   m_spells: 1
   cursor: {fileID: 789386808}
@@ -6877,7 +6878,7 @@ Camera:
   m_Depth: 9
   m_CullingMask:
     serializedVersion: 2
-    m_Bits: 15671
+    m_Bits: 64823
   m_RenderingPath: -1
   m_TargetTexture: {fileID: 0}
   m_TargetDisplay: 0
