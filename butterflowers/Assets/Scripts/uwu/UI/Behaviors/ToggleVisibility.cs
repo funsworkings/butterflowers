@@ -62,7 +62,11 @@ namespace UIExt.Behaviors
                 if (lerping) StopCoroutine("UpdatingVisibility");
 
                 transitionSpeed = (shown) ? transitionInSpeed : transitionOutSpeed;
-                StartCoroutine("UpdatingVisibility");
+
+                if (gameObject.activeInHierarchy)
+                    StartCoroutine("UpdatingVisibility");
+                else
+                    SetCurrentToTarget();
             }
             else
             {

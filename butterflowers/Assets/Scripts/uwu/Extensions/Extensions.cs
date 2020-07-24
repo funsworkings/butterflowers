@@ -655,6 +655,34 @@ public static class Extensions
         return null;
     }
 
+    public static string Scramble(this string body, float strength)
+    {
+        if(string.IsNullOrEmpty(body))
+            return body;
+
+        var len = body.Length;
+        if (len == 1)
+            return body;
+
+        strength = Mathf.Clamp01(strength);
+        int iterations = Mathf.FloorToInt(strength * len);
+
+        char[] chars = body.ToCharArray();
+        for (int i = 0; i < iterations; i++) 
+        {
+            var ind = Random.Range(0, len);
+
+            var a = chars[ind];
+            var b = chars[i];
+            var c = a;
+
+            chars[i] = c;
+            chars[ind] = b;
+        }
+
+        return new string(chars);
+    }
+
     #endregion
 
     #region Errors

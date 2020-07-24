@@ -1103,6 +1103,19 @@ namespace Wizard {
 			return FetchKnowledgeFromBeacon(beacon) <= Preset.unknownBeaconThreshold;
 		}
 
+		public float GetKnowledgeMagnitudeForBeacon(Beacon beacon)
+		{
+			if (beacon == null || string.IsNullOrEmpty(beacon.file)) return 0f;
+
+			var file = beacon.file;
+			Knowledge k = null;
+
+			if (fileKnowledge.TryGetValue(file, out k)) 
+				return Mathf.Clamp01(k.time / (WorldPreset.secondsPerDay * Preset.daysUntilFileKnowledge));
+
+			return 0f;
+		}
+
 		#endregion
 
 

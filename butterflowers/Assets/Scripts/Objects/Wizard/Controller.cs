@@ -6,6 +6,7 @@ using Noder.Nodes.Abstract;
 using Settings;
 using UnityEngine;
 using UnityEngine.AI;
+using UnityEngine.Events;
 
 namespace Wizard {
 
@@ -21,6 +22,7 @@ namespace Wizard {
         #region Events
 
         public System.Action<Memory> onDiscoverMemory;
+        public UnityEvent onFocus, onLoseFocus;
 
 		#endregion
 
@@ -389,8 +391,18 @@ namespace Wizard {
             Save.dialogueVisited = nodeIDs;
         }
 
+        public void OnFocus()
+        {
+            onFocus.Invoke();
+            Comment(); // Attempt comment
+        }
 
-        public void React()
+        public void OnLoseFocus()
+        {
+            onLoseFocus.Invoke();
+        }
+
+        void React()
         {
             var rand = Random.Range(0f, 1f);
             if (rand > BrainPreset.reactionProbability)
@@ -400,7 +412,7 @@ namespace Wizard {
             Mood state = Brain.moodState;
         }
 
-        public void Comment()
+        void Comment()
         {
             bool comment = true;
 

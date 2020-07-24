@@ -399,7 +399,7 @@ namespace Wizard {
         string FilterMemories(string body, bool found = false)
         {
             body = Extensions.ReplaceEnclosingPattern(body, memoryFlag, "");
-            if (found) body = string.Format("<i><color=#27FFF8>{0}",  body); // Italicize memory
+            if (found) body = string.Format("<i><color={0}>{1}", COLOR_LOOKUP.AGENTS[AGENT.Wizard],  body); // Italicize memory
 
             return body;
         }

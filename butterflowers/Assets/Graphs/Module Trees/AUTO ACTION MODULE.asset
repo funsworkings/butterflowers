@@ -39,6 +39,8 @@ MonoBehaviour:
   - {fileID: 114413616135300368}
   - {fileID: 114831807485781378}
   - {fileID: 114390968699567400}
+  - {fileID: 114849824373547332}
+  - {fileID: 114666846527168608}
   debug: 0
   auto: 1
   m_rootNode: {fileID: 114568737782071316}
@@ -56,7 +58,7 @@ MonoBehaviour:
   m_Name: Kick Nest
   m_EditorClassIdentifier: 
   graph: {fileID: 11400000}
-  position: {x: 1784, y: 472}
+  position: {x: 2424, y: 488}
   ports:
     keys:
     - data
@@ -77,8 +79,8 @@ MonoBehaviour:
       _typeQualifiedName: Noder.Node, Assembly-CSharp, Version=0.0.0.0, Culture=neutral,
         PublicKeyToken=null
       connections:
-      - fieldName: routes 0
-        node: {fileID: 114433568500832360}
+      - fieldName: output
+        node: {fileID: 114666846527168608}
         reroutePoints: []
       _direction: 0
       _connectionType: 0
@@ -110,7 +112,7 @@ MonoBehaviour:
   m_Name: Ho B
   m_EditorClassIdentifier: 
   graph: {fileID: 11400000}
-  position: {x: 2296, y: 1112}
+  position: {x: 2280, y: 1064}
   ports:
     keys:
     - value
@@ -394,7 +396,7 @@ MonoBehaviour:
   m_Name: Random Dialogue
   m_EditorClassIdentifier: 
   graph: {fileID: 11400000}
-  position: {x: 2776, y: 1288}
+  position: {x: 2744, y: 1304}
   ports:
     keys:
     - collection
@@ -800,7 +802,7 @@ MonoBehaviour:
         PublicKeyToken=null
       connections:
       - fieldName: input
-        node: {fileID: 114040424424405544}
+        node: {fileID: 114849824373547332}
         reroutePoints: []
       _direction: 1
       _connectionType: 0
@@ -1256,6 +1258,76 @@ MonoBehaviour:
       _dynamic: 0
   value: []
   collection: {fileID: 11400000, guid: b4d551c4dc620c243a5332ad204218cd, type: 2}
+--- !u!114 &114666846527168608
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 0}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 1b97b28a1ca7c8040809221e6cad0386, type: 3}
+  m_Name: Dialogue Event
+  m_EditorClassIdentifier: 
+  graph: {fileID: 11400000}
+  position: {x: 2104, y: 440}
+  ports:
+    keys:
+    - delay
+    - data
+    - input
+    - output
+    values:
+    - _fieldName: delay
+      _node: {fileID: 114666846527168608}
+      _typeQualifiedName: System.Single, mscorlib, Version=4.0.0.0, Culture=neutral,
+        PublicKeyToken=b77a5c561934e089
+      connections: []
+      _direction: 0
+      _connectionType: 1
+      _typeConstraint: 0
+      _dynamic: 0
+    - _fieldName: data
+      _node: {fileID: 114666846527168608}
+      _typeQualifiedName: System.String, mscorlib, Version=4.0.0.0, Culture=neutral,
+        PublicKeyToken=b77a5c561934e089
+      connections:
+      - fieldName: value
+        node: {fileID: 114849824373547332}
+        reroutePoints: []
+      _direction: 0
+      _connectionType: 1
+      _typeConstraint: 1
+      _dynamic: 0
+    - _fieldName: input
+      _node: {fileID: 114666846527168608}
+      _typeQualifiedName: Noder.Node, Assembly-CSharp, Version=0.0.0.0, Culture=neutral,
+        PublicKeyToken=null
+      connections:
+      - fieldName: success
+        node: {fileID: 114849824373547332}
+        reroutePoints: []
+      _direction: 0
+      _connectionType: 0
+      _typeConstraint: 0
+      _dynamic: 0
+    - _fieldName: output
+      _node: {fileID: 114666846527168608}
+      _typeQualifiedName: Noder.Node, Assembly-CSharp, Version=0.0.0.0, Culture=neutral,
+        PublicKeyToken=null
+      connections:
+      - fieldName: input
+        node: {fileID: 114040424424405544}
+        reroutePoints: []
+      _direction: 1
+      _connectionType: 1
+      _typeConstraint: 0
+      _dynamic: 0
+  input: {fileID: 0}
+  output: {fileID: 0}
+  data: 
+  delay: 0
 --- !u!114 &114674727022165092
 MonoBehaviour:
   m_ObjectHideFlags: 0
@@ -1392,7 +1464,7 @@ MonoBehaviour:
   m_Name: Ho B Gesture Threshold
   m_EditorClassIdentifier: 
   graph: {fileID: 11400000}
-  position: {x: 2296, y: 1176}
+  position: {x: 2280, y: 1144}
   ports:
     keys:
     - value
@@ -1615,3 +1687,84 @@ MonoBehaviour:
   output: {fileID: 0}
   value: 0
   routes: 0a00000014000000
+--- !u!114 &114849824373547332
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 0}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 1e72f61587f4ee447a8b5f0c268d852b, type: 3}
+  m_Name: Random Dialogue
+  m_EditorClassIdentifier: 
+  graph: {fileID: 11400000}
+  position: {x: 1768, y: 424}
+  ports:
+    keys:
+    - collection
+    - input
+    - success
+    - fail
+    - value
+    values:
+    - _fieldName: collection
+      _node: {fileID: 114849824373547332}
+      _typeQualifiedName: DialogueCollection, Assembly-CSharp, Version=0.0.0.0, Culture=neutral,
+        PublicKeyToken=null
+      connections: []
+      _direction: 0
+      _connectionType: 1
+      _typeConstraint: 0
+      _dynamic: 0
+    - _fieldName: input
+      _node: {fileID: 114849824373547332}
+      _typeQualifiedName: Noder.Node, Assembly-CSharp, Version=0.0.0.0, Culture=neutral,
+        PublicKeyToken=null
+      connections:
+      - fieldName: routes 0
+        node: {fileID: 114433568500832360}
+        reroutePoints: []
+      _direction: 0
+      _connectionType: 0
+      _typeConstraint: 0
+      _dynamic: 0
+    - _fieldName: success
+      _node: {fileID: 114849824373547332}
+      _typeQualifiedName: Noder.Node, Assembly-CSharp, Version=0.0.0.0, Culture=neutral,
+        PublicKeyToken=null
+      connections:
+      - fieldName: input
+        node: {fileID: 114666846527168608}
+        reroutePoints: []
+      _direction: 1
+      _connectionType: 1
+      _typeConstraint: 0
+      _dynamic: 0
+    - _fieldName: fail
+      _node: {fileID: 114849824373547332}
+      _typeQualifiedName: Noder.Node, Assembly-CSharp, Version=0.0.0.0, Culture=neutral,
+        PublicKeyToken=null
+      connections: []
+      _direction: 1
+      _connectionType: 1
+      _typeConstraint: 0
+      _dynamic: 0
+    - _fieldName: value
+      _node: {fileID: 114849824373547332}
+      _typeQualifiedName: System.String, mscorlib, Version=4.0.0.0, Culture=neutral,
+        PublicKeyToken=b77a5c561934e089
+      connections:
+      - fieldName: data
+        node: {fileID: 114666846527168608}
+        reroutePoints: []
+      _direction: 1
+      _connectionType: 0
+      _typeConstraint: 0
+      _dynamic: 0
+  value: 
+  input: {fileID: 0}
+  success: {fileID: 0}
+  fail: {fileID: 0}
+  collection: {fileID: 11400000, guid: 775ec66cf08961446a23571590cf8d07, type: 2}
