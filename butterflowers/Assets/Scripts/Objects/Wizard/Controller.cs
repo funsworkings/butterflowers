@@ -76,6 +76,8 @@ namespace Wizard {
         bool load = false;
         bool debug = false;
 
+        [SerializeField] bool infocus = false;
+
         [SerializeField] CanvasGroup debugwindow;
         [SerializeField] UnityEngine.UI.Text debugtext;
 
@@ -100,7 +102,7 @@ namespace Wizard {
         public bool isFocused {
             get
             {
-                return Focus.active;
+                return true;
             }
         }
 
@@ -393,12 +395,23 @@ namespace Wizard {
 
         public void OnFocus()
         {
-            onFocus.Invoke();
             Comment(); // Attempt comment
+
+            if (!infocus) 
+            {
+                onFocus.Invoke();
+                Dialogue.PushAllFromQueue();
+            }
+
+            infocus = true;
+            World.FOCUS = true;
         }
 
         public void OnLoseFocus()
         {
+            infocus = false;
+            World.FOCUS = false;
+
             onLoseFocus.Invoke();
         }
 
@@ -414,16 +427,17 @@ namespace Wizard {
 
         void Comment()
         {
-            bool comment = true;
-
-            if (!Dialogue.isAlertActive) 
+            if (isFocused) 
             {
                 float r = Random.Range(0f, 1f);
-                comment = (r <= BrainPreset.commentProbabilty);
+                if (r <= BrainPreset.commentProbabilty)
+                    Comment(Brain.moodState, Brain.stanceState);
             }
+        }
 
-            if(comment)
-                Dialogue.Comment(Brain.moodState, Brain.stanceState);
+        void Comment(Mood mood, Stance stance)
+        {
+            Dialogue.Comment(mood, stance);
         }
 
         public void DiscoverMemory(Memory memory)
@@ -499,7 +513,7 @@ namespace Wizard {
         void onUpdateBrainState(Mood mood, Stance stance)
         {
             Debug.LogFormat("Wizard became {0} and {1}", mood, stance);
-            Dialogue.QueueComment();
+            Comment(mood, stance);
         }
 
 		#endregion

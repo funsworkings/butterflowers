@@ -65,6 +65,7 @@ namespace Wizard {
 
 		[SerializeField] List<string> temp = new List<string>();
         [SerializeField] List<int> tempvisited = new List<int>();
+        [SerializeField] string m_comment = null;
 
         #endregion
 
@@ -120,10 +121,21 @@ namespace Wizard {
         }
 
         public string[] temporaryqueue => temp.ToArray();
+        public bool waiting => temp.Count > 0 || !string.IsNullOrEmpty(m_comment);
 
         [SerializeField] string[] debugBodies = new string[] { };
 
         public bool isAlertActive => alert.activeSelf;
+
+        public string comment {
+            set
+            {
+                bool alerts = !string.IsNullOrEmpty(value);
+                m_comment = value;
+
+                alert.SetActive(alerts);
+            }
+        }
 
         #endregion
 
@@ -132,12 +144,12 @@ namespace Wizard {
         void Awake()
         {
             controller = GetComponent<Controller>();
+            brain = GetComponent<Brain>();
         }
 
         void Start()
         {
             memories = controller.Memories;
-            brain = controller.Brain;
 
             foreach (DialogueTree tree in dialogueTrees)
                 tree.dialogueHandler = this;
@@ -169,7 +181,11 @@ namespace Wizard {
 
         public void PushAllFromQueue()
         {
-            for (int i = 0; i < temp.Count; i++) {
+            Push(m_comment);
+            m_comment = null;
+
+            for (int i = 0; i < temp.Count; i++) 
+            {
                 Push(temp[i]);
             }
             temp = new List<string>();
@@ -195,9 +211,6 @@ namespace Wizard {
 
             return body;
         }
-
-
-        public void QueueComment() { alert.SetActive(true); }
 
         public void React(EVENTCODE @event, Mood mood)
         {
@@ -228,7 +241,13 @@ namespace Wizard {
             var collection = mapping.dialogue;
 
             string comment = collection.FetchRandomItem();
-            Push(comment, true);
+            if (controller.isFocused) 
+            {
+                Push(comment, true);
+                this.m_comment = null;
+            }
+            else
+                this.m_comment = comment;
         }
 
         #endregion
@@ -302,6 +321,9 @@ namespace Wizard {
 
         protected override string ParseBody(string body)
         {
+            if (string.IsNullOrEmpty(body))
+                return body;
+
             body = Extensions.ReplaceEnclosingPattern(body, imageFlag, "<sprite name=\"{0}\">"); // Replace img tag
             body = body.Replace(daysFlag, Sun.Instance.days.ToString());
 
@@ -399,7 +421,7 @@ namespace Wizard {
         string FilterMemories(string body, bool found = false)
         {
             body = Extensions.ReplaceEnclosingPattern(body, memoryFlag, "");
-            if (found) body = string.Format("<i><color={0}>{1}", COLOR_LOOKUP.AGENTS[AGENT.Wizard],  body); // Italicize memory
+            if (found) body = string.Format("<i><color={0}>{1}", COLOR_LOOKUP.AGENTS[AGENT.Wizard], body); // Italicize memory
 
             return body;
         }

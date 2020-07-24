@@ -489,6 +489,9 @@ public static class Extensions
 
     public static string ReplaceEnclosingPattern(string input, string flag, string replace)
     {
+        if (string.IsNullOrEmpty(input))
+            return input;
+
         string patt = string.Format("{0}.*?{0}", flag);
         return Regex.Replace(input, patt, 
 

@@ -35,7 +35,13 @@ public class CustomCursor : MonoBehaviour
             var setting = settings.ElementAt(0);
             var tex = setting.icon;
 
-            NativeCursor.SetCursor(tex, Vector2.zero, CursorMode.Auto);
+            var mode = CursorMode.Auto;
+
+            #if UNITY_STANDALONE_OSX && !UNITY_EDITOR
+                mode = CursorMode.ForceSoftware;
+            #endif
+
+            NativeCursor.SetCursor(tex, Vector2.zero, mode);
         }
     }
 }
