@@ -23,12 +23,20 @@ namespace UIExt.Behaviors.Visibility
                          protected float current, target;
 
 
+        bool def_interactable = false;
+        bool def_blocksRaycasts = false;
+
         private void Awake() {
-            if(type == Type.CanvasGroup && canvasGroup == null)
+            if (type == Type.CanvasGroup && canvasGroup == null) {
                 canvasGroup = GetComponent<CanvasGroup>();
-            else if(type == Type.Image && image == null)
+                if (canvasGroup != null) {
+                    def_interactable = canvasGroup.interactable;
+                    def_blocksRaycasts = canvasGroup.blocksRaycasts;
+                }
+            }
+            else if (type == Type.Image && image == null)
                 image = GetComponent<Image>();
-            else if(type == Type.Text && text == null)
+            else if (type == Type.Text && text == null)
                 text = GetComponent<Text>();
         }
 
@@ -59,8 +67,8 @@ namespace UIExt.Behaviors.Visibility
         protected override void EvaluateVisibility(){
             if(type == Type.CanvasGroup){
                 canvasGroup.alpha = current;
-                canvasGroup.interactable = (current > 0f);
-                canvasGroup.blocksRaycasts = (current > 0f);      
+                canvasGroup.interactable = (current > 0f)? def_interactable:false;
+                canvasGroup.blocksRaycasts = (current > 0f)? def_blocksRaycasts:false;      
             } 
             else if(type == Type.Image)
                 image.color = Extensions.SetOpacity(current, image.color);

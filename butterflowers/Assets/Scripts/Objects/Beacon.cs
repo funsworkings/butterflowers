@@ -42,7 +42,7 @@ public class Beacon: MonoBehaviour {
 
     #region Properties
 
-    [SerializeField] ParticleSystem revealPS, discoveryPS, deathPS;
+    [SerializeField] ParticleSystem revealPS, discoveryPS, deathPS, auraPS;
 
     Interactable interactable;
     SimpleOscillate Oscillate;
@@ -76,7 +76,6 @@ public class Beacon: MonoBehaviour {
     [SerializeField] float timeToDie = 1.67f;
 
     public Type type = Type.None;
-
     public bool learning = false;
 
     #endregion
@@ -139,6 +138,14 @@ public class Beacon: MonoBehaviour {
         }
     }
 
+    public float knowledge 
+    {
+        get
+        {
+            return Room.FetchBeaconKnowledgeMagnitude(this);
+        }
+    }
+
     #endregion
 
     #region Monobehaviour callbacks
@@ -152,7 +159,8 @@ public class Beacon: MonoBehaviour {
         Nest = Nest.Instance;
     }
 
-    void Start() {
+    void Start() 
+    {
         CreateInfo();
     }
 
@@ -190,7 +198,8 @@ public class Beacon: MonoBehaviour {
         }
     }
 
-    void OnEnable() {
+    void OnEnable() 
+    {
         interactable.onGrab += Activate;
         interactable.onHover += Hover;
         interactable.onUnhover += Unhover;
@@ -356,6 +365,18 @@ public class Beacon: MonoBehaviour {
         HideInfo();
     }
 
+    public void OverrideHover()
+    {
+        if (!active) return;
+        DisplayInfo(AGENT.Wizard);
+    }
+
+    public void ClearOverrideHover()
+    {
+        if (!active) return;
+        HideInfo();
+    }
+
     #endregion
 
     #region Beacon callbacks
@@ -402,12 +423,12 @@ public class Beacon: MonoBehaviour {
         HideInfo();
     }
 
-    void DisplayInfo(){
+    void DisplayInfo(AGENT agent = AGENT.User){
         if (destroyed) return;
         if (beaconInfo == null)
             return;
 
-        beaconInfo.Show();
+        beaconInfo.Show(agent);
     }
 
     void UpdateInfo()

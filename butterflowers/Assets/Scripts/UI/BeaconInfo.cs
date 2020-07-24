@@ -9,9 +9,11 @@ public class BeaconInfo : MonoBehaviour
 {
     Beacon m_beacon = null;
     public Beacon beacon {
-        get {
+        get 
+        {
             return m_beacon;
         }
+
         set
         {
             m_beacon = value;
@@ -20,49 +22,38 @@ public class BeaconInfo : MonoBehaviour
             if (value != null)
                 file = (beacon.fileEntry == null) ? beacon.file : beacon.fileEntry.ShortName;
 
-            text.text = file;
-
+            def_file = file;
         }
     }
 
     CanvasGroup canvasGroup;
 
     [SerializeField] TMPro.TMP_Text text;
-    [SerializeField] GameObject icon;
-    [SerializeField] Image icon_image;
 
-
-    [SerializeField] Sprite iconLearn, iconAction, iconComfort, iconUnknown;
+    string def_file;
 
     void Awake()
     {
         canvasGroup = GetComponent<CanvasGroup>();
     }
 
-    public void Show()
+    public void Show(AGENT agent)
     {
+        if (agent == AGENT.User)
+            text.text = def_file;
+        else if (agent == AGENT.Wizard) 
+        {
+            float random = 1f - beacon.knowledge;
+
+            string body = def_file.Scramble(random);
+            text.text = string.Format("<color={0}>", COLOR_LOOKUP.AGENTS[AGENT.Wizard]) + body;
+        }
+
         canvasGroup.alpha = 1f;
-
-        var status = beacon.status;
-        var pass = true;
-
-        if (status == Beacon.Status.NULL || status == Beacon.Status.UNKNOWN) {
-            icon_image.sprite = iconLearn;
-            pass = beacon.learning;
-        }
-        else if (status == Beacon.Status.COMFORTABLE) {
-            icon_image.sprite = iconComfort;
-        }
-        else if (status == Beacon.Status.ACTIONABLE) {
-            icon_image.sprite = iconAction;
-        }
-
-        icon.SetActive(pass);
     }
 
     public void Hide()
     {
         canvasGroup.alpha = 0f;
-        icon.SetActive(false);
     }
 }

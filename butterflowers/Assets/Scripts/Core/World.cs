@@ -249,6 +249,8 @@ public class World : Spawner
         Beacon.Discovered += onDiscoveredBeacon;
 
         Wizard.onDiscoverMemory += onDiscoveredMemory;
+        Wizard.onFocus.AddListener(OverrideBeaconInfos);
+        Wizard.onLoseFocus.AddListener(ClearOverrideBeaconInfos);
 
         Quilt.onDisposeTexture += onDisposeQuiltTexture;
 
@@ -271,6 +273,8 @@ public class World : Spawner
         Beacon.Discovered -= onDiscoveredBeacon;
 
         Wizard.onDiscoverMemory -= onDiscoveredMemory;
+        Wizard.onFocus.RemoveListener(OverrideBeaconInfos);
+        Wizard.onLoseFocus.RemoveListener(ClearOverrideBeaconInfos);
 
         Quilt.onDisposeTexture -= onDisposeQuiltTexture;
 
@@ -530,6 +534,23 @@ public class World : Spawner
         return Beacon.Status.NULL;
     }
 
+    public float FetchBeaconKnowledgeMagnitude(Beacon beacon)
+    {
+        return Wizard.Brain.GetKnowledgeMagnitudeForBeacon(beacon);
+    }
+
+    public void OverrideBeaconInfos()
+    {
+        foreach (Beacon b in allBeacons)
+            b.OverrideHover();
+    }
+
+    public void ClearOverrideBeaconInfos()
+    {
+        foreach (Beacon b in allBeacons)
+            b.ClearOverrideHover();
+    }
+
     #endregion
 
     #region World operations
@@ -560,7 +581,6 @@ public class World : Spawner
     #endregion
 
     #region Wizard operations
-
 
     public float GetAbsorption()
     {
