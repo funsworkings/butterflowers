@@ -16,6 +16,7 @@ public class World : Spawner
     public static World Instance = null;
 
     public static bool LOAD = false;
+    public static bool FOCUS = false;
 
     [SerializeField] GAMESTATE m_STATE = GAMESTATE.GAME;
     public GAMESTATE STATE {
@@ -159,6 +160,9 @@ public class World : Spawner
 
         if (!initializeOnAwake) return;
 
+        LOAD = false;
+        FOCUS = false;
+
         StartCoroutine("Initialize");
     }
 
@@ -186,6 +190,7 @@ public class World : Spawner
 
     IEnumerator Initialize()
     {
+
         Save = GameDataSaveSystem.Instance;
         while (!Save.load) yield return null;
 

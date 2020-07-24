@@ -29,6 +29,7 @@ public class BeaconInfo : MonoBehaviour
     CanvasGroup canvasGroup;
 
     [SerializeField] TMPro.TMP_Text text;
+    [SerializeField] Color unknownColor, knownColor;
 
     string def_file;
 
@@ -39,14 +40,21 @@ public class BeaconInfo : MonoBehaviour
 
     public void Show(AGENT agent)
     {
-        if (agent == AGENT.User)
+        if (agent == AGENT.User) 
+        {
             text.text = def_file;
+        }
         else if (agent == AGENT.Wizard) 
         {
-            float random = 1f - beacon.knowledge;
+            float knowledge = beacon.knowledge;
+
+            float random = 1f - knowledge;
+
+            Color color = Color.Lerp(unknownColor, knownColor, knowledge);
+            string color_hex = Extensions.ParseColor(color);
 
             string body = def_file.Scramble(random);
-            text.text = string.Format("<color={0}>", COLOR_LOOKUP.AGENTS[AGENT.Wizard]) + body;
+            text.text = string.Format("<color={0}>", color_hex) + body;
         }
 
         canvasGroup.alpha = 1f;
@@ -54,6 +62,12 @@ public class BeaconInfo : MonoBehaviour
 
     public void Hide()
     {
+        if (World.FOCUS) 
+        {
+            Show(AGENT.Wizard);
+            return;
+        }
+
         canvasGroup.alpha = 0f;
     }
 }
