@@ -85,6 +85,8 @@ namespace Wizard {
 
         [SerializeField] DialogueTree introDialogueTree;
 
+        [SerializeField] Animator emotions;
+
         #endregion
 
         #region Accessors
@@ -134,6 +136,9 @@ namespace Wizard {
             var file_knowledge = (!Preset.persistKnowledge) ? new Knowledge[] { } : Save.file_knowledge;
 
             Brain.Load(enviro_knowledge, file_knowledge);
+
+            Brain.EvaluateStance();
+            Brain.EvaluateMood();
 
             StartCoroutine("Absorbing");
 
@@ -390,6 +395,7 @@ namespace Wizard {
 
         public void OnFocus()
         {
+            Emote(); // Attempt emote
             Comment(); // Attempt comment
 
             if (!infocus) 
@@ -415,6 +421,17 @@ namespace Wizard {
 
             EVENTCODE @event = Events.LAST_EVENT;
             Mood state = Brain.moodState;
+        }
+
+        void Emote()
+        {
+            Debug.Log("trigger emote");
+
+            Mood mood = Brain.moodState;
+            if (mood == Mood.Depression)
+                emotions.SetTrigger("cry");
+            else if (mood == Mood.Joyous)
+                emotions.SetTrigger("love");
         }
 
         void Comment()

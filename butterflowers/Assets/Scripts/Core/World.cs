@@ -454,7 +454,6 @@ public class World : Spawner
             if (!v) {
                 onDiscoveredBeacon(instance); // Send to nest if immediately found
                 Events.ReceiveEvent(EVENTCODE.BEACONACTIVATE, AGENT.World, AGENT.Beacon, details: instance.file);
-
             }
         }
     }

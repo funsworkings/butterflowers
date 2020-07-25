@@ -344,7 +344,9 @@ namespace Wizard {
 
 			Refresh(beacons);
 
-			m_stance = EvaluateStance(); // Reset stance
+			EvaluateStance(); // Reset stance
+
+			Debug.Log("wiz reset");
 		}
 
 		#endregion
@@ -388,7 +390,7 @@ namespace Wizard {
 
 		#region Evaluate mood/stance
 
-		float EvaluateStance()
+		public float EvaluateStance()
 		{
 			float EW = Preset.enviroKnowledgeStanceWeight;
 			float FW = Preset.fileKnowledgeStanceWeight;
@@ -400,10 +402,11 @@ namespace Wizard {
 			float enviro = FetchKnowledgeFromEnvironment();
 			float files = FetchKnowledgeFromFiles();
 
-			return (EW * enviro) + (FW * files);
+			m_stance = (EW * enviro) + (FW * files);
+			return m_stance;
 		}
 
-		float EvaluateMood()
+		public float EvaluateMood()
 		{
 			float SW = Preset.stanceMoodWeight;
 			float BHW = Preset.healthOfButterflowersMoodWeight;
@@ -421,7 +424,8 @@ namespace Wizard {
 			float m = (SW * stance) + (BHW * butterflowerhealth) + (STMW * st_memory);
 			m = m.RemapNRB(0f, 1f, -1f, 1f, true);
 
-			return m;
+			m_mood = m;
+			return m_mood;
 		}
 
 		float EvaluateAbsorption()
