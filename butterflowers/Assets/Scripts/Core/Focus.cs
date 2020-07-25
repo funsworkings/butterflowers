@@ -15,6 +15,7 @@ public class Focus : MonoBehaviour
     #region Events
 
     public UnityEvent onFocus, onLoseFocus;
+    public static System.Action<State, State> onUpdateState;
 
 	#endregion
 
@@ -22,15 +23,27 @@ public class Focus : MonoBehaviour
 
 	[SerializeField] CameraManager CameraManager;
     [SerializeField] FocusCamera Camera;
+    [SerializeField] Wizard.Controller Wizard;
 
     [SerializeField] AudioHandler BackgroundAudio;
     [SerializeField] AudioHandler MemoryAudio;
 
     #endregion
 
-    #region Properties
+    #region Internal
 
-    [SerializeField] FocalPoint m_focus = null;
+    public enum State 
+    {
+        None,
+        Environment,
+        Wizard
+    }
+
+	#endregion
+
+	#region Properties
+
+	[SerializeField] FocalPoint m_focus = null;
     [SerializeField] FocalPoint focusInQueue = null;
 
     [SerializeField] FocalPoint[] focalPoints;
@@ -46,6 +59,8 @@ public class Focus : MonoBehaviour
     #endregion
 
     #region Attributes
+
+    [SerializeField] State m_state = State.None;
 
     [SerializeField] float minFocusDistance = 1f, maxFocusDistance = 10f;
 
@@ -73,9 +88,11 @@ public class Focus : MonoBehaviour
     public bool active {
         get
         {
-            return (m_focus != null);
+            return (m_state != State.None);
         }
     }
+
+    public State state => m_state;
 
     public FocalPoint focus => m_focus;
 
@@ -149,11 +166,17 @@ public class Focus : MonoBehaviour
         UpdateLoadingBar();
         UpdateTrajectory();
 
+
+        EvaluateState();
+
+
         if (BackgroundAudio != null) {
             if (active) 
             {
-                SetBackgroundAudioFromDistance();
-                SetBackgroundVolumeFromDistance();
+                float dist = (m_state == State.Wizard) ? 0f : -1f;
+
+                SetBackgroundAudioFromDistance(dist);
+                SetBackgroundVolumeFromDistance(dist);
             }
             else 
             {
@@ -169,9 +192,39 @@ public class Focus : MonoBehaviour
 
     #endregion
 
-    #region Focusing
+    #region State
 
-    void QueueFocus(FocalPoint focus)
+    void EvaluateState()
+    {
+        State state = State.None;
+
+        if (Wizard.isFocused) 
+        {
+            state = State.Wizard;
+        }
+        else 
+        {
+            if (focus == null)
+                state = State.None;
+            else
+                state = State.Environment;
+        }
+
+        if (state != this.state) 
+        {
+            m_state = state;
+            if (onUpdateState != null)
+                onUpdateState(m_state, state);
+        }
+
+        
+    }
+
+	#endregion
+
+	#region Focusing
+
+	void QueueFocus(FocalPoint focus)
     {
         return;
 
@@ -309,7 +362,11 @@ public class Focus : MonoBehaviour
 
         if (active) {
 
-            float dist = Vector3.Distance(m_focus.transform.position, Camera.transform.position);
+            float dist = 0f;
+
+            if(m_state == State.Environment)
+                dist = Vector3.Distance(m_focus.transform.position, Camera.transform.position);
+
             float vol = dist.RemapNRB(minFocusDistance, maxFocusDistance, maxMemVol, minMemVol);
             vol = Mathf.Max(minMemVol, vol * baseline);
 
@@ -330,16 +387,17 @@ public class Focus : MonoBehaviour
         if (m_focus != null) m_focus.LoseFocus(); // Clear default focus
     }
 
-    void SetBackgroundAudioFromDistance()
+    void SetBackgroundAudioFromDistance(float distance = -1f)
     {
         if (BackgroundAudio == null || Camera == null) return;
 
-        float dist = Vector3.Distance(m_focus.transform.position, Camera.transform.position);
+        if(distance < 0f)
+            distance = Vector3.Distance(m_focus.transform.position, Camera.transform.position);
 
-        float pitch = dist.RemapNRB(minFocusDistance, maxFocusDistance, minBGPitch, maxBGPitch);
+        float pitch = distance.RemapNRB(minFocusDistance, maxFocusDistance, minBGPitch, maxBGPitch);
         BackgroundAudio.pitch = pitch;
 
-        lowpass = dist.RemapNRB(minFocusDistance, maxFocusDistance, minBGLP, maxBGLP);
+        lowpass = distance.RemapNRB(minFocusDistance, maxFocusDistance, minBGLP, maxBGLP);
     }
 
     void SmoothLowPassFilter()
@@ -354,13 +412,14 @@ public class Focus : MonoBehaviour
         mixer.SetFloat(lowPassFilterParam, target);
     }
 
-    void SetBackgroundVolumeFromDistance()
+    void SetBackgroundVolumeFromDistance(float distance = -1f)
     {
         if (BackgroundAudio == null || Camera == null) return;
 
-        float dist = Vector3.Distance(m_focus.transform.position, Camera.transform.position);
+        if(distance < 0f)
+            distance = Vector3.Distance(m_focus.transform.position, Camera.transform.position);
 
-        float vol = dist.RemapNRB(minFocusDistance, maxFocusDistance, minBGVol, maxBGVol);
+        float vol = distance.RemapNRB(minFocusDistance, maxFocusDistance, minBGVol, maxBGVol);
         BackgroundAudio.volume = vol;
     }
 

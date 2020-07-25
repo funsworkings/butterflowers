@@ -62,7 +62,7 @@ public class BeaconInfo : MonoBehaviour
 
     public void Hide()
     {
-        if (World.FOCUS) 
+        if (beacon.overrideFocus && beacon.visible) 
         {
             Show(AGENT.Wizard);
             return;
