@@ -13,8 +13,8 @@ MonoBehaviour:
   m_Name: Brain (Default)
   m_EditorClassIdentifier: 
   fileKnowledgeStanceWeight: 1
-  playerKnowledgeStanceWeight: 1
-  enviroKnowledgeStanceWeight: 1
+  playerKnowledgeStanceWeight: 0
+  enviroKnowledgeStanceWeight: 5
   stanceMoodWeight: 3
   shortTermMemoryMoodWeight: 1
   healthOfButterflowersMoodWeight: 7
@@ -43,6 +43,7 @@ MonoBehaviour:
   unknownBeaconThreshold: 0.87
   actionableBeaconThreshold: 0.133
   reactionProbability: 0.33
+  commentProbabilty: 0.5
   impactActionWeight: 1.33
   impactMoodWeight: 0.5
   impactHoBWeight: 5

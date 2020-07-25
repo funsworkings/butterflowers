@@ -229,8 +229,8 @@ namespace Wizard {
             wand.onGestureEnd += onCompleteGesture;
 
             navigation = GetComponent<Navigation>();
-            navigation.onMoveToPoint += onMoveToLocation;
-            navigation.onLookAtPoint += onLookAtLocation;
+            //navigation.onMoveToPoint += onMoveToLocation;
+            //navigation.onLookAtPoint += onLookAtLocation;
 
             dialogue = controller.Dialogue;
             dialogue.onCompleteBody += onCompleteDialogue;
@@ -247,8 +247,8 @@ namespace Wizard {
             wand.onGestureEnd -= onCompleteGesture;
 
             wand.onGestureEnd -= onCompleteGesture;
-            navigation.onMoveToPoint -= onMoveToLocation;
-            navigation.onLookAtPoint -= onLookAtLocation;
+            //navigation.onMoveToPoint -= onMoveToLocation;
+           // navigation.onLookAtPoint -= onLookAtLocation;
 
             dialogue.onCompleteBody -= onCompleteDialogue;
             dialogue.onDispose -= onDisposeDialogue;

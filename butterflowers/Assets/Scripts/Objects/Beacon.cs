@@ -146,6 +146,8 @@ public class Beacon: MonoBehaviour {
         }
     }
 
+    public bool overrideFocus => Room.FOCUS;
+
     #endregion
 
     #region Monobehaviour callbacks
@@ -192,7 +194,6 @@ public class Beacon: MonoBehaviour {
             else 
             {
                 warping = false;
-
                 if (warp_nest) Nest.ReceiveBeacon(this);
             }
         }
@@ -215,6 +216,11 @@ public class Beacon: MonoBehaviour {
         Beacon.Discovered -= CheckIfDiscovered;
 
         Unregister();
+    }
+
+    void OnDestroy()
+    {
+        DestroyInfo();
     }
 
     #endregion
@@ -367,13 +373,11 @@ public class Beacon: MonoBehaviour {
 
     public void OverrideHover()
     {
-        if (!active) return;
         DisplayInfo(AGENT.Wizard);
     }
 
     public void ClearOverrideHover()
     {
-        if (!active) return;
         HideInfo();
     }
 
@@ -420,7 +424,19 @@ public class Beacon: MonoBehaviour {
         infoTooltip.camera = Room.PlayerCamera;
         
         UpdateInfo();
-        HideInfo();
+
+        if(overrideFocus)
+            DisplayInfo(AGENT.Wizard);
+        else
+            HideInfo();
+    }
+
+    void DestroyInfo()
+    {
+        if (info != null) {
+            GameObject.Destroy(info);
+            info = null;
+        }
     }
 
     void DisplayInfo(AGENT agent = AGENT.User){

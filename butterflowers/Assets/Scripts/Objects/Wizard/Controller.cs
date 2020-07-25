@@ -99,12 +99,7 @@ namespace Wizard {
         public Wand Wand => wand;
         public Animator Animator => animator;
 
-        public bool isFocused {
-            get
-            {
-                return true;
-            }
-        }
+        public bool isFocused => infocus;
 
         #endregion
 
@@ -404,14 +399,11 @@ namespace Wizard {
             }
 
             infocus = true;
-            World.FOCUS = true;
         }
 
         public void OnLoseFocus()
         {
             infocus = false;
-            World.FOCUS = false;
-
             onLoseFocus.Invoke();
         }
 

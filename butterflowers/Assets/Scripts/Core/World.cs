@@ -16,7 +16,6 @@ public class World : Spawner
     public static World Instance = null;
 
     public static bool LOAD = false;
-    public static bool FOCUS = false;
 
     [SerializeField] GAMESTATE m_STATE = GAMESTATE.GAME;
     public GAMESTATE STATE {
@@ -57,6 +56,7 @@ public class World : Spawner
 	[SerializeField] Settings.WorldPreset Preset;
     [SerializeField] Wizard.Memories Memories;
     [SerializeField] CameraManager CameraManager;
+    [SerializeField] Focus Focus;
 
     GameDataSaveSystem Save = null;
     Library Library = null;
@@ -124,6 +124,8 @@ public class World : Spawner
     public Camera WizardCamera => m_wizardCamera;
     public Camera PlayerCamera => m_playerCamera;
 
+    public bool FOCUS => (Focus.state == Focus.State.Wizard && Nest.open);
+
     #endregion
 
 
@@ -161,7 +163,6 @@ public class World : Spawner
         if (!initializeOnAwake) return;
 
         LOAD = false;
-        FOCUS = false;
 
         StartCoroutine("Initialize");
     }
@@ -244,6 +245,8 @@ public class World : Spawner
 
         Discovery.onDiscover += onDiscoveredSomethingNew;
 
+        Focus.onUpdateState += onUpdateFocusState;
+
         Nest.onOpen.AddListener(onNestStateChanged);
         Nest.onClose.AddListener(onNestStateChanged);
         Nest.onAddBeacon += onIngestBeacon;
@@ -254,8 +257,6 @@ public class World : Spawner
         Beacon.Discovered += onDiscoveredBeacon;
 
         Wizard.onDiscoverMemory += onDiscoveredMemory;
-        Wizard.onFocus.AddListener(OverrideBeaconInfos);
-        Wizard.onLoseFocus.AddListener(ClearOverrideBeaconInfos);
 
         Quilt.onDisposeTexture += onDisposeQuiltTexture;
 
@@ -268,6 +269,8 @@ public class World : Spawner
 
         Discovery.onDiscover -= onDiscoveredSomethingNew;
 
+        Focus.onUpdateState -= onUpdateFocusState;
+
         Nest.onOpen.RemoveListener(onNestStateChanged);
         Nest.onClose.RemoveListener(onNestStateChanged);
         Nest.onAddBeacon -= onIngestBeacon;
@@ -278,8 +281,6 @@ public class World : Spawner
         Beacon.Discovered -= onDiscoveredBeacon;
 
         Wizard.onDiscoverMemory -= onDiscoveredMemory;
-        Wizard.onFocus.RemoveListener(OverrideBeaconInfos);
-        Wizard.onLoseFocus.RemoveListener(ClearOverrideBeaconInfos);
 
         Quilt.onDisposeTexture -= onDisposeQuiltTexture;
 
@@ -328,6 +329,8 @@ public class World : Spawner
 
         bool success = Nest.Close(); // Close nest
         RefreshBeacons(); // Reset all beacons
+
+        yield return new WaitForEndOfFrame();
     }
 
     #endregion
@@ -655,8 +658,22 @@ public class World : Spawner
         ps.Play();
     }
 
-	#endregion
+    #endregion
 
+
+    #region Focus callbacks
+
+    void onUpdateFocusState(Focus.State previous, Focus.State current)
+    {
+        Debug.LogFormat("Focus state changed from {0} to {1}", previous, current);
+
+        if (FOCUS && Nest.open)
+            OverrideBeaconInfos();
+        else
+            ClearOverrideBeaconInfos();
+    }
+
+	#endregion
 
 	#region Beacon callbacks
 
@@ -707,6 +724,11 @@ public class World : Spawner
     {
         Debug.LogFormat("Nest state changed to --> {0}", Nest.open);
         Save.nestOpen = Nest.open; // Set save state in file
+
+        if (FOCUS)
+            OverrideBeaconInfos();
+        else
+            ClearOverrideBeaconInfos();
     }
 
     void onIngestBeacon(Beacon beacon)

@@ -200,7 +200,7 @@ Transform:
   m_GameObject: {fileID: 2418046}
   m_LocalRotation: {x: 0, y: 0, z: 0, w: 1}
   m_LocalPosition: {x: 0, y: 0, z: 0.115}
-  m_LocalScale: {x: 0.08300154, y: 0.061628316, z: 0.01}
+  m_LocalScale: {x: 0.088210486, y: 0.061628316, z: 0.01}
   m_Children:
   - {fileID: 1968306696}
   - {fileID: 2015572246}
@@ -818,6 +818,7 @@ MonoBehaviour:
   Preset: {fileID: 11400000, guid: 45ffdf5e02efb4848942aaeb5d029f6e, type: 2}
   Memories: {fileID: 11400000, guid: a11a7773fa9f39649b779c417d4c7b19, type: 2}
   CameraManager: {fileID: 1067243527}
+  Focus: {fileID: 1969311502}
   Wizard: {fileID: 468500791}
   maxBeacons: 24
   DEFAULT_NULL_TEXTURE: {fileID: 2800000, guid: 48b99aa691dd8744f9adf73fba436432,
@@ -3409,7 +3410,7 @@ Transform:
   m_PrefabInstance: {fileID: 0}
   m_PrefabAsset: {fileID: 0}
   m_GameObject: {fileID: 201810246}
-  m_LocalRotation: {x: -0.22025321, y: 0.000000013505881, z: -0.000000006295696, w: 0.97544277}
+  m_LocalRotation: {x: -0.22025323, y: -2.4103189e-15, z: 3.087657e-15, w: 0.97544277}
   m_LocalPosition: {x: 0, y: -4.7999983, z: -19.199999}
   m_LocalScale: {x: 1, y: 1, z: 1}
   m_Children:
@@ -4545,7 +4546,7 @@ RectTransform:
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
   m_AnchorMin: {x: 0, y: 1}
   m_AnchorMax: {x: 0, y: 1}
-  m_AnchoredPosition: {x: -0.00018310547, y: -0.15020752}
+  m_AnchoredPosition: {x: -0.00018310547, y: -0.15014648}
   m_SizeDelta: {x: 424.09998, y: 228.70001}
   m_Pivot: {x: 0, y: 1}
 --- !u!114 &281720629
@@ -11231,6 +11232,7 @@ GameObject:
   - component: {fileID: 468500798}
   - component: {fileID: 468500795}
   - component: {fileID: 468500796}
+  - component: {fileID: 468500792}
   - component: {fileID: 468500799}
   m_Layer: 13
   m_Name: wizard
@@ -11326,10 +11328,30 @@ MonoBehaviour:
   BrainPreset: {fileID: 11400000, guid: 599fca27826da9a469476dcff92e983f, type: 2}
   m_Memories: {fileID: 11400000, guid: a11a7773fa9f39649b779c417d4c7b19, type: 2}
   state: 3
+  infocus: 0
   debugwindow: {fileID: 391654774}
   debugtext: {fileID: 0}
   sequences: []
   introDialogueTree: {fileID: 11400000, guid: b26009607a2ee7e4f8f87cd972d80eef, type: 2}
+--- !u!114 &468500792
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 468500788}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 1f355c82f8768934bb447bccc0cf70f7, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
+  focused: 0
+  queued: 0
+  timetofocus: 1
+  focusIcon: {fileID: 0}
+  anchor: {x: 0, y: 0, z: 0}
+  screen_anchor: {x: 0, y: 0, z: 0}
+  overrideCamera: {fileID: 0}
 --- !u!135 &468500793
 SphereCollider:
   m_ObjectHideFlags: 0
@@ -11392,6 +11414,7 @@ MonoBehaviour:
   alert: {fileID: 722442386}
   temp: []
   tempvisited: 
+  m_comment: 
   node_id: -1
   m_minRandomness: 0.067
   m_maxRandomness: 1
@@ -11610,7 +11633,7 @@ MonoBehaviour:
   m_EditorClassIdentifier: 
   move_position: {x: 0, y: 0, z: 0}
   m_lookAt: {fileID: 0}
-  defaultLookAt: {fileID: 534669905}
+  defaultLookAt: {fileID: 0}
   safeLookAt: {x: 0, y: 0, z: 0}
   turnThreshold: 90
   minLookAtSpeed: 1
@@ -12418,7 +12441,7 @@ Transform:
   m_PrefabInstance: {fileID: 0}
   m_PrefabAsset: {fileID: 0}
   m_GameObject: {fileID: 534669902}
-  m_LocalRotation: {x: -0.22025321, y: 0.000000013505881, z: -0.000000006295696, w: 0.97544277}
+  m_LocalRotation: {x: -0.22025323, y: -2.4103189e-15, z: 3.087657e-15, w: 0.97544277}
   m_LocalPosition: {x: 0, y: -4.7999983, z: -30.55278}
   m_LocalScale: {x: 1, y: 1, z: 1}
   m_Children:
@@ -27372,7 +27395,7 @@ MonoBehaviour:
   m_OnCullStateChanged:
     m_PersistentCalls:
       m_Calls: []
-  m_Sprite: {fileID: 21300000, guid: cabdcb4f70cdc6642b5f5113f50ec059, type: 3}
+  m_Sprite: {fileID: 21300000, guid: 6df84c3af2e072143beb2c72e9e2566f, type: 3}
   m_Type: 0
   m_PreserveAspect: 0
   m_FillCenter: 1
@@ -35657,7 +35680,7 @@ Transform:
   m_GameObject: {fileID: 1968306695}
   m_LocalRotation: {x: -0, y: -0, z: -2.2204458e-16, w: 1}
   m_LocalPosition: {x: 4.5, y: -2.81, z: 106.8}
-  m_LocalScale: {x: 1.2047969, y: 1.6226308, z: 10}
+  m_LocalScale: {x: 1.1336521, y: 1.6226308, z: 10}
   m_Children: []
   m_Father: {fileID: 2418050}
   m_RootOrder: 0
@@ -35730,6 +35753,7 @@ GameObject:
   m_Component:
   - component: {fileID: 1969311503}
   - component: {fileID: 1969311502}
+  - component: {fileID: 1969311504}
   m_Layer: 0
   m_Name: Focus
   m_TagString: Untagged
@@ -35801,6 +35825,7 @@ MonoBehaviour:
         m_CallState: 2
   CameraManager: {fileID: 1067243527}
   Camera: {fileID: 0}
+  Wizard: {fileID: 468500791}
   BackgroundAudio: {fileID: 730062441}
   MemoryAudio: {fileID: 1848652306}
   m_focus: {fileID: 0}
@@ -35812,6 +35837,8 @@ MonoBehaviour:
   tooltip: {fileID: 915320163}
   trajectory: {fileID: 1527179099}
   trajectory_root: {fileID: 1039990181}
+  pr_state: 0
+  m_state: 0
   minFocusDistance: 16
   maxFocusDistance: 67
   minBGPitch: 0.4
@@ -35848,6 +35875,28 @@ Transform:
   m_Father: {fileID: 1434293601}
   m_RootOrder: 3
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
+--- !u!114 &1969311504
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 1969311501}
+  m_Enabled: 0
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 5b9e515ea995fed40b07ab56f96dad77, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
+  move_position: {x: 0, y: 0, z: 0}
+  m_lookAt: {fileID: 0}
+  defaultLookAt: {fileID: 0}
+  safeLookAt: {x: 0, y: 0, z: 0}
+  turnThreshold: 90
+  minLookAtSpeed: 1
+  maxLookAtSpeed: 3
+  turning: 0
+  debug: 0
+  angleBetween: 0
 --- !u!1001 &1970890481
 PrefabInstance:
   m_ObjectHideFlags: 0
@@ -41204,7 +41253,7 @@ Transform:
   m_GameObject: {fileID: 2015572245}
   m_LocalRotation: {x: 0, y: 0, z: 0, w: 1}
   m_LocalPosition: {x: 21.7, y: 19.1, z: 0}
-  m_LocalScale: {x: 0.00397583, y: 0.005354681, z: 0.033}
+  m_LocalScale: {x: 0.003741052, y: 0.005354681, z: 0.033}
   m_Children:
   - {fileID: 474465336}
   m_Father: {fileID: 2418050}
