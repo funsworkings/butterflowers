@@ -55,6 +55,11 @@ namespace UIExt.Behaviors.Visibility
             current = target;
             EvaluateVisibility();
             lerping = false;
+
+            if (shown)
+                onShown.Invoke();
+            else
+                onHidden.Invoke();
         }
 
         public void SetOpacity(float alpha){
