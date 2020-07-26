@@ -72,6 +72,7 @@ public class Beacon: MonoBehaviour {
     bool warp_nest = false;
     float warp_t = 0f;
 
+    [SerializeField] AnimationCurve warpScaleCurve, normalScaleCurve;
     [SerializeField] float timeToWarp = 1f, heightOfWarp = 1f;
     [SerializeField] float timeToDie = 1.67f;
 
@@ -189,7 +190,10 @@ public class Beacon: MonoBehaviour {
                 transform.position = warp_a + (dir * Mathf.Pow(interval, 4f)) + (Vector3.up * h);
 
                 float sa = (warp_nest) ? 1f : 0f; float sb = (warp_nest) ? 0f : 1f;
-                transform.localScale = Vector3.one * Mathf.Lerp(sa, sb, Mathf.Pow(interval, 2f));
+                AnimationCurve curve = (warp_nest) ? warpScaleCurve : normalScaleCurve;
+
+                float si = Mathf.Lerp(sa, sb, curve.Evaluate(interval));
+                transform.localScale = Vector3.one * si;
             }
             else 
             {

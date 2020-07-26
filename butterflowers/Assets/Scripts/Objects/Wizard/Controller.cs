@@ -63,6 +63,7 @@ namespace Wizard {
         Actions m_Actions;
         Dialogue m_Dialogue; 
         Audio Audio;
+        Damage damage;
 
         SkinnedMeshRenderer Renderer;
         Material DefaultMaterial;
@@ -117,6 +118,7 @@ namespace Wizard {
             m_Actions = GetComponent<Actions>();
             m_Dialogue = GetComponent<Dialogue>();
             Audio = GetComponent<Audio>();
+            damage = GetComponent<Damage>();
 
             Renderer = GetComponentInChildren<SkinnedMeshRenderer>();
             DefaultMaterial = Renderer.sharedMaterial;
@@ -140,14 +142,14 @@ namespace Wizard {
             Brain.EvaluateStance();
             Brain.EvaluateMood();
 
-            StartCoroutine("Absorbing");
+            //StartCoroutine("Absorbing");
 
             load = true;
         }
 
         void OnDestroy()
         {
-            StopCoroutine("Absorbing");
+            //StopCoroutine("Absorbing");
         }
 
         void OnEnable()
@@ -381,6 +383,8 @@ namespace Wizard {
 
             Dialogue.autoprogress = false;
             Dialogue.FetchDialogueFromTree(mood);
+
+            damage.Hit();
         }
 
         public void UpdateCurrentDialogueNode(int nodeID)
@@ -596,6 +600,8 @@ namespace Wizard {
 
         public void SetAbsorbState(bool absorbed)
         {
+            return;
+
             if (Brain.absorption >= 1f) {
                 Renderer.material = null;
                 return;

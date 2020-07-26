@@ -1,5 +1,6 @@
 ﻿using System.Collections;
 using System.Collections.Generic;
+using UIExt.Behaviors.Visibility;
 using UnityEngine;
 using UnityEngine.Events;
 
@@ -11,6 +12,7 @@ public class Nest : MonoBehaviour
 
     [SerializeField] Quilt Quilt = null;
     GameDataSaveSystem Save;
+    World World;
 
 	#endregion
 
@@ -31,9 +33,13 @@ public class Nest : MonoBehaviour
     Material mat;
     new Collider collider;
     new Rigidbody rigidbody;
+    Damage damage;
 
     [SerializeField] ParticleSystem sparklesPS, cometPS;
     [SerializeField] GameObject pr_impactPS, pr_shinePS;
+
+    [SerializeField] TMPro.TMP_Text infoText;
+    [SerializeField] ToggleOpacity infoOpacity;
 
 	#endregion
 
@@ -90,6 +96,7 @@ public class Nest : MonoBehaviour
         interactable = GetComponent<Interactable>();
         collider = GetComponent<Collider>();
         rigidbody = GetComponent<Rigidbody>();
+        damage = GetComponent<Damage>();
 
         mat = GetComponent<Renderer>().material;
     }
@@ -97,10 +104,13 @@ public class Nest : MonoBehaviour
     void Start()
     {
         Save = GameDataSaveSystem.Instance;
+        World = World.Instance;
 
         interactable.onHover += Hover;
         interactable.onUnhover += Unhover;
         interactable.onRelease += Kick;
+
+        damage.onHit.AddListener(SpillKick);
 
         Beacon.Destroyed += onDestroyBeacon;
     }
@@ -123,6 +133,9 @@ public class Nest : MonoBehaviour
         }
 
         UpdateColorFromState();
+
+
+        if (queue) infoText.text = string.Format("{0} / {1}", beacons.Length, capacity);
     }
 
     void OnDestroy()
@@ -130,6 +143,8 @@ public class Nest : MonoBehaviour
         interactable.onHover -= Hover;
         interactable.onUnhover -= Unhover;
         interactable.onRelease -= Kick;
+
+        damage.onHit.RemoveListener(SpillKick);
 
         Beacon.Destroyed -= onDestroyBeacon;
     }
@@ -141,11 +156,13 @@ public class Nest : MonoBehaviour
     void Hover(Vector3 origin, Vector3 normal)
     {
         queue = true;
+        infoOpacity.Show();
     }
 
     void Unhover(Vector3 origin, Vector3 normal)
     {
         queue = false;
+        infoOpacity.Hide();
     }
 
     void Kick(Vector3 origin, Vector3 direction)
@@ -154,20 +171,23 @@ public class Nest : MonoBehaviour
         AddForceAndOpen(origin, dir, force, AGENT.User);
     }
 
-    void AddForceAndOpen(Vector3 point, Vector3 direction, float force, AGENT agent = AGENT.Inhabitants)
+    void AddForceAndOpen(Vector3 point, Vector3 direction, float force, AGENT agent = AGENT.Inhabitants, bool particles = true, bool events = true)
     {
         rigidbody.AddForceAtPosition(direction * force, point);
 
-        var impact = Instantiate(pr_impactPS, point, pr_impactPS.transform.rotation);
-        impact.transform.up = direction.normalized;
-        impact.GetComponent<ParticleSystem>().Play();
+        if (particles) 
+        {
+            var impact = Instantiate(pr_impactPS, point, pr_impactPS.transform.rotation);
+            impact.transform.up = direction.normalized;
+            impact.GetComponent<ParticleSystem>().Play();
+        }
 
         //var shine = Instantiate(pr_shinePS, point, pr_impactPS.transform.rotation);
         //shine.GetComponent<ParticleSystem>().Play();
 
         Open();
 
-        Events.ReceiveEvent(EVENTCODE.NESTKICK, agent, AGENT.Nest);
+        if(events) Events.ReceiveEvent(EVENTCODE.NESTKICK, agent, AGENT.Nest);
     }
 
     #endregion
@@ -215,7 +235,12 @@ public class Nest : MonoBehaviour
         return success;
     }
 
-    public void RandomKick(AGENT agent = AGENT.Inhabitants)
+    void SpillKick() 
+    {
+        RandomKick(AGENT.NULL, ps: false, events: false);
+    }
+
+    public void RandomKick(AGENT agent = AGENT.Inhabitants, bool ps = true, bool events = true)
     {
         Vector3 sphere_pos = Random.insideUnitSphere;
         Vector3 dir = -sphere_pos;
@@ -223,7 +248,7 @@ public class Nest : MonoBehaviour
         Kick(dir, agent);
     }
 
-    public void Kick(Vector3 direction, AGENT agent = AGENT.Inhabitants)
+    public void Kick(Vector3 direction, AGENT agent = AGENT.Inhabitants, bool ps = true, bool events = true)
     {
         Vector3 ray_origin = -direction * 5f;
         Vector3 ray_dir = direction;
@@ -237,7 +262,7 @@ public class Nest : MonoBehaviour
             Vector3 origin = hit.point;
             Vector3 dir = (-normal - 3f * gravity_ext.gravity).normalized;
 
-            AddForceAndOpen(origin, dir, force, agent);
+            AddForceAndOpen(origin, dir, force, agent, particles:ps, events:events);
         }
     }
 
@@ -314,6 +339,7 @@ public class Nest : MonoBehaviour
             Dispose(true);
 
             Events.ReceiveEvent(EVENTCODE.NESTSPILL, AGENT.Inhabitants, AGENT.Nest);
+            //damage.Hit();
 
             return;
         }

@@ -36,7 +36,7 @@ namespace UIExt.Behaviors
         [SerializeField] protected float transitionInSpeed = 0f, transitionOutSpeed = 0f;
         protected float transitionSpeed;
 
-        public UnityEvent OnShow, OnHide, OnToggle;
+        public UnityEvent OnShow, OnHide, OnToggle, onShown, onHidden;
 
         void OnEnable()
         {

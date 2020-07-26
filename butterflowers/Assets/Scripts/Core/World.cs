@@ -247,6 +247,8 @@ public class World : Spawner
 
         Focus.onUpdateState += onUpdateFocusState;
 
+        Events.onGlobalEvent += onGlobalEvent;
+
         Nest.onOpen.AddListener(onNestStateChanged);
         Nest.onClose.AddListener(onNestStateChanged);
         Nest.onAddBeacon += onIngestBeacon;
@@ -270,6 +272,8 @@ public class World : Spawner
         Discovery.onDiscover -= onDiscoveredSomethingNew;
 
         Focus.onUpdateState -= onUpdateFocusState;
+
+        Events.onGlobalEvent -= onGlobalEvent;
 
         Nest.onOpen.RemoveListener(onNestStateChanged);
         Nest.onClose.RemoveListener(onNestStateChanged);
@@ -328,6 +332,9 @@ public class World : Spawner
         Nest.AttemptUpdateCapacity();
 
         bool success = Nest.Close(); // Close nest
+        if (success)
+            Butterflowers.KillButterflies();
+
         RefreshBeacons(); // Reset all beacons
 
         yield return new WaitForEndOfFrame();
@@ -657,6 +664,29 @@ public class World : Spawner
         ps.Play();
     }
 
+    public void Stall()
+    {
+        if (stallinprogress)
+            StopCoroutine("Stalling");
+
+
+        stallinprogress = true;
+        StartCoroutine("Stalling");
+    }
+
+    bool stallinprogress = false;
+    public float stalltime = .3f;
+
+    IEnumerator Stalling()
+    {
+        Time.timeScale = 0f;
+
+        yield return new WaitForSecondsRealtime(stalltime);
+
+        Time.timeScale = 1f;
+        stallinprogress = false;
+    }
+
     #endregion
 
 
@@ -670,6 +700,15 @@ public class World : Spawner
             OverrideBeaconInfos();
         else
             ClearOverrideBeaconInfos();
+    }
+
+    #endregion
+
+    #region Event callbacks
+
+    void onGlobalEvent(EVENTCODE @event)
+    {
+        //Stall(); // Freeze time
     }
 
 	#endregion

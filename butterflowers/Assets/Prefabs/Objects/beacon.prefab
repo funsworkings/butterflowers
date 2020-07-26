@@ -75,18 +75,59 @@ MonoBehaviour:
     ShortName: 
     Extension: 
   origin: {x: 0, y: 0, z: 0}
-  timeToWarp: 1.33
+  warpScaleCurve:
+    serializedVersion: 2
+    m_Curve:
+    - serializedVersion: 3
+      time: 0.7977791
+      value: 0
+      inSlope: 0
+      outSlope: 0
+      tangentMode: 0
+      weightedMode: 0
+      inWeight: 0
+      outWeight: 0
+    - serializedVersion: 3
+      time: 1
+      value: 1
+      inSlope: 10.413763
+      outSlope: 10.413763
+      tangentMode: 0
+      weightedMode: 0
+      inWeight: 0.05487776
+      outWeight: 0
+    m_PreInfinity: 2
+    m_PostInfinity: 2
+    m_RotationOrder: 4
+  normalScaleCurve:
+    serializedVersion: 2
+    m_Curve:
+    - serializedVersion: 3
+      time: 0
+      value: 0
+      inSlope: 6.8858495
+      outSlope: 6.8858495
+      tangentMode: 0
+      weightedMode: 0
+      inWeight: 0
+      outWeight: 0.05262822
+    - serializedVersion: 3
+      time: 0.35144043
+      value: 1
+      inSlope: 0.024056876
+      outSlope: 0.024056876
+      tangentMode: 0
+      weightedMode: 0
+      inWeight: 0.55792296
+      outWeight: 0
+    m_PreInfinity: 2
+    m_PostInfinity: 2
+    m_RotationOrder: 4
+  timeToWarp: 1.76
   heightOfWarp: 2.33
   timeToDie: 0
   type: 0
   learning: 0
-  activeAuraColor: {r: 1, g: 0.14117646, b: 0.8856873, a: 1}
-  inactiveAuraColor: {r: 0.7921569, g: 0.7921569, b: 0.7921569, a: 0}
-  minAuraHue: 0.67777777
-  maxAuraHue: 0.85555553
-  auraHue: 0
-  auraSat: 0.86
-  auraVal: 1
 --- !u!65 &1270796099338416104
 BoxCollider:
   m_ObjectHideFlags: 0

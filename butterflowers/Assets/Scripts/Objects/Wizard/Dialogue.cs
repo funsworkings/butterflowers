@@ -411,7 +411,7 @@ namespace Wizard {
 
         void onReceiveDialogue(DialogueTree tree, string body)
         {
-            Push(body);
+            Push(body, true);
         }
 
         #endregion
