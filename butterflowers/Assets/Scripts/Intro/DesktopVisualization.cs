@@ -5,107 +5,258 @@ using UnityEngine.UI;
 using XNode.Examples.MathNodes;
 
 using UnityEngine.Events;
+using UIExt.Behaviors.Visibility;
 
 namespace Intro {
 
     public class DesktopVisualization: MonoBehaviour {
 
-        public UnityEvent onComplete;
+        public UnityEvent onBegin, onBeginSpawnFiles, onSpawnFile, onEndSpawnFiles, onSpawnNest, onConstructRoom, onBeginWipe, onEndWipe, onComplete;
         public TextureCollection StarterPack;
 
-        RectTransform area;
+        [Header("Timing")]
+        public float introDelay = 1f;
+        public float welcomeTextDelay = 1f;
+        public float beaconSpawnDelay = 1f;
+        public float nestDropDelay = 1f;
+        public float maxTimeBetweenSpawnFiles = 1f;
+        public float nestOverflowTextDelay = 1f;
+        public float wipeObjectsDelay = 1f;
+        public float maxTimeWipeObjects = 1f;
 
-        [Header("External")]
-            [SerializeField] Quilt quilt;
-            [SerializeField] MotherOfButterflies mother;
+        [Header("Tutorial")]
+        public bool hasClicked = false;
+        public bool hasFocused = false, hasLostFocus = false;
+        public bool hasAdded = false;
+        public bool hasSpilled = false;
+        public bool hasWipedButterflies = false;
 
-        [Header("Spawn attributes")]
-            [SerializeField] GameObject pr_desktopFile;
-            [SerializeField] RectTransform desktopRoot;
-            [SerializeField] float maxTimeBetweenSpawn = 1f;
-            [SerializeField] List<GameObject> files = new List<GameObject>();
-            Dictionary<GameObject, Texture2D> file_lookup = new Dictionary<GameObject, Texture2D>();
+        [Header("UI elements")]
+            public ToggleOpacity uiOpacity;
+            public TogglePosition welcomeText;
+            public TogglePosition clickText;
+            public TogglePosition holdText, loseHoldText;
+            public TogglePosition addBeacontext;
+            public TogglePosition nestOverflowText;
 
-        [Header("Absorb attributes")]
-            [SerializeField] float timeToAbsorbFiles = 1f;
+        [Header("Scene objects")]
+            public GameObject floor;
+            public Nest nest;
+            Rigidbody nest_rigid;
 
-        void Awake() {
-            area = GetComponent<RectTransform>();
+            public Quilt quilt;
+            public MotherOfButterflies mother;
+
+        [Header("Spawn beacons")]
+            public GameObject pr_beacon;
+            public Transform nestRoot, desktopRoot;
+            public float desktopRadius = 1f, stepRadius = 1f;
+            public int itemsPerRing = 6, stepItems = 1;
+            public List<GameObject> files = new List<GameObject>();
+            Dictionary<Beacon, Texture2D> file_lookup = new Dictionary<Beacon, Texture2D>();
+
+
+        #region Monobehaviour callbacks
+
+        void OnEnable()
+        {
+            nest.onAddBeacon += onIngestBeacon;
+            nest.onRemoveBeacon += onReleaseBeacon;
+
+            Events.onFireEvent += onReceiveEvent;
         }
 
+        void OnDisable()
+        {
+            nest.onAddBeacon -= onIngestBeacon;
+            nest.onRemoveBeacon -= onReleaseBeacon;
 
-        /* * * * * * * * * * * * * * * * */
+            Events.onFireEvent -= onReceiveEvent;
+        }
+
+        #endregion
+
+        public void Begin() 
+        {
+            onBegin.Invoke();
+            StartCoroutine("Intro");
+        }
+
+        IEnumerator Intro()
+        {
+            yield return new WaitForSeconds(introDelay);
+
+            uiOpacity.Show();
+            while (!uiOpacity.Visible) yield return null;
+
+            welcomeText.Show();
+            yield return new WaitForSeconds(welcomeTextDelay);
+            welcomeText.Hide();
 
 
-        public void SpawnDesktopFiles()
+            onBeginSpawnFiles.Invoke();
+            yield return new WaitForSeconds(beaconSpawnDelay);
+
+            SpawnDesktopFiles();
+            while (!spawnFiles) yield return null;
+            onEndSpawnFiles.Invoke();
+
+
+            SpawnNest();
+            yield return new WaitForSeconds(nestDropDelay);
+            onConstructRoom.Invoke();
+            
+            while (!hasClicked) 
+            {
+                clickText.Show();
+                yield return null;
+            }
+            clickText.Hide();
+
+            
+            while (!hasFocused) 
+            {
+                holdText.Show();
+                yield return null;
+            }
+            holdText.Hide();
+
+
+            while (!hasAdded) {
+                addBeacontext.Show();
+                yield return null;
+            }
+            addBeacontext.Hide();
+
+            while (!hasSpilled) yield return null;
+            nestOverflowText.Show();
+            yield return new WaitForSeconds(nestOverflowTextDelay);
+            nestOverflowText.Hide();
+
+
+            while (!hasLostFocus) 
+            {
+                loseHoldText.Show();
+                yield return null;
+            }
+            loseHoldText.Hide();
+
+            yield return new WaitForSeconds(3f);
+
+            onBeginWipe.Invoke();
+            yield return new WaitForSeconds(wipeObjectsDelay);
+
+            float delay = 0f;
+
+            quilt.gameObject.SetActive(false);
+
+            delay = Random.Range(0f, maxTimeWipeObjects);
+            yield return new WaitForSeconds(delay);
+
+            nest.gameObject.SetActive(false);
+
+            delay = Random.Range(0f, maxTimeWipeObjects);
+            yield return new WaitForSeconds(delay);
+
+            foreach (GameObject b in files) {
+                b.SetActive(false);
+
+                delay = Random.Range(0f, maxTimeWipeObjects / 3f);
+                yield return new WaitForSeconds(delay);
+            }
+
+            delay = Random.Range(0f, maxTimeWipeObjects);
+            yield return new WaitForSeconds(delay);
+
+            floor.SetActive(false);
+            onEndWipe.Invoke();
+
+            yield return new WaitForSeconds(1f);
+            KillAllButterflies();
+            while (!hasWipedButterflies) yield return null;
+
+            onComplete.Invoke();
+        }
+
+        #region Room construction
+
+        public void SpawnNest()
+        {
+            nest_rigid = nest.GetComponent<Rigidbody>();
+            nest_rigid.useGravity = true;
+
+            onSpawnNest.Invoke();
+        }
+
+		public void SpawnDesktopFiles()
         {
             var files = StarterPack.elements;
-            var area = this.area.rect;
-
-            StartCoroutine(SpawningDesktopFiles(files, area));
+            StartCoroutine(SpawningDesktopFiles(files, desktopRoot));
         }
 
-        IEnumerator SpawningDesktopFiles(Texture2D[] files, Rect area)
+        bool spawnFiles = false;
+        IEnumerator SpawningDesktopFiles(Texture2D[] files, Transform root)
         {
-            for (int i = 0; i < files.Length; i++) {
-                var x = Random.Range(-area.width / 2f, area.width / 2f);
-                var y = Random.Range(-area.height / 2f, area.height / 2f);
+            float radius = desktopRadius;
+            int items = 0;
+            int itemCap = itemsPerRing;
+            int level = 1;
+            float angle = 0f;
 
-                var file = Instantiate(pr_desktopFile, transform);
+            for (int i = 0; i < files.Length; i++) 
+            {
+                radius = level * desktopRadius + (level - 1) * stepRadius;
 
-                var file_rect = file.GetComponent<RectTransform>();
-                var file_img = file.GetComponent<RawImage>();
+                angle = ((float)items / (Mathf.Min(itemCap, files.Length-itemCap) + 1) ) * 2f * Mathf.PI;
 
-                file_rect.anchoredPosition = new Vector2(x, y);
-                file_img.texture = files[i];
+                var x = Mathf.Cos(angle);
+                var y = Mathf.Sin(angle);
 
-                this.files.Add(file);
+                var path = files[i].name;
+                var pos = root.TransformPoint(new Vector3(x, 0f, y) * radius);
+
+                var file = SpawnBeacon(pos, root);
+                file.file = path;
+                file.fileEntry = null;
+                file.origin = pos;
+                file.type = Beacon.Type.External;
+
+                this.files.Add(file.gameObject);
                 file_lookup.Add(file, files[i]);
 
-                yield return new WaitForSeconds(Random.Range(0f, maxTimeBetweenSpawn));
-            }
-        }
+                onSpawnFile.Invoke();
 
-        public void AbsorbDesktopFiles()
-        {
-            StartCoroutine(AbsorbingDesktopFiles());
-        }
-
-        IEnumerator AbsorbingDesktopFiles()
-        {
-            float t = 0f;
-            float len = 0f;
-            float interval = 0f;
-
-            Vector2 target = desktopRoot.position;
-            
-            for (int i = 0; i < files.Count; i++) {
-                var file = files[i];
-                var transform = file.GetComponent<RectTransform>();
-
-                len = Random.Range(timeToAbsorbFiles / 2f, timeToAbsorbFiles);
-
-                while (t < timeToAbsorbFiles) {
-                    t += Time.deltaTime;
-                    interval = Mathf.Clamp01(t / timeToAbsorbFiles);
-
-                    var amt = Mathf.Pow(interval, 2f);
-
-                    transform.position = Vector2.Lerp(transform.position, target, amt);
-                    transform.localScale = Vector3.Lerp(Vector3.one, Vector3.zero, amt);
-
-                    yield return null;
+                if (++items > itemCap) 
+                {
+                    ++level;
+                    
+                    items = 0;
+                    itemCap = level * itemsPerRing + ((level - 1) * stepItems);
                 }
 
-                quilt.Add(file_lookup[file]);
-                t = 0f;
+                yield return new WaitForSeconds(Random.Range(0f, maxTimeBetweenSpawnFiles));
             }
+
+            spawnFiles = true;
         }
+
+        Beacon SpawnBeacon(Vector3 position, Transform root)
+        {
+            GameObject beacon = Instantiate(pr_beacon, root);
+
+            beacon.transform.position = position;
+            beacon.transform.up = root.up;
+
+            return beacon.GetComponent<Beacon>();
+        }
+
+		#endregion
 
 
         public void KillAllButterflies()
         {
             mother.KillButterflies(false);
+            WaitForComplete();
         }
 
         public void WaitForComplete()
@@ -116,7 +267,51 @@ namespace Intro {
         IEnumerator WaitForButterflyDeath()
         {
             yield return new WaitForSeconds(3.33f);
-            onComplete.Invoke();
+            hasWipedButterflies = true;
+        }
+
+
+        #region Nest callbacks
+
+        void onIngestBeacon(Beacon beacon)
+        {
+            beacon.visible = false;
+
+            if (beacon.type == Beacon.Type.None) return;
+
+            var file = beacon.file;
+            var tex = file_lookup[beacon];
+
+            quilt.Add(tex);
+        }
+
+        void onReleaseBeacon(Beacon beacon)
+        {
+            beacon.visible = true;
+
+            if (beacon.type == Beacon.Type.None) return;
+
+            var file = beacon.file;
+            quilt.Pop(file);
+        }
+
+        #endregion
+
+        public void OnFocus()
+        {
+            hasFocused = true;
+        }
+
+        public void OnLostFocus()
+        {
+            hasLostFocus = true;
+        }
+
+        void onReceiveEvent(EVENTCODE @event, AGENT a, AGENT b, string details)
+        {
+            if (@event == EVENTCODE.BEACONACTIVATE) hasAdded = true;
+            if (@event == EVENTCODE.NESTSPILL) hasSpilled = true;
+            if (@event == EVENTCODE.NESTKICK) hasClicked = true;
         }
     }
 

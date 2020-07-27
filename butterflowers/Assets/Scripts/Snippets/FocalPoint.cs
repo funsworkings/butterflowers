@@ -8,6 +8,8 @@ public class FocalPoint : MonoBehaviour
 {
     World world;
 
+    [SerializeField] CameraManager CameraManager;
+
     #region Events
 
     public static System.Action<FocalPoint> FocusOnPoint, LostFocusOnPoint, BeginFocus, HoverFocus, UnhoverFocus;
@@ -131,7 +133,9 @@ public class FocalPoint : MonoBehaviour
         if (!queued || isFocused) return;
 
         anchor = point;
-        screen_anchor = world.PlayerCamera.WorldToScreenPoint(anchor);
+
+        var cam = (world == null) ? CameraManager.MainCamera : world.PlayerCamera;
+        screen_anchor = cam.WorldToScreenPoint(anchor);
 
         if (BeginFocus != null)
             BeginFocus(this);

@@ -106,6 +106,9 @@ public class Nest : MonoBehaviour
         Save = GameDataSaveSystem.Instance;
         World = World.Instance;
 
+        if (Quilt == null)
+            Quilt = FindObjectOfType<Quilt>();
+
         interactable.onHover += Hover;
         interactable.onUnhover += Unhover;
         interactable.onRelease += Kick;
@@ -135,7 +138,7 @@ public class Nest : MonoBehaviour
         UpdateColorFromState();
 
 
-        if (queue) infoText.text = string.Format("{0} / {1}", beacons.Length, capacity);
+        if (queue && infoText != null) infoText.text = string.Format("{0} / {1}", beacons.Length, capacity);
     }
 
     void OnDestroy()
@@ -156,13 +159,17 @@ public class Nest : MonoBehaviour
     void Hover(Vector3 origin, Vector3 normal)
     {
         queue = true;
-        infoOpacity.Show();
+
+        if(infoOpacity != null)
+            infoOpacity.Show();
     }
 
     void Unhover(Vector3 origin, Vector3 normal)
     {
         queue = false;
-        infoOpacity.Hide();
+
+        if (infoOpacity != null)
+            infoOpacity.Hide();
     }
 
     void Kick(Vector3 origin, Vector3 direction)
@@ -339,7 +346,9 @@ public class Nest : MonoBehaviour
             Dispose(true);
 
             Events.ReceiveEvent(EVENTCODE.NESTSPILL, AGENT.Inhabitants, AGENT.Nest);
-            //damage.Hit();
+
+            if(damage != null)
+                damage.Hit();
 
             return;
         }

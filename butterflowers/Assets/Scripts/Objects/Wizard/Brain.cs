@@ -303,7 +303,7 @@ namespace Wizard {
 
 		void Update()
 		{
-			if (!Sun.active) return;
+			if (!Sun.active || !Nest.open) return;
 
 			TIMETOLEARN = Preset.daysUntilFileKnowledge * WorldPreset.secondsPerDay;
 

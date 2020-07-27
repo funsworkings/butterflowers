@@ -12,6 +12,7 @@ using Noder.Nodes.External;
 using System.Linq;
 using Noder.Graphs;
 using System.Text;
+using TMPro;
 
 namespace Wizard {
 
@@ -31,13 +32,11 @@ namespace Wizard {
         Memories memories;
         Brain brain;
 
-        [SerializeField] Text_WiggleEffect memoryTextEffect;
-
-        [SerializeField] ToggleOpacity bubble = null;
-        [SerializeField] TogglePosition bubble_pos = null;
-        [SerializeField] ToggleOpacity advancer = null;
-
         [SerializeField] GameObject alert;
+
+        [SerializeField] TMP_Text normalTextContainer, memoryTextContainer;
+        [SerializeField] ToggleOpacity normalOpacity, memoryOpacity;
+        [SerializeField] ToggleOpacity advancer = null;
 
         #endregion
 
@@ -83,6 +82,9 @@ namespace Wizard {
 
         [SerializeField] CommentMapping[] commentaries = new CommentMapping[] { };
         [SerializeField] ReactionMapping[] reactions = new ReactionMapping[] { };
+
+
+        bool pr_memoryinprogress = false, memoryinprogress = false;
 
         #endregion
 
@@ -136,6 +138,9 @@ namespace Wizard {
                 alert.SetActive(alerts);
             }
         }
+
+        public ToggleOpacity containerOpacity => (memoryinprogress) ? memoryOpacity : normalOpacity;
+        public TMP_Text containerText => (memoryinprogress) ? memoryTextContainer : normalTextContainer;
 
         #endregion
 
@@ -333,32 +338,38 @@ namespace Wizard {
             return body;
         }
 
-        protected override void OnSpeak()
+        protected override void SendBody(string body)
         {
-            base.OnSpeak();
-
-            bubble.Show();
-            bubble_pos.Show();
+            containerText.text = body;
         }
 
         protected override void OnDispose()
         {
             base.OnDispose();
 
-            bubble.Hide();
-            bubble_pos.Hide();
-
+            containerOpacity.Hide();
             advancer.Hide();
         }
 
         protected override void OnStart(string body)
         {
             bool found = DiscoveryMemoriesFromBody(body);
+
+            pr_memoryinprogress = memoryinprogress;
+            memoryinprogress = found;
+
+            if (pr_memoryinprogress != memoryinprogress) {
+                if (memoryinprogress)
+                    normalOpacity.Hide();
+                else
+                    memoryOpacity.Hide();
+            }
+
             m_body = FilterMemories(body, found);
 
             if(!debug) UpdateTimeBetweenSymbols();
 
-            memoryTextEffect.magnitude = (found)? 8f:0f;
+            containerOpacity.Show();
             advancer.Hide();
         }
 

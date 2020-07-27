@@ -150,7 +150,8 @@ public class DialogueHandler: MonoBehaviour {
 
     public virtual void Dispose()
     {
-        if (speaking) {
+        if (speaking) 
+        {
             OnDispose();
             if (onDispose != null)
                 onDispose();
@@ -191,6 +192,7 @@ public class DialogueHandler: MonoBehaviour {
             tmp_container.text = body;
             return;
         }
+
         if (txt_container != null) 
         {
             txt_container.text = body;
