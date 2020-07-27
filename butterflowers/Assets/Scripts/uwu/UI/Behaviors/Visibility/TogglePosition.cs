@@ -18,7 +18,8 @@ namespace UIExt.Behaviors.Visibility {
 
         protected override IEnumerator UpdatingVisibility(){
             float dist = Vector3.Distance(current, target);
-            while(dist > .033f){
+            while(dist > .033f)
+            {
                 lerping = true;
 
                 current = Vector3.Lerp(current, target, Time.deltaTime * transitionSpeed);

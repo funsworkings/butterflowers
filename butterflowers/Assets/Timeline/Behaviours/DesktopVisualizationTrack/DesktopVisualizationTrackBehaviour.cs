@@ -30,8 +30,9 @@ public class DesktopVisualizationTrackBehaviour : PlayableBehaviour
 
                 if (op == Op.Spawn)
                     Vis.SpawnDesktopFiles();
-                else if (op == Op.Absorb)
-                    Vis.AbsorbDesktopFiles();
+                else if (op == Op.Absorb) {
+                    //Vis.AbsorbDesktopFiles();
+                }
                 else if (op == Op.Kill)
                     Vis.KillAllButterflies();
 

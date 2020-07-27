@@ -29,8 +29,11 @@ namespace UIExt.Behaviors
             }
         }
 
+        public bool Visible => (Shown && !lerping);
+        public bool Hidden => (!Shown && !lerping);
+
         [SerializeField] protected bool lerps = false;
-        protected bool lerping = false;
+        [SerializeField] protected bool lerping = false;
 
         [SerializeField] protected float value = 0f;
         [SerializeField] protected float transitionInSpeed = 0f, transitionOutSpeed = 0f;
@@ -52,26 +55,40 @@ namespace UIExt.Behaviors
             {
                 StopCoroutine("UpdatingVisibility");
                 SetCurrentToTarget();
+
+                lerping = false;
             }
         }
 
         protected virtual void OnUpdateVisibility()
         {
+            transitionSpeed = (shown) ? transitionInSpeed : transitionOutSpeed;
+
+            var lerps = this.lerps && transitionSpeed > 0f;
+
             if (lerps)
             {
-                if (lerping) StopCoroutine("UpdatingVisibility");
+                if (lerping) 
+                    StopCoroutine("UpdatingVisibility");
 
-                transitionSpeed = (shown) ? transitionInSpeed : transitionOutSpeed;
+                
 
-                if (gameObject.activeInHierarchy)
+                if (gameObject.activeInHierarchy) {
                     StartCoroutine("UpdatingVisibility");
-                else
+                    lerping = true;
+                }
+                else 
+                {
                     SetCurrentToTarget();
+                    lerping = false;
+                }
             }
             else
             {
                 SetCurrentToTarget();
                 EvaluateVisibility();
+
+                lerping = false;
             }
         }
 

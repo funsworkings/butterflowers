@@ -198,7 +198,7 @@ public class Focus : MonoBehaviour
     {
         State state = State.None;
 
-        if (Wizard.isFocused) 
+        if (Wizard != null && Wizard.isFocused) 
         {
             state = State.Wizard;
         }

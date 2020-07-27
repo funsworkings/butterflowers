@@ -7,7 +7,7 @@ using UnityEngine.UI;
 
 public class BeaconInfo : MonoBehaviour
 {
-    Beacon m_beacon = null;
+    [SerializeField] Beacon m_beacon = null;
     public Beacon beacon {
         get 
         {

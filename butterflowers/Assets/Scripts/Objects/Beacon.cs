@@ -29,7 +29,7 @@ public class Beacon: MonoBehaviour {
         ACTIONABLE
     }
 
-    public Status status => Room.FetchBeaconStatus(this);
+    public Status status => (Room == null)? Status.NULL:Room.FetchBeaconStatus(this);
 
 	#endregion
 
@@ -56,6 +56,7 @@ public class Beacon: MonoBehaviour {
 
     bool active = false;
 
+    [SerializeField] bool self = false;
     [SerializeField] bool m_discovered = false, m_visible = true, m_destroyed = false;
 
     [SerializeField] GameObject infoPrefab, info;
@@ -143,11 +144,11 @@ public class Beacon: MonoBehaviour {
     {
         get
         {
-            return Room.FetchBeaconKnowledgeMagnitude(this);
+            return (Room == null)? 1f:Room.FetchBeaconKnowledgeMagnitude(this);
         }
     }
 
-    public bool overrideFocus => Room.FOCUS;
+    public bool overrideFocus => (Room == null)? false : Room.FOCUS;
 
     #endregion
 
@@ -171,7 +172,7 @@ public class Beacon: MonoBehaviour {
     {
         active = (Nest.open && visible);
 
-        Oscillate.enabled = !warping || destroyed || !active;
+        if(Oscillate != null) Oscillate.enabled = !warping || destroyed || !active;
 
         if (!active) HideInfo();
 
@@ -280,6 +281,9 @@ public class Beacon: MonoBehaviour {
 
         //var shine = Instantiate(pr_shinePS, transform.position, transform.rotation);
         //shine.GetComponent<ParticleSystem>().Play();
+
+        if (self)
+            Nest.AddBeacon(this);
 
         return true;
     }
@@ -420,12 +424,14 @@ public class Beacon: MonoBehaviour {
 	#region Info operations
 
 	void CreateInfo(){
-        info = Instantiate(infoPrefab, Room.BeaconInfoContainer);
+        var container = GameObject.FindGameObjectWithTag("Beacon Container");
+
+        info = Instantiate(infoPrefab, container.transform);
         beaconInfo = info.GetComponent<BeaconInfo>();
         
         infoTooltip = info.GetComponent<Tooltip>();
         infoTooltip.target = transform;
-        infoTooltip.camera = Room.PlayerCamera;
+        infoTooltip.camera = (Room == null)? Camera.main:Room.PlayerCamera;
         
         UpdateInfo();
 

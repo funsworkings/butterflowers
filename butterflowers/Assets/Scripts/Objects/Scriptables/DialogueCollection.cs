@@ -7,6 +7,9 @@ using System.Linq;
 [CreateAssetMenu(fileName = "New Dialogue Collection", menuName = "Extras/Dialogue Collection", order = 52)]
 public class DialogueCollection : ScriptableObject
 {
+    [SerializeField] string prepend = "";
+    [SerializeField] string append = "";
+
     public string[] elements;
 
     [SerializeField] List<string> visited = new List<string>();
@@ -23,7 +26,8 @@ public class DialogueCollection : ScriptableObject
 
             if (!string.IsNullOrEmpty(el)) {
                 visited.Add(el);
-                return el;
+
+                return prepend + el + append;
             }
         }
 
