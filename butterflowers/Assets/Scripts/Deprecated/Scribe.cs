@@ -60,6 +60,9 @@ public class Scribe : Logger
 
 	[SerializeField] EVENTCODE[] excludes = new EVENTCODE[] { };
 
+	[SerializeField] bool saving = true;
+	[SerializeField] bool lib = true;
+
 	#endregion
 
 	#region Monobehaviour callbacks
@@ -84,16 +87,22 @@ public class Scribe : Logger
 	{
 		Events.onFireEvent += Push;
 
-		focus.onFocus += onFocus;
-		focus.onLoseFocus += onLoseFocus;
+		if (focus != null) 
+		{
+			focus.onFocus += onFocus;
+			focus.onLoseFocus += onLoseFocus;
+		}
 	}
 
 	void OnDisable()
 	{
 		Events.onFireEvent -= Push;
 
-		focus.onFocus -= onFocus;
-		focus.onLoseFocus -= onLoseFocus;
+		if (focus != null) 
+		{
+			focus.onFocus -= onFocus;
+			focus.onLoseFocus -= onLoseFocus;
+		}
 
 		Clear();
 	}
@@ -109,7 +118,8 @@ public class Scribe : Logger
 		else
 			log += string.Format("\n{0}", message);
 
-		if (!focus.isFocused) {
+		if (focus == null || !focus.isFocused) 
+		{
 			position = caches.Count - 1;
 		}
 		else 
@@ -184,15 +194,21 @@ public class Scribe : Logger
 			}
 
 			save_caches.Add(log);
-			Save.log_entries = save_caches.ToArray();
+
+			if(saving)
+				Save.log_entries = save_caches.ToArray();
 		}
 		caches.Add(log);
 
 
 		if (unknown)
 			Push(detail);
-		else
-			Push(parseLog(log));
+		else {
+			if (!lib)
+				Push(parseLog(log, overridedetail: detail));
+			else
+				Push(parseLog(log));
+		}
 	}
 
 	#endregion
@@ -246,7 +262,7 @@ public class Scribe : Logger
 
 	#region Helpers
 
-	private string parseLog(Log log, bool useDetailLookup = true)
+	private string parseLog(Log log, string overridedetail = null)
 	{
 		var @event = (EVENTCODE)((int)log.paramx);
 		var agA = (AGENT)((int)log.paramy);
@@ -254,6 +270,9 @@ public class Scribe : Logger
 
 		var detail_lookup = log.detail_lookup;
 		var detail = (detail_lookup == -1) ? "" : Library.ALL_FILES[detail_lookup];
+
+		if (!string.IsNullOrEmpty(overridedetail))
+			detail = overridedetail;
 
 		string e = parseEventcode(@event);
 		string agent_a = formatAgent(agA);

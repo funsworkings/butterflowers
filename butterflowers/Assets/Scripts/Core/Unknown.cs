@@ -35,6 +35,7 @@ public class Unknown : MonoBehaviour
 	[SerializeField] float scribeInterval = 1f;
     [SerializeField] int totalwidth = 32;
     [SerializeField] Pattern patt = Pattern.None;
+    [SerializeField] bool events = true;
 
 
     [Header("River")]
@@ -69,13 +70,15 @@ public class Unknown : MonoBehaviour
 
     void OnEnable()
     {
-        Events.onFireEvent += onFireEvent;
+        if(events)
+            Events.onFireEvent += onFireEvent;
         //feedCamera.enabled = false;
     }
 
     void OnDisable()
     {
-        Events.onFireEvent -= onFireEvent;
+        if(events)
+            Events.onFireEvent -= onFireEvent;
     }
 
     void onFireEvent(EVENTCODE @event, AGENT a, AGENT b, string details)
@@ -143,7 +146,7 @@ public class Unknown : MonoBehaviour
 
     #region None
 
-    string none()
+    public string none()
     {
         var row = new string(normalchar, totalwidth);
         return row;
@@ -153,9 +156,9 @@ public class Unknown : MonoBehaviour
 
 	#region River
 
-	string river()
+	public string river()
     {
-        float health = Butterflies.GetHealth();
+        float health = (Butterflies != null)? Butterflies.GetHealth():1f;
 
         float wavelength = health.RemapNRB(0f, 1f, minriverwavelength, maxriverwavelength);
         float slope = -(wavelength * Mathf.Sin(Time.time * riverspeed));
@@ -185,7 +188,7 @@ public class Unknown : MonoBehaviour
 
     #region Perlin
 
-    string perlin()
+    public string perlin()
     {
         var row = new string(normalchar, totalwidth);
         var chars = row.ToCharArray();
@@ -210,7 +213,7 @@ public class Unknown : MonoBehaviour
 
     #region Feed
 
-    string feed()
+    public string feed()
     {
         var row = new string(normalchar, totalwidth);
         var chars = row.ToCharArray();
