@@ -69,11 +69,11 @@ public class FocalPoint : MonoBehaviour
 
         focused = queued =  false;
 
+        world = World.Instance;
+
         interactable.onHover += Hover;
         interactable.onUnhover += Unhover;
         interactable.onGrab += Grab;
-
-        world = World.Instance;
     }
 
     void OnDisable()

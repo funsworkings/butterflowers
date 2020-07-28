@@ -6,12 +6,13 @@ using XNode.Examples.MathNodes;
 
 using UnityEngine.Events;
 using UIExt.Behaviors.Visibility;
+using System.Linq;
 
 namespace Intro {
 
     public class DesktopVisualization: MonoBehaviour {
 
-        public UnityEvent onBegin, onBeginSpawnFiles, onSpawnFile, onEndSpawnFiles, onSpawnNest, onConstructRoom, onBeginWipe, onEndWipe, onComplete;
+        public UnityEvent onBegin, onIntroComplete, onBeginSpawnFiles, onSpawnFile, onEndSpawnFiles, onSpawnNest, onConstructRoom, onBeginWipe, onEndWipe, onComplete;
         public TextureCollection StarterPack;
 
         [Header("Timing")]
@@ -44,7 +45,10 @@ namespace Intro {
             public Nest nest;
             Rigidbody nest_rigid;
 
+            public Unknown unknown;
             public Quilt quilt;
+            public Scribe terminal;
+            public FileNavigator Files;
             public MotherOfButterflies mother;
 
         [Header("Spawn beacons")]
@@ -64,6 +68,8 @@ namespace Intro {
             nest.onRemoveBeacon += onReleaseBeacon;
 
             Events.onFireEvent += onReceiveEvent;
+
+            Files.onRefresh += onRefreshFiles;
         }
 
         void OnDisable()
@@ -72,6 +78,8 @@ namespace Intro {
             nest.onRemoveBeacon -= onReleaseBeacon;
 
             Events.onFireEvent -= onReceiveEvent;
+
+            Files.onRefresh -= onRefreshFiles;
         }
 
         #endregion
@@ -94,6 +102,12 @@ namespace Intro {
             welcomeText.Hide();
 
 
+            terminalinprogress = true;
+            TerminalIntro();
+            while (terminalinprogress) yield return null;
+            onIntroComplete.Invoke();
+
+
             onBeginSpawnFiles.Invoke();
             yield return new WaitForSeconds(beaconSpawnDelay);
 
@@ -101,11 +115,18 @@ namespace Intro {
             while (!spawnFiles) yield return null;
             onEndSpawnFiles.Invoke();
 
+            PushToTerminal("NETWORK FILES WAS SCRAPED!");
+            yield return new WaitForSeconds(.8f);
+
+            PushToTerminal("<i>butterflowers</i> WAS BOOTED!");
+            yield return new WaitForSeconds(.2f);
+
 
             SpawnNest();
             yield return new WaitForSeconds(nestDropDelay);
             onConstructRoom.Invoke();
-            
+
+            hasClicked = false;
             while (!hasClicked) 
             {
                 clickText.Show();
@@ -113,7 +134,7 @@ namespace Intro {
             }
             clickText.Hide();
 
-            
+            hasFocused = false;
             while (!hasFocused) 
             {
                 holdText.Show();
@@ -121,19 +142,20 @@ namespace Intro {
             }
             holdText.Hide();
 
-
+            hasAdded = false;
             while (!hasAdded) {
                 addBeacontext.Show();
                 yield return null;
             }
             addBeacontext.Hide();
 
+            hasSpilled = false;
             while (!hasSpilled) yield return null;
             nestOverflowText.Show();
             yield return new WaitForSeconds(nestOverflowTextDelay);
             nestOverflowText.Hide();
 
-
+            hasLostFocus = false;
             while (!hasLostFocus) 
             {
                 loseHoldText.Show();
@@ -160,6 +182,7 @@ namespace Intro {
 
             foreach (GameObject b in files) {
                 b.SetActive(false);
+                Events.ReceiveEvent(EVENTCODE.BEACONDELETE, AGENT.World, AGENT.Beacon, details: file_lookup[b.GetComponent<Beacon>()].name);
 
                 delay = Random.Range(0f, maxTimeWipeObjects / 3f);
                 yield return new WaitForSeconds(delay);
@@ -225,6 +248,7 @@ namespace Intro {
                 file_lookup.Add(file, files[i]);
 
                 onSpawnFile.Invoke();
+                Events.ReceiveEvent(EVENTCODE.BEACONADD, AGENT.World, AGENT.Beacon, details: path);
 
                 if (++items > itemCap) 
                 {
@@ -270,10 +294,107 @@ namespace Intro {
             hasWipedButterflies = true;
         }
 
+        #region Console
 
-        #region Nest callbacks
+        public void RefreshDesktopFiles()
+        {
+            Files.Refresh();
+        }
 
-        void onIngestBeacon(Beacon beacon)
+        void onRefreshFiles()
+        {
+            var entries = Files.GetFiles();
+            var files = Files.GetPathsFromFiles(entries);
+            StartCoroutine("RefreshingDesktop", files);
+        }
+
+        bool refreshing = true;
+        IEnumerator RefreshingDesktop(string[] files)
+        {
+            var root = Files.Path;
+
+            for (int i = 0; i < files.Length; i++) {
+                Events.ReceiveEvent(EVENTCODE.DISCOVERY, AGENT.World, AGENT.Beacon, root + "/" + files[i]);
+                yield return new WaitForSeconds(.05f);
+            }
+
+            refreshing = false;
+        }
+
+        public void TerminalIntro()
+        {
+            StartCoroutine("TerminalIntroSequence");
+        }
+
+        bool terminalinprogress = false;
+        IEnumerator TerminalIntroSequence()
+        {
+            int j = 0;
+
+            PushToTerminal("BOOTING UP <i>butterflowers</i>...");
+            yield return new WaitForSeconds(1f);
+
+            PushToTerminal("SPAWNING <i>VOID</i>...");
+            yield return new WaitForSeconds(.8f);
+            for (j = 0; j < 16; j++) 
+            {
+                PushToTerminal(unknown.none());
+                yield return new WaitForSeconds(.087f);
+            }
+
+            PushToTerminal("<i>VOID</i> WAS SPAWNED!");
+            yield return new WaitForSeconds(.2f);
+
+            PushToTerminal("SPAWNING <i>NOISE</i>...");
+            yield return new WaitForSeconds(.8f);
+            for (j = 0; j < 16; j++) {
+                PushToTerminal(unknown.perlin());
+                yield return new WaitForSeconds(.087f);
+            }
+
+            PushToTerminal("<i>NOISE</i> WAS SPAWNED!");
+            yield return new WaitForSeconds(.2f);
+
+            PushToTerminal("SPAWNING <i>RIVERS</i>...");
+            yield return new WaitForSeconds(1.2f);
+            for (j = 0; j < 16; j++) {
+                PushToTerminal(unknown.river());
+                yield return new WaitForSeconds(.087f);
+            }
+
+            PushToTerminal("<i>RIVERS</i> WAS SPAWNED!");
+            yield return new WaitForSeconds(.2f);
+
+            PushToTerminal("SPAWNING <i>CAMERA FEED</i>...");
+            yield return new WaitForSeconds(2f);
+            for (j = 0; j < 16; j++) {
+                PushToTerminal(unknown.feed());
+                yield return new WaitForSeconds(.087f);
+            }
+
+            PushToTerminal("<i>CAMERA FEED</i> WAS SPAWNED!");
+            yield return new WaitForSeconds(.2f);
+
+            PushToTerminal("LOADING USER DESKTOP FILES...");
+            yield return new WaitForSeconds(2.3f);
+
+            RefreshDesktopFiles();
+            while (refreshing) yield return null;
+
+            PushToTerminal("USER DESKTOP FILES WAS LOADED!");
+            yield return new WaitForSeconds(.2f);
+
+            PushToTerminal("SCRAPING NETWORK FILES...");
+            yield return new WaitForSeconds(.8f);
+
+            terminalinprogress = false;
+        }
+
+		#endregion
+
+		#region Nest callbacks
+
+		void onIngestBeacon(Beacon beacon)
         {
             beacon.visible = false;
 
@@ -305,6 +426,11 @@ namespace Intro {
         public void OnLostFocus()
         {
             hasLostFocus = true;
+        }
+
+        public void PushToTerminal(string text)
+        {
+            Events.ReceiveEvent(EVENTCODE.UNKNOWN, AGENT.NULL, AGENT.NULL, text);
         }
 
         void onReceiveEvent(EVENTCODE @event, AGENT a, AGENT b, string details)
