@@ -26,7 +26,7 @@ namespace Wizard {
         #region Properties
 
         [SerializeField] DialogueTree[] dialogueTrees;
-        [SerializeField] DialogueTree coreDialogueTree;
+        [SerializeField] DialogueTree coreDialogueTree, introDialogueTree;
 
         Controller controller;
         Memories memories;
@@ -246,13 +246,18 @@ namespace Wizard {
             var collection = mapping.dialogue;
 
             string comment = collection.FetchRandomItem();
-            if (controller.isFocused) 
+            Debug.Log("comment = " + comment);
+
+            Push(comment, true);
+            this.m_comment = null;
+
+            /*if (controller.isFocused) 
             {
                 Push(comment, true);
                 this.m_comment = null;
             }
             else
-                this.m_comment = comment;
+                this.comment = comment;*/
         }
 
         #endregion
@@ -290,8 +295,13 @@ namespace Wizard {
 
         protected void UpdateTimeBetweenSymbols()
         {
+            if (brain == null)
+                brain = controller.Brain;
+
             float mood = brain.mood;
             float stance = brain.stance;
+
+            Debug.LogFormat("mood = {0} stance = {1}", mood, stance);
 
             float random = (1f - stance).RemapNRB(0f, 1f, minRandomness, maxRandomness); // Inverse mood 
 
@@ -349,6 +359,9 @@ namespace Wizard {
 
             containerOpacity.Hide();
             advancer.Hide();
+
+            if (world.STATE == GAMESTATE.INTRO) 
+                StartCoroutine("WaitForNextIntroDialogue");
         }
 
         protected override void OnStart(string body)
@@ -390,13 +403,19 @@ namespace Wizard {
 
         protected override void OnComplete(string body)
         {
-            if (world.STATE == GAMESTATE.GAME) 
-            {
+            if (world.STATE == GAMESTATE.GAME) {
                 autoprogress = true;
                 advancer.Hide();
             }
-            else 
+            else
                 advancer.Show();
+        }
+
+        IEnumerator WaitForNextIntroDialogue()
+        {
+            yield return new WaitForSeconds(1.33f);
+            if(world.STATE == GAMESTATE.INTRO)
+                FetchDialogueFromTree(introDialogueTree); // Move to next dialogue node in intro
         }
 
         #endregion

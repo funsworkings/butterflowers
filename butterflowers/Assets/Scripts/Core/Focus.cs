@@ -45,6 +45,7 @@ public class Focus : MonoBehaviour
 
 	[SerializeField] FocalPoint m_focus = null;
     [SerializeField] FocalPoint focusInQueue = null;
+    [SerializeField] FocusCamera lastFocusCamera = null;
 
     [SerializeField] FocalPoint[] focalPoints;
     [SerializeField] CameraVisualBlend CameraBlend;
@@ -74,8 +75,8 @@ public class Focus : MonoBehaviour
     [SerializeField] string lowPassFilterParam = null;
 
     [SerializeField] float timeToFocus, timeToLoseFocus = 1f;
-                     float t_focus = 0f, t_losefocus = 0f;
-                     bool focus_ready = false;
+    [SerializeField] float t_focus = 0f, t_losefocus = 0f;
+    [SerializeField] bool focus_ready = false;
     [SerializeField] float focusDelay = 0f;
                      bool delay = false;
 
@@ -129,7 +130,11 @@ public class Focus : MonoBehaviour
     void Update()
     {
         if (Input.GetMouseButtonDown(0)) focus_ready = true;
-        if (Input.GetMouseButtonUp(0)) focus_ready = false;
+        if (Input.GetMouseButtonUp(0)) 
+        {
+            focus_ready = false;
+            focusInQueue = null;
+        }
 
 
         if (!focus_ready) 
@@ -138,7 +143,7 @@ public class Focus : MonoBehaviour
             delay = true;
         }
         else {
-            if (active)
+            if (active && (focusInQueue == null))
                 delay = (t_losefocus < focusDelay);
             else
                 delay = (t_focus < focusDelay);
@@ -297,7 +302,7 @@ public class Focus : MonoBehaviour
 
     void UpdateTrajectory()
     {
-        if (focusing && !delay) 
+        if (focusing && !delay && focusInQueue.camera != null) 
         {
             trajectory.Line.enabled = true;
 
@@ -316,17 +321,21 @@ public class Focus : MonoBehaviour
     {
         if (focus == this.m_focus) return;
 
-        Dispose();
-        this.m_focus = focus;
+        if (focus.dispose) {
+            Dispose();
 
-        Camera = focus.camera;
-        if (Camera == null) return;
+            this.m_focus = focus;
 
-        Camera.Focus(focus.transform);
+            Camera = focus.camera;
+            if (Camera != null) {
+                lastFocusCamera = Camera;
 
-        CameraBlend.blendDefinition = null;
-        CameraBlend.BlendTo(Camera);
+                Camera.Focus(focus.transform);
 
+                CameraBlend.blendDefinition = null;
+                CameraBlend.BlendTo(Camera);
+            }
+        }
         onFocus.Invoke();
     }
 
@@ -343,6 +352,7 @@ public class Focus : MonoBehaviour
         Dispose();
         m_focus = null;
 
+        lastFocusCamera = null;
 
         var loseFocusBlend = loseFocusBlends.PickRandomSubset(1)[0];
 

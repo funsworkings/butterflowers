@@ -43,6 +43,7 @@ MonoBehaviour:
   - {fileID: 114708203570275542}
   - {fileID: 114728902533725936}
   - {fileID: 114743677580544604}
+  - {fileID: 114314210255499356}
   debug: 0
   auto: 1
   m_rootNode: {fileID: 114066146296506084}
@@ -102,7 +103,7 @@ MonoBehaviour:
   m_Name: Kick Nest
   m_EditorClassIdentifier: 
   graph: {fileID: 11400000}
-  position: {x: 2472, y: 1464}
+  position: {x: 2504, y: 1400}
   ports:
     keys:
     - data
@@ -581,6 +582,59 @@ MonoBehaviour:
       _dynamic: 0
     - _fieldName: output
       _node: {fileID: 114280831127623564}
+      _typeQualifiedName: Noder.Node, Assembly-CSharp, Version=0.0.0.0, Culture=neutral,
+        PublicKeyToken=null
+      connections: []
+      _direction: 1
+      _connectionType: 1
+      _typeConstraint: 0
+      _dynamic: 0
+  input: {fileID: 0}
+  output: {fileID: 0}
+  data: {fileID: 0}
+--- !u!114 &114314210255499356
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 0}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 949f85438aef5b24aa17d5aa312401eb, type: 3}
+  m_Name: Hit
+  m_EditorClassIdentifier: 
+  graph: {fileID: 11400000}
+  position: {x: 2873.6216, y: 1286.897}
+  ports:
+    keys:
+    - data
+    - input
+    - output
+    values:
+    - _fieldName: data
+      _node: {fileID: 114314210255499356}
+      _typeQualifiedName: UnityEngine.Object, UnityEngine.CoreModule, Version=0.0.0.0,
+        Culture=neutral, PublicKeyToken=null
+      connections: []
+      _direction: 0
+      _connectionType: 1
+      _typeConstraint: 1
+      _dynamic: 0
+    - _fieldName: input
+      _node: {fileID: 114314210255499356}
+      _typeQualifiedName: Noder.Node, Assembly-CSharp, Version=0.0.0.0, Culture=neutral,
+        PublicKeyToken=null
+      connections:
+      - fieldName: output
+        node: {fileID: 114743677580544604}
+        reroutePoints: []
+      _direction: 0
+      _connectionType: 0
+      _typeConstraint: 0
+      _dynamic: 0
+    - _fieldName: output
+      _node: {fileID: 114314210255499356}
       _typeQualifiedName: Noder.Node, Assembly-CSharp, Version=0.0.0.0, Culture=neutral,
         PublicKeyToken=null
       connections: []
@@ -1220,7 +1274,7 @@ MonoBehaviour:
   m_Name: Module
   m_EditorClassIdentifier: 
   graph: {fileID: 11400000}
-  position: {x: 2472, y: 1288}
+  position: {x: 2472, y: 1256}
   ports:
     keys:
     - tree
@@ -1252,7 +1306,10 @@ MonoBehaviour:
       _node: {fileID: 114743677580544604}
       _typeQualifiedName: Noder.Node, Assembly-CSharp, Version=0.0.0.0, Culture=neutral,
         PublicKeyToken=null
-      connections: []
+      connections:
+      - fieldName: input
+        node: {fileID: 114314210255499356}
+        reroutePoints: []
       _direction: 1
       _connectionType: 1
       _typeConstraint: 0

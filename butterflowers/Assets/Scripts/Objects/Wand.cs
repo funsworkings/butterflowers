@@ -238,14 +238,27 @@ public class Wand : MonoBehaviour
         ray = camera.ScreenPointToRay(position);
 
         var hits = Physics.RaycastAll(ray, interactionDistance, interactionMask.value);
-        ParseInteractions(hits);
+
+        var ray_2d = new PointerEventData(EventSystem.current);
+            ray_2d.position = Input.mousePosition;
+        var hits_2d = new List<RaycastResult>();
+
+        EventSystem.current.RaycastAll(ray_2d, hits_2d);
+
+        if (!spells) 
+        {
+            hits = new RaycastHit[] { }; // Discard all raycast events if no spells
+            hits_2d = new List<RaycastResult>();
+        }
+
+        ParseInteractions(hits, hits_2d.ToArray());
     }
 
-    void ParseInteractions(RaycastHit[] hits)
+    void ParseInteractions(RaycastHit[] hits, RaycastResult[] hits_2d)
     {
         List<Interactable> interacting = new List<Interactable>();
 
-        if(hits != null){
+        if(hits != null && hits_2d != null){
             GameObject obj = null;
             Interactable obj_int = null;
 
@@ -271,10 +284,33 @@ public class Wand : MonoBehaviour
                 //Debug.LogFormat("Collided with {0}", hit.collider.gameObject.name);
             }
 
+            var ray_hit = new RaycastHit();
+            foreach (RaycastResult hit_2d in hits_2d) 
+            {
+                obj = hit_2d.gameObject;
+                obj_int = obj.GetComponent<Interactable>();
+
+                if (obj_int != null) {
+                    ray_hit.point = obj.transform.position;
+                    ray_hit.normal = obj.transform.forward;
+
+                    if (down)
+                        obj_int.Grab(ray_hit);
+                    else if (cont)
+                        obj_int.Continue(ray_hit);
+                    else if (up)
+                        obj_int.Release(ray_hit);
+                    else {
+                        obj_int.Hover(ray_hit);
+                        interacting.Add(obj_int);
+                    }
+                }
+            }
+
             if (cursor_icon != null) 
             {
                 // Update cursor
-                if (hits.Length > 0) 
+                if (hits.Length > 0 || hits_2d.Length > 0) 
                     cursor_icon.state = CustomCursor.State.Hover;
                 else
                     cursor_icon.state = CustomCursor.State.Normal;

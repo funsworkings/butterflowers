@@ -14,6 +14,8 @@ namespace Settings
             public bool persistKnowledge = false;
             public bool persistBeacons = false;
             public bool alwaysIntro = false;
+            public bool alwaysAbsorb = false;
+            public bool useWizard = false;
 
         [Header("Time Attributes")]
             public float hoursPerDay = 24f;

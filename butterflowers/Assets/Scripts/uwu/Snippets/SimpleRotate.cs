@@ -10,6 +10,19 @@ public class SimpleRotate : MonoBehaviour
     [SerializeField] bool global = false;
     [SerializeField] bool randomSpeed = false;
     [SerializeField] bool randomAxis = false;
+
+
+    public float Speed {
+        get
+        {
+            return speed;
+        }
+        set
+        {
+            speed = value;
+        }
+    }
+
     private void Start()
     {
         if (randomSpeed) speed *= Random.Range(0f, 1f);

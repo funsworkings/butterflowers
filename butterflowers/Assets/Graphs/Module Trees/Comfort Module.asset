@@ -51,6 +51,7 @@ MonoBehaviour:
   - {fileID: 114909537524897704}
   - {fileID: 114725214556136598}
   - {fileID: 114521693230172352}
+  - {fileID: 114405568380607102}
   debug: 0
   auto: 1
   m_rootNode: {fileID: 114406319115094738}
@@ -541,7 +542,7 @@ MonoBehaviour:
   m_Name: Conditional
   m_EditorClassIdentifier: 
   graph: {fileID: 11400000}
-  position: {x: 1304, y: 1512}
+  position: {x: 1320, y: 1576}
   ports:
     keys:
     - a
@@ -795,6 +796,59 @@ MonoBehaviour:
   success: {fileID: 0}
   fail: {fileID: 0}
   elements: []
+--- !u!114 &114405568380607102
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 0}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 949f85438aef5b24aa17d5aa312401eb, type: 3}
+  m_Name: Hit
+  m_EditorClassIdentifier: 
+  graph: {fileID: 11400000}
+  position: {x: 2137.4685, y: 1543.5797}
+  ports:
+    keys:
+    - data
+    - input
+    - output
+    values:
+    - _fieldName: data
+      _node: {fileID: 114405568380607102}
+      _typeQualifiedName: UnityEngine.Object, UnityEngine.CoreModule, Version=0.0.0.0,
+        Culture=neutral, PublicKeyToken=null
+      connections: []
+      _direction: 0
+      _connectionType: 1
+      _typeConstraint: 1
+      _dynamic: 0
+    - _fieldName: input
+      _node: {fileID: 114405568380607102}
+      _typeQualifiedName: Noder.Node, Assembly-CSharp, Version=0.0.0.0, Culture=neutral,
+        PublicKeyToken=null
+      connections:
+      - fieldName: output
+        node: {fileID: 114917904127976682}
+        reroutePoints: []
+      _direction: 0
+      _connectionType: 0
+      _typeConstraint: 0
+      _dynamic: 0
+    - _fieldName: output
+      _node: {fileID: 114405568380607102}
+      _typeQualifiedName: Noder.Node, Assembly-CSharp, Version=0.0.0.0, Culture=neutral,
+        PublicKeyToken=null
+      connections: []
+      _direction: 1
+      _connectionType: 1
+      _typeConstraint: 0
+      _dynamic: 0
+  input: {fileID: 0}
+  output: {fileID: 0}
+  data: {fileID: 0}
 --- !u!114 &114406319115094738
 MonoBehaviour:
   m_ObjectHideFlags: 0
@@ -1646,7 +1700,7 @@ MonoBehaviour:
   m_Name: Absorption
   m_EditorClassIdentifier: 
   graph: {fileID: 11400000}
-  position: {x: 1048, y: 1592}
+  position: {x: 984, y: 1608}
   ports:
     keys:
     - value
@@ -1921,7 +1975,7 @@ MonoBehaviour:
   m_Name: Random Number
   m_EditorClassIdentifier: 
   graph: {fileID: 11400000}
-  position: {x: 1047.871, y: 1481.6929}
+  position: {x: 1016, y: 1480}
   ports:
     keys:
     - min
@@ -2146,7 +2200,10 @@ MonoBehaviour:
       _node: {fileID: 114917904127976682}
       _typeQualifiedName: Noder.Node, Assembly-CSharp, Version=0.0.0.0, Culture=neutral,
         PublicKeyToken=null
-      connections: []
+      connections:
+      - fieldName: input
+        node: {fileID: 114405568380607102}
+        reroutePoints: []
       _direction: 1
       _connectionType: 1
       _typeConstraint: 0

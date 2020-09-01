@@ -200,7 +200,7 @@ Transform:
   m_GameObject: {fileID: 2418046}
   m_LocalRotation: {x: 0, y: 0, z: 0, w: 1}
   m_LocalPosition: {x: 0, y: 0, z: 0.115}
-  m_LocalScale: {x: 0.08952324, y: 0.061628316, z: 0.01}
+  m_LocalScale: {x: 0.08588627, y: 0.061628316, z: 0.01}
   m_Children:
   - {fileID: 2015572246}
   m_Father: {fileID: 534669905}
@@ -624,6 +624,7 @@ MonoBehaviour:
   Preset: {fileID: 11400000, guid: 45ffdf5e02efb4848942aaeb5d029f6e, type: 2}
   Memories: {fileID: 11400000, guid: a11a7773fa9f39649b779c417d4c7b19, type: 2}
   CameraManager: {fileID: 1067243527}
+  Focus: {fileID: 0}
   Wizard: {fileID: 468500791}
   maxBeacons: 24
   DEFAULT_NULL_TEXTURE: {fileID: 2800000, guid: 48b99aa691dd8744f9adf73fba436432,
@@ -632,6 +633,9 @@ MonoBehaviour:
   pr_PositivePS: {fileID: 1311559724632354285, guid: 3ed5efbaf97b2a94989b8edf335c7b76,
     type: 3}
   initializeOnAwake: 1
+  wizardIntroAnimation: {fileID: 0}
+  wizardOpacity: {fileID: 0}
+  wizardCloudsOpacity: {fileID: 0}
   m_beaconInfoContainer: {fileID: 2032687484}
   m_wizardCamera: {fileID: 582910691}
   m_playerCamera: {fileID: 534669904}
@@ -639,6 +643,7 @@ MonoBehaviour:
   previousMainCamera: {fileID: 0}
   beaconPaths: []
   wizardDiscoveries: 
+  stalltime: 0.3
 --- !u!1 &62689476
 GameObject:
   m_ObjectHideFlags: 0
@@ -4454,6 +4459,7 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 1f355c82f8768934bb447bccc0cf70f7, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
+  CameraManager: {fileID: 0}
   focused: 0
   queued: 0
   timetofocus: 0.5
@@ -11116,7 +11122,7 @@ GameObject:
   m_Icon: {fileID: 0}
   m_NavMeshLayer: 0
   m_StaticEditorFlags: 0
-  m_IsActive: 1
+  m_IsActive: 0
 --- !u!4 &468500789
 Transform:
   m_ObjectHideFlags: 0
@@ -11167,25 +11173,29 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 3abef107115004477a1d1830b154d73a, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
+  onFocus:
+    m_PersistentCalls:
+      m_Calls: []
+  onLoseFocus:
+    m_PersistentCalls:
+      m_Calls: []
   World: {fileID: 58810647}
   wand: {fileID: 2015572249}
   Nest: {fileID: 735639530}
   Focus: {fileID: 1969311502}
   Look: {fileID: 534669904}
+  ABSORBED: 0
   Preset: {fileID: 11400000, guid: 45ffdf5e02efb4848942aaeb5d029f6e, type: 2}
   BrainPreset: {fileID: 11400000, guid: 599fca27826da9a469476dcff92e983f, type: 2}
   m_Memories: {fileID: 11400000, guid: a11a7773fa9f39649b779c417d4c7b19, type: 2}
+  m_Dialogue: {fileID: 0}
   state: 3
+  infocus: 0
   debugwindow: {fileID: 391654774}
   debugtext: {fileID: 0}
   sequences: []
-  dialogueMappings:
-  - focalPoint: {fileID: 283568907}
-    dialogueTree: {fileID: 11400000, guid: d68b340a6d3fb304e9b7bf653ea3e16b, type: 2}
-  - focalPoint: {fileID: 735639535}
-    dialogueTree: {fileID: 11400000, guid: d68b340a6d3fb304e9b7bf653ea3e16b, type: 2}
   introDialogueTree: {fileID: 11400000, guid: b26009607a2ee7e4f8f87cd972d80eef, type: 2}
-  discoveryDialogueTree: {fileID: 0}
+  emotions: {fileID: 0}
 --- !u!135 &468500793
 SphereCollider:
   m_ObjectHideFlags: 0
@@ -11237,20 +11247,24 @@ MonoBehaviour:
   m_body: 
   m_current: 
   m_inprogress: 0
-  dialogueTree: {fileID: 11400000, guid: 9f67b438b35ca5e49a81403d378b5a12, type: 2}
-  introTree: {fileID: 11400000, guid: b26009607a2ee7e4f8f87cd972d80eef, type: 2}
-  discoveryTree: {fileID: 0}
-  focusDialogueTree: {fileID: 0}
-  bubble: {fileID: 1096321895}
-  bubble_pos: {fileID: 1096321899}
+  dialogueTrees: []
+  coreDialogueTree: {fileID: 0}
+  alert: {fileID: 0}
+  normalTextContainer: {fileID: 0}
+  memoryTextContainer: {fileID: 0}
+  normalOpacity: {fileID: 0}
+  memoryOpacity: {fileID: 0}
   advancer: {fileID: 478646750}
   temp: []
   tempvisited: 
+  m_comment: 
   node_id: -1
   m_minRandomness: 0.067
   m_maxRandomness: 1
   m_minSymbolDelay: 0.055
   m_maxSymbolDelay: 0.3
+  commentaries: []
+  reactions: []
   debugBodies: []
   debug: 1
   m_randomBetweenSymbols: 0
@@ -11301,7 +11315,7 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: fa90edc80d8da3f4c9ae7586a74c43c3, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  Manager: {fileID: 58810647}
+  World: {fileID: 0}
   REFRESH: 0
   REFRESH_RATE: 16
   Nest: {fileID: 735639530}
@@ -11317,7 +11331,11 @@ MonoBehaviour:
   - {fileID: 11400000, guid: 7602890933f5cb543a7758b9acb69fff, type: 2}
   - {fileID: 11400000, guid: 98ddda73f7f78a34093102c105a991d7, type: 2}
   WorldPreset: {fileID: 11400000, guid: 45ffdf5e02efb4848942aaeb5d029f6e, type: 2}
+  debugMood: -1
+  debugStance: -1
+  debugAbsorb: -1
   m_mood: 0
+  t_mood: 0
   m_stance: 0
   m_absorption: 0
   m_environmentKnowledge: 0
@@ -11327,40 +11345,14 @@ MonoBehaviour:
   m_possibleActionsFilter: 
   m_possibleActionsRaw: 
   excludes: 010000000300000004000000
-  wiz_beacons: []
-  dsktop_beacons: []
+  m_stanceState: 0
+  m_moodState: 0
+  self_beacons: []
+  ext_beacons: []
   all_beacons: []
   PLAYER_EVENTS: 
   WORLD_EVENTS: 
   NEST_EVENTS: 
-  reactionMappings:
-  - event: 10
-    mood: 01000000
-    reactions: {fileID: 11400000, guid: e5cfff65c4634074dbf7b45e09fe05a4, type: 2}
-  - event: 10
-    mood: 00000000
-    reactions: {fileID: 11400000, guid: 908bc77d6accfd24cbb1ac5c12e35669, type: 2}
-  - event: 10
-    mood: 02000000
-    reactions: {fileID: 11400000, guid: ca882ce3e653f95459f5676115b10161, type: 2}
-  - event: 20
-    mood: 01000000
-    reactions: {fileID: 11400000, guid: 803b94507cadc1f458461aa2e50508e4, type: 2}
-  - event: 20
-    mood: 00000000
-    reactions: {fileID: 11400000, guid: 0bb4f0181bc079e49ad3ecf8a914a161, type: 2}
-  - event: 20
-    mood: 02000000
-    reactions: {fileID: 11400000, guid: 57d73cb3d8732184f965ed1a35c9ba74, type: 2}
-  - event: 12
-    mood: 01000000
-    reactions: {fileID: 11400000, guid: 1f6f38ed4c291294db970ae64f10f537, type: 2}
-  - event: 12
-    mood: 00000000
-    reactions: {fileID: 11400000, guid: 5c497a62b1e78ce438be36fb17328487, type: 2}
-  - event: 12
-    mood: 02000000
-    reactions: {fileID: 11400000, guid: f1aee736b55417947b6e0216e8eb1b25, type: 2}
   stanceUI: {fileID: 1597402196}
   moodUI: {fileID: 1576223866}
   absorbUI: {fileID: 1591568984}
@@ -11401,6 +11393,8 @@ MonoBehaviour:
   m_EditorClassIdentifier: 
   Preset: {fileID: 11400000, guid: 599fca27826da9a469476dcff92e983f, type: 2}
   snapshot: {fileID: 875157282}
+  spells_root: {fileID: 0}
+  pr_spell: {fileID: 0}
   spells_ps: {fileID: 913984134}
   m_queue: []
   m_inprogress: 0
@@ -16202,6 +16196,7 @@ MonoBehaviour:
   m_EditorClassIdentifier: 
   shown: 0
   lerps: 1
+  lerping: 0
   value: 0
   transitionInSpeed: 12
   transitionOutSpeed: 12
@@ -16212,6 +16207,12 @@ MonoBehaviour:
     m_PersistentCalls:
       m_Calls: []
   OnToggle:
+    m_PersistentCalls:
+      m_Calls: []
+  onShown:
+    m_PersistentCalls:
+      m_Calls: []
+  onHidden:
     m_PersistentCalls:
       m_Calls: []
   type: 0
@@ -16755,6 +16756,7 @@ MonoBehaviour:
   m_EditorClassIdentifier: 
   shown: 1
   lerps: 1
+  lerping: 0
   value: 0
   transitionInSpeed: 8
   transitionOutSpeed: 8
@@ -16765,6 +16767,12 @@ MonoBehaviour:
     m_PersistentCalls:
       m_Calls: []
   OnToggle:
+    m_PersistentCalls:
+      m_Calls: []
+  onShown:
+    m_PersistentCalls:
+      m_Calls: []
+  onHidden:
     m_PersistentCalls:
       m_Calls: []
   type: 0
@@ -17182,6 +17190,7 @@ MonoBehaviour:
   m_EditorClassIdentifier: 
   shown: 1
   lerps: 1
+  lerping: 0
   value: 0
   transitionInSpeed: 4
   transitionOutSpeed: 4
@@ -17192,6 +17201,12 @@ MonoBehaviour:
     m_PersistentCalls:
       m_Calls: []
   OnToggle:
+    m_PersistentCalls:
+      m_Calls: []
+  onShown:
+    m_PersistentCalls:
+      m_Calls: []
+  onHidden:
     m_PersistentCalls:
       m_Calls: []
   type: 0
@@ -19746,6 +19761,8 @@ MonoBehaviour:
     type: 3}
   pr_shinePS: {fileID: 1311559724632354285, guid: 3ed5efbaf97b2a94989b8edf335c7b76,
     type: 3}
+  infoText: {fileID: 0}
+  infoOpacity: {fileID: 0}
   open: 0
   queue: 0
   disposeOnClose: 0
@@ -19845,6 +19862,7 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 1f355c82f8768934bb447bccc0cf70f7, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
+  CameraManager: {fileID: 0}
   focused: 0
   queued: 0
   timetofocus: 0.33
@@ -21956,6 +21974,7 @@ MonoBehaviour:
   m_EditorClassIdentifier: 
   shown: 0
   lerps: 1
+  lerping: 0
   value: 0
   transitionInSpeed: 8
   transitionOutSpeed: 8
@@ -21966,6 +21985,12 @@ MonoBehaviour:
     m_PersistentCalls:
       m_Calls: []
   OnToggle:
+    m_PersistentCalls:
+      m_Calls: []
+  onShown:
+    m_PersistentCalls:
+      m_Calls: []
+  onHidden:
     m_PersistentCalls:
       m_Calls: []
   type: 0
@@ -24581,6 +24606,7 @@ MonoBehaviour:
   m_EditorClassIdentifier: 
   shown: 0
   lerps: 1
+  lerping: 0
   value: 0
   transitionInSpeed: 16
   transitionOutSpeed: 16
@@ -24591,6 +24617,12 @@ MonoBehaviour:
     m_PersistentCalls:
       m_Calls: []
   OnToggle:
+    m_PersistentCalls:
+      m_Calls: []
+  onShown:
+    m_PersistentCalls:
+      m_Calls: []
+  onHidden:
     m_PersistentCalls:
       m_Calls: []
   type: 0
@@ -25493,6 +25525,7 @@ MonoBehaviour:
   m_EditorClassIdentifier: 
   shown: 0
   lerps: 1
+  lerping: 0
   value: 0
   transitionInSpeed: 8
   transitionOutSpeed: 4
@@ -25503,6 +25536,12 @@ MonoBehaviour:
     m_PersistentCalls:
       m_Calls: []
   OnToggle:
+    m_PersistentCalls:
+      m_Calls: []
+  onShown:
+    m_PersistentCalls:
+      m_Calls: []
+  onHidden:
     m_PersistentCalls:
       m_Calls: []
   type: 0
@@ -25574,6 +25613,7 @@ MonoBehaviour:
   m_EditorClassIdentifier: 
   shown: 0
   lerps: 1
+  lerping: 0
   value: 0
   transitionInSpeed: 9
   transitionOutSpeed: 3
@@ -25584,6 +25624,12 @@ MonoBehaviour:
     m_PersistentCalls:
       m_Calls: []
   OnToggle:
+    m_PersistentCalls:
+      m_Calls: []
+  onShown:
+    m_PersistentCalls:
+      m_Calls: []
+  onHidden:
     m_PersistentCalls:
       m_Calls: []
   visible: {x: -46, y: -50}
@@ -31810,6 +31856,7 @@ MonoBehaviour:
   scribeInterval: 0.067
   totalwidth: 64
   patt: 3
+  events: 1
   riverposition: 0
   riverwidth: 8
   minriverwidth: 2
@@ -34071,6 +34118,7 @@ MonoBehaviour:
   m_EditorClassIdentifier: 
   shown: 0
   lerps: 1
+  lerping: 0
   value: 0
   transitionInSpeed: 8
   transitionOutSpeed: 8
@@ -34081,6 +34129,12 @@ MonoBehaviour:
     m_PersistentCalls:
       m_Calls: []
   OnToggle:
+    m_PersistentCalls:
+      m_Calls: []
+  onShown:
+    m_PersistentCalls:
+      m_Calls: []
+  onHidden:
     m_PersistentCalls:
       m_Calls: []
   type: 0
@@ -36999,6 +37053,7 @@ MonoBehaviour:
   m_EditorClassIdentifier: 
   shown: 0
   lerps: 1
+  lerping: 0
   value: 0
   transitionInSpeed: 8
   transitionOutSpeed: 8
@@ -37009,6 +37064,12 @@ MonoBehaviour:
     m_PersistentCalls:
       m_Calls: []
   OnToggle:
+    m_PersistentCalls:
+      m_Calls: []
+  onShown:
+    m_PersistentCalls:
+      m_Calls: []
+  onHidden:
     m_PersistentCalls:
       m_Calls: []
   type: 0
@@ -39813,6 +39874,7 @@ MonoBehaviour:
         m_CallState: 2
   CameraManager: {fileID: 1067243527}
   Camera: {fileID: 0}
+  Wizard: {fileID: 0}
   BackgroundAudio: {fileID: 730062441}
   MemoryAudio: {fileID: 1848652306}
   m_focus: {fileID: 0}
@@ -39824,6 +39886,7 @@ MonoBehaviour:
   tooltip: {fileID: 915320163}
   trajectory: {fileID: 1527179099}
   trajectory_root: {fileID: 1039990181}
+  m_state: 0
   minFocusDistance: 16
   maxFocusDistance: 67
   minBGPitch: 0.4
@@ -45086,6 +45149,7 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 1f355c82f8768934bb447bccc0cf70f7, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
+  CameraManager: {fileID: 0}
   focused: 0
   queued: 0
   timetofocus: 1
@@ -45216,7 +45280,7 @@ Transform:
   m_GameObject: {fileID: 2015572245}
   m_LocalRotation: {x: 0, y: 0, z: 0, w: 1}
   m_LocalPosition: {x: 21.7, y: 19.1, z: 0}
-  m_LocalScale: {x: 0.0036861936, y: 0.005354681, z: 0.033}
+  m_LocalScale: {x: 0.0038422905, y: 0.005354681, z: 0.033}
   m_Children:
   - {fileID: 474465336}
   m_Father: {fileID: 2418050}
@@ -46028,6 +46092,8 @@ MonoBehaviour:
   maxLines: 43
   position: 0
   excludes: ffffffff1e000000290000002a0000002b00000020000000
+  saving: 1
+  lib: 1
 --- !u!222 &2045015205
 CanvasRenderer:
   m_ObjectHideFlags: 0

@@ -233,6 +233,8 @@ public class Scribe : Logger
 
 	void UpdateControls(int lines)
 	{
+		if (upArrow == null || downArrow == null) return;
+
 		upArrow.SetActive(position != lines);
 		downArrow.SetActive(position != caches.Count - 1);
 	}

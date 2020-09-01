@@ -10,6 +10,7 @@ using System.Runtime.InteropServices;
 
 using UnityEngine.Events;
 using UnityEngine.Experimental.UIElements;
+using UIExt.Behaviors.Visibility;
 
 public class World : Spawner
 {
@@ -34,6 +35,11 @@ public class World : Spawner
     {
         if (STATE != state) 
         {
+            if (state == GAMESTATE.GAME && STATE == GAMESTATE.INTRO)
+                onCompleteIntro.Invoke(); // Signal end to intro
+            if (state == GAMESTATE.ABSORB && STATE == GAMESTATE.GAME) 
+                onCompleteAbsorb.Invoke();
+
             STATE = state;
             if (UPDATE_GAMESTATE != null)
                 UPDATE_GAMESTATE(STATE);
@@ -48,6 +54,8 @@ public class World : Spawner
     public System.Action onRefreshBeacons;
     public System.Action<GAMESTATE> UPDATE_GAMESTATE;
 
+    public UnityEvent onCompleteIntro, onCompleteAbsorb;
+
     #endregion
 
 
@@ -57,6 +65,7 @@ public class World : Spawner
     [SerializeField] Wizard.Memories Memories;
     [SerializeField] CameraManager CameraManager;
     [SerializeField] Focus Focus;
+    [SerializeField] Sequences Sequencing;
 
     GameDataSaveSystem Save = null;
     Library Library = null;
@@ -177,6 +186,18 @@ public class World : Spawner
             PositiveBurst();
     }
 
+    void LateUpdate()
+    {
+        if (STATE == GAMESTATE.ABSORB) {
+
+            if (Preset.useWizard) 
+            {
+                if (Wizard.Brain.EvaluateAbsorption() < 1f)
+                    MoveToState(GAMESTATE.GAME); // Revert
+            }
+        }
+    }
+
     protected override void OnDestroy(){
         base.OnDestroy();
 
@@ -198,8 +219,8 @@ public class World : Spawner
         if (Preset.alwaysIntro) m_STATE = GAMESTATE.INTRO;
         else m_STATE = (GAMESTATE)Save.data.GAMESTATE;
 
-        if (UPDATE_GAMESTATE != null)
-            UPDATE_GAMESTATE(STATE);
+        if(Preset.useWizard)
+            Wizard.Initialize();
 
         Nest.RestoreCapacity(Save.nestcapacity);
 
@@ -212,8 +233,7 @@ public class World : Spawner
 
         Library.Initialize(refresh);
 
-        while (Library.loadprogress < 1f) 
-        {
+        while (Library.loadprogress < 1f) {
             Loader.progress = Library.loadprogress;
             yield return null;
         }
@@ -236,7 +256,22 @@ public class World : Spawner
             RefreshBeacons();
 
         Sun.active = true; // Set sun into motion
+
+        if (STATE == GAMESTATE.INTRO) 
+        {
+            Sequencing.Intro();
+        }
+        else if (STATE == GAMESTATE.GAME || STATE == GAMESTATE.ABSORB) 
+        {
+            Sequencing.Game();
+        }
+        while (Sequencing.inprogress)
+            yield return null;
+
         LOAD = true;
+        // Update global game state here
+        if (UPDATE_GAMESTATE != null)
+            UPDATE_GAMESTATE(STATE);
     }
 
     void SubscribeToEvents()
@@ -258,7 +293,8 @@ public class World : Spawner
         Beacon.OnUnregister += onUnregisterBeacon;
         Beacon.Discovered += onDiscoveredBeacon;
 
-        Wizard.onDiscoverMemory += onDiscoveredMemory;
+        if(Preset.useWizard)
+            Wizard.onDiscoverMemory += onDiscoveredMemory;
 
         Quilt.onDisposeTexture += onDisposeQuiltTexture;
 
@@ -284,7 +320,8 @@ public class World : Spawner
         Beacon.OnUnregister -= onUnregisterBeacon;
         Beacon.Discovered -= onDiscoveredBeacon;
 
-        Wizard.onDiscoverMemory -= onDiscoveredMemory;
+        if(Preset.useWizard)
+            Wizard.onDiscoverMemory -= onDiscoveredMemory;
 
         Quilt.onDisposeTexture -= onDisposeQuiltTexture;
 
@@ -338,6 +375,7 @@ public class World : Spawner
         RefreshBeacons(); // Reset all beacons
 
         yield return new WaitForEndOfFrame();
+        CheckForConsumption();
     }
 
     #endregion
@@ -536,21 +574,27 @@ public class World : Spawner
 
     public Beacon.Status FetchBeaconStatus(Beacon beacon)
     {
-        var brain = Wizard.Brain;
+        if (Preset.useWizard) 
+        {
+            var brain = Wizard.Brain;
 
-        if (brain.isUnknown(beacon))
-            return Beacon.Status.UNKNOWN;
-        else if (brain.isComfortable(beacon))
-            return Beacon.Status.COMFORTABLE;
-        else if (brain.isActionable(beacon))
-            return Beacon.Status.ACTIONABLE;
+            if (brain.isUnknown(beacon))
+                return Beacon.Status.UNKNOWN;
+            else if (brain.isComfortable(beacon))
+                return Beacon.Status.COMFORTABLE;
+            else if (brain.isActionable(beacon))
+                return Beacon.Status.ACTIONABLE;
+        }
 
         return Beacon.Status.NULL;
     }
 
     public float FetchBeaconKnowledgeMagnitude(Beacon beacon)
     {
-        return Wizard.Brain.GetKnowledgeMagnitudeForBeacon(beacon);
+        if(Preset.useWizard)
+            return Wizard.Brain.GetKnowledgeMagnitudeForBeacon(beacon);
+
+        return 1f;
     }
 
     public void OverrideBeaconInfos()
@@ -583,7 +627,7 @@ public class World : Spawner
             max = nest;
         }
 
-        float absorb = (1f - GetAbsorption());
+        float absorb = (1f - FetchKnowledgeOfWizard());
         if (absorb > max) {
             suggestion = SUGGESTION.VISIT_TREE;
             max = nest;
@@ -596,7 +640,7 @@ public class World : Spawner
 
     #region Wizard operations
 
-    public float GetAbsorption()
+    public float FetchKnowledgeOfWizard()
     {
         int current = wizardDiscoveries.Count;
         int total = Memories.items.Length;
@@ -649,6 +693,22 @@ public class World : Spawner
     #endregion
 
     #region Miscellaneous operations
+
+    public void CheckForConsumption()
+    {
+        if (STATE != GAMESTATE.GAME && !Preset.alwaysAbsorb) return; // Ignore absorb for non-game state requests
+
+        if (Preset.useWizard) 
+        {
+            var brain = Wizard.Brain;
+
+            float absorption = brain.EvaluateAbsorption();
+            if (absorption >= 1f) {
+                Sequencing.Consume();
+                MoveToState(GAMESTATE.ABSORB);
+            }
+        }
+    }
 
     public void PositiveBurst()
     {

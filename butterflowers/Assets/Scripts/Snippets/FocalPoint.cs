@@ -2,6 +2,7 @@
 using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
+using UnityEngine.Events;
 using UnityEngine.Experimental.UIElements;
 
 public class FocalPoint : MonoBehaviour
@@ -11,6 +12,8 @@ public class FocalPoint : MonoBehaviour
     [SerializeField] CameraManager CameraManager;
 
     #region Events
+
+    public UnityEvent onFocused, onLostFocus, onQueue;
 
     public static System.Action<FocalPoint> FocusOnPoint, LostFocusOnPoint, BeginFocus, HoverFocus, UnhoverFocus;
     public System.Action onFocus, onLoseFocus;
@@ -22,7 +25,9 @@ public class FocalPoint : MonoBehaviour
     Camera mainCamera;
 
     [SerializeField] bool focused = false, queued = false;
+
     public float timetofocus = 1f;
+    public bool dispose = true;
     public Sprite focusIcon;
 
     public Vector3 anchor, screen_anchor;
@@ -94,6 +99,8 @@ public class FocalPoint : MonoBehaviour
         focused = true;
 
         Debug.Log("Focus on " + gameObject.name);
+
+        onFocused.Invoke();
         if (onFocus != null)
             onFocus();
 
@@ -105,6 +112,7 @@ public class FocalPoint : MonoBehaviour
         if (!focused) return;
         focused = false;
 
+        onLostFocus.Invoke();
         if (onLoseFocus != null)
             onLoseFocus();
 
@@ -117,6 +125,7 @@ public class FocalPoint : MonoBehaviour
     void Hover(Vector3 point, Vector3 normal) {
         queued = true;
 
+        onQueue.Invoke();
         if (HoverFocus != null)
             HoverFocus(this);
     }
@@ -134,9 +143,20 @@ public class FocalPoint : MonoBehaviour
 
         anchor = point;
 
-        var cam = (world == null) ? CameraManager.MainCamera : world.PlayerCamera;
-        screen_anchor = cam.WorldToScreenPoint(anchor);
+        if (world == null)
+            world = World.Instance;
 
+        if (transform is RectTransform) //2d flag
+        {
+            screen_anchor = transform.position;
+        }
+        else 
+        {
+            var cam = (world == null) ? CameraManager.MainCamera : world.PlayerCamera;
+            screen_anchor = cam.WorldToScreenPoint(anchor);
+        }           
+
+        Debug.Log("focus on " + gameObject.name);
         if (BeginFocus != null)
             BeginFocus(this);
     }

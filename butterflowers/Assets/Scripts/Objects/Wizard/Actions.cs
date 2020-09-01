@@ -174,13 +174,7 @@ namespace Wizard {
             {
                 if (available) 
                 {
-                    if (controller.isFocused) {
-                        var passive_actions = queue.Where(action => action.passive);
-                        if (passive_actions.Count() > 0)
-                            return passive_actions.ElementAt(0);
-                    }
-                    else
-                        return queue[0];
+                    return queue[0];
                 }
 
                 return null;

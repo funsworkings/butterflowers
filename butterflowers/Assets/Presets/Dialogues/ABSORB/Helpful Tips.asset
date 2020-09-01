@@ -12,10 +12,26 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: f329c46efeec4664a98540bfdf1d0b8f, type: 3}
   m_Name: Helpful Tips
   m_EditorClassIdentifier: 
-  prepend: <u>HINT</u><br>
-  append: 
+  prepend: <color=#FFB1ED><u>HINT</u><br>
+  append: '!'
   elements:
-  - Make sure to keep the nest full before sun cycles !
-  - Live in the present moment above all else!
+  - Make sure to keep the nest full before sun cycles
+  - Live in the present moment above all else
   - Gaze at the sun until you grow drowsy
-  visited: []
+  - Run yr fingers in the cold river and feel other memory
+  - Don't be camera-shy ;-)
+  - Oversaturation is never a bad thing
+  - Live within the ( ouroboros )
+  - Find true solace in your digital self
+  - Leveling up is truer and higher glory here
+  - Release your playful energy unto the terrain
+  visited:
+  - Gaze at the sun until you grow drowsy
+  - Don't be camera-shy ;-)
+  - Live within the ( ouroboros )
+  - Release your playful energy unto the terrain
+  - Live in the present moment above all else
+  - Make sure to keep the nest full before sun cycles
+  - Leveling up is truer and higher glory here
+  - Run yr fingers in the cold river and feel other memory
+  - Oversaturation is never a bad thing
