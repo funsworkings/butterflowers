@@ -5,7 +5,7 @@ using UnityEngine.Events;
 
 public class Damage : MonoBehaviour
 {
-    public UnityEvent onHit;
+    public UnityEvent onHit, onRecover;
 
     [SerializeField] Color damageColor = Color.white;
     [SerializeField] Material[] damageMaterials = new Material[] { };
@@ -57,8 +57,11 @@ public class Damage : MonoBehaviour
     {
         if (damaging) 
         {
-            if (t_damage > damageDuration)
+            if (t_damage > damageDuration) 
+            {
                 damaging = false;
+                onRecover.Invoke();
+            }
             else
                 t_damage += Time.deltaTime;
 

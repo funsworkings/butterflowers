@@ -13,6 +13,8 @@ public class Nest : MonoBehaviour
     [SerializeField] Quilt Quilt = null;
     GameDataSaveSystem Save;
     World World;
+    Focus Focus;
+    Camera main_camera;
 
 	#endregion
 
@@ -105,6 +107,8 @@ public class Nest : MonoBehaviour
     {
         Save = GameDataSaveSystem.Instance;
         World = World.Instance;
+        Focus = FindObjectOfType<Focus>();
+        main_camera = Camera.main;
 
         if (Quilt == null)
             Quilt = FindObjectOfType<Quilt>();
@@ -116,17 +120,12 @@ public class Nest : MonoBehaviour
         damage.onHit.AddListener(SpillKick);
 
         Beacon.Destroyed += onDestroyBeacon;
+
+        StartCoroutine("MaintainOnScreen");
     }
 
     void Update()
     {
-        /*if (Input.GetMouseButtonDown(1) && queue) {
-            var beacon = RemoveLastBeacon();
-            bool success = beacon != null;
-            if(success)
-                Events.ReceiveEvent(beacon.file_abbreviated, "removed from NEST", Agent.Inhabitant0);
-        }*/
-
         if (energy > 0f)
         {
             timeSinceEnergyBoost += Time.deltaTime;
@@ -150,6 +149,29 @@ public class Nest : MonoBehaviour
         damage.onHit.RemoveListener(SpillKick);
 
         Beacon.Destroyed -= onDestroyBeacon;
+
+        StopCoroutine("MaintainOnScreen");
+    }
+
+    IEnumerator MaintainOnScreen()
+    {
+        while (true) 
+        {
+            yield return new WaitForSeconds(3f);
+
+            if (!Focus.active && open)  // Ignore if focus is focused on somethings
+            {
+                Vector2 screen_pos = Vector2.zero;
+
+                bool visible = Extensions.IsVisible(transform, main_camera, out screen_pos);
+                if (!visible) {
+                    Vector3 target_pos = main_camera.ViewportToWorldPoint(new Vector3(.5f, .5f, 10f));
+                    Vector3 dir = (target_pos - transform.position).normalized;
+
+                    Kick(dir, AGENT.World); // Kick nest towards screen pos
+                }
+            }
+        }
     }
 
     #endregion

@@ -85,7 +85,8 @@ public class Unknown : MonoBehaviour
     {
         if (@event != EVENTCODE.NESTGROW) return;
 
-        if (World.GetAbsorption() < 1f) {
+        if (World.FetchKnowledgeOfWizard() < 1f) 
+        {
             int level = Nest.LEVEL;
 
             // Evaluate PATTERN

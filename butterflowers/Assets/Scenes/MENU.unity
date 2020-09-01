@@ -122,7 +122,6 @@ GameObject:
   m_Component:
   - component: {fileID: 14925368}
   - component: {fileID: 14925370}
-  - component: {fileID: 14925369}
   m_Layer: 0
   m_Name: BG Camera
   m_TagString: Untagged
@@ -144,14 +143,6 @@ Transform:
   m_Father: {fileID: 1559175226}
   m_RootOrder: 0
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
---- !u!81 &14925369
-AudioListener:
-  m_ObjectHideFlags: 0
-  m_CorrespondingSourceObject: {fileID: 0}
-  m_PrefabInstance: {fileID: 0}
-  m_PrefabAsset: {fileID: 0}
-  m_GameObject: {fileID: 14925367}
-  m_Enabled: 1
 --- !u!20 &14925370
 Camera:
   m_ObjectHideFlags: 0
@@ -895,8 +886,8 @@ MonoBehaviour:
   m_outlineColor:
     serializedVersion: 2
     rgba: 4278190080
-  m_fontSize: 78.51
-  m_fontSizeBase: 78.51
+  m_fontSize: 62.3
+  m_fontSizeBase: 62.3
   m_fontWeight: 400
   m_enableAutoSizing: 0
   m_fontSizeMin: 18
@@ -1177,8 +1168,8 @@ MonoBehaviour:
   m_outlineColor:
     serializedVersion: 2
     rgba: 4278190080
-  m_fontSize: 78.51
-  m_fontSizeBase: 78.51
+  m_fontSize: 62.3
+  m_fontSizeBase: 62.3
   m_fontWeight: 400
   m_enableAutoSizing: 0
   m_fontSizeMin: 18
@@ -6428,7 +6419,6 @@ GameObject:
   m_Component:
   - component: {fileID: 562810660}
   - component: {fileID: 562810662}
-  - component: {fileID: 562810661}
   m_Layer: 0
   m_Name: Quilt Camera
   m_TagString: Untagged
@@ -6450,14 +6440,6 @@ Transform:
   m_Father: {fileID: 1559175226}
   m_RootOrder: 1
   m_LocalEulerAnglesHint: {x: 90, y: -90, z: 90}
---- !u!81 &562810661
-AudioListener:
-  m_ObjectHideFlags: 0
-  m_CorrespondingSourceObject: {fileID: 0}
-  m_PrefabInstance: {fileID: 0}
-  m_PrefabAsset: {fileID: 0}
-  m_GameObject: {fileID: 562810659}
-  m_Enabled: 1
 --- !u!20 &562810662
 Camera:
   m_ObjectHideFlags: 0
@@ -6931,10 +6913,6 @@ PrefabInstance:
       propertyPath: overrideCamera
       value: 
       objectReference: {fileID: 0}
-    - target: {fileID: 1981574396, guid: bbe889dad4ed0dd48a0243ced6070a70, type: 3}
-      propertyPath: m_Layer
-      value: 18
-      objectReference: {fileID: 0}
     - target: {fileID: 1981574397, guid: bbe889dad4ed0dd48a0243ced6070a70, type: 3}
       propertyPath: m_LocalRotation.x
       value: 0.08940024
@@ -6951,10 +6929,6 @@ PrefabInstance:
       propertyPath: m_LocalRotation.w
       value: -0.22031322
       objectReference: {fileID: 0}
-    - target: {fileID: 1854825634, guid: bbe889dad4ed0dd48a0243ced6070a70, type: 3}
-      propertyPath: m_Layer
-      value: 18
-      objectReference: {fileID: 0}
     - target: {fileID: 1854825635, guid: bbe889dad4ed0dd48a0243ced6070a70, type: 3}
       propertyPath: m_LocalRotation.x
       value: 0.09533454
@@ -6970,6 +6944,14 @@ PrefabInstance:
     - target: {fileID: 1854825635, guid: bbe889dad4ed0dd48a0243ced6070a70, type: 3}
       propertyPath: m_LocalRotation.w
       value: -0.2222648
+      objectReference: {fileID: 0}
+    - target: {fileID: 1854825634, guid: bbe889dad4ed0dd48a0243ced6070a70, type: 3}
+      propertyPath: m_Layer
+      value: 18
+      objectReference: {fileID: 0}
+    - target: {fileID: 1981574396, guid: bbe889dad4ed0dd48a0243ced6070a70, type: 3}
+      propertyPath: m_Layer
+      value: 18
       objectReference: {fileID: 0}
     m_RemovedComponents: []
   m_SourcePrefab: {fileID: 100100000, guid: bbe889dad4ed0dd48a0243ced6070a70, type: 3}
@@ -8784,8 +8766,8 @@ MonoBehaviour:
   m_outlineColor:
     serializedVersion: 2
     rgba: 4278190080
-  m_fontSize: 64
-  m_fontSizeBase: 64
+  m_fontSize: 49.5
+  m_fontSizeBase: 49.5
   m_fontWeight: 400
   m_enableAutoSizing: 0
   m_fontSizeMin: 18
@@ -9017,8 +8999,8 @@ MonoBehaviour:
   m_outlineColor:
     serializedVersion: 2
     rgba: 4278190080
-  m_fontSize: 78.51
-  m_fontSizeBase: 78.51
+  m_fontSize: 59.7
+  m_fontSizeBase: 59.7
   m_fontWeight: 400
   m_enableAutoSizing: 0
   m_fontSizeMin: 18
@@ -11248,13 +11230,13 @@ MonoBehaviour:
   m_GameObject: {fileID: 1418382838}
   m_Enabled: 1
   m_EditorHideFlags: 0
-  m_Script: {fileID: 11500000, guid: fa52ee4ced3bf8643bf91a6f79cd0b20, type: 3}
+  m_Script: {fileID: 11500000, guid: 624f530dfd1da944f9416d706457d78a, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  capacity: 28
+  capacity: 10
   duplicates: 1
   auto: 0
-  resize: 1
+  resize: 0
   focus: {fileID: 0}
   controls: {fileID: 1157409246}
   upArrow: {fileID: 1198740223}
@@ -11263,10 +11245,10 @@ MonoBehaviour:
   navigator: {fileID: 0}
   save_caches: []
   caches: []
-  defaultColor: {r: 0.92300004, g: 0.92300004, b: 0.92300004, a: 1}
-  maxLines: 37
+  defaultColor: {r: 0, g: 0, b: 0, a: 0}
+  maxLines: 34
   position: 0
-  excludes: ffffffff1e000000290000002a0000002b00000020000000
+  excludes: 
   saving: 0
   lib: 0
 --- !u!114 &1418382840
@@ -12121,8 +12103,8 @@ MonoBehaviour:
   m_outlineColor:
     serializedVersion: 2
     rgba: 4278190080
-  m_fontSize: 93.84
-  m_fontSizeBase: 93.84
+  m_fontSize: 59.1
+  m_fontSizeBase: 59.1
   m_fontWeight: 400
   m_enableAutoSizing: 0
   m_fontSizeMin: 18
@@ -13340,8 +13322,8 @@ MonoBehaviour:
   m_outlineColor:
     serializedVersion: 2
     rgba: 4278190080
-  m_fontSize: 64
-  m_fontSizeBase: 64
+  m_fontSize: 48.3
+  m_fontSizeBase: 48.3
   m_fontWeight: 400
   m_enableAutoSizing: 0
   m_fontSizeMin: 18
@@ -14272,6 +14254,31 @@ PrefabInstance:
       propertyPath: m_Name
       value: nest
       objectReference: {fileID: 0}
+    - target: {fileID: 3447281704321886860, guid: e4ffaf7dd570b28469327a4909aedfd2,
+        type: 3}
+      propertyPath: onOpen.m_PersistentCalls.m_Calls.Array.size
+      value: 1
+      objectReference: {fileID: 0}
+    - target: {fileID: 3447281704321886860, guid: e4ffaf7dd570b28469327a4909aedfd2,
+        type: 3}
+      propertyPath: Quilt
+      value: 
+      objectReference: {fileID: 245673828}
+    - target: {fileID: 3447281704321886860, guid: e4ffaf7dd570b28469327a4909aedfd2,
+        type: 3}
+      propertyPath: onOpen.m_PersistentCalls.m_Calls.Array.data[0].m_Target
+      value: 
+      objectReference: {fileID: 1261963360}
+    - target: {fileID: 3447281704321886860, guid: e4ffaf7dd570b28469327a4909aedfd2,
+        type: 3}
+      propertyPath: onOpen.m_PersistentCalls.m_Calls.Array.data[0].m_MethodName
+      value: ReleaseButterflies
+      objectReference: {fileID: 0}
+    - target: {fileID: 3447281704321886860, guid: e4ffaf7dd570b28469327a4909aedfd2,
+        type: 3}
+      propertyPath: onOpen.m_PersistentCalls.m_Calls.Array.data[0].m_Arguments.m_ObjectArgumentAssemblyTypeName
+      value: UnityEngine.Object, UnityEngine
+      objectReference: {fileID: 0}
     - target: {fileID: 3447281704321886858, guid: e4ffaf7dd570b28469327a4909aedfd2,
         type: 3}
       propertyPath: m_LocalPosition.x
@@ -14341,41 +14348,6 @@ PrefabInstance:
         type: 3}
       propertyPath: m_LocalScale.z
       value: 1
-      objectReference: {fileID: 0}
-    - target: {fileID: 3447281704321886862, guid: e4ffaf7dd570b28469327a4909aedfd2,
-        type: 3}
-      propertyPath: m_UseGravity
-      value: 0
-      objectReference: {fileID: 0}
-    - target: {fileID: 3447281704321886849, guid: e4ffaf7dd570b28469327a4909aedfd2,
-        type: 3}
-      propertyPath: m_Enabled
-      value: 0
-      objectReference: {fileID: 0}
-    - target: {fileID: 3447281704321886860, guid: e4ffaf7dd570b28469327a4909aedfd2,
-        type: 3}
-      propertyPath: onOpen.m_PersistentCalls.m_Calls.Array.size
-      value: 1
-      objectReference: {fileID: 0}
-    - target: {fileID: 3447281704321886860, guid: e4ffaf7dd570b28469327a4909aedfd2,
-        type: 3}
-      propertyPath: Quilt
-      value: 
-      objectReference: {fileID: 245673828}
-    - target: {fileID: 3447281704321886860, guid: e4ffaf7dd570b28469327a4909aedfd2,
-        type: 3}
-      propertyPath: onOpen.m_PersistentCalls.m_Calls.Array.data[0].m_Target
-      value: 
-      objectReference: {fileID: 1261963360}
-    - target: {fileID: 3447281704321886860, guid: e4ffaf7dd570b28469327a4909aedfd2,
-        type: 3}
-      propertyPath: onOpen.m_PersistentCalls.m_Calls.Array.data[0].m_MethodName
-      value: ReleaseButterflies
-      objectReference: {fileID: 0}
-    - target: {fileID: 3447281704321886860, guid: e4ffaf7dd570b28469327a4909aedfd2,
-        type: 3}
-      propertyPath: onOpen.m_PersistentCalls.m_Calls.Array.data[0].m_Arguments.m_ObjectArgumentAssemblyTypeName
-      value: UnityEngine.Object, UnityEngine
       objectReference: {fileID: 0}
     - target: {fileID: 3447281704321886857, guid: e4ffaf7dd570b28469327a4909aedfd2,
         type: 3}
@@ -14451,6 +14423,16 @@ PrefabInstance:
         type: 3}
       propertyPath: onHit.m_PersistentCalls.m_Calls.Array.data[1].m_Arguments.m_FloatArgument
       value: 1
+      objectReference: {fileID: 0}
+    - target: {fileID: 3447281704321886862, guid: e4ffaf7dd570b28469327a4909aedfd2,
+        type: 3}
+      propertyPath: m_UseGravity
+      value: 0
+      objectReference: {fileID: 0}
+    - target: {fileID: 3447281704321886849, guid: e4ffaf7dd570b28469327a4909aedfd2,
+        type: 3}
+      propertyPath: m_Enabled
+      value: 0
       objectReference: {fileID: 0}
     m_RemovedComponents: []
   m_SourcePrefab: {fileID: 100100000, guid: e4ffaf7dd570b28469327a4909aedfd2, type: 3}
@@ -14597,6 +14579,7 @@ MonoBehaviour:
   MemoryAudio: {fileID: 0}
   m_focus: {fileID: 0}
   focusInQueue: {fileID: 0}
+  lastFocusCamera: {fileID: 0}
   focalPoints: []
   CameraBlend: {fileID: 1153131403}
   loading: {fileID: 1014991238}
@@ -14620,6 +14603,9 @@ MonoBehaviour:
   lowPassFilterParam: LPCutoff_BackgroundMusic
   timeToFocus: 1.67
   timeToLoseFocus: 1
+  t_focus: 0
+  t_losefocus: 0
+  focus_ready: 0
   focusDelay: 0.267
   loseFocusBlends:
   - {fileID: 11400000, guid: 367df76d735b52746872c9853cd8c029, type: 2}

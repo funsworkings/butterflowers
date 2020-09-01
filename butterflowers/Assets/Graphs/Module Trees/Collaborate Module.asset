@@ -28,6 +28,7 @@ MonoBehaviour:
   - {fileID: 114961829491501556}
   - {fileID: 114515166920058320}
   - {fileID: 114382132308072528}
+  - {fileID: 114475612943266956}
   debug: 0
   auto: 1
   m_rootNode: {fileID: 114559855199151174}
@@ -219,7 +220,7 @@ MonoBehaviour:
   m_Name: Module
   m_EditorClassIdentifier: 
   graph: {fileID: 11400000}
-  position: {x: 744, y: 376}
+  position: {x: 808, y: 392}
   ports:
     keys:
     - input
@@ -242,7 +243,10 @@ MonoBehaviour:
       _node: {fileID: 114382132308072528}
       _typeQualifiedName: Noder.Node, Assembly-CSharp, Version=0.0.0.0, Culture=neutral,
         PublicKeyToken=null
-      connections: []
+      connections:
+      - fieldName: input
+        node: {fileID: 114475612943266956}
+        reroutePoints: []
       _direction: 1
       _connectionType: 1
       _typeConstraint: 0
@@ -374,6 +378,59 @@ MonoBehaviour:
   value: 0
   pass: {fileID: 0}
   fail: {fileID: 0}
+--- !u!114 &114475612943266956
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 0}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 949f85438aef5b24aa17d5aa312401eb, type: 3}
+  m_Name: Hit
+  m_EditorClassIdentifier: 
+  graph: {fileID: 11400000}
+  position: {x: 1080, y: 440}
+  ports:
+    keys:
+    - data
+    - input
+    - output
+    values:
+    - _fieldName: data
+      _node: {fileID: 114475612943266956}
+      _typeQualifiedName: UnityEngine.Object, UnityEngine.CoreModule, Version=0.0.0.0,
+        Culture=neutral, PublicKeyToken=null
+      connections: []
+      _direction: 0
+      _connectionType: 1
+      _typeConstraint: 1
+      _dynamic: 0
+    - _fieldName: input
+      _node: {fileID: 114475612943266956}
+      _typeQualifiedName: Noder.Node, Assembly-CSharp, Version=0.0.0.0, Culture=neutral,
+        PublicKeyToken=null
+      connections:
+      - fieldName: output
+        node: {fileID: 114382132308072528}
+        reroutePoints: []
+      _direction: 0
+      _connectionType: 0
+      _typeConstraint: 0
+      _dynamic: 0
+    - _fieldName: output
+      _node: {fileID: 114475612943266956}
+      _typeQualifiedName: Noder.Node, Assembly-CSharp, Version=0.0.0.0, Culture=neutral,
+        PublicKeyToken=null
+      connections: []
+      _direction: 1
+      _connectionType: 1
+      _typeConstraint: 0
+      _dynamic: 0
+  input: {fileID: 0}
+  output: {fileID: 0}
+  data: {fileID: 0}
 --- !u!114 &114515166920058320
 MonoBehaviour:
   m_ObjectHideFlags: 0

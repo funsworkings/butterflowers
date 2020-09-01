@@ -213,6 +213,8 @@ public static class Extensions
         float oldRange = (oldMax - oldMin);
         float newRange = (newMax - newMin);
         float newValue = (((oldValue - oldMin) * newRange) / oldRange) + newMin;
+
+
         return newValue;
     }
 

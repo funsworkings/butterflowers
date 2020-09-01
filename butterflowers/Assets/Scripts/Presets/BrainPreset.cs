@@ -59,6 +59,10 @@ public class BrainPreset : ScriptableObject
         public float moodSmoothSpeed = 1f;
         public float shortTermMemoryDecaySpeed = 3f;
 
+    [Header("ABSORB (MECHANICS)")]
+        public float stanceAbsorptionWeight = 1f;
+        public float memoryCollectionAbsorptionWeight = 1f;
+
     [Header("ACTIONS (MECHANICS)")]
         public float minimumTimeBetweenActions = 1f;
         public float maximumTimeBetweenActions = 3f;

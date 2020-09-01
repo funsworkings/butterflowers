@@ -22,7 +22,7 @@ namespace Wizard {
         #region Events
 
         public System.Action<Memory> onDiscoverMemory;
-        public UnityEvent onFocus, onLoseFocus;
+        public UnityEvent onFocus, onLoseFocus, onAbsorption;
 
 		#endregion
 
@@ -42,6 +42,8 @@ namespace Wizard {
 
 		public enum State { Idle, Walk, Spell, Rest, Picture }
 
+        public bool ABSORBED => (World.STATE == GAMESTATE.ABSORB);
+
         #endregion
 
         #region Properties
@@ -60,10 +62,12 @@ namespace Wizard {
 
         Brain m_Brain;
         Navigation m_Navigation;
+        Appearance m_Appearance;
         Actions m_Actions;
         Dialogue m_Dialogue; 
         Audio Audio;
         Damage damage;
+        FocalPoint m_FocalPoint;
 
         SkinnedMeshRenderer Renderer;
         Material DefaultMaterial;
@@ -98,6 +102,8 @@ namespace Wizard {
         public Actions Actions => m_Actions;
         public Dialogue Dialogue => m_Dialogue;
         public Memories Memories => m_Memories;
+        public Appearance Appearance => m_Appearance;
+        public FocalPoint FocalPoint => m_FocalPoint;
 
         public Wand Wand => wand;
         public Animator Animator => animator;
@@ -116,22 +122,25 @@ namespace Wizard {
             m_Brain = GetComponent<Brain>();
             m_Navigation = GetComponent<Navigation>();
             m_Actions = GetComponent<Actions>();
-            m_Dialogue = GetComponent<Dialogue>();
             Audio = GetComponent<Audio>();
+            m_Dialogue = GetComponent<Dialogue>();
             damage = GetComponent<Damage>();
-
-            Renderer = GetComponentInChildren<SkinnedMeshRenderer>();
-            DefaultMaterial = Renderer.sharedMaterial;
+            m_Appearance = GetComponent<Appearance>();
+            m_FocalPoint = GetComponent<FocalPoint>();
         }
 
-        IEnumerator Start()
+        public void Initialize()
+        {
+            StartCoroutine("Initializing");
+        }
+
+        IEnumerator Initializing()
         {
             Save = GameDataSaveSystem.Instance;
-
             while (!World.LOAD)
                 yield return null;
 
-            Dialogue.nodeID = (!Preset.persistDialogue)? -1 : Save.dialogueNode;
+            Dialogue.nodeID = (!Preset.persistDialogue) ? -1 : Save.dialogueNode;
             Dialogue.nodeIDsVisited = (!Preset.persistDialogueVisited) ? new int[] { } : Save.dialogueVisited;
 
             var enviro_knowledge = (!Preset.persistKnowledge) ? 0f : Save.enviro_knowledge;
@@ -141,15 +150,9 @@ namespace Wizard {
 
             Brain.EvaluateStance();
             Brain.EvaluateMood();
-
-            //StartCoroutine("Absorbing");
+            Brain.EvaluateAbsorption();
 
             load = true;
-        }
-
-        void OnDestroy()
-        {
-            //StopCoroutine("Absorbing");
         }
 
         void OnEnable()
@@ -197,16 +200,12 @@ namespace Wizard {
             EvaluateState();
             UpdateAnimatorFromState(state);
 
-            
-            if (Brain.absorption >= 1f) 
-            {
-                SetAbsorbState(true); // Always set self to NULL
-            }
-
-
             // Debug window toggle
             if (Input.GetKeyDown(KeyCode.Z)) debug = !debug;
+
             debugwindow.alpha = (debug) ? 1f : 0f;
+                debugwindow.interactable = debug;
+                debugwindow.blocksRaycasts = debug;
 
 			#region Action overrides (DEBUG)
 			/*
@@ -313,14 +312,6 @@ namespace Wizard {
 
         void RespondToPlayerAction(EVENTCODE @event)
         {
-            if (@event == EVENTCODE.NESTKICK) 
-            {
-                if (World.STATE == GAMESTATE.INTRO) {
-                    Dialogue.FetchDialogueFromTree(introDialogueTree); // Move to next dialogue node in intro
-                    if (Dialogue.inprogress) Dialogue.Advance();
-                }
-            }
-
             /*
             return; //IGNORE PLAYER EVENTS FOR NOW
 
@@ -373,6 +364,11 @@ namespace Wizard {
             state = State.Idle;
         }
 
+        public void Hit()
+        {
+            damage.Hit();
+        }
+
         #endregion
 
         #region Dialogue
@@ -397,11 +393,14 @@ namespace Wizard {
             Save.dialogueVisited = nodeIDs;
         }
 
-        public void OnFocus()
+        public void Click()
         {
             Emote(); // Attempt emote
             Comment(); // Attempt comment
+        }
 
+        public void OnFocus()
+        {
             if (!infocus) 
             {
                 onFocus.Invoke();
@@ -419,17 +418,21 @@ namespace Wizard {
 
         void React()
         {
+            if (World.STATE != GAMESTATE.GAME) return;
+
             var rand = Random.Range(0f, 1f);
             if (rand > BrainPreset.reactionProbability)
                 return;
 
             EVENTCODE @event = Events.LAST_EVENT;
             Mood state = Brain.moodState;
+
+            Dialogue.React(@event, state);
         }
 
         void Emote()
         {
-            Debug.Log("trigger emote");
+            if (World.STATE != GAMESTATE.GAME) return;
 
             Mood mood = Brain.moodState;
             if (mood == Mood.Depression)
@@ -440,16 +443,16 @@ namespace Wizard {
 
         void Comment()
         {
-            if (isFocused) 
-            {
-                float r = Random.Range(0f, 1f);
-                if (r <= BrainPreset.commentProbabilty)
-                    Comment(Brain.moodState, Brain.stanceState);
-            }
+            if (World.STATE != GAMESTATE.GAME) return;
+
+            float r = Random.Range(0f, 1f);
+            if (r <= BrainPreset.commentProbabilty)
+                Comment(Brain.moodState, Brain.stanceState);
         }
 
         void Comment(Mood mood, Stance stance)
         {
+            if (World.STATE != GAMESTATE.GAME) return;
             Dialogue.Comment(mood, stance);
         }
 
@@ -494,8 +497,11 @@ namespace Wizard {
 
         void onCompleteDialogueTree(DialogueTree tree)
         {
-            if (tree == introDialogueTree)
+            // COMPLETED INTRO SEQUENCE
+            if (tree == introDialogueTree) 
+            {
                 World.MoveToState(GAMESTATE.GAME); // Move to game state
+            }
         }
 
 		#endregion
@@ -514,7 +520,6 @@ namespace Wizard {
 
         void onEnactAction(Action action)
         {
-            SetAbsorbState(action.auto);
             if (action.cast) 
                 animator.SetTrigger("cast");
         }
@@ -526,6 +531,8 @@ namespace Wizard {
         void onUpdateBrainState(Mood mood, Stance stance)
         {
             Debug.LogFormat("Wizard became {0} and {1}", mood, stance);
+
+            if (World.STATE == GAMESTATE.INTRO) return;
             Comment(mood, stance);
         }
 
@@ -589,56 +596,11 @@ namespace Wizard {
 
         void onGlobalEvent(EVENTCODE @event)
         {
-            if (World.STATE == GAMESTATE.INTRO) return;
-
+            if (World.STATE != GAMESTATE.GAME) return;
             TriggerDialogue();
         }
 
         #endregion
-
-        #region Appearance
-
-        public void SetAbsorbState(bool absorbed)
-        {
-            return;
-
-            if (Brain.absorption >= 1f) {
-                Renderer.material = null;
-                return;
-            }
-
-            override_absorb = absorbed;
-
-            if (absorbed) Renderer.material = null;
-            else Renderer.material = DefaultMaterial;
-        }
-
-        bool override_absorb = false;
-
-        IEnumerator Absorbing()
-        {
-            while (true) 
-            {
-                var absorb = Brain.absorption;
-
-                if (absorb >= 1f || override_absorb)
-                    Renderer.material = null;
-                else 
-                {
-                    yield return new WaitForSeconds(.0067f);
-
-                    float threshold = Mathf.Pow(absorb, 3f);
-                    if (Random.Range(0f, 1f) < threshold)
-                        Renderer.material = null;
-                    else
-                        Renderer.material = DefaultMaterial;
-                }
-
-                yield return null;
-            }
-        }
-
-		#endregion
 
 		#region Debug
 

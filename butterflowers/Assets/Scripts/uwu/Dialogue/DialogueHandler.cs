@@ -3,8 +3,6 @@ using System.Collections.Generic;
 using UnityEngine;
 
 using TMPro;
-using UIExt.Behaviors.Visibility;
-using UnityEngine.Experimental.UIElements;
 
 public class DialogueHandler: MonoBehaviour {
 

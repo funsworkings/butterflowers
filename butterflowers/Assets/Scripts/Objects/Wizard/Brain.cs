@@ -11,6 +11,7 @@ using Settings;
 using UnityEngine;
 using TMPro;
 using Noder.Nodes.Abstract;
+using UnityEngine.UI;
 
 namespace Wizard {
 
@@ -38,6 +39,7 @@ namespace Wizard {
 
 		Sun Sun;
 		Library Library;
+		GameDataSaveSystem Save;
 
 		public Nest Nest;
 		public MotherOfButterflies Mother;
@@ -63,7 +65,7 @@ namespace Wizard {
 
 		[SerializeField] WorldPreset WorldPreset;
 
-		Controller controller;
+		public Controller controller;
 		Memories memories;
 		Dialogue dialogue;
 		Actions actions;
@@ -73,7 +75,7 @@ namespace Wizard {
 
 		#region Attributes
 
-		[SerializeField] [Range(-1f, 1f)] float m_mood = 0f;
+		[SerializeField] [Range(-1f, 1f)] float m_mood = 0f, t_mood = 0f;
 		[SerializeField] [Range(0f, 1f)] float m_stance = 0f;
 		[SerializeField] [Range(0f, 1f)] float m_absorption = 0f;
 
@@ -160,6 +162,13 @@ namespace Wizard {
 		public TMP_Text moodUI;
 		public TMP_Text absorbUI;
 
+		public TMP_Text override_stanceText;
+		public Slider override_stanceSlider;
+		public TMP_Text override_moodText;
+		public Slider override_moodSlider;
+		public TMP_Text override_absorbText;
+		public Slider override_absorbSlider;
+
 		public TMP_Text treeUI;
 		public TMP_Text treeEventUI;
 
@@ -200,6 +209,8 @@ namespace Wizard {
 
 		void OnEnable()
 		{
+			Save = GameDataSaveSystem.Instance;
+
 			World.onRefreshBeacons += Reset;
 
 			ModuleTree.onReceiveEvent += onReceiveEvent;
@@ -260,8 +271,6 @@ namespace Wizard {
 				{
 					case GAMESTATE.INTRO:
 						break;
-					case GAMESTATE.DISCOVERY:
-						break;
 					case GAMESTATE.GAME:
 					case GAMESTATE.ABSORB:
 					default:
@@ -303,14 +312,17 @@ namespace Wizard {
 
 		void Update()
 		{
-			if (!Sun.active || !Nest.open) return;
+			if (!Sun.active) return;
 
 			TIMETOLEARN = Preset.daysUntilFileKnowledge * WorldPreset.secondsPerDay;
 
 			float dt = Time.deltaTime;
 
-			LearnFromEnvironment(dt);
-			LearnFromBeacons(dt);
+			if (Nest.open) 
+			{
+				LearnFromEnvironment(dt);
+				LearnFromBeacons(dt);
+			}
 
 			var enviro = environmentKnowledge;
 			var files = knowledge = fileKnowledge.Values.ToArray();
@@ -318,10 +330,15 @@ namespace Wizard {
 
 			FeelMemory(dt);
 
-			float t_mood = EvaluateMood();
-			m_mood = Mathf.Lerp(mood, t_mood, Time.deltaTime * Preset.moodSmoothSpeed);
+			EvaluateMood();
+			EvaluateAbsorption();
 
-			m_absorption = World.GetAbsorption();
+			getMoodState(true);
+
+			if (override_stanceSlider.value >= 0f)
+				EvaluateStance(); // Override default behaviour
+
+			m_mood = Mathf.Lerp(mood, t_mood, Time.deltaTime * Preset.moodSmoothSpeed);
 
 			DebugResources();
 			DebugActionQueue();
@@ -388,10 +405,16 @@ namespace Wizard {
 
 
 
-		#region Evaluate mood/stance
+		#region Evaluate mood/stance/absorb
 
 		public float EvaluateStance()
 		{
+			var debugStance = override_stanceSlider.value;
+			if (debugStance >= 0f) {
+				m_stance = debugStance;
+				return debugStance;
+			}
+
 			float EW = Preset.enviroKnowledgeStanceWeight;
 			float FW = Preset.fileKnowledgeStanceWeight;
 			float TW = (EW + FW);
@@ -408,6 +431,12 @@ namespace Wizard {
 
 		public float EvaluateMood()
 		{
+			var debugMood = override_moodSlider.value;
+			if (debugMood >= 0f) {
+				t_mood = debugMood.RemapNRB(0f, 1f, -1f, 1f);
+				return t_mood;
+			}
+
 			float SW = Preset.stanceMoodWeight;
 			float BHW = Preset.healthOfButterflowersMoodWeight;
 			float STMW = Preset.shortTermMemoryMoodWeight * shortterm_weight;
@@ -424,13 +453,32 @@ namespace Wizard {
 			float m = (SW * stance) + (BHW * butterflowerhealth) + (STMW * st_memory);
 			m = m.RemapNRB(0f, 1f, -1f, 1f, true);
 
-			m_mood = m;
-			return m_mood;
+			t_mood = m;
+			return m;
 		}
 
-		float EvaluateAbsorption()
+		public float EvaluateAbsorption()
 		{
-			return World.GetAbsorption();
+			var debugAbsorb = override_absorbSlider.value;
+			if (debugAbsorb >= 0f) {
+				m_absorption = debugAbsorb;
+				return debugAbsorb;
+			}
+
+			float MW = Preset.memoryCollectionAbsorptionWeight;
+			float SW = Preset.stanceAbsorptionWeight;
+			float TW = (MW + SW);
+
+			MW /= TW;
+			SW /= TW;
+
+			float memory_knowledge = World.FetchKnowledgeOfWizard();
+			float enviro_knowledge = stance;
+
+			float absorb = (MW * memory_knowledge) + (SW * enviro_knowledge);
+
+			m_absorption = absorb;
+			return absorb;
 		}
 
 		#endregion
@@ -1033,6 +1081,11 @@ namespace Wizard {
 
 			shorttermMood.text = (shortterm_memory == null)? "NULL":shortterm_memory.weight+"";
 			shortTermWeight.text = (shortterm_memory == null)? "0.0":m_shortterm_weight+"";
+
+			// Debug all slider values
+			override_stanceText.text = string.Format("Override stance ({0})", System.Math.Round(override_stanceSlider.value, 2));
+			override_moodText.text = string.Format("Override mood ({0})", System.Math.Round(override_moodSlider.value, 2));
+			override_absorbText.text = string.Format("Override absorb ({0})", System.Math.Round(override_absorbSlider.value, 2));
 		}
 
 		void DebugEventQueue(ref TMP_Text[] arr, ref List<EVENTCODE> events)

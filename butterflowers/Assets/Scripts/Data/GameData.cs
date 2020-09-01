@@ -20,11 +20,12 @@ public partial class GameData {
     public int[] dialoguevisited = new int[] { };
     public float enviro_knowledge = 0f;
     public Knowledge[] file_knowledge = new Knowledge[] { };
+    public float max_stance = -1f;
 
     public bool wizard = false;
     public LogData logs = new LogData();
 
     public int nestcapacity = 6;
 
-    public int GAMESTATE = 0;
+    public int GAMESTATE = 1;
 }
