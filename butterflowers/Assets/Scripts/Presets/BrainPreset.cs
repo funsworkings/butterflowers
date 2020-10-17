@@ -101,5 +101,4 @@ public class BrainPreset : ScriptableObject
         public Brain.ActionStanceThreshold[] actionStanceThresholds;
         public Brain.BeaconOpMoodThreshold[] beaconOpMoodThresholds;
         public Brain.NestOpMoodThreshold[] nestOpMoodThresholds;
-        public Brain.EmoteMoodThreshold[] emoteMoodThresholds;
 }

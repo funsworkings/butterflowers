@@ -1,9 +1,10 @@
-﻿using System.Collections;
-using System.Collections.Generic;
-using UnityEngine;
+﻿using System;
 
-public interface IErrorHandler
+namespace uwu.Behaviors
 {
-    void OnReceiveError(System.Exception err);
-    void OnResolveError();
+	public interface IErrorHandler
+	{
+		void OnReceiveError(Exception err);
+		void OnResolveError();
+	}
 }

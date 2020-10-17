@@ -1,193 +1,188 @@
-﻿using System.Collections;
-using System.Collections.Generic;
+﻿using System.Collections.Generic;
+using System.Linq;
 using UnityEngine;
 
-using System.Linq;
+namespace uwu.Camera
+{
+	/// <summary>
+	///     Manages all in-game cameras
+	///     - Ensure one camera used at a time
+	///     - Switch between camera views
+	/// </summary>
+	public class CameraManager : MonoBehaviour
+	{
+		[SerializeField] GameCamera defaultCamera, previousCamera, currentCamera;
 
-/// <summary>
-/// Manages all in-game cameras
-///     - Ensure one camera used at a time
-///     - Switch between camera views
-/// </summary>
-
-public class CameraManager: MonoBehaviour {
-    [SerializeField] GameCamera defaultCamera, previousCamera, currentCamera;
-
-    [SerializeField] Camera m_mainCamera = null;
-
-
-    int virtualCameraIndex = -1;
-    List<GameCamera> virtualCameras = new List<GameCamera>();
-
-    public Camera MainCamera {
-        get
-        {
-            if (m_mainCamera == null)
-                m_mainCamera = Camera.main;
-
-            return m_mainCamera;
-        }
-        set
-        {
-            m_mainCamera = value;
-        }
-    }
-
-    public GameCamera DefaultCamera => defaultCamera;
-
-    public GameCamera ActiveCamera {
-        get
-        {
-            return currentCamera;
-        }
-    }
+		[SerializeField] UnityEngine.Camera m_mainCamera;
 
 
-    #region Monobehaviour callbacks
+		int virtualCameraIndex = -1;
+		List<GameCamera> virtualCameras = new List<GameCamera>();
 
-    // Start is called before the first frame update
-    void Start()
-    {
-        virtualCameras = GetComponentsInChildren<GameCamera>(true).ToList();
-        foreach (GameCamera c in virtualCameras) {
-            if (c == defaultCamera) Enable(c);
-            else Disable(c);
-        }
-    }
+		public UnityEngine.Camera MainCamera
+		{
+			get
+			{
+				if (m_mainCamera == null)
+					m_mainCamera = UnityEngine.Camera.main;
 
-    void Update()
-    {
-        if (Input.GetKeyDown(KeyCode.C)) 
-        {
-            CycleCameras();
-        }
-    }
+				return m_mainCamera;
+			}
+			set => m_mainCamera = value;
+		}
 
-    #endregion
+		public GameCamera DefaultCamera => defaultCamera;
 
-    void Enable(GameCamera camera){
-        if(camera == null) return;
+		public GameCamera ActiveCamera => currentCamera;
 
-        camera.Enable();
+		void Enable(GameCamera camera)
+		{
+			if (camera == null) return;
 
-        GameCamera @ref = (camera != currentCamera) ? currentCamera : null;
-        onUpdateActiveCamera(camera);
+			camera.Enable();
 
-        if (@ref != null)
-            Disable(@ref);
-    }
+			var @ref = camera != currentCamera ? currentCamera : null;
+			onUpdateActiveCamera(camera);
 
-    void Disable(GameCamera camera){
-        if(camera == null) return;
+			if (@ref != null)
+				Disable(@ref);
+		}
 
-        camera.Disable();
-        if (currentCamera == camera)
-            onUpdateActiveCamera(null);
-    }
+		void Disable(GameCamera camera)
+		{
+			if (camera == null) return;
 
-    void onUpdateActiveCamera(GameCamera camera)
-    {
-        previousCamera = currentCamera;
-        currentCamera = camera;
+			camera.Disable();
+			if (currentCamera == camera)
+				onUpdateActiveCamera(null);
+		}
 
-        onUpdateGameCamera();
-    }
+		void onUpdateActiveCamera(GameCamera camera)
+		{
+			previousCamera = currentCamera;
+			currentCamera = camera;
 
-    #region Operations
+			onUpdateGameCamera();
+		}
 
-    // Reset to default camera
-    public void ResetToDefault(){
-        if(currentCamera != defaultCamera){
-            Disable(currentCamera);
-            Enable(defaultCamera);
-        }
-    }
+		#region Callbacks
 
-    public void SetCamera(GameCamera camera)
-    {
-        Enable(camera);
-    }
+		void onUpdateGameCamera()
+		{
+			if (currentCamera == null) {
+				virtualCameraIndex = -1;
+				return;
+			}
 
-    public void ClearCamera(GameCamera camera)
-    {
-        Disable(camera);
-    }
+			virtualCameraIndex = virtualCameras.IndexOf(currentCamera);
+		}
 
-    public void CycleCameras(){
-        int index = virtualCameraIndex + 1;
-        if(index > virtualCameras.Count-1)
-            index = 0;
-
-        Enable(virtualCameras[index]);
-    }
-
-    #endregion
-
-    #region Callbacks
-
-    void onUpdateGameCamera(){
-        if(currentCamera == null){
-            virtualCameraIndex = -1;
-            return;
-        }
-
-        virtualCameraIndex = virtualCameras.IndexOf(currentCamera);
-    }
-
-    #endregion
-
-    #region Deprecated
-
-    /*
-
-    Camera mainCamera;
-    [SerializeField] new Camera camera;
-     int cameraIndex = -1;
-     List<Camera> cameras = new List<Camera>();
-
-     void Start(){
-
-         cameras = FindObjectsOfType<Camera>().ToList();
-        foreach(Camera c in cameras){
-            if(c != mainCamera && c.tag != "Hidden")
-                c.gameObject.SetActive(false);
-            else 
-                camera = c;
-        }
-     }
-
-     void onUpdateCamera(){
-        if(camera == null){
-            cameraIndex = -1;
-            return;
-        }
-
-        cameraIndex = cameras.IndexOf(camera);
-    }
-
-    public void Set(Camera camera){
-        if(this.camera != camera){
-            if(this.camera != null && this.camera.tag != "Hidden")
-                this.camera.gameObject.SetActive(false);
-            this.camera = camera;
-
-            if (this.camera != null && this.camera.tag != "Hidden")
-                this.camera.gameObject.SetActive(true);
-        }
-    }
-
-    public void Set(GameCamera camera){
-        if(camera == null)
-            return;
-
-        if(currentCamera != null && currentCamera != camera)
-            Disable(currentCamera); // Disable previous camera
-
-        Enable(camera);    
-    }
+		#endregion
 
 
-    */
+		#region Monobehaviour callbacks
 
-    #endregion
+		// Start is called before the first frame update
+		void Start()
+		{
+			virtualCameras = FindObjectsOfType<GameCamera>().ToList();
+			foreach (var c in virtualCameras)
+				if (c == defaultCamera) Enable(c);
+				else Disable(c);
+		}
+
+		void Update()
+		{
+			if (Input.GetKeyDown(KeyCode.C)) CycleCameras();
+		}
+
+		#endregion
+
+		#region Operations
+
+		// Reset to default camera
+		public void ResetToDefault()
+		{
+			if (currentCamera != defaultCamera) {
+				Disable(currentCamera);
+				Enable(defaultCamera);
+			}
+		}
+
+		public void SetCamera(GameCamera camera)
+		{
+			Enable(camera);
+		}
+
+		public void ClearCamera(GameCamera camera)
+		{
+			Disable(camera);
+		}
+
+		public void CycleCameras()
+		{
+			var index = virtualCameraIndex + 1;
+			if (index > virtualCameras.Count - 1)
+				index = 0;
+
+			Enable(virtualCameras[index]);
+		}
+
+		#endregion
+
+		#region Deprecated
+
+		/*
+
+	Camera mainCamera;
+	[SerializeField] new Camera camera;
+	 int cameraIndex = -1;
+	 List<Camera> cameras = new List<Camera>();
+
+	 void Start(){
+
+	     cameras = FindObjectsOfType<Camera>().ToList();
+	    foreach(Camera c in cameras){
+	        if(c != mainCamera && c.tag != "Hidden")
+	            c.gameObject.SetActive(false);
+	        else 
+	            camera = c;
+	    }
+	 }
+
+	 void onUpdateCamera(){
+	    if(camera == null){
+	        cameraIndex = -1;
+	        return;
+	    }
+
+	    cameraIndex = cameras.IndexOf(camera);
+	}
+
+	public void Set(Camera camera){
+	    if(this.camera != camera){
+	        if(this.camera != null && this.camera.tag != "Hidden")
+	            this.camera.gameObject.SetActive(false);
+	        this.camera = camera;
+
+	        if (this.camera != null && this.camera.tag != "Hidden")
+	            this.camera.gameObject.SetActive(true);
+	    }
+	}
+
+	public void Set(GameCamera camera){
+	    if(camera == null)
+	        return;
+
+	    if(currentCamera != null && currentCamera != camera)
+	        Disable(currentCamera); // Disable previous camera
+
+	    Enable(camera);    
+	}
+
+
+	*/
+
+		#endregion
+	}
 }

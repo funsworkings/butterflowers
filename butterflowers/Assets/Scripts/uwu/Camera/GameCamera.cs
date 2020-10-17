@@ -1,75 +1,82 @@
-﻿using System.Collections;
-using System.Collections.Generic;
+﻿using Cinemachine;
 using UnityEngine;
-
-using Cinemachine;
 using UnityEngine.Events;
 
-/// <summary>
-/// Base class for game cameras in scene
-/// </summary>
-[RequireComponent(typeof(CinemachineVirtualCamera))]
-public class GameCamera : MonoBehaviour
+namespace uwu.Camera
 {
-    #region Events
+	/// <summary>
+	///     Base class for game cameras in scene
+	/// </summary>
+	[RequireComponent(typeof(CinemachineVirtualCamera))]
+	public class GameCamera : MonoBehaviour
+	{
+		#region Events
 
-    public UnityEvent onEnable, onDisable;
+		public UnityEvent onEnable, onDisable;
 
-    #endregion
+		#endregion
 
-    #region Accessors
+		// Connect to Cinemachine camera
+		protected new CinemachineVirtualCamera camera;
 
-    public float fov => camera.m_Lens.FieldOfView;
-    public float nearClipPlane => camera.m_Lens.NearClipPlane;
-    public float farClipPlane => camera.m_Lens.FarClipPlane;
+		protected CinemachineFreeLook cameraFreeLook;
+		protected CinemachineComposer composer;
 
-	#endregion
+		protected CameraManager manager;
+		protected CinemachineTransposer transposer;
 
-	protected CameraManager manager;
+		#region Accessors
 
-    // Connect to Cinemachine camera
-    protected new CinemachineVirtualCamera camera;
-                protected CinemachineTransposer transposer;
-                protected CinemachineComposer composer;
+		public float fov => camera.m_Lens.FieldOfView;
+		public float nearClipPlane => camera.m_Lens.NearClipPlane;
+		public float farClipPlane => camera.m_Lens.FarClipPlane;
 
-    protected CinemachineFreeLook cameraFreeLook;
+		#endregion
 
-    #region Monobehaviour callbacks
+		#region Monobehaviour callbacks
 
-    protected virtual void Awake() {
-        manager = FindObjectOfType<CameraManager>();
+		protected virtual void Awake()
+		{
+			manager = FindObjectOfType<CameraManager>();
 
-        camera = GetComponent<CinemachineVirtualCamera>();
-        cameraFreeLook = GetComponent<CinemachineFreeLook>();
-    }
+			camera = GetComponent<CinemachineVirtualCamera>();
+			cameraFreeLook = GetComponent<CinemachineFreeLook>();
+		}
 
-    protected virtual void Start(){
-        if (camera != null)
-        {
-            transposer = camera.GetCinemachineComponent<CinemachineTransposer>();
-            composer = camera.GetCinemachineComponent<CinemachineComposer>();
-        }
-    }
+		protected virtual void Start()
+		{
+			if (camera != null) {
+				transposer = camera.GetCinemachineComponent<CinemachineTransposer>();
+				composer = camera.GetCinemachineComponent<CinemachineComposer>();
+			}
+		}
 
-    public virtual void Enable(){ 
-        Debug.Log("Enabled " + name);
-        camera.enabled = true;
+		public virtual void Enable()
+		{
+			Debug.Log("Enabled " + name);
+			camera.enabled = true;
 
-        onEnabled();
-        onEnable.Invoke();
-    }
+			onEnabled();
+			onEnable.Invoke();
+		}
 
-    protected virtual void onEnabled() { }
+		protected virtual void onEnabled()
+		{
+		}
 
-    public virtual void Disable(){
-        Debug.Log("Disabled " + name);
-        camera.enabled = false;
+		public virtual void Disable()
+		{
+			Debug.Log("Disabled " + name);
+			camera.enabled = false;
 
-        onDisabled();
-        onDisable.Invoke();
-    }
+			onDisabled();
+			onDisable.Invoke();
+		}
 
-    protected virtual void onDisabled() { }
+		protected virtual void onDisabled()
+		{
+		}
 
-    #endregion
+		#endregion
+	}
 }

@@ -1,75 +1,73 @@
-﻿using System.Collections;
-using System.Collections.Generic;
+﻿using Cinemachine;
 using UnityEngine;
 
-using Cinemachine;
-
-[RequireComponent(typeof(Camera))]
-public class Screenshake : MonoBehaviour
+namespace uwu.Snippets
 {
-    new Camera camera;
-    CinemachineBrain brain;
+	[RequireComponent(typeof(UnityEngine.Camera))]
+	public class Screenshake : MonoBehaviour
+	{
+		[SerializeField] float radius = 1f;
+		[SerializeField] float dampening = 1f;
 
-    [SerializeField] float radius = 1f;
-    [SerializeField] float dampening = 1f;
+		bool active = false;
+		CinemachineBrain brain;
+		new UnityEngine.Camera camera;
 
-    Vector3 origin = Vector3.zero;
+		Vector3 origin = Vector3.zero;
+		float shake;
 
-    bool active = false;
-    float shake = 0f;
+		public bool inprogress => shake > 0f;
 
-    public bool inprogress => shake > 0f;
+		void Awake()
+		{
+			camera = GetComponent<UnityEngine.Camera>();
+			brain = GetComponent<CinemachineBrain>();
+		}
 
-    void Awake()
-    {
-        camera = GetComponent<Camera>();
-        brain = GetComponent<CinemachineBrain>();
-    }
+		void Update()
+		{
+			if (inprogress) {
+				shake -= Time.deltaTime * dampening;
+				if (shake < 0f) {
+					shake = 0f;
+					Dispose();
+				}
+				else {
+					onShake();
+				}
+			}
+		}
 
-    void Update()
-    {
-        if (inprogress) 
-        {
-            shake -= Time.deltaTime * dampening;
-            if (shake < 0f) 
-            {
-                shake = 0f;
-                Dispose();
-            }
-            else
-                onShake();
-        }
-    }
+		public void Shake(float strength = 1f)
+		{
+			if (inprogress) return;
+			shake = strength;
 
-    public void Shake(float strength = 1f)
-    {
-        if (inprogress) return;
-        shake = strength;
+			if (camera == null) return;
+			if (brain != null) brain.enabled = false;
 
-        if (camera == null) return;
-        if (brain != null) brain.enabled = false;
+			var transform = camera.transform;
+			origin = transform.position;
 
-        var transform = camera.transform;
-        origin = transform.position;
+			onShake();
+		}
 
-        onShake();
-    }
+		void onShake()
+		{
+			var direction = Random.insideUnitSphere;
 
-    void onShake()
-    {
-        Vector3 direction = Random.insideUnitSphere;
+			var adjustment = 1f / direction.magnitude;
+			direction *= adjustment * radius * shake;
 
-        float adjustment = 1f / direction.magnitude;
-        direction *= (adjustment * radius * shake);
+			transform.position = origin + direction;
+		}
 
-        transform.position = (origin + direction);
-    }
+		void Dispose()
+		{
+			if (camera == null) return;
 
-    void Dispose()
-    {
-        if (camera == null) return;
-
-        camera.transform.position = origin;
-        if (brain != null) brain.enabled = true;
-    }
+			camera.transform.position = origin;
+			if (brain != null) brain.enabled = true;
+		}
+	}
 }

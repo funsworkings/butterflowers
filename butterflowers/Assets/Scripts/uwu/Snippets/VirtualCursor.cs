@@ -1,13 +1,14 @@
-﻿using System.Collections;
-using System.Collections.Generic;
-using UnityEngine;
+﻿using UnityEngine;
 
-public class VirtualCursor : Cursor
+namespace uwu.Snippets
 {
-    [SerializeField] new Camera camera;
+	public class VirtualCursor : Cursor
+	{
+		[SerializeField] new UnityEngine.Camera camera;
 
-    protected override Vector3 Position()
-    {
-        return camera.WorldToScreenPoint(transform.position);
-    }
+		protected override Vector3 Position()
+		{
+			return camera.WorldToScreenPoint(transform.position);
+		}
+	}
 }

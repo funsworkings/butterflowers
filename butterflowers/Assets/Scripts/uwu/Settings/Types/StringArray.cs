@@ -1,10 +1,10 @@
-﻿using System.Collections;
-using System.Collections.Generic;
-using UnityEngine;
+﻿using UnityEngine;
+using uwu.Settings.Instances;
 
-namespace Settings {
-
-    [CreateAssetMenu(fileName = "New Float Array", menuName = "Settings/Global/Strings", order = 52)]
-    public class StringArray : Global<StringSetting, string> {}
-
+namespace uwu.Settings.Types
+{
+	[CreateAssetMenu(fileName = "New Float Array", menuName = "Settings/Global/Strings", order = 52)]
+	public class StringArray : Global<StringSetting, string>
+	{
+	}
 }

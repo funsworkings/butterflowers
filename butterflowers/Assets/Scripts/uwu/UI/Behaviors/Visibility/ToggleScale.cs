@@ -1,47 +1,60 @@
 ﻿using System.Collections;
-using System.Collections.Generic;
 using UnityEngine;
-using UnityEngine.UI;
 
-namespace UIExt.Behaviors.Visibility {
+namespace uwu.UI.Behaviors.Visibility
+{
+	public class ToggleScale : ToggleVisibility
+	{
+		[SerializeField] protected Vector2 visible, hidden;
+		protected Vector2 current, target;
+		RectTransform rect;
 
-    public class ToggleScale : ToggleVisibility
-    {
-        RectTransform rect;
+		void Awake()
+		{
+			rect = GetComponent<RectTransform>();
+		}
 
-        [SerializeField] protected Vector2 visible, hidden;
-                         protected Vector2 current, target;
+		protected override IEnumerator UpdatingVisibility()
+		{
+			var dist = Vector3.Distance(current, target);
+			while (dist > .033f) {
+				lerping = true;
 
-        private void Awake() {
-            rect = GetComponent<RectTransform>();
-        }
+				current = Vector3.Lerp(current, target, Time.deltaTime * transitionSpeed);
+				EvaluateVisibility();
 
-        protected override IEnumerator UpdatingVisibility(){
-            float dist = Vector3.Distance(current, target);
-            while(dist > .033f){
-                lerping = true;
+				dist = Vector3.Distance(current, target);
+				yield return null;
+			}
 
-                current = Vector3.Lerp(current, target, Time.deltaTime * transitionSpeed);
-                EvaluateVisibility();
+			current = target;
+			EvaluateVisibility();
+			lerping = false;
+		}
 
-                dist = Vector3.Distance(current, target);
-                yield return null;
-            }
+		protected override void EvaluateVisibility()
+		{
+			rect.localScale = new Vector3(current.x, current.y, 1f);
+		}
 
-            current = target;
-            EvaluateVisibility();
-            lerping = false;
-        }
+		protected override void SetTarget(bool isVisible)
+		{
+			target = isVisible ? visible : hidden;
+		}
 
-        protected override void EvaluateVisibility(){
-            rect.localScale = new Vector3(current.x, current.y, 1f);
-        }
+		protected override void SetCurrent(bool isVisible)
+		{
+			current = isVisible ? visible : hidden;
+		}
 
-        protected override void SetTarget(bool isVisible){ target = (isVisible)? visible:hidden; }
-        protected override void SetCurrent(bool isVisible){ current = (isVisible)? visible:hidden; }
+		protected override void SetTargetToCurrent()
+		{
+			target = current;
+		}
 
-        protected override void SetTargetToCurrent(){ target = current; }
-        protected override void SetCurrentToTarget(){ current = target; }
-    }
-
+		protected override void SetCurrentToTarget()
+		{
+			current = target;
+		}
+	}
 }

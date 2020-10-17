@@ -1,31 +1,29 @@
-﻿using System.Collections;
-using System.Collections.Generic;
-using UnityEngine;
+﻿using UnityEngine;
 
-using UnityEngine.UI;
+namespace uwu.UI.Elements
+{
+	public class Menu : MonoBehaviour
+	{
+		readonly Vector2 anchor = Vector2.zero;
 
-namespace UIExt.Elements {
-    public class Menu : MonoBehaviour
-    {
-        RectTransform rect;
+		readonly Vector2 pivot = new Vector2(0f, 0f);
+		RectTransform rect;
 
-        Vector2 pivot = new Vector2(0f, 0f);
-        Vector2 anchor = Vector2.zero;
+		void Awake()
+		{
+			rect = GetComponent<RectTransform>();
+		}
 
-        private void Awake() {
-            rect = GetComponent<RectTransform>();
-        }
+		// Update is called once per frame
+		void Update()
+		{
+			if (rect == null) return;
 
-        // Update is called once per frame
-        void Update()
-        {
-            if(rect == null) return;
+			if (rect.pivot != pivot)
+				rect.pivot = pivot;
 
-            if(rect.pivot != pivot)
-                rect.pivot = pivot;
-
-            if(rect.anchoredPosition != anchor)
-                rect.anchoredPosition = anchor;
-        }
-    }
+			if (rect.anchoredPosition != anchor)
+				rect.anchoredPosition = anchor;
+		}
+	}
 }

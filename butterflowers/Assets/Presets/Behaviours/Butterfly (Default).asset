@@ -12,11 +12,10 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: eba2f930bfa9d4a9ea9c6cac90fd8107, type: 3}
   m_Name: Butterfly (Default)
   m_EditorClassIdentifier: 
-  maxSpeed: 5.67
+  maxSpeed: 3
   noiseAmount: 3
   noiseSize: 50.51
-  moveAmount: 0.67
-  attraction: 18
+  attraction: 0.87
   follow: 1
   gravity: 0.098
   descentTime: 3
@@ -24,34 +23,9 @@ MonoBehaviour:
   colorRefresh: 1
   minLifetime: 1
   maxLifetime: 10
-  wandRadius: 164
-  wandAttractSpeed: 96
-  wandRepelSpeed: 1280
-  energyDecayCurve:
-    serializedVersion: 2
-    m_Curve:
-    - serializedVersion: 3
-      time: 0
-      value: 0
-      inSlope: 1
-      outSlope: 1
-      tangentMode: 34
-      weightedMode: 0
-      inWeight: 0
-      outWeight: 0
-    - serializedVersion: 3
-      time: 1
-      value: 1
-      inSlope: 1
-      outSlope: 1
-      tangentMode: 34
-      weightedMode: 0
-      inWeight: 0
-      outWeight: 0
-    m_PreInfinity: 2
-    m_PostInfinity: 2
-    m_RotationOrder: 4
-  energyGrowthCurve:
+  minimumWandSpeed: 0
+  maximumWandSpeed: 36
+  distanceAttractionCurve:
     serializedVersion: 2
     m_Curve:
     - serializedVersion: 3
@@ -59,56 +33,23 @@ MonoBehaviour:
       value: 1
       inSlope: 0
       outSlope: 0
-      tangentMode: 0
-      weightedMode: 0
-      inWeight: 0
-      outWeight: 0.091836736
-    - serializedVersion: 3
-      time: 1
-      value: 0
-      inSlope: -2.5819693
-      outSlope: -2.5819693
-      tangentMode: 0
-      weightedMode: 0
-      inWeight: 0.032653034
-      outWeight: 0
-    m_PreInfinity: 2
-    m_PostInfinity: 2
-    m_RotationOrder: 4
-  attractionCurve:
-    serializedVersion: 2
-    m_Curve:
-    - serializedVersion: 3
-      time: 0
-      value: 0
-      inSlope: 2
-      outSlope: 2
-      tangentMode: 0
-      weightedMode: 0
-      inWeight: 0
-      outWeight: 0
-    - serializedVersion: 3
-      time: 0.75169885
-      value: 0.70877427
-      inSlope: -0.783741
-      outSlope: -0.783741
-      tangentMode: 0
+      tangentMode: 136
       weightedMode: 0
       inWeight: 0.33333334
-      outWeight: 0.5648072
+      outWeight: 0.33333334
     - serializedVersion: 3
-      time: 1.0061035
+      time: 1
       value: 0
       inSlope: 0
       outSlope: 0
-      tangentMode: 0
+      tangentMode: 136
       weightedMode: 0
-      inWeight: 0
-      outWeight: 0
+      inWeight: 0.33333334
+      outWeight: 0.33333334
     m_PreInfinity: 2
     m_PostInfinity: 2
     m_RotationOrder: 4
-  followCurve:
+  speedAttractionCurve:
     serializedVersion: 2
     m_Curve:
     - serializedVersion: 3
@@ -123,28 +64,27 @@ MonoBehaviour:
     - serializedVersion: 3
       time: 1
       value: 1
-      inSlope: 0
-      outSlope: 0
+      inSlope: 0.47423193
+      outSlope: 0.47423193
       tangentMode: 0
       weightedMode: 0
-      inWeight: 0
+      inWeight: 0.14919853
       outWeight: 0
     m_PreInfinity: 2
     m_PostInfinity: 2
     m_RotationOrder: 4
+  velocityDampening: 2
+  velocityTrailThreshold: 0.5
   centerStrength: 3
   minCenterDistance: 0.87
-  energyGrowth: 18.21
-  energyDecay: 1000
-  recoveryTime: 3
+  energyGrowth: 1.3
   minAnimationSpeed: 1
   maxAnimationSpeed: 10
   timeDead: 9
   deathColorDelay: 0.33
   deathTransitionTime: 0.167
-  scale: 0.167
+  scale: 0.067
   timeToGrow: 1.67
-  maximumColorSpeed: 0.838
   deathProbabilityCurve:
     serializedVersion: 2
     m_Curve:

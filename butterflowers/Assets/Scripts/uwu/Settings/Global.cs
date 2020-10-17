@@ -1,20 +1,17 @@
-﻿using System.Collections;
-using System.Collections.Generic;
-using UnityEngine;
+﻿using UnityEngine;
 
-namespace Settings {
+namespace uwu.Settings
+{
+	public class Global<U, T> : ScriptableObject where U : Setting<T>
+	{
+		public U[] settings;
 
-    public class Global<U, T> : ScriptableObject where U:Setting<T>
-    {
-        public U[] settings;
-
-        public T GetValueFromKey(string key){
-            foreach(U s in settings){
-                if(s.key == key)
-                    return s.value;
-            }
-            return default(T);
-        }
-    }
-
+		public T GetValueFromKey(string key)
+		{
+			foreach (var s in settings)
+				if (s.key == key)
+					return s.value;
+			return default;
+		}
+	}
 }

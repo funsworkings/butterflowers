@@ -1,45 +1,53 @@
-﻿using System.Collections;
-using System.Collections.Generic;
+﻿using Cinemachine;
 using UnityEngine;
-using Cinemachine;
 
-public class CinemachineDriver : MonoBehaviour
+namespace uwu.Camera
 {
-    new CinemachineVirtualCamera camera;
+	public class CinemachineDriver : MonoBehaviour
+	{
+		new CinemachineVirtualCamera camera;
+		CinemachineComposer composer;
 
-    CinemachineTransposer transposer;
-    CinemachineComposer composer;
+		bool fetched;
 
-    void Awake() {
-        Fetch();
-    }
+		CinemachineTransposer transposer;
 
-    bool fetched = false;
-    void Fetch(){
-        camera = GetComponent<CinemachineVirtualCamera>();
-        transposer = camera.GetCinemachineComponent<CinemachineTransposer>();
-        composer = camera.GetCinemachineComponent<CinemachineComposer>(); 
+		void Awake()
+		{
+			Fetch();
+		}
 
-        fetched = true;
-    }
+		void Fetch()
+		{
+			camera = GetComponent<CinemachineVirtualCamera>();
+			transposer = camera.GetCinemachineComponent<CinemachineTransposer>();
+			composer = camera.GetCinemachineComponent<CinemachineComposer>();
 
-    public void SetNearClipping(float near){
-        if(!fetched) Fetch();
-        (camera.m_Lens).NearClipPlane = near;
-    }
+			fetched = true;
+		}
 
-    public void SetFarClipping(float far){
-        if(!fetched) Fetch();
-        (camera.m_Lens).FarClipPlane = far;
-    }
+		public void SetNearClipping(float near)
+		{
+			if (!fetched) Fetch();
+			camera.m_Lens.NearClipPlane = near;
+		}
 
-    public void UpdateTransposerOffset(Vector3 offset){
-        if(!fetched) Fetch();
-        transposer.m_FollowOffset = offset;
-    }
+		public void SetFarClipping(float far)
+		{
+			if (!fetched) Fetch();
+			camera.m_Lens.FarClipPlane = far;
+		}
 
-    public void UpdateComposerOffset(Vector3 offset){
-        if(!fetched) Fetch();
-        composer.m_TrackedObjectOffset = offset;
-    }
+		public void UpdateTransposerOffset(Vector3 offset)
+		{
+			if (!fetched) Fetch();
+			transposer.m_FollowOffset = offset;
+		}
+
+		public void UpdateComposerOffset(Vector3 offset)
+		{
+			if (!fetched) Fetch();
+			composer.m_TrackedObjectOffset = offset;
+		}
+	}
 }

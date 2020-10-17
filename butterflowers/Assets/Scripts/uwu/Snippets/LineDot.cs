@@ -1,18 +1,20 @@
 using UnityEngine;
-using UnityEngine.UI;
 
-[ExecuteInEditMode]
-public class LineDot : MonoBehaviour {
-    RectTransform rect;
+namespace uwu.Snippets
+{
+	[ExecuteInEditMode]
+	public class LineDot : MonoBehaviour
+	{
+		public float x, y, radius;
+		RectTransform rect;
 
-    public float x = 0f, y = 0f, radius = 0f;
+		void Update()
+		{
+			if (rect == null)
+				rect = GetComponent<RectTransform>();
 
-    void Update() {
-        if(rect == null)
-            rect = GetComponent<RectTransform>();
-
-        rect.anchoredPosition = new Vector2(x, y);
-        rect.sizeDelta = Vector2.one * (radius / 2f);    
-    }
-
+			rect.anchoredPosition = new Vector2(x, y);
+			rect.sizeDelta = Vector2.one * (radius / 2f);
+		}
+	}
 }

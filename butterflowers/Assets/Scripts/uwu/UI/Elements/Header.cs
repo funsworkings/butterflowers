@@ -1,35 +1,30 @@
-﻿using System.Collections;
-using System.Collections.Generic;
-using UnityEngine;
+﻿using UnityEngine;
 
-using UnityEngine.UI;
-
-namespace UIExt.Elements
+namespace uwu.UI.Elements
 {
-    [ExecuteInEditMode]
-    public class Header : MonoBehaviour
-    {
-        RectTransform rect;
+	[ExecuteInEditMode]
+	public class Header : MonoBehaviour
+	{
+		readonly Vector2 anchor = Vector2.zero;
 
-        Vector2 pivot = new Vector2(.5f, 1f);
-        Vector2 anchor = Vector2.zero;
+		readonly Vector2 pivot = new Vector2(.5f, 1f);
+		RectTransform rect;
 
-        private void Awake() {
-            rect = GetComponent<RectTransform>();
-        }
+		void Awake()
+		{
+			rect = GetComponent<RectTransform>();
+		}
 
-        // Update is called once per frame
-        void Update()
-        {
-            if(rect == null) return;
+		// Update is called once per frame
+		void Update()
+		{
+			if (rect == null) return;
 
-            if(rect.pivot != pivot)
-                rect.pivot = pivot;
+			if (rect.pivot != pivot)
+				rect.pivot = pivot;
 
-            if(rect.anchoredPosition != anchor)
-                rect.anchoredPosition = anchor;
-        }
-    }
+			if (rect.anchoredPosition != anchor)
+				rect.anchoredPosition = anchor;
+		}
+	}
 }
-
-

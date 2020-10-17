@@ -4,70 +4,31 @@ using UnityEngine;
 
 using Wizard;
 using UnityEngine.UI;
+using uwu.Extensions;
 
 public class BeaconInfo : MonoBehaviour
 {
-    [SerializeField] Beacon m_beacon = null;
-    public Beacon beacon {
-        get 
-        {
-            return m_beacon;
-        }
-
-        set
-        {
-            m_beacon = value;
-
-            string file = "";
-            if (value != null)
-                file = (beacon.fileEntry == null) ? beacon.file : beacon.fileEntry.ShortName;
-
-            def_file = file;
-        }
-    }
-
-    CanvasGroup canvasGroup;
+    string template = "{0}\n\n<color={1}>[ A ] dd to nest\n[ P ] lant in terrain"; 
 
     [SerializeField] TMPro.TMP_Text text;
     [SerializeField] Color unknownColor, knownColor;
 
-    string def_file;
-
-    void Awake()
+    public string parseTextFromBeacon(Beacon beacon)
     {
-        canvasGroup = GetComponent<CanvasGroup>();
+        Color color = unknownColor;
+        string color_hex = Extensions.ParseColor(color);
+
+        string file = "";
+        if (beacon != null)
+            file = parseBeaconFileName(beacon);
+
+        var def_file = file;
+
+        return string.Format(template, def_file, color_hex);
     }
 
-    public void Show(AGENT agent)
+    public string parseBeaconFileName(Beacon beacon)
     {
-        if (agent == AGENT.User) 
-        {
-            text.text = def_file;
-        }
-        else if (agent == AGENT.Wizard) 
-        {
-            float knowledge = beacon.knowledge;
-
-            float random = 1f - knowledge;
-
-            Color color = Color.Lerp(unknownColor, knownColor, knowledge);
-            string color_hex = Extensions.ParseColor(color);
-
-            string body = def_file.Scramble(random);
-            text.text = string.Format("<color={0}>", color_hex) + body;
-        }
-
-        canvasGroup.alpha = 1f;
-    }
-
-    public void Hide()
-    {
-        if (beacon.overrideFocus && beacon.visible) 
-        {
-            Show(AGENT.Wizard);
-            return;
-        }
-
-        canvasGroup.alpha = 0f;
+        return (beacon.fileEntry == null) ? beacon.file : beacon.fileEntry.ShortName;
     }
 }

@@ -6,7 +6,7 @@ using UnityEngine.Timeline;
 [Serializable]
 public class FocusControlClip : PlayableAsset
 {
-    public ExposedReference<FocalPoint> focalPoint;
+    public ExposedReference<Focusable> focalPoint;
     public bool enabled = false;
 
     public override Playable CreatePlayable (PlayableGraph graph, GameObject owner)

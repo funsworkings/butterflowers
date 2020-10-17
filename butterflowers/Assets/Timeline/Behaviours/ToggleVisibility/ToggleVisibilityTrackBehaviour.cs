@@ -2,7 +2,7 @@ using System;
 using UnityEngine;
 using UnityEngine.Playables;
 using UnityEngine.Timeline;
-using UIExt.Behaviors;
+using uwu.UI.Behaviors;
 
 [Serializable]
 public class ToggleVisibilityTrackBehaviour : PlayableBehaviour

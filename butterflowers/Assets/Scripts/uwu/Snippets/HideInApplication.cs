@@ -1,19 +1,21 @@
-﻿using System.Collections;
-using System.Collections.Generic;
-using UnityEngine;
+﻿using UnityEngine;
 
-public class HideInApplication : MonoBehaviour {
+namespace uwu.Snippets
+{
+	public class HideInApplication : MonoBehaviour
+	{
+		Renderer[] renderers;
 
-    Renderer[] renderers;
+		void Awake()
+		{
+			renderers = GetComponentsInChildren<Renderer>();
+		}
 
-    void Awake(){
-        renderers = GetComponentsInChildren<Renderer>();
-    }
-
-    // Use this for initialization
-    void Start()
-    {
-        foreach(Renderer r in renderers)
-            r.enabled = false;
-    }
+		// Use this for initialization
+		void Start()
+		{
+			foreach (var r in renderers)
+				r.enabled = false;
+		}
+	}
 }

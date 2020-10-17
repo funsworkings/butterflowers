@@ -1,10 +1,10 @@
-﻿using System.Collections;
-using System.Collections.Generic;
-using UnityEngine;
+﻿using UnityEngine;
+using uwu.Settings.Instances;
 
-namespace Settings {
-
-    [CreateAssetMenu(fileName = "New Float Array", menuName = "Settings/Global/Bools", order = 52)]
-    public class BoolArray : Global<BoolSetting, bool> {}
-
+namespace uwu.Settings.Types
+{
+	[CreateAssetMenu(fileName = "New Float Array", menuName = "Settings/Global/Bools", order = 52)]
+	public class BoolArray : Global<BoolSetting, bool>
+	{
+	}
 }

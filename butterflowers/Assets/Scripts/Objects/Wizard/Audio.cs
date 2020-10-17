@@ -1,6 +1,7 @@
 ﻿using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
+using uwu.Audio;
 using Wizard;
 
 public class Audio: AudioHandler {
@@ -8,7 +9,7 @@ public class Audio: AudioHandler {
     #region External
 
     [SerializeField] AudioHandler MemoryAudio;
-    [SerializeField] Focus Focus;
+    [SerializeField] Focusing Focusing;
 
     #endregion
 
@@ -32,7 +33,7 @@ public class Audio: AudioHandler {
     }
 
     void Start() {
-        Focus = FindObjectOfType<Focus>();
+        Focusing = FindObjectOfType<Focusing>();
         brain = controller.Brain;
     }
 
@@ -67,7 +68,7 @@ public class Audio: AudioHandler {
 
     #region Memories
 
-    void SmoothMemoryAudio() { Focus.SetMemoryVolumeWithDistance(brain.shortterm_weight); }
+    void SmoothMemoryAudio() { Focusing.SetMemoryVolumeWithDistance(brain.shortterm_weight); }
 
 	#endregion
 }

@@ -1,69 +1,65 @@
-﻿using System.Collections;
+﻿using System;
 using System.Collections.Generic;
 using UnityEngine;
+using uwu.Behaviors;
 
-namespace UIExt.Elements
+namespace uwu.UI.Elements
 {
+	public class TetherList<E> : MonoBehaviour
+	{
+		[SerializeField] GameObject tetherBlockPrefab;
 
-    public class TetherList<E> : MonoBehaviour
-    {
-        public System.Action onPopulateList;
+		protected List<GameObject> blocks = new List<GameObject>();
+		public Action onPopulateList;
+		protected List<ITether<E>> tethers = new List<ITether<E>>();
 
-        [SerializeField] GameObject tetherBlockPrefab;
+		protected virtual void OnEnable()
+		{
+		}
 
-        protected List<GameObject> blocks = new List<GameObject>();
-        protected List<ITether<E>> tethers = new List<ITether<E>>();
+		protected virtual void OnDisable()
+		{
+		}
 
-        protected virtual void OnEnable()
-        {
+		public void PopulateList(E[] elements, Transform root = null, bool events = true)
+		{
+			if (root == null)
+				root = transform;
 
-        }
+			if (elements != null)
+				foreach (var el in elements)
+					if (validateItem(el)) {
+						var obj = Instantiate(tetherBlockPrefab, root);
+						var tether = obj.GetComponent<ITether<E>>();
+						tether.tether = el;
 
-        protected virtual void OnDisable()
-        {
+						tethers.Add(tether);
+						onPopulateItem(tether);
+						blocks.Add(obj);
+					}
 
-        }
+			if (events && onPopulateList != null)
+				onPopulateList();
+		}
 
-        public void PopulateList(E[] elements, Transform root = null, bool events = true)
-        {
-            if (root == null)
-                root = transform;
+		protected virtual bool validateItem(E tether)
+		{
+			return true;
+		}
 
-            if (elements != null)
-            {
-                foreach (E el in elements)
-                {
-                    if (validateItem(el))
-                    {
-                        var obj = Instantiate(tetherBlockPrefab, root);
-                        ITether<E> tether = obj.GetComponent<ITether<E>>();
-                        tether.tether = el;
+		protected virtual void onPopulateItem(ITether<E> tether)
+		{
+		}
 
-                        this.tethers.Add(tether);
-                        onPopulateItem(tether);
-                        this.blocks.Add(obj);
-                    }
-                }
-            }
+		public void ClearList()
+		{
+			var blocks = this.blocks.ToArray();
 
-            if (events && onPopulateList != null)
-                onPopulateList();
-        }
+			foreach (var block in blocks)
+				Destroy(block);
 
-        protected virtual bool validateItem(E tether) { return true; }
-        protected virtual void onPopulateItem(ITether<E> tether) { }
-
-        public void ClearList()
-        {
-            GameObject[] blocks = this.blocks.ToArray();
-
-            foreach (GameObject block in blocks)
-                GameObject.Destroy(block);
-
-            this.blocks = new List<GameObject>();
-            this.tethers = new List<ITether<E>>();
-        }
-
-    }
-
+			this.blocks = new List<GameObject>();
+			tethers = new List<ITether<E>>();
+		}
+	}
 }

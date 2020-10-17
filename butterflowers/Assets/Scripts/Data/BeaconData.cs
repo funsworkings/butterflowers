@@ -3,17 +3,20 @@ using System.Collections.Generic;
 using UnityEngine;
 
 using Type = Beacon.Type;
+using Locale = Beacon.Locale;
 
 [System.Serializable]
-public class BeaconData {
+public class BeaconData 
+{
     public int type = 0;
-    public string path = "";
-    public bool visible = false;
+    public int state = -1;
 
-    public BeaconData(string path, Type type, bool visible)
+    public string path = "";
+
+    public BeaconData(string path, Type type, Locale state)
     {
         this.path = path;
         this.type = (int)type;
-        this.visible = visible;
+        this.state = (int)state;
     }
 }

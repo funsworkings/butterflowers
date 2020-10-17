@@ -1,24 +1,23 @@
 ﻿using UnityEngine;
 
-namespace SimpleFileBrowser
+namespace uwu.IO.SimpleFileBrowser.Scripts.SimpleRecycledListView
 {
-	[RequireComponent( typeof( RectTransform ) )]
+	[RequireComponent(typeof(RectTransform))]
 	public class ListItem : MonoBehaviour
 	{
+		IListViewAdapter adapter;
 		public object Tag { get; set; }
 		public int Position { get; set; }
 
-		private IListViewAdapter adapter;
-
-		internal void SetAdapter( IListViewAdapter listView )
+		internal void SetAdapter(IListViewAdapter listView)
 		{
-			this.adapter = listView;
+			adapter = listView;
 		}
 
 		public void OnClick()
 		{
-			if( adapter.OnItemClicked != null )
-				adapter.OnItemClicked( this );
+			if (adapter.OnItemClicked != null)
+				adapter.OnItemClicked(this);
 		}
 	}
 }

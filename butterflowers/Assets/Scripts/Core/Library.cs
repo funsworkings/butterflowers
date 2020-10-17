@@ -11,82 +11,63 @@ using System.Threading.Tasks;
 using Memories = Wizard.Memories;
 using UnityEditor;
 using System.Security.Cryptography;
+using uwu;
+using uwu.Extensions;
+using uwu.IO;
+using Object = System.Object;
 
 public class Library : Singleton<Library>
 {
-	public const bool READ_IN_EDITOR_MODE = false;
+	public bool READ_IN_EDITOR_MODE = true;
+	public Texture2D DEFAULT_NULL_TEXTURE;
+	public Dictionary<string, Texture2D[]> TEXTURE_PACKS = new Dictionary<string, Texture2D[]>();
 
-
-	#region Events
+	// Events
 
 	public System.Action OnRefreshItems;
-	public System.Action<string> OnAddItem;
 
-	#endregion
+	public System.Action<string[]> onAddedFiles, onRemovedFiles;
 
-	#region External
+	// External
 
 	FileNavigator Files = null;
-
-	Memories m_WizardFiles = null;
-	public Memories WizardFiles {
-		get { return m_WizardFiles; }
-		set {
-			bool refresh = (m_WizardFiles != value);
-
-			m_WizardFiles = value;
-			if (refresh) RefreshWizardFiles();
-		} 
-	}
-
 	Quilt Quilt = null;
 	GameDataSaveSystem Save;
-	World Manager;
 
-	#endregion
-
-	#region Collections
+	// Collections
 
 	public List<string> ALL_FILES = new List<string>();
+	public List<int> SHARED_FILES = new List<int>();
+	public List<string> TEMP_FILES = new List<string>();
 
-	[SerializeField] List<string> items = new List<string>();
-	[SerializeField] List<string> items_wizard = new List<string>();
-	[SerializeField] List<string> items_desktop = new List<string>();
-	[SerializeField] List<string> items_enviro = new List<string>();
-
-	[SerializeField] List<string> items_shared = new List<string>();
-	[SerializeField] List<int> items_shared_indices = new List<int>();
-
+	Dictionary<string, List<string>> FILE_LOOKUP = new Dictionary<string, List<string>>();
 
 	[SerializeField] List<string> textureQueue = new List<string>();
+	[SerializeField] List<string> textureLoadTarget = new List<string>();
+
 	[SerializeField] List<Texture2D> temp_textures = new List<Texture2D>();
 	[SerializeField] Dictionary<string, Texture2D> textures = new Dictionary<string, Texture2D>();
 
-	#endregion
-
-	#region Properties
+	// Properties
 
 	WWW textureWWW;
 
-	#endregion
-
-	#region Attributes
+	// Attributes
 
 	[SerializeField] bool read = false, load = false, initialized = false;
 
-	#endregion
-
 	#region Accessors
 
-	public float loadprogress 
+	public float loadProgress 
 	{
 		get
 		{
-			if (initialized)
-			{
-				int files = items_desktop.Count;
+			if (initialized) {
+				int files = textureLoadTarget.Count();
+				if (files == 0)
+					return 1f;
+				
 				int textures = (files - textureQueue.Count);
-
 				return (float)textures / files;
 			}
 
@@ -94,33 +75,10 @@ public class Library : Singleton<Library>
 		}
 	}
 
-	public string[] wizard_files {
-		get
-		{
-			return items_wizard.ToArray();
-		}
-	}
-
-	public string[] desktop_files {
-		get
-		{
-			return items_desktop.ToArray();
-		}
-	}
-
-	public string[] shared_files {
-		get
-		{
-			return items_shared.ToArray();
-		}
-	}
-
-	public string[] enviro_files {
-		get
-		{
-			return items_enviro.ToArray();
-		}
-	}
+	public string[] wizard_files => FILE_LOOKUP["WIZARD"].ToArray();
+	public string[] desktop_files => FILE_LOOKUP["DESKTOP"].ToArray();
+	public string[] shared_files => FILE_LOOKUP["SHARED"].ToArray();
+	public string[] enviro_files => FILE_LOOKUP["ENVIRONMENT"].ToArray();
 
 	#endregion
 
@@ -128,9 +86,6 @@ public class Library : Singleton<Library>
 
 	void OnDestroy()
 	{
-		if (!initialized)
-			return;
-
 		Files.onRefresh -= RefreshFiles;
 		Quilt.onLoadTexture -= AddTextureToLibrary;
 
@@ -138,100 +93,145 @@ public class Library : Singleton<Library>
 	}
 
 	#endregion
+	
+	#region Initialization
 
-	#region Internal
+	public void Load(string[] files, Texture2D NULL_TEXTURE, Dictionary<string, Texture2D[]> TEXTURE_PACKS, bool loadTexturesImmediate)
+	{
+		Save = GameDataSaveSystem.Instance;
+
+		Files = FileNavigator.Instance;
+			Files.onRefresh += RefreshFiles;
+
+		Quilt = Quilt.Instance;
+			Quilt.onLoadTexture += AddTextureToLibrary;
+
+		READ_IN_EDITOR_MODE = loadTexturesImmediate;
+		DEFAULT_NULL_TEXTURE = NULL_TEXTURE;
+		this.TEXTURE_PACKS = TEXTURE_PACKS;
+			
+		ALL_FILES = new List<string>(files);
+		TEMP_FILES = new List<string>(files);
+		
+		Files.Refresh();
+
+		initialized = true;
+	}
+
+	public void Reload()
+	{
+		Files.Refresh(); // Refresh all files
+	}
+
+	void Dispose()
+	{
+		if (load) {
+			StopCoroutine("LoadFromQueue");
+			load = false;
+		}
+
+		Texture2D[] textures = this.textures.Values.ToArray();
+		for (int i = 0; i < textures.Length; i++) {
+			var tex = textures[i];
+			var name = tex.name;
+
+			if(desktop_files.Contains(name)) // Destroy texture if loaded from desktop
+				Destroy(textures[i]);
+		}
+		this.textures.Clear();
+		textureQueue.Clear();
+
+		FILE_LOOKUP.Clear();
+		ALL_FILES.Clear();
+
+		Texture2D[] temptextures = temp_textures.ToArray();
+		for (int i = 0; i < temptextures.Length; i++) {
+			Destroy(temptextures[i]);
+		}
+
+		if (textureWWW != null) {
+			textureWWW.Dispose();
+			textureWWW = null;
+		}
+	}
+	
+	#endregion
+
+	#region Refreshing files
 
 	void RefreshDesktopFiles()
     {
+	    textureLoadTarget = new List<string>();
+	    
 		var paths = Files.GetPaths();
 		for (int i = 0; i < paths.Length; i++) {
 			var path = paths[i];
-			if (!ALL_FILES.Contains(path))
-				ALL_FILES.Add(path);
+			
+			AddFile(path, "DESKTOP");
+			if (!textures.ContainsKey(path)) 
+				textureLoadTarget.Add(path);
 		}
 
-		items_desktop = new List<string>(paths);
-
 #if !UNITY_EDITOR
-		LoadTextures(items_desktop.ToArray());
+		LoadTextures(textureLoadTarget.ToArray());
 #else
 		if (READ_IN_EDITOR_MODE)
-			LoadTextures(items_desktop.ToArray());
+			LoadTextures(textureLoadTarget.ToArray());
 #endif
 	}
 
-	void RefreshWizardFiles()
+	void RefreshTexturePacks()
 	{
-		if (WizardFiles == null) 
-		{
-			items_wizard = new List<string>();
-			return;
+		foreach (KeyValuePair<string, Texture2D[]> PACK in TEXTURE_PACKS) {
+			foreach (Texture2D tex in PACK.Value) {
+				AddTextureFromPack(PACK.Key, tex);
+			}
 		}
+		
+		void AddTextureFromPack(string pack, Texture2D image)
+		{
+			var id = image.name;
+			var tex = image;
 
-		var memories = WizardFiles.items.Where(memory => !string.IsNullOrEmpty(memory.name));
-		items_wizard = new List<string>(memories.Select(memory => memory.name)); // Set items list from memory names
-
-		// Add wizard memory images to texture lookup
-		for (int i = 0; i < memories.Count(); i++) {
-			var mem = memories.ElementAt(i);
-			
-			var file = mem.name;
-			if (!ALL_FILES.Contains(file))
-				ALL_FILES.Add(file);
-
-			AddTextureToLibrary(mem.name, mem.image);
+			AddFile(id, pack);
+			AddTextureToLibrary(id, tex);
 		}
 	}
-
-	void RefreshEnvironmentFiles()
-	{
-		var enviro = Manager.StarterPack;
-		if (enviro == null) 
-		{
-			items_enviro = new List<string>();
-			return;
-		}
-
-		items_enviro = new List<string>(enviro.Select(tex => tex.name));
-
-		for (int i = 0; i < items_enviro.Count(); i++) {
-
-			var file = items_enviro[i];
-			if (!ALL_FILES.Contains(file))
-				ALL_FILES.Add(file);
-
-			AddTextureToLibrary(file, enviro[i]);
-		}
-	}
-
+	
 	void RefreshSharedFiles()
 	{
 		if (Save == null) return;
 
 		var indices = Save.shared_files;
-		items_shared_indices = new List<int>(indices);
-
-		var items = new List<string>();
+		SHARED_FILES = new List<int>(indices);
+		
 		for (int i = 0; i < indices.Length; i++) {
 			var index = indices[i];
-			items.Add(ALL_FILES[index]);
+			var file = ALL_FILES[index];
+			
+			AddFile(file, "SHARED");
 		}
-
-		items_shared = new List<string>(items);
 	}
 
 	void RefreshFiles()
 	{
-		Dispose();
-
+		string[] CACHE_TEMP_FILES = TEMP_FILES.ToArray();
+		TEMP_FILES = new List<string>(); // Wipe temp files alloc
+		
 		RefreshDesktopFiles();
-		RefreshWizardFiles();
-		RefreshEnvironmentFiles();
 		RefreshSharedFiles();
+		RefreshTexturePacks();
+
+		IEnumerable<string> ADDED_FILES = TEMP_FILES.Except(CACHE_TEMP_FILES);
+		IEnumerable<string> REMOVED_FILES = CACHE_TEMP_FILES.Except(TEMP_FILES);
+
+		// Fire events for file status changes
+		if (onAddedFiles != null) 
+			onAddedFiles(ADDED_FILES.ToArray());
+		if (onRemovedFiles != null) 
+			onRemovedFiles(REMOVED_FILES.ToArray());
 
 		Save.files = ALL_FILES.ToArray();
-
-		items = ALL_FILES;
 		if (OnRefreshItems != null)
 			OnRefreshItems();
 	}
@@ -288,9 +288,6 @@ public class Library : Singleton<Library>
 		var texture = DownloadHandlerTexture.GetContent(_www);
 		texture.name = file;
 
-		//textureWWW.Dispose();
-		//textureWWW = null;
-
 		_www.Dispose();
 
 		AddTextureToLibrary(file, texture);
@@ -305,69 +302,11 @@ public class Library : Singleton<Library>
 
 		Debug.LogFormat("Added {0} to library", file);
 	}
-
-	#endregion
-
-	#region Operations
-
-	public void Initialize(bool refresh = true)
-	{
-		if (Files != null || initialized) return;
-
-		Files = FileNavigator.Instance;
-		Files.onRefresh += RefreshFiles;
-
-		Quilt = Quilt.Instance;
-		Quilt.onLoadTexture += AddTextureToLibrary;
-
-		Save = GameDataSaveSystem.Instance;
-
-		Manager = World.Instance;
-
-		ALL_FILES = new List<string>(Save.files);
-
-		Files.Refresh();
-		initialized = true;
-	}
-
-	public void Dispose()
-	{
-		if (load) {
-			StopCoroutine("LoadFromQueue");
-			load = false;
-		}
-
-		Texture2D[] textures = this.textures.Values.ToArray();
-		for (int i = 0; i < textures.Length; i++) {
-			var tex = textures[i];
-			var name = tex.name;
-
-			if(items_desktop.Contains(name)) // Destroy texture if loaded from desktop
-				Destroy(textures[i]);
-		}
-		this.textures.Clear();
-		textureQueue.Clear();
-
-		items_desktop.Clear();
-		items_wizard.Clear();
-		items_shared.Clear();
-		items.Clear();
-
-		Texture2D[] temptextures = temp_textures.ToArray();
-		for (int i = 0; i < temptextures.Length; i++) {
-			Destroy(temptextures[i]);
-		}
-
-		if (textureWWW != null) {
-			textureWWW.Dispose();
-			textureWWW = null;
-		}
-	}
-
+	
 	public Texture2D GetTexture(string path)
 	{
 		if (!textures.ContainsKey(path)) {
-			return Manager.DEFAULT_NULL_TEXTURE;
+			return DEFAULT_NULL_TEXTURE;
 		}
 		return textures[path];
 	}
@@ -376,33 +315,30 @@ public class Library : Singleton<Library>
 	{
 		var root = Files.Path;
 		var path = Path.Combine(root, string.Format("{0}.jpg", name));
-
-		if (items.Contains(path)) return;
+		
 		if (ALL_FILES.Contains(path)) return;
 
 		var bytes = image.EncodeToJPG();
 		File.WriteAllBytes(path, bytes);
 
-		items.Add(path);
-		items_shared.Add(path);
-
 		textures.Add(path, image);
 		temp_textures.Add(image);
 
-		if (OnAddItem != null)
-			OnAddItem(path);
-
-
-		ALL_FILES.Add(path);
-		items_shared_indices.Add(ALL_FILES.Count - 1);
+		AddFile(name, "SHARED");
+		
+		SHARED_FILES.Add(ALL_FILES.Count - 1);
 
 		Save.files = ALL_FILES.ToArray();
-		Save.shared_files = items_shared_indices.ToArray();
+		Save.shared_files = SHARED_FILES.ToArray();
 	}
 
+	#endregion
+	
+	#region Files
+	
 	public bool ContainsFile(string file)
 	{
-		return items.Contains(file);
+		return ALL_FILES.Contains(file);
 	}
 
 	public int FetchFileIndex(string filename)
@@ -421,30 +357,63 @@ public class Library : Singleton<Library>
 		return false;
 	}
 
-	public bool IsDesktop(Beacon beacon) { return (beacon == null) ? false : IsDesktop(beacon.file); }
-	public bool IsWizard(Beacon beacon) { return (beacon == null) ? false : IsWizard(beacon.file); }
-	public bool IsShared(Beacon beacon) { return (beacon == null) ? false : IsShared(beacon.file); }
-	public bool IsEnviro(Beacon beacon) { return (beacon == null) ? false : IsEnviro(beacon.file); }
-
-	public bool IsDesktop(string file)
+	bool AddFile(string file, string type)
 	{
-		return items_desktop.Contains(file);
+		bool exists = true;
+		
+		if (!ALL_FILES.Contains(file)) {
+			ALL_FILES.Add(file);
+			exists = false;
+		}
+
+		if (!TEMP_FILES.Contains(file)) {
+			TEMP_FILES.Add(file);
+		}
+
+		AddToFileLookup(type, file);
+		return exists;
 	}
 
-	public bool IsWizard(string file)
+	void AddToFileLookup(string type, string file)
 	{
-		return items_wizard.Contains(file);
+		if (FILE_LOOKUP.ContainsKey(type)) {
+			var list = FILE_LOOKUP[type];
+			if (!list.Contains(file)) 
+				list.Add(file);
+		}
+		else {
+			FILE_LOOKUP[type] = new List<string>(new string[]{ file });
+		}
 	}
 
-	public bool IsShared(string file)
-	{
-		return items_shared.Contains(file);
-	}
+	#endregion
 
-	public bool IsEnviro(string file)
-	{
-		return items_enviro.Contains(file);
-	}
+	#region File types
+		
+		public bool IsDesktop(Beacon beacon) { return (beacon == null) ? false : IsDesktop(beacon.file); }
+		public bool IsWizard(Beacon beacon) { return (beacon == null) ? false : IsWizard(beacon.file); }
+		public bool IsShared(Beacon beacon) { return (beacon == null) ? false : IsShared(beacon.file); }
+		public bool IsEnviro(Beacon beacon) { return (beacon == null) ? false : IsEnviro(beacon.file); }
 
-		#endregion
-	}
+		public bool IsDesktop(string file)
+		{
+			return FILE_LOOKUP.ContainsKey("DESKTOP") && desktop_files.Contains(file);
+		}
+
+		public bool IsWizard(string file)
+		{
+			return FILE_LOOKUP.ContainsKey("WIZARD") && wizard_files.Contains(file);
+		}
+
+		public bool IsShared(string file)
+		{
+			return FILE_LOOKUP.ContainsKey("SHARED") && shared_files.Contains(file);
+		}
+
+		public bool IsEnviro(string file)
+		{
+			return FILE_LOOKUP.ContainsKey("ENVIRONMENT") && enviro_files.Contains(file);
+		}
+		
+	#endregion
+}

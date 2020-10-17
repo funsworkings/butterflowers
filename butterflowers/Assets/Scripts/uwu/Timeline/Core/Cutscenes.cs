@@ -1,82 +1,81 @@
-﻿using System.Collections;
-using System.Collections.Generic;
-using UnityEngine;
+﻿using UnityEngine;
 using UnityEngine.Playables;
 
-[RequireComponent(typeof(PlayableDirector))]
-public class Cutscenes : MonoBehaviour
+namespace uwu.Timeline.Core
 {
-
-	#region Properties
-
-	PlayableDirector playableDirector;
-
-	#endregion
-
-	#region Internal
-
-	public enum State
+	[RequireComponent(typeof(PlayableDirector))]
+	public class Cutscenes : MonoBehaviour
 	{
-		Playing,
-		Paused,
-		Stopped
-	}
+		#region Internal
 
-	#endregion
-
-	#region Attributes
-
-	State state = State.Stopped;
-
-	[SerializeField] PlayableAsset m_cutscene = null;
-
-	#endregion
-
-	#region Accessors
-
-	public bool playing => state == State.Playing;
-	public bool paused => state == State.Paused;
-	public bool stopped => state == State.Stopped;
-
-	public PlayableAsset cutscene 
-	{
-		get { return m_cutscene; }
-		set
+		public enum State
 		{
-			if (!stopped)
-				Stop();
-
-			m_cutscene = value;
-			playableDirector.playableAsset = cutscene;
+			Playing,
+			Paused,
+			Stopped
 		}
-	}
 
-	#endregion
+		#endregion
 
-	#region Monobehaviour callbacks
+		#region Properties
 
-	void Awake()
-	{
-		playableDirector = GetComponent<PlayableDirector>();
-	}
+		PlayableDirector playableDirector;
 
-	void OnEnable()
-	{
-		playableDirector.played += onPlay;
-		playableDirector.stopped += onStop;
+		#endregion
 
-		m_cutscene = playableDirector.playableAsset;
-	}
+		#region Attributes
 
-	void OnDisable()
-	{
-		playableDirector.played -= onPlay;
-		playableDirector.stopped -= onStop;
-	}
+		State state = State.Stopped;
 
-	void Update()
-	{
-		/*
+		[SerializeField] PlayableAsset m_cutscene;
+
+		#endregion
+
+		#region Accessors
+
+		public bool playing => state == State.Playing;
+		public bool paused => state == State.Paused;
+		public bool stopped => state == State.Stopped;
+
+		public PlayableAsset cutscene
+		{
+			get => m_cutscene;
+			set
+			{
+				if (!stopped)
+					Stop();
+
+				m_cutscene = value;
+				playableDirector.playableAsset = cutscene;
+			}
+		}
+
+		#endregion
+
+		#region Monobehaviour callbacks
+
+		void Awake()
+		{
+			playableDirector = GetComponent<PlayableDirector>();
+		}
+
+		void OnEnable()
+		{
+			playableDirector.played += onPlay;
+			playableDirector.stopped += onStop;
+
+			m_cutscene = playableDirector.playableAsset;
+		}
+
+		void OnDisable()
+		{
+			playableDirector.played -= onPlay;
+			playableDirector.stopped -= onStop;
+		}
+
+		void Update()
+		{
+			/*
 		if (Input.GetKeyDown(KeyCode.LeftControl)) 
 		{
 			if (!playing)
@@ -85,62 +84,58 @@ public class Cutscenes : MonoBehaviour
 				Pause();
 		}
 		*/
-	}
+		}
 
-	#endregion
+		#endregion
 
-	#region Playable director callbacks
+		#region Playable director callbacks
 
-	void onPlay(PlayableDirector director)
-	{
-		state = State.Playing;
-	}
+		void onPlay(PlayableDirector director)
+		{
+			state = State.Playing;
+		}
 
-	void onStop(PlayableDirector director)
-	{
-		state = State.Stopped;
-	}
+		void onStop(PlayableDirector director)
+		{
+			state = State.Stopped;
+		}
 
-	#endregion
+		#endregion
 
-	#region Operations
+		#region Operations
 
-	public void Play()
-	{
-		if (!playing) {
-			if (paused) 
-			{
-				playableDirector.playableGraph.GetRootPlayable(0).SetSpeed(1);
-				state = State.Playing;
+		public void Play()
+		{
+			if (!playing) {
+				if (paused) {
+					playableDirector.playableGraph.GetRootPlayable(0).SetSpeed(1);
+					state = State.Playing;
+				}
+				else {
+					playableDirector.Play();
+				}
 			}
-			else
-				playableDirector.Play();
 		}
-	}
 
-	public void Play(PlayableAsset cutscene)
-	{
-		this.cutscene = cutscene;
-		Play();
-	}
-
-	public void Stop()
-	{
-		if (!stopped)
+		public void Play(PlayableAsset cutscene)
 		{
-			playableDirector.Stop();
+			this.cutscene = cutscene;
+			Play();
 		}
-	}
 
-	public void Pause()
-	{
-		if (playing) 
+		public void Stop()
 		{
-			playableDirector.playableGraph.GetRootPlayable(0).SetSpeed(0);
-			state = State.Paused;
+			if (!stopped) playableDirector.Stop();
 		}
+
+		public void Pause()
+		{
+			if (playing) {
+				playableDirector.playableGraph.GetRootPlayable(0).SetSpeed(0);
+				state = State.Paused;
+			}
+		}
+
+		#endregion
 	}
-
-	#endregion
-
 }

@@ -1,47 +1,48 @@
-﻿using System.Collections;
-using System.Collections.Generic;
+﻿using System;
 using System.Linq;
 using UnityEngine;
-using UnityEngine.UI;
-
 using NativeCursor = UnityEngine.Cursor;
 
-public class CustomCursor : MonoBehaviour
+namespace uwu.Snippets
 {
+	public class CustomCursor : MonoBehaviour
+	{
+		public enum State
+		{
+			Normal,
+			Hover,
+			Remote
+		}
 
-    public enum State 
-    {
-        Normal,
-        Hover,
-        Down
-    }
+		public State state = State.Normal;
 
-    public State state = State.Normal;
+		[SerializeField] Setting[] settings;
 
-    [System.Serializable]
-    public struct Setting {
-        public State state;
-        public Texture2D icon;
-    }
+		// Update is called once per frame
+		void Update()
+		{
+			var settings = this.settings.Where(s => s.state == state);
+			if (settings.Count() > 0) {
+				var setting = settings.ElementAt(0);
+				var tex = setting.icon;
 
-    [SerializeField] Setting[] settings;
+				var mode = CursorMode.Auto;
 
-    // Update is called once per frame
-    void Update()
-    {
-        var settings = this.settings.Where(s => s.state == state);
-        if (settings.Count() > 0) 
-        {
-            var setting = settings.ElementAt(0);
-            var tex = setting.icon;
-
-            var mode = CursorMode.Auto;
-
-            #if UNITY_STANDALONE_OSX && !UNITY_EDITOR
+#if UNITY_STANDALONE_OSX && !UNITY_EDITOR
                 mode = CursorMode.ForceSoftware;
-            #endif
+#endif
 
-            NativeCursor.SetCursor(tex, Vector2.zero, mode);
-        }
-    }
+				var visible = NativeCursor.visible = (tex != null);
+				if(visible)
+					NativeCursor.SetCursor(tex, Vector2.zero, mode);
+			}
+		}
+
+		[Serializable]
+		public struct Setting
+		{
+			public State state;
+			public Texture2D icon;
+		}
+	}
 }

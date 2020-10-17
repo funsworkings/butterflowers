@@ -1,30 +1,28 @@
-using System;
-using System.Collections;
-using System.Collections.Generic;
 using UnityEngine;
-using UnityEngine.UI;
+using uwu.UI.Behaviors.Visibility;
 
-using UIExt.Behaviors.Visibility;
+namespace uwu.UI.Elements
+{
+	public class Category : MonoBehaviour
+	{
+		[SerializeField] TogglePosition options;
+		ToggleOpacity opacity;
 
-namespace UIExt.Elements {
+		void Awake()
+		{
+			opacity = GetComponent<ToggleOpacity>();
+		}
 
-    public class Category : MonoBehaviour {
-                        ToggleOpacity opacity;
-        [SerializeField] TogglePosition options;
+		public void Show()
+		{
+			opacity.Show();
+			options.Show();
+		}
 
-        void Awake() {
-            opacity = GetComponent<ToggleOpacity>();    
-        }
-
-        public void Show(){
-            opacity.Show();
-            options.Show();
-        }
-
-        public void Hide(){
-            opacity.Hide();
-            options.Hide();
-        }
-    }
-
+		public void Hide()
+		{
+			opacity.Hide();
+			options.Hide();
+		}
+	}
 }

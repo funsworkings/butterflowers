@@ -1,9 +1,10 @@
-using System.Collections;
-using System.Collections.Generic;
+using System;
 using UnityEngine;
 
-namespace Settings {
-
-    [System.Serializable] public class ColorSetting : Setting<Color>{}
-
+namespace uwu.Settings.Instances
+{
+	[Serializable]
+	public class ColorSetting : Setting<Color>
+	{
+	}
 }

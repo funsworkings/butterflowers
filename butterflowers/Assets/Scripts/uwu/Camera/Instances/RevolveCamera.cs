@@ -1,58 +1,58 @@
-﻿using System.Collections;
-using System.Collections.Generic;
+﻿using Cinemachine;
 using UnityEngine;
 
-using Cinemachine;
-
-public class RevolveCamera : GameCamera
+namespace uwu.Camera.Instances
 {
-    [SerializeField] Transform target = null;
-    [SerializeField] bool controls = false;
+	public class RevolveCamera : GameCamera
+	{
+		[SerializeField] Transform target;
+		[SerializeField] bool controls;
 
-    CinemachineOrbitalTransposer orbitTransposer = null;
+		[Header("Attributes")] [SerializeField]
+		float radius = 1f, height;
 
-    float defaultAngle = 0f;
+		[SerializeField] float angle;
+		[SerializeField] bool resetOnDisable;
 
-    [Header("Attributes")]
-        [SerializeField] float radius = 1f, height = 0f;
-        [SerializeField] float angle = 0f;
-        [SerializeField] bool resetOnDisable = false;
+		float defaultAngle;
 
-    protected override void Start()
-    {
-        base.Start();
+		CinemachineOrbitalTransposer orbitTransposer;
 
-        orbitTransposer = camera.GetCinemachineComponent<CinemachineOrbitalTransposer>();
-        defaultAngle = angle;
-    }
+		protected override void Start()
+		{
+			base.Start();
 
-    // Update is called once per frame
-    void Update()
-    {
-        if (orbitTransposer == null) return;
+			orbitTransposer = camera.GetCinemachineComponent<CinemachineOrbitalTransposer>();
+			defaultAngle = angle;
+		}
 
-        /*
-        float dt = Time.deltaTime;
-        
-        if (controls) {
-            if (Input.GetKey(KeyCode.LeftArrow)) angle += 90f * dt;
-            if (Input.GetKey(KeyCode.RightArrow)) angle -= 90f * dt;
-        }
-        */
+		// Update is called once per frame
+		void Update()
+		{
+			if (orbitTransposer == null) return;
 
-        float angToRad = angle * Mathf.Deg2Rad;
-        Vector3 offset = new Vector3(Mathf.Cos(angToRad)*radius, height, Mathf.Sin(angToRad)*radius);
+			/*
+		float dt = Time.deltaTime;
+		
+		if (controls) {
+		    if (Input.GetKey(KeyCode.LeftArrow)) angle += 90f * dt;
+		    if (Input.GetKey(KeyCode.RightArrow)) angle -= 90f * dt;
+		}
+		*/
 
-        orbitTransposer.m_FollowOffset = offset;
-    }
+			var angToRad = angle * Mathf.Deg2Rad;
+			var offset = new Vector3(Mathf.Cos(angToRad) * radius, height, Mathf.Sin(angToRad) * radius);
 
-    protected override void onDisabled()
-    {
-        base.onDisabled();
+			orbitTransposer.m_FollowOffset = offset;
+		}
 
-        if (resetOnDisable) 
-        {
-            //angle = defaultAngle;
-        }
-    }
+		protected override void onDisabled()
+		{
+			base.onDisabled();
+
+			if (resetOnDisable) {
+				//angle = defaultAngle;
+			}
+		}
+	}
 }

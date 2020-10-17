@@ -1,10 +1,11 @@
-﻿using System.Collections;
-using System.Collections.Generic;
-using UnityEngine;
+﻿using System;
 
-[System.Serializable]
-public partial class GameData
+namespace uwu
 {
-    public string BUILD_VERSION = "0.0";
-    public string TIMESTAMP = "0";
+	[Serializable]
+	public partial class GameData
+	{
+		public string BUILD_VERSION = "0.0";
+		public string TIMESTAMP = "0";
+	}
 }

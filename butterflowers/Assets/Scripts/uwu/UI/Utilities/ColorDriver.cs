@@ -1,144 +1,133 @@
-﻿using System.Collections;
-using System.Collections.Generic;
+﻿using TMPro;
 using UnityEngine;
-
 using UnityEngine.UI;
-using TMPro;
-using Settings;
+using uwu.Settings.Types;
 
-namespace UIExt.Utilities {
+namespace uwu.UI.Utilities
+{
+	[ExecuteInEditMode]
+	public class ColorDriver : MonoBehaviour
+	{
+		public enum Type
+		{
+			Empty,
+			Image,
+			RawImage,
+			Text,
+			TMPText
+		}
 
-    using Style = Palette.Style;
+		public Palette.Style style = Palette.Style.Default;
+		public Palette.Style defaultStyle = Palette.Style.Default;
 
-    [ExecuteInEditMode]
-    public class ColorDriver : MonoBehaviour
-    {
-        public enum Type { Empty, Image, RawImage, Text, TMPText }
-        Type type = Type.Empty;
+		[Range(0, 1)] public float opacity = 1f;
 
-        public Style style = Style.Default;
-        public Style defaultStyle = Style.Default;
-        bool defaulted = false;
-        [Range(0, 1)]
-        public float opacity = 1f;
+		[SerializeField] Palette styling;
+		bool defaulted = false;
 
-        [SerializeField] Palette styling = null;
+		Image image;
+		RawImage rawImage;
 
-        Image image;
-        RawImage rawImage;
-
-        Text text;
-        TMP_Text tMP_Text;
-
-
-        void Awake()
-        {
-            image = GetComponent<Image>();
-            if (image == null)
-            {
-                rawImage = GetComponent<RawImage>();
-                if (rawImage == null)
-                {
-                    tMP_Text = GetComponent<TMP_Text>();
-                    if (tMP_Text == null)
-                    {
-                        text = GetComponent<Text>();
-                        if (text == null)
-                            type = Type.Empty;
-                        else
-                            type = Type.Text;
-                    }
-                    else
-                        type = Type.TMPText;
-                }
-                else
-                    type = Type.RawImage;
-            }
-            else
-                type = Type.Image;
+		UnityEngine.UI.Text text;
+		TMP_Text tMP_Text;
+		Type type = Type.Empty;
 
 
-            // if (Application.isPlaying)
-            //{
-            defaultStyle = style;        
-            //}
-        }
+		void Awake()
+		{
+			image = GetComponent<Image>();
+			if (image == null) {
+				rawImage = GetComponent<RawImage>();
+				if (rawImage == null) {
+					tMP_Text = GetComponent<TMP_Text>();
+					if (tMP_Text == null) {
+						text = GetComponent<UnityEngine.UI.Text>();
+						if (text == null)
+							type = Type.Empty;
+						else
+							type = Type.Text;
+					}
+					else {
+						type = Type.TMPText;
+					}
+				}
+				else {
+					type = Type.RawImage;
+				}
+			}
+			else {
+				type = Type.Image;
+			}
 
-        // Update is called once per frame
-        void Update()
-        {
-            UpdateColor();
-        }
 
-        public void UpdateColor()
-        {
-            if (type == Type.Empty || styling == null) return;
+			// if (Application.isPlaying)
+			//{
+			defaultStyle = style;
+			//}
+		}
 
-            Color color = styling.FetchColorFromSetting(style, opacity);
+		// Update is called once per frame
+		void Update()
+		{
+			UpdateColor();
+		}
 
-            if (type == Type.Image)
-            {
-                if (!Application.isPlaying)
-                {
-                    if (image == null)
-                        image = GetComponent<Image>();
-                }
+		public void UpdateColor()
+		{
+			if (type == Type.Empty || styling == null) return;
 
-                if (image == null)
-                    return;
+			var color = styling.FetchColorFromSetting(style, opacity);
 
-                image.color = color;
-            }
-            else if (type == Type.RawImage)
-            {
-                if (!Application.isPlaying)
-                {
-                    if (rawImage == null)
-                        rawImage = GetComponent<RawImage>();
-                }
+			if (type == Type.Image) {
+				if (!Application.isPlaying)
+					if (image == null)
+						image = GetComponent<Image>();
 
-                if (rawImage == null)
-                    return;
+				if (image == null)
+					return;
 
-                rawImage.material.color = color;
-            }
-            else if (type == Type.TMPText)
-            {
-                if (!Application.isPlaying)
-                {
-                    if (tMP_Text == null)
-                        tMP_Text = GetComponent<TMP_Text>();
-                }
+				image.color = color;
+			}
+			else if (type == Type.RawImage) {
+				if (!Application.isPlaying)
+					if (rawImage == null)
+						rawImage = GetComponent<RawImage>();
 
-                if (tMP_Text == null)
-                    return;
+				if (rawImage == null)
+					return;
 
-                tMP_Text.color = color;
-            }
-            else if (type == Type.Text)
-            {
-                if (!Application.isPlaying)
-                {
-                    if (text == null)
-                        text = GetComponent<Text>();
-                }
+				rawImage.material.color = color;
+			}
+			else if (type == Type.TMPText) {
+				if (!Application.isPlaying)
+					if (tMP_Text == null)
+						tMP_Text = GetComponent<TMP_Text>();
 
-                if (text == null)
-                    return;
+				if (tMP_Text == null)
+					return;
 
-                text.color = color;
-            }
-        }
+				tMP_Text.color = color;
+			}
+			else if (type == Type.Text) {
+				if (!Application.isPlaying)
+					if (text == null)
+						text = GetComponent<UnityEngine.UI.Text>();
 
-        public void SetColor(int _style)
-        {
-            style = (Settings.Palette.Style)_style;
-        }
+				if (text == null)
+					return;
 
-        public void ResetColor()
-        {
-            style = defaultStyle;
-        }
-    }
+				text.color = color;
+			}
+		}
 
+		public void SetColor(int _style)
+		{
+			style = (Palette.Style) _style;
+		}
+
+		public void ResetColor()
+		{
+			style = defaultStyle;
+		}
+	}
 }

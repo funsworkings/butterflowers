@@ -1,65 +1,73 @@
-﻿using System.Collections;
-using System.Collections.Generic;
-using System.Runtime.Serialization.Formatters.Binary;
+﻿using System;
 using System.IO;
-using System;
+using System.Runtime.Serialization.Formatters.Binary;
 using UnityEngine;
 
-public static class DataHandler {
+namespace uwu.Data
+{
+	public static class DataHandler
+	{
+		public static bool ready = true;
 
-	public static bool ready = true;
+		public static bool Write<T>(T dat, string path)
+		{
+			var bf = new BinaryFormatter();
+			var file = File.Open(path, FileMode.Create);
 
-	public static bool Write<T>(T dat, string path){
-		BinaryFormatter bf = new BinaryFormatter();
-		FileStream file = File.Open(path, FileMode.Create);
+			try {
+				bf.Serialize(file, dat);
+				file.Close();
 
-		try{
-			bf.Serialize(file, dat);
-			file.Close();
+				return true;
+			}
+			catch (Exception e) {
+				file.Close();
+				return false;
+			}
+		}
 
-			return true;
-		} catch(Exception e){
-			file.Close();
+		public static T Read<T>(string path)
+		{
+			if (File.Exists(path)) {
+				var bf = new BinaryFormatter();
+				var file = File.Open(path, FileMode.Open);
+
+				var dat = (T) bf.Deserialize(file);
+				file.Close();
+
+				return dat;
+			}
+
+			return default;
+		}
+
+		public static T ReadJSON<T>(string path)
+		{
+			if (File.Exists(path)) {
+				var json = File.ReadAllText(path);
+
+				var dat = JsonUtility.FromJson<T>(json);
+				return dat;
+			}
+
+			return default;
+		}
+
+		public static void WriteJSON<T>(T dat, string path, bool pretty)
+		{
+			var json = JsonUtility.ToJson(dat, pretty);
+			File.WriteAllText(path, json);
+		}
+
+		public static bool Delete(string path)
+		{
+			if (File.Exists(path)) {
+				File.Delete(path);
+
+				return true;
+			}
+
 			return false;
 		}
-	}
-
-	public static T Read<T>(string path){
-		if(File.Exists(path)){
-			BinaryFormatter bf = new BinaryFormatter();
-			FileStream file = File.Open(path, FileMode.Open);
-			
-			T dat = (T)bf.Deserialize(file);
-			file.Close();
-
-			return dat;
-		}
-		
-		return default(T);
-	}
-
-	public static T ReadJSON<T>(string path){
-		if(File.Exists(path)){
-			string json = File.ReadAllText(path);
-			
-			T dat = JsonUtility.FromJson<T>(json);
-			return dat;
-		}
-
-		return default(T);
-	}
-
-	public static void WriteJSON<T>(T dat, string path, bool pretty){
-		string json = JsonUtility.ToJson(dat, pretty);
-		File.WriteAllText(path, json);  
-	}
-
-	public static bool Delete(string path){
-		if(File.Exists(path)){
-			File.Delete(path);
-
-			return true;
-		}
-		return false;
 	}
 }

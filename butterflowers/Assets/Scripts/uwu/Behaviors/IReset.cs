@@ -1,3 +1,7 @@
-public interface IReset {
-    void Reset();
+namespace uwu.Behaviors
+{
+	public interface IReset
+	{
+		void Reset();
+	}
 }

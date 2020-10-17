@@ -1,96 +1,91 @@
-﻿using System.Collections;
-using System.Collections.Generic;
-using UnityEngine;
+﻿using UnityEngine;
 using UnityEngine.Events;
 
-public class Damage : MonoBehaviour
+namespace uwu.Snippets
 {
-    public UnityEvent onHit, onRecover;
+	public class Damage : MonoBehaviour
+	{
+		public UnityEvent onHit, onRecover;
 
-    [SerializeField] Color damageColor = Color.white;
-    [SerializeField] Material[] damageMaterials = new Material[] { };
-    [SerializeField] float damageScale = 1f;
-    [SerializeField] float damageDuration = .167f;
+		[SerializeField] Color damageColor = Color.white;
+		[SerializeField] Material[] damageMaterials = { };
+		[SerializeField] float damageScale = 1f;
+		[SerializeField] float damageDuration = .167f;
 
-    Vector3 def_scale;
-    Color[] def_colors;
+		[SerializeField] new Renderer renderer;
 
-    [SerializeField] new Renderer renderer;
-    Material[] materials;
+		[SerializeField] bool debugHit;
 
-    bool damaging = false;
-    float t_damage = 0f;
+		bool damaging;
+		Color[] def_colors;
 
-    public float damage_amount => 1f - Mathf.Clamp01( t_damage / damageDuration );
+		Vector3 def_scale;
+		Material[] materials;
+		float t_damage;
 
-    [SerializeField] bool debugHit = false;
+		public float damage_amount => 1f - Mathf.Clamp01(t_damage / damageDuration);
 
-    void Awake()
-    {
-        if(renderer == null)
-            renderer = GetComponent<Renderer>();
-    }
+		void Awake()
+		{
+			if (renderer == null)
+				renderer = GetComponent<Renderer>();
+		}
 
-    void Start()
-    {
-        def_scale = transform.localScale;
+		void Start()
+		{
+			def_scale = transform.localScale;
 
-        if (renderer != null) {
-            materials = renderer.materials;
-            def_colors = new Color[materials.Length];
-            for (int i = 0; i < materials.Length; i++)
-                def_colors[i] = materials[i].color;
-        }
-    }
+			if (renderer != null) {
+				materials = renderer.materials;
+				def_colors = new Color[materials.Length];
+				for (var i = 0; i < materials.Length; i++)
+					def_colors[i] = materials[i].color;
+			}
+		}
 
-    void Update() {
+		void Update()
+		{
+			if (debugHit) {
+				debugHit = false;
+				Hit();
+			}
+		}
 
-        if (debugHit) 
-        {
-            debugHit = false;
-            Hit();
-        }
+		void LateUpdate()
+		{
+			if (damaging) {
+				if (t_damage > damageDuration) {
+					damaging = false;
+					onRecover.Invoke();
+				}
+				else {
+					t_damage += Time.deltaTime;
+				}
 
-    }
+				if (renderer != null)
+					UpdateMaterials();
+				UpdateScale();
+			}
+		}
 
-    void LateUpdate()
-    {
-        if (damaging) 
-        {
-            if (t_damage > damageDuration) 
-            {
-                damaging = false;
-                onRecover.Invoke();
-            }
-            else
-                t_damage += Time.deltaTime;
+		public void Hit()
+		{
+			onHit.Invoke();
 
-            if(renderer != null)
-                UpdateMaterials();
-            UpdateScale();
-        }
-    }
-    
-    public void Hit()
-    {
-        onHit.Invoke();
+			t_damage = 0f;
+			damaging = true;
+		}
 
-        t_damage = 0f;
-        damaging = true;
-    }
+		void UpdateMaterials()
+		{
+			var mats = renderer.materials = damaging && damageMaterials.Length > 0 ? damageMaterials : materials;
 
-    void UpdateMaterials()
-    {
-        var mats = renderer.materials = (damaging && damageMaterials.Length > 0) ? damageMaterials : materials;
+			for (var i = 0; i < mats.Length; i++) renderer.materials[i].color = damaging ? damageColor : def_colors[i];
+		}
 
-        for (int i = 0; i < mats.Length; i++) 
-        {
-            renderer.materials[i].color = (damaging) ? damageColor : def_colors[i];
-        }
-    }
-
-    void UpdateScale()
-    {
-        transform.localScale = def_scale * ((damaging) ? (1f + (damageScale - 1f) * damage_amount) : 1f);
-    }
+		void UpdateScale()
+		{
+			transform.localScale = def_scale * (damaging ? 1f + (damageScale - 1f) * damage_amount : 1f);
+		}
+	}
 }

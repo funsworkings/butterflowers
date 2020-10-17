@@ -1,16 +1,15 @@
-﻿using System.Collections;
-using System.Collections.Generic;
-using UnityEngine;
+﻿using UnityEngine;
+using uwu.Settings.Instances;
 
-namespace Settings {
+namespace uwu.Settings.Types
+{
+	[CreateAssetMenu(fileName = "New Carousel Style", menuName = "Settings/Global/Carousel", order = 52)]
+	public class CarouselStyle : Global<FloatSetting, float>
+	{
+		public bool infiniteScroll;
+		public bool clamped;
+		public bool scaling;
 
-    [CreateAssetMenu(fileName = "New Carousel Style", menuName = "Settings/Global/Carousel", order = 52)]
-    public class CarouselStyle : Global<FloatSetting, float> {
-        public bool infiniteScroll = false;
-        public bool clamped        = false;
-        public bool scaling        = false;
-
-        public AnimationCurve scaleCurve;
-    }
-
+		public AnimationCurve scaleCurve;
+	}
 }

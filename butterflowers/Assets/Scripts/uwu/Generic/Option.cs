@@ -1,64 +1,55 @@
-﻿using System.Collections;
-using System.Collections.Generic;
-using UnityEngine;
+﻿using UnityEngine;
 
-/// <summary>
-/// Generic class for options within a selection, send select events to selection
-/// </summary>
-
-public class Option<T> : MonoBehaviour
+namespace uwu.Generic
 {
-    public delegate void Selected(Option<T> option);
-    public static event Selected onSelected;
+	/// <summary>
+	///     Generic class for options within a selection, send select events to selection
+	/// </summary>
+	public class Option<T> : MonoBehaviour
+	{
+		public delegate void Selected(Option<T> option);
 
-    [SerializeField] protected string id;
-    public string Id
-    {
-        get
-        {
-            return id;
-        }
-    }
+		[SerializeField] protected string id;
 
-    public int index = 0;
+		public int index;
 
-    [SerializeField] protected T attribute; // Data contained within option
-    public virtual T Attribute
-    {
-        get
-        {
-            return attribute;
-        }
-        set
-        {
-            attribute = value;
-        }
-    }
+		protected bool active; // Currently selected?
 
-    protected bool active = false;  // Currently selected?
-    protected Selection<T> selection;
+		[SerializeField] protected T attribute; // Data contained within option
+		protected Selection<T> selection;
 
-    public void Bind(Selection<T> selection)
-    {
-        this.selection = selection; // Assign selecto to communicate with
-    }
+		public string Id => id;
 
-    public virtual void Select()
-    {
-        //if(active) return;
+		public virtual T Attribute
+		{
+			get => attribute;
+			set => attribute = value;
+		}
 
-        active = true;
-        if (selection != null)
-            selection.SelectOption(this);
+		public static event Selected onSelected;
 
-        if (onSelected != null)
-            onSelected(this);
-    }
+		public void Bind(Selection<T> selection)
+		{
+			this.selection = selection; // Assign selecto to communicate with
+		}
 
-    public virtual void Deselect()
-    {
-        if (!active) return;
+		public virtual void Select()
+		{
+			//if(active) return;
 
-        active = false;
-    }
+			active = true;
+			if (selection != null)
+				selection.SelectOption(this);
+
+			if (onSelected != null)
+				onSelected(this);
+		}
+
+		public virtual void Deselect()
+		{
+			if (!active) return;
+
+			active = false;
+		}
+	}
 }

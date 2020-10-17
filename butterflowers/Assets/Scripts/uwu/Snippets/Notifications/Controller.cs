@@ -1,154 +1,139 @@
-﻿using System.Collections;
+﻿using System;
+using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
 
-
-namespace Notifications
+namespace uwu.Snippets.Notifications
 {
+	using instance = Instance;
 
-    using instance = Instance;
+	public class Controller : MonoBehaviour
+	{
+		[SerializeField] float clearTime = 1f, timeout = 5f;
 
-    public class Controller : MonoBehaviour
-    {
-        GameDataSaveSystem Save;
+		[SerializeField] Transform staticContainer;
+		[SerializeField] GameObject staticPrefab;
 
-        public Dictionary<Notification, instance> instances = new Dictionary<Notification, instance>();
+		[SerializeField] Transform nonstaticContainer;
+		[SerializeField] GameObject nonstaticPrefab;
+		bool clearing;
 
-        public System.Action<Notification> onReceiveNotification;
-        public System.Action<Notification> onDismissNotification;
+		public Dictionary<Notification, instance> instances = new Dictionary<Notification, instance>();
+		readonly List<Notification> nonstaticNotifications = new List<Notification>();
+		public Action<Notification> onDismissNotification;
 
-        List<Notification> staticNotifications = new List<Notification>();
-        List<Notification> nonstaticNotifications = new List<Notification>();
+		public Action<Notification> onReceiveNotification;
+		GameDataSaveSystem Save;
 
-        [SerializeField] float clearTime = 1f, timeout = 5f;
-        bool clearing = false;
+		readonly List<Notification> staticNotifications = new List<Notification>();
 
-        [SerializeField] Transform staticContainer;
-        [SerializeField] GameObject staticPrefab;
+		public void Receive(Notification notification)
+		{
+			instance instance = null;
+			instances.TryGetValue(notification, out instance);
 
-        [SerializeField] Transform nonstaticContainer;
-        [SerializeField] GameObject nonstaticPrefab;
+			if (instance == null) {
+				if (notification.isStatic) {
+					staticNotifications.Add(notification);
 
-        public void Receive(Notification notification)
-        {
-            instance instance = null;
-            instances.TryGetValue(notification, out instance);
+					if (!clearing) {
+						StartCoroutine("Clear");
+						clearing = true;
+					}
+				}
+				else {
+					nonstaticNotifications.Add(notification);
+				}
 
-            if (instance == null)
-            {
-                if (notification.isStatic)
-                {
-                    staticNotifications.Add(notification);
+				AddToContainer(notification, notification.isStatic);
 
-                    if (!clearing)
-                    {
-                        StartCoroutine("Clear");
-                        clearing = true;
-                    }
-                }
-                else
-                {
-                    nonstaticNotifications.Add(notification);
-                }
+				if (onReceiveNotification != null)
+					onReceiveNotification(notification);
+			}
+		}
 
-                AddToContainer(notification, notification.isStatic);
+		void onDismissedNotification(Notification notification)
+		{
+			Dismiss(notification, true);
+		}
 
-                if (onReceiveNotification != null)
-                    onReceiveNotification(notification);
+		public void Dismiss(Notification notification)
+		{
+			Dismiss(notification, false);
+		}
 
-            }
-        }
+		public void Dismiss(Notification notification, bool events = false)
+		{
+			instance instance = null;
+			instances.TryGetValue(notification, out instance);
 
-        void onDismissedNotification(Notification notification)
-        {
-            Dismiss(notification, true);
-        }
+			if (instance != null) {
+				if (notification.isStatic) {
+					staticNotifications.Remove(notification);
+				}
+				else {
+					nonstaticNotifications.Remove(notification);
+					instance.onDismissed -= onDismissedNotification;
+				}
 
-        public void Dismiss(Notification notification)
-        {
-            Dismiss(notification, false);
-        }
+				Destroy(instance.gameObject);
+				instances.Remove(notification);
 
-        public void Dismiss(Notification notification, bool events = false)
-        {
-            instance instance = null;
-            instances.TryGetValue(notification, out instance);
+				if (events)
+					if (onDismissNotification != null)
+						onDismissNotification(notification);
+			}
+		}
 
-            if (instance != null)
-            {
-                if (notification.isStatic)
-                {
-                    staticNotifications.Remove(notification);
-                }
-                else
-                {
-                    nonstaticNotifications.Remove(notification);
-                    instance.onDismissed -= onDismissedNotification;
-                }
+		public void ClearAll()
+		{
+			var active = new List<Notification>();
+			foreach (var notification in instances) {
+				var notif = notification.Key;
+				if (notif != null)
+					active.Add(notif);
+			}
 
-                GameObject.Destroy(instance.gameObject);
-                instances.Remove(notification);
+			var activeArr = active.ToArray();
+			foreach (var notif in activeArr)
+				Dismiss(notif);
+		}
 
-                if (events)
-                {
-                    if (onDismissNotification != null)
-                        onDismissNotification(notification);
-                }
-            }
-        }
+		public void AddToContainer(Notification notification, bool isStatic)
+		{
+			var container = isStatic ? staticContainer : nonstaticContainer;
+			var prefab = isStatic ? staticPrefab : nonstaticPrefab;
 
-        public void ClearAll()
-        {
-            List<Notification> active = new List<Notification>();
-            foreach(KeyValuePair<Notification, instance> notification in instances)
-            {
-                var notif = notification.Key;
-                if (notif != null)
-                    active.Add(notif);
-            }
+			var obj = Instantiate(prefab, container);
 
-            Notification[] activeArr = active.ToArray();
-            foreach (Notification notif in activeArr)
-                Dismiss(notif);
-        }
+			var obj_i = obj.GetComponent<instance>();
+			obj_i.notification = notification;
 
-        public void AddToContainer(Notification notification, bool isStatic)
-        {
-            Transform container = (isStatic) ? staticContainer : nonstaticContainer;
-            GameObject prefab = (isStatic) ? staticPrefab : nonstaticPrefab;
+			if (!isStatic)
+				obj_i.onDismissed += onDismissedNotification;
 
-            GameObject obj = Instantiate(prefab, container);
+			instances.Add(notification, obj_i);
+		}
 
-            instance obj_i = obj.GetComponent<instance>();
-            obj_i.notification = notification;
+		IEnumerator Clear()
+		{
+			var t = 0f;
 
-            if (!isStatic)
-                obj_i.onDismissed += onDismissedNotification;
+			while (staticNotifications.Count > 0) {
+				if (t >= clearTime) {
+					var count = staticNotifications.Count;
+					Dismiss(staticNotifications[count - 1]);
 
-            instances.Add(notification, obj_i);
-        }
+					t = 0f;
+				}
+				else {
+					t += Time.deltaTime;
+				}
 
-        IEnumerator Clear()
-        {
-            float t = 0f;
+				yield return null;
+			}
 
-            while(staticNotifications.Count > 0)
-            {
-                if (t >= clearTime)
-                {
-                    var count = staticNotifications.Count;
-                    Dismiss(staticNotifications[count - 1]);
-
-                    t = 0f;
-                }
-                else
-                    t += Time.deltaTime;
-
-                yield return null;
-            }
-
-            clearing = false;
-        }
-    }
-
+			clearing = false;
+		}
+	}
 }

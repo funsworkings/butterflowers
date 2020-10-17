@@ -1,60 +1,60 @@
-﻿using System.Collections;
-using System.Collections.Generic;
-using UnityEngine;
+﻿using UnityEngine;
 using UnityEngine.Events;
 
-/// <summary>
-/// Generic class for selections with multiple options
-/// </summary>
-
-public class Selection<T> : MonoBehaviour
+namespace uwu.Generic
 {
-    public UnityEvent OnSelect; // Global event for when option is selected
+	/// <summary>
+	///     Generic class for selections with multiple options
+	/// </summary>
+	public class Selection<T> : MonoBehaviour
+	{
+		public delegate void OnOptionSelected(T option); // Delegate for when option is selected
 
-    public delegate void OnOptionSelected(T option); // Delegate for when option is selected
-    public OnOptionSelected SelectedOption;
-    
-    [SerializeField] protected Option<T>[] options;
+		public UnityEvent OnSelect; // Global event for when option is selected
 
-    [SerializeField] protected Option<T> selected = null; // Option currently selected
-    public Option<T> Selected {
-        get{
-            return selected;
-        }
+		[SerializeField] protected Option<T>[] options;
 
-        set {
-            selected = value;
-        }
-    }
+		[SerializeField] protected Option<T> selected; // Option currently selected
+		public OnOptionSelected SelectedOption;
 
-    // Start is called before the first frame update
-    protected virtual void Start()
-    {
-        if(selected != null)
-            selected.Select();
+		public Option<T> Selected
+		{
+			get => selected;
 
-        // Attach selection to options
-        foreach(Option<T> o in options)
-            o.Bind(this); 
-    }
+			set => selected = value;
+		}
 
-    public void SelectOption(Option<T> option){
-        if(selected != null && selected != option) // Deselect previous option if exists and different than current
-            selected.Deselect();
+		// Start is called before the first frame update
+		protected virtual void Start()
+		{
+			if (selected != null)
+				selected.Select();
 
-        selected = option;
+			// Attach selection to options
+			foreach (var o in options)
+				o.Bind(this);
+		}
 
-        Debug.Log("selected option: " + option.Id);
+		public void SelectOption(Option<T> option)
+		{
+			if (selected != null && selected != option) // Deselect previous option if exists and different than current
+				selected.Deselect();
 
-        // Fire selection events
-        SelectedOption(option.Attribute);
-        OnSelect.Invoke();
-    }
+			selected = option;
 
-    public void Clear(){
-        if(selected != null)
-            selected.Deselect(); // Clear selected option
+			Debug.Log("selected option: " + option.Id);
 
-        selected = null;
-    }
+			// Fire selection events
+			SelectedOption(option.Attribute);
+			OnSelect.Invoke();
+		}
+
+		public void Clear()
+		{
+			if (selected != null)
+				selected.Deselect(); // Clear selected option
+
+			selected = null;
+		}
+	}
 }
