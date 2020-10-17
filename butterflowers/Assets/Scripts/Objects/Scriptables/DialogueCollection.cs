@@ -3,6 +3,7 @@ using System.Collections.Generic;
 using UnityEngine;
 
 using System.Linq;
+using uwu.Extensions;
 
 [CreateAssetMenu(fileName = "New Dialogue Collection", menuName = "Extras/Dialogue Collection", order = 52)]
 public class DialogueCollection : ScriptableObject

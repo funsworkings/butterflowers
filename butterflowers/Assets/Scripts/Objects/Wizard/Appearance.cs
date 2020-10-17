@@ -63,7 +63,9 @@ namespace Wizard
                 Leveling();
         }
 
-        State EvaluateState() {
+        State EvaluateState() 
+        {
+            /*
             float absorption = brain.absorption;
             State state = State.Normal;
 
@@ -78,6 +80,9 @@ namespace Wizard
             }
 
             return state;
+            */
+
+            return State.Normal;
         }
 
         public void Fade()

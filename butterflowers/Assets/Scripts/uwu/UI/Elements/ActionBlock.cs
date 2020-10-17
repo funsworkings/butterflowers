@@ -1,39 +1,36 @@
-﻿using System.Collections;
-using System.Collections.Generic;
+﻿using System;
 using UnityEngine;
-
 using UnityEngine.EventSystems;
 
-namespace UIExt.Elements
+namespace uwu.UI.Elements
 {
+	public class ActionBlock : MonoBehaviour, IPointerClickHandler
+	{
+		[SerializeField] protected bool internalEvents = true;
+		public Action onInvokeAction;
 
-    public class ActionBlock : MonoBehaviour, IPointerClickHandler
-    {
-        public System.Action onInvokeAction;
+		public void OnPointerClick(PointerEventData eventData)
+		{
+			if (!internalEvents)
+				return;
 
-        [SerializeField] protected bool internalEvents = true;
+			InvokeAction();
+			if (onInvokeAction != null)
+				onInvokeAction();
+		}
 
-        public void OnPointerClick(PointerEventData eventData)
-        {
-            if (!internalEvents)
-                return;
-                
-            InvokeAction();
-            if (onInvokeAction != null)
-                onInvokeAction();
-        }
+		public void EnactAction()
+		{
+			if (internalEvents)
+				return;
 
-        public void EnactAction()
-        {
-            if (internalEvents)
-                return;
+			InvokeAction();
+			if (onInvokeAction != null)
+				onInvokeAction();
+		}
 
-            InvokeAction();
-            if (onInvokeAction != null)
-                onInvokeAction();
-        }
-
-        protected virtual void InvokeAction() { }
-    }
-
+		protected virtual void InvokeAction()
+		{
+		}
+	}
 }

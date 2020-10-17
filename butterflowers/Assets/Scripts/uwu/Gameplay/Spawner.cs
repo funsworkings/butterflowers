@@ -2,183 +2,189 @@
 using System.Collections.Generic;
 using UnityEngine;
 
-public class Spawner : MonoBehaviour
+namespace uwu.Gameplay
 {
-    public GameObject prefab;
-    protected List<GameObject> instances = new List<GameObject>();
+	public class Spawner : MonoBehaviour
+	{
+		public GameObject prefab;
 
-    [SerializeField] int count = 0;
-    
-    [SerializeField] protected Transform root = null, parent = null;
-    [SerializeField] protected int amount = 100;
-    [SerializeField] protected bool spawnOnAwake = true;
-    [SerializeField] protected bool continuous = false;
+		[SerializeField] int count;
 
-    protected Vector3 m_center = Vector3.zero;
-    public Vector3 center {
-        get{
-            return transform.position + m_center;
-        }
-    }
+		[SerializeField] protected Transform root, parent;
+		[SerializeField] protected int amount = 100;
+		[SerializeField] protected bool spawnOnAwake = true;
+		[SerializeField] protected bool continuous;
 
-    protected Vector3 m_extents = Vector3.zero;
-    public Vector3 extents {
-        get{
-            return m_extents;
-        }
-    }
+		[SerializeField] protected Vector3 boundsOffset = Vector3.zero, boundsMultiplier = Vector3.one;
+		protected List<GameObject> instances = new List<GameObject>();
 
-    [SerializeField] protected Vector3 boundsOffset = Vector3.zero, boundsMultiplier = Vector3.one;
+		protected Vector3 m_center = Vector3.zero;
 
-    protected virtual void Awake() {
-        if(root == null)
-            root = transform;
-        if (parent == null)
-            parent = transform;
-    }
+		protected Vector3 m_extents = Vector3.zero;
 
-    // Start is called before the first frame update
-    protected virtual void Start()
-    {
-        CalculateBounds();
-        //Debug.LogFormat("center: {0} extents:{1}", m_center, m_extents);
+		public Vector3 center => transform.position + m_center;
 
-        if(continuous)
-            StartCoroutine("SpawnContinously");
-        else {
-            if (spawnOnAwake)
-                Spawn(amount);
-        }
-    }
+		public Vector3 extents => m_extents;
 
-    protected virtual void Update(){ count = instances.Count; }
+		protected virtual void Awake()
+		{
+			if (root == null)
+				root = transform;
+			if (parent == null)
+				parent = transform;
+		}
 
-    protected virtual void OnDestroy(){
-        if(continuous)
-            StopCoroutine("SpawnContinously");
-    }
+		// Start is called before the first frame update
+		protected virtual void Start()
+		{
+			CalculateBounds();
+			Debug.LogFormat("name: {0} center: {1} extents:{2}", gameObject.name, m_center, m_extents);
 
-    public GameObject[] Spawn(int amount = 0){
-        if (prefab == null || amount == 0)
-            return null;
+			if (continuous) {
+				StartCoroutine("SpawnContinously");
+			}
+			else {
+				if (spawnOnAwake)
+					Spawn(amount);
+			}
+		}
 
-        List<GameObject> spawned = new List<GameObject>();
-        for(int i = 0; i < amount; i++)
-        {
-            var instance = InstantiatePrefab();
-            spawned.Add(instance);
-        }
+		protected virtual void Update()
+		{
+			count = instances.Count;
+		}
 
-        return spawned.ToArray();
-    }
+		protected virtual void OnDestroy()
+		{
+			if (continuous)
+				StopCoroutine("SpawnContinously");
+		}
 
-    public GameObject Spawn(Vector3 position, Quaternion rotation, GameObject inst = null)
-    { 
-        if (prefab == null) return null;
+		public GameObject[] Spawn(int amount = 0)
+		{
+			if (prefab == null || amount == 0)
+				return null;
 
-        var instance = InstantiatePrefab(null);
+			var spawned = new List<GameObject>();
+			for (var i = 0; i < amount; i++) {
+				var instance = InstantiatePrefab();
+				spawned.Add(instance);
+			}
 
-        instance.transform.position = position;
-        instance.transform.rotation = rotation;
+			return spawned.ToArray();
+		}
 
-        return instance;
-    }
+		public GameObject Spawn(Vector3 position, Quaternion rotation, GameObject inst = null)
+		{
+			if (prefab == null) return null;
 
-    public bool Despawn(int amount = 0){
-        int count = instances.Count;
-        if(count == 0 || amount == 0)
-            return false;
+			var instance = InstantiatePrefab();
 
-        if(amount > count)
-            amount = count; // Ensure not greater to current instance count
+			instance.transform.position = position;
+			instance.transform.rotation = rotation;
 
-        for(int i = 0; i < amount; i++){
-            if(instances[0] != null){
-                GameObject.Destroy(instances[0]);
-                instances.RemoveAt(0);
-            }
-        }
+			return instance;
+		}
 
-        return true;
-    }
-    
-    public bool Clear(){
-        int count = instances.Count;
-        return Despawn(count);
-    }
+		public bool Despawn(int amount = 0)
+		{
+			var count = instances.Count;
+			if (count == 0 || amount == 0)
+				return false;
 
-    IEnumerator SpawnContinously(){
-        while(true){
-            int current = instances.Count;
+			if (amount > count)
+				amount = count; // Ensure not greater to current instance count
 
-            if(current < amount)
-                Spawn((amount - current));
-            else if(current > amount)
-                Despawn((current - amount));
+			for (var i = 0; i < amount; i++)
+				if (instances[0] != null) {
+					Destroy(instances[0]);
+					instances.RemoveAt(0);
+				}
 
-            yield return null;
-        }
-    }
+			return true;
+		}
 
-    public virtual void DecidePosition(ref Vector3 pos)
-    {
-        Vector3 offset = Vector3.zero, position = Vector3.zero;
+		public bool Clear()
+		{
+			var count = instances.Count;
+			return Despawn(count);
+		}
 
-        float bx = boundsMultiplier.x, by = boundsMultiplier.y, bz = boundsMultiplier.z;
-      
-        offset = m_center + (new Vector3(Random.Range(-extents.x, extents.x)*bx,
-                                         Random.Range(-extents.y, extents.y)*by,
-                                         Random.Range(-extents.z, extents.z)*bz));
+		IEnumerator SpawnContinously()
+		{
+			while (true) {
+				var current = instances.Count;
 
-        position = root.TransformPoint(offset) + boundsOffset;
-        pos = position;
-    }
+				if (current < amount)
+					Spawn(amount - current);
+				else if (current > amount)
+					Despawn(current - amount);
 
-    public virtual void DecideRotation(ref Quaternion rot)
-    {
-        rot = prefab.transform.rotation;
-    }
+				yield return null;
+			}
+		}
 
-    protected GameObject InstantiatePrefab(GameObject inst = null)
-    {
-        bool refresh = true;
+		public virtual void DecidePosition(ref Vector3 pos)
+		{
+			Vector3 offset = Vector3.zero, position = Vector3.zero;
 
-        var instance = inst;
-        if (instance == null)
-        {
-            refresh = false;
-            instance = Instantiate(prefab);
-            instances.Add(instance);
-        }
+			float bx = boundsMultiplier.x, by = boundsMultiplier.y, bz = boundsMultiplier.z;
 
-        Vector3 pos = Vector3.zero;
-        Quaternion rot = transform.rotation;
+			offset = m_center + new Vector3(Random.Range(-extents.x, extents.x) * bx,
+				Random.Range(-extents.y, extents.y) * @by,
+				Random.Range(-extents.z, extents.z) * bz);
 
-        DecidePosition(ref pos);
-        DecideRotation(ref rot);
+			position = root.TransformPoint(offset) + boundsOffset;
+			pos = position;
+		}
 
-        SetPrefabAttributes(instance, pos, rot);
-        onInstantiatePrefab(instance, refresh);
+		public virtual void DecideRotation(ref Quaternion rot)
+		{
+			rot = prefab.transform.rotation;
+		}
 
-        instance.transform.parent = parent;
-        return instance;
-    }
+		protected GameObject InstantiatePrefab(GameObject inst = null)
+		{
+			var refresh = true;
 
-    protected virtual void SetPrefabAttributes(GameObject instance, Vector3 position, Quaternion rotation)
-    {
-        instance.transform.position = position;
-        instance.transform.rotation = rotation;
-    }
+			var instance = inst;
+			if (instance == null) {
+				refresh = false;
+				instance = Instantiate(prefab);
+				instances.Add(instance);
+			}
 
-    protected virtual void onInstantiatePrefab(GameObject obj, bool refresh){}
+			var pos = Vector3.zero;
+			var rot = transform.rotation;
 
-    protected virtual void CalculateBounds()
-    {
-        Collider col = root.GetComponent<Collider>();
+			DecidePosition(ref pos);
+			DecideRotation(ref rot);
 
-        m_center = col.bounds.center;
-        m_extents = col.bounds.extents;
+			SetPrefabAttributes(instance, pos, rot);
+			onInstantiatePrefab(instance, refresh);
 
-        col.enabled = false; // Disable collider after fetching center+bounds
-    }
+			instance.transform.parent = parent;
+			return instance;
+		}
+
+		protected virtual void SetPrefabAttributes(GameObject instance, Vector3 position, Quaternion rotation)
+		{
+			instance.transform.position = position;
+			instance.transform.rotation = rotation;
+		}
+
+		protected virtual void onInstantiatePrefab(GameObject obj, bool refresh)
+		{
+		}
+
+		protected virtual void CalculateBounds()
+		{
+			var col = root.GetComponent<Collider>();
+
+			m_center = root.InverseTransformPoint(col.bounds.center);
+			m_extents = col.bounds.extents;
+
+			col.enabled = false; // Disable collider after fetching center+bounds
+		}
+	}
 }

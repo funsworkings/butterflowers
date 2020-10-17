@@ -9,21 +9,24 @@
 //added auto-find main camera
 //added un-initialized state, where script will do nothing
 //BM - added color tinting
+
 using UnityEngine;
-using System.Collections;
 
-[ExecuteInEditMode]
-public class CameraFacingBillboard : MonoBehaviour
+namespace uwu.Snippets
 {
-    Camera mainCam;
+	[ExecuteInEditMode]
+	public class CameraFacingBillboard : MonoBehaviour
+	{
+		UnityEngine.Camera mainCam;
 
-	void Update(){
-		if (mainCam == null) {
-			mainCam = Camera.main;
-			return;
+		void Update()
+		{
+			if (mainCam == null) {
+				mainCam = UnityEngine.Camera.main;
+				return;
+			}
+
+			transform.LookAt(mainCam.transform.position, Vector3.up);
 		}
-
-        transform.LookAt(mainCam.transform.position, Vector3.up);
 	}
-
 }

@@ -1,33 +1,33 @@
-﻿using System.Collections;
-using System.Collections.Generic;
-using UnityEngine;
+﻿using UnityEngine;
 
-[RequireComponent(typeof(ParticleSystem))]
-public class KillParticles : MonoBehaviour
+namespace uwu.Snippets
 {
-    ParticleSystem ps;
+	[RequireComponent(typeof(ParticleSystem))]
+	public class KillParticles : MonoBehaviour
+	{
+		bool played;
+		ParticleSystem ps;
 
-    bool played = false;
+		void Awake()
+		{
+			ps = GetComponent<ParticleSystem>();
+		}
 
-    void Awake() {
-        ps = GetComponent<ParticleSystem>();    
-    }
+		// Update is called once per frame
+		void Update()
+		{
+			if (played)
+				if (!ps.isPlaying)
+					if (ps.particleCount <= 0)
+						Kill();
 
-    // Update is called once per frame
-    void Update()
-    {
-        if(played){
-            if(!ps.isPlaying){
-                if(ps.particleCount <= 0)
-                    Kill();
-            }
-        }
+			if (ps.isPlaying)
+				played = true;
+		}
 
-        if(ps.isPlaying)
-            played = true;
-    }
-
-    void Kill(){
-        GameObject.Destroy(gameObject);
-    }
+		void Kill()
+		{
+			Destroy(gameObject);
+		}
+	}
 }

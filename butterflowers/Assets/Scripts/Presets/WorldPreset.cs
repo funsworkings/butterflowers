@@ -1,5 +1,7 @@
 ﻿using UnityEngine;
 using System.Collections;
+using Data;
+using Wizard;
 
 namespace Settings
 {
@@ -13,9 +15,13 @@ namespace Settings
             public bool persistDialogueVisited = false;
             public bool persistKnowledge = false;
             public bool persistBeacons = false;
+            public bool persistVines = false;
             public bool alwaysIntro = false;
             public bool alwaysAbsorb = false;
             public bool useWizard = false;
+            public bool takePhotos = false;
+            public bool logEvents = false;
+            public bool loadTexturesInEditor = true;
 
         [Header("Time Attributes")]
             public float hoursPerDay = 24f;
@@ -25,11 +31,42 @@ namespace Settings
         [Header("Physics Attributes")]
             public Vector3 directionOfGravity = Vector3.down;
 
+        [Header("Texture Attributes")] 
+            public Texture2D defaultNullTexture;
+
+            public TextureCollection starterFiles;
+            public Memories wizardFiles;
+
         [Header("Spawn Attributes")]
             public int amountOfButterflies = 100;
 
+        [Header("Nest Attributes")]
+            public int nestCapacity = 6;
+
+        [Header("Beacon Attributes")]
+            public int amountOfBeacons = 10;
+            public float normalBeaconScale = 1f;
+            public float plantedBeaconScale = 3f;
+            public float beaconLerpDuration = 1f;
+            public AnimationCurve beaconScaleCurve;
+
+        [Header("Vine Attributes")] 
+            [Range(0f, 1f)] public float saplingGrowHeight;
+            public float daysToGrowVine = 1f;
+
+        [Header("Surveillance Attributes")] 
+            public float surveillanceLogRate = 1f;
+            
+        [Header("Scoring Attributes")]
+            public ScoringData baselineSurveillanceData;
+
         [Header("Unknown Attributes")]
             [Range(0f, 1f)] public float unknownPersistenceThreshold = .5f;
+
+        [Header("Remote Attributes")] 
+            public float cursorSpeedThreshold = 1f;
+            public float cursorIdleTimeThreshold = 10f;
+            public float cursorIdleDelay = 1f;
 
         [Header("Miscellaneous Attributes")]
             public TextureCollection worldTextures;
@@ -43,16 +80,19 @@ namespace Settings
             }
         }
 
-        public float secondsPerDay {
-            get
-            {
-                return minutesPerDay * 60f;
-            }
+        public float secondsPerDay
+        {
+            get { return minutesPerDay * 60f; }
         }
 
-        public float ConvertToDays(float seconds)
+        public float ConvertSecondsToDays(float seconds)
         {
             return (seconds / secondsPerDay);
+        }
+
+        public float ConvertDaysToSeconds(float days)
+        {
+            return (days * secondsPerDay);
         }
 
         public bool IsDuringDay(float timeofday)

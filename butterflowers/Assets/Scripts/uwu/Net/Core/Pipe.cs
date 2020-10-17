@@ -1,218 +1,207 @@
-﻿using System.Collections;
-using System.Collections.Generic;
+﻿using System;
+using System.Collections;
+using System.Text;
 using UnityEngine;
-
 using UnityEngine.Networking;
-using UnityEngine.Events;
 
-public sealed class Pipe : MonoBehaviour
+namespace uwu.Net.Core
 {
-    public bool debug = false;
-
-    #region Internal
-
-    public class Error
-    {
-        public string message = "";
-    }
-
-    #endregion
-
-    #region Callbacks
-
-    public PipeEvent GET_callback = new PipeEvent();
-    public PipeEvent POST_callback = new PipeEvent();
-    public PipeEvent PUT_callback = new PipeEvent();
-    public PipeEvent DELETE_callback = new PipeEvent();
-
-    #endregion
+	public sealed class Pipe : MonoBehaviour
+	{
+		public bool debug;
 
 
-    #region Entry web operations
+		#region Helpers
 
-    public void GET<E>(string uri)
-    {
-        StartCoroutine(Get<E>(uri));
-    }
+		public Exception ParseRequestForError(UnityWebRequest request, string response)
+		{
+			Exception error = null;
 
-    public void POST<E>(string uri, System.Object dat)
-    {
-        string json = JsonUtility.ToJson(dat);
-        StartCoroutine(Post<E>(uri, json));
-    }
+			if (request.isNetworkError) {
+				error = new Exception("Network error*Unable to connect to server");
+			}
+			else {
+				var status = Mathf.FloorToInt(request.responseCode);
 
-    public void PUT<E>(string uri, System.Object dat)
-    {
-        string json = JsonUtility.ToJson(dat);
-        StartCoroutine(Put(uri, json));
-    }
+				if (status > 199 && status < 300) {
+					error = null;
+				}
+				else {
+					var message = "Unknown error*?????";
 
-    public void DELETE(string uri)
-    {
-        StartCoroutine(Delete(uri));
-    }
+					try {
+						var err = JsonUtility.FromJson<Error>(response);
+						message = err.message;
+					}
+					catch (Exception e) {
+						message = string.Format("Server error*{0}", status);
+					}
 
-    #endregion
+					error = new Exception(message);
+					Debug.Log("status: " + status);
+				}
+			}
 
-    #region Coroutine web operations
+			return error;
+		}
 
-    IEnumerator Get<E>(string uri)
-    {
-        UnityWebRequest req = UnityWebRequest.Get(uri);
+		#endregion
 
-        req.SendWebRequest();
-        while (!req.isDone)
-            yield return null;
+		#region Internal
 
-        E dat = default(E);
+		public class Error
+		{
+			public string message = "";
+		}
 
-        var ret = System.Text.Encoding.UTF8.GetString(req.downloadHandler.data);
-        System.Exception err = ParseRequestForError(req, ret);
+		#endregion
 
-        try
-        {
-            dat = JsonUtility.FromJson<E>(ret);
-        }
-        catch(System.Exception e)
-        {
-            Debug.LogErrorFormat("uri: {0} err: {1}", uri, e.Message);
-        }
+		#region Callbacks
 
-        if (debug) Debug.LogFormat("GET {0} -> {1}", uri, ret);
+		public PipeEvent GET_callback = new PipeEvent();
+		public PipeEvent POST_callback = new PipeEvent();
+		public PipeEvent PUT_callback = new PipeEvent();
+		public PipeEvent DELETE_callback = new PipeEvent();
 
-        if (GET_callback != null)
-            GET_callback.Invoke(err, dat);
-
-        req.Dispose();
-    }
-
-    IEnumerator Post<E>(string uri, string json)
-    {
-    
-        UnityWebRequest req = UnityWebRequest.Post(uri, json);
-
-        if (!string.IsNullOrEmpty(json))
-        {
-            req.SetRequestHeader("content-type", "application/json");
-            req.uploadHandler.contentType = "application/json";
-            req.uploadHandler = new UploadHandlerRaw(System.Text.Encoding.UTF8.GetBytes(json));
-        }
-
-        req.SendWebRequest();
-        while (!req.isDone)
-            yield return null;
-
-        E dat = default(E);
-
-        var ret = System.Text.Encoding.UTF8.GetString(req.downloadHandler.data);
-        System.Exception err = ParseRequestForError(req, ret);
-
-        try
-        {
-            dat = JsonUtility.FromJson<E>(ret);
-        }
-        catch(System.Exception e)
-        {
-            err = e;
-            dat = default(E);
-        }
-
-        if (debug) Debug.LogFormat("POST {0} -> {1}", uri, ret);
-
-        if (POST_callback != null)
-            POST_callback.Invoke(err, dat);
-
-        req.Dispose();
-    }
-
-    IEnumerator Put(string uri, string json)
-    { 
-        UnityWebRequest req = UnityWebRequest.Put(uri, json);
-
-        if (!string.IsNullOrEmpty(json))
-        {
-            req.SetRequestHeader("content-type", "application/json");
-            req.uploadHandler.contentType = "application/json";
-            req.uploadHandler = new UploadHandlerRaw(System.Text.Encoding.UTF8.GetBytes(json));
-        }
-
-        req.SendWebRequest();
-        while (!req.isDone)
-            yield return null;
-
-        var ret = System.Text.Encoding.UTF8.GetString(req.downloadHandler.data);
-        System.Exception err = ParseRequestForError(req, ret);
-
-        if (debug) Debug.LogFormat("PUT {0} -> {1}", uri, ret);
-
-        if (PUT_callback != null)
-            PUT_callback.Invoke(err, null);
-
-        req.Dispose();
-    }
-
-    IEnumerator Delete(string uri)
-    { 
-        UnityWebRequest req = UnityWebRequest.Delete(uri);
-        req.downloadHandler = new DownloadHandlerBuffer();
-
-        req.SendWebRequest();
-        while (!req.isDone)
-            yield return null;
-
-        var ret = System.Text.Encoding.UTF8.GetString(req.downloadHandler.data);
-        System.Exception err = ParseRequestForError(req, ret);
-
-        if (debug) Debug.LogFormat("DELETE {0} -> {1}", uri, ret);
-
-        if (DELETE_callback != null)
-            DELETE_callback.Invoke(err, null);
-
-        req.Dispose();
-    }
-
-    #endregion
+		#endregion
 
 
-    #region Helpers
+		#region Entry web operations
 
-    public System.Exception ParseRequestForError(UnityWebRequest request, string response)
-    {
-        System.Exception error = null;
+		public void GET<E>(string uri)
+		{
+			StartCoroutine(Get<E>(uri));
+		}
 
-        if (request.isNetworkError)
-        {
-            error = new System.Exception("Network error*Unable to connect to server");
-        }
-        else
-        {
-            int status = Mathf.FloorToInt(request.responseCode);
+		public void POST<E>(string uri, object dat)
+		{
+			var json = JsonUtility.ToJson(dat);
+			StartCoroutine(Post<E>(uri, json));
+		}
 
-            if (status > 199 && status < 300)
-            {
-                error = null;
-            }
-            else
-            {
-                string message = "Unknown error*?????";
+		public void PUT<E>(string uri, object dat)
+		{
+			var json = JsonUtility.ToJson(dat);
+			StartCoroutine(Put(uri, json));
+		}
 
-                try
-                {
-                    Error err = JsonUtility.FromJson<Error>(response);
-                    message = err.message;
-                }
-                catch (System.Exception e)
-                {
-                    message = string.Format("Server error*{0}", status);
-                }
+		public void DELETE(string uri)
+		{
+			StartCoroutine(Delete(uri));
+		}
 
-                error = new System.Exception(message);
-                Debug.Log("status: " + status);
-            }
-        }
+		#endregion
 
-        return error;
-    }
+		#region Coroutine web operations
 
-    #endregion
+		IEnumerator Get<E>(string uri)
+		{
+			var req = UnityWebRequest.Get(uri);
+
+			req.SendWebRequest();
+			while (!req.isDone)
+				yield return null;
+
+			E dat = default;
+
+			var ret = Encoding.UTF8.GetString(req.downloadHandler.data);
+			var err = ParseRequestForError(req, ret);
+
+			try {
+				dat = JsonUtility.FromJson<E>(ret);
+			}
+			catch (Exception e) {
+				Debug.LogErrorFormat("uri: {0} err: {1}", uri, e.Message);
+			}
+
+			if (debug) Debug.LogFormat("GET {0} -> {1}", uri, ret);
+
+			if (GET_callback != null)
+				GET_callback.Invoke(err, dat);
+
+			req.Dispose();
+		}
+
+		IEnumerator Post<E>(string uri, string json)
+		{
+			var req = UnityWebRequest.Post(uri, json);
+
+			if (!string.IsNullOrEmpty(json)) {
+				req.SetRequestHeader("content-type", "application/json");
+				req.uploadHandler.contentType = "application/json";
+				req.uploadHandler = new UploadHandlerRaw(Encoding.UTF8.GetBytes(json));
+			}
+
+			req.SendWebRequest();
+			while (!req.isDone)
+				yield return null;
+
+			E dat = default;
+
+			var ret = Encoding.UTF8.GetString(req.downloadHandler.data);
+			var err = ParseRequestForError(req, ret);
+
+			try {
+				dat = JsonUtility.FromJson<E>(ret);
+			}
+			catch (Exception e) {
+				err = e;
+				dat = default;
+			}
+
+			if (debug) Debug.LogFormat("POST {0} -> {1}", uri, ret);
+
+			if (POST_callback != null)
+				POST_callback.Invoke(err, dat);
+
+			req.Dispose();
+		}
+
+		IEnumerator Put(string uri, string json)
+		{
+			var req = UnityWebRequest.Put(uri, json);
+
+			if (!string.IsNullOrEmpty(json)) {
+				req.SetRequestHeader("content-type", "application/json");
+				req.uploadHandler.contentType = "application/json";
+				req.uploadHandler = new UploadHandlerRaw(Encoding.UTF8.GetBytes(json));
+			}
+
+			req.SendWebRequest();
+			while (!req.isDone)
+				yield return null;
+
+			var ret = Encoding.UTF8.GetString(req.downloadHandler.data);
+			var err = ParseRequestForError(req, ret);
+
+			if (debug) Debug.LogFormat("PUT {0} -> {1}", uri, ret);
+
+			if (PUT_callback != null)
+				PUT_callback.Invoke(err, null);
+
+			req.Dispose();
+		}
+
+		IEnumerator Delete(string uri)
+		{
+			var req = UnityWebRequest.Delete(uri);
+			req.downloadHandler = new DownloadHandlerBuffer();
+
+			req.SendWebRequest();
+			while (!req.isDone)
+				yield return null;
+
+			var ret = Encoding.UTF8.GetString(req.downloadHandler.data);
+			var err = ParseRequestForError(req, ret);
+
+			if (debug) Debug.LogFormat("DELETE {0} -> {1}", uri, ret);
+
+			if (DELETE_callback != null)
+				DELETE_callback.Invoke(err, null);
+
+			req.Dispose();
+		}
+
+		#endregion
+	}
 }

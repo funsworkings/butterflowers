@@ -1,352 +1,154 @@
-﻿using System.Collections;
+﻿using System;
+using System.Collections;
 using System.Collections.Generic;
-using UnityEngine;
-
 using System.IO;
-using System.Linq;
+using UnityEngine;
+using uwu.Data;
+using uwu.Extensions;
+using uwu.IO;
 using Wizard;
-using UnityEditor;
 
-public class GameDataSaveSystem: Singleton<GameDataSaveSystem> {
-    public static System.Action<bool> onLoad;
-
-
-    private const string savefile = "save.dat";
-    private const float refreshrate = 15f;
-
-    private bool m_autosave = false;
-    public bool autosave {
-        get
-        {
-            return m_autosave;
-        }
-        set
-        {
-            if (autosave != value) {
-                if (!value) StopCoroutine("Autosave");
-                else StartCoroutine("Autosave");
-            }
-            m_autosave = value;
-        }
-    }
+namespace uwu
+{
+	public partial class GameDataSaveSystem : Singleton<GameDataSaveSystem>
+	{
+		const string savefile = "save.dat";
+		const float refreshrate = 15f;
+		public static Action<bool> onLoad;
 
 
-    [SerializeField] GameData m_data = null;
-    public GameData data {
-        get
-        {
-            return m_data;
-        }
-    }
+		[SerializeField] GameData m_data;
 
-    bool m_load = false;
-    public bool load {
-        get
-        {
-            return m_load;
-        }
-    }
+		bool m_autosave;
 
-    #region External access
+		public bool autosave
+		{
+			get => m_autosave;
+			set
+			{
+				if (autosave != value) {
+					if (!value) StopCoroutine("Autosave");
+					else StartCoroutine("Autosave");
+				}
 
-    public bool wizard {
-        get
-        {
-            return (data == null) ? false : data.wizard;
-        }
-        set
-        {
-            data.wizard = true;
-        }
-    }
+				m_autosave = value;
+			}
+		}
 
-    public string[] files {
-        get
-        {
-            return (data == null) ? new string[] { } : data.files;
-        }
-        set
-        {
-            data.files = value;
-        }
-    }
+		public GameData data => m_data;
 
-    public float time {
-        get {
-            return (data == null)? 0f:data.time;
-        }
-        set {
-            data.time = value;
-        }
-    }
+		public bool load { get; set; }
 
-    public LogData logs {
-        get
-        {
-            return (data == null) ? new LogData() : data.logs;
-        }
-        set
-        {
-            data.logs = value;
-        }
-    }
+		void OnEnable()
+		{
+			LoadGameData();
+		}
 
-    public Scribe.Log[] log_entries {
-        get
-        {
-            return (data == null) ? new Scribe.Log[] { } : data.logs.logs;
-        }
-        set
-        {
-            data.logs.logs = value;
-        }
-    }
+		void OnDisable()
+		{
+			SaveGameData();
+			autosave = false;
+		}
 
-    public int chapter 
-    {
-        get
-        {
-            return data.chapter;
-        }
-        set
-        {
-            data.chapter = value;
-        }
-    }
+		void OnApplicationPause(bool pause)
+		{
+			if (pause) {
+				SaveGameData();
+				autosave = false;
+			}
+			else {
+				LoadGameData();
+			}
+		}
 
-    public int nestcapacity {
-        get
-        {
-            return (data == null) ? 6 : data.nestcapacity;
-        }
-        set
-        {
-            data.nestcapacity = value;
-        }
-    }
+		IEnumerator Autosave()
+		{
+			while (true) {
+				yield return new WaitForSeconds(refreshrate);
+				SaveGameData();
+			}
+		}
 
-    public int[] discovered {
-        get
-        {
-            var discoveries = (data == null) ? null : data.discoveries;
-            if (discoveries == null) {
-                discoveries = new int[] { };
-                discovered = discoveries;
-            }
-            return discoveries;
-        }
-        set
-        {
-            data.discoveries = value;
-        }
-    }
+		void SaveGameData()
+		{
+			if (data == null) {
+				Debug.LogWarning("Attempted to save when no data available!");
+				return;
+			}
 
-    public BeaconData[] beaconData {
-        get
-        {
-            return (data == null) ? new BeaconData[] { } : data.beacons;
-        }
-    }
+			onSaveGameData();
 
-    public Beacon[] beacons {
-        set
-        {
-            var dat = new List<BeaconData>();
-            for (int i = 0; i < value.Length; i++) {
-                var beacon = value[i];
-                var parsed = new BeaconData(beacon.file, beacon.type, beacon.visible);
+			var version = Application.version;
+			var timestamp = string.Format("{0} - {1}", DateTime.Now.ToShortDateString(), DateTime.Now.ToShortTimeString());
 
-                dat.Add(parsed);
-            }
+			data.BUILD_VERSION = version;
+			data.TIMESTAMP = timestamp;
 
-            data.beacons = dat.ToArray();
-        }
-    }
+			DataHandler.Write(m_data, dataPath);
+		}
 
-    public bool nestOpen {
-        get
-        {
-            return (data == null) ? false : data.nestopen;
-        }
-        set
-        {
-            data.nestopen = value;
-        }
-    }
+		public void ResetGameData()
+		{
+			m_data = new GameData();
+			SaveGameData();
+		}
 
-    public int dialogueNode {
-        get
-        {
-            return (data == null) ? -1 : data.dialoguenode;
-        }
-        set
-        {
-            data.dialoguenode = value;
-        }
-    }
+		public void LoadGameData(bool events = false, bool create = true)
+		{
+			var previous = false;
 
-    public int[] dialogueVisited {
-        get
-        {
-            return (data == null) ? new int[] { } : data.dialoguevisited;
-        }
-        set
-        {
-            data.dialoguevisited = value;
-        }
-    }
+			var load = DataHandler.Read<GameData>(dataPath);
+			if (load == null) {
+				Debug.LogWarning("No save file located, initializing data file...");
+				if (create) m_data = new GameData();
+			}
+			else {
+				m_data = load;
+				previous = true;
+			}
 
-    public float enviro_knowledge {
-        get
-        {
-            return (data == null) ? 0f : data.enviro_knowledge;
-        }
-        set
-        {
-            data.enviro_knowledge = value;
-        }
-    }
+			onLoadGameData();
+			this.load = true;
 
-    public Knowledge[] file_knowledge {
-        get
-        {
-            return (data == null) ? new Knowledge[] { } : data.file_knowledge;
-        }
-        set
-        {
-            data.file_knowledge = value;
-        }
-    }
+			if (events)
+				if (onLoad != null)
+					onLoad(previous);
+		}
 
-    public int[] shared_files {
-        get
-        {
-            return (data == null) ? new int[] { } : data.shared_files;
-        }
-        set
-        {
-            data.shared_files = value;
-        }
-    }
+		#region Fetch data path
 
-    #endregion
+		string m_dataPath;
 
-    #region Fetch data path
+		public string dataPath
+		{
+			get
+			{
+				var dir = Application.persistentDataPath + DataPaths.DATA_PATH;
+				FileUtils.EnsureDirectory(dir);
 
+				if (m_dataPath == null)
+					m_dataPath = Path.Combine(dir, savefile);
 
-    string m_dataPath = null;
-    public string dataPath
-    {
-        get
-        {
-            string dir = Application.persistentDataPath + DataPaths.DATA_PATH;
-            FileUtils.EnsureDirectory(dir);
+				Debug.LogFormat("Save data path = {0}", m_dataPath);
+				return m_dataPath;
+			}
+		}
 
-            if (m_dataPath == null)
-                m_dataPath = Path.Combine(dir, savefile);
+		#endregion
 
-            Debug.LogFormat("Save data path = {0}", m_dataPath);
-            return m_dataPath;
-        }
-    }
+		#region Save/load callbacks
 
-    #endregion
+		void onSaveGameData()
+		{
+			Debug.LogFormat("~~Save file was SAVED on {0}~~", DateTime.Now.ToShortTimeString());
+		}
 
-    private void OnEnable()
-    {
-        LoadGameData();
-    }
+		void onLoadGameData()
+		{
+			Debug.LogFormat("~~Save file was LOADED on {0}~~", DateTime.Now.ToShortTimeString());
+			autosave = refreshrate > 0f;
+		}
 
-    private void OnDisable()
-    {
-        SaveGameData();
-        autosave = false;
-    }
-
-    private void OnApplicationPause(bool pause)
-    {
-        if (pause) 
-        {
-            SaveGameData();
-            autosave = false;
-        }
-        else
-            LoadGameData();
-    }
-
-    IEnumerator Autosave()
-    {
-        while (true) 
-        {
-            yield return new WaitForSeconds(refreshrate);
-            SaveGameData();
-        }
-    }
-
-    void SaveGameData()
-    {
-        if (data == null) 
-        {
-            Debug.LogWarning("Attempted to save when no data available!");
-            return;
-        }
-
-        onSaveGameData();
-
-        string version = Application.version;
-        string timestamp = string.Format("{0} - {1}", System.DateTime.Now.ToShortDateString(), System.DateTime.Now.ToShortTimeString());
-
-        data.BUILD_VERSION = version;
-        data.TIMESTAMP = timestamp;
-
-        DataHandler.Write<GameData>(m_data, dataPath);
-    }
-
-    public void ResetGameData()
-    {
-        m_data = new GameData();
-        SaveGameData();
-    }
-
-    public void LoadGameData(bool events = false, bool create = false)
-    {
-        bool previous = false;
-
-        GameData load = DataHandler.Read<GameData>(dataPath);
-        if (load == null) 
-        {
-            Debug.LogWarning("No save file located, initializing data file...");
-            if(create) m_data = new GameData();
-        }
-        else 
-        {
-            m_data = load;
-            previous = true;
-        }
-
-        onLoadGameData();
-        m_load = true;
-
-        if (events) 
-        {
-            if (onLoad != null)
-                onLoad(previous);
-        }
-    }
-
-	#region Save/load callbacks
-
-	void onSaveGameData()
-    {
-        Debug.LogFormat("~~Save file was SAVED on {0}~~", System.DateTime.Now.ToShortTimeString());
-    }
-
-    void onLoadGameData()
-    {
-        Debug.LogFormat("~~Save file was LOADED on {0}~~", System.DateTime.Now.ToShortTimeString());
-        autosave = (refreshrate > 0f);
-    }
-
-    #endregion
-
+		#endregion
+	}
 }

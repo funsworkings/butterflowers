@@ -1,9 +1,9 @@
-﻿using System.Collections;
-using System.Collections.Generic;
-using UnityEngine;
+﻿using System;
 
-namespace Settings {
-
-    [System.Serializable] public class FloatSetting : Setting<float>{}
-
+namespace uwu.Settings.Instances
+{
+	[Serializable]
+	public class FloatSetting : Setting<float>
+	{
+	}
 }

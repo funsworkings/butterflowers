@@ -2,8 +2,6 @@
 using System.Collections.Generic;
 using UnityEngine;
 
-using Log = Scribe.Log;
-
 [System.Serializable] 
 public class LogData 
 {

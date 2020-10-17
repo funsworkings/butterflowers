@@ -1,6 +1,6 @@
-﻿namespace SimpleFileBrowser
+﻿namespace uwu.IO.SimpleFileBrowser.Scripts.SimpleRecycledListView
 {
-	public delegate void OnItemClickedHandler( ListItem item );
+	public delegate void OnItemClickedHandler(ListItem item);
 
 	public interface IListViewAdapter
 	{
@@ -11,6 +11,6 @@
 
 		ListItem CreateItem();
 
-		void SetItemContent( ListItem item );
+		void SetItemContent(ListItem item);
 	}
 }

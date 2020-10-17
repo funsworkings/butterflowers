@@ -1,69 +1,76 @@
-﻿using UnityEngine;
-using UnityEngine.Events; // 1
-using System.Collections;
+﻿using System;
 using System.Collections.Generic;
+using UnityEngine;
+using UnityEngine.Events;
 
-[System.Serializable]
-public class CustomGameEvent {
-    public GameEvent gameEvent;
-    public UnityEvent response;
-}
+namespace uwu.Events
+{ // 1
 
-public class GameEventListener : MonoBehaviour
-{
-    [SerializeField] List<CustomGameEvent> events = new List<CustomGameEvent>();
-                     Dictionary<GameEvent, CustomGameEvent> eventsDict = new Dictionary<GameEvent, CustomGameEvent>();
+	[Serializable]
+	public class CustomGameEvent
+	{
+		public GameEvent gameEvent;
+		public UnityEvent response;
+	}
 
-    [SerializeField] List<CustomGameEvent> objectEvents = new List<CustomGameEvent>();
+	public class GameEventListener : MonoBehaviour
+	{
+		[SerializeField] List<CustomGameEvent> events = new List<CustomGameEvent>();
 
-    private void Start() {
-        foreach(CustomGameEvent e in events)
-            eventsDict.Add(e.gameEvent, e);
+		[SerializeField] List<CustomGameEvent> objectEvents = new List<CustomGameEvent>();
 
-        foreach(CustomGameEvent e in objectEvents)
-            eventsDict.Add(e.gameEvent, e);
-    }
+		[SerializeField] GameObject eventObject;
+		readonly Dictionary<GameEvent, CustomGameEvent> eventsDict = new Dictionary<GameEvent, CustomGameEvent>();
+		public GameObject EventObject => eventObject;
 
-    private void OnEnable() // 4
-    {
-        foreach(CustomGameEvent e in events)
-            e.gameEvent.RegisterListener(this);
+		void Start()
+		{
+			foreach (var e in events)
+				eventsDict.Add(e.gameEvent, e);
 
-        foreach(CustomGameEvent e in objectEvents)
-            e.gameEvent.RegisterListener(this);
-    }
+			foreach (var e in objectEvents)
+				eventsDict.Add(e.gameEvent, e);
+		}
 
-    private void OnDisable() // 5
-    {
-        foreach(CustomGameEvent e in events)
-            e.gameEvent.UnregisterListener(this);
+		void OnEnable() // 4
+		{
+			foreach (var e in events)
+				e.gameEvent.RegisterListener(this);
 
-        foreach(CustomGameEvent e in objectEvents)
-            e.gameEvent.UnregisterListener(this);
-    }
+			foreach (var e in objectEvents)
+				e.gameEvent.RegisterListener(this);
+		}
 
-    public void OnEventRaised(GameEvent e) // 6
-    {
-        CustomGameEvent cge = null;
-        
-        eventsDict.TryGetValue(e, out cge);
-        if(cge != null)
-            cge.response.Invoke();
-    }
+		void OnDisable() // 5
+		{
+			foreach (var e in events)
+				e.gameEvent.UnregisterListener(this);
 
-    [SerializeField] GameObject eventObject;
-    public GameObject EventObject { get{ return eventObject; } }
+			foreach (var e in objectEvents)
+				e.gameEvent.UnregisterListener(this);
+		}
 
-    public void OnEventRaised(GameEvent e, GameObject o){ //Used for object-oriented events
-        CustomGameEvent cge = null;
-        
-        eventsDict.TryGetValue(e, out cge);
-        if(cge != null){
-            if(!objectEvents.Contains(cge))
-                return;
+		public void OnEventRaised(GameEvent e) // 6
+		{
+			CustomGameEvent cge = null;
 
-            eventObject = o;
-            cge.response.Invoke();
-        }
-    }
+			eventsDict.TryGetValue(e, out cge);
+			if (cge != null)
+				cge.response.Invoke();
+		}
+
+		public void OnEventRaised(GameEvent e, GameObject o)
+		{ //Used for object-oriented events
+			CustomGameEvent cge = null;
+
+			eventsDict.TryGetValue(e, out cge);
+			if (cge != null) {
+				if (!objectEvents.Contains(cge))
+					return;
+
+				eventObject = o;
+				cge.response.Invoke();
+			}
+		}
+	}
 }

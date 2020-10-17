@@ -4,283 +4,231 @@ using UnityEngine;
 
 using System.Linq;
 using TMPro;
-using FileSystemEntry = SimpleFileBrowser.FileSystemEntry;
+using FileSystemEntry = uwu.IO.SimpleFileBrowser.Scripts.FileSystemEntry;
 using Memory = Wizard.Memory;
 using System.Runtime.InteropServices;
-
+using AI.Agent;
+using Objects.Managers;
 using UnityEngine.Events;
 using UnityEngine.Experimental.UIElements;
-using UIExt.Behaviors.Visibility;
+using UnityEngine.UI;
+using uwu;
+using uwu.Camera;
+using uwu.Extensions;
+using uwu.Gameplay;
+using uwu.IO;
+using uwu.Snippets;
+using uwu.Snippets.Load;
+using uwu.UI.Behaviors.Visibility;
 
-public class World : Spawner
+public class World : MonoBehaviour
 {
     public static World Instance = null;
-
     public static bool LOAD = false;
 
-    [SerializeField] GAMESTATE m_STATE = GAMESTATE.GAME;
-    public GAMESTATE STATE {
-        get
-        {
-            return m_STATE;
-        }
-        set
-        {
-            m_STATE = value;
-            Save.data.GAMESTATE = (int)m_STATE;
-        }
-    }
-
-    public void MoveToState(GAMESTATE state)
-    {
-        if (STATE != state) 
-        {
-            if (state == GAMESTATE.GAME && STATE == GAMESTATE.INTRO)
-                onCompleteIntro.Invoke(); // Signal end to intro
-            if (state == GAMESTATE.ABSORB && STATE == GAMESTATE.GAME) 
-                onCompleteAbsorb.Invoke();
-
-            STATE = state;
-            if (UPDATE_GAMESTATE != null)
-                UPDATE_GAMESTATE(STATE);
-        }
-    }
-
-
-    #region Events
+    // Events
 
     public UnityEvent onDiscovery;
 
-    public System.Action onRefreshBeacons;
-    public System.Action<GAMESTATE> UPDATE_GAMESTATE;
+    public static System.Action<State> onUpdateState;
+    
+    #region Internal
 
-    public UnityEvent onCompleteIntro, onCompleteAbsorb;
-
+    public enum State
+    {
+        User = 0,
+        Remote = 1,
+        Parallel = 2
+    }
+    
     #endregion
 
-
-	#region External
+    // External
 
 	[SerializeField] Settings.WorldPreset Preset;
-    [SerializeField] Wizard.Memories Memories;
     [SerializeField] CameraManager CameraManager;
-    [SerializeField] Focus Focus;
-    [SerializeField] Sequences Sequencing;
+    [SerializeField] Focusing Focusing;
 
     GameDataSaveSystem Save = null;
     Library Library = null;
     FileNavigator Files = null;
-    Scribe Scribe = null;
-    Discovery Discovery = null;
-    MotherOfButterflies Butterflowers = null;
+    Discoveries Discoveries = null;
+    Surveillance Surveillance = null;
+
+    ButterflowerManager Butterflowers = null;
+    BeaconManager Beacons = null;
+    VineManager Vines = null;
+    EventManager EventsM = null;
+    GradingManager Grading = null;
+    SummaryManager Summary = null;
+
     Sun Sun = null;
     Nest Nest = null;
     Quilt Quilt = null;
-    [SerializeField] Wizard.Controller Wizard = null;
-    Loading Loader = null;
+    Cage Cage = null;
+    Brain AI = null;
 
-	#endregion
+    [SerializeField] Wand wand;
 
-	#region Attributes
+    // Attributes
 
-	[SerializeField] int maxBeacons = 100;
-
-    public Texture2D DEFAULT_NULL_TEXTURE;
+    public State state = State.User;
+    public string username;
 
     [SerializeField] Spawner positiveSpawner;
     [SerializeField] GameObject pr_PositivePS;
+    
+    [SerializeField] bool photoInProgress = false;
+    [SerializeField] bool reloadInProgress = false;
 
-    [SerializeField] bool initializeOnAwake = true;
+    [SerializeField] Texture2D lastPhotoTaken = null;
+    [SerializeField] string lastPhotoCaption = null;
 
-    #endregion
+    float remoteTimer = 0f;
 
-    #region Properties
-
-    [SerializeField] Transform m_beaconInfoContainer = null;
-
-    [SerializeField] Camera m_wizardCamera = null;
+    // Properties
+    
     [SerializeField] Camera m_playerCamera = null;
-
-    [SerializeField] Snapshot WorldCamera;
+    [SerializeField] Snapshot snapshotCamera;
     [SerializeField] Camera previousMainCamera = null;
+    
+    [SerializeField] Loading Loader = null;
+    [SerializeField] Loading Reloader = null;
 
-    #endregion
-
-    #region Collections
-
-    public Texture2D[] StarterPack => Preset.worldTextures.elements;
-
-	Dictionary<string, List<Beacon>> beacons = new Dictionary<string, List<Beacon>>();
-    List<Beacon> allBeacons = new List<Beacon>();
-
-    [SerializeField] string[] beaconPaths = new string[] { };
-
-    [SerializeField] List<int> wizardDiscoveries = new List<int>();
-
-    #endregion
-
-
+    [SerializeField] UnityEngine.UI.Image remoteProgressBar;
+    [SerializeField] ToggleOpacity userOverlay, remoteOverlay;
 
     #region Accessors
-
-    public Beacon[] AllBeacons => allBeacons.ToArray();
-
-    public Beacon[] ActiveBeacons   => allBeacons.Where(beacon => Nest.HasBeacon(beacon)).ToArray();
-    public Beacon[] InactiveBeacons => allBeacons.Where(beacon => !Nest.HasBeacon(beacon)).ToArray();
-
-    public Transform BeaconInfoContainer => m_beaconInfoContainer;
-
-    public Camera WizardCamera => m_wizardCamera;
+    
     public Camera PlayerCamera => m_playerCamera;
 
-    public bool FOCUS => (Focus.state == Focus.State.Wizard && Nest.open);
+    public string LastPhotoCaption => lastPhotoCaption;
+    public Texture2D LastPhoto => lastPhotoTaken;
+
+    public bool User => (state == State.User);
+    public bool Remote => (state == State.Remote);
+    public bool Parallel => (state == State.Parallel);
 
     #endregion
-
-
 
     #region Monobehaviour callbacks
 
-    protected override void Awake()
+    void Awake()
     {
-        base.Awake();
-
         Instance = this;
-        spawnOnAwake = false;
-
-        Save = GameDataSaveSystem.Instance;
     }
 
-    protected override void Start(){
-        base.Start();
+    IEnumerator Start()
+    {
+        Sun = Sun.Instance;
+        Sun.active = false; // Initialize sun to inactive on start
+        
+        Save = GameDataSaveSystem.Instance;
+        while (!Save.load) 
+            yield return null;
 
+        username = Save.username;
+        state = (Save.data.GAMESTATE != State.Parallel) ? State.User : State.Parallel;
+
+        Surveillance = Surveillance.Instance;
+        
         Library = Library.Instance;
-        Library.WizardFiles = Memories;
 
-        Discovery = Discovery.Instance;
-        Discovery.Preset = Preset;
+        Discoveries = Discoveries.Instance;
+            Discoveries.Load(Save.discovered, Preset.persistDiscoveries); // Load all discoveries
 
         Files = FileNavigator.Instance;
-        Scribe = Scribe.Instance;
-        Sun = Sun.Instance;
+        
         Nest = Nest.Instance;
         Quilt = Quilt.Instance;
 
-        Butterflowers = FindObjectOfType<MotherOfButterflies>();
-        Loader = FindObjectOfType<Loading>();
-
-        if (!initializeOnAwake) return;
-
-        LOAD = false;
+        Butterflowers = FindObjectOfType<ButterflowerManager>();
+        Beacons = FindObjectOfType<BeaconManager>();
+        Vines = FindObjectOfType<VineManager>();
+        Cage = FindObjectOfType<Cage>();
+        EventsM = FindObjectOfType<EventManager>();
+        Grading = FindObjectOfType<GradingManager>();
+        Summary = FindObjectOfType<SummaryManager>();
+        AI = FindObjectOfType<Brain>();
+        
+        SubscribeToEvents(); // Add all event listeners
 
         StartCoroutine("Initialize");
     }
 
-    protected override void Update()
+    void Update()
     {
-        base.Update();
+        if (!Save.load) return;
+        Save.data.GAMESTATE = state;
 
-        beaconPaths = allBeacons.Select(beacon => beacon.file).ToArray();
+        State newState = UpdateRemoteStatus();
 
-        if (Input.GetKeyDown(KeyCode.W))
-            PositiveBurst();
-    }
+        if (state != newState) {
+            if (onUpdateState != null)
+                onUpdateState(newState);
 
-    void LateUpdate()
-    {
-        if (STATE == GAMESTATE.ABSORB) {
-
-            if (Preset.useWizard) 
-            {
-                if (Wizard.Brain.EvaluateAbsorption() < 1f)
-                    MoveToState(GAMESTATE.GAME); // Revert
-            }
+            state = newState;
         }
     }
 
-    protected override void OnDestroy(){
-        base.OnDestroy();
-
+    void OnDestroy()
+    {
         UnsubscribeToEvents();
     }
 
     #endregion
 
-
-
-    #region Internal
+    #region Initialization
 
     IEnumerator Initialize()
     {
+        yield return new WaitForEndOfFrame(); // Padding at start of initialization -> SAFE
+        
+        Dictionary<string, Texture2D[]> texturePacks = new Dictionary<string, Texture2D[]>() 
+        {
+            { "WIZARD" , Preset.wizardFiles.items.Select(mem => mem.image).ToArray() },
+            { "ENVIRONMENT", Preset.starterFiles.elements }
+        };
+        
+        Surveillance.Load(Save.data.surveillanceData); // Load surveillance data
+        Library.Load(Save.files, Preset.defaultNullTexture, texturePacks, Preset.loadTexturesInEditor);
 
-        Save = GameDataSaveSystem.Instance;
-        while (!Save.load) yield return null;
-
-        if (Preset.alwaysIntro) m_STATE = GAMESTATE.INTRO;
-        else m_STATE = (GAMESTATE)Save.data.GAMESTATE;
-
-        if(Preset.useWizard)
-            Wizard.Initialize();
-
-        Nest.RestoreCapacity(Save.nestcapacity);
-
-        while (!Discovery.load) yield return null;
-
-        SubscribeToEvents();
-
-        var dat = Save.beaconData; Debug.LogFormat("Found {0} beacons from SAVE", dat.Length);
-        var refresh = (dat == null || dat.Length == 0) || !Preset.persistBeacons;
-
-        Library.Initialize(refresh);
-
-        while (Library.loadprogress < 1f) {
-            Loader.progress = Library.loadprogress;
+        while (Library.loadProgress < 1f) 
+        {
+            Loader.progress = Library.loadProgress;
             yield return null;
         }
         Loader.progress = 1f;
-
-        Scribe.Restore(Save.logs);
-
-        wizardDiscoveries = Discovery.discoveries.Intersect(Library.wizard_files.Select(w => Library.ALL_FILES.IndexOf(w))).ToList();
-
-        RestoreNest();
-
-        if (!refresh) {
-            RestoreBeacons(dat); // Restore from save file
-            DeleteDeprecatedBeacons();
-
-            if (onRefreshBeacons != null) // Fire event during initialization
-                onRefreshBeacons();
-        }
+        
+        EventsM.Load(null);
+        
+        if (Save.nestOpen)
+            Nest.Open();
         else
-            RefreshBeacons();
+            Nest.Close();
 
-        Sun.active = true; // Set sun into motion
+        AI.Load();
 
-        if (STATE == GAMESTATE.INTRO) 
-        {
-            Sequencing.Intro();
-        }
-        else if (STATE == GAMESTATE.GAME || STATE == GAMESTATE.ABSORB) 
-        {
-            Sequencing.Game();
-        }
-        while (Sequencing.inprogress)
-            yield return null;
+        Beacons.Load();
+        if (Preset.persistBeacons)
+            Beacons.RestoreBeacons(Save.beaconData, deprecate: false);
+        else
+            Beacons.RefreshBeacons();
 
+        if (Preset.persistVines)
+            Vines.Load(Save.vineData);
+        else
+            Vines.Load(null);
+
+        Sun.active = true; // Update sun state
         LOAD = true;
-        // Update global game state here
-        if (UPDATE_GAMESTATE != null)
-            UPDATE_GAMESTATE(STATE);
     }
 
     void SubscribeToEvents()
     {
         Sun.onCycle += Advance;
-
-        Discovery.onDiscover += onDiscoveredSomethingNew;
-
-        Focus.onUpdateState += onUpdateFocusState;
+        Discoveries.onDiscover += onDiscoverFile;
+        Focusing.onUpdateState += onUpdateFocusState;
 
         Events.onGlobalEvent += onGlobalEvent;
 
@@ -289,25 +237,18 @@ public class World : Spawner
         Nest.onAddBeacon += onIngestBeacon;
         Nest.onRemoveBeacon += onReleaseBeacon;
 
-        Beacon.OnRegister += onRegisterBeacon;
-        Beacon.OnUnregister += onUnregisterBeacon;
-        Beacon.Discovered += onDiscoveredBeacon;
-
-        if(Preset.useWizard)
-            Wizard.onDiscoverMemory += onDiscoveredMemory;
-
         Quilt.onDisposeTexture += onDisposeQuiltTexture;
 
-        Library.OnAddItem += onAddLibraryItem;
+        Cage.onCompleteCorners += DetachSelf;
     }
 
     void UnsubscribeToEvents()
     {
         Sun.onCycle -= Advance;
 
-        Discovery.onDiscover -= onDiscoveredSomethingNew;
+        Discoveries.onDiscover -= onDiscoverFile;
 
-        Focus.onUpdateState -= onUpdateFocusState;
+        Focusing.onUpdateState -= onUpdateFocusState;
 
         Events.onGlobalEvent -= onGlobalEvent;
 
@@ -316,38 +257,14 @@ public class World : Spawner
         Nest.onAddBeacon -= onIngestBeacon;
         Nest.onRemoveBeacon -= onReleaseBeacon;
 
-        Beacon.OnRegister -= onRegisterBeacon;
-        Beacon.OnUnregister -= onUnregisterBeacon;
-        Beacon.Discovered -= onDiscoveredBeacon;
-
-        if(Preset.useWizard)
-            Wizard.onDiscoverMemory -= onDiscoveredMemory;
-
         Quilt.onDisposeTexture -= onDisposeQuiltTexture;
-
-        Library.OnAddItem -= onAddLibraryItem;
+        
+        Cage.onCompleteCorners -= DetachSelf;
     }
 
     #endregion
 
-    #region Spawner overrides
-
-    protected override void CalculateBounds()
-    {
-        m_center = Vector3.zero;
-        m_extents = root.GetComponent<MeshFilter>().mesh.bounds.extents;
-    }
-
-    public override void DecideRotation(ref Quaternion rot)
-    {
-        rot = transform.rotation;
-    }
-
-    #endregion
-
-    #region Sun callbacks
-
-    bool photo = false;
+    #region Advancing
 
     void Advance()
     {
@@ -356,224 +273,119 @@ public class World : Spawner
 
     IEnumerator Advancing()
     {
+        Sun.active = false;
+        
         Nest.Pulse();
+        
         yield return new WaitForEndOfFrame();
 
-        TakePicture();
-        photo = true;
+        if (Preset.takePhotos) 
+        {
+            TakePicture();
+            photoInProgress = true;
 
-        yield return new WaitForEndOfFrame();
-        while (photo)
-            yield return null;
-
-        Nest.AttemptUpdateCapacity();
+            yield return new WaitForEndOfFrame();
+            while (photoInProgress)
+                yield return null;
+        }
 
         bool success = Nest.Close(); // Close nest
         if (success)
             Butterflowers.KillButterflies();
 
-        RefreshBeacons(); // Reset all beacons
+        Beacons.RefreshBeacons(); // Reset all beacons
+        
+        EventsM.Clear(); // Clear all cached events
+        
+        Summary.ShowSummary();
+        while (Summary.ActivePanel == SummaryManager.Panel.Grades)
+            yield return null;
+        
+        Surveillance.CreateLog(); // Continue new log of surveillance
 
+        Reloader.progress = 0f;
+        Library.Reload();
         yield return new WaitForEndOfFrame();
-        CheckForConsumption();
+        
+        while (Library.loadProgress < 1f) { // Wait until reload is complete
+            Reloader.progress = Library.loadProgress;
+            yield return null;
+        }
+        Reloader.progress = 1f;
+        
+        Summary.ShowEscape();
+        while (Summary.active)
+            yield return null;
+
+        Sun.active = true;
     }
 
     #endregion
+    
+    #region Remote access
 
-    #region Nest operations
-
-    void RestoreNest()
+    State UpdateRemoteStatus()
     {
-        if (Save.nestOpen) Nest.Open();
-        else Nest.Close();
+        State targetState = State.User;
+
+        if (state == State.Parallel) {
+            remoteTimer = 0f;
+            targetState = State.Parallel;
+            UpdateUserInterfaces(-1f);
+        }
+        else 
+        {
+            if (wand.speed2d < Preset.cursorSpeedThreshold) {
+                remoteTimer += Time.deltaTime;
+
+                float remoteInterval =
+                    Mathf.Clamp01((remoteTimer - Preset.cursorIdleDelay) / Preset.cursorIdleTimeThreshold);
+                targetState = (remoteInterval >= 1f) ? State.Remote : State.User;
+
+                UpdateUserInterfaces(remoteInterval);
+            }
+            else {
+                remoteTimer = 0f;
+                targetState = State.User;
+
+                UpdateUserInterfaces(0f);
+            }
+        }
+
+        return targetState;
     }
 
-	#endregion
-
-	#region Beacon operations
-
-	public Beacon CreateBeacon(string path, Beacon.Type type = Beacon.Type.Desktop)
+    void UpdateUserInterfaces(float progress)
     {
-        if (!Library.ContainsFile(path)) return null;
+        if (!User) 
+        {
+            remoteOverlay.Show();
 
-        var instance = InstantiatePrefab(); // Create new beacon prefab
+            if (progress < 0f)
+                userOverlay.Show();
+            else
+                userOverlay.Hide();
+        }
+        else {
+            remoteOverlay.Hide();
+            userOverlay.Show();
+        }
 
-        var beacon = instance.GetComponent<Beacon>();
-        beacon.file = path;
-        beacon.fileEntry = null;
-        beacon.origin = instance.transform.position;
-        beacon.type = type;
+        remoteProgressBar.fillAmount = (!User) ? 0f : progress;
+    }
 
-        var discovered = Discovery.HasDiscoveredFile(path);
-        beacon.discovered = discovered; // Set if beacon has been discovered
-
-        beacon.visible = true;
-
-        beacon.Register();
-        beacon.Appear();
-
-        Events.ReceiveEvent(EVENTCODE.BEACONADD, AGENT.World, AGENT.Beacon, details: beacon.file);
-
-        return beacon;
+    void DetachSelf()
+    {
+        state = State.Parallel; // Initialize parallel AI
     }
     
-    public void DeleteBeacon(Beacon beacon, bool overridenest = false)
-    {
-        bool success = true;
+    #endregion
 
-        if (overridenest) 
-            beacon.Delete();
-        else {
-            if (!Nest.HasBeacon(beacon))
-                beacon.Delete();
-            else
-                success = false;
-        }
-
-        if(success)
-            Events.ReceiveEvent(EVENTCODE.BEACONDELETE, AGENT.World, AGENT.Beacon, details: beacon.file);
-    }
-
-    // If beacon is in subset, IGNORE
-    // If beacon is not in subset, DELETE
-
-    void RefreshBeacons()
-    {
-        if (Library.loadprogress < 1f) return; // Ignore refresh if library not finished
-
-        DeleteDeprecatedBeacons();
-
-        var desktop = Library.desktop_files;
-        var wizard = Library.wizard_files.Where(file => Discovery.HasDiscoveredFile(file)); // Only choose 'discovered' wizard files
-        var shared = Library.shared_files;
-        var enviro = Library.enviro_files;
-
-        var files = ((desktop.Concat(wizard)).Concat(enviro)).ToArray();
-        var subset = files.PickRandomSubset<string>(maxBeacons).ToList(); // Random subset from aggregate collection    
-
-        var current = (beacons != null)? beacons.Keys.ToList(): new List<string>();
-        if (current.Count > 0) {
-
-            var target = subset;
-            for (int i = 0; i < current.Count; i++) 
-            {
-                var path = current[i];
-                if (!target.Contains(current[i])) {
-                    var bs = beacons[path].ToArray();
-                    for (int j = 0; j < bs.Length; j++) {
-                        var b = bs[j];
-                        DeleteBeacon(b);
-                    }
-
-                }
-            }
-
-        }
-
-        wizard = wizard.Intersect(subset);
-        desktop = desktop.Intersect(subset).ToArray();
-        enviro = enviro.Intersect(subset).ToArray();
-
-        CreateBeacons(wizard.ToArray(), Beacon.Type.Wizard);
-        CreateBeacons(desktop, Beacon.Type.Desktop);
-        CreateBeacons(enviro, Beacon.Type.External);
-
-        if (onRefreshBeacons != null)
-            onRefreshBeacons();
-    }
-
-    void RestoreBeacons(BeaconData[] data)
-    {
-        Debug.LogFormat("Recovered {0} beacons from save!", data.Length);
-        for (int i = 0; i < data.Length; i++) {
-            var beacon = data[i];
-
-            string p = beacon.path;
-            Beacon.Type t = (Beacon.Type)beacon.type;
-            bool v = beacon.visible;
-
-            var instance = CreateBeacon(p, t);
-            if (instance == null)
-                continue; // Bypass null beacon
-
-            if (!v) {
-                onDiscoveredBeacon(instance); // Send to nest if immediately found
-                Events.ReceiveEvent(EVENTCODE.BEACONACTIVATE, AGENT.World, AGENT.Beacon, details: instance.file);
-            }
-        }
-    }
-
-    Beacon[] CreateBeacons(string[] files, Beacon.Type type, bool overrides = false)
-    {
-        List<Beacon> instances = new List<Beacon>();
-        for (int i = 0; i < files.Length; i++) {
-            var path = files[i];
-
-            bool exists = (beacons.ContainsKey(path));
-            if (exists) {
-                exists = false;
-
-                var bs = beacons[path];
-                for (int j = 0; j < bs.Count; j++) {
-                    if (!Nest.HasBeacon(bs[j])) {
-                        exists = true;
-                        break;
-                    }
-                }
-            }
-
-            if (!exists || overrides) {
-                var beacon = CreateBeacon(files[i], type);
-                if (beacon != null) // Could not success instantiate
-                    instances.Add(beacon);
-            }
-        }
-
-        return instances.ToArray();
-    }
-
-    void DeleteDeprecatedBeacons()
-    {
-        var current = (beacons != null) ? beacons.Keys.ToList() : new List<string>();
-
-        var path = "";
-        for (int i = 0; i < current.Count; i++) {
-            path = current[i];
-
-            if (!Library.ContainsFile(path)) {
-                var bs = beacons[path].ToArray();
-                foreach (Beacon b in bs)
-                    DeleteBeacon(b, true);
-            }
-        }
-    }
-
-    public Beacon CreateBeaconForDesktop(string file)
-    {
-        string name = file;
-        return CreateBeacon(name, Beacon.Type.Desktop);
-    }
-
-    public Beacon CreateBeaconForWizard(Texture2D texture)
-    {
-        string name = texture.name;
-        return CreateBeacon(name, Beacon.Type.Wizard);
-    }
-
-    public Beacon FetchRandomBeacon(bool active = false)
-    {
-        var beacons = this.beacons.Values;
-        IEnumerable<Beacon> collection = (active) ? ActiveBeacons : InactiveBeacons;
-
-        int count = collection.Count();
-        if (count == 0) return null;
-
-        var _beacon = collection.ElementAt(Random.Range(0, count));
-        return _beacon;
-    }
+	#region Beacons
 
     public Beacon.Status FetchBeaconStatus(Beacon beacon)
     {
+        /*
         if (Preset.useWizard) 
         {
             var brain = Wizard.Brain;
@@ -584,34 +396,19 @@ public class World : Spawner
                 return Beacon.Status.COMFORTABLE;
             else if (brain.isActionable(beacon))
                 return Beacon.Status.ACTIONABLE;
-        }
+        }*/
 
         return Beacon.Status.NULL;
     }
 
     public float FetchBeaconKnowledgeMagnitude(Beacon beacon)
     {
-        if(Preset.useWizard)
-            return Wizard.Brain.GetKnowledgeMagnitudeForBeacon(beacon);
-
         return 1f;
-    }
-
-    public void OverrideBeaconInfos()
-    {
-        foreach (Beacon b in allBeacons)
-            b.OverrideHover();
-    }
-
-    public void ClearOverrideBeaconInfos()
-    {
-        foreach (Beacon b in allBeacons)
-            b.ClearOverrideHover();
     }
 
     #endregion
 
-    #region World operations
+    #region Suggestions
 
     public SUGGESTION[] GetSuggestions()
     {
@@ -627,40 +424,30 @@ public class World : Spawner
             max = nest;
         }
 
-        float absorb = (1f - FetchKnowledgeOfWizard());
+        /*float absorb = (1f - FetchKnowledgeOfWizard());
         if (absorb > max) {
             suggestion = SUGGESTION.VISIT_TREE;
             max = nest;
-        }
+        }*/
+        
+        suggestion = SUGGESTION.VISIT_TREE;
 
         return new SUGGESTION[] { suggestion };
     }
 
     #endregion
 
-    #region Wizard operations
-
-    public float FetchKnowledgeOfWizard()
-    {
-        int current = wizardDiscoveries.Count;
-        int total = Memories.items.Length;
-
-        return (float)current / total;
-    }
-
-    #endregion
-
-    #region Camera operations
+    #region Scene photo
 
     void TakePicture()
     {
-        var camera = WorldCamera.camera;
+        var camera = snapshotCamera.camera;
 
         previousMainCamera = CameraManager.MainCamera;
         CameraManager.MainCamera = camera;
         camera.enabled = true;
 
-        WorldCamera.onSuccess += onReceivePicture;
+        snapshotCamera.onSuccess += onReceivePicture;
 
         StartCoroutine("TakingPicture");
     }
@@ -668,47 +455,34 @@ public class World : Spawner
     IEnumerator TakingPicture()
     {
         yield return new WaitForSeconds(.167f);
-        WorldCamera.Capture();
+        snapshotCamera.Capture();
     }
 
     void onReceivePicture(Texture2D image)
     {
         var name = Extensions.RandomString(12);
-        var camera = WorldCamera.camera;
+        var camera = snapshotCamera.camera;
 
         Library.SaveTexture(name, image);
+
+        lastPhotoCaption = name;
+        lastPhotoTaken = image;
 
         CameraManager.MainCamera = previousMainCamera;
 
         camera.enabled = false;
         previousMainCamera = null;
 
-        WorldCamera.onSuccess -= onReceivePicture;
+        snapshotCamera.onSuccess -= onReceivePicture;
 
-        photo = false;
+        photoInProgress = false;
 
         Events.ReceiveEvent(EVENTCODE.PHOTOGRAPH, AGENT.World, AGENT.Terrain);
     }
 
     #endregion
 
-    #region Miscellaneous operations
-
-    public void CheckForConsumption()
-    {
-        if (STATE != GAMESTATE.GAME && !Preset.alwaysAbsorb) return; // Ignore absorb for non-game state requests
-
-        if (Preset.useWizard) 
-        {
-            var brain = Wizard.Brain;
-
-            float absorption = brain.EvaluateAbsorption();
-            if (absorption >= 1f) {
-                Sequencing.Consume();
-                MoveToState(GAMESTATE.ABSORB);
-            }
-        }
-    }
+    #region Miscellaneous
 
     public void PositiveBurst()
     {
@@ -724,42 +498,14 @@ public class World : Spawner
         ps.Play();
     }
 
-    public void Stall()
-    {
-        if (stallinprogress)
-            StopCoroutine("Stalling");
-
-
-        stallinprogress = true;
-        StartCoroutine("Stalling");
-    }
-
-    bool stallinprogress = false;
-    public float stalltime = .3f;
-
-    IEnumerator Stalling()
-    {
-        Time.timeScale = 0f;
-
-        yield return new WaitForSecondsRealtime(stalltime);
-
-        Time.timeScale = 1f;
-        stallinprogress = false;
-    }
-
     #endregion
 
 
     #region Focus callbacks
 
-    void onUpdateFocusState(Focus.State previous, Focus.State current)
+    void onUpdateFocusState(Focusing.State previous, Focusing.State current)
     {
         Debug.LogFormat("Focus state changed from {0} to {1}", previous, current);
-
-        if (FOCUS && Nest.open)
-            OverrideBeaconInfos();
-        else
-            ClearOverrideBeaconInfos();
     }
 
     #endregion
@@ -768,53 +514,10 @@ public class World : Spawner
 
     void onGlobalEvent(EVENTCODE @event)
     {
-        //Stall(); // Freeze time
+        
     }
 
 	#endregion
-
-	#region Beacon callbacks
-
-	void onRegisterBeacon(Beacon beacon)
-    {
-        var file = beacon.file;
-        if (beacons.ContainsKey(file)) {
-            var list = beacons[file];
-            list.Add(beacon);
-
-            beacons[file] = list;
-        }
-        else
-            beacons.Add(file, new List<Beacon>(new Beacon[] { beacon }));
-
-        allBeacons.Add(beacon);
-        Save.beacons = allBeacons.ToArray();
-    }
-
-    void onUnregisterBeacon(Beacon beacon)
-    {
-        var file = beacon.file;
-        if (beacons.ContainsKey(file)) {
-            var curr = beacons[file];
-            curr.Remove(beacon);
-
-            if (curr.Count == 0) beacons.Remove(file);
-            else beacons[file] = curr;
-        }
-
-        allBeacons.Remove(beacon);
-        Save.beacons = allBeacons.ToArray();
-    }
-
-    void onDiscoveredBeacon(Beacon beacon)
-    {
-        var file = beacon.file;
-
-        bool success = Discovery.DiscoverFile(file);
-        Nest.AddBeacon(beacon);
-    }
-
-    #endregion
 
     #region Nest callbacks
 
@@ -822,17 +525,11 @@ public class World : Spawner
     {
         Debug.LogFormat("Nest state changed to --> {0}", Nest.open);
         Save.nestOpen = Nest.open; // Set save state in file
-
-        if (FOCUS)
-            OverrideBeaconInfos();
-        else
-            ClearOverrideBeaconInfos();
     }
 
     void onIngestBeacon(Beacon beacon)
     {
-        beacon.visible = false;
-        Save.beacons = allBeacons.ToArray();
+        Save.beacons = Beacons.AllBeacons;
 
         if (beacon.type == Beacon.Type.None) return;
 
@@ -851,33 +548,12 @@ public class World : Spawner
 
     void onReleaseBeacon(Beacon beacon)
     {
-        beacon.visible = true;
-        Save.beacons = allBeacons.ToArray();
+        Save.beacons = Beacons.AllBeacons.ToArray();
 
         if (beacon.type == Beacon.Type.None) return;
 
         var file = beacon.file;
         Quilt.Pop(file);
-    }
-
-    #endregion
-
-    #region Wizard callbacks
-
-    void onDiscoveredMemory(Memory memory)
-    {
-        var file = memory.name;
-        bool success = Discovery.DiscoverFile(file);
-
-        Debug.LogFormat("discovery = {0}", file);
-        //if (success) 
-        //{
-            var beacon = CreateBeaconForWizard(memory.image);
-            if (beacon != null) 
-            {
-                beacon.Discover();
-            }
-        //}
     }
 
     #endregion
@@ -891,29 +567,16 @@ public class World : Spawner
 
     #endregion
 
-    #region Library callbacks
+    #region Discovery callbacks
 
-    void onAddLibraryItem(string item)
+    void onDiscoverFile(string file)
     {
-
+        Save.discovered = Discoveries.discoveries.ToArray(); // Save all discoveries
+        
+        onDiscovery.Invoke();
+        
+        Events.ReceiveEvent(EVENTCODE.DISCOVERY, AGENT.User, AGENT.Beacon, details:file);
     }
 
     #endregion
-
-    #region Discovery callbacks
-
-    void onDiscoveredSomethingNew(string file)
-    {
-        onDiscovery.Invoke();
-        Events.ReceiveEvent(EVENTCODE.DISCOVERY, AGENT.Inhabitants, AGENT.Beacon, details:file);
-
-        if (Library.IsWizard(file)) 
-        {
-            int index = Library.ALL_FILES.IndexOf(file);
-            if (!wizardDiscoveries.Contains(index))
-                wizardDiscoveries.Add(index);
-        }
-    }
-
-	#endregion
 }

@@ -1,6 +1,7 @@
 ﻿using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
+using uwu.Camera.Instances;
 using XNode.Examples.MathNodes;
 
 public class NestCamera : FocusCamera

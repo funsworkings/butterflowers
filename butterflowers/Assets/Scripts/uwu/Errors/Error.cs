@@ -1,39 +1,42 @@
-﻿using System.Collections;
-using System.Collections.Generic;
+﻿using System;
 using UnityEngine;
+using uwu.Behaviors;
 
-[System.Serializable]
-public class Error
+namespace uwu.Errors
 {
-    #region Events
+	[Serializable]
+	public class Error
+	{
+		public string message = "";
 
-    public System.Action<Error> onDispose;
+		[HideInInspector] public Exception exception;
+		[HideInInspector] public IErrorHandler handler;
 
-    #endregion
+		#region Events
 
-    public string message = "";
+		public Action<Error> onDispose;
 
-    [HideInInspector] public System.Exception exception;
-    [HideInInspector] public IErrorHandler handler;
+		#endregion
 
-    public Error(System.Exception exception, IErrorHandler handler)
-    {
-        this.exception = exception;
-        this.handler = handler;
+		public Error(Exception exception, IErrorHandler handler)
+		{
+			this.exception = exception;
+			this.handler = handler;
 
-        this.message = (exception != null) ? exception.Message : "";
-    }
+			message = exception != null ? exception.Message : "";
+		}
 
-    #region Operations
+		#region Operations
 
-    public void Dispose()
-    {
-        if (handler != null)
-            handler.OnResolveError();
+		public void Dispose()
+		{
+			if (handler != null)
+				handler.OnResolveError();
 
-        if (onDispose != null)
-            onDispose(this);
-    }
+			if (onDispose != null)
+				onDispose(this);
+		}
 
-    #endregion
+		#endregion
+	}
 }

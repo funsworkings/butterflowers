@@ -1,19 +1,21 @@
-﻿using System.Collections;
-using System.Collections.Generic;
+﻿using System;
 using UnityEngine;
 
-public class JsonHelper
- {
-     public static T[] getJsonArray<T>(string json)
-     {
-         string newJson = "{ \"array\": " + json + "}";
-         Wrapper<T> wrapper = JsonUtility.FromJson<Wrapper<T>>(newJson);
-         return wrapper.array;
-     }
- 
-     [System.Serializable]
-     private class Wrapper<T>
-     {
-         public T[] array;
-     }
- }
+namespace uwu.Extensions
+{
+	public class JsonHelper
+	{
+		public static T[] getJsonArray<T>(string json)
+		{
+			var newJson = "{ \"array\": " + json + "}";
+			var wrapper = JsonUtility.FromJson<Wrapper<T>>(newJson);
+			return wrapper.array;
+		}
+
+		[Serializable]
+		class Wrapper<T>
+		{
+			public T[] array;
+		}
+	}
+}

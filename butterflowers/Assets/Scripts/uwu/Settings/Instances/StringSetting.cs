@@ -1,9 +1,9 @@
-﻿using System.Collections;
-using System.Collections.Generic;
-using UnityEngine;
+﻿using System;
 
-namespace Settings {
-
-    [System.Serializable] public class StringSetting : Setting<string>{}
-
+namespace uwu.Settings.Instances
+{
+	[Serializable]
+	public class StringSetting : Setting<string>
+	{
+	}
 }

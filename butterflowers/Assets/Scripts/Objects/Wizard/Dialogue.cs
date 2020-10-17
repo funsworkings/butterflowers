@@ -1,8 +1,6 @@
 ﻿using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
-
-using UIExt.Behaviors.Visibility;
 using System.Text.RegularExpressions;
 using System.Reflection.Emit;
 using UnityScript.Steps;
@@ -13,6 +11,9 @@ using System.Linq;
 using Noder.Graphs;
 using System.Text;
 using TMPro;
+using uwu.Dialogue;
+using uwu.Extensions;
+using uwu.UI.Behaviors.Visibility;
 
 namespace Wizard {
 
@@ -359,9 +360,6 @@ namespace Wizard {
 
             containerOpacity.Hide();
             advancer.Hide();
-
-            if (world.STATE == GAMESTATE.INTRO) 
-                StartCoroutine("WaitForNextIntroDialogue");
         }
 
         protected override void OnStart(string body)
@@ -403,19 +401,8 @@ namespace Wizard {
 
         protected override void OnComplete(string body)
         {
-            if (world.STATE == GAMESTATE.GAME) {
-                autoprogress = true;
-                advancer.Hide();
-            }
-            else
-                advancer.Show();
-        }
-
-        IEnumerator WaitForNextIntroDialogue()
-        {
-            yield return new WaitForSeconds(1.33f);
-            if(world.STATE == GAMESTATE.INTRO)
-                FetchDialogueFromTree(introDialogueTree); // Move to next dialogue node in intro
+            autoprogress = true;
+            advancer.Hide();
         }
 
         #endregion

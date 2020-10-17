@@ -1,8 +1,8 @@
 using System;
-using UIExt.Behaviors;
 using UnityEngine;
 using UnityEngine.Playables;
 using UnityEngine.Timeline;
+using uwu.UI.Behaviors;
 
 [Serializable]
 public class ToggleVisibilityTrackClip : PlayableAsset

@@ -1,57 +1,65 @@
 using UnityEngine;
-using UnityEngine.UI;
 
-using TMPro;
+namespace uwu.UI.Extras
+{
+	[ExecuteInEditMode]
+	public class Tooltip : MonoBehaviour
+	{
+		public new UnityEngine.Camera camera;
 
-namespace UIExt.Extras {
+		public Transform target;
 
-    [ExecuteInEditMode]
-    public class Tooltip : MonoBehaviour 
-    {
-        Camera mainCamera;
+		[SerializeField] Vector3 offset = Vector3.zero;
+		[SerializeField] bool globalOffset = true;
 
-        public new Camera camera;
+		[SerializeField] bool smooth;
+		[SerializeField] float smoothSpeed = 1f;
+		UnityEngine.Camera mainCamera;
 
-        public Transform target = null;
+		bool set;
 
-        [SerializeField] Vector3 offset = Vector3.zero;
-        [SerializeField] bool globalOffset = true;
+		bool m_active = false;
 
-        [SerializeField] bool smooth = false;
-        [SerializeField] float smoothSpeed = 1f;
+		public bool active
+		{
+			get { return m_active;  }
+			set
+			{
+				m_active = value;
+			}
+		}
 
-        bool set = false;
+		void Awake()
+		{
+			mainCamera = UnityEngine.Camera.main;
+		}
 
-        void Awake() 
-        {
-            mainCamera = Camera.main;  
-        }
+		void Update()
+		{
+			if (active) {
+				if (target == null) {
+					set = false;
+					return;
+				}
 
-        void Update() {
-            if (target == null) {
-                set = false;
-                return;
-            }
+				var pos = CalculatePosition();
+				if (set && smooth) {
+					transform.position = Vector3.Lerp(transform.position, pos, Time.deltaTime * smoothSpeed);
+					return;
+				}
 
-            Vector3 pos = CalculatePosition();
-            if (set && smooth) {
-                transform.position = Vector3.Lerp(transform.position, pos, Time.deltaTime * smoothSpeed);
-                return;
-            }
+				transform.position = pos;
+				set = true;
+			}
+		}
 
-            transform.position = pos;
-            set = true;
-        }
+		Vector3 CalculatePosition()
+		{
+			var cam = camera == null ? mainCamera : camera;
 
-        Vector3 CalculatePosition() {
-
-            var cam = (camera == null) ? mainCamera : camera;
-
-            if (globalOffset)
-                return cam.WorldToScreenPoint(target.position) + offset;
-            else
-                return cam.WorldToScreenPoint(target.position + target.TransformVector(offset));
-        }
-    }
-
+			if (globalOffset)
+				return cam.WorldToScreenPoint(target.position) + offset;
+			return cam.WorldToScreenPoint(target.position + target.TransformVector(offset));
+		}
+	}
 }

@@ -1,20 +1,20 @@
-﻿using System.Collections;
-using System.Collections.Generic;
-using UnityEngine;
+﻿using UnityEngine;
+using uwu.Net.Core;
 
-using Net;
-
-public class WebRelay : MonoBehaviour
+namespace uwu.Net.Misc
 {
-    [SerializeField] string url = "URL_GOES_HERE";
+	public class WebRelay : MonoBehaviour
+	{
+		[SerializeField] string url = "URL_GOES_HERE";
 
-    public void GoTo()
-    {
-        WebHandler.Instance.GoTo(url);
-    }
+		public void GoTo()
+		{
+			WebHandler.Instance.GoTo(url);
+		}
 
-    public void GoTo(string url)
-    {
-        WebHandler.Instance.GoTo(url);
-    }
+		public void GoTo(string url)
+		{
+			WebHandler.Instance.GoTo(url);
+		}
+	}
 }

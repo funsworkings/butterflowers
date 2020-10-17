@@ -1,116 +1,108 @@
-﻿using System.Collections;
-using System.Collections.Generic;
-using UnityEngine;
-
-using UnityEngine.UI;
+﻿using System;
 using TMPro;
-using Settings;
+using UnityEngine;
+using uwu.Settings;
+using FontStyle = uwu.Settings.Types.FontStyle;
+using Setting = uwu.Settings.Types.FontStyle.Style;
 
-using Setting = Settings.FontStyle.Style;
-using FontStyle = UnityEngine.FontStyle;
+namespace uwu.UI.Utilities
+{
+	[ExecuteInEditMode]
+	public class FontDriver : MonoBehaviour
+	{
+		public enum Type
+		{
+			Empty,
+			Native,
+			TMP
+		}
 
-namespace UIExt.Utilities {
+		public Setting setting = Setting.Body2;
 
-    [ExecuteInEditMode]
-    public class FontDriver : MonoBehaviour
-    {
-        public enum Type { Empty, Native, TMP }
-        Type type = Type.Empty;
+		[SerializeField] FontStyle styling;
 
-        public Setting setting = Setting.Body2;
+		Local settings;
 
-        Local settings;
-        
-        [SerializeField] 
-        Settings.FontStyle styling;
+		UnityEngine.UI.Text text;
+		TMP_Text tMP_Text;
+		Type type = Type.Empty;
 
-        Text text;
-        TMP_Text tMP_Text;
+		void Awake()
+		{
+			tMP_Text = GetComponent<TMP_Text>();
+			if (tMP_Text == null) {
+				text = GetComponent<UnityEngine.UI.Text>();
+				if (text == null)
+					type = Type.Empty; // Disable component if no component available
+				else
+					type = Type.Native;
+			}
+			else {
+				type = Type.TMP;
+			}
+		}
 
-        void Awake()
-        {
-            tMP_Text = GetComponent<TMP_Text>();
-            if (tMP_Text == null)
-            {
-                text = GetComponent<Text>();
-                if (text == null)
-                    type = Type.Empty; // Disable component if no component available
-                else
-                    type = Type.Native;
-            }
-            else
-                type = Type.TMP;
-        }
+		// Update is called once per frame
+		void Update()
+		{
+			if (type == Type.Empty || styling == null) return;
 
-        // Update is called once per frame
-        void Update()
-        {
-            if (type == Type.Empty || styling == null) return;
+			var key = Enum.GetName(typeof(Setting), setting);
+			var format = styling.GetValueFromKey(key);
 
-            string key = System.Enum.GetName(typeof(Setting), setting);
-            FontFormat format = styling.GetValueFromKey(key);
+			if (format == null) {
+				format = new FontFormat();
+				format.weight = FontFormat.Weight.Bold;
+				format.size = 64f;
+				return;
+			}
 
-            if (format == null)
-            {
-                format = new FontFormat();
-                format.weight = FontFormat.Weight.Bold;
-                format.size = 64f;
-                return;
-            }
-
-            float size = format.size;
-            FontFormat.Weight weight = format.weight;
+			var size = format.size;
+			var weight = format.weight;
 
 
-            if (type == Type.Native)
-            {
-                if (!Application.isPlaying)
-                {
-                    if (text == null)
-                        text = GetComponent<Text>();
-                }
+			if (type == Type.Native) {
+				if (!Application.isPlaying)
+					if (text == null)
+						text = GetComponent<UnityEngine.UI.Text>();
 
-                if (text == null)
-                    return;
+				if (text == null)
+					return;
 
-                text.font = styling.font;
+				text.font = styling.font;
 
-                text.fontSize = (int)(size);
-                text.fontStyle = GetNativeFontWeight(weight);
-            }
-            else if (type == Type.TMP)
-            {
-                if (!Application.isPlaying)
-                {
-                    if (tMP_Text == null)
-                        tMP_Text = GetComponent<TMP_Text>();
-                }
+				text.fontSize = (int) size;
+				text.fontStyle = GetNativeFontWeight(weight);
+			}
+			else if (type == Type.TMP) {
+				if (!Application.isPlaying)
+					if (tMP_Text == null)
+						tMP_Text = GetComponent<TMP_Text>();
 
-                if (tMP_Text == null)
-                    return;
+				if (tMP_Text == null)
+					return;
 
-                tMP_Text.font = styling.tmpfont;
+				tMP_Text.font = styling.tmpfont;
 
-                tMP_Text.fontSize = size;
-                tMP_Text.fontStyle = GetTMPFontWeight(weight);
-            }
-        }
+				tMP_Text.fontSize = size;
+				tMP_Text.fontStyle = GetTMPFontWeight(weight);
+			}
+		}
 
-        FontStyles GetTMPFontWeight(FontFormat.Weight weight)
-        {
-            if (weight == FontFormat.Weight.Bold)
-                return FontStyles.Bold;
+		FontStyles GetTMPFontWeight(FontFormat.Weight weight)
+		{
+			if (weight == FontFormat.Weight.Bold)
+				return FontStyles.Bold;
 
-            return FontStyles.Normal;
-        }
+			return FontStyles.Normal;
+		}
 
-        FontStyle GetNativeFontWeight(FontFormat.Weight weight)
-        {
-            if (weight == FontFormat.Weight.Bold)
-                return FontStyle.Bold;
+		UnityEngine.FontStyle GetNativeFontWeight(FontFormat.Weight weight)
+		{
+			if (weight == FontFormat.Weight.Bold)
+				return UnityEngine.FontStyle.Bold;
 
-            return FontStyle.Normal;
-        }
-    }
-
+			return UnityEngine.FontStyle.Normal;
+		}
+	}
 }

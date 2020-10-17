@@ -1,34 +1,42 @@
-﻿using System.Collections;
-using System.Collections.Generic;
-using UnityEngine;
+﻿using UnityEngine;
+using uwu.Extensions;
 
-public class CameraDriver : Singleton<CameraDriver>
+namespace uwu.Camera
 {
-    Camera m_camera;
-    public new Camera camera {
-        get
-        {
-            if(m_camera == null)
-                m_camera = Camera.main;
+	public class CameraDriver : Singleton<CameraDriver>
+	{
+		UnityEngine.Camera m_camera;
 
-            return m_camera;
-        }
-    }
+		public new UnityEngine.Camera camera
+		{
+			get
+			{
+				if (m_camera == null)
+					m_camera = UnityEngine.Camera.main;
 
-    public Vector3 MoveRelativeToCamera(Vector2 vector){
-        return MoveRelativeToCamera(new Vector3(vector.x, vector.y, 0f));
-    }
+				return m_camera;
+			}
+		}
 
-    public Vector3 MoveRelativeToCamera(Vector3 vector){
-        vector.z = 0f;
-        return camera.transform.TransformVector(vector);
-    }
+		public Vector3 MoveRelativeToCamera(Vector2 vector)
+		{
+			return MoveRelativeToCamera(new Vector3(vector.x, vector.y, 0f));
+		}
 
-    public Vector3 ConvertToScreen(Vector3 position){
-        return camera.WorldToScreenPoint(position);
-    }
+		public Vector3 MoveRelativeToCamera(Vector3 vector)
+		{
+			vector.z = 0f;
+			return camera.transform.TransformVector(vector);
+		}
 
-    public Vector3 ConvertToViewport(Vector3 position){
-        return camera.WorldToViewportPoint(position);
-    }
+		public Vector3 ConvertToScreen(Vector3 position)
+		{
+			return camera.WorldToScreenPoint(position);
+		}
+
+		public Vector3 ConvertToViewport(Vector3 position)
+		{
+			return camera.WorldToViewportPoint(position);
+		}
+	}
 }

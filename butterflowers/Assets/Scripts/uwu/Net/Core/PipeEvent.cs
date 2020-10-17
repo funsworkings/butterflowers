@@ -1,10 +1,10 @@
-﻿using UnityEngine;
-using System.Collections;
-
+﻿using System;
 using UnityEngine.Events;
 
-[System.Serializable]
-public sealed class PipeEvent : UnityEvent<System.Exception, System.Object>
+namespace uwu.Net.Core
 {
-
+	[Serializable]
+	public sealed class PipeEvent : UnityEvent<Exception, object>
+	{
+	}
 }

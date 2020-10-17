@@ -4,7 +4,7 @@ using UnityEngine.Timeline;
 
 [TrackColor(1f, 0.9372188f, 0f)]
 [TrackClipType(typeof(FocusControlClip))]
-[TrackBindingType(typeof(Focus))]
+[TrackBindingType(typeof(Focusing))]
 public class FocusControlTrack : TrackAsset
 {
 

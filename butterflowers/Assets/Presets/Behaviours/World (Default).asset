@@ -18,13 +18,73 @@ MonoBehaviour:
   persistDialogueVisited: 1
   persistKnowledge: 1
   persistBeacons: 1
+  persistVines: 1
   alwaysIntro: 0
   alwaysAbsorb: 0
-  hoursPerDay: 0.05000001
+  useWizard: 0
+  takePhotos: 0
+  logEvents: 1
+  loadTexturesInEditor: 0
+  hoursPerDay: 0.004166667
   startOfDay: 0.1
   endOfDay: 0.6
   sunHoursPerDay: 0.00067
   directionOfGravity: {x: 0, y: -1, z: 0}
-  amountOfButterflies: 1280
+  defaultNullTexture: {fileID: 2800000, guid: 48b99aa691dd8744f9adf73fba436432, type: 3}
+  starterFiles: {fileID: 11400000, guid: e3e427dd97c719f418f51d145c525abd, type: 2}
+  wizardFiles: {fileID: 11400000, guid: a11a7773fa9f39649b779c417d4c7b19, type: 2}
+  amountOfButterflies: 640
+  nestCapacity: 6
+  amountOfBeacons: 10
+  normalBeaconScale: 1
+  plantedBeaconScale: 3
+  beaconLerpDuration: 1
+  beaconScaleCurve:
+    serializedVersion: 2
+    m_Curve:
+    - serializedVersion: 3
+      time: 0
+      value: 0
+      inSlope: 0
+      outSlope: 0
+      tangentMode: 0
+      weightedMode: 0
+      inWeight: 0
+      outWeight: 0
+    - serializedVersion: 3
+      time: 1
+      value: 1
+      inSlope: 2
+      outSlope: 2
+      tangentMode: 0
+      weightedMode: 0
+      inWeight: 0
+      outWeight: 0
+    m_PreInfinity: 2
+    m_PostInfinity: 2
+    m_RotationOrder: 4
+  saplingGrowHeight: 0
+  daysToGrowVine: 0.06
+  surveillanceLogRate: 0.167
+  baselineSurveillanceData:
+    timestamp: 0
+    filesAdded: 1
+    filesRemoved: 0
+    discoveries: 1
+    logs: []
+    beaconsAdded: 1
+    beaconsPlanted: 1
+    nestKicks: 1
+    nestSpills: 1
+    AverageHoB: 0
+    AverageNestFill: 0
+    AverageCursorSpeed: 0
+    AverageTimeSpentInNest: 0
+    AverageTimeSpentInMagicStar: 0
+    AverageTimeSpentInTree: 0
+    AverageTimeSpentInDefault: 0
   unknownPersistenceThreshold: 0.33
+  cursorSpeedThreshold: 1
+  cursorIdleTimeThreshold: 10
+  cursorIdleDelay: 1
   worldTextures: {fileID: 11400000, guid: e3e427dd97c719f418f51d145c525abd, type: 2}

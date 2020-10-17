@@ -1,40 +1,40 @@
 ﻿using System.Collections;
-using System.Collections.Generic;
 using UnityEngine;
 using UnityEngine.Events;
+using uwu.UI.Behaviors.Visibility;
 
-using UIExt.Behaviors.Visibility;
+namespace uwu.UI.Elements
+{
+	public class Notification : MonoBehaviour
+	{
+		public UnityEvent OnNotify;
 
-namespace UIExt.Elements {
+		[SerializeField] float lifetime = .33f; // How long to stay on screen for after SHOW
+		bool notify;
 
-    public class Notification : MonoBehaviour
-    {   
-        public UnityEvent OnNotify;
+		ToggleOpacity opacity;
 
-        ToggleOpacity opacity;
+		void Awake()
+		{
+			opacity = GetComponent<ToggleOpacity>();
+		}
 
-        [SerializeField] float lifetime = .33f; // How long to stay on screen for after SHOW
-                         bool notify = false;
+		public void Show()
+		{
+			if (notify)
+				StopCoroutine("Showing");
 
-        void Awake() {
-            opacity = GetComponent<ToggleOpacity>();    
-        }
+			notify = true;
+			StartCoroutine("Showing");
 
-        public void Show(){
-            if(notify)
-                StopCoroutine("Showing");
-            
-            notify = true;
-            StartCoroutine("Showing");
+			OnNotify.Invoke();
+		}
 
-            OnNotify.Invoke();
-        }
-
-        IEnumerator Showing(){
-            opacity.SetOpacity(1f);
-            yield return new WaitForSeconds(lifetime);
-            opacity.Hide();
-        }
-    }
-
+		IEnumerator Showing()
+		{
+			opacity.SetOpacity(1f);
+			yield return new WaitForSeconds(lifetime);
+			opacity.Hide();
+		}
+	}
 }

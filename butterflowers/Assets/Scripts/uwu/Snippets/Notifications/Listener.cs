@@ -1,55 +1,49 @@
-﻿using System.Collections;
-using System.Collections.Generic;
+﻿using System;
 using UnityEngine;
-
 using UnityEngine.Events;
 
-namespace Notifications
+namespace uwu.Snippets.Notifications
 {
-
-    public class Listener : MonoBehaviour
-    {
-        [SerializeField] Controller controller;
-
-        [System.Serializable]
-        public struct NotificationEvent
-        {
-            public Notification notification;
-            public UnityEvent response;
-        }
+	public class Listener : MonoBehaviour
+	{
+		[SerializeField] Controller controller;
 
 
-        [SerializeField] NotificationEvent[] events = new NotificationEvent[] { };
+		[SerializeField] NotificationEvent[] events = { };
 
 
-        void OnEnable()
-        {
-            if (controller == null)
-                return;
+		void OnEnable()
+		{
+			if (controller == null)
+				return;
 
-            controller.onDismissNotification += ReceiveNotificationEvent;
-        }
+			controller.onDismissNotification += ReceiveNotificationEvent;
+		}
 
-        void OnDisable()
-        {
-            if (controller == null)
-                return;
+		void OnDisable()
+		{
+			if (controller == null)
+				return;
 
-            controller.onDismissNotification -= ReceiveNotificationEvent;
-        }
+			controller.onDismissNotification -= ReceiveNotificationEvent;
+		}
 
-        void ReceiveNotificationEvent(Notification notification)
-        {
-            if (notification == null)
-                return;
+		void ReceiveNotificationEvent(Notification notification)
+		{
+			if (notification == null)
+				return;
 
 
-            foreach(NotificationEvent e in events)
-            {
-                if (e.notification == notification)
-                    e.response.Invoke();
-            }
-        }
-    }
+			foreach (var e in events)
+				if (e.notification == notification)
+					e.response.Invoke();
+		}
 
+		[Serializable]
+		public struct NotificationEvent
+		{
+			public Notification notification;
+			public UnityEvent response;
+		}
+	}
 }

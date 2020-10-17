@@ -1,7 +1,6 @@
 using UnityEditor;
 using UnityEngine;
 using UnityEngine.Playables;
-using UIExt.Behaviors;
 
 [CustomPropertyDrawer(typeof(ToggleVisibilityTrackBehaviour))]
 public class ToggleVisibilityTrackDrawer : PropertyDrawer

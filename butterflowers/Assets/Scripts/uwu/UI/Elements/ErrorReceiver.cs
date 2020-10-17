@@ -1,212 +1,192 @@
-﻿using System.Collections;
+﻿using System;
 using System.Collections.Generic;
-using UnityEngine;
-
-using UnityEngine.Events;
-using UnityEngine.UI;
 using TMPro;
-using System;
+using UnityEngine;
+using UnityEngine.Events;
+using uwu.Behaviors;
+using uwu.Errors;
 
-namespace UIExt.Elements {
-
-public class ErrorReceiver : MonoBehaviour
+namespace uwu.UI.Elements
 {
-    public static ErrorReceiver Instance = null;
+	public class ErrorReceiver : MonoBehaviour
+	{
+		public static ErrorReceiver Instance;
 
-    #region Events 
+		#region Events
 
-    public UnityEvent OnEnabled, OnDisabled;
+		public UnityEvent OnEnabled, OnDisabled;
 
-    #endregion
+		#endregion
 
-    #region Collections
+		#region Properties
 
-    List<Error> errors = new List<Error>(); 
-    Error errorInFocus = null;
+		[SerializeField] TMP_Text errorTitleField, errorBodyField;
 
-    #endregion
+		#endregion
 
-    #region Properties
+		#region Attributes
 
-    [SerializeField] TMP_Text errorTitleField, errorBodyField;
+		[SerializeField] int errorsInQueue;
 
-    #endregion
+		#endregion
 
-    #region Attributes
+		public void Push(string title, string body, IErrorHandler handler)
+		{
+			var message = string.Format("{0}*{1}", title, body);
+			var exception = new Exception(message);
 
-    [SerializeField] int errorsInQueue = 0;
+			Push(exception, handler);
+		}
 
-    #endregion
+		public void Push(Exception exception, IErrorHandler handler)
+		{
+			var error = new Error(exception, handler);
 
-    #region Monobehaviour callbacks
+			Push(error);
+		}
 
-    void Awake()
-    {
-        if(Instance == null)
-        {
-            Instance = this;
-        }
-        else
-        {
-            Destroy(gameObject); // Clear out Error receiver instance
-        }
-    }
+		public void Push(Error error)
+		{
+			errors.Add(error); // Add to error queue
 
-    void OnEnable()
-    {
-        errors = new List<Error>();
-        errorInFocus = null;
+			if (errors.Count == 1) {
+				OnEnabled.Invoke(); // Invoke enable to show error receiver
+				errorInFocus = error; // Immediately pop first error in queue
+			}
+		}
 
-        OnDisabled.Invoke();
-    }
+		public void Pop()
+		{
+			errorInFocus = null;
 
-    void Update()
-    {
-        errorsInQueue = errors.Count;
+			if (errors.Count > 0) {
+				errors.RemoveAt(0);
 
-        if (errorInFocus == null)
-            return;
+				if (errors.Count > 0) {
+					var error = errors[0];
+					errorInFocus = error;
+				}
+				else {
+					OnDisabled.Invoke(); // Invoke disable to hide error receiver
+				}
+			}
+		}
 
-        DisplayError(errorInFocus);
-    }
+		public void Clear()
+		{
+			if (errorInFocus == null)
+				return;
 
-    void OnDestroy()
-    {
-        if(Instance == this)
-        {
-            Instance = null; // Clear out previous instance
-        }
-    }
+			errorInFocus.Dispose();
+			Pop();
+			//errorInFocus = null;
+		}
 
-    #endregion
+		void onDisposeError(Error error)
+		{
+			if (errors.Contains(error))
+				errors.Remove(error); // Remove from error collection
 
-    public void Push(string title, string body, IErrorHandler handler)
-    {
-        string message = string.Format("{0}*{1}", title, body);
-        System.Exception exception = new System.Exception(message);
+			//       error.onDispose -= onDisposeError;
+			if (errors.Count == 0)
+				OnDisabled.Invoke(); // Invoke disable to hide error receiver
+			else
+				Pop(); // Immediately 
+		}
 
-        Push(exception, handler);
-    }
+		void DisplayError(Error error)
+		{
+			var message = error.exception != null ? error.exception.Message : "";
+			var message_parts = message.Split('*');
 
-    public void Push(System.Exception exception, IErrorHandler handler)
-    {
-        Error error = new Error(exception, handler);
+			// Detected message with multiple astricks
+			if (message_parts.Length > 2) {
+				var message_title = message_parts[0];
+				var message_body = "";
 
-        Push(error);
-    }
+				var message_end = new string[message_parts.Length - 1];
 
-    public void Push(Error error)
-    {
-        errors.Add(error); // Add to error queue
-       
-        if(errors.Count == 1)
-        {
-            OnEnabled.Invoke(); // Invoke enable to show error receiver
-            errorInFocus = error; // Immediately pop first error in queue
-        }
-    }
+				Array.Copy(message_parts, 1, message_end, 0, message_end.Length);
+				message_body = string.Join("", message_end);
 
-    public void Pop()
-    {
-        errorInFocus = null;
+				message_parts = new string[2] {message_title, message_body};
+			}
 
-        if(errors.Count > 0)
-        {
-            errors.RemoveAt(0);
+			if (message_parts.Length == 0)
+				message_parts = new[] {""};
 
-            if(errors.Count > 0)
-            {
-                Error error = errors[0];
-                errorInFocus = error;
-            }
-            else
-            {
-                OnDisabled.Invoke(); // Invoke disable to hide error receiver
-            }
-        }
-    }
+			var hasTitleAndBody = message_parts.Length == 2;
 
-    public void Clear()
-    {
-        if (errorInFocus == null)
-            return;
+			if (errorTitleField != null) {
+				errorTitleField.enabled = true;
+				if (hasTitleAndBody)
+					errorTitleField.text = message_parts[0];
+				else
+					errorTitleField.text = "Error";
+			}
 
-        errorInFocus.Dispose();
-        Pop();
-       //errorInFocus = null;
-    }
+			if (errorBodyField != null) {
+				errorBodyField.enabled = true;
+				errorBodyField.text = hasTitleAndBody ? message_parts[1] : message_parts[0];
+			}
+		}
 
-    void onDisposeError(Error error)
-    {
-        if(errors.Contains(error))
-            errors.Remove(error); // Remove from error collection
+		#region Helpers
 
- //       error.onDispose -= onDisposeError;
-        if (errors.Count == 0)
-        {
-            OnDisabled.Invoke(); // Invoke disable to hide error receiver
-        }
-        else
-            Pop(); // Immediately 
-    }
+		bool HandlerInQueue(IErrorHandler handler)
+		{
+			var flag = false;
+			for (var i = 0; i < errors.Count; i++)
+				if (errors[i].handler == handler) {
+					flag = true;
+					break;
+				}
 
-    void DisplayError(Error error)
-    {
-        string message = (error.exception != null)?error.exception.Message:"";
-        string[] message_parts = message.Split('*');
+			return flag;
+		}
 
-        // Detected message with multiple astricks
-        if(message_parts.Length > 2)
-        {
-            string message_title = message_parts[0];
-            string message_body = "";
+		#endregion
 
-            string[] message_end = new string[message_parts.Length - 1];
+		#region Collections
 
-                Array.Copy(message_parts, 1, message_end, 0, message_end.Length);
-                message_body = string.Join("", message_end);
-                
-            message_parts = new string[2] { message_title, message_body };
-        }
+		List<Error> errors = new List<Error>();
+		Error errorInFocus;
 
-        if (message_parts.Length == 0)
-            message_parts = new string[]{ "" };
+		#endregion
 
-        bool hasTitleAndBody = (message_parts.Length == 2);
+		#region Monobehaviour callbacks
 
-        if (errorTitleField != null)
-        {
-            errorTitleField.enabled = true;
-            if (hasTitleAndBody)
-                errorTitleField.text = message_parts[0];
-            else
-                errorTitleField.text = "Error";
-        }
-        if (errorBodyField != null)
-        {
-            errorBodyField.enabled = true;
-            errorBodyField.text = hasTitleAndBody ? message_parts[1] : message_parts[0];
-        }
-    }
+		void Awake()
+		{
+			if (Instance == null)
+				Instance = this;
+			else
+				Destroy(gameObject); // Clear out Error receiver instance
+		}
 
-    #region Helpers
+		void OnEnable()
+		{
+			errors = new List<Error>();
+			errorInFocus = null;
 
-    bool HandlerInQueue(IErrorHandler handler)
-    {
-        bool flag = false;
-        for(int i = 0; i < errors.Count; i++)
-        {
-            if(errors[i].handler == handler)
-            {
-                flag = true;
-                break;
-            }
-        }
+			OnDisabled.Invoke();
+		}
 
-        return flag;
-    }
+		void Update()
+		{
+			errorsInQueue = errors.Count;
 
-    #endregion
-}
+			if (errorInFocus == null)
+				return;
 
+			DisplayError(errorInFocus);
+		}
+
+		void OnDestroy()
+		{
+			if (Instance == this) Instance = null; // Clear out previous instance
+		}
+
+		#endregion
+	}
 }

@@ -1,12 +1,14 @@
-﻿using System.Collections;
-using System.Collections.Generic;
-using UnityEngine;
+﻿using UnityEngine;
 
-[CreateAssetMenu(fileName = "New Object Event", menuName = "Events/Object", order = 52)] // 1
-public class ObjectEvent : GameEvent
+namespace uwu.Events
 {
-    public void Raise(GameObject obj){
-        for( int i = listeners.Count - 1; i >= 0; i--)
-            listeners[i].OnEventRaised(this, obj);
-    }
+	[CreateAssetMenu(fileName = "New Object Event", menuName = "Events/Object", order = 52)] // 1
+	public class ObjectEvent : GameEvent
+	{
+		public void Raise(GameObject obj)
+		{
+			for (var i = listeners.Count - 1; i >= 0; i--)
+				listeners[i].OnEventRaised(this, obj);
+		}
+	}
 }

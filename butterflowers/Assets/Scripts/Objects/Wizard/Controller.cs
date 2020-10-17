@@ -7,12 +7,14 @@ using Settings;
 using UnityEngine;
 using UnityEngine.AI;
 using UnityEngine.Events;
+using uwu;
+using uwu.Animation;
+using uwu.Snippets;
+using AI.Types;
 
 namespace Wizard {
 
-    using ActionType = Actions.Type;
-    using Action = Actions.Action;
-    using ActionSequence = Actions.ActionSequence;
+    using ActionType = EVENTCODE;
 
     using Mood = Brain.MoodState;
     using Stance = Brain.StanceState;
@@ -33,7 +35,7 @@ namespace Wizard {
         [SerializeField] World World;
         [SerializeField] Wand wand;
         [SerializeField] Nest Nest;
-        [SerializeField] Focus Focus;
+        [SerializeField] Focusing Focusing;
         [SerializeField] Camera Look;
 
 		#endregion
@@ -41,8 +43,6 @@ namespace Wizard {
 		#region Internal
 
 		public enum State { Idle, Walk, Spell, Rest, Picture }
-
-        public bool ABSORBED => (World.STATE == GAMESTATE.ABSORB);
 
         #endregion
 
@@ -63,11 +63,11 @@ namespace Wizard {
         Brain m_Brain;
         Navigation m_Navigation;
         Appearance m_Appearance;
-        Actions m_Actions;
+        AI.Agent.Actions m_Actions;
         Dialogue m_Dialogue; 
         Audio Audio;
         Damage damage;
-        FocalPoint m_FocalPoint;
+        Focusable m_FocalPoint;
 
         SkinnedMeshRenderer Renderer;
         Material DefaultMaterial;
@@ -99,11 +99,11 @@ namespace Wizard {
         // Core functionality accessors
         public Brain Brain => m_Brain;
         public Navigation Navigation => m_Navigation;
-        public Actions Actions => m_Actions;
+        public AI.Agent.Actions Actions => m_Actions;
         public Dialogue Dialogue => m_Dialogue;
         public Memories Memories => m_Memories;
         public Appearance Appearance => m_Appearance;
-        public FocalPoint FocalPoint => m_FocalPoint;
+        public Focusable FocalPoint => m_FocalPoint;
 
         public Wand Wand => wand;
         public Animator Animator => animator;
@@ -121,12 +121,12 @@ namespace Wizard {
 
             m_Brain = GetComponent<Brain>();
             m_Navigation = GetComponent<Navigation>();
-            m_Actions = GetComponent<Actions>();
+            m_Actions = GetComponent<AI.Agent.Actions>();
             Audio = GetComponent<Audio>();
             m_Dialogue = GetComponent<Dialogue>();
             damage = GetComponent<Damage>();
             m_Appearance = GetComponent<Appearance>();
-            m_FocalPoint = GetComponent<FocalPoint>();
+            m_FocalPoint = GetComponent<Focusable>();
         }
 
         public void Initialize()
@@ -158,7 +158,6 @@ namespace Wizard {
         void OnEnable()
         {
             World = World.Instance;
-            World.UPDATE_GAMESTATE += onUpdateGameState;
 
             Sun.onDayBegin += onDayNightCycle;
             Sun.onNightBegin += onDayNightCycle;
@@ -176,8 +175,6 @@ namespace Wizard {
 
         void OnDisable()
         {
-            World.UPDATE_GAMESTATE -= onUpdateGameState;
-
             Sun.onDayBegin -= onDayNightCycle;
             Sun.onNightBegin -= onDayNightCycle;
 
@@ -418,8 +415,6 @@ namespace Wizard {
 
         void React()
         {
-            if (World.STATE != GAMESTATE.GAME) return;
-
             var rand = Random.Range(0f, 1f);
             if (rand > BrainPreset.reactionProbability)
                 return;
@@ -432,8 +427,6 @@ namespace Wizard {
 
         void Emote()
         {
-            if (World.STATE != GAMESTATE.GAME) return;
-
             Mood mood = Brain.moodState;
             if (mood == Mood.Depression)
                 emotions.SetTrigger("cry");
@@ -443,8 +436,6 @@ namespace Wizard {
 
         void Comment()
         {
-            if (World.STATE != GAMESTATE.GAME) return;
-
             float r = Random.Range(0f, 1f);
             if (r <= BrainPreset.commentProbabilty)
                 Comment(Brain.moodState, Brain.stanceState);
@@ -452,7 +443,6 @@ namespace Wizard {
 
         void Comment(Mood mood, Stance stance)
         {
-            if (World.STATE != GAMESTATE.GAME) return;
             Dialogue.Comment(mood, stance);
         }
 
@@ -462,7 +452,7 @@ namespace Wizard {
 
             Brain.EncounterMemory(memory, false);
             Audio.PushMemoryAudio(memory.audio);
-            Actions.Push(ActionType.Emote, immediate:true); // Immediately emote
+            //Actions.Push(ActionType.Emote, immediate:true); // Immediately emote
 
             if (onDiscoverMemory != null)
                 onDiscoverMemory(memory);
@@ -497,11 +487,7 @@ namespace Wizard {
 
         void onCompleteDialogueTree(DialogueTree tree)
         {
-            // COMPLETED INTRO SEQUENCE
-            if (tree == introDialogueTree) 
-            {
-                World.MoveToState(GAMESTATE.GAME); // Move to game state
-            }
+
         }
 
 		#endregion
@@ -518,10 +504,8 @@ namespace Wizard {
 
         #region Action callbacks
 
-        void onEnactAction(Action action)
+        void onEnactAction(AI.Types.Action action)
         {
-            if (action.cast) 
-                animator.SetTrigger("cast");
         }
 
         #endregion
@@ -531,8 +515,6 @@ namespace Wizard {
         void onUpdateBrainState(Mood mood, Stance stance)
         {
             Debug.LogFormat("Wizard became {0} and {1}", mood, stance);
-
-            if (World.STATE == GAMESTATE.INTRO) return;
             Comment(mood, stance);
         }
 
@@ -542,12 +524,12 @@ namespace Wizard {
 
 		public void DidCastSpell()
         {
-            Actions.onCastSpell();
+            //Actions.onCastSpell();
         }
 
         public void DidInspect()
         {
-            Actions.onInspect();
+            //Actions.onInspect();
         }
 
         #endregion
@@ -596,7 +578,6 @@ namespace Wizard {
 
         void onGlobalEvent(EVENTCODE @event)
         {
-            if (World.STATE != GAMESTATE.GAME) return;
             TriggerDialogue();
         }
 
@@ -614,15 +595,15 @@ namespace Wizard {
             debug += "\n\n- - - CURRENT ACTION - - -";
 
             var currentAction = Actions.currentAction;
-            if (currentAction != null) {
-                debug += string.Format("\ntype={0} dat={1}", currentAction.type, currentAction.debug);
-            }
+            //if (currentAction != null) {
+            //    debug += string.Format("\ntype={0} dat={1}", currentAction.type, currentAction.debug);
+            //}
 
             debug += "\n\n- - - ACTION QUEUE - - -";
 
             var queue = Actions.queue;
-            foreach (Action a in queue)
-                debug += string.Format("\ntype={0} dat={1}", a.type, a.debug);
+            //foreachBEAC.B..BEACNACONACTIVATENESTPOPNESTCLEARNESTKIKCKGESTUREPICKTURESNAPSHOT////NESTKICKEBEACNACIONACTIVATEBEACNDEONDELETEreturn false;//@event@eventEVENTCODEEVENTCODE (Action a in queue)
+            //    debug += string.Format("\ntype={0} dat={1}", a.type, a.debug);
 
             debug += "\n- - - END ACTION QUEUE - - -";
             debugtext.text = debug;

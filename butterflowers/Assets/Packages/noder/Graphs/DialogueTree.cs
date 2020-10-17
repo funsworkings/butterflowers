@@ -5,6 +5,7 @@ using UnityEngine;
 using XNode;
 using Noder.Nodes.External;
 using System.Linq;
+using uwu.Dialogue;
 using Wizard;
 
 namespace Noder.Graphs {

@@ -1,142 +1,128 @@
 ﻿using System.Collections;
-using System.Collections.Generic;
 using UnityEngine;
-using UnityEngine.UI;
-
 using UnityEngine.Events;
 
-namespace UIExt.Behaviors
+namespace uwu.UI.Behaviors
 {
-    /*
-    
-        Wrapper class for visible elements in UI
-            Hide, Show, Toggle
+	/*
+	
+	    Wrapper class for visible elements in UI
+	        Hide, Show, Toggle
 
-     */
+	 */
 
-    public abstract class ToggleVisibility : MonoBehaviour
-    {
-        [SerializeField] protected bool shown = false;
-        public bool Shown
-        {
-            get
-            {
-                return shown;
-            }
-            set
-            {
-                shown = value;
-            }
-        }
+	public abstract class ToggleVisibility : MonoBehaviour
+	{
+		[SerializeField] protected bool shown;
 
-        public bool Visible => (Shown && !lerping);
-        public bool Hidden => (!Shown && !lerping);
+		[SerializeField] protected bool lerps;
+		[SerializeField] protected bool lerping;
 
-        [SerializeField] protected bool lerps = false;
-        [SerializeField] protected bool lerping = false;
+		[SerializeField] protected float value;
+		[SerializeField] protected float transitionInSpeed, transitionOutSpeed;
 
-        [SerializeField] protected float value = 0f;
-        [SerializeField] protected float transitionInSpeed = 0f, transitionOutSpeed = 0f;
-        protected float transitionSpeed;
+		public UnityEvent OnShow, OnHide, OnToggle, onShown, onHidden;
+		protected float transitionSpeed;
 
-        public UnityEvent OnShow, OnHide, OnToggle, onShown, onHidden;
+		public bool Shown
+		{
+			get => shown;
+			set => shown = value;
+		}
 
-        void OnEnable()
-        {
-            SetCurrent(shown);
-            SetTargetToCurrent();
+		public bool Visible => Shown && !lerping;
+		public bool Hidden => !Shown && !lerping;
 
-            EvaluateVisibility();
-        }
+		void OnEnable()
+		{
+			SetCurrent(shown);
+			SetTargetToCurrent();
 
-        void OnDisable()
-        {
-            if (lerping)
-            {
-                StopCoroutine("UpdatingVisibility");
-                SetCurrentToTarget();
+			EvaluateVisibility();
+		}
 
-                lerping = false;
-            }
-        }
+		void OnDisable()
+		{
+			if (lerping) {
+				StopCoroutine("UpdatingVisibility");
+				SetCurrentToTarget();
 
-        protected virtual void OnUpdateVisibility()
-        {
-            transitionSpeed = (shown) ? transitionInSpeed : transitionOutSpeed;
+				lerping = false;
+			}
+		}
 
-            var lerps = this.lerps && transitionSpeed > 0f;
+		protected virtual void OnUpdateVisibility()
+		{
+			transitionSpeed = shown ? transitionInSpeed : transitionOutSpeed;
 
-            if (lerps)
-            {
-                if (lerping) 
-                    StopCoroutine("UpdatingVisibility");
+			var lerps = this.lerps && transitionSpeed > 0f;
 
-                
+			if (lerps) {
+				if (lerping)
+					StopCoroutine("UpdatingVisibility");
 
-                if (gameObject.activeInHierarchy) {
-                    StartCoroutine("UpdatingVisibility");
-                    lerping = true;
-                }
-                else 
-                {
-                    SetCurrentToTarget();
-                    lerping = false;
-                }
-            }
-            else
-            {
-                SetCurrentToTarget();
-                EvaluateVisibility();
 
-                lerping = false;
-            }
-        }
+				if (gameObject.activeInHierarchy) {
+					StartCoroutine("UpdatingVisibility");
+					lerping = true;
+				}
+				else {
+					SetCurrentToTarget();
+					lerping = false;
+				}
+			}
+			else {
+				SetCurrentToTarget();
+				EvaluateVisibility();
 
-        protected virtual IEnumerator UpdatingVisibility()
-        {
-            yield return null;
-        }
+				lerping = false;
+			}
+		}
 
-        protected virtual void EvaluateVisibility() { }
+		protected virtual IEnumerator UpdatingVisibility()
+		{
+			yield return null;
+		}
 
-        protected abstract void SetTarget(bool isVisible);
-        protected abstract void SetCurrent(bool isVisible);
+		protected virtual void EvaluateVisibility()
+		{
+		}
 
-        protected abstract void SetTargetToCurrent();
-        protected abstract void SetCurrentToTarget();
+		protected abstract void SetTarget(bool isVisible);
+		protected abstract void SetCurrent(bool isVisible);
 
-        public void Show()
-        {
-            if (shown) return;
+		protected abstract void SetTargetToCurrent();
+		protected abstract void SetCurrentToTarget();
 
-            shown = true;
-            SetTarget(true);
+		public void Show()
+		{
+			if (shown) return;
 
-            OnUpdateVisibility();
-            OnShow.Invoke();
-        }
+			shown = true;
+			SetTarget(true);
 
-        public void Hide()
-        {
-            if (!shown) return;
+			OnUpdateVisibility();
+			OnShow.Invoke();
+		}
 
-            shown = false;
-            SetTarget(false);
+		public void Hide()
+		{
+			if (!shown) return;
 
-            OnUpdateVisibility();
-            OnHide.Invoke();
-        }
+			shown = false;
+			SetTarget(false);
 
-        public void Toggle()
-        {
-            shown = !shown;
-            SetTarget(shown);
+			OnUpdateVisibility();
+			OnHide.Invoke();
+		}
 
-            OnUpdateVisibility();
-            OnToggle.Invoke();
-        }
-    }
+		public void Toggle()
+		{
+			shown = !shown;
+			SetTarget(shown);
 
+			OnUpdateVisibility();
+			OnToggle.Invoke();
+		}
+	}
 }
-
-

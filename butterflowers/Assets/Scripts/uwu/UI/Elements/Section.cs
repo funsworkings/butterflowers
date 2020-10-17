@@ -1,209 +1,196 @@
-﻿using System.Collections;
-using System.Collections.Generic;
-using UnityEngine;
-
-using UnityEngine.Events;
+﻿using System.Collections.Generic;
 using System.Linq;
+using UnityEngine;
+using UnityEngine.Events;
 
-namespace UIExt.Elements {
+namespace uwu.UI.Elements
+{
+	public class Section : MonoBehaviour
+	{
+		public UnityEvent onOpen, onClose;
 
-    public class Section : MonoBehaviour   
-    {
-        public UnityEvent onOpen, onClose;
+		[SerializeField] bool m_active;
 
-        [SerializeField] bool m_active = false;
-        public bool active
-        {
-            get { return m_active; }
-            set { m_active = value; }
-        }
-        
-        [SerializeField] Page[] pages;
+		[SerializeField] Page[] pages;
 
-        public Page defaultPage;
-        Page previousPage = null, currentPage = null, queuePage = null;
+		public Page defaultPage;
 
-        public Page fetch
-        {
-            get
-            {
-                if (queuePage == null)
-                    return defaultPage;
+		[SerializeField] List<GameObject> objects = new List<GameObject>();
+		Page currentPage, queuePage;
 
-                return queuePage;
-            }
-        }
+		public bool active
+		{
+			get => m_active;
+			set => m_active = value;
+		}
 
-        public Page previous {
-            get{ return previousPage; }
-            set{ previousPage = value; }
-        }
+		public Page fetch
+		{
+			get
+			{
+				if (queuePage == null)
+					return defaultPage;
 
-        public Page current {
-            get{
-                return currentPage;
-            }
-            set {
-                if(current != value){
-                    previousPage = current;
-                    currentPage = value;
+				return queuePage;
+			}
+		}
 
-                    onUpdateActivePage();
-                }
-            }
-        }
+		public Page previous { get; set; }
 
-        [SerializeField]List<GameObject> objects = new List<GameObject>();
+		public Page current
+		{
+			get => currentPage;
+			set
+			{
+				if (current != value) {
+					previous = current;
+					currentPage = value;
 
-        void Awake() {
-            int pages = 0;
+					onUpdateActivePage();
+				}
+			}
+		}
 
-            int children = transform.childCount;
-            for (int i = 0; i < children; i++)
-            {
-                var obj = transform.GetChild(i).gameObject;
-                if (obj.GetComponent<Page>() == null)
-                    objects.Add(obj);
-                else
-                    pages++;
-            }
+		void Awake()
+		{
+			var pages = 0;
 
-            //Debug.LogFormat("Section \"{0}\" has {1} children and {2} pages", gameObject.name, children, pages);
-        }
+			var children = transform.childCount;
+			for (var i = 0; i < children; i++) {
+				var obj = transform.GetChild(i).gameObject;
+				if (obj.GetComponent<Page>() == null)
+					objects.Add(obj);
+				else
+					pages++;
+			}
 
-        // Start is called before the first frame update
-        void Start()
-        {
-            pages = GetComponentsInChildren<Page>(); // Fetch all pages
+			//Debug.LogFormat("Section \"{0}\" has {1} children and {2} pages", gameObject.name, children, pages);
+		}
 
-            // Ensure defaults are set at beginning
-            previousPage = null;
-            currentPage = null;
+		// Start is called before the first frame update
+		void Start()
+		{
+			pages = GetComponentsInChildren<Page>(); // Fetch all pages
 
-            if (active)
-            {
-                active = false;
-                Open();
-            }
-            else
-            {
-                active = true;
-                Close();
-            }
-        }
+			// Ensure defaults are set at beginning
+			previous = null;
+			currentPage = null;
 
-        void onUpdateActivePage(bool events = false){
-            Page activating = null;
+			if (active) {
+				active = false;
+				Open();
+			}
+			else {
+				active = true;
+				Close();
+			}
+		}
 
-            foreach(Page page in pages){
-                if (page == current)
-                    activating = page;
-                else
-                    page.Close(events);
-            }
+		void onUpdateActivePage(bool events = false)
+		{
+			Page activating = null;
 
-            if(activating != null)
-                activating.Open(events);
-        }
+			foreach (var page in pages)
+				if (page == current)
+					activating = page;
+				else
+					page.Close(events);
 
-        public void ReturnToPreviousPage(){
-            if(previous == null){
-                Debug.LogWarning("No previous page to return to!");
-                return;
-            }
+			if (activating != null)
+				activating.Open(events);
+		}
 
-            current = previous;
-        }
+		public void ReturnToPreviousPage()
+		{
+			if (previous == null) {
+				Debug.LogWarning("No previous page to return to!");
+				return;
+			}
 
-        public void MoveToPage(Page page){
-            if (!ContainsPage(page))
-                return;
+			current = previous;
+		}
 
-            current = page;
-        }
+		public void MoveToPage(Page page)
+		{
+			if (!ContainsPage(page))
+				return;
 
-        public void OpenToPage(Page page)
-        {
-            if (!ContainsPage(page))
-                return;
-                
-            OpenToPage_sealed(page, true);
-        }
+			current = page;
+		}
 
-        void OpenToPage_sealed(Page page, bool self = true)
-        {
-            if (page == null) { 
-                Debug.LogWarning("Attempt to open to null page, ignore...");
-                return;
-            }
+		public void OpenToPage(Page page)
+		{
+			if (!ContainsPage(page))
+				return;
 
-            if (active)
-                current = page; // Jump to next page 
-            else
-            {
-                queuePage = page;
-                Open(self);
-            }
-        }
+			OpenToPage_sealed(page);
+		}
 
-        public void Open(bool self = true)
-        {
-            if(self)
-            {
-                return;
-            }
+		void OpenToPage_sealed(Page page, bool self = true)
+		{
+			if (page == null) {
+				Debug.LogWarning("Attempt to open to null page, ignore...");
+				return;
+			}
 
-            bool inactive = !active;
+			if (active) {
+				current = page; // Jump to next page 
+			}
+			else {
+				queuePage = page;
+				Open(self);
+			}
+		}
 
-            active = true;
-            onUpdatedActiveState();
+		public void Open(bool self = true)
+		{
+			if (self) return;
 
-            if (inactive)
-                onOpen.Invoke();
-        }
+			var inactive = !active;
 
-        public void Close(bool self = true)
-        {
-            if(self)
-            {
-                return;
-            }
+			active = true;
+			onUpdatedActiveState();
 
-            bool inactive = !active;
+			if (inactive)
+				onOpen.Invoke();
+		}
 
-            active = false;
-            onUpdatedActiveState();
+		public void Close(bool self = true)
+		{
+			if (self) return;
 
-            if (!inactive)
-                onClose.Invoke();
-        }
+			var inactive = !active;
 
-        void onUpdatedActiveState()
-        {
-            //Debug.Log(gameObject.name + " was made " + active);
-            if (active)
-            {
-                currentPage = fetch; // Fetch page from page in queue
-            }
-            else
-            {
-                currentPage = null;
-                queuePage = null;
-            }
+			active = false;
+			onUpdatedActiveState();
 
-            onUpdateActivePage(true);
-            foreach (GameObject o in objects)
-                o.SetActive(active);
-        }
+			if (!inactive)
+				onClose.Invoke();
+		}
 
-        #region Helpers
+		void onUpdatedActiveState()
+		{
+			//Debug.Log(gameObject.name + " was made " + active);
+			if (active) {
+				currentPage = fetch; // Fetch page from page in queue
+			}
+			else {
+				currentPage = null;
+				queuePage = null;
+			}
 
-        public bool ContainsPage(Page page)
-        {
-            return (page != null && pages.Contains(page));
-        }
+			onUpdateActivePage(true);
+			foreach (var o in objects)
+				o.SetActive(active);
+		}
 
-        #endregion
-    }
+		#region Helpers
 
+		public bool ContainsPage(Page page)
+		{
+			return page != null && pages.Contains(page);
+		}
+
+		#endregion
+	}
 }

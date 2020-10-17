@@ -1,21 +1,22 @@
-﻿using System.Collections;
-using System.Collections.Generic;
-using UnityEngine;
+﻿using UnityEngine;
 
-[ExecuteInEditMode]
-public class MaintainGlobalScale : MonoBehaviour
+namespace uwu.Snippets
 {
-    [SerializeField] Vector3 scale;
+	[ExecuteInEditMode]
+	public class MaintainGlobalScale : MonoBehaviour
+	{
+		[SerializeField] Vector3 scale;
 
-    // Update is called once per frame
-    void Update()
-    {
-        Vector3 globalscale = transform.lossyScale;
+		// Update is called once per frame
+		void Update()
+		{
+			var globalscale = transform.lossyScale;
 
-        float dx = scale.x / globalscale.x;
-        float dy = scale.y / globalscale.y;
-        float dz = scale.z / globalscale.z;
+			var dx = scale.x / globalscale.x;
+			var dy = scale.y / globalscale.y;
+			var dz = scale.z / globalscale.z;
 
-        transform.localScale = Vector3.Scale(transform.localScale, new Vector3(dx, dy, dz));
-    }
+			transform.localScale = Vector3.Scale(transform.localScale, new Vector3(dx, dy, dz));
+		}
+	}
 }

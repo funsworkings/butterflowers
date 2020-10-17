@@ -1,59 +1,56 @@
-﻿using System.Collections;
-using System.Collections.Generic;
-using UnityEngine;
+﻿using UnityEngine;
 using UnityEngine.UI;
 
-namespace UIExt.Elements {
+namespace uwu.UI.Elements
+{
+	[RequireComponent(typeof(ScrollRect))]
+	public class ScrollRectNavigator : MonoBehaviour
+	{
+		[SerializeField] float moveMultiplier = 1f;
 
-    [RequireComponent(typeof(ScrollRect))]
-    public class ScrollRectNavigator: MonoBehaviour {
+		ScrollRect scroll;
 
-        ScrollRect scroll;
+		public RectTransform content => scroll.content;
 
-        [SerializeField] float moveMultiplier = 1f;
+		public float width => content.sizeDelta.x;
+		public float height => content.sizeDelta.y;
 
-        public RectTransform content => scroll.content;
+		public int items => content.childCount;
 
-        public float width => content.sizeDelta.x;
-        public float height => content.sizeDelta.y;
+		void Awake()
+		{
+			scroll = GetComponent<ScrollRect>();
+		}
 
-        public int items => content.childCount;
+		#region Operations
 
-        void Awake()
-        {
-            scroll = GetComponent<ScrollRect>();
-        }
+		public void MoveUpUnit()
+		{
+			var amount = items > 0 ? height / items : 1f;
+			Move(Vector2.up * amount);
+		}
 
-        #region Operations
+		public void MoveDownUnit()
+		{
+			var amount = items > 0 ? height / items : 1f;
+			Move(Vector2.down * amount);
+		}
 
-        public void MoveUpUnit()
-        {
-            float amount = (items > 0)? (height / items):1f;
-            Move(Vector2.up * amount);
-        }
+		public void Move(Vector2 amount)
+		{
+			scroll.normalizedPosition += new Vector2(amount.x / width, amount.y / height) * moveMultiplier;
+		}
 
-        public void MoveDownUnit()
-        {
-            float amount = (items > 0)? (height / items):1f;
-            Move(Vector2.down * amount);
-        }
+		public void MoveToTop()
+		{
+			scroll.normalizedPosition = new Vector2(0, 1);
+		}
 
-        public void Move(Vector2 amount)
-        {
-            scroll.normalizedPosition += new Vector2(amount.x / width, amount.y / height) * moveMultiplier;
-        }
-
-        public void MoveToTop()
-        {
-            scroll.normalizedPosition = new Vector2(0, 1);
-        }
-
-        public void MoveToBottom()
-        {
-            scroll.normalizedPosition = new Vector2(0, 0);
-        }
+		public void MoveToBottom()
+		{
+			scroll.normalizedPosition = new Vector2(0, 0);
+		}
 
 		#endregion
 	}
-
 }

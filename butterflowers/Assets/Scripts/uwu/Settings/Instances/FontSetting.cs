@@ -1,9 +1,9 @@
-﻿using System.Collections;
-using System.Collections.Generic;
-using UnityEngine;
+﻿using System;
 
-namespace Settings {
-
-    [System.Serializable] public class FontSetting : Setting<FontFormat> { }
-
+namespace uwu.Settings.Instances
+{
+	[Serializable]
+	public class FontSetting : Setting<FontFormat>
+	{
+	}
 }

@@ -6,7 +6,7 @@ using UnityEngine.Timeline;
 [Serializable]
 public class FocusControlBehaviour : PlayableBehaviour
 {
-    public FocalPoint focalPoint;
+    public Focusable focalPoint;
     public bool enable;
 
     public override void ProcessFrame(Playable playable, FrameData info, object playerData)
@@ -20,7 +20,7 @@ public class FocusControlBehaviour : PlayableBehaviour
             }
         }
         else {
-            Focus focus = (Focus)playerData;
+            Focusing focus = (Focusing)playerData;
 
             if(focus != null)
                 focus.LoseFocus();

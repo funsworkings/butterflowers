@@ -1,31 +1,32 @@
-﻿using System.Collections;
-using System.Collections.Generic;
-using UnityEngine;
+﻿using UnityEngine;
 
-public class ApplyGravityRelativeToCamera : ApplyCustomGravity
+namespace uwu.Snippets
 {
-    Camera mainCamera;
+	public class ApplyGravityRelativeToCamera : ApplyCustomGravity
+	{
+		public float multiplier = 1f;
+		UnityEngine.Camera mainCamera;
 
-    public float multiplier = 1f;
-    public Vector3 gravity
-    {
-        get
-        {
-            if (mainCamera == null)
-                mainCamera = Camera.main;
+		public Vector3 gravity
+		{
+			get
+			{
+				if (mainCamera == null)
+					mainCamera = UnityEngine.Camera.main;
 
-            return -mainCamera.transform.up;
-        }
-    }
+				return -mainCamera.transform.up;
+			}
+		}
 
-    void Start()
-    {
-        mainCamera = Camera.main;
-    }
+		void Start()
+		{
+			mainCamera = UnityEngine.Camera.main;
+		}
 
-    protected override void ApplyGravity(float magnitude)
-    {
-        directionOfGravity = gravity;
-        base.ApplyGravity(magnitude * multiplier);
-    }
+		protected override void ApplyGravity(float magnitude)
+		{
+			directionOfGravity = gravity;
+			base.ApplyGravity(magnitude * multiplier);
+		}
+	}
 }

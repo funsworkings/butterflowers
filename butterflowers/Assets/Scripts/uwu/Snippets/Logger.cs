@@ -1,73 +1,77 @@
-﻿using System.Collections;
-using System.Collections.Generic;
-using System.Runtime.CompilerServices;
+﻿using System.Collections.Generic;
 using UnityEngine;
 
-public class Logger : MonoBehaviour
+namespace uwu.Snippets
 {
-	#region Collections
+	public class Logger : MonoBehaviour
+	{
+		#region Collections
 
-	protected List<string> messages = new List<string>();
+		protected List<string> messages = new List<string>();
 
-	#endregion
+		#endregion
+		
+		#region Attributes
 
-	#region Attributes
+		[SerializeField] int capacity = 10;
+		[SerializeField] protected bool duplicates = true;
+		[SerializeField] protected bool auto, resize;
 
-	[SerializeField] int capacity = 10;
-    [SerializeField] protected bool duplicates = true;
-    [SerializeField] protected bool auto = false, resize = false;
+		#endregion
 
-	#endregion
+		public void Push(string message)
+		{
+			var duplicate = messages.Contains(message);
+			if (!duplicates)
+				return;
 
-	public void Push(string message)
-    {
-        var duplicate = messages.Contains(message);
-        if (!duplicates)
-            return;
+			if (resize) capacity = messages.Count + 1;
 
-        if (resize) capacity = messages.Count+1;
+			var overflow = messages.Count + 1 > capacity;
+			if (overflow) {
+				if (auto) Pop();
+				else {
+					Debug.LogWarning("Attempt to add element to exceed capacity of fixed logger, ignore..");
+					return;
+				}
+			}
 
-        var overflow = (messages.Count + 1) > capacity;
-        if (overflow) {
-            if (auto) Pop();
-            else {
-                Debug.LogWarning("Attempt to add element to exceed capacity of fixed logger, ignore..");
-                return;
-            }
-        }
+			messages.Add(message);
+			onPushElement(messages.Count-1, message);
+		}
 
-        messages.Add(message);
-        onPushElement(message);
-    }
+		void Pop()
+		{
+			if (messages.Count > 0)
+				Remove(0);
+		}
 
-    void Pop()
-    {
-        if (messages.Count > 0)
-            Remove(0);
-    }
+		public void Remove(int index)
+		{
+			if (index >= 0 && index <= messages.Count - 1) {
+				var message = messages[index];
+				messages.RemoveAt(index);
+				onPopElement(index, message);
+			}
+		}
 
-    public void Remove(int index)
-    {
-        if (index >= 0 && index <= messages.Count - 1) {
-            var message = messages[index];
-            messages.RemoveAt(index);
-            onPopElement(message);
-        }
-    }
+		public void Clear()
+		{
+			var allItems = messages.ToArray();
+			for (var i = 0; i < allItems.Length; i++)
+				Remove(0);
+		}
 
-    public void Clear()
-    {
-        var emptying = messages.ToArray();
-        messages = new List<string>();
+		#region Callbacks
 
-        for (int i = 0; i < emptying.Length; i++)
-            onPopElement(emptying[i]);
-    }
+		protected virtual void onPushElement(int index, string message)
+		{
+		}
 
-    #region Callbacks
+		protected virtual void onPopElement(int index, string message)
+		{
+		}
 
-    protected virtual void onPushElement(string message) { }
-    protected virtual void onPopElement(string message) { }
-
-	#endregion
+		#endregion
+	}
 }

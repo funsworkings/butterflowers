@@ -1,24 +1,24 @@
-﻿using System.Collections;
-using System.Collections.Generic;
-using UnityEngine;
+﻿using UnityEngine;
 
-[ExecuteInEditMode]
-public class ReverseLocalEulerAngles : MonoBehaviour
+namespace uwu.Snippets
 {
-    // Start is called before the first frame update
-    void Start()
-    {
-        
-    }
+	[ExecuteInEditMode]
+	public class ReverseLocalEulerAngles : MonoBehaviour
+	{
+		// Start is called before the first frame update
+		void Start()
+		{
+		}
 
-    // Update is called once per frame
-    void Update()
-    {
-        var parent = transform.parent;
+		// Update is called once per frame
+		void Update()
+		{
+			var parent = transform.parent;
 
-        if (parent == null)
-            return;
+			if (parent == null)
+				return;
 
-        transform.localEulerAngles = -parent.localEulerAngles;
-    }
+			transform.localEulerAngles = -parent.localEulerAngles;
+		}
+	}
 }
