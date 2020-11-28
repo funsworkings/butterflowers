@@ -13,6 +13,7 @@ namespace Noder.Nodes.Behaviours.Events {
         private Nest nest;
 
         public bool useDirection = false;
+        public float force = 1f;
 
         protected override void OnEnter()
         {
@@ -31,11 +32,12 @@ namespace Noder.Nodes.Behaviours.Events {
                 Vector3 dir = GetInputValue<Vector3>("data", this.data);
 
                 Kick kick = new Kick();
-                kick.useDirection = useDirection;
-                kick.direction = dir;
+                    kick.useDirection = useDirection;
+                    kick.direction = dir;
+                    kick.force = force;
 
 
-                ModuleTree.onReceiveEvent(tree, EVENTCODE.NESTKICK, kick); // Override event
+                ModuleTree.onReceiveEvent(tree, EVENTCODE.NESTKICK, kick, rewards); // Override event
                 return true;
             }
 

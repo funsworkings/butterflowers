@@ -12,6 +12,9 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 9063068c659741bc87143801de0c5604, type: 3}
   m_Name: AI Brain (Default)
   m_EditorClassIdentifier: 
+  needMultiplier: 10
+  recoveryMultiplier: 10
+  needDecayMultiplier: 1.2
   needAttenuationCurve:
     serializedVersion: 2
     m_Curve:
@@ -37,3 +40,34 @@ MonoBehaviour:
     m_PostInfinity: 2
     m_RotationOrder: 4
   maximumNeedsScore: 100
+  excludeDecayNeeds: 
+  baselineDeltaPercentage: 2
+  nestLearningMultiplier: 2
+  daysUntilEnvironmentKnowledge: 7
+  daysUntilFileKnowledge: 7
+  enviroKnowledgeStanceWeight: 1
+  fileKnowledgeStanceWeight: 1
+  lowStanceThreshold: -0.5
+  highStanceThreshold: 0.5
+  stanceMoodWeight: 5
+  healthOfButterflowersMoodWeight: 1
+  needsWeight: 5
+  moodSmoothSpeed: 1
+  lowMoodThreshold: -0.5
+  highMoodThreshold: 0.5
+  actionRadius: 3.33
+  minimumTimeBetweenActions: 1
+  maximumTimeBetweenActions: 3
+  baseFatigueTeleportDistance: 24
+  eventNullFramesThreshold: 72
+  eventMaximumStackHeight: 12
+  moodAttributeIcons:
+  - mood: -1
+    image: {fileID: 21300000, guid: 961fa78fc01e799449fbea503603b1ce, type: 3}
+    color: {r: 0.6156863, g: 0, b: 0.28702876, a: 1}
+  - mood: 0
+    image: {fileID: 21300000, guid: f2b1bbf16453df2428c0595a181fc26c, type: 3}
+    color: {r: 0.6792453, g: 0.67708606, b: 0.57992166, a: 1}
+  - mood: 1
+    image: {fileID: 21300000, guid: 4f44b34058dfc6840b50cd54bfb69d33, type: 3}
+    color: {r: 0.19188325, g: 0.8301887, b: 0.5245545, a: 1}

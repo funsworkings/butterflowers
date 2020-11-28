@@ -75,6 +75,7 @@ public class Butterfly : MonoBehaviour
 
     public Vector3 origin = Vector3.zero;
     [SerializeField] Vector3 velocity = Vector3.zero;
+    [SerializeField] Vector3 acceleration = Vector3.zero;
     
     [Header("State")]
     
@@ -108,6 +109,12 @@ public class Butterfly : MonoBehaviour
         }
     }
 
+    public Vector3 Velocity
+    {
+        get { return acceleration; }
+        set { acceleration = value; }
+    }
+    
     #endregion
 
     #region Monobehavior callbacks
@@ -187,6 +194,7 @@ public class Butterfly : MonoBehaviour
 
         AdjustAnimatorSpeed();
 
+        velocity += acceleration * Time.deltaTime;
         if (state != State.Dying)
             ClampVelocity();
 
@@ -259,6 +267,7 @@ public class Butterfly : MonoBehaviour
         }
 
         velocity = Vector3.zero;
+        acceleration = Vector3.zero;
         transform.localScale = Vector3.zero;
 
         timeSinceAlive = timeSinceDeath = 0f;
@@ -366,7 +375,8 @@ public class Butterfly : MonoBehaviour
         return magnitude;
     }
     
-    void MoveTowardsGround(float t){
+    void MoveTowardsGround(float t)
+    {
         velocity += Vector3.down * Mathf.Pow(t, 2f) * preset.gravity;
     }
 

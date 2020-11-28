@@ -13,7 +13,7 @@ public class BrainPreset : ScriptableObject
 	[Header("STANCE (WEIGHTS)")]
         public float fileKnowledgeStanceWeight = 1f;
         public float playerKnowledgeStanceWeight = 1f;
-        public float enviroKnowledgeStanceWeight = 1f;
+        
 
 
 
@@ -95,10 +95,4 @@ public class BrainPreset : ScriptableObject
         [Range(0f, 1f)] public float healthOfButterflowersGestureThreshold = .5f;
 
 	#endregion
-
-	[Header("DEPRECATED")]
-
-        public Brain.ActionStanceThreshold[] actionStanceThresholds;
-        public Brain.BeaconOpMoodThreshold[] beaconOpMoodThresholds;
-        public Brain.NestOpMoodThreshold[] nestOpMoodThresholds;
 }

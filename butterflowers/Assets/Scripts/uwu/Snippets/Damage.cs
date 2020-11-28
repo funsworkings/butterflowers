@@ -12,6 +12,8 @@ namespace uwu.Snippets
 		[SerializeField] float damageScale = 1f;
 		[SerializeField] float damageDuration = .167f;
 
+		[SerializeField] bool useColor = true;
+
 		[SerializeField] new Renderer renderer;
 
 		[SerializeField] bool debugHit;
@@ -35,7 +37,7 @@ namespace uwu.Snippets
 		{
 			def_scale = transform.localScale;
 
-			if (renderer != null) {
+			if (renderer != null && useColor) {
 				materials = renderer.materials;
 				def_colors = new Color[materials.Length];
 				for (var i = 0; i < materials.Length; i++)
@@ -62,7 +64,7 @@ namespace uwu.Snippets
 					t_damage += Time.deltaTime;
 				}
 
-				if (renderer != null)
+				if (renderer != null && useColor)
 					UpdateMaterials();
 				UpdateScale();
 			}

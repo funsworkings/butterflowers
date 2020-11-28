@@ -245,8 +245,12 @@ public class Sun : MonoBehaviour
             Debug.LogFormat("Sun advanced!  from:{0} to:{1}", days-1, days);
 
             Events.ReceiveEvent(EVENTCODE.CYCLE, AGENT.World, AGENT.Terrain, days + "");
-            if (onCycle != null)
-                onCycle();
+
+            //if (World.Instance.User) // Only behaadvance sun if world is not parallel (otherwise CNTD)
+            //{
+                if (onCycle != null)
+                    onCycle();
+            //}
 
             return true;
         }

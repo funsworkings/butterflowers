@@ -43,7 +43,7 @@ namespace Wizard
         void Start()
         {
             material = renderer.material;
-            brain = controller.Brain;
+            //brain = controller.Brain;
         }
 
         void Update()

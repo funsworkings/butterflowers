@@ -4,7 +4,7 @@ namespace AI.Types
 {
 	public enum Behaviour 
 	{
-		DYNAMICISM,
+		SPONTANEITY,
 		NURTURE,
 		GLUTTONY,
 		PLAY,

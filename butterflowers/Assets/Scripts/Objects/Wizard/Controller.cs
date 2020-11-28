@@ -16,10 +16,9 @@ namespace Wizard {
 
     using ActionType = EVENTCODE;
 
-    using Mood = Brain.MoodState;
-    using Stance = Brain.StanceState;
-
     public class Controller: MonoBehaviour {
+        
+        /*
         
         #region Events
 
@@ -164,7 +163,7 @@ namespace Wizard {
 
             Nest.onAddBeacon += onIngestBeacon;
 
-            Actions.onEnact += onEnactAction;
+            //Actions.onEnact += onEnactAction;
             Brain.onUpdateState += onUpdateBrainState;
 
             Events.onFireEvent += onFireEvent;
@@ -180,7 +179,7 @@ namespace Wizard {
 
             Nest.onAddBeacon -= onIngestBeacon;
 
-            Actions.onEnact -= onEnactAction;
+            //Actions.onEnact -= onEnactAction;
             Brain.onUpdateState -= onUpdateBrainState;
 
             Events.onFireEvent -= onFireEvent;
@@ -263,7 +262,7 @@ namespace Wizard {
                     Actions.Push(seq);
                 }
             }
-            */
+            
 			#endregion
 		}
 
@@ -293,7 +292,7 @@ namespace Wizard {
 
         void EnactAction()
         {
-            /*
+    
             var action = Brain.ChooseBestAction();
             if (action != null) 
             {
@@ -304,12 +303,12 @@ namespace Wizard {
                 Debug.LogFormat("FALLBACK action => NONE");
                 //Actions.Push(ActionType.Emote);
             }
-            */
+    
         }
 
         void RespondToPlayerAction(EVENTCODE @event)
         {
-            /*
+            
             return; //IGNORE PLAYER EVENTS FOR NOW
 
 
@@ -338,7 +337,6 @@ namespace Wizard {
                         break;
                 }
             }
-            */
         }
 
 		#endregion
@@ -560,7 +558,7 @@ namespace Wizard {
             float prob = Mathf.Clamp(base_probability, min, max);
             if (Random.Range(0f, 1f) <= prob)
                 EnactAction();
-            */
+            
         }
 
         #endregion
@@ -589,7 +587,7 @@ namespace Wizard {
         {
             string debug = "";
 
-            debug += string.Format("STANCE = {0}", Brain.stance);
+            debug += string.Format("STANCE = {0}", Brain.Stance);
             debug += string.Format("\nMOOD = {0}", Brain.mood);
             
             debug += "\n\n- - - CURRENT ACTION - - -";
@@ -610,6 +608,8 @@ namespace Wizard {
         }
 
         #endregion
+        
+        */
 
     }
 

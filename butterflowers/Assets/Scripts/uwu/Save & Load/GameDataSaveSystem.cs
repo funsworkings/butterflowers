@@ -2,6 +2,7 @@
 using System.Collections;
 using System.Collections.Generic;
 using System.IO;
+using System.Linq;
 using UnityEngine;
 using uwu.Data;
 using uwu.Extensions;
@@ -12,21 +13,26 @@ namespace uwu
 {
 	public partial class GameDataSaveSystem : Singleton<GameDataSaveSystem>
 	{
-		const string savefile = "save.dat";
-		const float refreshrate = 15f;
-		public static Action<bool> onLoad;
+		// Defaults
+			const string def_savefile = "save.dat";
+			const float def_refreshrate = 15f;
 
-
-		[SerializeField] GameData m_data;
+			// Collections
+			protected Dictionary<string, string> file_lookup = new Dictionary<string, string>();
+			protected Dictionary<string, object> data_lookup = new Dictionary<string, object>();
+			protected Dictionary<string, object> cache_data_lookup = new Dictionary<string, object>();
+			protected Dictionary<string, Type> type_lookup = new Dictionary<string, Type>();
+			
+			protected List<object> datas = new List<object>();
 
 		bool m_autosave;
-
 		public bool autosave
 		{
 			get => m_autosave;
 			set
 			{
-				if (autosave != value) {
+				if (autosave != value) 
+				{
 					if (!value) StopCoroutine("Autosave");
 					else StartCoroutine("Autosave");
 				}
@@ -35,118 +41,267 @@ namespace uwu
 			}
 		}
 
-		public GameData data => m_data;
-
-		public bool load { get; set; }
+		#region Monobehaviour callbacks
 
 		void OnEnable()
 		{
-			LoadGameData();
+			autosave = true;
 		}
 
 		void OnDisable()
 		{
-			SaveGameData();
+			SaveAllGameData();
 			autosave = false;
 		}
 
 		void OnApplicationPause(bool pause)
 		{
-			if (pause) {
-				SaveGameData();
+			if (pause) 
+			{
+				SaveAllGameData();
 				autosave = false;
 			}
-			else {
-				LoadGameData();
+			else 
+			{
+				autosave = true;
 			}
 		}
+		
+		#endregion 
+		
+		#region Save & load
 
 		IEnumerator Autosave()
 		{
-			while (true) {
-				yield return new WaitForSeconds(refreshrate);
-				SaveGameData();
+			while (true) 
+			{
+				yield return new WaitForSeconds(def_refreshrate);
+				SaveAllGameData();
 			}
 		}
 
-		void SaveGameData()
+		public bool HasData(string file)
 		{
-			if (data == null) {
+			return data_lookup.ContainsKey(file);
+		}
+
+		bool SaveGameData(string file = null, bool useCacheSave = false)
+		{
+			if (file == null) file = def_savefile;
+
+			object o = null;
+			data_lookup.TryGetValue(file, out o);
+
+			if (o == null) 
+			{
 				Debug.LogWarning("Attempted to save when no data available!");
-				return;
+				return false;
 			}
 
-			onSaveGameData();
+			GameData cacheDat = (GameData) o;
 
 			var version = Application.version;
 			var timestamp = string.Format("{0} - {1}", DateTime.Now.ToShortDateString(), DateTime.Now.ToShortTimeString());
 
-			data.BUILD_VERSION = version;
-			data.TIMESTAMP = timestamp;
-
-			DataHandler.Write(m_data, dataPath);
-		}
-
-		public void ResetGameData()
-		{
-			m_data = new GameData();
-			SaveGameData();
-		}
-
-		public void LoadGameData(bool events = false, bool create = true)
-		{
-			var previous = false;
-
-			var load = DataHandler.Read<GameData>(dataPath);
-			if (load == null) {
-				Debug.LogWarning("No save file located, initializing data file...");
-				if (create) m_data = new GameData();
-			}
-			else {
-				m_data = load;
-				previous = true;
-			}
-
-			onLoadGameData();
-			this.load = true;
-
-			if (events)
-				if (onLoad != null)
-					onLoad(previous);
-		}
-
-		#region Fetch data path
-
-		string m_dataPath;
-
-		public string dataPath
-		{
-			get
+			// Rebind data from list
+			if (!useCacheSave) 
 			{
-				var dir = Application.persistentDataPath + DataPaths.DATA_PATH;
-				FileUtils.EnsureDirectory(dir);
-
-				if (m_dataPath == null)
-					m_dataPath = Path.Combine(dir, savefile);
-
-				Debug.LogFormat("Save data path = {0}", m_dataPath);
-				return m_dataPath;
+				object d = cache_data_lookup[file];
+				if (d != null) o = d;
 			}
+
+			(o as GameData).BUILD_VERSION = version;
+			(o as GameData).TIMESTAMP = timestamp;
+
+			data_lookup[file] = o; // Overwrite lookup
+			onSaveGameData(file); // Callback!
+
+			var path = file_lookup[file]; // Fetch rel file path
+			return DataHandler.Write(o, path);
+		}
+
+		void SaveAllGameData()
+		{
+			KeyValuePair<string, object>[] dat = data_lookup.ToArray();
+			foreach (KeyValuePair<string, object> d in dat) 
+			{
+				var file = d.Key;
+				SaveGameData(file);
+			}
+		}
+
+		public bool LoadGameData<E>(string file = null, bool createIfEmpty = false) where E:GameData
+		{
+			if (file == null) file = def_savefile; // Fallback to default save file
+
+			E dat = null;
+			string path = null;
+
+			if (file_lookup.ContainsKey(file)) // Fetch rel file path
+				path = file_lookup[file];
+			else
+				path = ConstructDataPath(file);
+			
+			dat = DataHandler.Read<E>(path);
+			if (dat == null && createIfEmpty) 
+			{
+				Debug.LogWarningFormat("No save file located, initializing data file... [{0}]", file);
+				dat = (E) Activator.CreateInstance(typeof(E));
+			}
+			
+			bool success = (dat != null);
+			if (success) 
+			{
+				Debug.LogFormat("Object success intiialize... [{0}]", file);
+				PushGameData<E>(file, path, dat); // Push save file onto stack
+			}
+
+			onLoadGameData(file, success); // Callback!
+			
+			return success;
+		}
+
+		public void UnloadGameData(string file = null)
+		{
+			SaveGameData(file);
+			PopGameData(file);
+		}
+		
+		public void WipeGameData<E>(string file = null) where E:GameData
+		{
+			if (file == null) file = def_savefile;
+
+			if (data_lookup.ContainsKey(file)) 
+			{
+				cache_data_lookup[file] = data_lookup[file] = (E)Activator.CreateInstance(typeof(E));
+				SaveGameData(file, useCacheSave:true); // Overwrite existing game data for file
+			}
+		}
+
+		public void EraseGameData(string file = null)
+		{
+			if (file == null) file = def_savefile;
+
+			string path = null;
+			if (file_lookup.TryGetValue(file, out path)) 
+			{
+				System.IO.File.Delete(path); // Erase file at path
+				PopGameData(file);
+			}
+		}
+
+		#endregion
+		
+		#region Push/pop
+		
+		void PushGameData<E>(string file, string path, E dat, string directory = null) where E:GameData
+		{
+			if (!file_lookup.ContainsKey(file)) 
+			{
+				file_lookup.Add(file, path);
+			}
+			
+			if (!data_lookup.ContainsKey(file)) 
+			{
+				string id = dat.ID;
+				print(id);
+				
+				data_lookup.Add(file, dat); // Add game data to lookup
+			}
+
+			if (!cache_data_lookup.ContainsKey(file)) 
+			{
+				cache_data_lookup.Add(file, dat);
+			}
+
+			if (!type_lookup.ContainsKey(file)) 
+			{
+				type_lookup.Add(file, dat.GetType());
+			}
+		}
+
+		void PopGameData(string file)
+		{
+			if (file_lookup.ContainsKey(file))
+				file_lookup.Remove(file);
+			if (data_lookup.ContainsKey(file))
+				data_lookup.Remove(file);
+			if (cache_data_lookup.ContainsKey(file))
+				cache_data_lookup.Remove(file);
+			if (type_lookup.ContainsKey(file))
+				type_lookup.Remove(file);
+		}
+		
+		#endregion
+		
+		#region Query
+
+		public string[] FindAllSaveFiles(string[] extensions = null, string directory = null)
+		{
+			if (directory == null) directory = Application.persistentDataPath;
+			if(extensions == null) extensions = new string[]{ "dat" };
+			
+			if (System.IO.Directory.Exists(directory)) 
+			{
+				List<string> valid = new List<string>();
+				
+				var files = new DirectoryInfo(directory).GetFileSystemInfos();
+				foreach (FileSystemInfo i in files) 
+				{
+					if (extensions.Contains(i.Extension)) 
+					{
+						valid.Add(i.Name);
+					}
+				}
+
+				return valid.ToArray();
+			}
+			else 
+			{
+				throw new System.Exception("Directory for locating save files does not exist!");	
+			}
+		}
+		
+		#endregion
+
+		#region Data path
+
+		/// <summary>
+		/// Constructs the data path for a save file - OPTIONAL: directory
+		/// </summary>
+		/// <param name="filename"></param>
+		/// <param name="ext"></param>
+		/// <param name="directory"></param>
+		public string ConstructDataPath(string filename, string directory = null)
+		{
+			if (directory == null)
+				directory = Application.persistentDataPath;
+			
+			FileUtils.EnsureDirectory(directory);
+			
+			var path = Path.Combine(directory, filename);
+			Debug.LogFormat("Save data path = {0}", path);
+			
+			return path;
 		}
 
 		#endregion
 
 		#region Save/load callbacks
 
-		void onSaveGameData()
+		void onSaveGameData(string file)
 		{
-			Debug.LogFormat("~~Save file was SAVED on {0}~~", DateTime.Now.ToShortTimeString());
+			Debug.LogFormat("~~Save file [{0}] was SAVED on {1}~~", file, DateTime.Now.ToShortTimeString());
 		}
 
-		void onLoadGameData()
+		void onLoadGameData(string file, bool success)
 		{
-			Debug.LogFormat("~~Save file was LOADED on {0}~~", DateTime.Now.ToShortTimeString());
-			autosave = refreshrate > 0f;
+			var timestamp = DateTime.Now.ToShortTimeString();
+			
+			if(success)
+				Debug.LogFormat("~~Save file [{0}] was LOADED on {1}~~", file, timestamp);
+			else
+				Debug.LogWarningFormat("Save file [{0}] FAILED TO LOAD on {1}", file, timestamp);
 		}
 
 		#endregion

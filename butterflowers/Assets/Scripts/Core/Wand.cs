@@ -2,6 +2,7 @@
 using System.Collections;
 using System.Collections.Generic;
 using System.Linq;
+using B83.Win32;
 using Settings;
 using UnityEditor;
 using UnityEngine;
@@ -22,6 +23,8 @@ public class Wand : Entity
     // Events
     
     [SerializeField] WorldPreset preset;
+    [SerializeField] ButterflowerManager butterflowers;
+    [SerializeField] BeaconManager beacons;
 
     #region Internal
 
@@ -42,13 +45,14 @@ public class Wand : Entity
 
     [Header("General")]
 	    [SerializeField] new Camera camera;
-    [SerializeField] bool m_spells = true;
+        [SerializeField] bool m_spells = true;
 
         [SerializeField] Cursor cursor;
         [SerializeField] float distanceFromCamera = 10f;
         [SerializeField] float cursorToWorldRate = 1f;
 
         public State state = State.Drift;
+        public bool infocus = true;
 
         SimpleVelocity _simpleVelocity;
 
@@ -63,6 +67,8 @@ public class Wand : Entity
         LayerMask interactionMask, navigationMask;
         [SerializeField]
         float interactionDistance = 100f;
+
+        [SerializeField] bool multipleInteractions = true;
 
         [SerializeField] float brushDistance = 10f;
         [SerializeField] float brushSpeed = 1f;
@@ -87,6 +93,8 @@ public class Wand : Entity
 
         [Header("Debug")] 
             [SerializeField] Image debugCircle;
+            [SerializeField] Vector3 pushFromCamera;
+            [SerializeField] float pushStrength = 1f;
 
     #region Accessors
 
@@ -156,7 +164,8 @@ public class Wand : Entity
     }
 
     [SerializeField] float m_speed = 0f;
-    public float speed {
+    public float speed 
+    {
         get
         {
             m_speed = velocity3d.magnitude;
@@ -180,7 +189,9 @@ public class Wand : Entity
     public struct Kick 
     {
         public bool useDirection;
+        
         public Vector3 direction;
+        public float force;
     }
 
     #endregion
@@ -205,12 +216,17 @@ public class Wand : Entity
             camera = Camera.main;
     }
 
+    protected override bool EvaluateUpdate()
+    {
+        return true;
+    }
+
     protected override void OnUpdate()
     {
         if (camera == null)
             return;
 
-        m_spells = !World.Remote;
+        m_spells = infocus;
 
         if (spells) 
         {
@@ -219,6 +235,11 @@ public class Wand : Entity
             up = Input.GetMouseButtonUp(0);
 
             Interact();
+
+            if (Input.GetKeyDown(KeyCode.X)) {
+                butterflowers.KillButterfliesInDirection(camera.transform.TransformDirection(pushFromCamera.normalized),
+                    pushStrength);
+            }
 
             UpdateTrajectory();
             if (debugCircle != null) {
@@ -234,102 +255,35 @@ public class Wand : Entity
             UpdateCursorState(null, null);
         }
     }
+    
+    void OnApplicationFocus(bool hasFocus)
+    {
+        infocus = hasFocus;
+    }
+
+    void OnApplicationPause(bool pauseStatus)
+    {
+        infocus = !pauseStatus;
+    }
 
     #endregion
 
-    #region Gestures
-
-    public bool EnactGesture(Gesture t_gesture, float speed = 1f)
-    {
-        if (animator == null) return false;
-        if (gesture || waitforgesture) return false;
-
-        Gestures.PlayAnimation(t_gesture.clip);
-
-        waitforgesture = true;
-        m_queueGesture = t_gesture;
-
-        StartCoroutine("TimeoutGesture");
-        BeginGesture();
-
-        return true;
-    }
-
-    public bool CancelGesture()
-    {
-        if (!gestureInProgress) return false;
-
-        Gestures.StopAnimation();
-        return true;
-    }
-
-    IEnumerator TimeoutGesture()
-    {
-        float t = 0f;
-        float timeout = .167f;
-
-        while (t < timeout && waitforgesture) 
-        {
-            t += Time.deltaTime;
-            yield return null;
-        }
-
-        if (t < timeout) {
-            Debug.Log("Gesture SUCCESS!");
-
-            m_currentGesture = m_queueGesture;
-            m_queueGesture = null;
-
-            GestureStart.Invoke();
-            if (onGestureBegin != null)
-                onGestureBegin(m_currentGesture);
-
-            gesture = spells = true;
-        }
-        else {
-            Debug.Log("Gesture FAIL!");
-
-            m_queueGesture = m_currentGesture = null;
-            gesture = spells = false;
-
-            GestureEnd.Invoke();
-        }
-
-        waitforgesture = false;
-
-        while (gestureInProgress)
-            yield return null;
-
-        EndGesture();
-    }
-
-    public void BeginGesture()
-    {
-        if (waitforgesture) 
-            waitforgesture = false;
-    }
-
-    public void EndGesture()
-    {
-        GestureEnd.Invoke();
-        if (onGestureEnd != null)
-            onGestureEnd(m_currentGesture);
-
-        m_queueGesture = m_currentGesture = null;
-
-        gesture = false;
-        spells = false;
-    }
-
-	#endregion
-
-	#region Interaction
+    #region Interaction
 
 	void Interact()
     {
         ray = camera.ScreenPointToRay(cursor.position);
 
-        var hits = Physics.RaycastAll(ray, interactionDistance, interactionMask.value);
+        var hits = new RaycastHit[] { };
+        if (multipleInteractions)
+            hits = Physics.RaycastAll(ray, interactionDistance, interactionMask.value);
+        else {
+            var hit = new RaycastHit();
+            if (Physics.Raycast(ray, out hit, interactionDistance, interactionMask.value)) 
+            {
+                hits = new RaycastHit[]{ hit };       
+            }
+        }
 
         if (!Sun.Instance.active) {
             hits = new RaycastHit[] { };
@@ -375,7 +329,9 @@ public class Wand : Entity
             }
 
             List<uwu.Gameplay.Interactable> interactions_3d = temp_int.Keys.ToList();
-            FilterBeaconInteractions(ref interactions_3d);
+            
+            FilterClosestInteractables<Beacon>(ref interactions_3d);
+            FilterClosestInteractables<Vine>(ref interactions_3d);
 
             foreach (uwu.Gameplay.Interactable i in interactions_3d) 
             {
@@ -439,15 +395,15 @@ public class Wand : Entity
         return closest;
     }
 
-    void FilterBeaconInteractions(ref List<uwu.Gameplay.Interactable> interactions_temp)
+    void FilterClosestInteractables<E>(ref List<uwu.Gameplay.Interactable> interactions_temp) where E:MonoBehaviour
     {
-        IEnumerable<uwu.Gameplay.Interactable> beacons_int = interactions_temp.Where(i => i.GetComponent<Beacon>() != null);
+        IEnumerable<uwu.Gameplay.Interactable> typed_int = interactions_temp.Where(i => i.GetComponent<E>() != null);
 
-        uwu.Gameplay.Interactable closest_beacon = GetClosestInteractable(beacons_int.ToList());
-        if (closest_beacon != null) 
+        uwu.Gameplay.Interactable closest_int = GetClosestInteractable(typed_int.ToList());
+        if (closest_int != null) 
         {
-            beacons_int = beacons_int.Except(new uwu.Gameplay.Interactable[] { closest_beacon });
-            interactions_temp = interactions_temp.Except(beacons_int).ToList();
+            typed_int = typed_int.Except(new uwu.Gameplay.Interactable[] { closest_int });
+            interactions_temp = interactions_temp.Except(typed_int).ToList();
         }
     }
 
@@ -468,75 +424,124 @@ public class Wand : Entity
 
     // BEACONS
 
-    public void ActivateBeacon(Beacon beacon) 
+    public bool AddBeacon(string file, POINT point)
     {
-        if (beacon == null) return;
+        var ray = camera.ScreenPointToRay(new Vector3(point.x, (Screen.height - point.y), 0f));
+        var hit = new RaycastHit();
+
+        Debug.LogErrorFormat("Wand attempt to add file => {0} at position => {1}", file, point);
+        
+        if (Physics.Raycast(ray, out hit, Mathf.Infinity, interactionMask.value)) // Found suitable position 
+        {
+            var position = hit.point;
+            beacons.CreateBeaconInstance(file, Beacon.Type.Desktop, position);
+
+            return true;
+        }
+
+        return false;
+    }
+
+    public bool ActivateBeacon(Beacon beacon) 
+    {
+        if (beacon == null) return false;
 
         bool success = beacon.Activate();
         if (success)
             Events.ReceiveEvent(EVENTCODE.BEACONACTIVATE, Agent, AGENT.Beacon, details: beacon.file);
+
+        return success;
     }
 
-    public void PlantBeacon(Beacon beacon)
+    public bool PlantBeacon(Beacon beacon)
     {
-        if (beacon == null) return;
+        if (beacon == null) return false;
 
         bool success = beacon.Plant();
         if(success)
             Events.ReceiveEvent(EVENTCODE.BEACONPLANT, Agent, AGENT.Beacon, details: beacon.file);
+
+        return success;
     }
     
-    public void DestroyBeacon(Beacon beacon) 
+    public bool DestroyBeacon(Beacon beacon) 
     {
-        if (beacon == null) return;
+        if (beacon == null) return false;
 
         bool success = beacon.Delete(particles: true);
         if (success)
             Events.ReceiveEvent(EVENTCODE.BEACONDELETE, Agent, AGENT.Beacon, details: beacon.file);
+
+        return success;
     }
 
     // NEST
 
-    public void KickNest(Kick kick)
+    public bool KickNest(Kick kick)
     {
         var nest = Nest.Instance;
+        
+        print("RL KICK");
 
         if (kick.useDirection)
-            nest.Kick(kick.direction, Agent);
+            nest.Kick(kick.direction, kick.force, Agent);
         else
-            nest.RandomKick(Agent);
+            nest.RandomKick(kick.force, Agent);
+
+        return true;
     }
 
-    public void PopBeaconFromNest(Beacon beacon)
+    public bool PopBeaconFromNest(Beacon beacon)
     {
-        if (beacon == null) return;
+        if (beacon == null) return false;
 
         bool success = Nest.Instance.RemoveBeacon(beacon);
         if (success)
             Events.ReceiveEvent(EVENTCODE.NESTPOP, Agent, AGENT.Beacon, details: beacon.file);
+
+        return success;
     }
 
-    public void PopLastBeaconFromNest()
+    public bool PopLastBeaconFromNest()
     {
         var beacon = Nest.Instance.RemoveLastBeacon();
         bool success = beacon != null;
         if (success)
             Events.ReceiveEvent(EVENTCODE.NESTPOP, Agent, AGENT.Beacon, details: beacon.file);
+
+        return success;
     }
 
-    public void ClearNest()
+    public bool ClearNest()
     {
         bool success = Nest.Instance.Dispose();
         if (success)
             Events.ReceiveEvent(EVENTCODE.NESTCLEAR, Agent, AGENT.Nest);
+
+        return success;
     }
     
     // MISCELLANEOUS FUCK MISCELLANEOUS FUQ
 
-    public void Refocus(Focusable focus)
+    public bool Refocus(Focusable focus)
     {
-        if (focus == null) return;
+        if (focus == null) return false;
+        
         focus.Focus();
+        return true;
+    }
+
+    public bool EscapeFocus()
+    {
+        if (World.IsFocused) 
+        {
+            var focusing = FindObjectOfType<Focusing>();
+            focusing.LoseFocus();
+            
+            return true;
+        }
+
+        return false;
     }
 
     #endregion
@@ -545,14 +550,14 @@ public class Wand : Entity
 
     void UpdateCursorState(RaycastHit[] hits, RaycastResult[] hits_2d)
     {
-        if (cursor_icon != null) {
-            if (World.Remote) 
+        if (cursor_icon != null) 
+        {
+            if (World.Remote || !spells) 
             {
                 cursor_icon.state = CustomCursor.State.Remote;
                 return;
             }
-                
-                
+            
             // Update cursor
             if (hits.Length > 0 || hits_2d.Length > 0)
                 cursor_icon.state = CustomCursor.State.Hover;

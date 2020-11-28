@@ -2,6 +2,7 @@
 using Noder.Nodes.Abstract;
 using System.Collections;
 using System.Collections.Generic;
+using AI.Types.Mappings;
 using UnityEngine;
 
 namespace Noder.Nodes.Behaviours.States {
@@ -9,6 +10,8 @@ namespace Noder.Nodes.Behaviours.States {
     public class ModuleNode: State {
 
         [Input(ShowBackingValue.Always, ConnectionType.Override)] public ModuleTree tree;
+        
+        public BehaviourInt rewards;
 
         protected override void OnEnter()
         {
@@ -20,8 +23,14 @@ namespace Noder.Nodes.Behaviours.States {
             {
                 Debug.Log("MOVE TO " + val.name);
 
+                var t = (graph as ModuleTree);
+                if (t != null) 
+                {
+                    ModuleTree.onReceiveRewards(t, rewards);
+                }
+                
                 val.Restart(); // Move into sub-tree
-                (graph as ModuleTree).Reset(); // Reset current tree
+                t.Reset(); // Reset current tree
             }
                 
         }

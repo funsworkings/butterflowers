@@ -7,6 +7,7 @@ using System.Collections.Generic;
 using System.Linq;
 using System.Text.RegularExpressions;
 using UnityEngine;
+using UnityEngine.UI;
 using XNode.Examples.MathNodes;
 using Rand = System.Random;
 using Random = UnityEngine.Random;
@@ -735,6 +736,35 @@ namespace uwu.Extensions
 			return new string(chars);
 		}
 
+		#endregion
+		
+		#region Types
+		
+		public static bool castToBoolean(this int i){ return (i != 0); }
+		
+		#endregion
+		
+		#region Math
+		
+		public static float StandardDeviation(float[] values)
+		{
+			var m = values.Average();
+			float v = values.Select(f => Mathf.Pow(m - f, 2f)).Average();
+			float d = Mathf.Sqrt(v);
+
+			return d;
+		}
+
+		public static float PercentageDifference(float v1, float v2, bool includeSign = false)
+		{
+			float average = (v1 + v2) / 2f;
+			float percent = (average == 0f)? 0f : (v1 - v2) / average;
+			if (includeSign && (v1 < v2))
+				percent *= -1f;
+
+			return percent;
+		}
+		
 		#endregion
 	}
 }

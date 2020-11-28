@@ -283,7 +283,8 @@ public class Quilt : MonoBehaviour
     {
         while (queue.Count > 0) 
         {
-            if (!read) {
+            if (!read) 
+            {
                 string file = queue[0];
                 queue.RemoveAt(0);
 
@@ -348,7 +349,23 @@ public class Quilt : MonoBehaviour
         if(material == null)
             return;
 
-        textureArray.PopulateTextureArray(textureStack);
+        int count = textureStack.Length;
+        
+        List<Texture2D> valid = new List<Texture2D>();
+            valid.AddRange(textureStack);
+        Texture2D[] append = new Texture2D[(textureCap - count)];
+            valid.AddRange(append);
+        
+        material.SetTexture("_Texture0", valid[0]);
+        material.SetTexture("_Texture1", valid[1]);
+        material.SetTexture("_Texture2", valid[2]);
+        material.SetTexture("_Texture3", valid[3]);
+        material.SetTexture("_Texture4", valid[4]);
+        material.SetTexture("_Texture5", valid[5]);
+
+        material.SetInt("_TextureCount", count);
+
+        //textureArray.PopulateTextureArray(textureStack);
         UpdateLerpSpeed();
 
         offset = 1f; // Snap back immediately to last added

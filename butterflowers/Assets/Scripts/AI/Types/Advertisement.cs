@@ -7,17 +7,30 @@ namespace AI.Types
 	[System.Serializable]
 	public class Advertisement
 	{
+		[SerializeField]
+		string id = null;
+
+		public string ID
+		{
+			get
+			{
+				if(id == null || id == "")
+					id = System.Guid.NewGuid().ToString();
+
+				return id;
+			}
+		}
+		
+		
 		public Action action = new Action();
-		public BehaviourInt rewards = new BehaviourInt();
-		
-		
+		public BehaviourIntGroup rewards = new BehaviourIntGroup();
+
 		#region Actions
 
-		public void SetActionParams(EVENTCODE @event, object data, Advertiser advertiser)
+		public void SetActionParams(EVENTCODE @event, object data)
 		{
 			action.@event = @event;
 			action.dat = data;
-			action.advertiser = advertiser;
 		}
 		
 		#endregion
@@ -26,31 +39,25 @@ namespace AI.Types
 
 		public int GetReward(Behaviour behaviour, bool wipe)
 		{
-			try {
-				var reward = rewards.GetValue(behaviour);
+			var value = rewards.GetValue(behaviour);
+			if (wipe) 
+				rewards.SetValue(behaviour, 0);
 
-				if (wipe)
-					rewards.SetValue(behaviour, 0);
-
-				return reward;
-			}
-			catch (System.Exception err) 
-			{
-				return GetDefaultReward();
-			}
-			
+			return value;
 		}
 
-		public void SetReward(Behaviour behaviour, int reward)
-		{
-			rewards.SetValue(behaviour, reward);
-		}
-
-		public static int GetDefaultReward()
-		{
-			return 0;
-		}
-		
 		#endregion
+
+		public override bool Equals(object obj)
+		{
+			if (obj == null) return false;
+
+			if (obj.GetType() == typeof(Advertisement)) {
+				Advertisement other = (Advertisement) obj;
+				return (ID == other.ID);
+			}
+
+			return false;
+;		}
 	}
 }

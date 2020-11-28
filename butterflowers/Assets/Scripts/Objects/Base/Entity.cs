@@ -1,4 +1,5 @@
-﻿using System.Collections;
+﻿using System;
+using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
 
@@ -26,7 +27,9 @@ public abstract class Entity : MonoBehaviour
     {
         World = World.Instance;
         Sun = Sun.Instance;
-
+        
+        World.RegisterEntity(this);
+        
         OnStart();
     }
 
@@ -36,12 +39,20 @@ public abstract class Entity : MonoBehaviour
 			OnUpdate();
     }
 
+    protected void OnDestroy()
+    {
+	    World.UnregisterEntity(this);
+	    
+	    OnDestroyed();
+    }
+
     #endregion
 
     #region Monobehaviour override callbacks
 
     protected virtual void OnStart() { }
     protected virtual void OnUpdate() { }
+    protected virtual void OnDestroyed() { }
 
 	#endregion
 	

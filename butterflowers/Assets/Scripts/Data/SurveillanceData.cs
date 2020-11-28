@@ -15,32 +15,33 @@ namespace Data
 		public int timestamp = 0;
 	
 		[Header("File stats")]
-			public int filesAdded = 0;
-			public int filesRemoved = 0;
-			public int discoveries = 0;
+			public int filesAdded = 0; // Gluttony, nurture
+			public int filesRemoved = 0; // Destruction, spontaneity
+			public int discoveries = 0; // Spontaneity, play
 
 		[Header("Log stats")] 
-			public SurveillanceLogData[] logs;
+			public SurveillanceLogData[] logs = new SurveillanceLogData[]{};
 			
 		#region Log accessors
 
-		public float averageHoB => (logs.Select(log => log.butterflyHealth).Average());
-		public float averageNestFill => (logs.Select(log => log.nestFill).Average());
-		public float averageCursorSpeed => (logs.Select(log => log.cursorSpeed).Average());
+		public float averageHoB => (logs == null || logs.Length == 0)? 0f:(logs.Select(log => log.butterflyHealth).Average()); // Destruction, play, nurture
+		public float averageNestFill => (logs == null || logs.Length == 0)? 0f:(logs.Select(log => log.nestFill).Average()); // Nurture, destruction, gluttony
+		public float averageCursorSpeed => (logs == null || logs.Length == 0)? 0f:(logs.Select(log => log.cursorSpeed).Average()); // Play, spontaneity
 
-		public float timeSpentInNest => (logs.Where(log => log.agentInFocus == AGENT.Nest).Count() * 1f) / logs.Length;
-		public float timeSpentInMagicStar => (logs.Where(log => log.agentInFocus == AGENT.MagicStar).Count() * 1f) / logs.Length;
-		public float timeSpentInTree => (logs.Where(log => log.agentInFocus == AGENT.Tree).Count() * 1f) / logs.Length;
-		public float timeSpentInDefault => (logs.Where(log => log.agentInFocus == AGENT.NULL).Count() * 1f) / logs.Length;
+		// Rest, spontaneity, play
+		public float timeSpentInNest => (logs == null || logs.Length == 0)? 0f:(logs.Where(log => log.agentInFocus == AGENT.Nest).Count() * 1f) / logs.Length;
+		public float timeSpentInMagicStar => (logs == null || logs.Length == 0)? 0f:(logs.Where(log => log.agentInFocus == AGENT.MagicStar).Count() * 1f) / logs.Length;
+		public float timeSpentInTree => (logs == null || logs.Length == 0)? 0f:(logs.Where(log => log.agentInFocus == AGENT.Tree).Count() * 1f) / logs.Length;
+		public float timeSpentInDefault => (logs == null || logs.Length == 0)? 0f:(logs.Where(log => log.agentInFocus == AGENT.NULL).Count() * 1f) / logs.Length;
 		
 		#endregion
 
 		[Header("Beacon stats")] 
-			public int beaconsAdded = 0;
-			public int beaconsPlanted = 0;
+			public int beaconsAdded = 0; // Gluttony, destruction
+			public int beaconsPlanted = 0; // Nurture, rest
 
 		[Header("Nest stats")] 
-			public int nestKicks = 0;
-			public int nestSpills = 0;
+			public int nestKicks = 0; // Play, rest
+			public int nestSpills = 0; // Destruction, gluttony
 	}
 }

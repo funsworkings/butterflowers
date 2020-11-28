@@ -1,12 +1,13 @@
 ﻿using Noder.Nodes.Abstract;
 using System.Collections;
 using System.Collections.Generic;
+using AI.Types;
 using UnityEngine;
 using Wizard;
 
 namespace Noder.Nodes.Behaviours.Branches {
 
-    public class MoodBranch: Branch<Brain.MoodState> {
+    public class MoodBranch: Branch<Mood> {
 
     }
 

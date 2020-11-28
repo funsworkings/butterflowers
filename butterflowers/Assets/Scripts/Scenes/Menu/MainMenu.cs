@@ -3,64 +3,98 @@ using System.Collections.Generic;
 using UnityEngine;
 
 using UnityEngine.Events;
+using UnityEngine.SceneManagement;
 using uwu;
+using uwu.Scenes;
 using uwu.UI.Behaviors.Visibility;
 
 public class MainMenu : MonoBehaviour
 {
-    public UnityEvent onBeginGame, onContinueGame;
-
     GameDataSaveSystem Save;
+    
+    // Properties
 
     [SerializeField] GameObject continuePanel;
-    [SerializeField] ToggleOpacity opacity;
+    [SerializeField] Animator animation;
+    [SerializeField] SceneUtils sceneUtils;
 
-    bool @continue = false;
-
-    void Awake()
+    public enum Route
     {
-        Save = GameDataSaveSystem.Instance;
+        NULL,
+        
+        NewGame,
+        ContinueGame
     }
 
-    void OnEnable()
-    {
-        GameDataSaveSystem.onLoad += DisplayOptions;
-    }
+    public Route route = Route.NULL;
 
-    void OnDisable()
-    {
-        GameDataSaveSystem.onLoad -= DisplayOptions;
-    }
-
+    bool previousSceneFileExists = false;
+    bool previousBrainFileExists = false;
+    
     void Start()
     {
         Save = GameDataSaveSystem.Instance;
-        Save.LoadGameData(events: true);
+
+        previousSceneFileExists = Save.LoadGameData<SceneData>();
+        
+        previousBrainFileExists = Save.LoadGameData<BrainData>("brain.fns");
+        if (previousBrainFileExists) 
+            previousBrainFileExists = !string.IsNullOrEmpty(Save.brainData.username);
+
+        DisplayOptions(previousSceneFileExists && previousBrainFileExists);
     }
 
-    void DisplayOptions(bool continue_available) 
+    void DisplayOptions(bool previousSave) 
     {
-        continuePanel.SetActive(continue_available);
+        continuePanel.SetActive(previousSave);
+        animation.SetInteger("options", (previousSave)? 2:1);
     }
+    
+    #region Routes
 
     public void NewGame()
     {
-        Save.ResetGameData();
-        @continue = false;
-        opacity.Hide();
+        RecoverGameData();
+        WipeGameData();
+        
+        route = Route.NewGame;
+        animation.SetTrigger("new_game");
+    }
+
+    public void ContinueNewGame()
+    {
+        if (route != Route.NewGame) return;
+        animation.SetTrigger("trigger_game");
     }
 
     public void ContinueGame()
     {
-        @continue = true;
-        opacity.Hide();
+        route = Route.ContinueGame;
+        animation.SetTrigger("trigger_game");
+    }
+    
+    #endregion
+
+    void RecoverGameData()
+    {
+        if(!previousSceneFileExists) Save.LoadGameData<SceneData>(createIfEmpty: true);
+        if(!previousBrainFileExists) Save.LoadGameData<BrainData>("brain.fns", true);
+    }
+    
+    void WipeGameData()
+    {
+        Save.WipeGameData<BrainData>("brain.fns");
+        Save.WipeGameData<SceneData>(); 
     }
 
-    public void TriggerSelection()
+    public void MoveToTheGame()
     {
-        if(@continue)
-            onContinueGame.Invoke();
-        else
-            onBeginGame.Invoke();
+        if (route == Route.NULL) 
+        {
+            Debug.LogWarning("Ignore request to load scene when route is NULL!");
+            return;
+        }
+        Debug.LogWarning("Move!");
+        SceneManager.LoadScene(1);
     }
 }

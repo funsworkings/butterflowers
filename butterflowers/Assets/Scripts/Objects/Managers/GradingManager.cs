@@ -20,7 +20,8 @@ namespace Objects.Managers
 		// Properties
 
 		[SerializeField] WorldPreset Preset;
-
+		[SerializeField] Animator animator;
+		
 		[SerializeField] TMP_Text score;
 
 		[SerializeField] Transform scoreItemParent;
@@ -54,7 +55,7 @@ namespace Objects.Managers
 		
 		[Header("Debug")]
 			[SerializeField] float[] scores = new float[]{};
-			[SerializeField] ScoringData composite;
+			[SerializeField] CompositeSurveillanceData composite;
 			[SerializeField] bool refreshComposite = false;
 			
 			
@@ -69,7 +70,7 @@ namespace Objects.Managers
 		void Update()
 		{
 			if (refreshComposite) {
-				composite = CreateCompositeAverageLog();
+				composite = Surveillance.CreateCompositeAverageLog();
 				refreshComposite = false;
 			}
 		}
@@ -80,8 +81,8 @@ namespace Objects.Managers
 
 		public void ShowScores()
 		{
-			var log = new ScoringData(Surveillance.activeLog);
-			var compositeLog = CreateCompositeAverageLog();
+			var log = new CompositeSurveillanceData(Surveillance.activeLog);
+			var compositeLog = Surveillance.CreateCompositeAverageLog();
 
 			StartCoroutine(ShowingScores(compositeLog, log));
 			
@@ -91,7 +92,7 @@ namespace Objects.Managers
 			/*****/
 		}
 
-		IEnumerator ShowingScores(ScoringData compositeLog, ScoringData log)
+		IEnumerator ShowingScores(CompositeSurveillanceData compositeLog, CompositeSurveillanceData log)
 		{
 			yield return new WaitForSeconds(timeBetweenScores);
 			ShowScoreItem(addedFiles, compositeLog.filesAdded,log.filesAdded);
@@ -125,24 +126,14 @@ namespace Objects.Managers
 			ShowScoreItem(timeInDefault,compositeLog.AverageTimeSpentInDefault,log.timeSpentInDefault);
 			
 			yield return new WaitForSeconds(timeBetweenScores);
-			ShowScoreItem(cursorVelocity,compositeLog.AverageCursorSpeed,log.averageCursorSpeed);
-			
-			yield return new WaitForSeconds(timeBetweenScores*2f);
-			scoreScaler.Show();
-
-			while (!scoreScaler.Shown) yield return null;
-			yield return new WaitForSeconds(timeBeforeStroke);
-			scoreDropdownAnimation.Play();
+			ShowScoreItem(cursorVelocity, compositeLog.AverageCursorSpeed, log.averageCursorSpeed);
 		}
 
 		public void HideScores()
 		{
 			StopAllCoroutines();
 			foreach(ScoreItem item in scoreItems)
-				item.gameObject.SetActive(false);
-			
-			scoreScaler.Hide();
-			strokeImage.fillAmount = 0f;
+				item.gameObject.SetActive(false);;
 		}
 
 		void ShowScoreItem(ScoreItem item, float previousScore, float currentScore)
@@ -155,7 +146,7 @@ namespace Objects.Managers
 		
 		#region Scoring
 
-		public char CalculateGrade(ScoringData current, ScoringData composite)
+		public char CalculateGrade(CompositeSurveillanceData current, CompositeSurveillanceData composite)
 		{
 			float fileadd = CalculatePercentageIncrease(composite.filesAdded, current.filesAdded);
 			float fileremove = -CalculatePercentageIncrease(composite.filesRemoved, current.filesRemoved);
@@ -181,37 +172,6 @@ namespace Objects.Managers
 				return 'D';
 			else
 				return 'F';
-		}
-
-		ScoringData CreateCompositeAverageLog()
-		{
-			var logs = Surveillance.previousLogs;
-			if (logs == null)
-				return Preset.baselineSurveillanceData;
-
-			ScoringData composite = new ScoringData();
-				
-				composite.filesAdded = (int) logs.Select(l => l.filesAdded).Average();
-				composite.filesRemoved = (int) logs.Select(l => l.filesRemoved).Average();
-				composite.discoveries = (int)logs.Select(l => l.discoveries).Average();
-				
-				composite.beaconsAdded = (int) logs.Select(l => l.beaconsAdded).Average();
-				composite.beaconsPlanted = (int)logs.Select(l => l.beaconsPlanted).Average();
-
-				composite.nestKicks = (int) logs.Select(l => l.nestKicks).Average();
-				composite.nestSpills = (int)logs.Select(l => l.nestSpills).Average();
-
-				composite.AverageCursorSpeed = logs.Select(l => l.averageCursorSpeed).Average();
-				composite.AverageHoB = logs.Select(l => l.averageHoB).Average();
-				composite.AverageNestFill = logs.Select(l => l.averageNestFill).Average();
-
-				composite.AverageTimeSpentInNest = logs.Select(l => l.timeSpentInNest).Average();
-				composite.AverageTimeSpentInTree = logs.Select(l => l.timeSpentInTree).Average();
-				composite.AverageTimeSpentInMagicStar = logs.Select(l => l.timeSpentInMagicStar).Average();
-				composite.AverageTimeSpentInDefault = logs.Select(l => l.timeSpentInDefault).Average();
-				
-
-			return composite;
 		}
 
 		float CalculatePercentageIncrease(float a, float b)

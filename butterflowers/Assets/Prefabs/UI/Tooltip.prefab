@@ -114,8 +114,8 @@ MonoBehaviour:
   m_outlineColor:
     serializedVersion: 2
     rgba: 4278190080
-  m_fontSize: 36
-  m_fontSizeBase: 36
+  m_fontSize: 24
+  m_fontSizeBase: 24
   m_fontWeight: 400
   m_enableAutoSizing: 0
   m_fontSizeMin: 18
@@ -286,6 +286,7 @@ GameObject:
   - component: {fileID: 7413739892866268084}
   - component: {fileID: 4194946445239890977}
   - component: {fileID: 114316798377498118}
+  - component: {fileID: 6028160816285505326}
   m_Layer: 5
   m_Name: Tooltip
   m_TagString: Untagged
@@ -337,8 +338,12 @@ MonoBehaviour:
   camera: {fileID: 0}
   target: {fileID: 0}
   offset: {x: 0, y: 0, z: 0}
+  padding: {x: 0, y: 0}
   globalOffset: 1
   smooth: 0
+  tracking: 1
+  fitInCanvas: 1
+  closeOnPointerExit: 0
   smoothSpeed: 1
 --- !u!114 &3643821466468760118
 MonoBehaviour:
@@ -428,6 +433,33 @@ MonoBehaviour:
   text: {fileID: 0}
   visible: 1
   hidden: 0
+--- !u!114 &6028160816285505326
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 7327096736874297126}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: -765806418, guid: f70555f144d8491a825f0804e09c671c, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
+  m_Material: {fileID: 0}
+  m_Color: {r: 1, g: 1, b: 1, a: 0}
+  m_RaycastTarget: 1
+  m_OnCullStateChanged:
+    m_PersistentCalls:
+      m_Calls: []
+  m_Sprite: {fileID: 0}
+  m_Type: 0
+  m_PreserveAspect: 0
+  m_FillCenter: 1
+  m_FillMethod: 4
+  m_FillAmount: 1
+  m_FillClockwise: 1
+  m_FillOrigin: 0
+  m_UseSpriteMesh: 0
 --- !u!1 &7702935302860965638
 GameObject:
   m_ObjectHideFlags: 0

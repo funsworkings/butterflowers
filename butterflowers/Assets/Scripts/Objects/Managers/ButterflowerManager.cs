@@ -155,6 +155,20 @@ public class ButterflowerManager : Spawner
             butterfly.Kill();
     }
 
+    public void KillButterfliesInDirection(Vector3 direction, float strength = 1f)
+    {
+        Vector3 dir = Vector3.zero;
+        
+        foreach (Butterfly butterfly in butterflies) 
+        {
+            dir = (butterfly.transform.position - camera.transform.position).normalized;
+            dir += direction;
+            
+            butterfly.Velocity = dir * strength;
+            butterfly.Kill();
+        }
+    }
+
     public void ReleaseButterflies()
     {
         foreach (Butterfly butterfly in butterflies)

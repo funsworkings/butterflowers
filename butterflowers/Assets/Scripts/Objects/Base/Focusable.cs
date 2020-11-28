@@ -6,6 +6,7 @@ using UnityEngine.Events;
 using UnityEngine.Experimental.UIElements;
 using uwu.Camera;
 using uwu.Camera.Instances;
+using uwu.Extensions;
 
 public class Focusable : Interactable
 {
@@ -19,6 +20,8 @@ public class Focusable : Interactable
     // Attributes
 
     [SerializeField] bool focused = false, queued = false;
+    [SerializeField] Transform anchor;
+
     public bool dispose = true;
 
     string m_message = null;
@@ -29,19 +32,11 @@ public class Focusable : Interactable
 
 	#region Accessors
 
-    public bool isFocused {
-        get
-        {
-            return focused;
-        }
-    }
+    public bool isFocused => focused;
 
-    public new FocusCamera camera {
-        get
-        {
-            return overrideCamera;
-        }
-    }
+    public new FocusCamera camera => overrideCamera;
+
+    public Transform Anchor => anchor;
     
     string message
     {
@@ -56,7 +51,7 @@ public class Focusable : Interactable
         }
     }
 
-	#endregion
+    #endregion
 
     protected override void OnStart()
     {
@@ -75,9 +70,9 @@ public class Focusable : Interactable
         }
     }
 
-    public void Focus()
+    public bool Focus()
     {
-        if (focused) return;
+        if (focused) return false;
         focused = true;
 
         Debug.Log("Focus on " + gameObject.name);
@@ -88,15 +83,19 @@ public class Focusable : Interactable
 
         if (FocusOnPoint != null)
             FocusOnPoint(this);
+
+        return true;
     }
 
-    public void LoseFocus() {
-        if (!focused) return;
+    public bool LoseFocus() {
+        if (!focused) return false;
         focused = false;
 
         onLostFocus.Invoke();
         if (onLoseFocus != null)
             onLoseFocus();
+
+        return true;
     }
 
     #region Interactable callbacks
@@ -155,7 +154,14 @@ public class Focusable : Interactable
 
     bool InfoContainsFocusText()
     {
-        return tooltipText.text.Contains(message);
+        try {
+            var contains = tooltipText.text.Contains(message);
+            return contains;
+        }
+        catch (System.Exception err) {
+            Debug.LogWarningFormat("Tooltip failed => {0}", gameObject.name);
+            return false;
+        }
     }
 	
     #endregion

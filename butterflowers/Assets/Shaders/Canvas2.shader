@@ -4,6 +4,13 @@
     {
         _MainTex ("Main Texture", 2D) = "white" {}
         _NoiseTex ("Noise Texture", 2D) = "white" {}
+        
+        _Texture0 ("Texture 0", 2D) = "white" {}
+        _Texture1 ("Texture 1", 2D) = "white" {}
+        _Texture2 ("Texture 2", 2D) = "white" {}
+        _Texture3 ("Texture 3", 2D) = "white" {}
+        _Texture4 ("Texture 4", 2D) = "white" {}
+        _Texture5 ("Texture 5", 2D) = "white" {}
     
         _Textures ("Textures", 2DArray) = ""{}
         _TextureCount ("Texture Count", int) = 0
@@ -56,6 +63,8 @@
             
             sampler2D _MainTex;
             sampler2D _NoiseTex;
+
+            sampler2D _Texture0, _Texture1, _Texture2, _Texture3, _Texture4, _Texture5;
             
             float4 _MainTex_ST;
             
@@ -113,10 +122,18 @@
                     maxrange = saturate(r / _TextureCount) * 1.0;
                 
                 fixed4 c = fixed4(1.0, 1.0, 1.0, 1.0);
-                for(int i = 0; i < _TextureCount; i++){
-                    uv.z = i;
-                
-                    c = UNITY_SAMPLE_TEX2DARRAY(_Textures, uv);
+                for(int i = 0; i < _TextureCount; i++)
+                {
+                    //uv.z = i;
+                    //c = UNITY_SAMPLE_TEX2DARRAY(_Textures, uv);
+                    c = half4(1.0, 1.0, 1.0, 1.0);
+                    
+                    if(i == 0) c = tex2D(_Texture0, uv);
+                    else if(i == 1) c = tex2D(_Texture1, uv);
+                    else if(i == 2) c = tex2D(_Texture2, uv);
+                    else if(i == 3) c = tex2D(_Texture3, uv);
+                    else if(i == 4) c = tex2D(_Texture4, uv);
+                    else if(i == 5) c = tex2D(_Texture5, uv);
 
                     float index = 0.0;
                     if(_TextureCount > 1)

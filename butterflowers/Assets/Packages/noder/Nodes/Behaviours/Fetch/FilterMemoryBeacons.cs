@@ -23,7 +23,8 @@ namespace Noder.Nodes.Behaviours.Entries {
             var brain = (graph as ModuleTree).Brain;
             var raw = GetInputValue<string[]>("beacons", this.beacons);
 
-            return brain.filterMemoryBeacons(raw, (int)filter);
+            return null;
+            //return brain.filterMemoryBeacons(raw, (int)filter);
         }
 
     }

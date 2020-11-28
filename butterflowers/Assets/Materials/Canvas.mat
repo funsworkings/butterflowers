@@ -75,6 +75,30 @@ Material:
         m_Texture: {fileID: 0}
         m_Scale: {x: 1, y: 1}
         m_Offset: {x: 0, y: 0}
+    - _Texture0:
+        m_Texture: {fileID: 0}
+        m_Scale: {x: 1, y: 1}
+        m_Offset: {x: 0, y: 0}
+    - _Texture1:
+        m_Texture: {fileID: 0}
+        m_Scale: {x: 1, y: 1}
+        m_Offset: {x: 0, y: 0}
+    - _Texture2:
+        m_Texture: {fileID: 0}
+        m_Scale: {x: 1, y: 1}
+        m_Offset: {x: 0, y: 0}
+    - _Texture3:
+        m_Texture: {fileID: 0}
+        m_Scale: {x: 1, y: 1}
+        m_Offset: {x: 0, y: 0}
+    - _Texture4:
+        m_Texture: {fileID: 0}
+        m_Scale: {x: 1, y: 1}
+        m_Offset: {x: 0, y: 0}
+    - _Texture5:
+        m_Texture: {fileID: 0}
+        m_Scale: {x: 1, y: 1}
+        m_Offset: {x: 0, y: 0}
     - _Textures:
         m_Texture: {fileID: 0}
         m_Scale: {x: 1, y: 1}
@@ -89,8 +113,8 @@ Material:
     - _GlossMapScale: 1
     - _Glossiness: 0.57
     - _GlossyReflections: 1
-    - _Interval: 0.9386926
-    - _LerpSpeed: 0.4466667
+    - _Interval: 0
+    - _LerpSpeed: 0
     - _Metallic: 0
     - _Mode: 0
     - _NoiseStrength: 0
@@ -99,8 +123,8 @@ Material:
     - _SmoothnessTextureChannel: 0
     - _SpecularHighlights: 1
     - _SrcBlend: 1
-    - _TextureCount: 4
-    - _TextureRange: 4
+    - _TextureCount: 0
+    - _TextureRange: 0
     - _TextureStrength: 1
     - _UVSec: 0
     - _ZWrite: 1

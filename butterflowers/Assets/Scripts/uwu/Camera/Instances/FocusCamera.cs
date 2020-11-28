@@ -33,5 +33,7 @@ namespace uwu.Camera.Instances
 		{
 			focus = defaultFocus;
 		}
+
+		public Vector3 GetDirection(){ return transform.forward; }
 	}
 }

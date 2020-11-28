@@ -1,5 +1,6 @@
 ﻿using System.Collections;
 using System.Collections.Generic;
+using AI.Agent;
 using UnityEngine;
 
 using Noder.Nodes.Behaviours.Core;
@@ -10,14 +11,14 @@ namespace Noder.Nodes.Behaviours.Events {
 
     public class Hit: BaseEventNode<Object> {
 
-        private Controller controller;
+        private Actions actions;
 
         protected override void OnEnter()
         {
-            if (controller == null) 
+            if (actions == null) 
             {
                 var tree = (graph as ModuleTree);
-                controller = tree.Brain.controller;
+                actions = tree.Brain.Actions;
             }
 
             base.OnEnter();
@@ -28,7 +29,7 @@ namespace Noder.Nodes.Behaviours.Events {
             var tree = (graph as ModuleTree);
             if (tree != null) 
             {
-                controller.Hit();
+                actions.Hit();
                 return true;
             }
 

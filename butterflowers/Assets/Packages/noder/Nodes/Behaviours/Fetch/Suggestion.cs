@@ -12,7 +12,8 @@ namespace Noder.Nodes.Behaviours.Fetch {
         protected override SUGGESTION ValueProvider()
         {
             var brain = (graph as ModuleTree).Brain;
-            return brain.getSuggestion();
+            //return brain.getSuggestion();
+            return SUGGESTION.NULL;
         }
 
     }

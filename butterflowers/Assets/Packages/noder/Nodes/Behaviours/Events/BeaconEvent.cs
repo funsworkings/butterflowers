@@ -10,7 +10,7 @@ namespace Noder.Nodes.Behaviours.Events {
 
     public class BeaconEvent: BaseEventNode<string> {
 
-        public enum Type { Add, Remove }
+        public enum Type { Add, Remove, Plant }
 
         [Input(ShowBackingValue.Always, ConnectionType.Override)] public Type type = Type.Add;
 
@@ -23,12 +23,16 @@ namespace Noder.Nodes.Behaviours.Events {
 
                 if (type == Type.Add) {
                     if (beacon != null) {
-                        ModuleTree.onReceiveEvent(tree, EVENTCODE.BEACONACTIVATE, beacon);
+                        ModuleTree.onReceiveEvent(tree, EVENTCODE.BEACONACTIVATE, beacon, rewards);
                         return true;
                     }
                 }
                 else if (type == Type.Remove) {
-                    ModuleTree.onReceiveEvent(tree, EVENTCODE.NESTPOP, beacon);
+                    ModuleTree.onReceiveEvent(tree, EVENTCODE.NESTPOP, beacon, rewards);
+                    return true;
+                }
+                else if (type == Type.Plant) {
+                    ModuleTree.onReceiveEvent(tree, EVENTCODE.BEACONPLANT, beacon, rewards);
                     return true;
                 }
             }

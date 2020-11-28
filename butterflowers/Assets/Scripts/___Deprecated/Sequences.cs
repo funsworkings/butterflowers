@@ -66,7 +66,7 @@ public class Sequences : MonoBehaviour
 
 		yield return new WaitForSeconds(introDelay);
 		wizardIntroAnimation.Play();
-		wizard.OnFocus();
+		//wizard.OnFocus();
 
 		yield return new WaitForSeconds(introEndDelay);
 		m_inprogress = false;
@@ -123,14 +123,14 @@ public class Sequences : MonoBehaviour
 		float maxSpeed = 0f;
 
 		// ACCEL CAMERA + ABSORB WIZARD
-		wizard.Appearance.LevelUp();
+		//wizard.Appearance.LevelUp();
 		yield return new WaitForEndOfFrame();
 
-		while (wizard.Appearance.state == Wizard.Appearance.State.Leveling) 
+		/*while (wizard.Appearance.state == Wizard.Appearance.State.Leveling) 
 		{
 			revolveFeedCamera.Speed += (Time.deltaTime * camerSpeedAcceleration);
 			yield return null;
-		}
+		}*/
 		maxSpeed = revolveFeedCamera.Speed;
 		yield return new WaitForSeconds(slowCameraDelay);
 

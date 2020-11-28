@@ -9,9 +9,43 @@
       <e p="Assembly-CSharp-firstpass.csproj" t="IncludeRecursive" />
       <e p="Assembly-CSharp.csproj" t="IncludeRecursive" />
       <e p="Assets" t="Include">
-        <e p="Animations" t="Include">
-          <e p="State Machine Events" t="Include">
-            <e p="GestureEvents.cs" t="Include" />
+        <e p="Cutscenes" t="Include">
+          <e p="Behaviours" t="Include">
+            <e p="CameraManagerTrack" t="Include">
+              <e p="CameraManagerTrackBehaviour.cs" t="Include" />
+              <e p="CameraManagerTrackClip.cs" t="Include" />
+              <e p="CameraManagerTrackTrack.cs" t="Include" />
+            </e>
+            <e p="CanvasGroupTrack" t="Include">
+              <e p="CanvasGroupTrackBehaviour.cs" t="Include" />
+              <e p="CanvasGroupTrackClip.cs" t="Include" />
+              <e p="CanvasGroupTrackTrack.cs" t="Include" />
+              <e p="Editor" t="Include">
+                <e p="CanvasGroupTrackDrawer.cs" t="Include" />
+              </e>
+            </e>
+            <e p="DesktopVisualizationTrack" t="Include">
+              <e p="DesktopVisualizationTrackBehaviour.cs" t="Include" />
+              <e p="DesktopVisualizationTrackClip.cs" t="Include" />
+              <e p="DesktopVisualizationTrackTrack.cs" t="Include" />
+            </e>
+            <e p="FocusControl" t="Include">
+              <e p="FocusControlBehaviour.cs" t="Include" />
+              <e p="FocusControlClip.cs" t="Include" />
+              <e p="FocusControlTrack.cs" t="Include" />
+            </e>
+            <e p="PushDialogue" t="Include">
+              <e p="PushDialogueBehaviour.cs" t="Include" />
+              <e p="PushDialogueClip.cs" t="Include" />
+              <e p="PushDialogueTrack.cs" t="Include" />
+            </e>
+            <e p="ToggleVisibility" t="Include">
+              <e p="Editor" t="Include">
+                <e p="ToggleVisibilityTrackDrawer.cs" t="Include" />
+              </e>
+              <e p="ToggleVisibilityTrackBehaviour.cs" t="Include" />
+              <e p="ToggleVisibilityTrackClip.cs" t="Include" />
+            </e>
           </e>
         </e>
         <e p="DefaultPlayables" t="Include">
@@ -148,15 +182,19 @@
                   <e p="RandomGesture.cs" t="Include" />
                   <e p="RandomGestureSet.cs" t="Include" />
                   <e p="RandomModule.cs" t="Include" />
+                  <e p="RandomModuleTree.cs" t="Include" />
+                  <e p="RandomWaypoint.cs" t="Include" />
                 </e>
                 <e p="Events" t="Include">
                   <e p="BeaconEvent.cs" t="Include" />
                   <e p="ClearNest.cs" t="Include" />
                   <e p="DialogueEvent.cs" t="Include" />
                   <e p="EnactGesture.cs" t="Include" />
+                  <e p="FailureEvent.cs" t="Include" />
                   <e p="Fireworks.cs" t="Include" />
                   <e p="Hit.cs" t="Include" />
                   <e p="KickNest.cs" t="Include" />
+                  <e p="MoveToAgent.cs" t="Include" />
                   <e p="TakeSelfie.cs" t="Include" />
                 </e>
                 <e p="Fetch" t="Include">
@@ -170,6 +208,8 @@
                   <e p="GestureSet.cs" t="Include" />
                   <e p="HoB.cs" t="Include" />
                   <e p="HoBGestureThreshold.cs" t="Include" />
+                  <e p="IsRemote.cs" t="Include" />
+                  <e p="IsSelf.cs" t="Include" />
                   <e p="LastEvent.cs" t="Include" />
                   <e p="MoodNode.cs" t="Include" />
                   <e p="MoodStateNode.cs" t="Include" />
@@ -180,6 +220,7 @@
                   <e p="StanceStateNode.cs" t="Include" />
                   <e p="SubMoodStateNode.cs" t="Include" />
                   <e p="Suggestion.cs" t="Include" />
+                  <e p="Waypoints.cs" t="Include" />
                 </e>
                 <e p="States" t="Include">
                   <e p="ModuleNode.cs" t="Include" />
@@ -300,6 +341,11 @@
               <e p="SoftMaskTemplate.cginc" t="Include" />
             </e>
           </e>
+          <e p="UnityWindowsFileDrag-Drop-master" t="Include">
+            <e p="B83.Win32.cs" t="Include" />
+            <e p="FileDragAndDrop.cs" t="Include" />
+            <e p="ImageExample.cs" t="Include" />
+          </e>
           <e p="xNode" t="Include">
             <e p="Examples" t="Include">
               <e p="MathGraph" t="Include">
@@ -416,12 +462,11 @@
             <e p="Unknown.cs" t="Include" />
           </e>
           <e p="AI" t="Include">
-            <e p="Advertiser.cs" t="Include" />
             <e p="Agent" t="Include">
               <e p="Actions.cs" t="Include" />
+              <e p="Body.cs" t="Include" />
               <e p="Brain.cs" t="Include" />
               <e p="BrainOld.cs" t="Include" />
-              <e p="Mesh.cs" t="Include" />
             </e>
             <e p="Scriptables" t="Include">
               <e p="BrainPreset.cs" t="Include" />
@@ -431,22 +476,40 @@
               <e p="ActionSequence.cs" t="Include" />
               <e p="Advertisement.cs" t="Include" />
               <e p="Behaviour.cs" t="Include" />
-              <e p="BehaviourCollection.cs" t="Include" />
-              <e p="BehaviourMapping.cs" t="Include" />
+              <e p="BehaviourGroup.cs" t="Include" />
+              <e p="BehaviourMap.cs" t="Include" />
               <e p="BehaviourProfile.cs" t="Include" />
               <e p="Editor" t="Include">
                 <e p="BehaviourProfilePropertyDrawer.cs" t="Include" />
               </e>
-              <e p="Interfaces" t="Include">
-                <e p="IAdvertiser.cs" t="Include" />
-              </e>
+              <e p="FailureCode.cs" t="Include" />
               <e p="Knowledge.cs" t="Include" />
-              <e p="Mappings" t="Include">
+              <e p="Maps" t="Include">
                 <e p="BehaviourFloat.cs" t="Include" />
-                <e p="BehaviourFloatMap.cs" t="Include" />
+                <e p="BehaviourFloatGroup.cs" t="Include" />
                 <e p="BehaviourInt.cs" t="Include" />
-                <e p="BehaviourIntegerMap.cs" t="Include" />
+                <e p="BehaviourIntGroup.cs" t="Include" />
+                <e p="BehaviourSprite.cs" t="Include" />
+                <e p="BehaviourSpriteGroup.cs" t="Include" />
+                <e p="BehaviourString.cs" t="Include" />
+                <e p="BehaviourStringGroup.cs" t="Include" />
               </e>
+              <e p="Mood.cs" t="Include" />
+              <e p="SecondaryMood.cs" t="Include" />
+              <e p="Stance.cs" t="Include" />
+            </e>
+            <e p="UI" t="Include">
+              <e p="HUD Elements" t="Include">
+                <e p="AttributeElement.cs" t="Include" />
+                <e p="StatElement.cs" t="Include" />
+                <e p="StatOverlayElement.cs" t="Include" />
+                <e p="StatsContainer.cs" t="Include" />
+              </e>
+              <e p="HUDElement.cs" t="Include" />
+              <e p="MoodIconMapping.cs" t="Include" />
+            </e>
+            <e p="Utilities" t="Include">
+              <e p="AnimationRelay.cs" t="Include" />
             </e>
           </e>
           <e p="Cameras" t="Include">
@@ -463,15 +526,20 @@
           </e>
           <e p="Data" t="Include">
             <e p="BeaconData.cs" t="Include" />
+            <e p="CompositeSurveillanceData.cs" t="Include" />
+            <e p="LeafBundleData.cs" t="Include" />
+            <e p="LeafData.cs" t="Include" />
             <e p="Log.cs" t="Include" />
             <e p="LogData.cs" t="Include" />
-            <e p="ScoringData.cs" t="Include" />
             <e p="SurveillanceData.cs" t="Include" />
+            <e p="SurveillanceDataDelta.cs" t="Include" />
             <e p="SurveillanceLogData.cs" t="Include" />
             <e p="VineData.cs" t="Include" />
           </e>
           <e p="Global.cs" t="Include" />
           <e p="Interfaces" t="Include">
+            <e p="IFileContainer.cs" t="Include" />
+            <e p="IFlammable.cs" t="Include" />
             <e p="IObserveSunCycle.cs" t="Include" />
             <e p="IReactToSun.cs" t="Include" />
           </e>
@@ -493,6 +561,7 @@
                 <e p="Tree.cs" t="Include" />
                 <e p="Vine.cs" t="Include" />
               </e>
+              <e p="Leaf.cs" t="Include" />
               <e p="Quilt.cs" t="Include" />
               <e p="Spell.cs" t="Include" />
               <e p="Sun.cs" t="Include" />
@@ -504,7 +573,9 @@
               <e p="EventManager.cs" t="Include" />
               <e p="GradingManager.cs" t="Include" />
               <e p="LoadingManager.cs" t="Include" />
+              <e p="ModuleTreeHelper.cs" t="Include" />
               <e p="SummaryManager.cs" t="Include" />
+              <e p="TooltipManager.cs" t="Include" />
               <e p="VineManager.cs" t="Include" />
             </e>
             <e p="Scriptables" t="Include">
@@ -529,8 +600,10 @@
             <e p="WorldPreset.cs" t="Include" />
           </e>
           <e p="Save &amp; Load" t="Include">
+            <e p="BrainData.cs" t="Include" />
             <e p="GameData.cs" t="Include" />
             <e p="GameDataSaveSystem.cs" t="Include" />
+            <e p="SceneData.cs" t="Include" />
           </e>
           <e p="Scenes" t="Include">
             <e p="Introduction" t="Include">
@@ -551,6 +624,7 @@
             <e p="BeaconInfo.cs" t="Include" />
             <e p="DayTracker.cs" t="Include" />
             <e p="EventLog.cs" t="Include" />
+            <e p="MenuCursor.cs" t="Include" />
             <e p="ScoreItem.cs" t="Include" />
           </e>
           <e p="uwu" t="Include">
@@ -601,6 +675,7 @@
             <e p="Extensions" t="Include">
               <e p="EasingFunction.cs" t="Include" />
               <e p="Extensions.cs" t="Include" />
+              <e p="ExtraInput.cs" t="Include" />
               <e p="JsonHelper.cs" t="Include" />
               <e p="Singleton.cs" t="Include" />
               <e p="TTMonoBehaviour.cs" t="Include" />
@@ -655,6 +730,7 @@
             <e p="Save &amp; Load" t="Include">
               <e p="GameData.cs" t="Include" />
               <e p="GameDataSaveSystem.cs" t="Include" />
+              <e p="SettingsSystem.cs" t="Include" />
             </e>
             <e p="Scenes" t="Include">
               <e p="SceneUtils.cs" t="Include" />
@@ -718,6 +794,7 @@
               <e p="SimpleScale.cs" t="Include" />
               <e p="SimpleVelocity.cs" t="Include" />
               <e p="Snapshot.cs" t="Include" />
+              <e p="TimeControl.cs" t="Include" />
               <e p="VirtualCanvas.cs" t="Include" />
               <e p="VirtualCursor.cs" t="Include" />
             </e>
@@ -741,6 +818,7 @@
                 <e p="ToggleVisibility.cs" t="Include" />
                 <e p="UpdateMinimumLayoutSizeFromChildren.cs" t="Include" />
                 <e p="Visibility" t="Include">
+                  <e p="ToggleAnimation.cs" t="Include" />
                   <e p="ToggleOpacity.cs" t="Include" />
                   <e p="TogglePosition.cs" t="Include" />
                   <e p="ToggleRotation.cs" t="Include" />
@@ -786,6 +864,7 @@
           <e p="ColorKey.shader" t="Include" />
           <e p="DeferredFog.shader" t="Include" />
           <e p="DeferredShading.shader" t="Include" />
+          <e p="EtherealBoy.shader" t="Include" />
           <e p="Instancing.shader" t="Include" />
           <e p="My First Lighting Shader.shader" t="Include" />
           <e p="My First Shader.shader" t="Include" />
@@ -1108,45 +1187,6 @@
           </e>
           <e p="Sprites" t="Include">
             <e p="EmojiOne Attribution.txt" t="Include" />
-          </e>
-        </e>
-        <e p="Timeline" t="Include">
-          <e p="Behaviours" t="Include">
-            <e p="CameraManagerTrack" t="Include">
-              <e p="CameraManagerTrackBehaviour.cs" t="Include" />
-              <e p="CameraManagerTrackClip.cs" t="Include" />
-              <e p="CameraManagerTrackTrack.cs" t="Include" />
-            </e>
-            <e p="CanvasGroupTrack" t="Include">
-              <e p="CanvasGroupTrackBehaviour.cs" t="Include" />
-              <e p="CanvasGroupTrackClip.cs" t="Include" />
-              <e p="CanvasGroupTrackTrack.cs" t="Include" />
-              <e p="Editor" t="Include">
-                <e p="CanvasGroupTrackDrawer.cs" t="Include" />
-              </e>
-            </e>
-            <e p="DesktopVisualizationTrack" t="Include">
-              <e p="DesktopVisualizationTrackBehaviour.cs" t="Include" />
-              <e p="DesktopVisualizationTrackClip.cs" t="Include" />
-              <e p="DesktopVisualizationTrackTrack.cs" t="Include" />
-            </e>
-            <e p="FocusControl" t="Include">
-              <e p="FocusControlBehaviour.cs" t="Include" />
-              <e p="FocusControlClip.cs" t="Include" />
-              <e p="FocusControlTrack.cs" t="Include" />
-            </e>
-            <e p="PushDialogue" t="Include">
-              <e p="PushDialogueBehaviour.cs" t="Include" />
-              <e p="PushDialogueClip.cs" t="Include" />
-              <e p="PushDialogueTrack.cs" t="Include" />
-            </e>
-            <e p="ToggleVisibility" t="Include">
-              <e p="Editor" t="Include">
-                <e p="ToggleVisibilityTrackDrawer.cs" t="Include" />
-              </e>
-              <e p="ToggleVisibilityTrackBehaviour.cs" t="Include" />
-              <e p="ToggleVisibilityTrackClip.cs" t="Include" />
-            </e>
           </e>
         </e>
       </e>

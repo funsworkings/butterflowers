@@ -34,7 +34,7 @@ public class Audio: AudioHandler {
 
     void Start() {
         Focusing = FindObjectOfType<Focusing>();
-        brain = controller.Brain;
+        //brain = controller.Brain;
     }
 
     void OnEnable()
@@ -68,7 +68,8 @@ public class Audio: AudioHandler {
 
     #region Memories
 
-    void SmoothMemoryAudio() { Focusing.SetMemoryVolumeWithDistance(brain.shortterm_weight); }
+    void SmoothMemoryAudio() { //Focusing.SetMemoryVolumeWithDistance(brain.shortterm_weight);
+                               }
 
 	#endregion
 }
