@@ -21,6 +21,11 @@ ModelImporter:
     100030: joint9
     100032: //RootNode
     100034: wizard_combine
+    100036: joint10 1
+    100038: joint11 1
+    100040: joint6 1
+    100042: joint7 1
+    100044: wizard_combine2
     400000: joint10
     400002: joint101
     400004: joint11
@@ -39,11 +44,18 @@ ModelImporter:
     400030: joint9
     400032: //RootNode
     400034: wizard_combine
+    400036: joint10 1
+    400038: joint11 1
+    400040: joint6 1
+    400042: joint7 1
+    400044: wizard_combine2
     2100000: lambert1
     4300000: wizard_combine
+    4300002: wizard_combine2
     7400000: mixamo.com
     9500000: //RootNode
     13700000: wizard_combine
+    13700002: wizard_combine2
     2186277476908879412: ImportLogs
   externalObjects: {}
   materials:
@@ -57,7 +69,8 @@ ModelImporter:
     resampleCurves: 1
     optimizeGameObjects: 0
     motionNodeName: 
-    rigImportErrors: 
+    rigImportErrors: "Avatar creation failed:\n\tTransform 'joint61' for human bone
+      'LeftLowerLeg' not found\n"
     rigImportWarnings: 
     animationImportErrors: 
     animationImportWarnings: 

@@ -15,7 +15,7 @@ namespace Noder.Nodes.Behaviours.Events {
             if (tree != null) {
                 Gesture dat = GetInputValue<Gesture>("data", this.data);
 
-                ModuleTree.onReceiveEvent(tree, EVENTCODE.GESTURE, dat); // Override event
+                ModuleTree.onReceiveEvent(tree, EVENTCODE.GESTURE, dat, rewards); // Override event
                 return true;
             }
 

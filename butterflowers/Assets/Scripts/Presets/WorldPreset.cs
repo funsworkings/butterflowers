@@ -53,12 +53,24 @@ namespace Settings
         [Header("Vine Attributes")] 
             [Range(0f, 1f)] public float saplingGrowHeight;
             public float daysToGrowVine = 1f;
+            public float minimumVineGrowHeight = 1f;
+            public float maximumVineGrowHeight = 10f;
+            public float vineWidth = 1f;
+            public int minimumLeavesPerSegment = 5, maximumLeavesPerSegment = 10;
+            [Range(0f, 1f)] public float leafDensityPerSegment;
 
+        [Header("Leaf Attributes")] 
+            public AnimationCurve leafGrowCurve;
+            public float leafGrowTime = 1f;
+            public float minimumLeafScale = .33f, maximumLeafScale = 1f;
+            public float leafFlutterAngle = 45f;
+            public float leafFlutterTime = 1f;
+            
         [Header("Surveillance Attributes")] 
             public float surveillanceLogRate = 1f;
             
         [Header("Scoring Attributes")]
-            public ScoringData baselineSurveillanceData;
+            public CompositeSurveillanceData baselineSurveillanceData;
 
         [Header("Unknown Attributes")]
             [Range(0f, 1f)] public float unknownPersistenceThreshold = .5f;

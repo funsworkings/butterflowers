@@ -12,7 +12,9 @@ namespace Noder.Nodes.Behaviours.Fetch {
         protected override INTENT ValueProvider()
         {
             var brain = (graph as ModuleTree).Brain;
-            return brain.getPlayerIntent();
+            return INTENT.PLAY;
+            
+            //return brain.getPlayerIntent();
         }
 
     }

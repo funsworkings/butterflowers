@@ -57,6 +57,12 @@ namespace uwu.Camera
 		[SerializeField] UnityEngine.Animation planeAnimation;
 
 		#endregion
+		
+		#region Accessors
+
+		public bool Blending => blending;
+		
+		#endregion
 
 		#region Attributes
 

@@ -11,6 +11,7 @@ using System.Threading.Tasks;
 using Memories = Wizard.Memories;
 using UnityEditor;
 using System.Security.Cryptography;
+using B83.Win32;
 using uwu;
 using uwu.Extensions;
 using uwu.IO;
@@ -26,6 +27,7 @@ public class Library : Singleton<Library>
 
 	public System.Action OnRefreshItems;
 
+	public System.Action<string, POINT> onAddFileInstance;
 	public System.Action<string[]> onAddedFiles, onRemovedFiles;
 
 	// External
@@ -35,6 +37,7 @@ public class Library : Singleton<Library>
 	GameDataSaveSystem Save;
 
 	// Collections
+
 
 	public List<string> ALL_FILES = new List<string>();
 	public List<int> SHARED_FILES = new List<int>();
@@ -113,6 +116,14 @@ public class Library : Singleton<Library>
 		ALL_FILES = new List<string>(files);
 		TEMP_FILES = new List<string>(files);
 		
+		FILE_LOOKUP = new Dictionary<string, List<string>>() 
+		{
+			{ "WIZARD", new List<string>() },
+			{ "DESKTOP", new List<string>() },
+			{ "SHARED", new List<string>() },
+			{ "ENVIRONMENT", new List<string>() },
+		};
+		
 		Files.Refresh();
 
 		initialized = true;
@@ -167,7 +178,7 @@ public class Library : Singleton<Library>
 		for (int i = 0; i < paths.Length; i++) {
 			var path = paths[i];
 			
-			AddFile(path, "DESKTOP");
+			RegisterFile(path, "DESKTOP");
 			if (!textures.ContainsKey(path)) 
 				textureLoadTarget.Add(path);
 		}
@@ -193,7 +204,7 @@ public class Library : Singleton<Library>
 			var id = image.name;
 			var tex = image;
 
-			AddFile(id, pack);
+			RegisterFile(id, pack);
 			AddTextureToLibrary(id, tex);
 		}
 	}
@@ -209,7 +220,7 @@ public class Library : Singleton<Library>
 			var index = indices[i];
 			var file = ALL_FILES[index];
 			
-			AddFile(file, "SHARED");
+			RegisterFile(file, "SHARED");
 		}
 	}
 
@@ -324,7 +335,7 @@ public class Library : Singleton<Library>
 		textures.Add(path, image);
 		temp_textures.Add(image);
 
-		AddFile(name, "SHARED");
+		RegisterFile(name, "SHARED");
 		
 		SHARED_FILES.Add(ALL_FILES.Count - 1);
 
@@ -357,7 +368,17 @@ public class Library : Singleton<Library>
 		return false;
 	}
 
-	bool AddFile(string file, string type)
+	public bool RegisterFileInstance(string file, POINT screenPoint)
+	{
+		bool success = RegisterFile(file, "DESKTOP");
+
+		if (success && onAddFileInstance != null) 
+			onAddFileInstance(file, screenPoint);
+
+		return success;
+	}
+
+	bool RegisterFile(string file, string type)
 	{
 		bool exists = true;
 		

@@ -17,7 +17,7 @@ namespace Noder.Nodes.Behaviours.Events {
         {
             if (brain == null) {
                 var tree = (graph as ModuleTree);
-                brain = tree.Brain;
+                //brain = tree.Brain;
             }
 
             base.OnEnter();
@@ -27,7 +27,7 @@ namespace Noder.Nodes.Behaviours.Events {
         {
             var tree = (graph as ModuleTree);
             if (tree != null) {
-                brain.Burst();
+                //brain.Burst();
                 return true;
             }
 

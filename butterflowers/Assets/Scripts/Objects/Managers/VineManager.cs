@@ -28,10 +28,11 @@ public class VineManager : MonoBehaviour
 
     [SerializeField] GameObject vinePrefab = null;
     [SerializeField] Transform vineRoot = null;
+    [SerializeField] Transform vineTooltips = null;
 
     bool load = false;
 
-	#region Monobehaviour callbacks
+    #region Monobehaviour callbacks
 
 	void OnEnable()
     {
@@ -74,7 +75,7 @@ public class VineManager : MonoBehaviour
         if (dat != null) {
             foreach (VineData v in dat) {
                 var vine = DropVine(transform.position, vineRoot.up);
-                    vine.Initialize(this, cage, v);
+                    vine.Initialize(this, cage, v, vineTooltips);
                     
                 vines.Add(vine);
             }
@@ -92,7 +93,7 @@ public class VineManager : MonoBehaviour
         var origin = beacon.origin;
         
         var vine = DropVine(origin, vineRoot.up);
-            vine.Initialize(this, cage,null);
+            vine.Initialize(this, cage,null, vineTooltips);
         
         var file = beacon.file;
             vine.file = file;
@@ -114,6 +115,11 @@ public class VineManager : MonoBehaviour
         return vine;
     }
 
+    public float SecondsToGrowVine()
+    {
+        return Preset.ConvertDaysToSeconds(Preset.daysToGrowVine);
+    }
+    
     public float CalculateVineGrowSpeed(Vine vine)
     {
         float secondsToGrow = Preset.ConvertDaysToSeconds(Preset.daysToGrowVine);
@@ -138,8 +144,10 @@ public class VineManager : MonoBehaviour
         {
             vine.TransitionToGate(); // Turn into gate    
         }
-        else
+        else 
+        {
             vine.GrowFlower();
+        }
     }
 
     void onVineCompleteGateGrowth(Vine vine)

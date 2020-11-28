@@ -10,6 +10,8 @@ using Settings;
 using uwu.IO.SimpleFileBrowser.Scripts;
 using uwu.Snippets;
 using XNode.Examples.MathNodes;
+using AI;
+using Behaviour = AI.Types.Behaviour;
 
 public class Beacon: Interactable {
 
@@ -60,7 +62,7 @@ public class Beacon: Interactable {
 
     #region Properties
 
-    [SerializeField] ParticleSystem revealPS, discoveryPS, deathPS, auraPS;
+    [SerializeField] ParticleSystem revealPS, discoveryPS, deathPS, addPS, auraPS;
 
     SimpleOscillate Oscillate;
     new MeshRenderer renderer;
@@ -90,8 +92,8 @@ public class Beacon: Interactable {
     public Vector3 origin = Vector3.zero;
     public Vector3 size = Vector3.one;
 
-    bool lerp = false;
-    float lerp_t = 0f, lerp_duration = 1f;
+    [SerializeField] bool lerp = false, statechange = false;
+    [SerializeField] float lerp_t = 0f, lerp_duration = 1f;
     AnimationCurve scaleCurve;
 
     [SerializeField] float timeToDie = 1.67f;
@@ -147,7 +149,7 @@ public class Beacon: Interactable {
             return (Room == null)? 1f:Room.FetchBeaconKnowledgeMagnitude(this);
         }
     }
-
+    
     public bool visible => state == Locale.Terrain;
 
     #endregion
@@ -181,13 +183,19 @@ public class Beacon: Interactable {
             EvaluateState();
         }
 
-        if (lerp) {
-            lerp_t += Time.deltaTime;
-            LerpToDestination(lerp_t);
+        if (lerp) 
+        {
+            if (!statechange) 
+            {
+                lerp_t += Time.deltaTime;
+                LerpToDestination(lerp_t);
+            }
         }
-        else {
+        else
             EvaluateState();
-        }
+        
+        if (statechange) // Wipe state change during frame
+            statechange = false;
     }
 
     void OnEnable() 
@@ -270,7 +278,9 @@ public class Beacon: Interactable {
     public bool Activate() 
     {
         if (state != Locale.Terrain) return false;
+        
         state = Locale.Nest;
+        statechange = true;
 
         Discover();
         
@@ -279,6 +289,9 @@ public class Beacon: Interactable {
         var impact = Instantiate(pr_impactPS, transform.position, transform.rotation);
         impact.GetComponent<ParticleSystem>().Play(); // Trigger particle sys
 
+        addPS.Play();
+        deathPS.Stop();
+        
         lerp = true;
         lerp_t = 0f;
 
@@ -288,7 +301,9 @@ public class Beacon: Interactable {
     public bool Plant()
     {
         if (state != Locale.Terrain) return false;
+        
         state = Locale.Planted;
+        statechange = true;
 
         lerp = true;
         lerp_t = 0f;
@@ -303,8 +318,14 @@ public class Beacon: Interactable {
 
     public bool Deactivate()
     {
+        Debug.LogFormat("Deactivate {0} when state is {1}", file, state);
         if (state != Locale.Nest) return false;
+        
         state = Locale.Terrain;
+        statechange = true;
+        
+        deathPS.Play();
+        addPS.Stop();
 
         lerp = true;
         lerp_t = 0f;
@@ -327,7 +348,8 @@ public class Beacon: Interactable {
             Destroyed(this);
         }
         
-        StartCoroutine("Dying", particles);
+        Destroy(gameObject);
+        //StartCoroutine("Dying", particles);
 
         return true;
     }
@@ -449,7 +471,7 @@ public class Beacon: Interactable {
 
             if (complete) 
                 Nest.ReceiveBeacon(this); // Receive beacon in nest
-            }
+        }
         else if (state == Locale.Planted) {
             dest_pos = origin;
 
@@ -460,7 +482,8 @@ public class Beacon: Interactable {
         transform.localScale = Vector3.Lerp(scaleA, scaleB, scaleCurve.Evaluate(i));
         transform.position = Vector3.Lerp(transform.position, dest_pos, i);
 
-        if (complete) lerp = false; // Stop lerping if arrived
+        if (complete) 
+            lerp = false; // Stop lerping if arrived
     }
 
 	#endregion

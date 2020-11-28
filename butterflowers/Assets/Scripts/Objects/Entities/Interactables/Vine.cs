@@ -3,6 +3,8 @@ using System.Collections;
 using System.Collections.Generic;
 using System.Linq;
 using System.Runtime.InteropServices;
+using Data;
+using Objects.Entities;
 using UnityEngine;
 using UnityEngine.Serialization;
 using uwu.Extensions;
@@ -15,7 +17,8 @@ public class Vine : Interactable
     public enum Status 
     {
         Natural,
-        Gate
+        Gate,
+        Complete
     }
 
 	#endregion
@@ -26,6 +29,8 @@ public class Vine : Interactable
 
 	#region Properties
 
+    [SerializeField] WorldPreset preset;
+
 	LineRenderer line;
     new CapsuleCollider collider;
     VineManager Manager;
@@ -33,6 +38,7 @@ public class Vine : Interactable
     [SerializeField] ParticleSystem smokePS;
     [SerializeField] GameObject wallPrefab;
     [SerializeField] GameObject flowerPrefab;
+    [SerializeField] GameObject leafPrefab;
 
     #endregion
 
@@ -42,6 +48,7 @@ public class Vine : Interactable
     [SerializeField] List<Vector3> gate = new List<Vector3>();
     
     [SerializeField] List<Vector3> vertices = new List<Vector3>();
+    [SerializeField] List<Leaf> leaves = new List<Leaf>();
 
     [SerializeField] Vector3 gate_midpoint = Vector3.zero;
     [SerializeField] float gate_width = 0f, gate_height = 0f;
@@ -56,10 +63,8 @@ public class Vine : Interactable
     [SerializeField] float growRadius = 1f;
     [SerializeField] float snapDistance = .01f;
     [SerializeField] float growHeight = 4f;
-    [SerializeField] float growSpeed = 1f;
     [SerializeField] float gateSpeed = 1f;
     [SerializeField] float saplingSpeed = 1f;
-    [SerializeField] float growDistance = 1f;
     [SerializeField] int minSegments = 3, maxSegments = 10;
 
     Cage.Vertex vertex;
@@ -72,12 +77,16 @@ public class Vine : Interactable
     
     bool travelInProgress = false;
     bool initialized = false;
+    bool complete = false;
 
+    public bool refreshLeaves = false;
+    
     #endregion
 
     #region Accessors
 
     public Vector3[] Waypoints => waypoints.ToArray();
+    public Leaf[] Leaves => leaves.ToArray();
 
     public Vector3 end => line.GetPosition(line.positionCount - 1);
 
@@ -92,6 +101,18 @@ public class Vine : Interactable
     }
 
     public float length => waypoints.DistanceBetweenVectors();
+    public float height => growHeight;
+
+    [SerializeField] float m_growSpeed = 0f;
+
+    public float growSpeed
+    {
+        get
+        {
+            m_growSpeed = Manager.CalculateVineGrowSpeed(this);
+            return m_growSpeed;
+        }
+    }
 
 	#endregion
 
@@ -115,6 +136,7 @@ public class Vine : Interactable
         if (!initialized) return; // Ignore if not initialized
         
         collider.enabled = (state == Status.Natural); // Disable collider if gated
+        line.widthMultiplier = preset.vineWidth;
 
         if (travelInProgress) 
         {
@@ -122,6 +144,14 @@ public class Vine : Interactable
             {
                 bool completed = NaturalGrowthUpdate();
                 UpdateColliderBounds();
+
+                if (completed) 
+                {
+                    travelInProgress = false;  // Stop traveling when arrived
+                    if (onCompleteNaturalGrowth != null)
+                        onCompleteNaturalGrowth(this);
+                }
+                
             }
             else // Gated ( community ) 
             {
@@ -129,16 +159,14 @@ public class Vine : Interactable
                 if (completed) 
                 {
                     travelInProgress = false; // Stop traveling when arrived
-                    //TransitionToGate();
+                    if (onCompleteGateGrowth != null)
+                        onCompleteGateGrowth(this);
                 }
             }
         }
 
         line.positionCount = vertices.Count;
         line.SetPositions(vertices.ToArray());
-
-        if (Input.GetKeyDown(KeyCode.V)) 
-            Grow();
     }
 
     #endregion
@@ -153,15 +181,25 @@ public class Vine : Interactable
     #endregion
 
     #region Growth
-
-    public void Initialize(VineManager manager, Cage cage, VineData data = null)
+    
+    public void Initialize(VineManager manager, Cage cage, VineData data = null, Transform tooltipContainer = null)
     {
         Manager = manager;
 
         bool refresh = (data != null);
         
-        if (data == null) {
+        int vertexIndex = 0;
+        
+        if (data == null) 
+        {
+            vertex = cage.GetClosestVertex(transform.position, out vertexIndex);
+            
+            bool successQueue = cage.HoldVertex(vertexIndex);
+            if (successQueue) growHeight = preset.maximumVineGrowHeight;
+            else growHeight = Random.Range(preset.minimumVineGrowHeight, preset.maximumVineGrowHeight);
+            
             waypoints = new List<Vector3>(ConstructNaturalLine());
+            leaves = new List<Leaf>(ConstructAllLeaves());
 
             state = Status.Natural; // Default state
             index = 0;
@@ -178,17 +216,23 @@ public class Vine : Interactable
             index = data.index;
             interval = data.interval;
             file = data.file;
+            growHeight = data.height;
 
             transform.position = waypoints[0];
             transform.up = transform.parent.up;
+
+            foreach (LeafData ld in data.leaves.leaves) 
+            {
+                var leaf = ConstructLeaf(ld.index, ld.interval, ld.scale, ld.rotation);
+                leaves.Add(leaf);
+            }
+            ParseAllLeaves(index, interval, true);
+            
+            vertex = cage.GetClosestVertex(waypoints.Last(), out vertexIndex);
+            cage.HoldVertex(vertexIndex);
         }
 
-
-        int vertexIndex = 0;
-        vertex = cage.GetClosestVertex(waypoints.Last(), out vertexIndex);
         gate = new List<Vector3>(ConstructGatedLine(vertex)); // Construct gate from waypoints
-
-        growSpeed = manager.CalculateVineGrowSpeed(this);
 
         bool flagComplete = false;
         
@@ -231,8 +275,12 @@ public class Vine : Interactable
         // Update all vertices in line on LOAD
         line.positionCount = vertices.Count;
         line.SetPositions(vertices.ToArray());
+        
+        CreateTooltip(tooltipContainer);
 
-        if (flagComplete) {
+        complete = flagComplete;
+        if (flagComplete) 
+        {
             GrowFlower();
         }
         
@@ -246,6 +294,11 @@ public class Vine : Interactable
     {
         travelInProgress = true;
     }
+    
+    // grow speed = (total len) / (total secs)
+    // segment speed = (seg len) / (seg secs)
+    // segment length = [ (total len) / # segs ] / [ (total secs) / # segs ]
+    // segment secs = (total secs) / # segs
 
     bool NaturalGrowthUpdate()
     {
@@ -253,7 +306,8 @@ public class Vine : Interactable
 
         bool completed = false;
 
-        if (interval < 1f) {
+        if (interval < 1f) 
+        {
             float speed = growSpeed;
             if (index == 1)
                 speed = saplingSpeed;
@@ -262,6 +316,7 @@ public class Vine : Interactable
             interval = Mathf.Clamp01(interval); // Clamp 0-1
 
             LerpVertex(index, interval);
+            ParseAllLeaves(index, interval, false);
         }
         else 
         {
@@ -270,8 +325,6 @@ public class Vine : Interactable
             if (index == len) 
             {
                 completed = true;
-                if (onCompleteNaturalGrowth != null)
-                    onCompleteNaturalGrowth(this);
             }
             else {
                 ++index;
@@ -530,6 +583,104 @@ public class Vine : Interactable
         
         var flower = Instantiate(flowerPrefab, pos, flowerPrefab.transform.rotation);
             flower.transform.parent = transform;
+            flower.GetComponent<Animator>().SetBool("visible", true);
+    }
+
+    Leaf[] ConstructAllLeaves()
+    {
+        if (waypoints == null || waypoints.Count == 0) return null;
+        
+        List<Leaf> l = new List<Leaf>();
+
+        float density = preset.leafDensityPerSegment;
+        
+        int min = (int)(preset.minimumLeavesPerSegment*density);
+        int max = (int)(preset.maximumLeavesPerSegment*density);
+
+        for(int i = 0; i < waypoints.Count-1; i++) 
+        {
+            int count = Random.Range(min, max + 1);
+            for(int j = 0; j < count; j++) 
+            {
+                float pos = Random.Range(0f, 1f);
+
+                var leafInstance = ConstructLeaf(i, pos);
+                if (leafInstance != null) 
+                    l.Add(leafInstance);
+            } 
+        }
+
+        return l.ToArray();
+    }
+
+    Leaf ConstructLeaf(int index, float progress, float scale = -1f, float offset = -1f)
+    {
+        var leafInstance = GrowLeaf(index, progress,  ref offset);
+        if (leafInstance != null) 
+        {
+            var leaf = leafInstance.GetComponent<Leaf>();
+            leaf.index = index;
+            leaf.progress = progress;
+            leaf.offset = offset;
+            leaf.Scale = (scale == -1f)? Random.Range(preset.minimumLeafScale, preset.maximumLeafScale):scale;
+
+            return leaf;
+        }
+
+        return null;
+    }
+
+    void ParseAllLeaves(int index, float progress, bool immediate)
+    {
+        foreach (Leaf leaf in leaves) 
+        {
+            bool flag = (leaf.index < index);
+
+            if (!flag && leaf.index == index) 
+                flag = leaf.progress < progress;
+
+            if(flag && !leaf.Visible)
+                leaf.Show(immediate);
+            else if(!flag && leaf.Visible)
+                leaf.Hide(immediate);
+        }
+    }
+    
+    public GameObject GrowLeaf(int indexA, float segment, ref float offset)
+    {
+        if (indexA < waypoints.Count - 1) 
+        {
+            int indexB = indexA + 1;
+
+            Vector3 a = waypoints[indexA];
+            Vector3 b = waypoints[indexB];
+            
+            Vector3 position = Vector3.Lerp(a, b, segment);
+            Vector3 up = (b - a).normalized;
+
+            offset = (offset == -1f) ? Random.Range(0f, 360f) : offset;
+            Quaternion rot = Quaternion.AngleAxis(offset, up); // Rotate around vector
+
+            GameObject instance = Instantiate(leafPrefab, position, rot);
+                instance.transform.parent = transform;
+
+            return instance;
+        }
+
+        offset = 0f;
+        return null;
+    }
+
+    public void Flutter()
+    {
+        foreach(Leaf l in leaves)
+            l.Flutter();
+    }
+
+    public void Unflutter()
+    {
+        foreach(Leaf l in leaves)
+            l.Unflutter();
     }
     
     #endregion

@@ -3,7 +3,6 @@ using Settings;
 using System.Collections;
 using System.Collections.Generic;
 using AI;
-using AI.Types.Interfaces;
 using UnityEngine;
 using UnityEngine.Events;
 using uwu;
@@ -12,7 +11,7 @@ using uwu.Snippets;
 using Behaviour = AI.Types.Behaviour;
 using Random = UnityEngine.Random;
 
-public class Nest : Focusable, IAdvertiser
+public class Nest : Focusable
 {
     public static Nest Instance = null;
 
@@ -43,13 +42,6 @@ public class Nest : Focusable, IAdvertiser
     new Collider collider;
     new Rigidbody rigidbody;
     Damage damage;
-    
-    Advertiser m_Advertiser;
-    public Advertiser Advertiser
-    {
-        get { return m_Advertiser; }
-        set { m_Advertiser = value; }
-    }
 
     [SerializeField] ParticleSystem sparklesPS, cometPS;
     [SerializeField] GameObject pr_impactPS, pr_shinePS;
@@ -118,7 +110,6 @@ public class Nest : Focusable, IAdvertiser
         collider = GetComponent<Collider>();
         rigidbody = GetComponent<Rigidbody>();
         damage = GetComponent<Damage>();
-        Advertiser = GetComponent<Advertiser>();
 
         mat = GetComponent<Renderer>().material;
     }
@@ -155,10 +146,13 @@ public class Nest : Focusable, IAdvertiser
             m_energy = Mathf.Max(0f, m_energy - Time.deltaTime * energyDecaySpeed * Mathf.Pow(t, 2f));
         }
 
+        if (disposeduringframe) {
+            DisposeDuringFrame();
+            disposeduringframe = false;
+        }
+
         UpdateColorFromStateAndCapacity();
         UpdateInfoTextFromCapacity();
-        
-        UpdateAllAdvertisements();
     }
 
     protected override void OnDestroy()
@@ -264,18 +258,18 @@ public class Nest : Focusable, IAdvertiser
 
     void SpillKick()
     {
-        RandomKick(AGENT.NULL, ps: false, events: false);
+        RandomKick(1f, AGENT.NULL, ps: false, events: false);
     }
 
-    public void RandomKick(AGENT agent = AGENT.Inhabitants, bool ps = true, bool events = true)
+    public void RandomKick(float force = 1f, AGENT agent = AGENT.Inhabitants, bool ps = true, bool events = true)
     {
         Vector3 sphere_pos = Random.insideUnitSphere;
         Vector3 dir = -sphere_pos;
 
-        Kick(dir, agent);
+        Kick(dir, force, agent:agent);
     }
 
-    public void Kick(Vector3 direction, AGENT agent = AGENT.Inhabitants, bool ps = true, bool events = true)
+    public void Kick(Vector3 direction, float force = 1f, AGENT agent = AGENT.Inhabitants, bool ps = true, bool events = true)
     {
         Vector3 ray_origin = -direction * 5f;
         Vector3 ray_dir = direction;
@@ -289,7 +283,7 @@ public class Nest : Focusable, IAdvertiser
             Vector3 origin = hit.point;
             Vector3 dir = (-normal - 3f * gravity_ext.gravity).normalized;
 
-            AddForceAndOpen(origin, dir, force, agent, particles: ps, events: events);
+            AddForceAndOpen(origin, dir, this.force * force, agent, particles: ps, events: events);
         }
     }
 
@@ -307,7 +301,7 @@ public class Nest : Focusable, IAdvertiser
                     Vector3 target_pos = main_camera.ViewportToWorldPoint(new Vector3(.5f, .5f, 10f));
                     Vector3 dir = (target_pos - transform.position).normalized;
 
-                    Kick(dir, AGENT.World); // Kick nest towards screen pos
+                    Kick(dir, 1f, AGENT.World); // Kick nest towards screen pos
                 }
             }
         }
@@ -353,7 +347,6 @@ public class Nest : Focusable, IAdvertiser
 	public bool AddBeacon(Beacon beacon)
     {
         if (m_beacons.Contains(beacon)) return false;
-
         m_beacons.Add(beacon);
 
         return true;
@@ -362,10 +355,11 @@ public class Nest : Focusable, IAdvertiser
     public bool RemoveBeacon(Beacon beacon)
     {
         if (!m_beacons.Contains(beacon)) return false;
+        m_beacons.Remove(beacon);
 
+        Debug.LogFormat("Nest REMOVE = {0}", beacon.file);
         beacon.Deactivate();
 
-        m_beacons.Remove(beacon);
         cometPS.Play();
 
         onReleaseBeacon.Invoke();
@@ -378,29 +372,35 @@ public class Nest : Focusable, IAdvertiser
 
     public void ReceiveBeacon(Beacon beacon)
     {
-        Debug.LogFormat("Nest received = {0}", beacon.file);
+        Debug.LogFormat("Nest ADD = {0}", beacon.file);
 
         sparklesPS.Play();
 
         var dispose = (m_beacons.Count > capacity);
         if (dispose) 
         {
-            Dispose(true);
-
-            Events.ReceiveEvent(EVENTCODE.NESTSPILL, AGENT.User, AGENT.Nest);
-
-            if(damage != null)
-                damage.Hit();
-
+            disposeduringframe = true;
             return;
+        }
+        else {
+            disposeduringframe = false;
         }
 
         Pulse();
 
-       
-
         onIngestBeacon.Invoke();
         if (onAddBeacon != null) onAddBeacon(beacon);
+    }
+
+    bool disposeduringframe = false;
+    void DisposeDuringFrame()
+    {
+        Dispose(true);
+
+        Events.ReceiveEvent(EVENTCODE.NESTSPILL, AGENT.User, AGENT.Nest);
+        
+        if(damage != null)
+            damage.Hit();
     }
 
     public Beacon RemoveLastBeacon()
@@ -453,8 +453,12 @@ public class Nest : Focusable, IAdvertiser
         Vine vine = other.GetComponent<Vine>();
         if (vine != null) {
             var file = vine.file;
-            if(!string.IsNullOrEmpty(file)) {
+            if(!string.IsNullOrEmpty(file)) 
+            {
+                vine.Flutter();
                 Quilt.PushOverrideTexture(file);
+                
+                Pulse();
             }
         }
     }
@@ -462,94 +466,16 @@ public class Nest : Focusable, IAdvertiser
     void OnTriggerExit(Collider other)
     {
         Vine vine = other.GetComponent<Vine>();
-        if (vine != null) {
+        if (vine != null) 
+        {
             var file = vine.file;
-            if(!string.IsNullOrEmpty(file)) {
+            if(!string.IsNullOrEmpty(file)) 
+            {
+                vine.Unflutter();
                 Quilt.PopOverrideTexture(file);
             }
         }
     }
-
-    #endregion
-    
-    #region Advertisements
-
-    public void UpdateAllAdvertisements()
-    {
-        Advertiser.UpdateReward(EVENTCODE.NESTKICK, null, Behaviour.PLAY, 100);
-        Advertiser.UpdateReward(EVENTCODE.NESTPOP, null, Behaviour.DESTRUCTION, Mathf.FloorToInt(fill * 33));
-        Advertiser.UpdateReward(EVENTCODE.NESTCLEAR, null, Behaviour.NURTURE, Mathf.FloorToInt(Mathf.Pow(fill, 6f) * 33));
-    }
-
-    #endregion
-
-    #region Deprecated
-
-    /*
-
-    public void RestoreCapacity(int capacity)
-    {
-        m_capacity = capacity;
-        if (capacity > 6f)
-            StartCoroutine("Scale");
-
-        if (onUpdateCapacity != null)
-            onUpdateCapacity(capacity);
-    }
-
-    public void AttemptUpdateCapacity()
-    {
-        bool resize = false;
-
-        int curr_size = beacons.Length;
-        if (curr_size == capacity) 
-        {
-            Events.ReceiveEvent(EVENTCODE.NESTGROW, AGENT.Inhabitants, AGENT.Nest);
-
-            m_capacity += 6;
-            resize = true;
-        }
-        else {
-            Events.ReceiveEvent(EVENTCODE.NESTSHRINK, AGENT.Inhabitants, AGENT.Nest);
-
-            if (capacity != 6)
-                resize = true;
-
-            m_capacity = 6;
-            Dispose(true);
-        }
-
-        if(resize)
-            StartCoroutine("Scale");
-
-        Save.nestcapacity = capacity;
-        if (onUpdateCapacity != null)
-            onUpdateCapacity(capacity);
-    }
-
-    IEnumerator Scale()
-    {
-        float t = 0f;
-        float dur = .067f;
-
-        Vector3 a_scale = transform.localScale;
-        Vector3 t_scale = (1f + .167f*((capacity-6f) / 6f)) * Vector3.one;
-
-        transform.localScale = t_scale * 2f;
-
-        yield return new WaitForSeconds(.0033f);
-
-        while (t <= dur) {
-            t += Time.deltaTime;
-
-            var interval = Mathf.Clamp01(t / dur);
-            transform.localScale = Vector3.Lerp(a_scale, t_scale, Mathf.Pow(interval, 2f));
-
-            yield return null;
-        }
-    }
-
-    */
 
     #endregion
 }

@@ -15,7 +15,6 @@ MonoBehaviour:
   maxSpeed: 13
   noiseAmount: 3
   noiseSize: 50.51
-  moveAmount: 0.67
   attraction: 73
   follow: 1
   gravity: 0.098
@@ -24,58 +23,9 @@ MonoBehaviour:
   colorRefresh: 1
   minLifetime: 1
   maxLifetime: 10
-  wandRadius: 164
-  wandAttractSpeed: 96
-  wandRepelSpeed: 1280
-  energyDecayCurve:
-    serializedVersion: 2
-    m_Curve:
-    - serializedVersion: 3
-      time: 0
-      value: 0
-      inSlope: 1
-      outSlope: 1
-      tangentMode: 34
-      weightedMode: 0
-      inWeight: 0
-      outWeight: 0
-    - serializedVersion: 3
-      time: 1
-      value: 1
-      inSlope: 1
-      outSlope: 1
-      tangentMode: 34
-      weightedMode: 0
-      inWeight: 0
-      outWeight: 0
-    m_PreInfinity: 2
-    m_PostInfinity: 2
-    m_RotationOrder: 4
-  energyGrowthCurve:
-    serializedVersion: 2
-    m_Curve:
-    - serializedVersion: 3
-      time: 0
-      value: 1
-      inSlope: 0
-      outSlope: 0
-      tangentMode: 0
-      weightedMode: 0
-      inWeight: 0
-      outWeight: 0.091836736
-    - serializedVersion: 3
-      time: 1
-      value: 0
-      inSlope: -2.5819693
-      outSlope: -2.5819693
-      tangentMode: 0
-      weightedMode: 0
-      inWeight: 0.032653034
-      outWeight: 0
-    m_PreInfinity: 2
-    m_PostInfinity: 2
-    m_RotationOrder: 4
-  attractionCurve:
+  minimumWandSpeed: 1280
+  maximumWandSpeed: 0
+  distanceAttractionCurve:
     serializedVersion: 2
     m_Curve:
     - serializedVersion: 3
@@ -108,43 +58,24 @@ MonoBehaviour:
     m_PreInfinity: 2
     m_PostInfinity: 2
     m_RotationOrder: 4
-  followCurve:
+  speedAttractionCurve:
     serializedVersion: 2
-    m_Curve:
-    - serializedVersion: 3
-      time: 0
-      value: 0
-      inSlope: 0
-      outSlope: 0
-      tangentMode: 0
-      weightedMode: 0
-      inWeight: 0
-      outWeight: 0
-    - serializedVersion: 3
-      time: 1
-      value: 1
-      inSlope: 0
-      outSlope: 0
-      tangentMode: 0
-      weightedMode: 0
-      inWeight: 0
-      outWeight: 0
+    m_Curve: []
     m_PreInfinity: 2
     m_PostInfinity: 2
     m_RotationOrder: 4
+  velocityDampening: 1
+  velocityTrailThreshold: 1
   centerStrength: 3
   minCenterDistance: 0.87
   energyGrowth: 18.21
-  energyDecay: 1000
-  recoveryTime: 3
   minAnimationSpeed: 1
   maxAnimationSpeed: 10
   timeDead: 4.33
   deathColorDelay: 0.33
   deathTransitionTime: 0.167
-  scale: 0.167
+  scale: 0.067
   timeToGrow: 1.67
-  maximumColorSpeed: 0.838
   deathProbabilityCurve:
     serializedVersion: 2
     m_Curve:

@@ -64,7 +64,11 @@ public class Focusing : MonoBehaviour
 
         [SerializeField] float lowpass = 0f, lowPassSmoothSpeed = .1f;
         [SerializeField] string lowPassFilterParam = null;
-
+        
+    // Collections
+    [Header("Collections")]
+        [SerializeField] Focusable[] focuses = new Focusable[]{};
+    
     #region Accessors
 
     public bool active {
@@ -77,6 +81,7 @@ public class Focusing : MonoBehaviour
     public State state => m_state;
     
     public Focusable focus => m_focus;
+    public GameCamera FallbackCamera => CameraManager.DefaultCamera;
 
     #endregion
 
@@ -89,6 +94,11 @@ public class Focusing : MonoBehaviour
     void OnDisable()
     {
         Focusable.FocusOnPoint -= SetFocus;
+    }
+
+    void Start()
+    {
+        focuses = FindObjectsOfType<Focusable>();
     }
 
     // Update is called once per frame
@@ -113,17 +123,10 @@ public class Focusing : MonoBehaviour
     {
         State state = State.None;
 
-        if (Wizard != null && Wizard.isFocused) 
-        {
-            state = State.Wizard;
-        }
-        else 
-        {
-            if (focus == null)
-                state = State.None;
-            else
-                state = State.Environment;
-        }
+        if (focus == null)
+            state = State.None;
+        else
+            state = State.Environment;
 
         if (state != this.state) 
         {
@@ -175,6 +178,25 @@ public class Focusing : MonoBehaviour
 
         onLoseFocus.Invoke();
         overlayOpacity.Hide();
+    }
+
+    public Focusable[] FindVisibleFocuses()
+    {
+        List<Focusable> focus = new List<Focusable>();
+        if (active) 
+            focus.Add(null); // Add escape option
+
+        foreach (Focusable f in focuses) 
+        {
+            if (f != this.focus) 
+            {
+                var pos = Vector2.zero;
+                if (f.transform.IsVisible(CameraManager.MainCamera, out pos))
+                    focus.Add(f);
+            }
+        }
+        
+        return focus.ToArray();
     }
 
     #endregion

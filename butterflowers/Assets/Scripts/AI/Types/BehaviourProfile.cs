@@ -7,31 +7,21 @@ namespace AI.Types
 	[System.Serializable]
 	public class BehaviourProfile
 	{
-		public BehaviourFloat weight;
-		public BehaviourFloat decay;
+		public BehaviourFloatGroup weights;
 
-		public float baseDecaySpeed = 1f;
-		
 		#region Access
 
 		public float GetWeight(Behaviour behaviour)
 		{
-			return weight.GetValue(behaviour);
+			return weights.GetValue(behaviour);
 		}
 		
 		public float GetDecay(Behaviour behaviour)
 		{
-			return decay.GetValue(behaviour);
-		}
-		
-		#endregion
-		
-		#region Disposal
+			if (behaviour == Behaviour.REST) 
+				return -(1f - GetWeight(behaviour) + .1f);
 
-		public void Dispose()
-		{
-			weight.Dispose();
-			decay.Dispose();
+			return GetWeight(behaviour);
 		}
 		
 		#endregion

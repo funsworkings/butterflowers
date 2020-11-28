@@ -23,9 +23,9 @@ MonoBehaviour:
   alwaysAbsorb: 0
   useWizard: 0
   takePhotos: 0
-  logEvents: 1
+  logEvents: 0
   loadTexturesInEditor: 0
-  hoursPerDay: 0.004166667
+  hoursPerDay: 0.05
   startOfDay: 0.1
   endOfDay: 0.6
   sunHoursPerDay: 0.00067
@@ -33,7 +33,7 @@ MonoBehaviour:
   defaultNullTexture: {fileID: 2800000, guid: 48b99aa691dd8744f9adf73fba436432, type: 3}
   starterFiles: {fileID: 11400000, guid: e3e427dd97c719f418f51d145c525abd, type: 2}
   wizardFiles: {fileID: 11400000, guid: a11a7773fa9f39649b779c417d4c7b19, type: 2}
-  amountOfButterflies: 640
+  amountOfButterflies: 1280
   nestCapacity: 6
   amountOfBeacons: 10
   normalBeaconScale: 1
@@ -64,7 +64,51 @@ MonoBehaviour:
     m_PostInfinity: 2
     m_RotationOrder: 4
   saplingGrowHeight: 0
-  daysToGrowVine: 0.06
+  daysToGrowVine: 0.05
+  minimumVineGrowHeight: 5
+  maximumVineGrowHeight: 8
+  vineWidth: 0.08
+  minimumLeavesPerSegment: 5
+  maximumLeavesPerSegment: 10
+  leafDensityPerSegment: 0.18
+  leafGrowCurve:
+    serializedVersion: 2
+    m_Curve:
+    - serializedVersion: 3
+      time: 0
+      value: 0
+      inSlope: 0
+      outSlope: 0
+      tangentMode: 0
+      weightedMode: 0
+      inWeight: 0
+      outWeight: 0
+    - serializedVersion: 3
+      time: 0.41560543
+      value: 1.4494756
+      inSlope: 1.4667146
+      outSlope: 1.4667146
+      tangentMode: 0
+      weightedMode: 0
+      inWeight: 0.33333334
+      outWeight: 0.33333334
+    - serializedVersion: 3
+      time: 0.9977417
+      value: 1
+      inSlope: -0.018474197
+      outSlope: -0.018474197
+      tangentMode: 0
+      weightedMode: 0
+      inWeight: 0.5184709
+      outWeight: 0
+    m_PreInfinity: 2
+    m_PostInfinity: 2
+    m_RotationOrder: 4
+  leafGrowTime: 0.3
+  minimumLeafScale: 0.33
+  maximumLeafScale: 1
+  leafFlutterAngle: 45
+  leafFlutterTime: 1
   surveillanceLogRate: 0.167
   baselineSurveillanceData:
     timestamp: 0
@@ -79,7 +123,7 @@ MonoBehaviour:
     AverageHoB: 0
     AverageNestFill: 0
     AverageCursorSpeed: 0
-    AverageTimeSpentInNest: 0
+    AverageTimeSpentInNest: 1
     AverageTimeSpentInMagicStar: 0
     AverageTimeSpentInTree: 0
     AverageTimeSpentInDefault: 0

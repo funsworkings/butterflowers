@@ -23,22 +23,18 @@ namespace Objects.Managers
 		// External
 
 		World World;
+		Nest nest;
 		
 		// Properties
 
 		[SerializeField] GradingManager Grading;
-		[SerializeField] LoadingManager Loading;
 
 		[SerializeField] ToggleOpacity gamePanel;
 		[SerializeField] ToggleOpacity summaryPanel;
-		[SerializeField] ToggleOpacity gradingPanel;
-		[SerializeField]  ToggleOpacity loadingPanel;
-		[SerializeField] ToggleOpacity escapeButton;
 
 		[SerializeField] RawImage photoOfTheDay;
 		[SerializeField] TMP_Text photoCaption;
-		[SerializeField] ToggleScale photoScale;
-		
+
 		// Attributes
 
 		[SerializeField] bool m_active = false;
@@ -58,6 +54,7 @@ namespace Objects.Managers
 		void Start()
 		{
 			World = World.Instance;
+			nest = Nest.Instance;
 			
 			var photoRect = photoOfTheDay.rectTransform;
 				basePhotoWidth = photoRect.sizeDelta.x;
@@ -76,45 +73,18 @@ namespace Objects.Managers
 			panel = Panel.Grades;
 			
 			DisplayPhotoOfTheDay();
+			Grading.ShowScores();
 			
 			gamePanel.Hide();
 			summaryPanel.Show();
-			gradingPanel.Show();
-			loadingPanel.Hide();
-			escapeButton.Hide();
-			
-			Grading.ShowScores();
-		}
-		
-		public void MoveToLoading()
-		{
-			photoScale.Hide();
-			
-			Loading.ShowLoading();
-			Grading.HideScores();
-			
-			gradingPanel.Hide();
-			loadingPanel.Show();
-			escapeButton.Hide();
-
-			panel = Panel.Reload;
-		}
-
-		public void ShowEscape()
-		{
-			escapeButton.Show();
 		}
 
 		public void HideSummary()
 		{
 			summaryPanel.Hide();
-			gradingPanel.Hide();
-			loadingPanel.Hide();
-			escapeButton.Hide();
-			
-			photoScale.Hide();
-
 			gamePanel.Show();
+			
+			Grading.HideScores();
 
 			m_active = false;
 			panel = Panel.Grades;
@@ -154,7 +124,6 @@ namespace Objects.Managers
 			}
 
 			photoCaption.text = string.Format("{0}.jpg", photoName);
-			photoScale.Show();
 		}
 		
 		#endregion

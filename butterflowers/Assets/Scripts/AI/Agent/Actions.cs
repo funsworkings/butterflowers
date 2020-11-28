@@ -8,6 +8,8 @@ using obj = System.Object;
 using System.Linq;
 using System.Resources;
 using AI.Types;
+using AI.Types.Mappings;
+using Noder.Graphs;
 using uwu.UI;
 using uwu.Camera;
 using uwu.Extensions;
@@ -21,21 +23,27 @@ namespace AI.Agent
 
         // Events
 
-        public System.Action<Action> onEnact, onComplete;
+        public System.Action<Action> onEnactAction, onCompleteAction, onFailAction;
 
         // External
 
         CameraManager CameraManager;
+
         [SerializeField] Nest Nest;
+        [SerializeField] BeaconManager Beacons;
+        [SerializeField] Focusing Focus;
+        [SerializeField] CameraVisualBlend CameraBlend;
 
         // Properties
 
-        [SerializeField] BrainPreset Preset;
+        [SerializeField] Scriptables.BrainPreset Preset;
         [SerializeField] Wand wand;
         [SerializeField] GameObject avatar;
-                         Mesh mesh;
 
         Brain Brain;
+        Body _body;
+        Damage damage;
+        new Camera camera;
 
         // Collections
 
@@ -44,7 +52,8 @@ namespace AI.Agent
         // Attributes
 
         [SerializeField] bool m_inprogress = false;
-        Action m_currentAction = null;
+        [SerializeField] Action m_currentAction = null;
+        [SerializeField] float defaultKickForce = 1f;
 
         #region Accessors
 
@@ -71,6 +80,10 @@ namespace AI.Agent
 
         public bool available => (m_queue != null && m_queue.Count > 0);
 
+        public float radius => Preset.actionRadius;
+
+        public Body body => _body;
+
         #endregion
 
         #region Monobehaviour callbacks
@@ -80,7 +93,9 @@ namespace AI.Agent
             Brain = GetComponent<Brain>();
 
             avatar.SetActive(false);
-            mesh = avatar.GetComponentInChildren<Mesh>(true);
+
+            _body = avatar.GetComponentInChildren<Body>(true);
+            if (_body != null) damage = avatar.GetComponent<Damage>();
         }
 
         void Start()
@@ -95,17 +110,17 @@ namespace AI.Agent
 
         void OnEnable()
         {
-            mesh.DidTeleport += OnDidTeleport;
-            mesh.DidCastSpell += OnDidCastSpell;
-            
+            _body.DidTeleport += OnDidTeleport;
+            _body.DidCastSpell += OnDidCastSpell;
+
             StartCoroutine("Refresh");
         }
 
         void OnDisable()
         {
-            mesh.DidTeleport -= OnDidTeleport;
-            mesh.DidCastSpell -= OnDidCastSpell;
-            
+            _body.DidTeleport -= OnDidTeleport;
+            _body.DidCastSpell -= OnDidCastSpell;
+
             StopCoroutine("Refresh");
         }
 
@@ -114,23 +129,21 @@ namespace AI.Agent
 
         IEnumerator Refresh()
         {
-            while (true) {
+            while (true) 
+            {
+                var action = nextAction;
 
-                if (!inprogress) {
-                    m_currentAction = null;
-
-                    var action = nextAction;
-
-                    if (available && action != null) {
+                if (available && action != null) 
+                {
+                    if (!inprogress) 
+                    {
                         var next = queue[0];
                         float delay = next.delay;
 
                         yield return new WaitForSeconds(delay);
-
-                        if(Brain.isActive) // Only pop action from queue if active
-                            Pop(action);
                     }
-
+                    
+                    Pop(action);
                 }
 
                 yield return null;
@@ -142,7 +155,7 @@ namespace AI.Agent
 
         public void Push(Action action)
         {
-            Push(action.@event, action.dat, action.advertiser, action.immediate);
+            Push(action.@event, action.dat, action.root, action.immediate, rewards: action.rewards);
         }
 
         public void Push(ActionSequence actions)
@@ -161,12 +174,15 @@ namespace AI.Agent
             }
         }
 
-        public void Push(EVENTCODE @event, object dat = null, Advertiser advertiser = null, bool immediate = false, float delay = -1f, bool auto = false)
+        public void Push(EVENTCODE @event, object dat = null, Transform root = null, bool immediate = false,
+            float delay = -1f, bool auto = false, BehaviourIntGroup rewards = null, ModuleTree tree = null)
         {
             Action action = new Action();
             action.@event = @event;
             action.dat = dat;
-            action.advertiser = advertiser;
+            action.root = (root == null) ? ParseRoot(@event, dat) : root;
+            action.tree = tree;
+            action.rewards = rewards;
             action.immediate = immediate;
             action.delay = (delay < 0f)
                 ? Random.Range(Preset.minimumTimeBetweenActions, Preset.maximumTimeBetweenActions)
@@ -179,7 +195,8 @@ namespace AI.Agent
                 else
                     m_queue.Add(action);
 
-                if (currentAction != null && inprogress) {
+                if (currentAction.@event != EVENTCODE.NULL && inprogress) 
+                {
                     bool cancel = CancelAction(currentAction);
                     inprogress = !cancel;
                 }
@@ -193,32 +210,95 @@ namespace AI.Agent
         void Pop(Action action = null)
         {
             if (!available) return;
-            if (Brain.Self && mesh.inprogress) return;
+            inprogress = true;
 
-            if (action != null) {
+            if (action != null) 
+            {
                 if (action != currentAction) 
                 {
-                    m_currentAction = action;
-
-                    if (Brain.Self) 
+                    try 
                     {
-                        if (!inprogress) {
-                            var advertiser = currentAction.advertiser;
-                            if (advertiser != null)
-                                mesh.SpellAtLocation(advertiser.transform.position);
-                            else
-                                mesh.Spell();
+                        ValidateAction(action);
+                        
+                        m_currentAction = action;
+                        body.cast = body.spell = false; // Reset body spellcast
+                        
+                        Pop(action);
+                    }
+                    catch (System.Exception e) 
+                    {
+                        var failureCode = e.Data["fail"];
+                        Debug.LogWarningFormat("Failed to validate action => {0}", failureCode);
 
-                            inprogress = true;
+                        switch (failureCode) 
+                        {
+                            case FailureCode.MaximumDistance:
+
+                                if (!body.teleport)
+                                    body.TeleportToLocation(action.root); // Move body to location until maximum distance reached
+
+                                break;
+                            case FailureCode.NotVisible:
+
+                                if (CameraBlend.Blending) 
+                                {
+                                    Debug.LogWarning("Camera visual blend in progress, wait until complete to move!");
+                                }
+                                else 
+                                {
+
+                                    var focuses = Focus.FindVisibleFocuses();
+
+                                    if (focuses.Length > 0) {
+                                        var sortedFocuses = 
+                                            Brain.SortFocusesByAlignmentToTarget(focuses, action.root);
+                                        var range = Mathf.FloorToInt((1f - Brain.stance) * sortedFocuses.Length);
+
+                                        var focus = (range == 0)
+                                            ? sortedFocuses[0]
+                                            : sortedFocuses[Random.Range(0, range)];
+                                        if (focus == null) {
+                                            Focus.LoseFocus();
+                                        }
+                                        else {
+                                            focus.Focus(); // Focus on point
+                                        }
+                                    }
+                                    else {
+                                        Dispose(); // Wipe action if no available way to get there!
+                                    }
+                                }
+
+                                break;
+                            case FailureCode.Uncast:
+
+                                if (!body.spell)
+                                    body.Spell();
+                                
+                                break;
+                            default: 
+                                Dispose(); // Wipe all actions if NULL
+                                Debug.LogWarning("Dispose !!");
+                                break;
                         }
                     }
-                    else {
-                        Pop(currentAction);
-                    }
                 }
-                else {
-                    ParseAction(action);
+                else 
+                {
+                    try 
+                    {
+                        ParseAction(action);
+                    }
+                    catch (System.Exception err) 
+                    {
+                        Debug.LogWarningFormat("Failed to parse action => {0}", err.Data["fail"]);
+
+                        if (onFailAction != null)
+                            onFailAction(action);
+                    }
+
                     m_queue.RemoveAt(0); // Remove el from queue
+                    inprogress = false;
                 }
             }
         }
@@ -227,100 +307,226 @@ namespace AI.Agent
         {
             m_queue.Clear();
 
-            if (inprogress) {
+            if (inprogress) 
+            {
                 bool clear = CancelAction(currentAction);
-                if (clear) {
+                if (clear) 
+                {
                     m_currentAction = null;
                     inprogress = false;
                 }
             }
+
+            body.spell = body.cast = false;
         }
 
         #endregion
 
         #region Action parse + cancel
 
+        Transform ParseRoot(EVENTCODE @event, object dat)
+        {
+            Transform root = null;
+            var eventcode = System.Enum.GetName(typeof(EVENTCODE), @event);
+
+            if (eventcode.Contains("NEST"))
+                root = Nest.transform;
+            else if (eventcode.Contains("BEACON")) {
+                var beacon = (Beacon) dat;
+                if (beacon != null)
+                    root = beacon.transform;
+            }
+            else if (@event == EVENTCODE.REFOCUS) {
+                if (dat != null)
+                    root = ((Focusable) dat).transform;
+            }
+
+            return root;
+        }
+
+        void ValidateAction(Action action)
+        {
+            var exception = new System.Exception();
+
+            if (!Brain.isActive || !Sun.Instance.active) 
+            {
+                exception.Data["fail"] = FailureCode.Inactive;
+                throw exception;
+            }
+
+            var root = action.root;
+            if (root == null) 
+            {
+                exception.Data["fail"] = FailureCode.MissingObject;
+                throw exception;
+            }
+
+            if (Brain.Self) 
+            {
+                var distance = Vector3.Distance(root.position, body.transform.position);
+
+                if (!body.spell) 
+                {
+                    if (distance > radius) 
+                    {
+                        exception.Data["fail"] = FailureCode.MaximumDistance;
+                        throw exception;
+                    }
+                }
+
+                
+                if (!body.cast) 
+                {
+                    exception.Data["fail"] = FailureCode.Uncast;
+                    throw exception;
+                }
+
+                if (distance > radius) 
+                {
+                    exception.Data["fail"] = FailureCode.MissingObject; // Object was moved while in the middle of cast, FOILED!
+                    throw exception;
+                }
+            }
+            else if (Brain.Remote) 
+            {
+                Vector2 screen = Vector2.zero;
+                Camera camera = CameraManager.MainCamera;
+                
+                var visible = root.IsVisible(camera, out screen);
+                if (!visible) 
+                {
+                    exception.Data["fail"] = FailureCode.NotVisible;
+                    throw exception;
+                }
+            }
+        }
+
         void ParseAction(Action action)
         {
             var dat = action.dat;
+            var root = action.root;
             var @event = action.@event;
             var t = System.Enum.GetName(typeof(EVENTCODE), @event);
-            var advertiser = action.advertiser;
+            var rewards = action.rewards;
 
-            if (t.StartsWith("BEACON")) {
-                Beacon beacon = (Beacon) dat;
+            bool success = (root != null);
+            //success = false; // Override missing object
 
-                if (beacon != null) {
+            if (success) { // Passed the action radius check
 
-                    if (@event == EVENTCODE.BEACONACTIVATE)
-                        wand.ActivateBeacon(beacon);
-                    else if (@event == EVENTCODE.BEACONDELETE)
-                        wand.DestroyBeacon(beacon);
-                    else if(@event == EVENTCODE.BEACONPLANT)
-                        wand.PlantBeacon(beacon);
-                    
-                }
-            }
-            else if (t.StartsWith("NEST")) 
-            {
-                if (@event == EVENTCODE.NESTPOP) {
+                if (t.StartsWith("BEACON")) {
                     Beacon beacon = (Beacon) dat;
 
-                    if (beacon == null)
-                        wand.PopLastBeaconFromNest();
-                    else
-                        wand.PopBeaconFromNest(beacon);
-                }
-                else if (@event == EVENTCODE.NESTKICK) {
-                    Wand.Kick kick = new Wand.Kick();
-                    if (dat == null)
-                        kick.useDirection = false;
-                    
-                    wand.KickNest(kick);
-                }
-                else if (@event == EVENTCODE.NESTCLEAR)
-                {
-                    wand.ClearNest();
-                }
-            }
-            else // Miscellaneous events
-            {
-                if (@event == EVENTCODE.REFOCUS) {
-                    Focusable focus = (Focusable) dat;
-                    wand.Refocus(focus);
-                }
-            }
-            
-            if (advertiser != null) 
-                advertiser.CaptureAllRewards(@event, true); // Retrieve all rewards for advertisement
-            
+                    if (beacon != null) {
 
-            action.Complete();
-            inprogress = false;
+                        if (@event == EVENTCODE.BEACONACTIVATE)
+                            success = wand.ActivateBeacon(beacon);
+                        else if (@event == EVENTCODE.BEACONDELETE)
+                            success = wand.DestroyBeacon(beacon);
+                        else if (@event == EVENTCODE.BEACONPLANT)
+                            success = wand.PlantBeacon(beacon);
+
+                    }
+                }
+                else if (t.StartsWith("NEST")) {
+                    if (@event == EVENTCODE.NESTPOP) {
+                        Beacon beacon = (Beacon) dat;
+
+                        if (beacon == null)
+                            success = wand.PopLastBeaconFromNest();
+                        else
+                            success = wand.PopBeaconFromNest(beacon);
+                    }
+                    else if (@event == EVENTCODE.NESTKICK) 
+                    {
+                        Wand.Kick kick = new Wand.Kick();
+                        if (dat == null) 
+                        {
+                            kick.useDirection = false;
+                            kick.force = defaultKickForce;
+                            
+                            print("DEF KCIK");
+                        }
+                        else {
+                            kick = (Wand.Kick) dat; // Update kick from data
+                        }
+
+                        success = wand.KickNest(kick);
+                    }
+                    else if (@event == EVENTCODE.NESTCLEAR) {
+                        success = wand.ClearNest();
+                    }
+                }
+                else // Miscellaneous events
+                {
+                    if (@event == EVENTCODE.REFOCUS) {
+                        if (dat == null) {
+                            if (!Brain.Self)
+                                success = wand.EscapeFocus();
+                            else
+                                success = body.Detach();
+                        }
+                        else {
+                            Focusable focus = (Focusable) dat;
+
+                            //if (!Brain.Self)
+                                success = wand.Refocus(focus);
+                            //else
+                            //    success = body.Attach(focus);
+                        }
+                    }
+                }
+            }
+
+            if (success) 
+            {
+                if (onCompleteAction != null)
+                    onCompleteAction(action);
+
+                action.Complete();
+            }
+            else 
+            {
+                var e = new System.Exception();
+                e.Data["fail"] = FailureCode.MissingObject;
+
+                throw e;
+            }
         }
 
         bool CancelAction(Action action)
         {
-            action.Cancel();
+            if (action != null) 
+            {
+                action.Cancel();
+            }
+
             return true;
         }
-        
+
         #endregion
-        
+
         #region Mesh animation callbacks
 
         void OnDidCastSpell()
         {
-            Pop(currentAction);
+            //Pop(currentAction);
         }
 
         void OnDidTeleport()
         {
-            
+
         }
-        
+
         #endregion
 
-    }
+        #region Miscellaneous
 
+        public void Hit()
+        {
+            damage.Hit();
+        }
+
+        #endregion
+    }
 }

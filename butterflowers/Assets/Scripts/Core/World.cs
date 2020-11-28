@@ -94,9 +94,18 @@ public class World : MonoBehaviour
     
     [SerializeField] Loading Loader = null;
     [SerializeField] Loading Reloader = null;
+    [SerializeField] ToggleOpacity ReloadContainer;
 
     [SerializeField] UnityEngine.UI.Image remoteProgressBar;
     [SerializeField] ToggleOpacity userOverlay, remoteOverlay;
+
+    // Collections
+    
+    [Header("Entities")]
+    
+    [SerializeField] List<Entity> entities = new List<Entity>();
+    [SerializeField] List<Interactable> interactables = new List<Interactable>();
+    [SerializeField] List<Focusable> focusables = new List<Focusable>();
 
     #region Accessors
     
@@ -109,6 +118,12 @@ public class World : MonoBehaviour
     public bool Remote => (state == State.Remote);
     public bool Parallel => (state == State.Parallel);
 
+    public bool IsFocused => Focusing.active;
+
+    public Entity[] Entities => entities.ToArray();
+    public Interactable[] Interactables => interactables.ToArray();
+    public Focusable[] Focusables => focusables.ToArray();
+    
     #endregion
 
     #region Monobehaviour callbacks
@@ -124,6 +139,10 @@ public class World : MonoBehaviour
         Sun.active = false; // Initialize sun to inactive on start
         
         Save = GameDataSaveSystem.Instance;
+        
+        Save.LoadGameData<SceneData>(createIfEmpty: true);
+        Save.LoadGameData<BrainData>("brain.fns", createIfEmpty:true);
+        
         while (!Save.load) 
             yield return null;
 
@@ -263,6 +282,34 @@ public class World : MonoBehaviour
     }
 
     #endregion
+    
+    #region Entities
+
+    public void RegisterEntity(Entity entity)
+    {
+        if (!entities.Contains(entity)) {
+            entities.Add(entity);
+            
+            if(entity is Interactable)
+                interactables.Add(entity as Interactable);
+            if(entity is Focusable)
+                focusables.Add(entity as Focusable);
+        }
+    }
+
+    public void UnregisterEntity(Entity entity)
+    {
+        if (entities.Contains(entity)) {
+            entities.Remove(entity);
+            
+            if(entity is Interactable)
+                interactables.Remove(entity as Interactable);
+            if(entity is Focusable)
+                focusables.Remove(entity as Focusable);
+        }
+    }
+
+    #endregion
 
     #region Advancing
 
@@ -273,37 +320,44 @@ public class World : MonoBehaviour
 
     IEnumerator Advancing()
     {
-        Sun.active = false;
+        bool full = (state == State.User);
+        
+        if(full) Sun.active = false;
         
         Nest.Pulse();
         
         yield return new WaitForEndOfFrame();
+        
+        TakePicture();
+        photoInProgress = true;
 
-        if (Preset.takePhotos) 
+        yield return new WaitForEndOfFrame();
+        while (photoInProgress)
+            yield return null;
+
+        if (full) 
         {
-            TakePicture();
-            photoInProgress = true;
-
-            yield return new WaitForEndOfFrame();
-            while (photoInProgress)
-                yield return null;
+            bool success = Nest.Close(); // Close nest
+            if (success)
+                Butterflowers.KillButterflies();
         }
-
-        bool success = Nest.Close(); // Close nest
-        if (success)
-            Butterflowers.KillButterflies();
 
         Beacons.RefreshBeacons(); // Reset all beacons
         
         EventsM.Clear(); // Clear all cached events
-        
-        Summary.ShowSummary();
-        while (Summary.ActivePanel == SummaryManager.Panel.Grades)
-            yield return null;
-        
+
+        if (full) 
+        {
+            Summary.ShowSummary();
+            while (Summary.active)
+                yield return null;
+        }
+
         Surveillance.CreateLog(); // Continue new log of surveillance
 
         Reloader.progress = 0f;
+        ReloadContainer.Show();
+        
         Library.Reload();
         yield return new WaitForEndOfFrame();
         
@@ -312,10 +366,6 @@ public class World : MonoBehaviour
             yield return null;
         }
         Reloader.progress = 1f;
-        
-        Summary.ShowEscape();
-        while (Summary.active)
-            yield return null;
 
         Sun.active = true;
     }
@@ -335,7 +385,8 @@ public class World : MonoBehaviour
         }
         else 
         {
-            if (wand.speed2d < Preset.cursorSpeedThreshold) {
+            if (!wand.spells || wand.speed2d < Preset.cursorSpeedThreshold) 
+            {
                 remoteTimer += Time.deltaTime;
 
                 float remoteInterval =
@@ -376,6 +427,16 @@ public class World : MonoBehaviour
 
     void DetachSelf()
     {
+        bool @new = (state != State.Parallel);
+
+        if (@new) 
+        {
+            AI.Reload(); // Construct behaviour profile
+            
+            Save.brainData.behaviourProfile = AI.Profile; // Assign profile
+            Save.brainData.load = true;
+        }
+        
         state = State.Parallel; // Initialize parallel AI
     }
     
@@ -463,7 +524,8 @@ public class World : MonoBehaviour
         var name = Extensions.RandomString(12);
         var camera = snapshotCamera.camera;
 
-        Library.SaveTexture(name, image);
+        if(Preset.takePhotos)
+            Library.SaveTexture(name, image);
 
         lastPhotoCaption = name;
         lastPhotoTaken = image;

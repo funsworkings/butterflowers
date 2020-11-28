@@ -10,16 +10,13 @@ using Noder.Nodes.External;
 using System.Linq;
 using Noder.Graphs;
 using System.Text;
+using AI.Types;
 using TMPro;
 using uwu.Dialogue;
 using uwu.Extensions;
 using uwu.UI.Behaviors.Visibility;
 
 namespace Wizard {
-
-    using Mood = Brain.MoodState;
-    using Stance = Brain.StanceState;
-
     public class Dialogue: DialogueHandler {
 
         World world;
@@ -155,7 +152,7 @@ namespace Wizard {
 
         void Start()
         {
-            memories = controller.Memories;
+            //memories = controller.Memories;
 
             foreach (DialogueTree tree in dialogueTrees)
                 tree.dialogueHandler = this;
@@ -296,11 +293,11 @@ namespace Wizard {
 
         protected void UpdateTimeBetweenSymbols()
         {
-            if (brain == null)
-                brain = controller.Brain;
+            //if (brain == null)
+              //  brain = controller.Brain;
 
-            float mood = brain.mood;
-            float stance = brain.stance;
+            float mood = 0f;
+            float stance = 0f;
 
             Debug.LogFormat("mood = {0} stance = {1}", mood, stance);
 
@@ -419,11 +416,11 @@ namespace Wizard {
                 if (!tempvisited.Contains(instance_id)) {
                     tempvisited.Add(instance_id);
 
-                    controller.UpdateDialogueVisited(tempvisited.ToArray());
+                    //controller.UpdateDialogueVisited(tempvisited.ToArray());
                 }
             }
 
-            controller.UpdateCurrentDialogueNode(instance_id);
+            //controller.UpdateCurrentDialogueNode(instance_id);
         }
 
         void onReceiveDialogue(DialogueTree tree, string body)
@@ -448,8 +445,8 @@ namespace Wizard {
             var memories = ParseMemoriesFromBody(body);
             Debug.LogFormat("FOUND {0} MEMORIES FROM BODY={1}", memories.Length, body);
 
-            for (int i = 0; i < memories.Length; i++)
-                controller.DiscoverMemory(memories[i]);
+            //for (int i = 0; i < memories.Length; i++)
+            //    controller.DiscoverMemory(memories[i]);
 
             return (memories.Length > 0);
         }
@@ -464,8 +461,8 @@ namespace Wizard {
                 var match = matches[i].Value;
                 match = match.Replace(":m:", "");
 
-                var mem = controller.Memories.GetMemoryByName(match);
-                if (mem != null) parsed.Add(mem);
+                //var mem = controller.Memories.GetMemoryByName(match);
+                //if (mem != null) parsed.Add(mem);
             }
 
             return parsed.ToArray();

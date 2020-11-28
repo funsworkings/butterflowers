@@ -19,17 +19,22 @@ public class Interactable : Entity
 
     [Header("Interaction")]
         [SerializeField] bool m_interactive = true;
+        bool hovering = false;
 
     [Header("Tooltips")]
         [SerializeField] GameObject container;
-        [SerializeField] bool useTooltip = true;
+
+        [SerializeField] bool useTooltip = true, alwaysShowTooltip = false;
         [SerializeField] string m_defaultTooltipText = "";
 
-        protected GameObject tooltipInstance;
+        [SerializeField] protected GameObject tooltipInstance;
         protected Tooltip tooltip;
         protected TMP_Text tooltipText;
         protected ToggleOpacity tooltipOpacity;
 
+        const int tooltipDelayFrames = 6;
+        int tooltipFrames = 0;
+        
 	#region Accessors
 
     public bool interactive 
@@ -103,15 +108,24 @@ public class Interactable : Entity
     {
         m_interactable.enabled = interactive;
 
-        if (!interactive) 
-        {
+        if (!interactive) {
             if (useTooltip) 
             {
-                if (tooltipOpacity != null && tooltipOpacity.Shown) // Hide tooltip if still visible
-                    HideTooltip();
+                if(tooltip.active)
+                    tooltip.Hide();
             }
         }
-        
+
+        if (useTooltip) {
+            if (hovering) {
+                if (++tooltipFrames > tooltipDelayFrames && !tooltip.active)
+                    ShowTooltip();
+            }
+            else {
+                tooltipFrames = 0;
+            }
+        }
+
         base.Update();
     }
 
@@ -151,7 +165,7 @@ public class Interactable : Entity
 
 	#region Tooltips
 
-	protected virtual void CreateTooltip(Transform container = null)
+    protected virtual void CreateTooltip(Transform container = null)
     {
         if (container != null)
             this.container = container.gameObject;
@@ -163,7 +177,10 @@ public class Interactable : Entity
             }
         }
         
-        tooltipInstance = Instantiate(prTooltip, this.container.transform);
+        if(tooltipInstance == null)
+            tooltipInstance = Instantiate(prTooltip, this.container.transform);
+
+        tooltipInstance.transform.parent = this.container.transform; // Override parent of tooltip if called again
 
         tooltip = tooltipInstance.GetComponent<Tooltip>();
             tooltip.target = transform;
@@ -183,20 +200,18 @@ public class Interactable : Entity
 
     protected virtual void UpdateTooltipText(string text)
     {
-        if(tooltip != null)
+        if(tooltip != null && tooltipText != null)
             tooltipText.text = text;
     }
 
     protected virtual void ShowTooltip()
     {
-        tooltipOpacity.Show();
-        tooltip.active = true;
+        tooltip.Show();
     }
 
     protected virtual void HideTooltip()
     {
-        tooltipOpacity.Hide();
-        tooltip.active = false;
+        tooltip.Hide();
     }
 
     #endregion
@@ -205,12 +220,12 @@ public class Interactable : Entity
 
     protected virtual void onHover(Vector3 point, Vector3 normal)
     {
-        if(useTooltip)
-            ShowTooltip();
+        hovering = true;
     }
 
     protected virtual void onUnhover(Vector3 point, Vector3 normal)
     {
+        hovering = false;
         if(useTooltip)
             HideTooltip();
     }

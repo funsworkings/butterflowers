@@ -22,9 +22,11 @@ namespace Wizard {
 
 	public class Brain: MonoBehaviour {
 
+		/*
+		
 		#region Events
 
-		public System.Action<MoodState, StanceState> onUpdateState;
+		public System.Action<MoodState, Stance> onUpdateState;
 
 		#endregion
 
@@ -47,16 +49,6 @@ namespace Wizard {
 
 		#endregion
 
-		#region Internal
-
-		public enum MoodState { NULL, Neutral, Depression, Joyous }
-		public enum Sub_MoodState { NULL, Mischief, Violence, Happy, Elation }
-
-		public enum StanceState { NULL, Neutral, Unknown, Confidence }
-
-		#endregion
-
-
 		#region Properties
 
 		public BrainPreset Preset;
@@ -77,7 +69,7 @@ namespace Wizard {
 		#region Attributes
 
 		[SerializeField] [Range(-1f, 1f)] float m_mood = 0f, t_mood = 0f;
-		[SerializeField] [Range(0f, 1f)] float m_stance = 0f;
+		[SerializeField] [Range(0f, 1f)] float m_stanceValue = 0f;
 		[SerializeField] [Range(0f, 1f)] float m_absorption = 0f;
 
 		[SerializeField] float m_environmentKnowledge = 0f;
@@ -91,7 +83,7 @@ namespace Wizard {
 
 		[SerializeField] ActionType[] excludes;
 
-		[SerializeField] StanceState m_stanceState = StanceState.NULL;
+		[SerializeField] Stance m_stance = AI.Types.Stance.NULL;
 		[SerializeField] MoodState m_moodState = MoodState.NULL;
 
 		private const int EVENT_WAIT = 72;
@@ -128,11 +120,11 @@ namespace Wizard {
 		#region Accessors
 
 		public float mood => m_mood;
-		public float stance => m_stance;
+		public float StanceValue => m_stanceValue;
 		public float absorption => m_absorption;
 
 		public MoodState moodState => m_moodState;
-		public StanceState stanceState => m_stanceState;
+		public Stance Stance => m_stance;
 
 
 		public float environmentKnowledge => m_environmentKnowledge;
@@ -213,7 +205,7 @@ namespace Wizard {
 
 			Beacons.onRefreshBeacons += Reset;
 
-			ModuleTree.onReceiveEvent += onReceiveEvent;
+			//ModuleTree.onReceiveEvent += onReceiveEvent;
 			ModuleTree.onReceiveDialogue += onReceiveDialogue;
 
 			Events.onFireEvent += onFireEvent;
@@ -223,7 +215,7 @@ namespace Wizard {
 		{
 			Beacons.onRefreshBeacons -= Reset;
 
-			ModuleTree.onReceiveEvent -= onReceiveEvent;
+			//ModuleTree.onReceiveEvent -= onReceiveEvent;
 			ModuleTree.onReceiveDialogue -= onReceiveDialogue;
 
 			Events.onFireEvent -= onFireEvent;
@@ -241,8 +233,8 @@ namespace Wizard {
 			wand = controller.Wand;
 
 			CoreBehaviourTree = BehaviourTrees[0];
-			foreach (ModuleTree tree in BehaviourTrees)
-				tree.Brain = this;
+			//foreach (ModuleTree tree in BehaviourTrees)
+			//	tree.Brain = this;
 
 			RECEIVE_PLAYER_EVENT = RECEIVE_WORLD_EVENT = RECEIVE_NEST_EVENT = -EVENT_WAIT;
 
@@ -461,7 +453,7 @@ namespace Wizard {
 
 			//float memory_knowledge = World.FetchKnowledgeOfWizard();
 			float memory_knowledge = 1f;
-			float enviro_knowledge = stance;
+			float enviro_knowledge = Stance;
 
 			float absorb = (MW * memory_knowledge) + (SW * enviro_knowledge);
 
@@ -681,10 +673,10 @@ namespace Wizard {
 
 		#region Mood/stance
 
-		void CheckForUpdateToMoodOrStance(MoodState mood = MoodState.NULL, StanceState stance = StanceState.NULL)
+		void CheckForUpdateToMoodOrStance(MoodState mood = MoodState.NULL, Stance stance = AI.Types.Stance.NULL)
 		{
 			if (mood == MoodState.NULL) mood = getMoodState(checkForUpdates:false);
-			if (stance == StanceState.NULL) stance = getStanceState(checkForUpdates:false);
+			if (stance == AI.Types.Stance.NULL) stance = getStanceState(checkForUpdates:false);
 
 			bool flag = false;
 
@@ -756,7 +748,7 @@ namespace Wizard {
 			return state;
 		}
 
-		public Sub_MoodState getSubMoodState()
+		public SubMoodState getSubMoodState()
 		{
 			var mood = this.mood;
 			var state = getMoodState();
@@ -768,9 +760,9 @@ namespace Wizard {
 				var diff = Mathf.Abs(mood - thresh);
 
 				if (diff / max >= .5f)
-					return Sub_MoodState.Violence;
+					return SubMoodState.Violence;
 				else
-					return Sub_MoodState.Mischief;
+					return SubMoodState.Mischief;
 			}
 			else if (state == MoodState.Joyous) 
 			{
@@ -779,29 +771,29 @@ namespace Wizard {
 				var diff = Mathf.Abs(mood - thresh);
 
 				if (diff / max >= .5f)
-					return Sub_MoodState.Elation;
+					return SubMoodState.Elation;
 				else
-					return Sub_MoodState.Happy;
+					return SubMoodState.Happy;
 			}
 
-			return Sub_MoodState.NULL;
+			return SubMoodState.NULL;
 		}
 
 
-		public StanceState getStanceState(AGENT agent = AGENT.NULL, bool checkForUpdates = true)
+		public Stance getStanceState(AGENT agent = AGENT.NULL, bool checkForUpdates = true)
 		{
-			float stance = this.stance;
+			float stance = this.Stance;
 
 			if (agent == AGENT.World)
 				stance = FetchKnowledgeFromEnvironment(); // Pull down enviro knowledge instead
 
 
-			var state = StanceState.Neutral;
+			var state = AI.Types.Stance.Neutral;
 
 			if (stance >= Preset.highStanceThreshold)
-				state = StanceState.Confidence;
+				state = AI.Types.Stance.Confidence;
 			if (stance <= Preset.lowStanceThreshold)
-				state = StanceState.Unknown;
+				state = AI.Types.Stance.Unknown;
 
 			return state;
 		}
@@ -1056,7 +1048,7 @@ namespace Wizard {
 			var m_state = getMoodState();
 
 			// DEBUG
-			stanceUI.text = string.Format("{0} ({1})", stance, System.Enum.GetName(typeof(StanceState), s_state));
+			stanceUI.text = string.Format("{0} ({1})", Stance, System.Enum.GetName(typeof(Stance), s_state));
 			moodUI.text = string.Format("{0} ({1})", mood, System.Enum.GetName(typeof(MoodState), m_state));
 			absorbUI.text = string.Format("{0}%", Mathf.RoundToInt(absorption * 100f));
 
@@ -1320,9 +1312,10 @@ namespace Wizard {
 		 * 
 		 * 
 		 * 
-		 */
-
-		#endregion
+			
+		*/
+		
 	}
+	
 
 }

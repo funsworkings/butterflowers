@@ -16,6 +16,7 @@ public class Surveillance : MonoBehaviour
 
 	GameDataSaveSystem Save;
 	Library Lib;
+	World World;
 
 	[SerializeField] Sun Sun;
 	[SerializeField] ButterflowerManager ButterflyManager;
@@ -26,12 +27,11 @@ public class Surveillance : MonoBehaviour
 	// Collections
 
 	[SerializeField] List<SurveillanceData> logs = new List<SurveillanceData>();
-	[SerializeField] List<SurveillanceLogData> cacheLogs = new List<SurveillanceLogData>();
-	
+
 	// Properties
 	
-	[SerializeField] WorldPreset Preset;   
-	
+	[SerializeField] WorldPreset Preset;
+	[SerializeField] bool recording = true;
 	
 	#region Accessors
 
@@ -52,6 +52,8 @@ public class Surveillance : MonoBehaviour
 			return null;
 		}
 	}
+
+	public SurveillanceData[] allLogs => logs.ToArray();
 
 	#endregion
 	
@@ -76,6 +78,7 @@ public class Surveillance : MonoBehaviour
 	{
 		Save = GameDataSaveSystem.Instance;
 		Lib = Library.Instance;
+		World = World.Instance;
 		
 		if (data != null) 
 		{
@@ -88,7 +91,7 @@ public class Surveillance : MonoBehaviour
 		EnsureLog();
 		
 		SubscribeToEvents();
-
+		
 		StartCoroutine("Capturing");
 	}
 	
@@ -121,8 +124,8 @@ public class Surveillance : MonoBehaviour
 		float log_t = 0f;
 		
 		while (true) {
-
-			if (Sun.active) 
+			recording = (World.state != World.State.Remote); // Only record user/parallel actions
+			if (Sun.active && recording) 
 			{
 				log_t += Time.deltaTime;
 				if (log_t > Preset.surveillanceLogRate) {
@@ -173,7 +176,7 @@ public class Surveillance : MonoBehaviour
 			log.timestamp = Sun.time;
 
 			log.butterflyHealth = ButterflyManager.GetHealth();
-			log.cursorSpeed = Wand.speed;
+			log.cursorSpeed = Wand.speed2d;
 			log.nestFill = Nest.fill;
 
 			var focus = Focus.focus;
@@ -187,10 +190,51 @@ public class Surveillance : MonoBehaviour
 	
 	#endregion
 	
+	#region Compositing
+	
+	public CompositeSurveillanceData CreateCompositeAverageLog(bool includeSelf = false)
+	{
+		CompositeSurveillanceData comp = new CompositeSurveillanceData();
+		
+		var logs = (includeSelf)? allLogs: previousLogs;
+		if (logs == null) 
+		{
+			comp = new CompositeSurveillanceData(activeLog);
+			logs = new SurveillanceData[] { activeLog };
+		}
+		else 
+		{
+			comp.filesAdded = (int) logs.Select(l => l.filesAdded).Average();
+			comp.filesRemoved = (int) logs.Select(l => l.filesRemoved).Average();
+			comp.discoveries = (int) logs.Select(l => l.discoveries).Average();
+
+			comp.beaconsAdded = (int) logs.Select(l => l.beaconsAdded).Average();
+			comp.beaconsPlanted = (int) logs.Select(l => l.beaconsPlanted).Average();
+
+			comp.nestKicks = (int) logs.Select(l => l.nestKicks).Average();
+			comp.nestSpills = (int) logs.Select(l => l.nestSpills).Average();
+		}
+
+		comp.AverageCursorSpeed = logs.Select(l => l.averageCursorSpeed).Average();
+		comp.AverageHoB = logs.Select(l => l.averageHoB).Average();
+		comp.AverageNestFill = logs.Select(l => l.averageNestFill).Average();
+
+		comp.AverageTimeSpentInNest = logs.Select(l => l.timeSpentInNest).Average();
+		comp.AverageTimeSpentInTree = logs.Select(l => l.timeSpentInTree).Average();
+		comp.AverageTimeSpentInMagicStar = logs.Select(l => l.timeSpentInMagicStar).Average();
+		comp.AverageTimeSpentInDefault = logs.Select(l => l.timeSpentInDefault).Average();
+				
+
+		return comp;
+	}
+	
+	#endregion
+	
 	#region Recording events
 
 	void OnReceiveEvent(EVENTCODE @event, AGENT agentA, AGENT agentB, string details)
 	{
+		if (!recording) return;
 		if (agentA == AGENT.User) 
 		{
 			RecordEvent(@event); // Only record events from User

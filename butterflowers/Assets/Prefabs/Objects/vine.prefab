@@ -4913,14 +4913,19 @@ MonoBehaviour:
   container: {fileID: 0}
   useTooltip: 1
   m_defaultTooltipText: vine
+  tooltipInstance: {fileID: 0}
+  preset: {fileID: 11400000, guid: 45ffdf5e02efb4848942aaeb5d029f6e, type: 2}
   smokePS: {fileID: 7266086613000251287}
   wallPrefab: {fileID: 861060819644785791, guid: 8c88242369492c0419ec14e5c89907f3,
     type: 3}
   flowerPrefab: {fileID: 1984411663683584353, guid: b145ea0ccfcafb24aa7d0530b9664792,
     type: 3}
+  leafPrefab: {fileID: 1429265214365859130, guid: 64900a99a6f7c0443b02f49e335aef17,
+    type: 3}
   waypoints: []
   gate: []
   vertices: []
+  leaves: []
   gate_midpoint: {x: 0, y: 0, z: 0}
   gate_width: 0
   gate_height: 0
@@ -4929,16 +4934,16 @@ MonoBehaviour:
   growRadius: 0.3
   snapDistance: 0.01
   growHeight: 8
-  growSpeed: 0.3
   gateSpeed: 10
   saplingSpeed: 4
-  growDistance: 1
   minSegments: 18
   maxSegments: 67
   interval: 0
   index: -1
   gateIndices: 
   gateTransition: []
+  refreshLeaves: 0
+  m_growSpeed: 0
 --- !u!136 &5635568111293190076
 CapsuleCollider:
   m_ObjectHideFlags: 0

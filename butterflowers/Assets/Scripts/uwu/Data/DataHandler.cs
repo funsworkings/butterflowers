@@ -9,7 +9,7 @@ namespace uwu.Data
 	{
 		public static bool ready = true;
 
-		public static bool Write<T>(T dat, string path)
+		public static bool Write(object dat, string path)
 		{
 			var bf = new BinaryFormatter();
 			var file = File.Open(path, FileMode.Create);
@@ -28,14 +28,22 @@ namespace uwu.Data
 
 		public static T Read<T>(string path)
 		{
-			if (File.Exists(path)) {
+			if (File.Exists(path)) 
+			{
 				var bf = new BinaryFormatter();
 				var file = File.Open(path, FileMode.Open);
 
-				var dat = (T) bf.Deserialize(file);
+				var obj = bf.Deserialize(file);
 				file.Close();
 
-				return dat;
+				try {
+					T dat = (T) obj;
+					return dat;
+				}
+				catch (System.Exception err) 
+				{
+					return default;
+				}
 			}
 
 			return default;

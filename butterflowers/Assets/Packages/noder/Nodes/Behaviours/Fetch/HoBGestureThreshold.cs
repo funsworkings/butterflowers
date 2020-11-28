@@ -12,7 +12,7 @@ namespace Noder.Nodes.Behaviours.Fetch {
         protected override float ValueProvider()
         {
             var tree = (graph as ModuleTree);
-            return tree.Brain.Preset.healthOfButterflowersGestureThreshold;
+            return tree.Brain.OldPreset.healthOfButterflowersGestureThreshold;
         }
     }
 

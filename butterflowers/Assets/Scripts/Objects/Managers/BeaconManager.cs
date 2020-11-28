@@ -3,7 +3,7 @@ using System.Collections.Generic;
 using UnityEngine;
 
 using System.Linq;
-
+using B83.Win32;
 using Type = Beacon.Type;
 using Locale = Beacon.Locale;
 using Settings;
@@ -60,8 +60,21 @@ public class BeaconManager : Spawner
 
 	public Beacon[] ActiveBeacons => allBeacons.Where(beacon => Nest.HasBeacon(beacon)).ToArray();
 	public Beacon[] InactiveBeacons => allBeacons.Where(beacon => !Nest.HasBeacon(beacon)).ToArray();
+	public Beacon[] PlantedBeacons => allBeacons.Where(beacon => beacon.state == Locale.Planted).ToArray();
+	public Beacon[] LiveBeacons => allBeacons.Where(beacon => (beacon.state != Locale.Planted || beacon.state != Locale.Destroyed)).ToArray();
 
 	public Transform BeaconInfoContainer => m_beaconInfoContainer;
+
+	public Beacon GetBeaconByFile(string file)
+	{
+		List<Beacon> b = null;
+		beacons.TryGetValue(file, out b);
+
+		if (b != null && b.Count > 0)
+			return b[0];
+
+		return null;
+	}
 
     #endregion
 
@@ -142,9 +155,11 @@ public class BeaconManager : Spawner
 
     #region Operations
 
-    public Beacon CreateBeacon(string path, Type type, Locale state)
+    public Beacon CreateBeacon(string path, Type type, Locale state, Vector3 position, bool usePosition = false)
     {
         var instance = InstantiatePrefab(); // Create new beacon prefab
+        if (usePosition) 
+	        instance.transform.position = position;
 
         var origin = instance.transform.position;
         var discovered = Discoveries.HasDiscoveredFile(path); // Check if seen before
@@ -157,6 +172,8 @@ public class BeaconManager : Spawner
             beacon.file = path;
             beacon.fileEntry = null;
             beacon.discovered = discovered; // Set if beacon has been discovered
+            
+        Debug.LogError("Add beacon => " + path);
 
         beacon.Register();
         beacon.Initialize(type, state, origin, scale, parent, lerp, preset.beaconScaleCurve, BeaconInfoContainer);
@@ -166,21 +183,25 @@ public class BeaconManager : Spawner
         return beacon;
     }
 
+    public void CreateBeaconInstance(string path, Type type, Vector3 point)
+    {
+	    CreateBeacon(path, type, Locale.Terrain, point, usePosition: true);
+    }
+
     public void DeleteBeacon(Beacon beacon, bool overridenest = false)
     {
         bool success = !(beacon.state == Locale.Planted);
 
-        if (success) 
-        {
-
-            if (overridenest)
-                beacon.Delete();
-            else {
-                if (!Nest.HasBeacon(beacon)) // Don't delete if currently inside nest
-                    beacon.Delete();
-                else
-                    success = false;
-            }
+        if (success) {
+	        if (overridenest)
+		        beacon.Delete();
+	        else 
+	        {
+		        if (!Nest.HasBeacon(beacon)) // Don't delete if currently inside nest
+			        beacon.Delete();
+		        else
+			        success = false;
+	        }
         }
 
         if (success)
@@ -192,14 +213,21 @@ public class BeaconManager : Spawner
 
     public void RefreshBeacons()
     {
+	    return;
+	    
         //DeleteDeprecatedBeacons(lib);
 
         var desktop = Library.desktop_files;
         var wizard = Library.wizard_files.Where(file => Discoveries.HasDiscoveredFile(file)); // Only choose 'discovered' wizard files
         var enviro = Library.enviro_files;
 
-        var files = ((desktop.Concat(wizard)).Concat(enviro)).ToArray();
-        var subset = files.PickRandomSubset<string>(maxBeacons).ToList(); // Random subset from aggregate collection    
+        var files = ((desktop.Concat(wizard)).Concat(enviro));
+        var blacklist = PlantedBeacons.Select(b => b.file);
+
+        files = files.Except(blacklist); // Ignore items from blacklist
+
+        var composite = files.ToArray();
+        var subset = composite.PickRandomSubset<string>(maxBeacons).ToList(); // Random subset from aggregate collection    
 
         var current = (beacons != null) ? beacons.Keys.ToList() : new List<string>();
         if (current.Count > 0) {
@@ -252,7 +280,7 @@ public class BeaconManager : Spawner
             Type t = (Type)beacon.type;
             Locale s = (Locale)beacon.state;
 
-            var instance = CreateBeacon(p, t, s);
+            var instance = CreateBeacon(p, t, s, Vector3.zero);
             if (instance == null)
                 continue; // Bypass null beacon
 
@@ -271,6 +299,8 @@ public class BeaconManager : Spawner
         if (onRefreshBeacons != null)
             onRefreshBeacons();
     }
+    
+	
 
     public void CreateBeacons(string[] files, Type type, Locale state)
     {
@@ -292,7 +322,7 @@ public class BeaconManager : Spawner
             }
 
             if (!exists)
-                CreateBeacon(files[i], type, state);
+                CreateBeacon(files[i], type, state, Vector3.zero);
         }
     }
 
@@ -369,6 +399,9 @@ public class BeaconManager : Spawner
 
     void onPlantedBeacon(Beacon beacon)
     {
+	    var file = beacon.file;
+	    bool success = Discoveries.DiscoverFile(file);
+	    
         if (onPlantBeacon != null)
             onPlantBeacon(beacon);
     }

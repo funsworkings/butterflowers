@@ -1,6 +1,7 @@
 ﻿using Cinemachine;
 using UnityEngine;
 using UnityEngine.Events;
+using uwu.Extensions;
 
 namespace uwu.Camera
 {
@@ -77,6 +78,22 @@ namespace uwu.Camera
 		{
 		}
 
+		#endregion
+		
+		#region Alignment
+		
+		// 0 = Perpendicular 1 = Same direction -1 = Opposite direction
+		public float CalculateAlignmentWithTarget(Transform target)
+		{
+			if (target == transform) return 1f; // Trajectory of self
+
+			Vector3 dirBetween = (target.position - transform.position).normalized;
+			Vector3 cameraForward = transform.forward;
+
+			float dot = Vector3.Dot(dirBetween, cameraForward);
+			return dot.RemapNRB(-1f, 1f, 0f, 1f);
+		}
+		
 		#endregion
 	}
 }

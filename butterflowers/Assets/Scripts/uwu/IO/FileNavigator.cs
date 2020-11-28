@@ -147,6 +147,16 @@ namespace uwu.IO
 			return file;
 		}
 
+		public bool ExtensionMatchesFilter(string ext)
+		{
+			if (filters == null || filters.Length == 0) {
+				return true;
+			}
+			else {
+				return (filters.Contains(ext));
+			}
+		}
+
 		public static FileSystemEntry[] GetFilesInDirectory(string path, FileType type = FileType.All,
 			string[] filters = null)
 		{

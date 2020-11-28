@@ -2,17 +2,18 @@
 using Noder.Nodes.Abstract;
 using System.Collections;
 using System.Collections.Generic;
+using AI.Types;
 using UnityEngine;
 using Wizard;
 
 namespace Noder.Nodes.Behaviours.Fetch 
 {
 
-    public class StanceStateNode: Entry<Brain.StanceState> {
+    public class StanceStateNode: Entry<Stance> {
 
         public bool environment = false;
 
-        protected override Brain.StanceState ValueProvider()
+        protected override Stance ValueProvider()
         {
             return (graph as ModuleTree).Brain.getStanceState((environment) ? AGENT.World : AGENT.NULL);
         }

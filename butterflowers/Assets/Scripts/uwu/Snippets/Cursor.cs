@@ -27,7 +27,7 @@ namespace uwu.Snippets
 		{
 			m_position = Position();
 
-			var dt = Time.deltaTime;
+			var dt = Time.unscaledDeltaTime;
 
 			b = position;
 			m_velocity = (b - a) / dt;

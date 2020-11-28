@@ -26,7 +26,7 @@ namespace Noder.Nodes.Behaviours.Events {
         {
             var tree = (graph as ModuleTree);
             if (tree != null) {
-                ModuleTree.onReceiveEvent(tree, EVENTCODE.NESTCLEAR, null); // Override event
+                ModuleTree.onReceiveEvent(tree, EVENTCODE.NESTCLEAR, null, rewards); // Override event
                 return true;
             }
 

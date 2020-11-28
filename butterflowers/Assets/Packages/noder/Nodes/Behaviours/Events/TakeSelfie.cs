@@ -15,7 +15,7 @@ namespace Noder.Nodes.Behaviours.Events {
             if (tree != null) {
                 string name = GetInputValue<string>("data", this.data);
 
-                ModuleTree.onReceiveEvent(tree, EVENTCODE.PHOTOGRAPH, name); // Override event
+                ModuleTree.onReceiveEvent(tree, EVENTCODE.PHOTOGRAPH, name, rewards); // Override event
                 return true;
             }
 

@@ -11,7 +11,8 @@ namespace Noder.Nodes.Behaviours.Fetch {
 
         protected override float ValueProvider()
         {
-            return (graph as ModuleTree).Brain.absorption;
+            return 0f;
+            //return (graph as ModuleTree).Brain.absorption;
         }
 
     }

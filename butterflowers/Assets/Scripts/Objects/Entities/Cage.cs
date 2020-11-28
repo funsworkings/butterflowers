@@ -36,6 +36,7 @@ public class Cage : MonoBehaviour
     Bounds bounds;
     
     bool[] m_active = new bool[4];
+    bool[] m_queue = new bool[4];
     
     // Collections
     
@@ -44,7 +45,8 @@ public class Cage : MonoBehaviour
     #region Accessors
 
     public bool[] active => m_active;
-    
+    public bool[] queue => m_queue;
+
     #endregion
     
     #region Monobehaviour callbacks
@@ -54,8 +56,11 @@ public class Cage : MonoBehaviour
         collider = GetComponent<Collider>();
     }
 
+#if UNITY_EDITOR
     void OnDrawGizmos()
     {
+        
+        
         foreach (Vertex v in vertices) {
             Handles.color = Color.blue;
             Handles.DrawWireCube(v.top, Vector3.one);
@@ -63,7 +68,9 @@ public class Cage : MonoBehaviour
             Handles.color = Color.red;
             Handles.DrawWireCube(v.bottom, Vector3.one);
         }
+        
     }
+#endif
 
     #endregion
     
@@ -161,6 +168,15 @@ public class Cage : MonoBehaviour
 
         CheckIfComplete();
         
+        return true;
+    }
+
+    public bool HoldVertex(int index)
+    {
+        if (queue[index])
+            return false;
+
+        queue[index] = true;
         return true;
     }
 

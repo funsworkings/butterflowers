@@ -2,6 +2,7 @@
 using System.Collections;
 using System.Collections.Generic;
 using System.IO;
+using System.Linq;
 using UnityEngine;
 using uwu.Data;
 using uwu.Extensions;
@@ -13,12 +14,39 @@ namespace uwu
 {
 	public partial class GameDataSaveSystem : Singleton<GameDataSaveSystem>
 	{
+		[SerializeField] SceneData sceneDat;
+		[SerializeField] BrainData brainDat;
+
+		public SceneData data
+		{
+			get
+			{
+				var dat = (SceneData)cache_data_lookup["save.dat"];
+				sceneDat = dat;
+
+				return dat;
+			}
+		}
+
+		public BrainData brainData
+		{
+			get
+			{
+				var dat =  (BrainData) cache_data_lookup["brain.fns"];
+				brainDat = dat;
+
+				return dat;
+			}
+		}
+		
+		public bool load => data_lookup.ContainsKey(def_savefile);
+		
 		#region External access
 
 		public string username
 		{
-			get => (data == null) ? null : data.username;
-			set => data.username = value;
+			get => (brainData == null) ? null : brainData.username;
+			set => brainData.username = value;
 		}
 
 		public bool wizard
@@ -29,8 +57,8 @@ namespace uwu
 
 		public string[] files
 		{
-			get { return data == null ? new string[] { } : data.files; }
-			set => data.files = value;
+			get { return brainData == null ? new string[] { } : brainData.files; }
+			set => brainData.files = value;
 		}
 
 		public float time
@@ -67,15 +95,15 @@ namespace uwu
 		{
 			get
 			{
-				var discoveries = data == null ? null : data.discoveries;
+				var discoveries = brainData == null ? null : brainData.discoveries;
 				if (discoveries == null) {
 					discoveries = new int[] { };
-					data.discoveries = discoveries;
+					brainData.discoveries = discoveries;
 				}
 
 				return discoveries;
 			}
-			set => data.discoveries = value;
+			set => brainData.discoveries = value;
 		}
 
 		public BeaconData[] beaconData
@@ -112,7 +140,7 @@ namespace uwu
 
 				for (var i = 0; i < value.Length; i++) {
 					var vine = value[i];
-					var parsed = new VineData(vine.state, vine.index, vine.interval, vine.Waypoints, vine.file);
+					var parsed = new VineData(vine.state, vine.index, vine.interval, vine.height, vine.Waypoints, vine.file, vine.Leaves);
 
 					dat.Add(parsed);
 				}
@@ -147,14 +175,14 @@ namespace uwu
 
 		public Knowledge[] file_knowledge
 		{
-			get { return data == null ? new Knowledge[] { } : data.file_knowledge; }
-			set => data.file_knowledge = value;
+			get { return brainData == null ? new Knowledge[] { } : brainData.file_knowledge; }
+			set => brainData.file_knowledge = value;
 		}
 
 		public int[] shared_files
 		{
-			get { return data == null ? new int[] { } : data.shared_files; }
-			set => data.shared_files = value;
+			get { return brainData == null ? new int[] { } : brainData.shared_files; }
+			set => brainData.shared_files = value;
 		}
 
 		#endregion
