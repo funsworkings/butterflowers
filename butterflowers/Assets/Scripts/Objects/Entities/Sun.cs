@@ -4,6 +4,7 @@ using UnityEngine;
 
 using UnityEngine.UI;
 using System.Linq;
+using Interfaces;
 using Settings;
 using uwu;
 
@@ -11,22 +12,21 @@ public class Sun : MonoBehaviour
 {
     public static Sun Instance;
 
-	#region Events
+	// Events
 
 	public static System.Action onDayBegin, onDayEnd, onNightBegin, onNightEnd; // Time of day events
     public static System.Action onCycle, onStateChange; // Day event
 
-	#endregion
-
-	#region External
+    // External
 
 	GameDataSaveSystem Save = null;
     [SerializeField] Settings.WorldPreset Preset;
 
+    World World;
+    
     IReactToSun[] Listeners;
-    IObserveSunCycle[] Observers;
-
-    #endregion
+    IReactToSunCycle[] Observers;
+    IPauseSun[] Pausers;
 
     #region Internal
 
@@ -34,13 +34,11 @@ public class Sun : MonoBehaviour
 
 	#endregion
 
-	#region Properties
+	// Properties
 
 	new Light light;
-
-    #endregion
-
-    #region Attributes
+    
+    // Attributes
 
     bool setTransform = false;
 
@@ -54,11 +52,12 @@ public class Sun : MonoBehaviour
     [SerializeField] int m_previousDays = -1, m_days = 0;
     [SerializeField] State state = State.Day;
 
+    [SerializeField] float minTimeScale = .001f, maxTimeScale = 1f, timeScale = 1f;
+    [SerializeField] float timeScaleLerpSpeed = 1f;
+    
     public bool active = true;
 
-	#endregion
-
-	#region Accessors
+    #region Accessors
 
 	public float time
     {
@@ -127,14 +126,18 @@ public class Sun : MonoBehaviour
 
     IEnumerator Start()
     {
+        World = World.Instance;
+        
         Listeners = FindObjectsOfType<MonoBehaviour>().OfType<IReactToSun>().ToArray();
-        Observers = FindObjectsOfType<MonoBehaviour>().OfType<IObserveSunCycle>().ToArray();
+        Observers = FindObjectsOfType<MonoBehaviour>().OfType<IReactToSunCycle>().ToArray();
+        Pausers = FindObjectsOfType<MonoBehaviour>().OfType<IPauseSun>().ToArray();
 
         active = false;
         while(!Save.load)
             yield return null;
 
         active = Save.data.active;
+        WaitForPausers();
         
         time = (Preset.resetWorldClock)? 0f:Save.time;
         onLoadSunData();
@@ -143,10 +146,23 @@ public class Sun : MonoBehaviour
     // Update is called once per frame
     void Update()
     {
+        float t_timeScale = 0f;
+        if (!active) 
+        {
+            WaitForPausers();
+            t_timeScale = minTimeScale;
+        }
+        else 
+        {
+            t_timeScale = maxTimeScale;
+        }
+
+        timeScale = Mathf.Lerp(timeScale, t_timeScale, Time.unscaledDeltaTime * timeScaleLerpSpeed);
+        Time.timeScale = timeScale;
+
         Save.data.active  = active;
+        if (!active) return; // Ignore time operations if inactive!
         
-        if (!active)
-            return;
 
         if (Input.GetKeyDown(KeyCode.RightBracket)) time += Preset.secondsPerDay;
 
@@ -246,17 +262,23 @@ public class Sun : MonoBehaviour
 
             Events.ReceiveEvent(EVENTCODE.CYCLE, AGENT.World, AGENT.Terrain, days + "");
 
-            //if (World.Instance.User) // Only behaadvance sun if world is not parallel (otherwise CNTD)
-            //{
-                if (onCycle != null)
-                    onCycle();
-            //}
+            CycleObservers(World.state == World.State.User);
+
+            Pausers = FindObjectsOfType<MonoBehaviour>().OfType<IPauseSun>().ToArray();
+            WaitForPausers();
+            
+            if (onCycle != null)
+                onCycle();
 
             return true;
         }
         return false;
     }
 
+    #endregion
+    
+    #region Listeners and observers
+    
     void UpdateListeners()
     {
         foreach (IReactToSun listener in Listeners) {
@@ -265,7 +287,30 @@ public class Sun : MonoBehaviour
         }
     }
 
-	#endregion
+    void CycleObservers(bool refresh)
+    {
+        Observers = FindObjectsOfType<MonoBehaviour>().OfType<IReactToSunCycle>().ToArray();
+        foreach(IReactToSunCycle o in Observers)
+            o.Cycle(refresh);
+    }
+
+    void WaitForPausers()
+    {
+        bool active = true;
+        
+        foreach (IPauseSun pauser in Pausers) 
+        {
+            if (pauser.Pause) 
+            {
+                active = false;
+                break;
+            }    
+        }
+
+        this.active = active;
+    }
+    
+    #endregion
 
 	#region Internal callbacks
 

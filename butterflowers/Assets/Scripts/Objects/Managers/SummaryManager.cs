@@ -1,4 +1,6 @@
 ﻿using System;
+using System.Collections;
+using Interfaces;
 using TMPro;
 using UnityEngine;
 using UnityEngine.Experimental.UIElements;
@@ -8,7 +10,7 @@ using uwu.UI.Behaviors.Visibility;
 
 namespace Objects.Managers
 {
-	public class SummaryManager : MonoBehaviour
+	public class SummaryManager : MonoBehaviour, IPauseSun, IReactToSunCycle
 	{
 		#region Internal
 
@@ -19,12 +21,7 @@ namespace Objects.Managers
 		}
 		
 		#endregion
-		
-		// External
 
-		World World;
-		Nest nest;
-		
 		// Properties
 
 		[SerializeField] GradingManager Grading;
@@ -34,6 +31,8 @@ namespace Objects.Managers
 
 		[SerializeField] RawImage photoOfTheDay;
 		[SerializeField] TMP_Text photoCaption;
+
+		public bool Pause => active;
 
 		// Attributes
 
@@ -53,9 +52,6 @@ namespace Objects.Managers
 
 		void Start()
 		{
-			World = World.Instance;
-			nest = Nest.Instance;
-			
 			var photoRect = photoOfTheDay.rectTransform;
 				basePhotoWidth = photoRect.sizeDelta.x;
 				basePhotoHeight = photoRect.sizeDelta.y;
@@ -65,12 +61,32 @@ namespace Objects.Managers
 
 		#endregion
 		
+		#region Cycle
+
+		public void Cycle(bool refresh)
+		{
+			if (refresh) 
+			{
+				ShowSummary();
+			}
+		}
+		
+		#endregion
+		
 		#region Show and hide
 
 		public void ShowSummary()
 		{
 			m_active = true;
 			panel = Panel.Grades;
+
+			StartCoroutine("WaitForSummary");
+		}
+
+		IEnumerator WaitForSummary()
+		{
+			while (Surveillance.Instance.photoInProgress) 
+				yield return null;
 			
 			DisplayPhotoOfTheDay();
 			Grading.ShowScores();
@@ -96,8 +112,8 @@ namespace Objects.Managers
 
 		public void DisplayPhotoOfTheDay()
 		{
-			var photoName = World.LastPhotoCaption;
-			var photo = World.LastPhoto;
+			var photoName = Surveillance.Instance.lastPhotoCaption;
+			var photo = Surveillance.Instance.lastPhotoTaken;
 			var valid = photo != null;
 
 			photoOfTheDay.enabled = valid;

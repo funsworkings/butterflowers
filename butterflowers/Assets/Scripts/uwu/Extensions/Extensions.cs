@@ -766,5 +766,26 @@ namespace uwu.Extensions
 		}
 		
 		#endregion
+		
+		#region Lerp
+
+		public static object GenericLerp<E>(object a, object b, float interval)
+		{
+			var type = typeof(E);
+			if (type == typeof(float)) 
+				return Mathf.Lerp((float) a, (float) b, interval);
+			else if (type == typeof(int))
+				return (int)Mathf.Lerp((float) a, (float) b, interval);
+			else if (type == typeof(Vector2))
+				return Vector2.Lerp((Vector2) a, (Vector2) b, interval);
+			else if (type == typeof(Vector3))
+				return Vector3.Lerp((Vector3) a, (Vector3) b, interval);
+			else if (type == typeof(Quaternion))
+				return Quaternion.Lerp((Quaternion) a, (Quaternion) b, interval);
+			
+			throw new System.Exception("Unsupported type detected for generic lerp!");
+		}
+		
+		#endregion
 	}
 }

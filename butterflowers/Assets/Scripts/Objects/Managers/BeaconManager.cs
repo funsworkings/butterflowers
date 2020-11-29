@@ -11,7 +11,7 @@ using uwu;
 using uwu.Extensions;
 using uwu.Gameplay;
 
-public class BeaconManager : Spawner
+public class BeaconManager : Spawner, IReactToSunCycle
 {
     public static BeaconManager Instance;
 
@@ -118,6 +118,15 @@ public class BeaconManager : Spawner
 	    Discoveries = Discoveries.Instance;
 	    Save = GameDataSaveSystem.Instance;
 	    Library = Library.Instance;
+    }
+    
+    #endregion
+    
+    #region Cycle
+
+    public void Cycle(bool refresh)
+    {
+	    RefreshBeacons();
     }
     
     #endregion

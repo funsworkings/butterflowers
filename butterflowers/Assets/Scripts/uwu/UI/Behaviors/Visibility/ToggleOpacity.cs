@@ -50,7 +50,7 @@ namespace uwu.UI.Behaviors.Visibility
 			while (dist > .033f) {
 				lerping = true;
 
-				current = Mathf.Lerp(current, target, Time.deltaTime * transitionSpeed);
+				current = Mathf.Lerp(current, target, _dt * transitionSpeed);
 				EvaluateVisibility();
 
 				dist = Mathf.Abs(target - current);

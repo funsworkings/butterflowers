@@ -1419,16 +1419,7 @@ MonoBehaviour:
   wand: {fileID: 900886785}
   state: 0
   username: 
-  positiveSpawner: {fileID: 0}
-  pr_PositivePS: {fileID: 1311559724632354285, guid: 3ed5efbaf97b2a94989b8edf335c7b76,
-    type: 3}
-  photoInProgress: 0
-  reloadInProgress: 0
-  lastPhotoTaken: {fileID: 0}
-  lastPhotoCaption: 
   m_playerCamera: {fileID: 534669904}
-  snapshotCamera: {fileID: 875157282}
-  previousMainCamera: {fileID: 0}
   Loader: {fileID: 1422909087}
   Reloader: {fileID: 1323270144}
   ReloadContainer: {fileID: 1747138067}
@@ -3273,6 +3264,7 @@ MonoBehaviour:
   value: 0
   transitionInSpeed: 8
   transitionOutSpeed: 8
+  useTimeScale: 1
   OnShow:
     m_PersistentCalls:
       m_Calls:
@@ -3340,7 +3332,7 @@ Animator:
   m_Avatar: {fileID: 0}
   m_Controller: {fileID: 9100000, guid: 52c003c2189fabc46b14ed9db8d27926, type: 2}
   m_CullingMode: 0
-  m_UpdateMode: 0
+  m_UpdateMode: 2
   m_ApplyRootMotion: 0
   m_LinearVelocityBlending: 0
   m_WarningMessage: 
@@ -3489,7 +3481,7 @@ Transform:
   m_PrefabInstance: {fileID: 0}
   m_PrefabAsset: {fileID: 0}
   m_GameObject: {fileID: 201810246}
-  m_LocalRotation: {x: 0.12156507, y: -0.000000008545882, z: 0.0000000010372503, w: 0.9925835}
+  m_LocalRotation: {x: 0.12156507, y: -0.000000008545884, z: 0.0000000010372673, w: 0.9925835}
   m_LocalPosition: {x: 0, y: 9.595102, z: -21.852465}
   m_LocalScale: {x: 1, y: 1.3577, z: 1}
   m_Children:
@@ -3646,6 +3638,7 @@ MonoBehaviour:
   value: 0
   transitionInSpeed: 6
   transitionOutSpeed: 6
+  useTimeScale: 1
   OnShow:
     m_PersistentCalls:
       m_Calls: []
@@ -4378,6 +4371,11 @@ PrefabInstance:
     - target: {fileID: 564541765, guid: 9dbe28569fb039d4b852511f5509a9e9, type: 3}
       propertyPath: m_textInfo.pageCount
       value: 0
+      objectReference: {fileID: 0}
+    - target: {fileID: 1178448135366265764, guid: 9dbe28569fb039d4b852511f5509a9e9,
+        type: 3}
+      propertyPath: m_UpdateMode
+      value: 2
       objectReference: {fileID: 0}
     m_RemovedComponents: []
   m_SourcePrefab: {fileID: 100100000, guid: 9dbe28569fb039d4b852511f5509a9e9, type: 3}
@@ -9903,6 +9901,7 @@ MonoBehaviour:
   value: 0
   transitionInSpeed: 8
   transitionOutSpeed: 8
+  useTimeScale: 1
   OnShow:
     m_PersistentCalls:
       m_Calls: []
@@ -11034,6 +11033,7 @@ MonoBehaviour:
   value: 0
   transitionInSpeed: 12
   transitionOutSpeed: 12
+  useTimeScale: 1
   OnShow:
     m_PersistentCalls:
       m_Calls: []
@@ -11132,12 +11132,17 @@ MonoBehaviour:
   m_EditorClassIdentifier: 
   Sun: {fileID: 619690092}
   ButterflyManager: {fileID: 247339871}
+  CameraManager: {fileID: 1067243527}
+  snapshotCamera: {fileID: 875157282}
   Nest: {fileID: 735639530}
   Wand: {fileID: 900886785}
   Focus: {fileID: 1969311502}
   logs: []
   Preset: {fileID: 11400000, guid: 45ffdf5e02efb4848942aaeb5d029f6e, type: 2}
   recording: 1
+  lastPhotoCaption: 
+  lastPhotoTaken: {fileID: 0}
+  photoInProgress: 0
 --- !u!1 &502971272
 GameObject:
   m_ObjectHideFlags: 0
@@ -11748,6 +11753,7 @@ MonoBehaviour:
   value: 0
   transitionInSpeed: 4
   transitionOutSpeed: 4
+  useTimeScale: 1
   OnShow:
     m_PersistentCalls:
       m_Calls: []
@@ -12370,6 +12376,10 @@ MonoBehaviour:
   m_previousDays: -1
   m_days: 0
   state: 0
+  minTimeScale: 0.001
+  maxTimeScale: 1
+  timeScale: 1
+  timeScaleLerpSpeed: 1
   active: 1
 --- !u!114 &619690093
 MonoBehaviour:
@@ -12378,7 +12388,7 @@ MonoBehaviour:
   m_PrefabInstance: {fileID: 0}
   m_PrefabAsset: {fileID: 0}
   m_GameObject: {fileID: 619690089}
-  m_Enabled: 1
+  m_Enabled: 0
   m_EditorHideFlags: 0
   m_Script: {fileID: 11500000, guid: 29a99e7677864c03959c3019c9eb6ebd, type: 3}
   m_Name: 
@@ -13091,6 +13101,7 @@ MonoBehaviour:
   value: 0
   transitionInSpeed: 18
   transitionOutSpeed: 1
+  useTimeScale: 1
   OnShow:
     m_PersistentCalls:
       m_Calls: []
@@ -14134,6 +14145,7 @@ MonoBehaviour:
   value: 0
   transitionInSpeed: 12
   transitionOutSpeed: 12
+  useTimeScale: 1
   OnShow:
     m_PersistentCalls:
       m_Calls: []
@@ -14279,6 +14291,7 @@ MonoBehaviour:
   value: 0
   transitionInSpeed: 8
   transitionOutSpeed: 8
+  useTimeScale: 0
   OnShow:
     m_PersistentCalls:
       m_Calls: []
@@ -14334,7 +14347,7 @@ Animator:
   m_Avatar: {fileID: 0}
   m_Controller: {fileID: 9100000, guid: 6ec033c710e2eb54286dc22691d114af, type: 2}
   m_CullingMode: 0
-  m_UpdateMode: 0
+  m_UpdateMode: 2
   m_ApplyRootMotion: 0
   m_LinearVelocityBlending: 0
   m_WarningMessage: 
@@ -15431,17 +15444,6 @@ MonoBehaviour:
   onStart:
     m_PersistentCalls:
       m_Calls:
-      - m_Target: {fileID: 1970994503}
-        m_MethodName: Play
-        m_Mode: 1
-        m_Arguments:
-          m_ObjectArgument: {fileID: 0}
-          m_ObjectArgumentAssemblyTypeName: UnityEngine.Object, UnityEngine
-          m_IntArgument: 0
-          m_FloatArgument: 0
-          m_StringArgument: 
-          m_BoolArgument: 0
-        m_CallState: 2
       - m_Target: {fileID: 1408375783}
         m_MethodName: SetActive
         m_Mode: 6
@@ -15912,6 +15914,7 @@ MonoBehaviour:
   value: 0
   transitionInSpeed: 18
   transitionOutSpeed: 1
+  useTimeScale: 1
   OnShow:
     m_PersistentCalls:
       m_Calls: []
@@ -17268,6 +17271,7 @@ MonoBehaviour:
   value: 0
   transitionInSpeed: 16
   transitionOutSpeed: 16
+  useTimeScale: 1
   OnShow:
     m_PersistentCalls:
       m_Calls: []
@@ -17947,6 +17951,7 @@ MonoBehaviour:
   value: 0
   transitionInSpeed: 8
   transitionOutSpeed: 4
+  useTimeScale: 1
   OnShow:
     m_PersistentCalls:
       m_Calls:
@@ -18055,6 +18060,7 @@ MonoBehaviour:
   value: 0
   transitionInSpeed: 9
   transitionOutSpeed: 3
+  useTimeScale: 1
   OnShow:
     m_PersistentCalls:
       m_Calls: []
@@ -18463,7 +18469,7 @@ Animator:
   m_Avatar: {fileID: 0}
   m_Controller: {fileID: 9100000, guid: e5c26a1bbdb4ba040be07aa1184fc5b5, type: 2}
   m_CullingMode: 0
-  m_UpdateMode: 0
+  m_UpdateMode: 2
   m_ApplyRootMotion: 0
   m_LinearVelocityBlending: 0
   m_WarningMessage: 
@@ -20396,6 +20402,11 @@ PrefabInstance:
     - target: {fileID: 564541765, guid: 9dbe28569fb039d4b852511f5509a9e9, type: 3}
       propertyPath: m_textInfo.pageCount
       value: 0
+      objectReference: {fileID: 0}
+    - target: {fileID: 1178448135366265764, guid: 9dbe28569fb039d4b852511f5509a9e9,
+        type: 3}
+      propertyPath: m_UpdateMode
+      value: 2
       objectReference: {fileID: 0}
     m_RemovedComponents: []
   m_SourcePrefab: {fileID: 100100000, guid: 9dbe28569fb039d4b852511f5509a9e9, type: 3}
@@ -22334,7 +22345,6 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 6227d3f328794136943882c8498388cb, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  m_advertisements: []
 --- !u!1 &1677838453
 GameObject:
   m_ObjectHideFlags: 0
@@ -22523,6 +22533,7 @@ MonoBehaviour:
   value: 0
   transitionInSpeed: 8
   transitionOutSpeed: 8
+  useTimeScale: 1
   OnShow:
     m_PersistentCalls:
       m_Calls: []
@@ -22658,6 +22669,7 @@ MonoBehaviour:
   value: 0
   transitionInSpeed: 8
   transitionOutSpeed: 8
+  useTimeScale: 1
   OnShow:
     m_PersistentCalls:
       m_Calls: []
@@ -23055,6 +23067,11 @@ PrefabInstance:
     - target: {fileID: 564541765, guid: 9dbe28569fb039d4b852511f5509a9e9, type: 3}
       propertyPath: m_textInfo.pageCount
       value: 0
+      objectReference: {fileID: 0}
+    - target: {fileID: 1178448135366265764, guid: 9dbe28569fb039d4b852511f5509a9e9,
+        type: 3}
+      propertyPath: m_UpdateMode
+      value: 2
       objectReference: {fileID: 0}
     m_RemovedComponents: []
   m_SourcePrefab: {fileID: 100100000, guid: 9dbe28569fb039d4b852511f5509a9e9, type: 3}
@@ -24344,6 +24361,11 @@ PrefabInstance:
       propertyPath: m_SizeDelta.y
       value: 0
       objectReference: {fileID: 0}
+    - target: {fileID: 1178448135366265764, guid: 9dbe28569fb039d4b852511f5509a9e9,
+        type: 3}
+      propertyPath: m_UpdateMode
+      value: 2
+      objectReference: {fileID: 0}
     m_RemovedComponents: []
   m_SourcePrefab: {fileID: 100100000, guid: 9dbe28569fb039d4b852511f5509a9e9, type: 3}
 --- !u!224 &1938932043 stripped
@@ -24731,6 +24753,7 @@ MonoBehaviour:
   value: 0
   transitionInSpeed: 8
   transitionOutSpeed: 8
+  useTimeScale: 1
   OnShow:
     m_PersistentCalls:
       m_Calls: []
@@ -25301,6 +25324,11 @@ PrefabInstance:
     - target: {fileID: 564541764, guid: 9dbe28569fb039d4b852511f5509a9e9, type: 3}
       propertyPath: m_SizeDelta.y
       value: 0
+      objectReference: {fileID: 0}
+    - target: {fileID: 1178448135366265764, guid: 9dbe28569fb039d4b852511f5509a9e9,
+        type: 3}
+      propertyPath: m_UpdateMode
+      value: 2
       objectReference: {fileID: 0}
     m_RemovedComponents: []
   m_SourcePrefab: {fileID: 100100000, guid: 9dbe28569fb039d4b852511f5509a9e9, type: 3}
@@ -31068,6 +31096,11 @@ PrefabInstance:
       propertyPath: m_textInfo.pageCount
       value: 0
       objectReference: {fileID: 0}
+    - target: {fileID: 1178448135366265764, guid: 9dbe28569fb039d4b852511f5509a9e9,
+        type: 3}
+      propertyPath: m_UpdateMode
+      value: 2
+      objectReference: {fileID: 0}
     m_RemovedComponents: []
   m_SourcePrefab: {fileID: 100100000, guid: 9dbe28569fb039d4b852511f5509a9e9, type: 3}
 --- !u!224 &2093763541 stripped
@@ -31407,6 +31440,7 @@ MonoBehaviour:
   value: 0
   transitionInSpeed: 4
   transitionOutSpeed: 2
+  useTimeScale: 1
   OnShow:
     m_PersistentCalls:
       m_Calls:
@@ -31541,6 +31575,7 @@ MonoBehaviour:
   value: 0
   transitionInSpeed: -1
   transitionOutSpeed: 1
+  useTimeScale: 0
   OnShow:
     m_PersistentCalls:
       m_Calls: []
@@ -31573,6 +31608,7 @@ GameObject:
   - component: {fileID: 2124491336}
   - component: {fileID: 2124491338}
   - component: {fileID: 2124491337}
+  - component: {fileID: 2124491339}
   m_Layer: 5
   m_Name: idle progress bar
   m_TagString: Untagged
@@ -31634,6 +31670,18 @@ CanvasRenderer:
   m_PrefabAsset: {fileID: 0}
   m_GameObject: {fileID: 2124491335}
   m_CullTransparentMesh: 0
+--- !u!225 &2124491339
+CanvasGroup:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 2124491335}
+  m_Enabled: 1
+  m_Alpha: 0
+  m_Interactable: 0
+  m_BlocksRaycasts: 0
+  m_IgnoreParentGroups: 0
 --- !u!1 &2125443310
 GameObject:
   m_ObjectHideFlags: 0

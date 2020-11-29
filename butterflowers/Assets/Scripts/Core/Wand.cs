@@ -235,21 +235,8 @@ public class Wand : Entity
             up = Input.GetMouseButtonUp(0);
 
             Interact();
-
-            if (Input.GetKeyDown(KeyCode.X)) {
-                butterflowers.KillButterfliesInDirection(camera.transform.TransformDirection(pushFromCamera.normalized),
-                    pushStrength);
-            }
-
+            
             UpdateTrajectory();
-            if (debugCircle != null) {
-                if (debug) {
-                    debugCircle.enabled = true;
-                    UpdateDebugCircle();
-                }
-                else
-                    debugCircle.enabled = false;
-            }
         }
         else {
             UpdateCursorState(null, null);
@@ -311,7 +298,8 @@ public class Wand : Entity
     {
         List<uwu.Gameplay.Interactable> interacting = new List<uwu.Gameplay.Interactable>();
 
-        if(hits != null && hits_2d != null){
+        if(hits != null && hits_2d != null)
+        {
             GameObject obj = null;
             uwu.Gameplay.Interactable obj_int = null;
 

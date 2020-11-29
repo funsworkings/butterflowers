@@ -7,7 +7,7 @@ using Settings;
 using UnityEngine.Events;
 using uwu.Gameplay;
 
-public class ButterflowerManager : Spawner
+public class ButterflowerManager : Spawner, IReactToSunCycle
 {
     public static ButterflowerManager Instance = null;
 
@@ -87,6 +87,15 @@ public class ButterflowerManager : Spawner
         Butterfly.Died -= ResetButterfly;
     }
 
+    #endregion
+    
+    #region Cycle
+
+    public void Cycle(bool refresh)
+    {
+        KillButterflies();
+    }
+    
     #endregion
 
     #region Spawner overrides
