@@ -20,7 +20,7 @@ namespace uwu.UI.Behaviors.Visibility
 			while (dist > .033f) {
 				lerping = true;
 
-				current = Vector3.Lerp(current, target, Time.deltaTime * transitionSpeed);
+				current = Vector3.Lerp(current, target, _dt * transitionSpeed);
 				EvaluateVisibility();
 
 				dist = Vector3.Distance(current, target);

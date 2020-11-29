@@ -3,6 +3,7 @@ using Settings;
 using System.Collections;
 using System.Collections.Generic;
 using AI;
+using Interfaces;
 using UnityEngine;
 using UnityEngine.Events;
 using uwu;
@@ -11,7 +12,7 @@ using uwu.Snippets;
 using Behaviour = AI.Types.Behaviour;
 using Random = UnityEngine.Random;
 
-public class Nest : Focusable
+public class Nest : Focusable, IReactToSunCycle
 {
     public static Nest Instance = null;
 
@@ -252,6 +253,14 @@ public class Nest : Focusable
         return success;
     }
 
+    public void Cycle(bool refresh)
+    {
+        Pulse();
+        
+        if (refresh) 
+            Close();
+    }
+
     #endregion
 
     #region Kicking
@@ -450,8 +459,13 @@ public class Nest : Focusable
 
     void OnTriggerEnter(Collider other)
     {
-        Vine vine = other.GetComponent<Vine>();
-        if (vine != null) {
+        Entity entity = other.GetComponent<Entity>();
+        if (entity == null) return;
+
+        if (entity is Vine) 
+        {
+            var vine = (entity as Vine);
+            
             var file = vine.file;
             if(!string.IsNullOrEmpty(file)) 
             {
@@ -465,9 +479,13 @@ public class Nest : Focusable
 
     void OnTriggerExit(Collider other)
     {
-        Vine vine = other.GetComponent<Vine>();
-        if (vine != null) 
+        Entity entity = other.GetComponent<Entity>();
+        if (entity == null) return;
+        
+        if (entity is Vine) 
         {
+            var vine = (entity as Vine);
+            
             var file = vine.file;
             if(!string.IsNullOrEmpty(file)) 
             {

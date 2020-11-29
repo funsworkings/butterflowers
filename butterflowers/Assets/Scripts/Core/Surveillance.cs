@@ -6,9 +6,11 @@ using Data;
 using Settings;
 using UnityEngine;
 using uwu;
+using uwu.Camera;
 using uwu.Extensions;
+using uwu.Snippets;
 
-public class Surveillance : MonoBehaviour
+public class Surveillance : MonoBehaviour, IReactToSunCycle
 {
 	public static Surveillance Instance = null;
 	
@@ -20,10 +22,12 @@ public class Surveillance : MonoBehaviour
 
 	[SerializeField] Sun Sun;
 	[SerializeField] ButterflowerManager ButterflyManager;
+	[SerializeField] CameraManager CameraManager;
+	[SerializeField] Snapshot snapshotCamera;
 	[SerializeField] Nest Nest;
 	[SerializeField] Wand Wand;
 	[SerializeField] Focusing Focus;
-	
+
 	// Collections
 
 	[SerializeField] List<SurveillanceData> logs = new List<SurveillanceData>();
@@ -32,6 +36,12 @@ public class Surveillance : MonoBehaviour
 	
 	[SerializeField] WorldPreset Preset;
 	[SerializeField] bool recording = true;
+
+	Camera previousMainCamera;
+	
+	public string lastPhotoCaption;
+	public Texture2D lastPhotoTaken;
+	public bool photoInProgress = false;
 	
 	#region Accessors
 
@@ -68,6 +78,16 @@ public class Surveillance : MonoBehaviour
 	{
 		StopAllCoroutines();
 		UnsubscribeFromEvents();
+	}
+
+	#endregion
+
+	#region Cycle
+
+	public void Cycle(bool refresh)
+	{
+		TakePicture();
+		CreateLog();
 	}
 
 	#endregion
@@ -187,6 +207,54 @@ public class Surveillance : MonoBehaviour
 
 		return log;
 	}
+	
+	#endregion
+	
+	#region Pictures
+	
+	void TakePicture()
+	{
+		var camera = snapshotCamera.camera;
+
+		previousMainCamera = CameraManager.MainCamera;
+		CameraManager.MainCamera = camera;
+		camera.enabled = true;
+
+		snapshotCamera.onSuccess += onReceivePicture;
+
+		photoInProgress = true;
+		StartCoroutine("TakingPicture");
+	}
+
+	IEnumerator TakingPicture()
+	{
+		yield return new WaitForSecondsRealtime(.167f);
+		snapshotCamera.Capture();
+	}
+
+	void onReceivePicture(Texture2D image)
+	{
+		var name = Extensions.RandomString(12);
+		var camera = snapshotCamera.camera;
+
+		if(Preset.takePhotos)
+			Lib.SaveTexture(name, image);
+
+		lastPhotoCaption = name;
+		lastPhotoTaken = image;
+
+		CameraManager.MainCamera = previousMainCamera;
+
+		camera.enabled = false;
+		previousMainCamera = null;
+
+		snapshotCamera.onSuccess -= onReceivePicture;
+
+		Events.ReceiveEvent(EVENTCODE.PHOTOGRAPH, AGENT.World, AGENT.Terrain);
+
+		photoInProgress = false;
+	}
+	
 	
 	#endregion
 	

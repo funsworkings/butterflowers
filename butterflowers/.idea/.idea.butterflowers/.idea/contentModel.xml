@@ -452,14 +452,33 @@
           <e p="___Deprecated" t="Include">
             <e p="BeaconFocalPoint.cs" t="Include" />
             <e p="Builder.cs" t="Include" />
+            <e p="CollisionPlane.cs" t="Include" />
             <e p="ColorWithTimeOfDay.cs" t="Include" />
+            <e p="DesktopVisualization.cs" t="Include" />
             <e p="Follower.cs" t="Include" />
             <e p="Preview.cs" t="Include" />
             <e p="RotateWithTimeOfDay.cs" t="Include" />
+            <e p="Scriptables" t="Include">
+              <e p="DialogueCollection.cs" t="Include" />
+              <e p="Gesture.cs" t="Include" />
+              <e p="GestureCollection.cs" t="Include" />
+              <e p="TextureCollection.cs" t="Include" />
+            </e>
             <e p="Sequences.cs" t="Include" />
+            <e p="Spell.cs" t="Include" />
+            <e p="Terminal.cs" t="Include" />
             <e p="Timeline.cs" t="Include" />
             <e p="TrajectoryLine.cs" t="Include" />
             <e p="Unknown.cs" t="Include" />
+            <e p="Wizard" t="Include">
+              <e p="Appearance.cs" t="Include" />
+              <e p="Audio.cs" t="Include" />
+              <e p="Controller.cs" t="Include" />
+              <e p="Dialogue.cs" t="Include" />
+              <e p="Memories.cs" t="Include" />
+              <e p="Memory.cs" t="Include" />
+              <e p="Navigation.cs" t="Include" />
+            </e>
           </e>
           <e p="AI" t="Include">
             <e p="Agent" t="Include">
@@ -540,8 +559,14 @@
           <e p="Interfaces" t="Include">
             <e p="IFileContainer.cs" t="Include" />
             <e p="IFlammable.cs" t="Include" />
-            <e p="IObserveSunCycle.cs" t="Include" />
+            <e p="IPauseSun.cs" t="Include" />
             <e p="IReactToSun.cs" t="Include" />
+            <e p="IReactToSunCycle.cs" t="Include" />
+          </e>
+          <e p="Menu" t="Include">
+            <e p="ChooseUsername.cs" t="Include" />
+            <e p="MainMenu.cs" t="Include" />
+            <e p="VersionText.cs" t="Include" />
           </e>
           <e p="Objects" t="Include">
             <e p="Base" t="Include">
@@ -552,18 +577,16 @@
             <e p="Entities" t="Include">
               <e p="Butterfly.cs" t="Include" />
               <e p="Cage.cs" t="Include" />
-              <e p="CollisionPlane.cs" t="Include" />
-              <e p="Flares.cs" t="Include" />
               <e p="Interactables" t="Include">
                 <e p="Beacon.cs" t="Include" />
+                <e p="Empty" t="Include">
+                  <e p="Star.cs" t="Include" />
+                  <e p="Tree.cs" t="Include" />
+                </e>
                 <e p="Nest.cs" t="Include" />
-                <e p="Star.cs" t="Include" />
-                <e p="Tree.cs" t="Include" />
                 <e p="Vine.cs" t="Include" />
               </e>
-              <e p="Leaf.cs" t="Include" />
               <e p="Quilt.cs" t="Include" />
-              <e p="Spell.cs" t="Include" />
               <e p="Sun.cs" t="Include" />
               <e p="Terrain.cs" t="Include" />
             </e>
@@ -578,20 +601,9 @@
               <e p="TooltipManager.cs" t="Include" />
               <e p="VineManager.cs" t="Include" />
             </e>
-            <e p="Scriptables" t="Include">
-              <e p="DialogueCollection.cs" t="Include" />
-              <e p="Gesture.cs" t="Include" />
-              <e p="GestureCollection.cs" t="Include" />
-              <e p="TextureCollection.cs" t="Include" />
-            </e>
-            <e p="Wizard" t="Include">
-              <e p="Appearance.cs" t="Include" />
-              <e p="Audio.cs" t="Include" />
-              <e p="Controller.cs" t="Include" />
-              <e p="Dialogue.cs" t="Include" />
-              <e p="Memories.cs" t="Include" />
-              <e p="Memory.cs" t="Include" />
-              <e p="Navigation.cs" t="Include" />
+            <e p="Miscellaneous" t="Include">
+              <e p="Flares.cs" t="Include" />
+              <e p="Leaf.cs" t="Include" />
             </e>
           </e>
           <e p="Presets" t="Include">
@@ -604,17 +616,6 @@
             <e p="GameData.cs" t="Include" />
             <e p="GameDataSaveSystem.cs" t="Include" />
             <e p="SceneData.cs" t="Include" />
-          </e>
-          <e p="Scenes" t="Include">
-            <e p="Introduction" t="Include">
-              <e p="ChooseUsername.cs" t="Include" />
-              <e p="DesktopVisualization.cs" t="Include" />
-              <e p="Terminal.cs" t="Include" />
-            </e>
-            <e p="Menu" t="Include">
-              <e p="MainMenu.cs" t="Include" />
-              <e p="VersionText.cs" t="Include" />
-            </e>
           </e>
           <e p="Snippets" t="Include">
             <e p="BindDistortionWithOpacity.cs" t="Include" />

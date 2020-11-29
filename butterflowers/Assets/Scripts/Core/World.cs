@@ -59,8 +59,6 @@ public class World : MonoBehaviour
     BeaconManager Beacons = null;
     VineManager Vines = null;
     EventManager EventsM = null;
-    GradingManager Grading = null;
-    SummaryManager Summary = null;
 
     Sun Sun = null;
     Nest Nest = null;
@@ -75,23 +73,12 @@ public class World : MonoBehaviour
     public State state = State.User;
     public string username;
 
-    [SerializeField] Spawner positiveSpawner;
-    [SerializeField] GameObject pr_PositivePS;
-    
-    [SerializeField] bool photoInProgress = false;
-    [SerializeField] bool reloadInProgress = false;
-
-    [SerializeField] Texture2D lastPhotoTaken = null;
-    [SerializeField] string lastPhotoCaption = null;
-
     float remoteTimer = 0f;
 
     // Properties
     
     [SerializeField] Camera m_playerCamera = null;
-    [SerializeField] Snapshot snapshotCamera;
-    [SerializeField] Camera previousMainCamera = null;
-    
+
     [SerializeField] Loading Loader = null;
     [SerializeField] Loading Reloader = null;
     [SerializeField] ToggleOpacity ReloadContainer;
@@ -110,9 +97,6 @@ public class World : MonoBehaviour
     #region Accessors
     
     public Camera PlayerCamera => m_playerCamera;
-
-    public string LastPhotoCaption => lastPhotoCaption;
-    public Texture2D LastPhoto => lastPhotoTaken;
 
     public bool User => (state == State.User);
     public bool Remote => (state == State.Remote);
@@ -166,8 +150,6 @@ public class World : MonoBehaviour
         Vines = FindObjectOfType<VineManager>();
         Cage = FindObjectOfType<Cage>();
         EventsM = FindObjectOfType<EventManager>();
-        Grading = FindObjectOfType<GradingManager>();
-        Summary = FindObjectOfType<SummaryManager>();
         AI = FindObjectOfType<Brain>();
         
         SubscribeToEvents(); // Add all event listeners
@@ -245,7 +227,6 @@ public class World : MonoBehaviour
 
     void SubscribeToEvents()
     {
-        Sun.onCycle += Advance;
         Discoveries.onDiscover += onDiscoverFile;
         Focusing.onUpdateState += onUpdateFocusState;
 
@@ -263,8 +244,6 @@ public class World : MonoBehaviour
 
     void UnsubscribeToEvents()
     {
-        Sun.onCycle -= Advance;
-
         Discoveries.onDiscover -= onDiscoverFile;
 
         Focusing.onUpdateState -= onUpdateFocusState;
@@ -311,74 +290,14 @@ public class World : MonoBehaviour
 
     #endregion
 
-    #region Advancing
-
-    void Advance()
-    {
-        StartCoroutine("Advancing");
-    }
-
-    IEnumerator Advancing()
-    {
-        bool full = (state == State.User);
-        
-        if(full) Sun.active = false;
-        
-        Nest.Pulse();
-        
-        yield return new WaitForEndOfFrame();
-        
-        TakePicture();
-        photoInProgress = true;
-
-        yield return new WaitForEndOfFrame();
-        while (photoInProgress)
-            yield return null;
-
-        if (full) 
-        {
-            bool success = Nest.Close(); // Close nest
-            if (success)
-                Butterflowers.KillButterflies();
-        }
-
-        Beacons.RefreshBeacons(); // Reset all beacons
-        
-        EventsM.Clear(); // Clear all cached events
-
-        if (full) 
-        {
-            Summary.ShowSummary();
-            while (Summary.active)
-                yield return null;
-        }
-
-        Surveillance.CreateLog(); // Continue new log of surveillance
-
-        Reloader.progress = 0f;
-        ReloadContainer.Show();
-        
-        Library.Reload();
-        yield return new WaitForEndOfFrame();
-        
-        while (Library.loadProgress < 1f) { // Wait until reload is complete
-            Reloader.progress = Library.loadProgress;
-            yield return null;
-        }
-        Reloader.progress = 1f;
-
-        Sun.active = true;
-    }
-
-    #endregion
-    
     #region Remote access
 
     State UpdateRemoteStatus()
     {
         State targetState = State.User;
 
-        if (state == State.Parallel) {
+        if (state == State.Parallel) 
+        {
             remoteTimer = 0f;
             targetState = State.Parallel;
             UpdateUserInterfaces(-1f);
@@ -497,71 +416,6 @@ public class World : MonoBehaviour
     }
 
     #endregion
-
-    #region Scene photo
-
-    void TakePicture()
-    {
-        var camera = snapshotCamera.camera;
-
-        previousMainCamera = CameraManager.MainCamera;
-        CameraManager.MainCamera = camera;
-        camera.enabled = true;
-
-        snapshotCamera.onSuccess += onReceivePicture;
-
-        StartCoroutine("TakingPicture");
-    }
-
-    IEnumerator TakingPicture()
-    {
-        yield return new WaitForSeconds(.167f);
-        snapshotCamera.Capture();
-    }
-
-    void onReceivePicture(Texture2D image)
-    {
-        var name = Extensions.RandomString(12);
-        var camera = snapshotCamera.camera;
-
-        if(Preset.takePhotos)
-            Library.SaveTexture(name, image);
-
-        lastPhotoCaption = name;
-        lastPhotoTaken = image;
-
-        CameraManager.MainCamera = previousMainCamera;
-
-        camera.enabled = false;
-        previousMainCamera = null;
-
-        snapshotCamera.onSuccess -= onReceivePicture;
-
-        photoInProgress = false;
-
-        Events.ReceiveEvent(EVENTCODE.PHOTOGRAPH, AGENT.World, AGENT.Terrain);
-    }
-
-    #endregion
-
-    #region Miscellaneous
-
-    public void PositiveBurst()
-    {
-        Vector3 pos = Vector3.zero;
-        positiveSpawner.DecidePosition(ref pos);
-
-        Quaternion rot = Quaternion.identity;
-        positiveSpawner.DecideRotation(ref rot);
-
-        var instance = Instantiate(pr_PositivePS, pos, rot);
-        var ps = instance.GetComponent<ParticleSystem>();
-
-        ps.Play();
-    }
-
-    #endregion
-
 
     #region Focus callbacks
 

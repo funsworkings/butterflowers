@@ -20,6 +20,7 @@ namespace uwu.UI.Behaviors
 
 		[SerializeField] protected float value;
 		[SerializeField] protected float transitionInSpeed, transitionOutSpeed;
+		[SerializeField] bool useTimeScale = true;
 
 		public UnityEvent OnShow, OnHide, OnToggle, onShown, onHidden;
 		protected float transitionSpeed;
@@ -32,6 +33,8 @@ namespace uwu.UI.Behaviors
 
 		public bool Visible => Shown && !lerping;
 		public bool Hidden => !Shown && !lerping;
+
+		protected float _dt => (useTimeScale) ? Time.deltaTime : Time.unscaledDeltaTime;
 
 		void OnEnable()
 		{
