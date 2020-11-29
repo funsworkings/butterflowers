@@ -2,7 +2,4 @@
 using System.Collections.Generic;
 using UnityEngine;
 
-public class Star : Focusable
-{
-
-}
+public class Star : Focusable { }
