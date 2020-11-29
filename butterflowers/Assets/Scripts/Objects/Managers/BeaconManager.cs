@@ -173,7 +173,7 @@ public class BeaconManager : Spawner
             beacon.fileEntry = null;
             beacon.discovered = discovered; // Set if beacon has been discovered
             
-        Debug.LogError("Add beacon => " + path);
+        Debug.Log("Add beacon => " + path);
 
         beacon.Register();
         beacon.Initialize(type, state, origin, scale, parent, lerp, preset.beaconScaleCurve, BeaconInfoContainer);
@@ -213,9 +213,7 @@ public class BeaconManager : Spawner
 
     public void RefreshBeacons()
     {
-	    return;
-	    
-        //DeleteDeprecatedBeacons(lib);
+	    //DeleteDeprecatedBeacons(lib);
 
         var desktop = Library.desktop_files;
         var wizard = Library.wizard_files.Where(file => Discoveries.HasDiscoveredFile(file)); // Only choose 'discovered' wizard files

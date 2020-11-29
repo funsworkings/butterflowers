@@ -105,7 +105,7 @@ public class Focusing : MonoBehaviour
     void Update()
     {
         if (active) {
-            if (Input.GetKeyDown(KeyCode.Escape))
+            if (ExtraInput.GetScrollDown())
             {
                 LoseFocus();
             }
