@@ -91,21 +91,6 @@ namespace uwu
 			set => data.nestcapacity = value;
 		}
 
-		public int[] discovered
-		{
-			get
-			{
-				var discoveries = brainData == null ? null : brainData.discoveries;
-				if (discoveries == null) {
-					discoveries = new int[] { };
-					brainData.discoveries = discoveries;
-				}
-
-				return discoveries;
-			}
-			set => brainData.discoveries = value;
-		}
-
 		public BeaconData[] beaconData
 		{
 			get { return data == null ? new BeaconData[] { } : data.beacons; }

@@ -455,6 +455,7 @@
             <e p="CollisionPlane.cs" t="Include" />
             <e p="ColorWithTimeOfDay.cs" t="Include" />
             <e p="DesktopVisualization.cs" t="Include" />
+            <e p="Discoveries.cs" t="Include" />
             <e p="Follower.cs" t="Include" />
             <e p="Preview.cs" t="Include" />
             <e p="RotateWithTimeOfDay.cs" t="Include" />
@@ -535,7 +536,6 @@
             <e p="NestCamera.cs" t="Include" />
           </e>
           <e p="Core" t="Include">
-            <e p="Discoveries.cs" t="Include" />
             <e p="Events.cs" t="Include" />
             <e p="Focusing.cs" t="Include" />
             <e p="Library.cs" t="Include" />
@@ -684,6 +684,7 @@
             </e>
             <e p="Gameplay" t="Include">
               <e p="Interactable.cs" t="Include" />
+              <e p="Interacter.cs" t="Include" />
               <e p="Spawner.cs" t="Include" />
             </e>
             <e p="Generic" t="Include">

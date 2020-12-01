@@ -26,7 +26,6 @@ public class BeaconManager : Spawner, IReactToSunCycle
 
 	World World;
     Nest Nest;
-    Discoveries Discoveries;
     GameDataSaveSystem Save;
     Library Library;
 
@@ -91,8 +90,7 @@ public class BeaconManager : Spawner, IReactToSunCycle
 	{
 		Beacon.OnRegister += onRegisterBeacon;
 		Beacon.OnUnregister += onUnregisterBeacon;
-
-		Beacon.Discovered += onDiscoveredBeacon;
+		
         Beacon.Planted += onPlantedBeacon;
     }
 
@@ -100,8 +98,7 @@ public class BeaconManager : Spawner, IReactToSunCycle
 	{
 		Beacon.OnRegister -= onRegisterBeacon;
 		Beacon.OnUnregister -= onUnregisterBeacon;
-
-		Beacon.Discovered -= onDiscoveredBeacon;
+		
         Beacon.Planted -= onPlantedBeacon;
 	}
 
@@ -115,7 +112,6 @@ public class BeaconManager : Spawner, IReactToSunCycle
 
 	    World = World.Instance;
 	    Nest = Nest.Instance;
-	    Discoveries = Discoveries.Instance;
 	    Save = GameDataSaveSystem.Instance;
 	    Library = Library.Instance;
     }
@@ -171,7 +167,7 @@ public class BeaconManager : Spawner, IReactToSunCycle
 	        instance.transform.position = position;
 
         var origin = instance.transform.position;
-        var discovered = Discoveries.HasDiscoveredFile(path); // Check if seen before
+        var discovered = Library.HasDiscoveredFile(path); // Check if seen before
 
         Vector3 scale = Vector3.one * preset.normalBeaconScale;
         Transform parent = this.parent;
@@ -225,7 +221,7 @@ public class BeaconManager : Spawner, IReactToSunCycle
 	    //DeleteDeprecatedBeacons(lib);
 
         var desktop = Library.desktop_files;
-        var wizard = Library.wizard_files.Where(file => Discoveries.HasDiscoveredFile(file)); // Only choose 'discovered' wizard files
+        var wizard = Library.wizard_files.Where(file => Library.HasDiscoveredFile(file)); // Only choose 'discovered' wizard files
         var enviro = Library.enviro_files;
 
         var files = ((desktop.Concat(wizard)).Concat(enviro));
@@ -293,7 +289,7 @@ public class BeaconManager : Spawner, IReactToSunCycle
 
             if (s == Locale.Nest) 
             {
-                onDiscoveredBeacon(instance); // Send to nest if immediately found
+                onActivatedBeacon(instance); // Send to nest if immediately found
                 Events.ReceiveEvent(EVENTCODE.BEACONACTIVATE, AGENT.World, AGENT.Beacon, details: instance.file);
             }
         }
@@ -396,20 +392,14 @@ public class BeaconManager : Spawner, IReactToSunCycle
 		Save.beacons = allBeacons.ToArray();
 	}
 
-	void onDiscoveredBeacon(Beacon beacon)
+	void onActivatedBeacon(Beacon beacon)
 	{
-		var file = beacon.file;
-
-		bool success = Discoveries.DiscoverFile(file);
 		Nest.AddBeacon(beacon);
 	}
 
     void onPlantedBeacon(Beacon beacon)
     {
-	    var file = beacon.file;
-	    bool success = Discoveries.DiscoverFile(file);
-	    
-        if (onPlantBeacon != null)
+	    if (onPlantBeacon != null)
             onPlantBeacon(beacon);
     }
 

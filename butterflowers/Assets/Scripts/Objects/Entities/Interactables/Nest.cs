@@ -382,6 +382,7 @@ public class Nest : Focusable, IReactToSunCycle
     public void ReceiveBeacon(Beacon beacon)
     {
         Debug.LogFormat("Nest ADD = {0}", beacon.file);
+        AddBeacon(beacon);
 
         sparklesPS.Play();
 

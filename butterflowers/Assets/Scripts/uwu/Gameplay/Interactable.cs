@@ -40,6 +40,7 @@ namespace uwu.Gameplay
 
 		public void Release(RaycastHit hit)
 		{
+			Debug.Log("release " + gameObject.name);
 			if (onRelease != null)
 				onRelease(hit.point, hit.normal);
 		}
