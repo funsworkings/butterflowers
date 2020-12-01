@@ -30,6 +30,8 @@ public class Library : Singleton<Library>
 	public System.Action<string, POINT> onAddFileInstance;
 	public System.Action<string[]> onAddedFiles, onRemovedFiles;
 
+	public System.Action<string> onDiscoverFile;
+
 	// External
 
 	FileNavigator Files = null;
@@ -382,7 +384,8 @@ public class Library : Singleton<Library>
 	{
 		bool exists = true;
 		
-		if (!ALL_FILES.Contains(file)) {
+		if (!ALL_FILES.Contains(file)) 
+		{
 			ALL_FILES.Add(file);
 			exists = false;
 		}
@@ -392,6 +395,10 @@ public class Library : Singleton<Library>
 		}
 
 		AddToFileLookup(type, file);
+
+		if (!exists && (onDiscoverFile != null))
+			onDiscoverFile(file); // Discover file on add file
+		
 		return exists;
 	}
 
@@ -407,6 +414,16 @@ public class Library : Singleton<Library>
 		}
 	}
 
+	#endregion
+	
+	#region Discovery
+	
+	public bool HasDiscoveredFile(string path)
+	{
+		int index = ALL_FILES.IndexOf(path);
+		return (index >= 0);
+	}
+	
 	#endregion
 
 	#region File types

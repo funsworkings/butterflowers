@@ -9,8 +9,6 @@ namespace uwu
 		public bool load = false;
 		
 		public string[] files = new string[] { };
-		
-		public int[] discoveries = new int[] { };
 		public int[] shared_files = new int[] { };
 		
 		public Knowledge[] file_knowledge = new Knowledge[] { };

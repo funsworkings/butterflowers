@@ -52,7 +52,6 @@ public class World : MonoBehaviour
     GameDataSaveSystem Save = null;
     Library Library = null;
     FileNavigator Files = null;
-    Discoveries Discoveries = null;
     Surveillance Surveillance = null;
 
     ButterflowerManager Butterflowers = null;
@@ -136,9 +135,6 @@ public class World : MonoBehaviour
         Surveillance = Surveillance.Instance;
         
         Library = Library.Instance;
-
-        Discoveries = Discoveries.Instance;
-            Discoveries.Load(Save.discovered, Preset.persistDiscoveries); // Load all discoveries
 
         Files = FileNavigator.Instance;
         
@@ -227,7 +223,7 @@ public class World : MonoBehaviour
 
     void SubscribeToEvents()
     {
-        Discoveries.onDiscover += onDiscoverFile;
+        Library.onDiscoverFile += onDiscoverFile;
         Focusing.onUpdateState += onUpdateFocusState;
 
         Events.onGlobalEvent += onGlobalEvent;
@@ -244,7 +240,7 @@ public class World : MonoBehaviour
 
     void UnsubscribeToEvents()
     {
-        Discoveries.onDiscover -= onDiscoverFile;
+        Library.onDiscoverFile -= onDiscoverFile;
 
         Focusing.onUpdateState -= onUpdateFocusState;
 
@@ -487,10 +483,9 @@ public class World : MonoBehaviour
 
     void onDiscoverFile(string file)
     {
-        Save.discovered = Discoveries.discoveries.ToArray(); // Save all discoveries
+        Debug.LogFormat("Discovery was made => {0}", file);
         
         onDiscovery.Invoke();
-        
         Events.ReceiveEvent(EVENTCODE.DISCOVERY, AGENT.User, AGENT.Beacon, details:file);
     }
 

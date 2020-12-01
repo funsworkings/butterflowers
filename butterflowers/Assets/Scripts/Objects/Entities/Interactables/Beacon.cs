@@ -48,7 +48,8 @@ public class Beacon: Interactable {
         Terrain,
         Nest,
         Planted,
-        Destroyed
+        Destroyed,
+        Drag
     }
 
 	#endregion
@@ -56,7 +57,7 @@ public class Beacon: Interactable {
 	#region Events
 
 	public static System.Action<Beacon> OnRegister, OnUnregister;
-    public static System.Action<Beacon> Discovered, Undiscovered, Destroyed, Planted;
+    public static System.Action<Beacon> Destroyed, Planted;
 
     #endregion
 
@@ -135,10 +136,7 @@ public class Beacon: Interactable {
         }
         set
         {
-            if (value)
-                Discover(false);
-            else
-                Hide(false);
+            m_discovered = value;
         }
     }
 
@@ -198,14 +196,7 @@ public class Beacon: Interactable {
             statechange = false;
     }
 
-    void OnEnable() 
-    {
-        Beacon.Discovered += CheckIfDuplicateDiscovery;
-    }
-
     void OnDisable() {
-        Beacon.Discovered -= CheckIfDuplicateDiscovery;
-
         Unregister();
     }
 
@@ -277,13 +268,11 @@ public class Beacon: Interactable {
 
     public bool Activate() 
     {
-        if (state != Locale.Terrain) return false;
+        if (state != Locale.Drag) return false;
         
         state = Locale.Nest;
         statechange = true;
 
-        Discover();
-        
         Events.ReceiveEvent(EVENTCODE.BEACONACTIVATE, AGENT.User, AGENT.Beacon, details: file);
 
         var impact = Instantiate(pr_impactPS, transform.position, transform.rotation);
@@ -298,9 +287,17 @@ public class Beacon: Interactable {
         return true;
     }
 
+    public void PlantAtLocation(Vector3 point)
+    {
+        if (state != Locale.Drag) return;
+        
+        origin = point;
+        Plant();
+    }
+
     public bool Plant()
     {
-        if (state != Locale.Terrain) return false;
+        if (state != Locale.Drag) return false;
         
         state = Locale.Planted;
         statechange = true;
@@ -354,6 +351,23 @@ public class Beacon: Interactable {
         return true;
     }
 
+    public void Grab()
+    {
+        if (state != Locale.Terrain) return;
+        state = Locale.Drag;
+
+        lerp = false;
+    }
+
+    public void Drop()
+    {
+        if (state != Locale.Drag) return;
+        state = Locale.Terrain;
+        
+        lerp = true;
+        lerp_t = 0f;
+    }
+
     #endregion
 
     #region State
@@ -378,33 +392,7 @@ public class Beacon: Interactable {
 
     #endregion
 
-    #region Discovery
-
-    // Simpler accessors
-
-    public void Discover(bool events = true) { ToggleDiscovery(true, events); }
-    public void Hide(bool events = true) { ToggleDiscovery(false, events); }
-
-    void ToggleDiscovery(bool discovered, bool events = true)
-    {
-        m_discovered = discovered;
-
-        if (events) 
-        {
-            if (discovered && Discovered != null)
-                Discovered(this);
-
-            if (!discovered && Undiscovered != null)
-                Undiscovered(this);
-        }
-
-        if (discovered) discoveryPS.Stop();
-        else discoveryPS.Play();
-    }
-
-	#endregion
-
-	#region Death
+    #region Death
 
 	IEnumerator Dying(bool particles = false)
     {
@@ -487,20 +475,6 @@ public class Beacon: Interactable {
     }
 
 	#endregion
-
-	#region Beacon callbacks
-
-	void CheckIfDuplicateDiscovery(Beacon beacon)
-    {
-        if (beacon == null || beacon == this) return;
-
-        if (beacon.file == file) // Matches file
-        { 
-            Discover(false); // No fire events
-        }
-    }
-
-    #endregion
 
     #region Info operations
 

@@ -356,7 +356,7 @@ public class Butterfly : MonoBehaviour
             //Check if killing butterfly, SPEED TOO GREAT
             if (wandSpeedInterval > 1f)
             {
-                onDeath(wand.Agent); // Flag butterfly for death
+                onDeath(AGENT.User); // Flag butterfly for death
                 magnitude = distanceMagnitude;
             }
             else {

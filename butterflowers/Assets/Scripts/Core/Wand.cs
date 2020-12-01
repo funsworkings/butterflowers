@@ -13,96 +13,56 @@ using UnityEngine.EventSystems;
 using UnityEngine.UI;
 using uwu.Animation;
 using uwu.Extensions;
+using uwu.Gameplay;
 using uwu.Snippets;
 using uwu.UI.Behaviors.Visibility;
 using XNode.Examples.MathNodes;
 using Cursor = uwu.Snippets.Cursor;
+using Interactable = uwu.Gameplay.Interactable;
 
-public class Wand : Entity
+public class Wand : Interacter
 {
-    // Events
+    // External
     
     [SerializeField] WorldPreset preset;
     [SerializeField] ButterflowerManager butterflowers;
     [SerializeField] BeaconManager beacons;
 
-    #region Internal
-
-    public enum State
-    {
-        Drift,
-        Paint
-    }
+    // Properties
     
-    #endregion
-    
-    // Events
-
-    public System.Action<Gesture> onGestureBegin, onGestureEnd;
-    public UnityEvent GestureStart, GestureEnd;
+    SimpleVelocity _simpleVelocity;
 
     // Attributes
 
     [Header("General")]
-	    [SerializeField] new Camera camera;
         [SerializeField] bool m_spells = true;
 
         [SerializeField] Cursor cursor;
-        [SerializeField] float distanceFromCamera = 10f;
+        [SerializeField] CustomCursor cursor_icon;
         [SerializeField] float cursorToWorldRate = 1f;
 
-        public State state = State.Drift;
         public bool infocus = true;
 
-        SimpleVelocity _simpleVelocity;
-
-    Animation animator;
-    Gestures Gestures;
-
     [Header("Interaction")]
-        Ray ray;
-        RaycastHit raycastHit;
-       
-        [SerializeField] 
-        LayerMask interactionMask, navigationMask;
-        [SerializeField]
-        float interactionDistance = 100f;
-
-        [SerializeField] bool multipleInteractions = true;
-
-        [SerializeField] float brushDistance = 10f;
-        [SerializeField] float brushSpeed = 1f;
         [SerializeField] float brushRadius = 12f;
-        
-        [SerializeField] List<uwu.Gameplay.Interactable> interacting = new List<uwu.Gameplay.Interactable>();
-
-        [SerializeField] bool down, cont, up;
-         [SerializeField] CustomCursor cursor_icon;
-
-         [SerializeField] float paint_t = 0f;
-         [SerializeField] float paintInterval = 1f;
-
-         [SerializeField] bool include2d = false;
-
-         public bool global = true;
-
-         [Header("Gestures")] 
-             [SerializeField] Gesture m_queueGesture;
-             [SerializeField] Gesture m_currentGesture;
-             [SerializeField] bool gesture = false, waitforgesture = false;
+        [SerializeField] Beacon beacon = null;
+        [SerializeField] Entity target = null;
+        [SerializeField] float defaultPointDistance = 10f;
+        public bool global = true;
 
         [Header("Debug")] 
+            [SerializeField] float pointDistance;
             [SerializeField] Image debugCircle;
-            [SerializeField] Vector3 pushFromCamera;
-            [SerializeField] float pushStrength = 1f;
 
     #region Accessors
+
+    protected override Vector3 origin => cursor.position;
 
     public Vector3 position3d {
         get{
             return camera.ScreenToWorldPoint(new Vector3(cursor.position.x, cursor.position.y, 1f));
         }
-    }
+    } 
 
     public Vector3 position2d
     {
@@ -175,11 +135,12 @@ public class Wand : Entity
 
     public float speed2d => velocity2d.magnitude;
 
-    public bool gestureInProgress => animator.isPlaying;
-
     public float radius => brushRadius;
     
     public Camera Camera => camera;
+
+    AGENT Agent => (AGENT.User);
+    World World => World.Instance;
 
 	#endregion
 
@@ -196,50 +157,33 @@ public class Wand : Entity
 
     #endregion
 
-    public bool debug = true;
-
     #region Monobehaviour callbacks
 
     void Awake()
     {
-        animator = GetComponent<Animation>();
-        Gestures = GetComponent<Gestures>();
         _simpleVelocity = GetComponent<SimpleVelocity>();
     }
 
 	// Start is called before the first frame update
-	protected override void OnStart()
+	protected override void Start()
     {
-        base.OnStart();
-        
-        if(camera == null)
-            camera = Camera.main;
+        base.Start();
     }
 
-    protected override bool EvaluateUpdate()
+    protected override void Update()
     {
-        return true;
-    }
-
-    protected override void OnUpdate()
-    {
-        if (camera == null)
-            return;
-
         m_spells = infocus;
 
+        base.Update();
+        
         if (spells) 
         {
-            down = Input.GetMouseButtonDown(0);
-            cont = Input.GetMouseButton(0);
-            up = Input.GetMouseButtonUp(0);
-
-            Interact();
-            
             UpdateTrajectory();
+            HandleBeacon();
         }
         else {
-            UpdateCursorState(null, null);
+            if (beacon != null) 
+                DropBeacon();
         }
     }
     
@@ -255,155 +199,65 @@ public class Wand : Entity
 
     #endregion
 
-    #region Interaction
+    #region Interacter
 
-	void Interact()
+    protected override void HandleInteractions(Dictionary<uwu.Gameplay.Interactable, RaycastHit> _frameInteractions)
     {
-        ray = camera.ScreenPointToRay(cursor.position);
-
-        var hits = new RaycastHit[] { };
-        if (multipleInteractions)
-            hits = Physics.RaycastAll(ray, interactionDistance, interactionMask.value);
-        else {
-            var hit = new RaycastHit();
-            if (Physics.Raycast(ray, out hit, interactionDistance, interactionMask.value)) 
-            {
-                hits = new RaycastHit[]{ hit };       
-            }
-        }
-
-        if (!Sun.Instance.active) {
-            hits = new RaycastHit[] { };
-        }
-
-        var ray_2d = new PointerEventData(EventSystem.current);
-            ray_2d.position = Input.mousePosition;
-        var hits_2d = new List<RaycastResult>();
-
-        EventSystem.current.RaycastAll(ray_2d, hits_2d);
-
-        if (!spells) 
+        if (spells) 
         {
-            hits = new RaycastHit[] { }; // Discard all raycast events if no spells
-            //hits_2d = new List<RaycastResult>();
+            base.HandleInteractions(_frameInteractions);
+
+            var hits = _frameInteractions.Values.ToArray();
+            UpdateCursorState(hits);
         }
+        else 
+        {
+            UpdateCursorState(null);    
+        }
+    }
+
+    protected override void FilterInteractions(ref Dictionary<uwu.Gameplay.Interactable, RaycastHit> _frameInteractions)
+    {
+        ExcludeDistantInteractables<Beacon>(ref _frameInteractions);
+        ExcludeDistantInteractables<Vine>(ref _frameInteractions);
+    }
+
+    void ExcludeDistantInteractables<E>(ref Dictionary<uwu.Gameplay.Interactable, RaycastHit> _frameInteractions) where E:MonoBehaviour
+    {
+        var interactions_temp = _frameInteractions.Keys;
         
-        if(!include2d)
-            hits_2d = new List<RaycastResult>(); // Wipe out 2d interactions
+        IEnumerable<uwu.Gameplay.Interactable> typed_int = FilterInteractablesByType<E>(interactions_temp);
+        uwu.Gameplay.Interactable closest_int = FindClosestInteractable(typed_int.ToList());
 
-        ParseInteractions(hits, hits_2d.ToArray());
+        foreach (uwu.Gameplay.Interactable i in typed_int) {
+            if (i != closest_int) _frameInteractions.Remove(i); // Remove distant type item
+        }
     }
 
-    void ParseInteractions(RaycastHit[] hits, RaycastResult[] hits_2d)
+    protected override void onGrabInteractable(uwu.Gameplay.Interactable interactable)
     {
-        List<uwu.Gameplay.Interactable> interacting = new List<uwu.Gameplay.Interactable>();
-
-        if(hits != null && hits_2d != null)
+        var beacon = interactable.GetComponent<Beacon>();
+        if (beacon != null && this.beacon == null) 
         {
-            GameObject obj = null;
-            uwu.Gameplay.Interactable obj_int = null;
-
-            Dictionary<uwu.Gameplay.Interactable, RaycastHit> temp_int = new Dictionary<uwu.Gameplay.Interactable, RaycastHit>();
-
-            foreach(RaycastHit hit in hits)
-            {
-                obj = hit.collider.gameObject;
-                obj_int = obj.GetComponent<uwu.Gameplay.Interactable>();
-
-                if (obj_int != null) 
-                    temp_int.Add(obj_int, hit);
-
-                //Debug.LogFormat("Collided with {0}", hit.collider.gameObject.name);
-            }
-
-            List<uwu.Gameplay.Interactable> interactions_3d = temp_int.Keys.ToList();
-            
-            FilterClosestInteractables<Beacon>(ref interactions_3d);
-            FilterClosestInteractables<Vine>(ref interactions_3d);
-
-            foreach (uwu.Gameplay.Interactable i in interactions_3d) 
-            {
-                var hit = temp_int[i];
-
-                if (down)
-                    i.Grab(hit);
-                else if (cont)
-                    i.Continue(hit);
-                else if (up)
-                    i.Release(hit);
-                else {
-                    i.Hover(hit);
-                    interacting.Add(i);
-                }
-            }
-
-
-            var ray_hit = new RaycastHit();
-            foreach (RaycastResult hit_2d in hits_2d) 
-            {
-                obj = hit_2d.gameObject;
-                obj_int = obj.GetComponent<uwu.Gameplay.Interactable>();
-
-                if (obj_int != null) {
-                    ray_hit.point = obj.transform.position;
-                    ray_hit.normal = obj.transform.forward;
-
-                    if (down)
-                        obj_int.Grab(ray_hit);
-                    else if (cont)
-                        obj_int.Continue(ray_hit);
-                    else if (up)
-                        obj_int.Release(ray_hit);
-                    else {
-                        obj_int.Hover(ray_hit);
-                        interacting.Add(obj_int);
-                    }
-                }
-            }
-
-            UpdateCursorState(hits, hits_2d);
+            this.beacon = beacon;
+            beacon.Grab();
         }
-
-        ParseLastInteractions(interacting);
     }
 
-    uwu.Gameplay.Interactable GetClosestInteractable(List<uwu.Gameplay.Interactable> hovering)
+    protected override void onReleaseInteractable(uwu.Gameplay.Interactable interactable)
     {
-        float minDistance = Mathf.Infinity;
-        uwu.Gameplay.Interactable closest = null;
-
-        foreach (uwu.Gameplay.Interactable i in hovering) {
-            float d = Vector3.Distance(transform.position, i.transform.position);
-            if (d <= minDistance) {
-                minDistance = d;
-                closest = i;
+        var entity = interactable.GetComponent<Entity>();
+        if (entity != null) 
+        {
+            if (entity is Terrain) 
+            {
+                
+            }
+            else if (entity is Nest) 
+            {
+                
             }
         }
-
-        return closest;
-    }
-
-    void FilterClosestInteractables<E>(ref List<uwu.Gameplay.Interactable> interactions_temp) where E:MonoBehaviour
-    {
-        IEnumerable<uwu.Gameplay.Interactable> typed_int = interactions_temp.Where(i => i.GetComponent<E>() != null);
-
-        uwu.Gameplay.Interactable closest_int = GetClosestInteractable(typed_int.ToList());
-        if (closest_int != null) 
-        {
-            typed_int = typed_int.Except(new uwu.Gameplay.Interactable[] { closest_int });
-            interactions_temp = interactions_temp.Except(typed_int).ToList();
-        }
-    }
-
-    void ParseLastInteractions(List<uwu.Gameplay.Interactable> current){
-        for(int i = 0; i < interacting.Count; i++)
-        {
-            var interactable = interacting[i];
-            if(!current.Contains(interactable))
-                interactable.Unhover();
-        }
-
-        interacting = current;
     }
 
     #endregion
@@ -414,7 +268,9 @@ public class Wand : Entity
 
     public bool AddBeacon(string file, POINT point)
     {
-        var ray = camera.ScreenPointToRay(new Vector3(point.x, (Screen.height - point.y), 0f));
+        return false;
+        
+       /* var ray = camera.ScreenPointToRay(new Vector3(point.x, (Screen.height - point.y), 0f));
         var hit = new RaycastHit();
 
         Debug.LogErrorFormat("Wand attempt to add file => {0} at position => {1}", file, point);
@@ -427,7 +283,7 @@ public class Wand : Entity
             return true;
         }
 
-        return false;
+        return false;*/
     }
 
     public bool ActivateBeacon(Beacon beacon) 
@@ -461,6 +317,54 @@ public class Wand : Entity
             Events.ReceiveEvent(EVENTCODE.BEACONDELETE, Agent, AGENT.Beacon, details: beacon.file);
 
         return success;
+    }
+
+    void HandleBeacon()
+    {
+        if (beacon != null) 
+        {
+            if (cont) 
+            {
+                Vector3 point = Vector3.zero;
+                if (Physics.Raycast(ray, out raycastHit, interactionDistance, interactionMask.value)) 
+                {
+                    point = raycastHit.point;
+                    pointDistance = raycastHit.distance;
+
+                    target = raycastHit.collider.GetComponent<Entity>();
+                }
+                else {
+                    point = camera.ScreenToWorldPoint(new Vector3(origin.x, origin.y, pointDistance));
+                    target = null;
+                }
+
+                beacon.transform.position = point;
+            }
+            else 
+            {
+                pointDistance = defaultPointDistance;
+                if(up) DropBeacon();
+            }
+        }
+        else {
+            pointDistance = defaultPointDistance;
+        }
+    }
+
+    void DropBeacon()
+    {
+        if (target is Terrain) 
+        {
+            Vector3 origin = raycastHit.point;
+            beacon.PlantAtLocation(origin);
+        }
+        else if (target is Nest)
+            beacon.Activate();
+        else
+            beacon.Drop();
+        
+        beacon = null;
+        target = null;
     }
 
     // NEST
@@ -536,7 +440,7 @@ public class Wand : Entity
 
     #region Cursor and trajectory
 
-    void UpdateCursorState(RaycastHit[] hits, RaycastResult[] hits_2d)
+    void UpdateCursorState(RaycastHit[] hits)
     {
         if (cursor_icon != null) 
         {
@@ -547,7 +451,7 @@ public class Wand : Entity
             }
             
             // Update cursor
-            if (hits.Length > 0 || hits_2d.Length > 0)
+            if (hits != null && hits.Length > 0)
                 cursor_icon.state = CustomCursor.State.Hover;
             else
                 cursor_icon.state = CustomCursor.State.Normal;
