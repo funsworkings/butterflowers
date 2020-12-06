@@ -8,7 +8,10 @@ using FileSystemEntry = uwu.IO.SimpleFileBrowser.Scripts.FileSystemEntry;
 using Memory = Wizard.Memory;
 using System.Runtime.InteropServices;
 using AI.Agent;
+using Data;
+using Objects.Base;
 using Objects.Managers;
+using Objects.Types;
 using UnityEngine.Events;
 using UnityEngine.Experimental.UIElements;
 using UnityEngine.UI;
@@ -21,7 +24,19 @@ using uwu.Snippets;
 using uwu.Snippets.Load;
 using uwu.UI.Behaviors.Visibility;
 
-public class World : MonoBehaviour
+
+/*
+ *
+ *  Overhauled the pickup+drop sys
+ *  Worked through polish notes on black hole with east
+ *  
+ *
+ * 
+ */
+
+
+
+public class World : MonoBehaviour, ISaveable
 {
     public static World Instance = null;
     public static bool LOAD = false;
@@ -30,26 +45,13 @@ public class World : MonoBehaviour
 
     public UnityEvent onDiscovery;
 
-    public static System.Action<State> onUpdateState;
-    
-    #region Internal
-
-    public enum State
-    {
-        User = 0,
-        Remote = 1,
-        Parallel = 2
-    }
-    
-    #endregion
-
     // External
 
-	[SerializeField] Settings.WorldPreset Preset;
+    [SerializeField] Settings.WorldPreset Preset;
     [SerializeField] CameraManager CameraManager;
     [SerializeField] Focusing Focusing;
 
-    GameDataSaveSystem Save = null;
+    GameDataSaveSystem _Save = null;
     Library Library = null;
     FileNavigator Files = null;
     Surveillance Surveillance = null;
@@ -58,6 +60,7 @@ public class World : MonoBehaviour
     BeaconManager Beacons = null;
     VineManager Vines = null;
     EventManager EventsM = null;
+    RemoteManager Remote = null;
 
     Sun Sun = null;
     Nest Nest = null;
@@ -69,44 +72,37 @@ public class World : MonoBehaviour
 
     // Attributes
 
-    public State state = State.User;
     public string username;
 
-    float remoteTimer = 0f;
-
     // Properties
-    
+
     [SerializeField] Camera m_playerCamera = null;
-
     [SerializeField] Loading Loader = null;
-    [SerializeField] Loading Reloader = null;
-    [SerializeField] ToggleOpacity ReloadContainer;
-
-    [SerializeField] UnityEngine.UI.Image remoteProgressBar;
-    [SerializeField] ToggleOpacity userOverlay, remoteOverlay;
 
     // Collections
     
-    [Header("Entities")]
-    
-    [SerializeField] List<Entity> entities = new List<Entity>();
-    [SerializeField] List<Interactable> interactables = new List<Interactable>();
-    [SerializeField] List<Focusable> focusables = new List<Focusable>();
+    [Header("Entities")] 
+        [SerializeField] List<Manager> managers = new List<Manager>();
+        [SerializeField] List<Entity> entities = new List<Entity>();
+        [SerializeField] List<Interactable> interactables = new List<Interactable>();
+        [SerializeField] List<Focusable> focusables = new List<Focusable>();
 
     #region Accessors
-    
+
     public Camera PlayerCamera => m_playerCamera;
 
-    public bool User => (state == State.User);
-    public bool Remote => (state == State.Remote);
-    public bool Parallel => (state == State.Parallel);
+    public WorldState state => Remote._State;
+    public bool IsUser => (Remote._State == WorldState.User);
+    public bool IsRemote => (Remote._State == WorldState.Remote);
+    public bool IsParallel => (Remote._State == WorldState.Parallel);
 
     public bool IsFocused => Focusing.active;
 
+    public Manager[] Managers => managers.ToArray();
     public Entity[] Entities => entities.ToArray();
     public Interactable[] Interactables => interactables.ToArray();
     public Focusable[] Focusables => focusables.ToArray();
-    
+
     #endregion
 
     #region Monobehaviour callbacks
@@ -120,52 +116,40 @@ public class World : MonoBehaviour
     {
         Sun = Sun.Instance;
         Sun.active = false; // Initialize sun to inactive on start
-        
-        Save = GameDataSaveSystem.Instance;
-        
-        Save.LoadGameData<SceneData>(createIfEmpty: true);
-        Save.LoadGameData<BrainData>("brain.fns", createIfEmpty:true);
-        
-        while (!Save.load) 
+
+        _Save = GameDataSaveSystem.Instance;
+
+        _Save.LoadGameData<SceneData>(createIfEmpty: true);
+        _Save.LoadGameData<BrainData>("brain.fns", createIfEmpty: true);
+
+        while (!_Save.load)
             yield return null;
 
-        username = Save.username;
-        state = (Save.data.GAMESTATE != State.Parallel) ? State.User : State.Parallel;
-
         Surveillance = Surveillance.Instance;
-        
         Library = Library.Instance;
-
         Files = FileNavigator.Instance;
-        
         Nest = Nest.Instance;
         Quilt = Quilt.Instance;
 
         Butterflowers = FindObjectOfType<ButterflowerManager>();
         Beacons = FindObjectOfType<BeaconManager>();
         Vines = FindObjectOfType<VineManager>();
+        Remote = FindObjectOfType<RemoteManager>();
         Cage = FindObjectOfType<Cage>();
         EventsM = FindObjectOfType<EventManager>();
         AI = FindObjectOfType<Brain>();
-        
+
+        /* * * * * * * * * * * * * * * * */
+
+        username = _Save.username;
+        Remote.Load(_Save.data.GAMESTATE); // Load game state
+
+        /* * * * * * * * * * * * * * * * */
+
+
         SubscribeToEvents(); // Add all event listeners
 
         StartCoroutine("Initialize");
-    }
-
-    void Update()
-    {
-        if (!Save.load) return;
-        Save.data.GAMESTATE = state;
-
-        State newState = UpdateRemoteStatus();
-
-        if (state != newState) {
-            if (onUpdateState != null)
-                onUpdateState(newState);
-
-            state = newState;
-        }
     }
 
     void OnDestroy()
@@ -180,184 +164,111 @@ public class World : MonoBehaviour
     IEnumerator Initialize()
     {
         yield return new WaitForEndOfFrame(); // Padding at start of initialization -> SAFE
-        
+
         Dictionary<string, Texture2D[]> texturePacks = new Dictionary<string, Texture2D[]>() 
         {
-            { "WIZARD" , Preset.wizardFiles.items.Select(mem => mem.image).ToArray() },
-            { "ENVIRONMENT", Preset.starterFiles.elements }
+            {"WIZARD", Preset.wizardFiles.items.Select(mem => mem.image).ToArray()},
+            {"ENVIRONMENT", Preset.starterFiles.elements}
         };
+
+        Surveillance.Load(_Save.data.surveillanceData); // Load surveillance data
         
-        Surveillance.Load(Save.data.surveillanceData); // Load surveillance data
-        Library.Load(Save.files, Preset.defaultNullTexture, texturePacks, Preset.loadTexturesInEditor);
+        
+        var lib_payload = new LibraryPayload();
+            lib_payload.directories = _Save.directories;
+            lib_payload.files = _Save.files;
+            lib_payload.userFiles = _Save.user_files;
+            lib_payload.sharedFiles = _Save.shared_files;
+            lib_payload.worldFiles = _Save.world_files;
+            
+        Library.Load(lib_payload, Preset.defaultNullTexture, texturePacks, Preset.loadTexturesInEditor);
 
         while (Library.loadProgress < 1f) 
         {
             Loader.progress = Library.loadProgress;
             yield return null;
         }
+
         Loader.progress = 1f;
-        
+
         EventsM.Load(null);
+        Nest.Load(_Save.nestOpen);
+        AI.Load(new BrainPayload(_Save.brainData, _Save.enviro_knowledge, _Save.file_knowledge));
+        Beacons.Load((Preset.persistBeacons) ? _Save.beaconData : null);
+        Vines.Load((Preset.persistVines) ? _Save.data.vines : null);
+        Sun.Load(_Save.data.sun);
         
-        if (Save.nestOpen)
-            Nest.Open();
-        else
-            Nest.Close();
-
-        AI.Load();
-
-        Beacons.Load();
-        if (Preset.persistBeacons)
-            Beacons.RestoreBeacons(Save.beaconData, deprecate: false);
-        else
-            Beacons.RefreshBeacons();
-
-        if (Preset.persistVines)
-            Vines.Load(Save.vineData);
-        else
-            Vines.Load(null);
-
-        Sun.active = true; // Update sun state
         LOAD = true;
     }
 
     void SubscribeToEvents()
     {
-        Library.onDiscoverFile += onDiscoverFile;
-        Focusing.onUpdateState += onUpdateFocusState;
-
-        Events.onGlobalEvent += onGlobalEvent;
-
-        Nest.onOpen.AddListener(onNestStateChanged);
-        Nest.onClose.AddListener(onNestStateChanged);
-        Nest.onAddBeacon += onIngestBeacon;
-        Nest.onRemoveBeacon += onReleaseBeacon;
-
-        Quilt.onDisposeTexture += onDisposeQuiltTexture;
-
-        Cage.onCompleteCorners += DetachSelf;
+        Surveillance.onCaptureLog += DidCaptureLog;
+        Beacons.onUpdateBeacons += DidUpdateBeacons;
+        Library.onDiscoverFile += DidDiscoverFile;
+        Library.OnRefreshItems += DidUpdateLibraryItems;
+        Remote.onParallel += DidBecomeParallel;
     }
 
     void UnsubscribeToEvents()
     {
-        Library.onDiscoverFile -= onDiscoverFile;
-
-        Focusing.onUpdateState -= onUpdateFocusState;
-
-        Events.onGlobalEvent -= onGlobalEvent;
-
-        Nest.onOpen.RemoveListener(onNestStateChanged);
-        Nest.onClose.RemoveListener(onNestStateChanged);
-        Nest.onAddBeacon -= onIngestBeacon;
-        Nest.onRemoveBeacon -= onReleaseBeacon;
-
-        Quilt.onDisposeTexture -= onDisposeQuiltTexture;
-        
-        Cage.onCompleteCorners -= DetachSelf;
+        Surveillance.onCaptureLog -= DidCaptureLog;
+        Beacons.onUpdateBeacons -= DidUpdateBeacons;
+        Library.onDiscoverFile -= DidDiscoverFile;
+        Library.OnRefreshItems -= DidUpdateLibraryItems;
+        Remote.onParallel -= DidBecomeParallel;
     }
 
     #endregion
-    
+
     #region Entities
 
-    public void RegisterEntity(Entity entity)
+    public void RegisterEntity(Element el)
     {
-        if (!entities.Contains(entity)) {
-            entities.Add(entity);
-            
-            if(entity is Interactable)
-                interactables.Add(entity as Interactable);
-            if(entity is Focusable)
-                focusables.Add(entity as Focusable);
-        }
-    }
-
-    public void UnregisterEntity(Entity entity)
-    {
-        if (entities.Contains(entity)) {
-            entities.Remove(entity);
-            
-            if(entity is Interactable)
-                interactables.Remove(entity as Interactable);
-            if(entity is Focusable)
-                focusables.Remove(entity as Focusable);
-        }
-    }
-
-    #endregion
-
-    #region Remote access
-
-    State UpdateRemoteStatus()
-    {
-        State targetState = State.User;
-
-        if (state == State.Parallel) 
+        if (el is Entity) 
         {
-            remoteTimer = 0f;
-            targetState = State.Parallel;
-            UpdateUserInterfaces(-1f);
-        }
-        else 
-        {
-            if (!wand.spells || wand.speed2d < Preset.cursorSpeedThreshold) 
+            var entity = (el as Entity);
+            if (!entities.Contains(entity)) 
             {
-                remoteTimer += Time.deltaTime;
+                entities.Add(entity);
 
-                float remoteInterval =
-                    Mathf.Clamp01((remoteTimer - Preset.cursorIdleDelay) / Preset.cursorIdleTimeThreshold);
-                targetState = (remoteInterval >= 1f) ? State.Remote : State.User;
-
-                UpdateUserInterfaces(remoteInterval);
-            }
-            else {
-                remoteTimer = 0f;
-                targetState = State.User;
-
-                UpdateUserInterfaces(0f);
+                if (entity is Interactable)
+                    interactables.Add(entity as Interactable);
+                if (entity is Focusable)
+                    focusables.Add(entity as Focusable);
             }
         }
-
-        return targetState;
+        else if (el is Manager) {
+            var manager = (el as Manager);
+            if(!managers.Contains(manager))
+                managers.Add(manager);
+        }
     }
 
-    void UpdateUserInterfaces(float progress)
+    public void UnregisterEntity(Element el)
     {
-        if (!User) 
+        if (el is Entity) 
         {
-            remoteOverlay.Show();
+            var entity = (el as Entity);
+            if (entities.Contains(entity)) {
+                entities.Remove(entity);
 
-            if (progress < 0f)
-                userOverlay.Show();
-            else
-                userOverlay.Hide();
+                if (entity is Interactable)
+                    interactables.Remove(entity as Interactable);
+                if (entity is Focusable)
+                    focusables.Remove(entity as Focusable);
+            }
         }
-        else {
-            remoteOverlay.Hide();
-            userOverlay.Show();
+        else if (el is Manager) {
+            var manager = (el as Manager);
+            if (managers.Contains(manager))
+                managers.Remove(manager);
         }
-
-        remoteProgressBar.fillAmount = (!User) ? 0f : progress;
     }
 
-    void DetachSelf()
-    {
-        bool @new = (state != State.Parallel);
-
-        if (@new) 
-        {
-            AI.Reload(); // Construct behaviour profile
-            
-            Save.brainData.behaviourProfile = AI.Profile; // Assign profile
-            Save.brainData.load = true;
-        }
-        
-        state = State.Parallel; // Initialize parallel AI
-    }
-    
     #endregion
 
-	#region Beacons
+    #region Beacons
 
     public Beacon.Status FetchBeaconStatus(Beacon beacon)
     {
@@ -405,88 +316,64 @@ public class World : MonoBehaviour
             suggestion = SUGGESTION.VISIT_TREE;
             max = nest;
         }*/
-        
+
         suggestion = SUGGESTION.VISIT_TREE;
 
-        return new SUGGESTION[] { suggestion };
+        return new SUGGESTION[] {suggestion};
     }
 
     #endregion
+    
+    #region Entity callbacks
 
-    #region Focus callbacks
-
-    void onUpdateFocusState(Focusing.State previous, Focusing.State current)
+    void DidUpdateLibraryItems()
     {
-        Debug.LogFormat("Focus state changed from {0} to {1}", previous, current);
+        var payload = (LibraryPayload) Library.Save();
+            _Save.directories = payload.directories;
+            _Save.files = payload.files;
+            _Save.user_files = payload.userFiles;
+            _Save.shared_files = payload.sharedFiles;
+            _Save.world_files = payload.worldFiles;
     }
 
-    #endregion
-
-    #region Event callbacks
-
-    void onGlobalEvent(EVENTCODE @event)
+    void DidCaptureLog()
     {
-        
+        _Save.data.surveillanceData = (SurveillanceData[])Surveillance.Save();
     }
 
-	#endregion
-
-    #region Nest callbacks
-
-    void onNestStateChanged()
+    void DidUpdateBeacons()
     {
-        Debug.LogFormat("Nest state changed to --> {0}", Nest.open);
-        Save.nestOpen = Nest.open; // Set save state in file
+        _Save.beacons = (Beacon[]) Beacons.Save();
     }
-
-    void onIngestBeacon(Beacon beacon)
+    
+    void DidBecomeParallel()
     {
-        Save.beacons = Beacons.AllBeacons;
+        AI.Reload(); // Construct behaviour profile
 
-        if (beacon.type == Beacon.Type.None) return;
-
-        var file = beacon.file;
-        var tex = Library.GetTexture(file);
-
-        if (tex != null) {
-            Debug.Log("Load in LIBRARY");
-            Quilt.Add(tex); // Load texture from library
-        }
-        else {
-            Debug.Log("Load from LIBRARY");
-            Quilt.Push(file); // Load texture in quilt
-        }
+        _Save.brainData.behaviourProfile = AI.Profile; // Assign profile
+        _Save.brainData.load = true;
     }
-
-    void onReleaseBeacon(Beacon beacon)
-    {
-        Save.beacons = Beacons.AllBeacons.ToArray();
-
-        if (beacon.type == Beacon.Type.None) return;
-
-        var file = beacon.file;
-        Quilt.Pop(file);
-    }
-
-    #endregion
-
-    #region Quilt callbacks
-
-    void onDisposeQuiltTexture(Texture texture)
-    {
-
-    }
-
-    #endregion
-
-    #region Discovery callbacks
-
-    void onDiscoverFile(string file)
+    
+    void DidDiscoverFile(string file)
     {
         Debug.LogFormat("Discovery was made => {0}", file);
         
+        Events.ReceiveEvent(EVENTCODE.DISCOVERY, AGENT.User, AGENT.Beacon, details: file);
         onDiscovery.Invoke();
-        Events.ReceiveEvent(EVENTCODE.DISCOVERY, AGENT.User, AGENT.Beacon, details:file);
+    }
+
+    #endregion
+
+    #region Save/load
+
+    public object Save()
+    {
+        return -1;
+    }
+
+    public void Load(object data)
+    {
+        print("Load world data!");
     }
 
     #endregion

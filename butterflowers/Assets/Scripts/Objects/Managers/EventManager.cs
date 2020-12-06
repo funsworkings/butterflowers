@@ -41,8 +41,7 @@ public class EventManager : Logger
 	string defaultColorHex;
 
 	[SerializeField] EVENTCODE[] excludes = new EVENTCODE[] { };
-
-	[SerializeField] bool saving = true;
+	
 	[SerializeField] float logScrollSpeed = 1f;
 
 	#region Monobehaviour callbacks
@@ -155,9 +154,6 @@ public class EventManager : Logger
 			}
 
 			save_caches.Add(log);
-
-			if(saving)
-				Save.log_entries = save_caches.ToArray();
 		}
 		caches.Add(log);
 		

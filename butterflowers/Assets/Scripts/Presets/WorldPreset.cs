@@ -46,7 +46,6 @@ namespace Settings
         [Header("Beacon Attributes")]
             public int amountOfBeacons = 10;
             public float normalBeaconScale = 1f;
-            public float plantedBeaconScale = 3f;
             public float beaconLerpDuration = 1f;
             public AnimationCurve beaconScaleCurve;
 

@@ -1,5 +1,6 @@
 ﻿using System.Collections;
 using System.Collections.Generic;
+using Data;
 using Settings;
 using UnityEngine;
 using uwu;
@@ -9,8 +10,6 @@ using Vertex = Cage.Vertex;
 public class VineManager : MonoBehaviour
 {
     #region External
-
-    GameDataSaveSystem Save;
     
     [SerializeField] BeaconManager Beacons;
 
@@ -54,26 +53,23 @@ public class VineManager : MonoBehaviour
         cage.onUpdateActiveCorners -= onCageUpdatedActiveCorner;
     }
 
-    void Update()
-    {
-        if (!load) return;
-        
-        if(vines.Count > 0)
-            Save.vines = vines.ToArray();
-    }
-
     #endregion
 
-    #region Initialization
+    #region Save/load
 
-    public void Load(VineData[] dat)
+    public System.Object Save()
     {
-        Save = GameDataSaveSystem.Instance;
+        return vines.ToArray();
+    }
+
+    public void Load(System.Object dat)
+    {
+        var data = (VineSceneData) dat;
         
-        cage.Initialize(Save.data.corners);
+        cage.Initialize(data.corners);
         
         if (dat != null) {
-            foreach (VineData v in dat) {
+            foreach (VineData v in data.vines) {
                 var vine = DropVine(transform.position, vineRoot.up);
                     vine.Initialize(this, cage, v, vineTooltips);
                     
@@ -168,7 +164,7 @@ public class VineManager : MonoBehaviour
     void onCageUpdatedActiveCorner()
     {
         var corners = cage.active;
-        Save.data.corners = corners;
+        //Save.data.corners = corners;
     }
     
     #endregion

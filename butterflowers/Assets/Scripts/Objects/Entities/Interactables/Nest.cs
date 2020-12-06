@@ -10,35 +10,29 @@ using uwu;
 using uwu.Extensions;
 using uwu.Snippets;
 using Behaviour = AI.Types.Behaviour;
+using Object = System.Object;
 using Random = UnityEngine.Random;
 
-public class Nest : Focusable, IReactToSunCycle
+public class Nest : Focusable, IReactToSunCycle, ISaveable
 {
     public static Nest Instance = null;
 
-    #region Events
+    // Events
 
     public UnityEvent onOpen, onClose;
     public UnityEvent onIngestBeacon, onReleaseBeacon;
 
-    public System.Action<Beacon> onAddBeacon, onRemoveBeacon;
-    public System.Action<int> onUpdateCapacity;
-
-    #endregion
-
-    #region External
+    // External
 
     [SerializeField] Quilt Quilt = null;
-    GameDataSaveSystem Save;
+    [SerializeField] BeaconManager Beacons = null;
+    
     Focusing Focusing;
     Camera main_camera;
 
-	#endregion
-
-	#region Properties
+    // Properties
 
 	ApplyGravityRelativeToCamera gravity_ext;
-    uwu.Gameplay.Interactable interactable;
     Material mat;
     new Collider collider;
     new Rigidbody rigidbody;
@@ -48,10 +42,8 @@ public class Nest : Focusable, IReactToSunCycle
     [SerializeField] GameObject pr_impactPS, pr_shinePS;
 
     [SerializeField] TMPro.TMP_Text infoText;
-
-    #endregion
-
-    #region Attributes
+    
+    // Attributes
 
     [Header("General")]
 
@@ -68,14 +60,13 @@ public class Nest : Focusable, IReactToSunCycle
     [Header("Beacons")]
         [SerializeField] List<Beacon> m_beacons = new List<Beacon>();
         [SerializeField] int m_capacity = 12;
+        [SerializeField] float dropRadius = 3f;
 
     [Header("Appearance")]
         [SerializeField] float colorSmoothSpeed = 1f;
         [SerializeField] Color inactiveColor, t_color;
 
-	#endregion
-
-	#region Accessors
+        #region Accessors
 
     public float fill {
         get
@@ -107,7 +98,6 @@ public class Nest : Focusable, IReactToSunCycle
         Instance = this;
 
         gravity_ext = GetComponent<ApplyGravityRelativeToCamera>();
-        interactable = GetComponent<uwu.Gameplay.Interactable>();
         collider = GetComponent<Collider>();
         rigidbody = GetComponent<Rigidbody>();
         damage = GetComponent<Damage>();
@@ -118,15 +108,14 @@ public class Nest : Focusable, IReactToSunCycle
     protected override void OnStart()
     {
         base.OnStart();
-
-        Save = GameDataSaveSystem.Instance;
+        
         Focusing = FindObjectOfType<Focusing>();
         main_camera = Camera.main;
 
         m_capacity = worldPreset.nestCapacity;
 
-        if (Quilt == null)
-            Quilt = FindObjectOfType<Quilt>();
+        if (Quilt == null) Quilt = FindObjectOfType<Quilt>();
+        if (Beacons == null) Beacons = FindObjectOfType<BeaconManager>();
 
         damage.onHit.AddListener(SpillKick);
 
@@ -357,6 +346,25 @@ public class Nest : Focusable, IReactToSunCycle
     {
         if (m_beacons.Contains(beacon)) return false;
         m_beacons.Add(beacon);
+        
+        sparklesPS.Play();
+
+        var dispose = (m_beacons.Count > capacity);
+        if (dispose) 
+        {
+            disposeduringframe = true;
+            return false;
+        }
+        else {
+            disposeduringframe = false;
+        }
+
+        Pulse();
+
+        onIngestBeacon.Invoke();
+
+        var file = beacon.file;
+        Quilt.Push(file);
 
         return true;
     }
@@ -373,33 +381,10 @@ public class Nest : Focusable, IReactToSunCycle
 
         onReleaseBeacon.Invoke();
 
-        if (onRemoveBeacon != null) 
-            onRemoveBeacon(beacon);
+        var file = beacon.file;
+        Quilt.Pop(file);
 
         return true;
-    }
-
-    public void ReceiveBeacon(Beacon beacon)
-    {
-        Debug.LogFormat("Nest ADD = {0}", beacon.file);
-        AddBeacon(beacon);
-
-        sparklesPS.Play();
-
-        var dispose = (m_beacons.Count > capacity);
-        if (dispose) 
-        {
-            disposeduringframe = true;
-            return;
-        }
-        else {
-            disposeduringframe = false;
-        }
-
-        Pulse();
-
-        onIngestBeacon.Invoke();
-        if (onAddBeacon != null) onAddBeacon(beacon);
     }
 
     bool disposeduringframe = false;
@@ -494,6 +479,22 @@ public class Nest : Focusable, IReactToSunCycle
                 Quilt.PopOverrideTexture(file);
             }
         }
+    }
+
+    #endregion
+    
+    #region Save/load
+
+    public Object Save()
+    {
+        return open;
+    }
+
+    public void Load(Object dat)
+    {
+        var lastOpen = (bool)dat;
+        if (lastOpen) Open();
+        else Close();
     }
 
     #endregion

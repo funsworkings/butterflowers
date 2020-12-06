@@ -11,17 +11,10 @@ using uwu.IO.SimpleFileBrowser.Scripts;
 using uwu.Snippets;
 using XNode.Examples.MathNodes;
 using AI;
+using Objects.Base;
 using Behaviour = AI.Types.Behaviour;
 
 public class Beacon: Interactable {
-
-    #region External
-
-    BeaconManager Manager;
-	World Room;
-    Nest Nest;
-
-    #endregion
 
     #region Internal
 
@@ -53,17 +46,21 @@ public class Beacon: Interactable {
     }
 
 	#endregion
+    
+    // External
+    
+    World Room;
+    Nest Nest;
 
-	#region Events
+    // Events
 
 	public static System.Action<Beacon> OnRegister, OnUnregister;
-    public static System.Action<Beacon> Destroyed, Planted;
+    public static System.Action<Beacon> Activated, Destroyed, Planted;
 
-    #endregion
+    // Properties
 
-    #region Properties
-
-    [SerializeField] ParticleSystem revealPS, discoveryPS, deathPS, addPS, auraPS;
+    [SerializeField] WorldPreset preset;
+    [SerializeField] ParticleSystem deathPS, addPS;
 
     SimpleOscillate Oscillate;
     new MeshRenderer renderer;
@@ -71,38 +68,28 @@ public class Beacon: Interactable {
     Material material;
 
     [SerializeField] GameObject pr_impactPS, pr_shinePS;
-
-    #endregion
-
-    #region Attributes
-
+    
     public Type type = Type.None;
     public Locale state = Locale.Terrain;
-
-    bool active = false;
-    bool hovered = false;
-
-    [SerializeField] bool m_discovered = false;
-
-    public BeaconInfo beaconInfo;
-
+    public AGENT parent = AGENT.NULL;
+    
     [SerializeField] string m_file = null;
     [SerializeField] FileSystemEntry m_fileEntry;
-
-    public Transform parent;
+    public BeaconInfo beaconInfo;
+    
     public Vector3 origin = Vector3.zero;
     public Vector3 size = Vector3.one;
 
-    [SerializeField] bool lerp = false, statechange = false;
+    // Attributes
+    
+    [SerializeField] bool hovered = false, m_discovered = false;
+
+    [SerializeField] bool returnToOrigin = false;
+    [SerializeField] Vector3 releasePosition = Vector3.zero, releaseScale = Vector3.zero;
     [SerializeField] float lerp_t = 0f, lerp_duration = 1f;
     AnimationCurve scaleCurve;
-
-    [SerializeField] float timeToDie = 1.67f;
-
-    public bool learning = false;
-
-    #endregion
-
+    
+    
     #region Accessors
 
     public string file {
@@ -161,39 +148,29 @@ public class Beacon: Interactable {
         Oscillate = GetComponent<SimpleOscillate>();
     }
 
-    protected override void OnUpdate()
+    protected override void Update()
     {
-        active = Nest.open;
-        if (!active) HideTooltip();
-
+        if (!Active) HideTooltip();
         UpdateColor();
         
+        base.Update();
+    }
+
+    protected override void OnUpdate()
+    {
         base.OnUpdate();
 
         // Interactions on hover (E / P)
-        if (hovered) 
-        {
-            if (Input.GetKeyUp(KeyCode.A))
-                Activate();
-            else if (Input.GetKeyUp(KeyCode.P))
-                Plant();
-
+        if (hovered)
             EvaluateState();
-        }
 
-        if (lerp) 
+        if (returnToOrigin) 
         {
-            if (!statechange) 
-            {
-                lerp_t += Time.deltaTime;
-                LerpToDestination(lerp_t);
-            }
+            lerp_t += Time.deltaTime;
+            ReturnToOrigin(lerp_t);
         }
-        else
-            EvaluateState();
         
-        if (statechange) // Wipe state change during frame
-            statechange = false;
+        EvaluateState();
     }
 
     void OnDisable() {
@@ -207,7 +184,7 @@ public class Beacon: Interactable {
 
     protected override void onHover(Vector3 point, Vector3 normal)
     {
-        if (!active) return;
+        if (!Active) return;
         hovered = true;
 
         base.onHover(point, normal);
@@ -215,7 +192,7 @@ public class Beacon: Interactable {
 
     protected override void onUnhover(Vector3 point, Vector3 normal)
     {
-        if (!active) return;
+        if (!Active) return;
         hovered = false;
 
         base.onUnhover(point, normal);
@@ -237,9 +214,8 @@ public class Beacon: Interactable {
             OnUnregister(this);
     }
 
-    public void Initialize(Type type, Locale state, Vector3 origin, Vector3 scale, Transform parent, float lerpTime, AnimationCurve scaling, Transform tooltipContainer)
+    public void Initialize(Type type, Locale state, Vector3 origin, Transform tooltipContainer)
     {
-        Manager = BeaconManager.Instance;
         Room = World.Instance;
         Nest = Nest.Instance;
 
@@ -252,13 +228,12 @@ public class Beacon: Interactable {
         this.type = type;
         this.state = state;
         this.origin = origin;
+        
+        this.size = preset.normalBeaconScale * Vector3.one;
+        this.lerp_duration = preset.beaconLerpDuration;
+        this.scaleCurve = preset.beaconScaleCurve;
 
-        this.parent = parent;
-        this.size = scale;
-        this.lerp_duration = lerpTime;
-        this.scaleCurve = scaling;
-
-        LerpToDestination(99f);
+        ReturnToOrigin(99f);
     }
 
 
@@ -269,11 +244,7 @@ public class Beacon: Interactable {
     public bool Activate() 
     {
         if (state != Locale.Drag) return false;
-        
         state = Locale.Nest;
-        statechange = true;
-
-        Events.ReceiveEvent(EVENTCODE.BEACONACTIVATE, AGENT.User, AGENT.Beacon, details: file);
 
         var impact = Instantiate(pr_impactPS, transform.position, transform.rotation);
         impact.GetComponent<ParticleSystem>().Play(); // Trigger particle sys
@@ -281,8 +252,12 @@ public class Beacon: Interactable {
         addPS.Play();
         deathPS.Stop();
         
-        lerp = true;
-        lerp_t = 0f;
+        transform.position = Nest.transform.position; // Reset back to nest position at start of lerp
+        transform.localScale = Vector3.zero;
+
+        Events.ReceiveEvent(EVENTCODE.BEACONACTIVATE, AGENT.User, AGENT.Beacon, details: file);
+        if (Activated != null)
+            Activated(this);
 
         return true;
     }
@@ -298,15 +273,11 @@ public class Beacon: Interactable {
     public bool Plant()
     {
         if (state != Locale.Drag) return false;
-        
         state = Locale.Planted;
-        statechange = true;
 
-        lerp = true;
-        lerp_t = 0f;
-        
+        transform.localScale = Vector3.zero;
+
         Events.ReceiveEvent(EVENTCODE.BEACONPLANT, AGENT.User, AGENT.Beacon, details: file);
-
         if (Planted != null)
             Planted(this);
 
@@ -317,17 +288,15 @@ public class Beacon: Interactable {
     {
         Debug.LogFormat("Deactivate {0} when state is {1}", file, state);
         if (state != Locale.Nest) return false;
-        
         state = Locale.Terrain;
-        statechange = true;
-        
+
         deathPS.Play();
         addPS.Stop();
 
-        lerp = true;
-        lerp_t = 0f;
-
         transform.position = Nest.transform.position; // Reset back to nest position at start of lerp
+        transform.localScale = Vector3.zero;
+        
+        ReturnToOrigin(-1f, initial:true);
 
         return true;
     }
@@ -346,7 +315,6 @@ public class Beacon: Interactable {
         }
         
         Destroy(gameObject);
-        //StartCoroutine("Dying", particles);
 
         return true;
     }
@@ -355,8 +323,6 @@ public class Beacon: Interactable {
     {
         if (state != Locale.Terrain) return;
         state = Locale.Drag;
-
-        lerp = false;
     }
 
     public void Drop()
@@ -364,8 +330,7 @@ public class Beacon: Interactable {
         if (state != Locale.Drag) return;
         state = Locale.Terrain;
         
-        lerp = true;
-        lerp_t = 0f;
+        ReturnToOrigin(-1f, initial:true);
     }
 
     #endregion
@@ -376,7 +341,7 @@ public class Beacon: Interactable {
     {
         renderer.enabled = true;
 
-        if (state == Locale.Terrain) 
+        if (state == Locale.Terrain && !returnToOrigin) 
         {
             Oscillate.enabled = false;
             interactive = true;
@@ -392,26 +357,6 @@ public class Beacon: Interactable {
 
     #endregion
 
-    #region Death
-
-	IEnumerator Dying(bool particles = false)
-    {
-        float t = 0f;
-        float sp = Oscillate.speed;
-
-        if (particles) 
-        {
-            deathPS.Play();
-            deathPS.transform.parent = null;
-
-            yield return new WaitForSeconds(timeToDie);
-        }
-        
-        Destroy(gameObject);
-    }
-
-    #endregion
-
     #region Appearance
 
     void UpdateColor() 
@@ -419,7 +364,7 @@ public class Beacon: Interactable {
         if (material == null) return;
 
         float hue = 0f;
-        float sat = 0f, t_sat = (active) ? 1f : 0f;
+        float sat = 0f, t_sat = (((Element) this).Active) ? 1f : 0f;
         float val = 0f;
 
         Color.RGBToHSV(material.color, out hue, out sat, out val);
@@ -430,53 +375,52 @@ public class Beacon: Interactable {
     }
 
     #endregion
+    
+    #region Element overrides
+
+    protected override bool EvaluateActiveState()
+    {
+        return Sun.active && Nest.open;
+    }
+
+    #endregion
 
     #region Movement
 
-    void LerpToDestination(float duration)
+    void ReturnToOrigin(float duration, bool initial = false)
     {
+        if (initial) 
+        {
+            returnToOrigin = true;
+            releasePosition = transform.position;
+            releaseScale = transform.localScale;
+            lerp_t = 0f;
+            
+            return;
+        }
+
         float i = duration / lerp_duration;
 
         bool complete = (i >= 1f);
         i = Mathf.Clamp01(i); // [0-1]
 
-        Vector3 dest_pos = Vector3.zero;
+        Vector3 dest_pos = origin;
         
-        Vector3 scaleA = Vector3.zero;
-        Vector3 scaleB = Vector3.zero;
-
-        if (state == Locale.Terrain) {
-            dest_pos = origin;
-
-            scaleA = Vector3.zero;
-            scaleB = size;
-        }
-        else if (state == Locale.Nest) {
-            dest_pos = Nest.transform.position;
-
-            scaleA = size;
-            scaleB = Vector3.zero;
-
-            if (complete) 
-                Nest.ReceiveBeacon(this); // Receive beacon in nest
-        }
-        else if (state == Locale.Planted) {
-            dest_pos = origin;
-
-            scaleA = size; 
-            scaleB = Vector3.zero;
-        }
+        Vector3 scaleA = releaseScale;
+        Vector3 scaleB = size;
 
         transform.localScale = Vector3.Lerp(scaleA, scaleB, scaleCurve.Evaluate(i));
-        transform.position = Vector3.Lerp(transform.position, dest_pos, i);
+        transform.position = Vector3.Lerp(releasePosition, dest_pos, i);
 
-        if (complete) 
-            lerp = false; // Stop lerping if arrived
+        if (complete) {
+            returnToOrigin = false; // Stop lerping if arrived
+            deathPS.Stop();
+        }
     }
 
 	#endregion
 
-    #region Info operations
+    #region Info
 
     protected override void CreateTooltip(Transform container = null)
     {

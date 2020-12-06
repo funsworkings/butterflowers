@@ -9,10 +9,13 @@ using System.Linq;
 using uwu.IO;
 using uwu.UI.Behaviors.Visibility;
 
-namespace Intro {
+namespace Intro
+{
 
-    public class DesktopVisualization: MonoBehaviour {
+    public class DesktopVisualization : MonoBehaviour
+    {
 
+        /*
         public UnityEvent onBegin, onIntroComplete, onBeginSpawnFiles, onSpawnFile, onEndSpawnFiles, onSpawnNest, onConstructRoom, onBeginWipe, onEndWipe, onComplete;
         public TextureCollection StarterPack;
 
@@ -328,7 +331,7 @@ namespace Intro {
 
         bool terminalinprogress = false;
         
-        /*
+        
         IEnumerator TerminalIntroSequence()
         {
             int j = 0;
@@ -391,7 +394,7 @@ namespace Intro {
 
             terminalinprogress = false;
         }
-        */
+        
 
 		#endregion
 
@@ -440,4 +443,6 @@ namespace Intro {
         }
     }
 
+    */
+    }
 }

@@ -9,6 +9,7 @@ using uwu.Extensions;
 using uwu.IO;
 using Wizard;
 using AI.Types;
+using Data;
 
 namespace uwu
 {
@@ -49,10 +50,10 @@ namespace uwu
 			set => brainData.username = value;
 		}
 
-		public bool wizard
+		public string[] directories
 		{
-			get => data == null ? false : data.wizard;
-			set => data.wizard = true;
+			get { return brainData == null ? new string[] { } : brainData.directories; }
+			set => brainData.directories = value;
 		}
 
 		public string[] files
@@ -60,35 +61,41 @@ namespace uwu
 			get { return brainData == null ? new string[] { } : brainData.files; }
 			set => brainData.files = value;
 		}
+		
+		public int[] user_files
+		{
+			get { return brainData == null ? new int[] { } : brainData.user_files; }
+			set => brainData.user_files = value;
+		}
+		
+		public int[] shared_files
+		{
+			get { return brainData == null ? new int[] { } : brainData.shared_files; }
+			set => brainData.shared_files = value;
+		}
+		
+		public int[] world_files
+		{
+			get { return brainData == null ? new int[] { } : brainData.world_files; }
+			set => brainData.world_files = value;
+		}
+
+		public SunData sun
+		{
+			get => data == null ? new SunData() : data.sun;
+			set => data.sun = value;
+		}
 
 		public float time
 		{
-			get => data == null ? 0f : data.time;
-			set => data.time = value;
-		}
-
-		public LogData logs
-		{
-			get => data == null ? new LogData() : data.logs;
-			set => data.logs = value;
-		}
-
-		public Log[] log_entries
-		{
-			get { return data == null ? new Log[] { } : data.logs.logs; }
-			set => data.logs.logs = value;
+			get => data == null ? 0f : data.sun.time;
+			set => data.sun.time = value;
 		}
 
 		public int chapter
 		{
 			get => data.chapter;
 			set => data.chapter = value;
-		}
-
-		public int nestcapacity
-		{
-			get => data == null ? 6 : data.nestcapacity;
-			set => data.nestcapacity = value;
 		}
 
 		public BeaconData[] beaconData
@@ -114,7 +121,7 @@ namespace uwu
 
 		public VineData[] vineData
 		{
-			get { return data == null ? new VineData[] { } : data.vines; }
+			get { return data == null ? new VineData[] { } : data.vines.vines; }
 		}
 
 		public Vine[] vines
@@ -130,7 +137,7 @@ namespace uwu
 					dat.Add(parsed);
 				}
 
-				data.vines = dat.ToArray();
+				data.vines.vines = dat.ToArray();
 			}
 		}
 
@@ -138,18 +145,6 @@ namespace uwu
 		{
 			get => data == null ? false : data.nestopen;
 			set => data.nestopen = value;
-		}
-
-		public int dialogueNode
-		{
-			get => data == null ? -1 : data.dialoguenode;
-			set => data.dialoguenode = value;
-		}
-
-		public int[] dialogueVisited
-		{
-			get { return data == null ? new int[] { } : data.dialoguevisited; }
-			set => data.dialoguevisited = value;
 		}
 
 		public float enviro_knowledge
@@ -162,12 +157,6 @@ namespace uwu
 		{
 			get { return brainData == null ? new Knowledge[] { } : brainData.file_knowledge; }
 			set => brainData.file_knowledge = value;
-		}
-
-		public int[] shared_files
-		{
-			get { return brainData == null ? new int[] { } : brainData.shared_files; }
-			set => brainData.shared_files = value;
 		}
 
 		#endregion

@@ -545,15 +545,19 @@
           </e>
           <e p="Data" t="Include">
             <e p="BeaconData.cs" t="Include" />
+            <e p="BrainPayload.cs" t="Include" />
             <e p="CompositeSurveillanceData.cs" t="Include" />
             <e p="LeafBundleData.cs" t="Include" />
             <e p="LeafData.cs" t="Include" />
+            <e p="LibraryPayload.cs" t="Include" />
             <e p="Log.cs" t="Include" />
             <e p="LogData.cs" t="Include" />
+            <e p="SunData.cs" t="Include" />
             <e p="SurveillanceData.cs" t="Include" />
             <e p="SurveillanceDataDelta.cs" t="Include" />
             <e p="SurveillanceLogData.cs" t="Include" />
             <e p="VineData.cs" t="Include" />
+            <e p="VineSceneData.cs" t="Include" />
           </e>
           <e p="Global.cs" t="Include" />
           <e p="Interfaces" t="Include">
@@ -570,9 +574,11 @@
           </e>
           <e p="Objects" t="Include">
             <e p="Base" t="Include">
+              <e p="Element.cs" t="Include" />
               <e p="Entity.cs" t="Include" />
               <e p="Focusable.cs" t="Include" />
               <e p="Interactable.cs" t="Include" />
+              <e p="Manager.cs" t="Include" />
             </e>
             <e p="Entities" t="Include">
               <e p="Butterfly.cs" t="Include" />
@@ -580,6 +586,7 @@
               <e p="Interactables" t="Include">
                 <e p="Beacon.cs" t="Include" />
                 <e p="Empty" t="Include">
+                  <e p="Flower.cs" t="Include" />
                   <e p="Star.cs" t="Include" />
                   <e p="Tree.cs" t="Include" />
                 </e>
@@ -597,6 +604,7 @@
               <e p="GradingManager.cs" t="Include" />
               <e p="LoadingManager.cs" t="Include" />
               <e p="ModuleTreeHelper.cs" t="Include" />
+              <e p="RemoteManager.cs" t="Include" />
               <e p="SummaryManager.cs" t="Include" />
               <e p="TooltipManager.cs" t="Include" />
               <e p="VineManager.cs" t="Include" />
@@ -604,6 +612,9 @@
             <e p="Miscellaneous" t="Include">
               <e p="Flares.cs" t="Include" />
               <e p="Leaf.cs" t="Include" />
+            </e>
+            <e p="Types" t="Include">
+              <e p="WorldState.cs" t="Include" />
             </e>
           </e>
           <e p="Presets" t="Include">
@@ -733,6 +744,7 @@
             <e p="Save &amp; Load" t="Include">
               <e p="GameData.cs" t="Include" />
               <e p="GameDataSaveSystem.cs" t="Include" />
+              <e p="ISaveable.cs" t="Include" />
               <e p="SettingsSystem.cs" t="Include" />
             </e>
             <e p="Scenes" t="Include">
@@ -809,6 +821,10 @@
                 <e p="Text_WiggleEffect.cs" t="Include" />
               </e>
               <e p="TextEffect.cs" t="Include" />
+            </e>
+            <e p="Textures" t="Include">
+              <e p="ITextureReceiver.cs" t="Include" />
+              <e p="TextureLoader.cs" t="Include" />
             </e>
             <e p="Timeline" t="Include">
               <e p="Core" t="Include">

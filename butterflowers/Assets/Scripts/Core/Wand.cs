@@ -268,22 +268,22 @@ public class Wand : Interacter
 
     public bool AddBeacon(string file, POINT point)
     {
-        return false;
-        
-       /* var ray = camera.ScreenPointToRay(new Vector3(point.x, (Screen.height - point.y), 0f));
+        var ray = camera.ScreenPointToRay(new Vector3(point.x, (Screen.height - point.y), 0f));
         var hit = new RaycastHit();
-
-        Debug.LogErrorFormat("Wand attempt to add file => {0} at position => {1}", file, point);
-        
-        if (Physics.Raycast(ray, out hit, Mathf.Infinity, interactionMask.value)) // Found suitable position 
-        {
-            var position = hit.point;
-            beacons.CreateBeaconInstance(file, Beacon.Type.Desktop, position);
-
-            return true;
-        }
-
-        return false;*/
+ 
+         Debug.LogErrorFormat("Wand attempt to add file => {0} at position => {1}", file, point);
+         
+         if (Physics.Raycast(ray, out hit, Mathf.Infinity, interactionMask.value)) // Found suitable position 
+         {
+             var position = hit.point;
+             beacons.CreateBeaconInstance(file, Beacon.Type.Desktop, position, true);
+         }
+         else 
+         {
+             beacons.CreateBeaconInstance(file, Beacon.Type.Desktop, Vector3.zero, false);
+         }
+ 
+         return false;
     }
 
     public bool ActivateBeacon(Beacon beacon) 
@@ -444,7 +444,7 @@ public class Wand : Interacter
     {
         if (cursor_icon != null) 
         {
-            if (World.Remote || !spells) 
+            if (World.IsRemote || !spells) 
             {
                 cursor_icon.state = CustomCursor.State.Remote;
                 return;

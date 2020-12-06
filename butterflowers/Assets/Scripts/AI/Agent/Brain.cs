@@ -9,6 +9,7 @@ using Data;
 using Noder.Graphs;
 using Noder.Nodes.Behaviours.Entries;
 using Objects.Managers;
+using Objects.Types;
 using Settings;
 using TMPro;
 using UnityEngine;
@@ -116,8 +117,8 @@ namespace AI.Agent
 
 		public bool isActive => active;
 		
-		public bool Self => (active && World.Parallel);
-		public bool Remote => (active && World.Remote);
+		public bool Self => (active && World.IsParallel);
+		public bool Remote => (active && World.IsRemote);
 
 		public Actions Actions => actions;
 		public Body Body => body;
@@ -212,7 +213,7 @@ namespace AI.Agent
 			if (!load || !Sun.active)
 				return;
 			
-			active = (World.state != World.State.User);
+			active = (!World.IsUser);
 			
 			if (!active) 
 			{
@@ -234,7 +235,7 @@ namespace AI.Agent
 				ActionUpdate();
 				StateUpdate();
 				
-				if(World.state != World.State.User)
+				if(World.state != WorldState.User)
 					VisualUpdate(); // Update HUD when user is not active
 
 				cacheProfile = Profile; // Wipe cache profiel
@@ -250,24 +251,25 @@ namespace AI.Agent
 		
 		#region Initialization
 
-		public void Load()
+		public void Load(object data)
 		{
 			Save = GameDataSaveSystem.Instance;
 			Library = Library.Instance;
 			Sun = Sun.Instance;
 			World = World.Instance;
 
-			m_enviroKnowledge = (worldPreset.persistKnowledge) ? Save.enviro_knowledge : 0f;
-			m_fileKnowledge = (worldPreset.persistKnowledge) ? Save.file_knowledge : new Knowledge[] { };
+			BrainPayload payload = (BrainPayload) data;
+
+			m_enviroKnowledge = (worldPreset.persistKnowledge) ? payload.environmentKnowledge : 0f;
+			m_fileKnowledge = (worldPreset.persistKnowledge) ? payload.fileKnowledge : new Knowledge[] { };
 
 			PopulateKnowledgeLookup(m_fileKnowledge);
 
-			active = (World.state != World.State.User);
+			active = (World.state != WorldState.User);
 			if(active)
 				Reload(); // Load profile + needs
-
-			bool success = Save.LoadGameData<BrainData>("brain.fns", createIfEmpty: true);
-			brainnnnnnnn = Save.brainData;
+			
+			brainnnnnnnn = payload.behaviourProfile;
 
 			load = true;
 		}
@@ -276,7 +278,7 @@ namespace AI.Agent
 		{
 			cacheProfile = Save.brainData.behaviourProfile;
 
-			if (World.state == World.State.Parallel) 
+			if (World.state == WorldState.Parallel) 
 				m_profile = Save.brainData.behaviourProfile;
 			else 
 			{
@@ -812,7 +814,7 @@ namespace AI.Agent
 		public float FetchKnowledgeFromFile(string file)
 		{
 			if (string.IsNullOrEmpty(file) || !fileKnowledgeLookup.ContainsKey(file)) return 0f;
-			if (Library.IsShared(file) || Library.IsWizard(file)) return 1f;
+			if (Library.IsSharedFile(file)) return 1f;
 
 			var k = fileKnowledgeLookup[file];
 			float days_k = worldPreset.ConvertSecondsToDays(k.time);

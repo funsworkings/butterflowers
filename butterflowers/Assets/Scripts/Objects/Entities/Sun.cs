@@ -4,7 +4,9 @@ using UnityEngine;
 
 using UnityEngine.UI;
 using System.Linq;
+using Data;
 using Interfaces;
+using Objects.Types;
 using Settings;
 using uwu;
 
@@ -19,7 +21,7 @@ public class Sun : MonoBehaviour
 
     // External
 
-	GameDataSaveSystem Save = null;
+	GameDataSaveSystem _Save = null;
     [SerializeField] Settings.WorldPreset Preset;
 
     World World;
@@ -119,33 +121,18 @@ public class Sun : MonoBehaviour
 	void Awake()
     {
         Instance = this;
-        Save = GameDataSaveSystem.Instance;
+        _Save = GameDataSaveSystem.Instance;
 
         light = GetComponent<Light>();
-    }
-
-    IEnumerator Start()
-    {
-        World = World.Instance;
-        
-        Listeners = FindObjectsOfType<MonoBehaviour>().OfType<IReactToSun>().ToArray();
-        Observers = FindObjectsOfType<MonoBehaviour>().OfType<IReactToSunCycle>().ToArray();
-        Pausers = FindObjectsOfType<MonoBehaviour>().OfType<IPauseSun>().ToArray();
 
         active = false;
-        while(!Save.load)
-            yield return null;
-
-        active = Save.data.active;
-        WaitForPausers();
-        
-        time = (Preset.resetWorldClock)? 0f:Save.time;
-        onLoadSunData();
     }
 
     // Update is called once per frame
     void Update()
     {
+        if (!World.LOAD) return;
+        
         float t_timeScale = 0f;
         if (!active) 
         {
@@ -160,28 +147,55 @@ public class Sun : MonoBehaviour
         timeScale = Mathf.Lerp(timeScale, t_timeScale, Time.unscaledDeltaTime * timeScaleLerpSpeed);
         Time.timeScale = timeScale;
 
-        Save.data.active  = active;
-        if (!active) return; // Ignore time operations if inactive!
-        
+        if (active) {
+            if (Input.GetKeyDown(KeyCode.RightBracket)) time += Preset.secondsPerDay;
 
-        if (Input.GetKeyDown(KeyCode.RightBracket)) time += Preset.secondsPerDay;
+            time += Time.deltaTime; // Add time to global clock
 
-        time += Time.deltaTime; // Add time to global clock
-        Save.time = time;
+            AdjustMeasurements();
 
-        AdjustMeasurements();
+            bool statechange = EvaluateTimeState();
+            bool advanced = EvaluateDay();
 
-        bool statechange = EvaluateTimeState();
-        bool advanced = EvaluateDay();
+            AlignWithRay();
+            UpdateListeners();
 
-        AlignWithRay();
-        UpdateListeners();
+            //if (advanced)
+            //  active = false; // Pause sun when crosses into new day (debug)
+        }
 
-        //if (advanced)
-          //  active = false; // Pause sun when crosses into new day (debug)
+        _Save.sun = (SunData)Save();
     }
 
 	#endregion
+    
+    #region Save/load
+
+    public object Save()
+    {
+        var dat = new SunData();
+            dat.active = active;
+            dat.time = time;
+
+        return dat;
+    }
+
+    public void Load(object data)
+    {
+        World = World.Instance;
+        Listeners = FindObjectsOfType<MonoBehaviour>().OfType<IReactToSun>().ToArray();
+        Observers = FindObjectsOfType<MonoBehaviour>().OfType<IReactToSunCycle>().ToArray();
+        Pausers = FindObjectsOfType<MonoBehaviour>().OfType<IPauseSun>().ToArray();
+
+        SunData dat = (SunData) data;
+            active = dat.active;
+            time = dat.time;
+            
+        WaitForPausers();
+        onLoadSunData();
+    }
+    
+    #endregion
 
 	#region Internal
 
@@ -262,7 +276,7 @@ public class Sun : MonoBehaviour
 
             Events.ReceiveEvent(EVENTCODE.CYCLE, AGENT.World, AGENT.Terrain, days + "");
 
-            CycleObservers(World.state == World.State.User);
+            CycleObservers(World.state == WorldState.User);
 
             Pausers = FindObjectsOfType<MonoBehaviour>().OfType<IPauseSun>().ToArray();
             WaitForPausers();

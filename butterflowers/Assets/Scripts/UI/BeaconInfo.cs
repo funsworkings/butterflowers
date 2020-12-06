@@ -23,7 +23,8 @@ public class BeaconInfo : MonoBehaviour
             file = parseBeaconFileName(beacon);
 
         var def_file = file;
-
+        return file;
+        
         return string.Format(template, def_file, color_hex);
     }
 
