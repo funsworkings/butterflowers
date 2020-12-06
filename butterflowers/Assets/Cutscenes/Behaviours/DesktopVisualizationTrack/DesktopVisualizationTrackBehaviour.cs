@@ -20,6 +20,7 @@ public class DesktopVisualizationTrackBehaviour : PlayableBehaviour
 
     public override void ProcessFrame(Playable playable, FrameData info, object playerData)
     {
+        /*
         if (!Application.isPlaying) return;
 
         DesktopVisualization Vis = (DesktopVisualization)playerData;
@@ -39,5 +40,6 @@ public class DesktopVisualizationTrackBehaviour : PlayableBehaviour
                 sent = true;
             }
         }
+        */
     }
 }

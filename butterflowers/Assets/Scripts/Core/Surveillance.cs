@@ -3,6 +3,7 @@ using System.Collections;
 using System.Collections.Generic;
 using System.Linq;
 using Data;
+using Objects.Types;
 using Settings;
 using UnityEngine;
 using uwu;
@@ -14,9 +15,12 @@ public class Surveillance : MonoBehaviour, IReactToSunCycle
 {
 	public static Surveillance Instance = null;
 	
-	// External
+	// Events
 
-	GameDataSaveSystem Save;
+	public System.Action onCaptureLog;
+	
+	// External
+	
 	Library Lib;
 	World World;
 
@@ -31,6 +35,7 @@ public class Surveillance : MonoBehaviour, IReactToSunCycle
 	// Collections
 
 	[SerializeField] List<SurveillanceData> logs = new List<SurveillanceData>();
+	[SerializeField] List<EVENTCODE> eventsDuringLog = new List<EVENTCODE>();
 
 	// Properties
 	
@@ -38,8 +43,8 @@ public class Surveillance : MonoBehaviour, IReactToSunCycle
 	[SerializeField] bool recording = true;
 
 	Camera previousMainCamera;
-	
-	public string lastPhotoCaption;
+
+	public string lastPhotoCaption, lastPhotoPath;
 	public Texture2D lastPhotoTaken;
 	public bool photoInProgress = false;
 	
@@ -86,23 +91,43 @@ public class Surveillance : MonoBehaviour, IReactToSunCycle
 
 	public void Cycle(bool refresh)
 	{
+		StartCoroutine("AdvanceLog");
+	}
+
+	IEnumerator AdvanceLog()
+	{
 		TakePicture();
+		photoInProgress = true;
+
+		while (photoInProgress)
+			yield return null;
+
+		activeLog.photo = lastPhotoPath;
+
+		yield return new WaitForEndOfFrame();
+		
 		CreateLog();
 	}
 
 	#endregion
 	
-	#region Initialization
+	#region Save/load
 
-	public void Load(SurveillanceData[] data)
+	public object Save()
 	{
-		Save = GameDataSaveSystem.Instance;
+		return logs.ToArray();
+	}
+
+	public void Load(object data)
+	{
 		Lib = Library.Instance;
 		World = World.Instance;
+
+		var previousLogs = (SurveillanceData[]) data;
 		
 		if (data != null) 
 		{
-			logs = new List<SurveillanceData>(data);
+			logs = new List<SurveillanceData>(previousLogs);
 		}
 		else 
 		{
@@ -143,16 +168,21 @@ public class Surveillance : MonoBehaviour, IReactToSunCycle
 	{
 		float log_t = 0f;
 		
-		while (true) {
-			recording = (World.state != World.State.Remote); // Only record user/parallel actions
-			if (Sun.active && recording) 
+		while (true) 
+		{
+			recording = (World.state != WorldState.Remote && Sun.active); // Only record user/parallel actions
+			if (recording) 
 			{
 				log_t += Time.deltaTime;
-				if (log_t > Preset.surveillanceLogRate) {
+				if (log_t > Preset.surveillanceLogRate) 
+				{
 					var log = CaptureFrameLog();
+						AttachEventsToLog(ref log);
+					
 					activeLog.logs = activeLog.logs.Append(log).ToArray();
 
-					Save.data.surveillanceData = logs.ToArray(); // Update all surveillance data in save
+					if (onCaptureLog != null)
+						onCaptureLog();
 
 					log_t = 0f;
 				}
@@ -237,8 +267,10 @@ public class Surveillance : MonoBehaviour, IReactToSunCycle
 		var name = Extensions.RandomString(12);
 		var camera = snapshotCamera.camera;
 
-		if(Preset.takePhotos)
-			Lib.SaveTexture(name, image);
+		if (Preset.takePhotos)
+			lastPhotoPath = Lib.CreateFile(name, image);
+		else
+			lastPhotoPath = "NULL";
 
 		lastPhotoCaption = name;
 		lastPhotoTaken = image;
@@ -274,13 +306,13 @@ public class Surveillance : MonoBehaviour, IReactToSunCycle
 		{
 			comp.filesAdded = (int) logs.Select(l => l.filesAdded).Average();
 			comp.filesRemoved = (int) logs.Select(l => l.filesRemoved).Average();
-			comp.discoveries = (int) logs.Select(l => l.discoveries).Average();
+			comp.Discoveries = (int) logs.Select(l => l.discoveries).Average();
 
-			comp.beaconsAdded = (int) logs.Select(l => l.beaconsAdded).Average();
-			comp.beaconsPlanted = (int) logs.Select(l => l.beaconsPlanted).Average();
+			comp.BeaconsAdded = (int) logs.Select(l => l.beaconsAdded).Average();
+			comp.BeaconsPlanted = (int) logs.Select(l => l.beaconsPlanted).Average();
 
-			comp.nestKicks = (int) logs.Select(l => l.nestKicks).Average();
-			comp.nestSpills = (int) logs.Select(l => l.nestSpills).Average();
+			comp.NestKicks = (int) logs.Select(l => l.nestKicks).Average();
+			comp.NestSpills = (int) logs.Select(l => l.nestSpills).Average();
 		}
 
 		comp.AverageCursorSpeed = logs.Select(l => l.averageCursorSpeed).Average();
@@ -291,47 +323,32 @@ public class Surveillance : MonoBehaviour, IReactToSunCycle
 		comp.AverageTimeSpentInTree = logs.Select(l => l.timeSpentInTree).Average();
 		comp.AverageTimeSpentInMagicStar = logs.Select(l => l.timeSpentInMagicStar).Average();
 		comp.AverageTimeSpentInDefault = logs.Select(l => l.timeSpentInDefault).Average();
-				
-
+		
 		return comp;
 	}
 	
 	#endregion
 	
-	#region Recording events
+	#region Events
 
 	void OnReceiveEvent(EVENTCODE @event, AGENT agentA, AGENT agentB, string details)
 	{
 		if (!recording) return;
+		
 		if (agentA == AGENT.User) 
-		{
-			RecordEvent(@event); // Only record events from User
+			eventsDuringLog.Add(@event);
+	}
+
+	void AttachEventsToLog(ref SurveillanceLogData log)
+	{
+		if (activeLog != null) {
+			EVENTCODE[] events = eventsDuringLog.ToArray();
+				log.AppendEvents(events);
+			
+			eventsDuringLog = new List<EVENTCODE>(); // Wipe event cache
 		}
 	}
 
-	public void RecordEvent(EVENTCODE @event)
-	{
-		switch (@event) {
-			case EVENTCODE.NESTKICK:
-				activeLog.nestKicks++;
-				break;
-			case EVENTCODE.NESTSPILL:
-				activeLog.nestSpills++;
-				break;
-			case EVENTCODE.DISCOVERY:
-				activeLog.discoveries++;
-				break;
-			case EVENTCODE.BEACONPLANT:
-				activeLog.beaconsPlanted++;
-				break;
-			case EVENTCODE.BEACONACTIVATE:
-				activeLog.beaconsAdded++;
-				break;
-			default:
-				break;
-		}
-	}
-	
 	#endregion
 	
 	#region Library callbacks

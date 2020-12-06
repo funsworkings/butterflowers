@@ -16,21 +16,29 @@ namespace Data
 		public float AverageTimeSpentInTree = 0f;
 		public float AverageTimeSpentInDefault = 0f;
 
+		public int FilesAdded = 0;
+		public int FilesRemoved = 0;
+		public int Discoveries = 0;
+		public int BeaconsAdded = 0;
+		public int BeaconsPlanted = 0;
+		public int NestKicks = 0;
+		public int NestSpills = 0;
+
 		public CompositeSurveillanceData(){}
 		
 		public CompositeSurveillanceData(SurveillanceData dat)
 		{
-			this.filesAdded = dat.filesAdded;
-			this.filesRemoved = dat.filesRemoved;
-			this.discoveries = dat.discoveries;
+			FilesAdded = dat.filesAdded;
+			FilesRemoved = dat.filesRemoved;
+			Discoveries = dat.discoveries;
 
-			this.beaconsAdded = dat.beaconsAdded;
-			this.beaconsPlanted = dat.beaconsPlanted;
+			BeaconsAdded = dat.beaconsAdded;
+			BeaconsPlanted = dat.beaconsPlanted;
 
-			this.nestKicks = dat.nestKicks;
-			this.nestSpills = dat.nestSpills;
+			NestKicks = dat.nestKicks;
+			NestSpills = dat.nestSpills;
 
-			this.logs = dat.logs;
+			logs = dat.logs;
 		}
 		
 		

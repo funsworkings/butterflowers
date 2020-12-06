@@ -26,9 +26,9 @@ namespace Data
 		
 		public SurveillanceDataDelta(CompositeSurveillanceData a, CompositeSurveillanceData b)
 		{
-			filesAdded = Extensions.PercentageDifference(a.filesAdded, b.filesAdded);
-			filesRemoved = Extensions.PercentageDifference(a.filesRemoved, b.filesRemoved);
-			discoveries = Extensions.PercentageDifference(a.discoveries, b.discoveries);
+			filesAdded = Extensions.PercentageDifference(a.FilesAdded, b.FilesAdded);
+			filesRemoved = Extensions.PercentageDifference(a.FilesRemoved, b.FilesRemoved);
+			discoveries = Extensions.PercentageDifference(a.Discoveries, b.Discoveries);
 
 			hob = Extensions.PercentageDifference(a.AverageHoB, b.AverageHoB);
 			nestfill = Extensions.PercentageDifference(a.AverageNestFill, b.AverageNestFill);
@@ -36,11 +36,10 @@ namespace Data
 
 			volatility = Extensions.PercentageDifference(a.CalculateFocusVolatility(), b.CalculateFocusVolatility());
 
-			beaconsAdded = Extensions.PercentageDifference(a.beaconsAdded, b.beaconsAdded);
-			beaconsPlanted = Extensions.PercentageDifference(a.beaconsPlanted, b.beaconsPlanted);
-
-			nestKicks = Extensions.PercentageDifference(a.nestKicks, b.nestKicks);
-			nestSpills = Extensions.PercentageDifference(a.nestSpills, b.nestSpills);
+			beaconsAdded = Extensions.PercentageDifference(a.BeaconsAdded, b.BeaconsAdded);
+			beaconsPlanted = Extensions.PercentageDifference(a.BeaconsPlanted, b.BeaconsPlanted);
+			nestKicks = Extensions.PercentageDifference(a.NestKicks, b.NestKicks);
+			nestSpills = Extensions.PercentageDifference(a.NestSpills, b.NestSpills);
 		}
 	}
 }

@@ -1417,15 +1417,10 @@ MonoBehaviour:
   CameraManager: {fileID: 1067243527}
   Focusing: {fileID: 1969311502}
   wand: {fileID: 900886785}
-  state: 0
   username: 
   m_playerCamera: {fileID: 534669904}
   Loader: {fileID: 1422909087}
-  Reloader: {fileID: 1323270144}
-  ReloadContainer: {fileID: 1747138067}
-  remoteProgressBar: {fileID: 2124491337}
-  userOverlay: {fileID: 1775561501}
-  remoteOverlay: {fileID: 175952860}
+  managers: []
   entities: []
   interactables: []
   focusables: []
@@ -3481,7 +3476,7 @@ Transform:
   m_PrefabInstance: {fileID: 0}
   m_PrefabAsset: {fileID: 0}
   m_GameObject: {fileID: 201810246}
-  m_LocalRotation: {x: 0.12156507, y: -0.000000008545884, z: 0.0000000010372748, w: 0.9925835}
+  m_LocalRotation: {x: 0.12156506, y: 0.000000008540378, z: -9.923e-10, w: 0.9925835}
   m_LocalPosition: {x: 0, y: 9.595102, z: -21.852465}
   m_LocalScale: {x: 1, y: 1.3577, z: 1}
   m_Children:
@@ -11138,9 +11133,11 @@ MonoBehaviour:
   Wand: {fileID: 900886785}
   Focus: {fileID: 1969311502}
   logs: []
+  eventsDuringLog: 
   Preset: {fileID: 11400000, guid: 45ffdf5e02efb4848942aaeb5d029f6e, type: 2}
   recording: 1
   lastPhotoCaption: 
+  lastPhotoPath: 
   lastPhotoTaken: {fileID: 0}
   photoInProgress: 0
 --- !u!1 &502971272
@@ -13614,6 +13611,7 @@ Transform:
   - {fileID: 1190223768}
   - {fileID: 1209675536}
   - {fileID: 1657525263}
+  - {fileID: 988829047}
   - {fileID: 894577355}
   m_Father: {fileID: 1434293601}
   m_RootOrder: 1
@@ -13796,9 +13794,12 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: a45c48130e12c6a459a4491ccfedce52, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  Nest: {fileID: 735639530}
+  preset: {fileID: 11400000, guid: 45ffdf5e02efb4848942aaeb5d029f6e, type: 2}
   material: {fileID: 2100000, guid: 81234154ee004467ba76e135ca590a5b, type: 2}
   textureArray: {fileID: 711978463}
+  canvas: {fileID: 8400000, guid: ff6f3aa6e1be04a159213d070f9b2f04, type: 2}
+  textures: []
+  textureCap: 4
   m_speed: 0
   minLerpSpeed: 0
   maxLerpSpeed: 0.67
@@ -13806,11 +13807,6 @@ MonoBehaviour:
   interval: 0
   m_death: 0
   m_deathDecay: 3.33
-  textureCap: 4
-  queue: []
-  textures: []
-  canvas: {fileID: 8400000, guid: ff6f3aa6e1be04a159213d070f9b2f04, type: 2}
-  debugTexture: {fileID: 2800000, guid: 68cdf30e4c2c846d89c01aeea9d7febf, type: 3}
   refreshRate: 0.167
 --- !u!1 &723675777
 GameObject:
@@ -15322,9 +15318,11 @@ MonoBehaviour:
     TIMESTAMP: 0
     username: 
     load: 0
+    directories: []
     files: []
-    discoveries: 
+    user_files: 
     shared_files: 
+    world_files: 
     file_knowledge: []
     behaviourProfile:
       weights:
@@ -15334,12 +15332,8 @@ MonoBehaviour:
     timestamp: 0
     filesAdded: 0
     filesRemoved: 0
-    discoveries: 0
     logs: []
-    beaconsAdded: 0
-    beaconsPlanted: 0
-    nestKicks: 0
-    nestSpills: 0
+    photo: 
     AverageHoB: 0
     AverageNestFill: 0
     AverageCursorSpeed: 0
@@ -15347,6 +15341,13 @@ MonoBehaviour:
     AverageTimeSpentInMagicStar: 0
     AverageTimeSpentInTree: 0
     AverageTimeSpentInDefault: 0
+    FilesAdded: 0
+    FilesRemoved: 0
+    Discoveries: 0
+    BeaconsAdded: 0
+    BeaconsPlanted: 0
+    NestKicks: 0
+    NestSpills: 0
   d:
     filesAdded: 0
     filesRemoved: 0
@@ -16056,7 +16057,7 @@ Transform:
   m_LocalScale: {x: 1, y: 1, z: 1}
   m_Children: []
   m_Father: {fileID: 689851640}
-  m_RootOrder: 6
+  m_RootOrder: 7
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
 --- !u!114 &894577356
 MonoBehaviour:
@@ -16999,6 +17000,57 @@ RectTransform:
   m_AnchoredPosition: {x: 0, y: 0}
   m_SizeDelta: {x: 0, y: 0}
   m_Pivot: {x: 0.5, y: 0.5}
+--- !u!1 &988829046
+GameObject:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  serializedVersion: 6
+  m_Component:
+  - component: {fileID: 988829047}
+  - component: {fileID: 988829048}
+  m_Layer: 0
+  m_Name: Remote (Manager)
+  m_TagString: Untagged
+  m_Icon: {fileID: 0}
+  m_NavMeshLayer: 0
+  m_StaticEditorFlags: 0
+  m_IsActive: 1
+--- !u!4 &988829047
+Transform:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 988829046}
+  m_LocalRotation: {x: 0, y: 0, z: 0, w: 1}
+  m_LocalPosition: {x: 0, y: 0, z: 0}
+  m_LocalScale: {x: 1, y: 1, z: 1}
+  m_Children: []
+  m_Father: {fileID: 689851640}
+  m_RootOrder: 6
+  m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
+--- !u!114 &988829048
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 988829046}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 646f7cb8a03b4ef5b1b11b4a78079d4b, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
+  wand: {fileID: 900886785}
+  preset: {fileID: 11400000, guid: 45ffdf5e02efb4848942aaeb5d029f6e, type: 2}
+  cage: {fileID: 131292716}
+  state: 0
+  remoteProgressBar: {fileID: 2124491337}
+  userOverlay: {fileID: 1775561501}
+  remoteOverlay: {fileID: 175952860}
+  remoteTimer: 0
 --- !u!1 &997966344
 GameObject:
   m_ObjectHideFlags: 0
@@ -17089,6 +17141,10 @@ MonoBehaviour:
   filters:
   - .jpg
   - .png
+  - .jpeg
+  - .JPG
+  - .JPEG
+  - .PNG
   path: 
   folder:
     Path: 
@@ -18644,7 +18700,6 @@ MonoBehaviour:
   logBlocks: []
   defaultColor: {r: 0.73086506, g: 1, b: 0.7028302, a: 1}
   excludes: 1e000000290000002a0000002b000000
-  saving: 1
   logScrollSpeed: 7.25
 --- !u!1 &1197990838
 GameObject:
@@ -18719,12 +18774,8 @@ MonoBehaviour:
     timestamp: 0
     filesAdded: 0
     filesRemoved: 0
-    discoveries: 0
     logs: []
-    beaconsAdded: 0
-    beaconsPlanted: 0
-    nestKicks: 0
-    nestSpills: 0
+    photo: 
     AverageHoB: 0
     AverageNestFill: 0
     AverageCursorSpeed: 0
@@ -18732,6 +18783,13 @@ MonoBehaviour:
     AverageTimeSpentInMagicStar: 0
     AverageTimeSpentInTree: 0
     AverageTimeSpentInDefault: 0
+    FilesAdded: 0
+    FilesRemoved: 0
+    Discoveries: 0
+    BeaconsAdded: 0
+    BeaconsPlanted: 0
+    NestKicks: 0
+    NestSpills: 0
   refreshComposite: 0
 --- !u!1 &1198347967
 GameObject:
@@ -25059,9 +25117,7 @@ MonoBehaviour:
       m_Calls: []
   CameraManager: {fileID: 1067243527}
   Camera: {fileID: 0}
-  Wizard: {fileID: 0}
   BackgroundAudio: {fileID: 730062441}
-  MemoryAudio: {fileID: 1848652306}
   m_focus: {fileID: 0}
   CameraBlending: {fileID: 155698731}
   overlayOpacity: {fileID: 208423719}
@@ -25079,12 +25135,9 @@ MonoBehaviour:
   maxBGLP: 3333
   minBGVol: 0.87
   maxBGVol: 1
-  minMemVol: 0.67
-  maxMemVol: 0.9
   lowpass: 0
   lowPassSmoothSpeed: 0.5
   lowPassFilterParam: LPCutoff_BackgroundMusic
-  focuses: []
 --- !u!4 &1969311503
 Transform:
   m_ObjectHideFlags: 0

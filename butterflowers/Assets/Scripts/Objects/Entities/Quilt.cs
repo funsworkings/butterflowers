@@ -4,64 +4,56 @@ using System.Collections.Generic;
 
 using UnityEngine.Networking;
 using System.Threading.Tasks;
+using Settings;
 using UnityEngine.UI;
 using uwu.Extensions;
 using uwu.Snippets;
+using uwu.Textures;
 
-public class Quilt : MonoBehaviour 
+public class Quilt : MonoBehaviour, ITextureReceiver
 {
     public static Quilt Instance = null;
-
-    #region Events
-
-    public System.Action<string, Texture> onLoadTexture;
-    public System.Action<Texture> onDisposeTexture;
-
-    #endregion
-
-    #region External
-
-    [SerializeField] Nest Nest;
+    
+    // External
+    
     Library Lib;
+    TextureLoader TextureLoader;
 
-	#endregion
+    // Properties
 
+    [SerializeField] WorldPreset preset;
+    
 	[SerializeField] Material material = null;
     [SerializeField] CreateTextureArray textureArray;
+    [SerializeField] RenderTexture canvas;
+    
+    // Collections
+    
+    [SerializeField] List<Texture2D> textures = new List<Texture2D>();
+    List<Texture2D> overridetextures = new List<Texture2D>();
+    
+    public int textureCap = 4;
+    
+    // Attributes
     
     [SerializeField] float m_speed = 0f;
     [SerializeField] float minLerpSpeed = 0f, maxLerpSpeed = 1f;
-
     [SerializeField] float offset = 0f;
-
     [SerializeField] float interval = 0f;
-    public float speedInterval {
-        get
-        {
-            interval = (m_speed - minLerpSpeed) / (maxLerpSpeed - minLerpSpeed);
-            return interval;
-        }
-    }
-
     [SerializeField] float m_death = 0f, m_deathDecay = 1f;
-    public float death {
-        get
-        {
-            return m_death;
-        }
-        set
-        {
-            m_death = Mathf.Clamp01(value);
-        }
-    }
-
-    public int textureCap = 4;
-
-    [SerializeField] List<string> queue = new List<string>();
-    [SerializeField] List<Texture2D> textures = new List<Texture2D>();
     
-    List<Texture2D> overridetextures = new List<Texture2D>();
+    [SerializeField] float refreshRate = .167f;
+    
+    // Private fields
 
+    int index = -1;
+
+    Texture2D sampler;
+    Color[] sample;
+    int w = 0, h = 0;
+
+    #region Accessors
+    
     Texture2D[] textureStack
     {
         get
@@ -72,26 +64,28 @@ public class Quilt : MonoBehaviour
             return textures.ToArray();
         }
     }
-
-    int index = -1;
-
-    private bool read = false, load = false;
-
-    [SerializeField] RenderTexture canvas;
-
-    [SerializeField] Texture2D debugTexture;
-
-    [SerializeField]
-    float refreshRate = .167f;
-
-    Texture2D sampler;
-    Color[] sample;
-
-    int w = 0;
-    int h = 0;
-
-    #region Monobehaviour callbacks
-
+    
+    public float speedInterval {
+        get
+        {
+            interval = (m_speed - minLerpSpeed) / (maxLerpSpeed - minLerpSpeed);
+            return interval;
+        }
+    }
+    
+    public float death {
+        get
+        {
+            return m_death;
+        }
+        set
+        {
+            m_death = Mathf.Clamp01(value);
+        }
+    }
+    
+    #endregion
+    
     void Awake()
     {
         if (Instance == null) {
@@ -103,14 +97,15 @@ public class Quilt : MonoBehaviour
         }
     }
 
-    void Start(){
-        Nest = Nest.Instance;
-        UpdateTextureCapFromNestCapacity();
-
+    void Start()
+    {
         Lib = Library.Instance;
+        TextureLoader = TextureLoader.Instance;
 
         textures = new List<Texture2D>();
         overridetextures = new List<Texture2D>();
+
+        textureCap = preset.nestCapacity;
 
         SetTextureAttributes();
         ApplyTextures();
@@ -130,8 +125,6 @@ public class Quilt : MonoBehaviour
         UpdateLerpSpeed();
         if(wait <= 0f)
             offset = Mathf.Repeat(offset + (Time.deltaTime * m_speed), 1f);
-
-        UpdateTextureCapFromNestCapacity();
     }
 
     float wait = 0f;
@@ -144,13 +137,15 @@ public class Quilt : MonoBehaviour
 
     }
 
-    #endregion
-
     #region Operations
 
     public void Push(string file)
     {
-        LoadTexture(file);
+        var texture = Lib.GetTexture(file, nullable:true);
+        if(texture == null)
+            LoadTexture(file);
+        else
+            Add(texture);
     }
 
     public void Pop(string file)
@@ -166,7 +161,7 @@ public class Quilt : MonoBehaviour
         }
     }
 
-	public void Add(Texture tex){
+	void Add(Texture tex){
         ++index;
 
         var texture = (tex as Texture2D);
@@ -175,30 +170,22 @@ public class Quilt : MonoBehaviour
         ApplyTextures();
     }
 
-    public void Remove(Texture tex) 
+    void Remove(Texture tex) 
     {
         var texture = (tex as Texture2D);
 
         if (textures.Contains(texture)) {
             textures.Remove(texture);
             --index;
-
-            if (onDisposeTexture != null)
-                onDisposeTexture(texture);
-
+            
             ApplyTextures();
         }
 
         death = 1f;
     }
 
-    public void Dispose(bool apply = true) {
-        var _textures = textures.ToArray();
-        for (int i = 0; i < _textures.Length; i++) {
-            if (onDisposeTexture != null)
-                onDisposeTexture(_textures[i]);
-        }
-
+    public void Dispose(bool apply = true)
+    {
         index = 0;
         textures = new List<Texture2D>();
 
@@ -207,7 +194,7 @@ public class Quilt : MonoBehaviour
 
     #endregion
 
-    #region Sample operations
+    #region Sampling
 
     void SetTextureAttributes()
     {
@@ -267,61 +254,22 @@ public class Quilt : MonoBehaviour
 
     #endregion
 
-    #region Texture operations
+    #region Load
+
+    public void ReceiveTexture(string file, Texture2D texture)
+    {
+        Add(texture);
+        Lib.RegisterTexture(file, texture);
+    }
 
     void LoadTexture(string path)
     {
-        queue.Add(path);
-
-        if (!load) {
-            StartCoroutine("LoadFromQueue");
-            load = true;
-        }
-    }
-
-    IEnumerator LoadFromQueue()
-    {
-        while (queue.Count > 0) 
-        {
-            if (!read) 
-            {
-                string file = queue[0];
-                queue.RemoveAt(0);
-
-                read = true;
-                
-                ReadBytes(file);
-            }
-
-            yield return null;
-        }
-
-        load = false;
-    }
-
-    async Task ReadBytes(string file)
-    {
-        var www = await new WWW(string.Format("file://{0}", file));
-
-        read = false;
-
-        if (!string.IsNullOrEmpty(www.error)) {
-            throw new System.Exception("Error reading from texture");
-        }
-
-        Debug.Log("Success load = " + file);
-        var texture = www.texture;
-        texture.name = file;
-
-        Add(texture);
-
-        if (onLoadTexture != null)
-            onLoadTexture(file, texture);
+        TextureLoader.Push(path, this);
     }
 
     #endregion
     
-    #region Override textures
+    #region Overrides
 
     public void PushOverrideTexture(string file)
     {
@@ -343,7 +291,7 @@ public class Quilt : MonoBehaviour
     
     #endregion
 
-    #region Internal
+    #region Textures
 
     void ApplyTextures(){
         if(material == null)
@@ -370,7 +318,8 @@ public class Quilt : MonoBehaviour
 
         offset = 1f; // Snap back immediately to last added
 
-        if (wait <= 0f) {
+        if (wait <= 0f) 
+        {
             wait = 1.67f;
             StartCoroutine("Wait");
         }
@@ -384,14 +333,5 @@ public class Quilt : MonoBehaviour
     }
 
     #endregion
-
-    #region Nest callbacks
-
-    void UpdateTextureCapFromNestCapacity()
-    {
-        if (Nest == null) return;
-        textureCap = Nest.Instance.capacity;
-    }
-
-	#endregion
+    
 }

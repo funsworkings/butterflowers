@@ -173,7 +173,7 @@ public class Vine : Interactable
     
     #region Entity overrides
 
-    protected override bool EvaluateUpdate()
+    protected override bool EvaluateActiveState()
     {
         return (Sun.active || state == Status.Gate);
     }

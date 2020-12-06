@@ -101,16 +101,6 @@ public class Focusable : Interactable
     #region Interactable callbacks
 
     protected override void onHover(Vector3 point, Vector3 normal) {
-        if (isFocused) 
-        {
-            ClearInfo();	
-        }
-        else 
-        {
-            AddInfo();
-        }
-        
-        
         queued = true;
         onQueue.Invoke();
         
@@ -123,46 +113,5 @@ public class Focusable : Interactable
         base.onUnhover(point, normal);
     }
 
-    #endregion
-    
-    #region Info
-
-    void AddInfo()
-    {
-        if (!InfoContainsFocusText()) {
-            string message = tooltipText.text;
-
-            if (!string.IsNullOrEmpty((message)))
-                message += "\n";
-            
-            message += (this.message);
-            UpdateTooltipText(message);
-        }
-    }
-
-    void ClearInfo()
-    {
-        if (InfoContainsFocusText()) {
-            string message = tooltipText.text;
-			
-            var index = message.IndexOf(this.message);
-            message = message.Remove(index);
-
-            UpdateTooltipText(message);
-        }
-    }
-
-    bool InfoContainsFocusText()
-    {
-        try {
-            var contains = tooltipText.text.Contains(message);
-            return contains;
-        }
-        catch (System.Exception err) {
-            Debug.LogWarningFormat("Tooltip failed => {0}", gameObject.name);
-            return false;
-        }
-    }
-	
     #endregion
 }

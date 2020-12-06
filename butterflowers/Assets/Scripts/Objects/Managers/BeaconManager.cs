@@ -10,14 +10,15 @@ using Settings;
 using uwu;
 using uwu.Extensions;
 using uwu.Gameplay;
+using Object = System.Object;
 
-public class BeaconManager : Spawner, IReactToSunCycle
+public class BeaconManager : Spawner, IReactToSunCycle, ISaveable
 {
     public static BeaconManager Instance;
 
 	#region Events
 
-	public System.Action onRefreshBeacons;
+	public System.Action onUpdateBeacons;
     public System.Action<Beacon> onPlantBeacon;
 
 	#endregion
@@ -26,7 +27,7 @@ public class BeaconManager : Spawner, IReactToSunCycle
 
 	World World;
     Nest Nest;
-    GameDataSaveSystem Save;
+    GameDataSaveSystem SaveSys;
     Library Library;
 
     #endregion
@@ -42,7 +43,7 @@ public class BeaconManager : Spawner, IReactToSunCycle
     #region Attributes
 
     [SerializeField] LayerMask beaconGroundMask;
-	[SerializeField] int maxBeacons = 100;
+    [SerializeField] int maxBeacons = 100;
 
 	#endregion
 
@@ -90,7 +91,8 @@ public class BeaconManager : Spawner, IReactToSunCycle
 	{
 		Beacon.OnRegister += onRegisterBeacon;
 		Beacon.OnUnregister += onUnregisterBeacon;
-		
+
+		Beacon.Activated += onActivatedBeacon;
         Beacon.Planted += onPlantedBeacon;
     }
 
@@ -98,31 +100,18 @@ public class BeaconManager : Spawner, IReactToSunCycle
 	{
 		Beacon.OnRegister -= onRegisterBeacon;
 		Beacon.OnUnregister -= onUnregisterBeacon;
-		
+
+		Beacon.Activated -= onActivatedBeacon;
         Beacon.Planted -= onPlantedBeacon;
 	}
 
     #endregion
-    
-    #region Initialization
 
-    public void Load()
-    {
-	    maxBeacons = preset.amountOfBeacons; // Initialize max beacons
-
-	    World = World.Instance;
-	    Nest = Nest.Instance;
-	    Save = GameDataSaveSystem.Instance;
-	    Library = Library.Instance;
-    }
-    
-    #endregion
-    
     #region Cycle
 
     public void Cycle(bool refresh)
     {
-	    RefreshBeacons();
+	    //RefreshBeacons(); Do not wipe beacons in environment
     }
     
     #endregion
@@ -169,10 +158,6 @@ public class BeaconManager : Spawner, IReactToSunCycle
         var origin = instance.transform.position;
         var discovered = Library.HasDiscoveredFile(path); // Check if seen before
 
-        Vector3 scale = Vector3.one * preset.normalBeaconScale;
-        Transform parent = this.parent;
-        float lerp = preset.beaconLerpDuration;
-
         var beacon = instance.GetComponent<Beacon>();
             beacon.file = path;
             beacon.fileEntry = null;
@@ -181,16 +166,16 @@ public class BeaconManager : Spawner, IReactToSunCycle
         Debug.Log("Add beacon => " + path);
 
         beacon.Register();
-        beacon.Initialize(type, state, origin, scale, parent, lerp, preset.beaconScaleCurve, BeaconInfoContainer);
+        beacon.Initialize(type, state, origin, BeaconInfoContainer);
 
         Events.ReceiveEvent(EVENTCODE.BEACONADD, AGENT.World, AGENT.Beacon, details: beacon.file);
 
         return beacon;
     }
 
-    public void CreateBeaconInstance(string path, Type type, Vector3 point)
+    public void CreateBeaconInstance(string path, Type type, Vector3 point, bool usePosition)
     {
-	    CreateBeacon(path, type, Locale.Terrain, point, usePosition: true);
+	    CreateBeacon(path, type, Locale.Terrain, point, usePosition: usePosition);
     }
 
     public void DeleteBeacon(Beacon beacon, bool overridenest = false)
@@ -220,11 +205,10 @@ public class BeaconManager : Spawner, IReactToSunCycle
     {
 	    //DeleteDeprecatedBeacons(lib);
 
-        var desktop = Library.desktop_files;
-        var wizard = Library.wizard_files.Where(file => Library.HasDiscoveredFile(file)); // Only choose 'discovered' wizard files
-        var enviro = Library.enviro_files;
+        var desktop = Library.UserFiles;
+        var enviro = Library.WorldFiles;
 
-        var files = ((desktop.Concat(wizard)).Concat(enviro));
+        var files = desktop.Concat(enviro);
         var blacklist = PlantedBeacons.Select(b => b.file);
 
         files = files.Except(blacklist); // Ignore items from blacklist
@@ -253,17 +237,12 @@ public class BeaconManager : Spawner, IReactToSunCycle
             }
 
         }
-
-        wizard = wizard.Intersect(subset);
+        
         desktop = desktop.Intersect(subset).ToArray();
         enviro = enviro.Intersect(subset).ToArray();
-
-        CreateBeacons(wizard.ToArray(), Type.Wizard, Locale.Terrain);
+        
         CreateBeacons(desktop, Type.Desktop, Locale.Terrain);
         CreateBeacons(enviro, Type.External, Locale.Terrain);
-
-        if (onRefreshBeacons != null)
-            onRefreshBeacons();
     }
 
     public void RestoreBeacons(BeaconData[] data, bool deprecate = false)
@@ -298,9 +277,6 @@ public class BeaconManager : Spawner, IReactToSunCycle
         {
            // DeleteDeprecatedBeacons(lib);
         }
-
-        if (onRefreshBeacons != null)
-            onRefreshBeacons();
     }
     
 	
@@ -374,7 +350,8 @@ public class BeaconManager : Spawner, IReactToSunCycle
 			beacons.Add(file, new List<Beacon>(new Beacon[] { beacon }));
 
 		allBeacons.Add(beacon);
-		Save.beacons = allBeacons.ToArray();
+		if (onUpdateBeacons != null)
+			onUpdateBeacons();
 	}
 
 	void onUnregisterBeacon(Beacon beacon)
@@ -389,7 +366,8 @@ public class BeaconManager : Spawner, IReactToSunCycle
 		}
 
 		allBeacons.Remove(beacon);
-		Save.beacons = allBeacons.ToArray();
+		if (onUpdateBeacons != null)
+			onUpdateBeacons();
 	}
 
 	void onActivatedBeacon(Beacon beacon)
@@ -402,6 +380,31 @@ public class BeaconManager : Spawner, IReactToSunCycle
 	    if (onPlantBeacon != null)
             onPlantBeacon(beacon);
     }
+
+	#endregion
+	
+	#region Save/load
+
+	public Object Save()
+	{
+		return allBeacons.ToArray();
+	}
+
+	public void Load(Object dat)
+	{
+		maxBeacons = preset.amountOfBeacons; // Initialize max beacons
+
+		World = World.Instance;
+		Nest = Nest.Instance;
+		SaveSys = GameDataSaveSystem.Instance;
+		Library = Library.Instance;
+
+		if (dat != null) 
+		{
+			var beacons = (BeaconData[]) dat;
+			RestoreBeacons(beacons);
+		}
+	}
 
 	#endregion
 }

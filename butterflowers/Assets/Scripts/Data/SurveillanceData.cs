@@ -17,7 +17,7 @@ namespace Data
 		[Header("File stats")]
 			public int filesAdded = 0; // Gluttony, nurture
 			public int filesRemoved = 0; // Destruction, spontaneity
-			public int discoveries = 0; // Spontaneity, play
+			
 
 		[Header("Log stats")] 
 			public SurveillanceLogData[] logs = new SurveillanceLogData[]{};
@@ -36,12 +36,14 @@ namespace Data
 		
 		#endregion
 
-		[Header("Beacon stats")] 
-			public int beaconsAdded = 0; // Gluttony, destruction
-			public int beaconsPlanted = 0; // Nurture, rest
+		// Accessors for core attributes driving AI
+		public int discoveries => logs.Select(log => log.SortEventsByType(EVENTCODE.DISCOVERY)).Count(); // Spontaneity, play
+		public int beaconsAdded => logs.Select(log => log.SortEventsByType(EVENTCODE.BEACONADD)).Count(); // Gluttony, destruction
+		public int beaconsPlanted => logs.Select(log => log.SortEventsByType(EVENTCODE.BEACONPLANT)).Count(); // Nurture, rest
+		public int nestKicks => logs.Select(log => log.SortEventsByType(EVENTCODE.NESTKICK)).Count(); // Play, rest
+		public int nestSpills => logs.Select(log => log.SortEventsByType(EVENTCODE.NESTSPILL)).Count(); // Destruction, gluttony
 
-		[Header("Nest stats")] 
-			public int nestKicks = 0; // Play, rest
-			public int nestSpills = 0; // Destruction, gluttony
+		[Header("Miscellaneous")] 
+			public string photo;
 	}
 }

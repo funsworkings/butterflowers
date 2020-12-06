@@ -70,7 +70,7 @@ namespace AI.Agent
 		
 		#region Verify active
 
-		protected override bool EvaluateUpdate()
+		protected override bool EvaluateActiveState()
 		{
 			return Brain.Self;
 		}

@@ -37,8 +37,7 @@ MonoBehaviour:
   nestCapacity: 6
   amountOfBeacons: 10
   normalBeaconScale: 1
-  plantedBeaconScale: 3
-  beaconLerpDuration: 1
+  beaconLerpDuration: 0.2
   beaconScaleCurve:
     serializedVersion: 2
     m_Curve:
@@ -109,17 +108,13 @@ MonoBehaviour:
   maximumLeafScale: 1
   leafFlutterAngle: 45
   leafFlutterTime: 1
-  surveillanceLogRate: 0.167
+  surveillanceLogRate: 3.33
   baselineSurveillanceData:
     timestamp: 0
     filesAdded: 1
     filesRemoved: 0
-    discoveries: 1
     logs: []
-    beaconsAdded: 1
-    beaconsPlanted: 1
-    nestKicks: 1
-    nestSpills: 1
+    photo: 
     AverageHoB: 0
     AverageNestFill: 0
     AverageCursorSpeed: 0
@@ -127,6 +122,13 @@ MonoBehaviour:
     AverageTimeSpentInMagicStar: 0
     AverageTimeSpentInTree: 0
     AverageTimeSpentInDefault: 0
+    FilesAdded: 0
+    FilesRemoved: 0
+    Discoveries: 0
+    BeaconsAdded: 0
+    BeaconsPlanted: 0
+    NestKicks: 0
+    NestSpills: 0
   unknownPersistenceThreshold: 0.33
   cursorSpeedThreshold: 1
   cursorIdleTimeThreshold: 10

@@ -9476,7 +9476,6 @@ GameObject:
   - component: {fileID: 1270796099338416104}
   - component: {fileID: 114299761081886602}
   - component: {fileID: 3173907804839275053}
-  - component: {fileID: 114104548790259910}
   m_Layer: 11
   m_Name: beacon
   m_TagString: Untagged
@@ -9525,19 +9524,19 @@ MonoBehaviour:
   m_interactive: 1
   container: {fileID: 0}
   useTooltip: 1
+  alwaysShowTooltip: 0
   m_defaultTooltipText: 
   tooltipInstance: {fileID: 0}
-  revealPS: {fileID: 7519155530151778121}
-  discoveryPS: {fileID: 2453548540509390200}
+  preset: {fileID: 11400000, guid: 45ffdf5e02efb4848942aaeb5d029f6e, type: 2}
   deathPS: {fileID: 2567470850076773811}
   addPS: {fileID: 123617474}
-  auraPS: {fileID: 2710361725971392789}
   pr_impactPS: {fileID: 5683122868263647427, guid: ada8750f99e3ae240a0cdbd90f03ffe1,
     type: 3}
   pr_shinePS: {fileID: 1311559724632354285, guid: 3ed5efbaf97b2a94989b8edf335c7b76,
     type: 3}
   type: 0
   state: 0
+  parent: 0
   m_discovered: 0
   beaconInfo: {fileID: 0}
   m_file: 
@@ -9546,15 +9545,12 @@ MonoBehaviour:
     Name: 
     ShortName: 
     Extension: 
-  parent: {fileID: 0}
   origin: {x: 0, y: 0, z: 0}
   size: {x: 1, y: 1, z: 1}
   lerp: 0
   statechange: 0
   lerp_t: 0
   lerp_duration: 1
-  timeToDie: 0
-  learning: 0
 --- !u!65 &1270796099338416104
 BoxCollider:
   m_ObjectHideFlags: 0
@@ -9600,19 +9596,6 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: eef10f3e409894d559e3f2f7c07247c4, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
---- !u!114 &114104548790259910
-MonoBehaviour:
-  m_ObjectHideFlags: 0
-  m_CorrespondingSourceObject: {fileID: 0}
-  m_PrefabInstance: {fileID: 0}
-  m_PrefabAsset: {fileID: 0}
-  m_GameObject: {fileID: 1270796099338416119}
-  m_Enabled: 1
-  m_EditorHideFlags: 0
-  m_Script: {fileID: 11500000, guid: 6227d3f328794136943882c8498388cb, type: 3}
-  m_Name: 
-  m_EditorClassIdentifier: 
-  m_advertisements: []
 --- !u!1 &1270796099906857372
 GameObject:
   m_ObjectHideFlags: 0

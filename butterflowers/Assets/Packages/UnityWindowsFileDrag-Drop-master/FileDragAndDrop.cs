@@ -36,20 +36,23 @@ public class FileDragAndDrop : MonoBehaviour
         foreach (string s in aFiles) 
         {
             Debug.LogError(s);
-
+            
+            var info = new FileInfo(s);
+            var path = info.FullName;
+            
             var ext = System.IO.Path.GetExtension(s).ToLowerInvariant();
             bool success = Files.ExtensionMatchesFilter(ext);
 
             if (success) 
             {
-                bool exists = Lib.RegisterFileInstance(s, aPos);
+                bool exists = Lib.RegisterFileInstance(path, aPos);
                 if(exists) 
-                    wand.AddBeacon(s, aPos); // Add beacon to scene via wand
+                    wand.AddBeacon(path, aPos); // Add beacon to scene via wand
                 else
-                    Debug.LogErrorFormat("File => {0} does not exist on user's desktop!", s);
+                    Debug.LogErrorFormat("File => {0} does not exist on user's desktop!", path);
             }
             else {
-                Debug.LogErrorFormat("File => {0} does not match extensions!", s);
+                Debug.LogErrorFormat("File => {0} does not match extensions!", path);
             }
         }
     }
