@@ -9534,21 +9534,25 @@ MonoBehaviour:
     type: 3}
   pr_shinePS: {fileID: 1311559724632354285, guid: 3ed5efbaf97b2a94989b8edf335c7b76,
     type: 3}
+  pr_flower: {fileID: 8040875481186664252, guid: f20db615abd81b74d9d5880fd72a699e,
+    type: 3}
   type: 0
   state: 0
   parent: 0
-  m_discovered: 0
-  beaconInfo: {fileID: 0}
   m_file: 
   m_fileEntry:
     Path: 
     Name: 
     ShortName: 
     Extension: 
+  beaconInfo: {fileID: 0}
   origin: {x: 0, y: 0, z: 0}
   size: {x: 1, y: 1, z: 1}
-  lerp: 0
-  statechange: 0
+  hovered: 0
+  m_discovered: 0
+  returnToOrigin: 0
+  releasePosition: {x: 0, y: 0, z: 0}
+  releaseScale: {x: 0, y: 0, z: 0}
   lerp_t: 0
   lerp_duration: 1
 --- !u!65 &1270796099338416104

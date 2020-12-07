@@ -353,13 +353,14 @@ public class Wand : Interacter
 
     void DropBeacon()
     {
-        if (target is Terrain) 
-        {
-            Vector3 origin = raycastHit.point;
+        Vector3 origin = raycastHit.point;
+        
+        if (target is Terrain)
             beacon.PlantAtLocation(origin);
-        }
         else if (target is Nest)
             beacon.Activate();
+        else if(target is Tree)
+            beacon.FlowerAtLocation(origin);
         else
             beacon.Drop();
         

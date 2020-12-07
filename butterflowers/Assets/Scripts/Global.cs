@@ -40,6 +40,7 @@ public enum EVENTCODE {
     BEACONADD = 21,
     BEACONDELETE = 22, //
     BEACONPLANT = 23, //
+    BEACONFLOWER = 24, //
 
     GESTURE = 30,
     PHOTOGRAPH = 31,

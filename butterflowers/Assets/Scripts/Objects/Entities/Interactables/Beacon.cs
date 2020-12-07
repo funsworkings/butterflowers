@@ -42,7 +42,8 @@ public class Beacon: Interactable {
         Nest,
         Planted,
         Destroyed,
-        Drag
+        Drag,
+        Flower
     }
 
 	#endregion
@@ -55,7 +56,7 @@ public class Beacon: Interactable {
     // Events
 
 	public static System.Action<Beacon> OnRegister, OnUnregister;
-    public static System.Action<Beacon> Activated, Destroyed, Planted;
+    public static System.Action<Beacon> Activated, Destroyed, Planted, Flowered;
 
     // Properties
 
@@ -68,6 +69,7 @@ public class Beacon: Interactable {
     Material material;
 
     [SerializeField] GameObject pr_impactPS, pr_shinePS;
+    [SerializeField] GameObject pr_flower;
     
     public Type type = Type.None;
     public Locale state = Locale.Terrain;
@@ -234,6 +236,7 @@ public class Beacon: Interactable {
         this.scaleCurve = preset.beaconScaleCurve;
 
         ReturnToOrigin(99f);
+        if(state == Locale.Flower) CreateFlowerAtOrigin();
     }
 
 
@@ -282,6 +285,35 @@ public class Beacon: Interactable {
             Planted(this);
 
         return true;
+    }
+
+    public void FlowerAtLocation(Vector3 point)
+    {
+        if (state != Locale.Drag) return;
+
+        origin = point;
+        Flower();
+    }
+
+    public bool Flower()
+    {
+        if (state != Locale.Drag) return false;
+        state = Locale.Flower;
+
+        transform.localScale = Vector3.zero;
+        
+        CreateFlowerAtOrigin();
+
+        Events.ReceiveEvent(EVENTCODE.BEACONFLOWER, AGENT.User, AGENT.Beacon, details: file);
+        if (Flowered != null)
+            Flowered(this);
+        
+        return true;
+    }
+
+    void CreateFlowerAtOrigin()
+    {
+        var flower = Instantiate(pr_flower, origin, Quaternion.identity);
     }
 
     public bool Deactivate()
