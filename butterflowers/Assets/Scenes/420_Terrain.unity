@@ -3476,7 +3476,8 @@ Transform:
   m_PrefabInstance: {fileID: 0}
   m_PrefabAsset: {fileID: 0}
   m_GameObject: {fileID: 201810246}
-  m_LocalRotation: {x: 0.12156506, y: 0.000000008540378, z: -9.923e-10, w: 0.9925835}
+  m_LocalRotation: {x: 0.12156507, y: -0.0000000085458876, z: 0.0000000010373067,
+    w: 0.9925835}
   m_LocalPosition: {x: 0, y: 9.595102, z: -21.852465}
   m_LocalScale: {x: 1, y: 1.3577, z: 1}
   m_Children:
@@ -20104,6 +20105,73 @@ MonoBehaviour:
   defaultText: Scraping for files...
   foundFilesText: Found {0} new files!
   noFilesText: No new files found!
+--- !u!1 &1377914528 stripped
+GameObject:
+  m_CorrespondingSourceObject: {fileID: 1854825634, guid: bbe889dad4ed0dd48a0243ced6070a70,
+    type: 3}
+  m_PrefabInstance: {fileID: 2909332178095530284}
+  m_PrefabAsset: {fileID: 0}
+--- !u!114 &1377914530
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 1377914528}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 3e7a9c22403f7be49a9a90332a5f2af5, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
+  m_agent: 9
+  prTooltip: {fileID: 7327096736874297126, guid: 31dffb715f0d17044a8d9c9074f7f506,
+    type: 3}
+  m_interactive: 1
+  container: {fileID: 2032687483}
+  useTooltip: 1
+  alwaysShowTooltip: 0
+  m_defaultTooltipText: 
+  tooltipInstance: {fileID: 0}
+  onFocused:
+    m_PersistentCalls:
+      m_Calls: []
+  onLostFocus:
+    m_PersistentCalls:
+      m_Calls: []
+  onQueue:
+    m_PersistentCalls:
+      m_Calls: []
+  focused: 0
+  queued: 0
+  anchor: {fileID: 1677838454}
+  dispose: 1
+  overrideCamera: {fileID: 164604285}
+--- !u!114 &1377914531
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 1377914528}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: eef10f3e409894d559e3f2f7c07247c4, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
+--- !u!64 &1377914533
+MeshCollider:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 1377914528}
+  m_Material: {fileID: 0}
+  m_IsTrigger: 0
+  m_Enabled: 1
+  serializedVersion: 3
+  m_Convex: 0
+  m_CookingOptions: 14
+  m_Mesh: {fileID: 10210, guid: 0000000000000000e000000000000000, type: 0}
 --- !u!1 &1386768771
 GameObject:
   m_ObjectHideFlags: 0
@@ -23893,6 +23961,73 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: df3ceb2e2dc7449e68ec783454ef14c1, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
+--- !u!1 &1901877599 stripped
+GameObject:
+  m_CorrespondingSourceObject: {fileID: 1981574396, guid: bbe889dad4ed0dd48a0243ced6070a70,
+    type: 3}
+  m_PrefabInstance: {fileID: 2909332178095530284}
+  m_PrefabAsset: {fileID: 0}
+--- !u!114 &1901877601
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 1901877599}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 3e7a9c22403f7be49a9a90332a5f2af5, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
+  m_agent: 9
+  prTooltip: {fileID: 7327096736874297126, guid: 31dffb715f0d17044a8d9c9074f7f506,
+    type: 3}
+  m_interactive: 1
+  container: {fileID: 2032687483}
+  useTooltip: 1
+  alwaysShowTooltip: 0
+  m_defaultTooltipText: 
+  tooltipInstance: {fileID: 0}
+  onFocused:
+    m_PersistentCalls:
+      m_Calls: []
+  onLostFocus:
+    m_PersistentCalls:
+      m_Calls: []
+  onQueue:
+    m_PersistentCalls:
+      m_Calls: []
+  focused: 0
+  queued: 0
+  anchor: {fileID: 1677838454}
+  dispose: 1
+  overrideCamera: {fileID: 164604285}
+--- !u!114 &1901877602
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 1901877599}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: eef10f3e409894d559e3f2f7c07247c4, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
+--- !u!64 &1901877604
+MeshCollider:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 1901877599}
+  m_Material: {fileID: 0}
+  m_IsTrigger: 0
+  m_Enabled: 1
+  serializedVersion: 3
+  m_Convex: 0
+  m_CookingOptions: 14
+  m_Mesh: {fileID: 10210, guid: 0000000000000000e000000000000000, type: 0}
 --- !u!1001 &1931795495
 PrefabInstance:
   m_ObjectHideFlags: 0
