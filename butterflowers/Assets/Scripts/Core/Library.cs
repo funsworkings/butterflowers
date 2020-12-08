@@ -42,7 +42,7 @@ public class Library : Singleton<Library>, ITextureReceiver
 	public System.Action OnRefreshItems;
 
 	public System.Action<string, POINT> onAddFileInstance;
-	public System.Action<string[]> onAddedFiles, onRemovedFiles;
+	public System.Action<string[]> onAddedFiles, onRemovedFiles, onDeletedFiles, onRecoverFiles;
 
 	public System.Action<string> onDiscoverFile;
 
@@ -55,6 +55,7 @@ public class Library : Singleton<Library>, ITextureReceiver
 	
 	public List<string> ALL_FILES = new List<string>();
 	public List<string> ALL_DIRECTORIES = new List<string>();
+	public Dictionary<string, bool> TEMP_FILES = new Dictionary<string, bool>();
 	
 	public List<int> USER_FILES = new List<int>();
 	public List<int> SHARED_FILES = new List<int>();
@@ -73,6 +74,7 @@ public class Library : Singleton<Library>, ITextureReceiver
 	// Attributes
 
 	[SerializeField] bool read = false, load = false, initialized = false;
+	[SerializeField] bool listenForEvents = false;
 
 	#region Accessors
 
@@ -109,6 +111,18 @@ public class Library : Singleton<Library>, ITextureReceiver
 	void OnDestroy()
 	{
 		Dispose();
+	}
+
+	void OnApplicationFocus(bool hasFocus)
+	{
+		if(hasFocus) StopListen();
+		else StartListen();
+	}
+
+	void OnApplicationPause(bool pauseStatus)
+	{
+		if(pauseStatus) StartListen();
+		else StopListen();
 	}
 
 	#endregion
@@ -401,6 +415,11 @@ public class Library : Singleton<Library>, ITextureReceiver
 		return success;
 	}
 
+	public bool UnregisterFile(string file)
+	{
+		return false;
+	}
+
 	public void RegisterTexture(string file, Texture tex)
 	{
 		var texture = (tex as Texture2D);
@@ -412,6 +431,72 @@ public class Library : Singleton<Library>, ITextureReceiver
 		Debug.LogFormat("Added {0} to library", file);
 	}
 
+	#endregion
+	
+	#region Deprecation
+
+	void StartListen()
+	{
+		if (!listenForEvents) 
+		{
+			TEMP_FILES.Clear();
+			foreach (string file in ALL_FILES) 
+			{
+				var fileInfo = new FileInfo(file);
+				var exists = fileInfo.Exists;
+
+				if (exists) TEMP_FILES.Add(file, true);
+				else TEMP_FILES.Add(file, false);
+			}
+			
+			StartCoroutine(ListenForFileEvents()); 
+			listenForEvents = true;
+		}
+	}
+	void StopListen(){ if(listenForEvents){ StopCoroutine(ListenForFileEvents()); listenForEvents = false; } }
+
+	IEnumerator ListenForFileEvents()
+	{
+		List<string> deprecate = new List<string>();
+		List<string> recover = new List<string>();
+
+		while (true) 
+		{
+			foreach (string file in ALL_FILES) 
+			{
+				var fileInfo = new FileInfo(file);
+				var exists = fileInfo.Exists;
+				
+				var cacheExists = false;
+				if (!TEMP_FILES.TryGetValue(file, out cacheExists)) 
+				{
+					TEMP_FILES.Add(file, exists);
+					cacheExists = exists;
+				}
+
+				if (cacheExists != exists) {
+					if (exists) recover.Add(file);
+					else deprecate.Add(file);
+
+					TEMP_FILES[file] = exists;
+				}
+			}
+			
+			Debug.LogErrorFormat("User deleted {0} files\nUser recovered {1} files", deprecate.Count, recover.Count);
+
+			if (deprecate.Count > 0 && onDeletedFiles != null)
+				onDeletedFiles(deprecate.ToArray());
+
+			if (recover.Count > 0 && onRecoverFiles != null)
+				onRecoverFiles(recover.ToArray());
+			
+			deprecate.Clear();
+			recover.Clear();
+
+			yield return new WaitForSecondsRealtime(1f);
+		}
+	}
+	
 	#endregion
 	
 	#region Discovery

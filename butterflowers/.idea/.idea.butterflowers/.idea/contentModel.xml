@@ -9,6 +9,12 @@
       <e p="Assembly-CSharp-firstpass.csproj" t="IncludeRecursive" />
       <e p="Assembly-CSharp.csproj" t="IncludeRecursive" />
       <e p="Assets" t="Include">
+        <e p="Animations" t="Include">
+          <e p="Behaviours" t="Include">
+            <e p="BeaconAnimationBehaviour.cs" t="Include" />
+            <e p="BeaconAppearBehaviour.cs" t="Include" />
+          </e>
+        </e>
         <e p="Cutscenes" t="Include">
           <e p="Behaviours" t="Include">
             <e p="CameraManagerTrack" t="Include">
@@ -641,6 +647,7 @@
           </e>
           <e p="uwu" t="Include">
             <e p="Animation" t="Include">
+              <e p="ComponentStateMachineBehaviour.cs" t="Include" />
               <e p="Editor" t="Include">
                 <e p="GesturesEditor.cs" t="Include" />
               </e>

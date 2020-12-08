@@ -94,7 +94,11 @@ public class BeaconManager : Spawner, IReactToSunCycle, ISaveable
 
 		Beacon.Activated += onActivatedBeacon;
         Beacon.Planted += onPlantedBeacon;
-    }
+        
+        Library = Library.Instance;
+	        Library.onDeletedFiles += UserDeletedFiles;
+	        Library.onRecoverFiles += UserRecoveredFiles;
+	}
 
 	void OnDisable()
 	{
@@ -103,6 +107,9 @@ public class BeaconManager : Spawner, IReactToSunCycle, ISaveable
 
 		Beacon.Activated -= onActivatedBeacon;
         Beacon.Planted -= onPlantedBeacon;
+        
+        Library.onDeletedFiles -= UserDeletedFiles;
+        Library.onRecoverFiles -= UserRecoveredFiles;
 	}
 
     #endregion
@@ -111,7 +118,7 @@ public class BeaconManager : Spawner, IReactToSunCycle, ISaveable
 
     public void Cycle(bool refresh)
     {
-	    //RefreshBeacons(); Do not wipe beacons in environment
+		WipeBeacons(); // Clear out flammable beacons
     }
     
     #endregion
@@ -149,7 +156,7 @@ public class BeaconManager : Spawner, IReactToSunCycle, ISaveable
 
     #region Operations
 
-    public Beacon CreateBeacon(string path, Type type, Locale state, Vector3 position, bool usePosition = false)
+    public Beacon CreateBeacon(string path, Type type, Locale state, Vector3 position, bool usePosition = false, bool load= true)
     {
         var instance = InstantiatePrefab(); // Create new beacon prefab
         if (usePosition) 
@@ -164,9 +171,8 @@ public class BeaconManager : Spawner, IReactToSunCycle, ISaveable
             beacon.discovered = discovered; // Set if beacon has been discovered
             
         Debug.Log("Add beacon => " + path);
-
-        beacon.Register();
-        beacon.Initialize(type, state, origin, BeaconInfoContainer);
+        
+        beacon.Initialize(type, state, origin, BeaconInfoContainer, load);
 
         Events.ReceiveEvent(EVENTCODE.BEACONADD, AGENT.World, AGENT.Beacon, details: beacon.file);
 
@@ -175,7 +181,7 @@ public class BeaconManager : Spawner, IReactToSunCycle, ISaveable
 
     public void CreateBeaconInstance(string path, Type type, Vector3 point, bool usePosition)
     {
-	    CreateBeacon(path, type, Locale.Terrain, point, usePosition: usePosition);
+	    CreateBeacon(path, type, Locale.Terrain, point, usePosition: usePosition, load:false);
     }
 
     public void DeleteBeacon(Beacon beacon, bool overridenest = false)
@@ -259,10 +265,11 @@ public class BeaconManager : Spawner, IReactToSunCycle, ISaveable
             var beacon = data[i];
 
             string p = beacon.path;
+            Vector3 loc = new Vector3(beacon.x, beacon.y, beacon.z);
             Type t = (Type)beacon.type;
             Locale s = (Locale)beacon.state;
 
-            var instance = CreateBeacon(p, t, s, Vector3.zero);
+            var instance = CreateBeacon(p, t, s, loc, usePosition:true);
             if (instance == null)
                 continue; // Bypass null beacon
 
@@ -278,8 +285,20 @@ public class BeaconManager : Spawner, IReactToSunCycle, ISaveable
            // DeleteDeprecatedBeacons(lib);
         }
     }
-    
-	
+
+    public void WipeBeacons()
+    {
+	    foreach (KeyValuePair<string, List<Beacon>> lookup in beacons) 
+	    {
+		    var file = lookup.Key;
+		    var beacons = lookup.Value.ToArray();
+
+		    foreach (Beacon b in beacons) 
+		    {
+				if(b.IsOnFire) DeleteBeacon(b, overridenest:true);    
+		    }
+	    }
+    }
 
     public void CreateBeacons(string[] files, Type type, Locale state)
     {
@@ -381,6 +400,36 @@ public class BeaconManager : Spawner, IReactToSunCycle, ISaveable
             onPlantBeacon(beacon);
     }
 
+	#endregion
+	
+	#region Library callbacks
+
+	void UserDeletedFiles(string[] files)
+	{
+		foreach (string file in files) 
+		{
+			if (beacons.ContainsKey(file)) 
+			{
+				var list = beacons[file];
+				foreach(Beacon b in list)
+					b.Destroy();	
+			}	
+		}
+	}
+
+	void UserRecoveredFiles(string[] files)
+	{
+		foreach (string file in files) 
+		{
+			if (beacons.ContainsKey(file)) 
+			{
+				var list = beacons[file];
+				foreach(Beacon b in list)
+					b.Recover();
+			}	
+		}
+	}
+	
 	#endregion
 	
 	#region Save/load

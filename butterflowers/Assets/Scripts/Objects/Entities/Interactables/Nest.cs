@@ -13,7 +13,7 @@ using Behaviour = AI.Types.Behaviour;
 using Object = System.Object;
 using Random = UnityEngine.Random;
 
-public class Nest : Focusable, IReactToSunCycle, ISaveable
+public class Nest : Focusable, IReactToSunCycle, ISaveable, IFlammable
 {
     public static Nest Instance = null;
 
@@ -145,9 +145,9 @@ public class Nest : Focusable, IReactToSunCycle, ISaveable
         UpdateInfoTextFromCapacity();
     }
 
-    protected override void OnDestroy()
+    protected override void OnDestroyed()
     {
-        base.OnDestroy();
+        base.OnDestroyed();
 
         damage.onHit.RemoveListener(SpillKick);
 
@@ -448,6 +448,17 @@ public class Nest : Focusable, IReactToSunCycle, ISaveable
         Entity entity = other.GetComponent<Entity>();
         if (entity == null) return;
 
+        Debug.LogError("Nest collided with " + entity.name);
+
+        if (entity is IFlammable) 
+        {
+            var e_Flammable = (entity as IFlammable);
+            
+            if (IsOnFire) e_Flammable.Fire();
+            else e_Flammable.Extinguish();
+        }
+        
+
         if (entity is Vine) 
         {
             var vine = (entity as Vine);
@@ -483,6 +494,22 @@ public class Nest : Focusable, IReactToSunCycle, ISaveable
 
     #endregion
     
+    #region Flammability
+    
+    public bool IsOnFire { get; }
+    
+    public void Fire()
+    {
+        
+    }
+
+    public void Extinguish()
+    {
+        
+    }
+    
+    #endregion
+    
     #region Save/load
 
     public Object Save()
@@ -498,4 +525,5 @@ public class Nest : Focusable, IReactToSunCycle, ISaveable
     }
 
     #endregion
+    
 }
