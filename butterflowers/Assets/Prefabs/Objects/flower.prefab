@@ -10,7 +10,8 @@ GameObject:
   m_Component:
   - component: {fileID: 1984411663683584352}
   - component: {fileID: 573763726}
-  m_Layer: 0
+  - component: {fileID: 1766958475}
+  m_Layer: 12
   m_Name: flower
   m_TagString: Untagged
   m_Icon: {fileID: 0}
@@ -53,6 +54,26 @@ Animator:
   m_HasTransformHierarchy: 1
   m_AllowConstantClipSamplingOptimization: 1
   m_KeepAnimatorControllerStateOnDisable: 0
+--- !u!114 &1766958475
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 1984411663683584353}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 2c43c326aa074ff7838ff2dc7862b364, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
+  m_agent: 0
+  prTooltip: {fileID: 0}
+  m_interactive: 1
+  container: {fileID: 0}
+  useTooltip: 1
+  alwaysShowTooltip: 0
+  m_defaultTooltipText: 
+  tooltipInstance: {fileID: 0}
 --- !u!1001 &5042240003626103682
 PrefabInstance:
   m_ObjectHideFlags: 0
