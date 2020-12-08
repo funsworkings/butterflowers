@@ -5,6 +5,7 @@ using System.Linq;
 using System.Runtime.InteropServices;
 using Data;
 using Objects.Entities;
+using Objects.Entities.Interactables.Empty;
 using UnityEngine;
 using UnityEngine.Serialization;
 using uwu.Extensions;
@@ -581,9 +582,11 @@ public class Vine : Interactable
     {
         Vector3 pos = (state == Status.Natural) ? end : vertex.top;
         
-        var flower = Instantiate(flowerPrefab, pos, flowerPrefab.transform.rotation);
-            flower.transform.parent = transform;
-            flower.GetComponent<Animator>().SetBool("visible", true);
+        var flowerInstance = Instantiate(flowerPrefab, pos, flowerPrefab.transform.rotation);
+            flowerInstance.transform.parent = transform;
+
+        var flower = flowerInstance.GetComponentInChildren<Flower>();
+        flower.Grow(Flower.GrowProfile.Normal);
     }
 
     Leaf[] ConstructAllLeaves()

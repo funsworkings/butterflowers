@@ -12,6 +12,7 @@ using uwu.Snippets;
 using XNode.Examples.MathNodes;
 using AI;
 using Objects.Base;
+using Objects.Entities.Interactables.Empty;
 using Behaviour = AI.Types.Behaviour;
 
 public class Beacon: Interactable {
@@ -313,7 +314,9 @@ public class Beacon: Interactable {
 
     void CreateFlowerAtOrigin()
     {
-        var flower = Instantiate(pr_flower, origin, Quaternion.identity);
+        var flowerInstance = Instantiate(pr_flower, origin, Quaternion.identity);
+        var flower = flowerInstance.GetComponentInChildren<Flower>();
+            flower.Grow(Objects.Entities.Interactables.Empty.Flower.GrowProfile.Small, file, type);
     }
 
     public bool Deactivate()
