@@ -34,16 +34,26 @@
   </component>
   <component name="ChangeListManager">
     <list default="true" id="6ebb3891-c912-403e-9e42-400f227dea0b" name="Default Changelist" comment="">
+      <change beforePath="$PROJECT_DIR$/.idea/.idea.butterflowers/.idea/contentModel.xml" beforeDir="false" afterPath="$PROJECT_DIR$/.idea/.idea.butterflowers/.idea/contentModel.xml" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/.idea/.idea.butterflowers/.idea/workspace.xml" beforeDir="false" afterPath="$PROJECT_DIR$/.idea/.idea.butterflowers/.idea/workspace.xml" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/Assets/Animations/Controllers/Entities/Flower.controller" beforeDir="false" afterPath="$PROJECT_DIR$/Assets/Animations/Controllers/Entities/Flower.controller" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/Assets/Materials/Canvas.mat" beforeDir="false" afterPath="$PROJECT_DIR$/Assets/Materials/Canvas.mat" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/Assets/Prefabs/Objects/beacon.prefab" beforeDir="false" afterPath="$PROJECT_DIR$/Assets/Prefabs/Objects/beacon.prefab" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/Assets/Prefabs/Objects/flower.prefab" beforeDir="false" afterPath="$PROJECT_DIR$/Assets/Prefabs/Objects/flower.prefab" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/Assets/Prefabs/Objects/tiny flower.prefab" beforeDir="false" afterPath="$PROJECT_DIR$/Assets/Prefabs/Objects/tiny flower.prefab" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/Assets/Scenes/420_Terrain.unity" beforeDir="false" afterPath="$PROJECT_DIR$/Assets/Scenes/420_Terrain.unity" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/Assets/Scripts/Core/Library.cs" beforeDir="false" afterPath="$PROJECT_DIR$/Assets/Scripts/Core/Library.cs" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/Assets/Scripts/Data/BeaconData.cs" beforeDir="false" afterPath="$PROJECT_DIR$/Assets/Scripts/Data/BeaconData.cs" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/Assets/Scripts/Interfaces/IFlammable.cs" beforeDir="false" afterPath="$PROJECT_DIR$/Assets/Scripts/Interfaces/IFlammable.cs" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/Assets/Scripts/Objects/Base/Interactable.cs" beforeDir="false" afterPath="$PROJECT_DIR$/Assets/Scripts/Objects/Base/Interactable.cs" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/Assets/Scripts/Objects/Entities/Interactables/Beacon.cs" beforeDir="false" afterPath="$PROJECT_DIR$/Assets/Scripts/Objects/Entities/Interactables/Beacon.cs" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/Assets/Scripts/Objects/Entities/Interactables/Empty/Flower.cs" beforeDir="false" afterPath="$PROJECT_DIR$/Assets/Scripts/Objects/Entities/Interactables/Empty/Flower.cs" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/Assets/Scripts/Objects/Entities/Interactables/Nest.cs" beforeDir="false" afterPath="$PROJECT_DIR$/Assets/Scripts/Objects/Entities/Interactables/Nest.cs" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/Assets/Scripts/Objects/Entities/Interactables/Vine.cs" beforeDir="false" afterPath="$PROJECT_DIR$/Assets/Scripts/Objects/Entities/Interactables/Vine.cs" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/Assets/Scripts/Objects/Managers/BeaconManager.cs" beforeDir="false" afterPath="$PROJECT_DIR$/Assets/Scripts/Objects/Managers/BeaconManager.cs" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/Assets/Scripts/Save &amp; Load/GameDataSaveSystem.cs" beforeDir="false" afterPath="$PROJECT_DIR$/Assets/Scripts/Save &amp; Load/GameDataSaveSystem.cs" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/Library/EditorUserBuildSettings.asset" beforeDir="false" afterPath="$PROJECT_DIR$/Library/EditorUserBuildSettings.asset" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/Library/assetDatabase3" beforeDir="false" afterPath="$PROJECT_DIR$/Library/assetDatabase3" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/ProjectSettings/QualitySettings.asset" beforeDir="false" afterPath="$PROJECT_DIR$/ProjectSettings/QualitySettings.asset" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/obj/Debug/Assembly-CSharp.csprojAssemblyReference.cache" beforeDir="false" afterPath="$PROJECT_DIR$/obj/Debug/Assembly-CSharp.csprojAssemblyReference.cache" afterDir="false" />
     </list>
     <option name="SHOW_DIALOG" value="false" />
     <option name="HIGHLIGHT_CONFLICTS" value="true" />
@@ -55,8 +65,10 @@
   </component>
   <component name="HighlightingSettingsPerFile">
     <setting file="file://$PROJECT_DIR$/Assets/Scripts/Objects/Entities/Cage.cs" root0="FORCE_HIGHLIGHTING" />
+    <setting file="file://$PROJECT_DIR$/Assets/Animations/Behaviours/BeaconAppearBehaviour.cs" root0="FORCE_HIGHLIGHTING" />
     <setting file="file://$PROJECT_DIR$/Assets/Scripts/uwu/Extensions/ExtraInput.cs" root0="FORCE_HIGHLIGHTING" />
     <setting file="file://$PROJECT_DIR$/Assets/Scripts/Core/Surveillance.cs" root0="FORCE_HIGHLIGHTING" />
+    <setting file="file://$PROJECT_DIR$/Assets/Scripts/uwu/Animation/ComponentStateMachineBehaviour.cs" root0="FORCE_HIGHLIGHTING" />
     <setting file="file://$PROJECT_DIR$/Assets/Scripts/uwu/Extensions/BackgroundMonoBehaviour.cs" root0="FORCE_HIGHLIGHTING" />
     <setting file="file://$PROJECT_DIR$/Assets/Scripts/AI/UI/HUD Elements/StatsContainer.cs" root0="FORCE_HIGHLIGHTING" />
     <setting file="file://$PROJECT_DIR$/Assets/Scripts/UI/MenuCursor.cs" root0="FORCE_HIGHLIGHTING" />
@@ -64,10 +76,6 @@
   <component name="IdeDocumentHistory">
     <option name="CHANGED_PATHS">
       <list>
-        <option value="$PROJECT_DIR$/Assets/Scripts/uwu/Gameplay/Interactable.cs" />
-        <option value="$PROJECT_DIR$/Assets/Scripts/Objects/Entities/Terrain.cs" />
-        <option value="$PROJECT_DIR$/Assets/Scripts/Objects/Entities/Butterfly.cs" />
-        <option value="$PROJECT_DIR$/Assets/Scripts/uwu/Gameplay/Interacter.cs" />
         <option value="$PROJECT_DIR$/Assets/Scripts/Data/SurveillanceData.cs" />
         <option value="$PROJECT_DIR$/Assets/Scripts/Data/SurveillanceLogData.cs" />
         <option value="$PROJECT_DIR$/Assets/Scripts/Data/CompositeSurveillanceData.cs" />
@@ -94,7 +102,6 @@
         <option value="$PROJECT_DIR$/Assets/Scripts/Objects/Managers/GradingManager.cs" />
         <option value="$PROJECT_DIR$/Assets/Scripts/Data/LibraryPayload.cs" />
         <option value="$PROJECT_DIR$/Assets/Scripts/Save &amp; Load/BrainData.cs" />
-        <option value="$PROJECT_DIR$/Assets/Scripts/Save &amp; Load/GameDataSaveSystem.cs" />
         <option value="$PROJECT_DIR$/Assets/Scripts/Data/VineSceneData.cs" />
         <option value="$PROJECT_DIR$/Assets/Scripts/Objects/Entities/Sun.cs" />
         <option value="$PROJECT_DIR$/Assets/Packages/UnityWindowsFileDrag-Drop-master/B83.Win32.cs" />
@@ -103,18 +110,23 @@
         <option value="$PROJECT_DIR$/Assets/Scripts/uwu/Textures/ITextureReceiver.cs" />
         <option value="$PROJECT_DIR$/Assets/Scripts/uwu/Textures/TextureLoader.cs" />
         <option value="$PROJECT_DIR$/Assets/Scripts/Objects/Entities/Quilt.cs" />
-        <option value="$PROJECT_DIR$/Assets/Scripts/Core/Library.cs" />
         <option value="$PROJECT_DIR$/Assets/Scripts/Objects/Base/Entity.cs" />
         <option value="$PROJECT_DIR$/Assets/Scripts/Objects/Base/Element.cs" />
-        <option value="$PROJECT_DIR$/Assets/Scripts/Objects/Managers/BeaconManager.cs" />
-        <option value="$PROJECT_DIR$/Assets/Scripts/Objects/Entities/Interactables/Nest.cs" />
         <option value="$PROJECT_DIR$/Assets/Scripts/Global.cs" />
         <option value="$PROJECT_DIR$/Assets/Scripts/Core/Wand.cs" />
         <option value="$PROJECT_DIR$/Assets/Scripts/uwu/Snippets/CameraFacingBillboard.cs" />
         <option value="$PROJECT_DIR$/Assets/Scripts/Objects/Entities/Interactables/Vine.cs" />
-        <option value="$PROJECT_DIR$/Assets/Scripts/Objects/Base/Interactable.cs" />
-        <option value="$PROJECT_DIR$/Assets/Scripts/Objects/Entities/Interactables/Beacon.cs" />
         <option value="$PROJECT_DIR$/Assets/Scripts/Objects/Entities/Interactables/Empty/Flower.cs" />
+        <option value="$PROJECT_DIR$/Assets/Scripts/uwu/Animation/ComponentStateMachineBehaviour.cs" />
+        <option value="$PROJECT_DIR$/Assets/Animations/Behaviours/BeaconAppearBehaviour.cs" />
+        <option value="$PROJECT_DIR$/Assets/Scripts/Data/BeaconData.cs" />
+        <option value="$PROJECT_DIR$/Assets/Scripts/Save &amp; Load/GameDataSaveSystem.cs" />
+        <option value="$PROJECT_DIR$/Assets/Scripts/Interfaces/IFlammable.cs" />
+        <option value="$PROJECT_DIR$/Assets/Scripts/Core/Library.cs" />
+        <option value="$PROJECT_DIR$/Assets/Scripts/Objects/Managers/BeaconManager.cs" />
+        <option value="$PROJECT_DIR$/Assets/Scripts/Objects/Entities/Interactables/Beacon.cs" />
+        <option value="$PROJECT_DIR$/Assets/Scripts/Objects/Base/Interactable.cs" />
+        <option value="$PROJECT_DIR$/Assets/Scripts/Objects/Entities/Interactables/Nest.cs" />
       </list>
     </option>
   </component>
@@ -189,7 +201,7 @@
       <workItem from="1605189540608" duration="23927000" />
       <workItem from="1605536852664" duration="20460000" />
       <workItem from="1606329474393" duration="44197000" />
-      <workItem from="1606787032846" duration="59083000" />
+      <workItem from="1606787032846" duration="75087000" />
     </task>
     <servers />
   </component>
@@ -286,13 +298,15 @@
       <screen x="0" y="0" width="1536" height="824" />
     </state>
     <state width="1493" height="288" key="GridCell.Tab.3.right/0.0.1536.824@0.0.1536.824" timestamp="1607212147886" />
-    <state x="601" y="129" key="RiderGenerateDialog" timestamp="1607142781234">
-      <screen x="0" y="0" width="1536" height="824" />
+    <state x="2922" y="-139" key="RiderGenerateDialog" timestamp="1607443975395">
+      <screen x="1920" y="-358" width="2560" height="1400" />
     </state>
+    <state x="2922" y="-139" key="RiderGenerateDialog/0.0.1536.824/1920.-358.2560.1400@1920.-358.2560.1400" timestamp="1607443975395" />
     <state x="601" y="129" key="RiderGenerateDialog/0.0.1536.824@0.0.1536.824" timestamp="1607142781234" />
-    <state x="80" y="57" width="1178" height="710" key="SettingsEditor" timestamp="1606975225579">
-      <screen x="0" y="0" width="1536" height="824" />
+    <state x="2053" y="-261" width="1178" height="710" key="SettingsEditor" timestamp="1607391680643">
+      <screen x="1920" y="-358" width="2560" height="1400" />
     </state>
+    <state x="2053" y="-261" key="SettingsEditor/0.0.1536.824/1920.-358.2560.1400@1920.-358.2560.1400" timestamp="1607391680643" />
     <state x="80" y="57" width="1178" height="710" key="SettingsEditor/0.0.1536.824@0.0.1536.824" timestamp="1606975225579" />
     <state x="43" y="37" width="1507" height="810" key="dock-window-1" timestamp="1606582891568">
       <screen x="0" y="0" width="1536" height="824" />
@@ -306,9 +320,10 @@
       <screen x="0" y="0" width="1536" height="824" />
     </state>
     <state x="425" y="187" width="672" height="677" key="run.anything.popup/0.0.1536.824@0.0.1536.824" timestamp="1607059001966" />
-    <state x="431" y="145" width="672" height="678" key="search.everywhere.popup" timestamp="1607355134390">
-      <screen x="0" y="0" width="1536" height="824" />
+    <state x="2638" y="-112" width="1120" height="1152" key="search.everywhere.popup" timestamp="1607454738641">
+      <screen x="1920" y="-358" width="2560" height="1400" />
     </state>
+    <state x="2638" y="-112" width="1120" height="1152" key="search.everywhere.popup/0.0.1536.824/1920.-358.2560.1400@1920.-358.2560.1400" timestamp="1607454738641" />
     <state x="431" y="145" width="672" height="678" key="search.everywhere.popup/0.0.1536.824@0.0.1536.824" timestamp="1607355134390" />
   </component>
 </project>

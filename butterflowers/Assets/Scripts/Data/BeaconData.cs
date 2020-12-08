@@ -13,10 +13,18 @@ public class BeaconData
 
     public string path = "";
 
-    public BeaconData(string path, Type type, Locale state)
+    public float x;
+    public float y;
+    public float z;
+
+    public BeaconData(string path, Vector3 origin, Type type, Locale state)
     {
         this.path = path;
         this.type = (int)type;
         this.state = (int)state;
+
+        this.x = origin.x;
+        this.y = origin.y;
+        this.z = origin.z;
     }
 }

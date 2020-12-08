@@ -586,7 +586,7 @@ public class Vine : Interactable
             flowerInstance.transform.parent = transform;
 
         var flower = flowerInstance.GetComponentInChildren<Flower>();
-        flower.Grow(Flower.GrowProfile.Normal);
+        flower.Grow(Flower.Origin.Vine); 
     }
 
     Leaf[] ConstructAllLeaves()

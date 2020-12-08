@@ -110,7 +110,7 @@ namespace uwu
 				var dat = new List<BeaconData>();
 				for (var i = 0; i < value.Length; i++) {
 					var beacon = value[i];
-					var parsed = new BeaconData(beacon.file, beacon.type, beacon.state);
+					var parsed = new BeaconData(beacon.file, beacon.Origin, beacon.type, beacon.state);
 
 					dat.Add(parsed);
 				}

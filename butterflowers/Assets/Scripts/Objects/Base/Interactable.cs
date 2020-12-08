@@ -94,6 +94,8 @@ public class Interactable : Entity
 	// Start is called before the first frame update
 	protected override void OnStart()
     {
+        base.OnStart();
+        
         if (useTooltip) {
             CreateTooltip();
             tooltip.active = false;
@@ -129,8 +131,10 @@ public class Interactable : Entity
         base.Update();
     }
 
-    protected virtual void OnDestroy()
+    protected override void OnDestroyed()
     {
+        base.OnDestroyed();
+        
         UnsubscribeFromInteractableEvents();
 
         if (useTooltip)

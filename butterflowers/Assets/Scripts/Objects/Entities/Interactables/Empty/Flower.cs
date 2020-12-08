@@ -2,14 +2,16 @@
 
 namespace Objects.Entities.Interactables.Empty
 {
+	using BeaconType = Beacon.Type;
+	
 	public class Flower : Interactable
 	{
 		#region Internal
 		
-		public enum GrowProfile
+		public enum Origin
 		{
-			Normal = 0,
-			Small = 1
+			Vine = 0,
+			Beacon = 1
 		}
 		
 		#endregion
@@ -19,7 +21,7 @@ namespace Objects.Entities.Interactables.Empty
 		Animator animator;
 
 		string file;
-		Beacon.Type type;
+		BeaconType type;
 		
 		protected override void Awake()
 		{
@@ -31,16 +33,17 @@ namespace Objects.Entities.Interactables.Empty
 		
 		#region Growth
 
-		public void Grow(GrowProfile profile)
+		public void Grow(Origin origin)
 		{
-			int profileIndex = (int) profile;
-				animator.SetInteger("growProfile", profileIndex);
-				animator.SetBool("visible", true);
+			int profileIndex = (int) origin;
+			
+			animator.SetInteger("growProfile", profileIndex);
+			animator.SetBool("visible", true);
 		}
 
-		public void Grow(GrowProfile profile, string file, Beacon.Type type)
+		public void Grow(Origin origin, string file, BeaconType type)
 		{
-			Grow(profile);
+			Grow(origin);
 			
 			this.file = file;
 			this.type = type;
@@ -55,7 +58,7 @@ namespace Objects.Entities.Interactables.Empty
 			if (file == null) return;
 			
 			var beacons = FindObjectOfType<BeaconManager>();
-				beacons.CreateBeacon(file, type, Beacon.Locale.Terrain, Vector3.zero);
+				beacons.CreateBeacon(file, type, Beacon.Locale.Terrain, Vector3.zero, load:false);
 		}
 
 		#endregion

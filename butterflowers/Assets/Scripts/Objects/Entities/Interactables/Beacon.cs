@@ -11,11 +11,12 @@ using uwu.IO.SimpleFileBrowser.Scripts;
 using uwu.Snippets;
 using XNode.Examples.MathNodes;
 using AI;
+using Interfaces;
 using Objects.Base;
 using Objects.Entities.Interactables.Empty;
 using Behaviour = AI.Types.Behaviour;
 
-public class Beacon: Interactable {
+public class Beacon: Interactable, IFlammable {
 
     #region Internal
 
@@ -62,9 +63,9 @@ public class Beacon: Interactable {
     // Properties
 
     [SerializeField] WorldPreset preset;
-    [SerializeField] ParticleSystem deathPS, addPS;
+    [SerializeField] ParticleSystem deathPS, addPS, appearPS;
 
-    SimpleOscillate Oscillate;
+    Animator animator;
     new MeshRenderer renderer;
     new Collider collider;
     Material material;
@@ -86,6 +87,7 @@ public class Beacon: Interactable {
     // Attributes
     
     [SerializeField] bool hovered = false, m_discovered = false;
+    [SerializeField] bool m_destroyed = false;
 
     [SerializeField] bool returnToOrigin = false;
     [SerializeField] Vector3 releasePosition = Vector3.zero, releaseScale = Vector3.zero;
@@ -106,6 +108,8 @@ public class Beacon: Interactable {
             RefreshInfo();
         }
     }
+
+    public Vector3 Origin => origin;
 
     public FileSystemEntry fileEntry {
         get
@@ -130,6 +134,12 @@ public class Beacon: Interactable {
         }
     }
 
+    public bool destroyed
+    {
+        get { return m_destroyed; }
+        private set { m_destroyed = value; }
+    }
+
     public float knowledge 
     {
         get
@@ -140,6 +150,8 @@ public class Beacon: Interactable {
     
     public bool visible => state == Locale.Terrain;
 
+    public ParticleSystem AppearPS => appearPS;
+
     #endregion
 
     #region Monobehaviour callbacks
@@ -148,7 +160,7 @@ public class Beacon: Interactable {
     {
         base.Awake();
 
-        Oscillate = GetComponent<SimpleOscillate>();
+        animator = GetComponent<Animator>();
     }
 
     protected override void Update()
@@ -217,12 +229,13 @@ public class Beacon: Interactable {
             OnUnregister(this);
     }
 
-    public void Initialize(Type type, Locale state, Vector3 origin, Transform tooltipContainer)
+    public void Initialize(Type type, Locale state, Vector3 origin, Transform tooltipContainer, bool load = false)
     {
         Room = World.Instance;
         Nest = Nest.Instance;
 
         collider = GetComponent<Collider>();
+        animator = GetComponent<Animator>();
         renderer = GetComponentInChildren<MeshRenderer>();
         material = renderer.material;
 
@@ -235,9 +248,15 @@ public class Beacon: Interactable {
         this.size = preset.normalBeaconScale * Vector3.one;
         this.lerp_duration = preset.beaconLerpDuration;
         this.scaleCurve = preset.beaconScaleCurve;
+        
+        
+        if(load) animator.SetInteger("open", 1);
+        else animator.SetInteger("open", 0);
 
         ReturnToOrigin(99f);
         if(state == Locale.Flower) CreateFlowerAtOrigin();
+        
+        Register();
     }
 
 
@@ -315,8 +334,8 @@ public class Beacon: Interactable {
     void CreateFlowerAtOrigin()
     {
         var flowerInstance = Instantiate(pr_flower, origin, Quaternion.identity);
-        var flower = flowerInstance.GetComponentInChildren<Flower>();
-            flower.Grow(Objects.Entities.Interactables.Empty.Flower.GrowProfile.Small, file, type);
+        var flower = flowerInstance.GetComponentInChildren<Flower>(); 
+            flower.Grow(Objects.Entities.Interactables.Empty.Flower.Origin.Beacon, file, type);
     }
 
     public bool Deactivate()
@@ -368,6 +387,18 @@ public class Beacon: Interactable {
         ReturnToOrigin(-1f, initial:true);
     }
 
+    public void Destroy()
+    {
+        destroyed = true;
+        Fire();
+    }
+
+    public void Recover()
+    {
+        destroyed = false;
+        Extinguish();
+    }
+
     #endregion
 
     #region State
@@ -378,13 +409,11 @@ public class Beacon: Interactable {
 
         if (state == Locale.Terrain && !returnToOrigin) 
         {
-            Oscillate.enabled = false;
             interactive = true;
             collider.enabled = true;
         }
         else 
         {
-            Oscillate.enabled = false;
             interactive = false;
             collider.enabled = false;
         }
@@ -409,6 +438,25 @@ public class Beacon: Interactable {
         material.color = actual;
     }
 
+    #endregion
+    
+    #region Flammable
+
+    public bool IsOnFire
+    {
+        get => deathPS.isPlaying;
+    }
+    
+    public void Fire()
+    {
+        deathPS.Play();
+    }
+
+    public void Extinguish()
+    {
+        deathPS.Stop();
+    }
+    
     #endregion
     
     #region Element overrides
