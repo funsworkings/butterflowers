@@ -58,7 +58,8 @@ public class Beacon: Interactable, IFlammable {
     // Events
 
 	public static System.Action<Beacon> OnRegister, OnUnregister;
-    public static System.Action<Beacon> Activated, Destroyed, Planted, Flowered;
+    public static System.Action<Beacon> Activated, Deactivated, Destroyed, Planted, Flowered;
+    public static System.Action<Beacon> onUpdateState;
 
     // Properties
 
@@ -188,7 +189,8 @@ public class Beacon: Interactable, IFlammable {
         EvaluateState();
     }
 
-    void OnDisable() {
+    void OnDisable() 
+    {
         Unregister();
     }
 
@@ -254,7 +256,9 @@ public class Beacon: Interactable, IFlammable {
         else animator.SetInteger("open", 0);
 
         ReturnToOrigin(99f);
+        
         if(state == Locale.Flower) CreateFlowerAtOrigin();
+        if(state != Locale.Terrain) transform.localScale = Vector3.zero;
         
         Register();
     }
@@ -352,6 +356,9 @@ public class Beacon: Interactable, IFlammable {
         
         ReturnToOrigin(-1f, initial:true);
 
+        if (Deactivated != null)
+            Deactivated(this);
+
         return true;
     }
 
@@ -395,6 +402,8 @@ public class Beacon: Interactable, IFlammable {
 
     public void Recover()
     {
+        return; // Ignore recovery from save
+        
         destroyed = false;
         Extinguish();
     }

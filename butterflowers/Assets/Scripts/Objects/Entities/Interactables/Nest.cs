@@ -38,7 +38,7 @@ public class Nest : Focusable, IReactToSunCycle, ISaveable, IFlammable
     new Rigidbody rigidbody;
     Damage damage;
 
-    [SerializeField] ParticleSystem sparklesPS, cometPS;
+    [SerializeField] ParticleSystem sparklesPS, cometPS, deathPS;
     [SerializeField] GameObject pr_impactPS, pr_shinePS;
 
     [SerializeField] TMPro.TMP_Text infoText;
@@ -245,7 +245,7 @@ public class Nest : Focusable, IReactToSunCycle, ISaveable, IFlammable
     public void Cycle(bool refresh)
     {
         Pulse();
-        
+        if(IsOnFire) Extinguish();
         if (refresh) 
             Close();
     }
@@ -346,6 +346,8 @@ public class Nest : Focusable, IReactToSunCycle, ISaveable, IFlammable
     {
         if (m_beacons.Contains(beacon)) return false;
         m_beacons.Add(beacon);
+
+        if (beacon.IsOnFire) Fire(); // Set fire to nest with flaming beacon
         
         sparklesPS.Play();
 
@@ -373,6 +375,16 @@ public class Nest : Focusable, IReactToSunCycle, ISaveable, IFlammable
     {
         if (!m_beacons.Contains(beacon)) return false;
         m_beacons.Remove(beacon);
+
+        bool extinguish = true;
+        foreach (Beacon b in beacons) {
+            if (b.IsOnFire) {
+                extinguish = false;
+                break;
+            }
+        }
+        
+        if(extinguish) Extinguish();
 
         Debug.LogFormat("Nest REMOVE = {0}", beacon.file);
         beacon.Deactivate();
@@ -495,17 +507,17 @@ public class Nest : Focusable, IReactToSunCycle, ISaveable, IFlammable
     #endregion
     
     #region Flammability
-    
-    public bool IsOnFire { get; }
+
+    public bool IsOnFire => deathPS.isPlaying;
     
     public void Fire()
     {
-        
+        deathPS.Play();
     }
 
     public void Extinguish()
     {
-        
+        deathPS.Stop();
     }
     
     #endregion
