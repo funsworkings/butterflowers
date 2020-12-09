@@ -11,7 +11,7 @@ GameObject:
   - component: {fileID: 123617472}
   - component: {fileID: 123617474}
   - component: {fileID: 123617473}
-  m_Layer: 11
+  m_Layer: 21
   m_Name: trail ps
   m_TagString: Untagged
   m_Icon: {fileID: 0}
@@ -4709,7 +4709,7 @@ GameObject:
   - component: {fileID: 1338636721}
   - component: {fileID: 1338636723}
   - component: {fileID: 1338636722}
-  m_Layer: 11
+  m_Layer: 21
   m_Name: appear ps
   m_TagString: Untagged
   m_Icon: {fileID: 0}
@@ -9425,7 +9425,7 @@ GameObject:
   - component: {fileID: 5373311980257788958}
   - component: {fileID: 7121029688608262579}
   - component: {fileID: 2657779654409832757}
-  m_Layer: 11
+  m_Layer: 21
   m_Name: planting ps
   m_TagString: Untagged
   m_Icon: {fileID: 0}
@@ -14192,7 +14192,7 @@ GameObject:
   - component: {fileID: 1270796099338416104}
   - component: {fileID: 3173907804839275053}
   - component: {fileID: 395374325}
-  m_Layer: 11
+  m_Layer: 21
   m_Name: beacon
   m_TagString: Untagged
   m_Icon: {fileID: 0}
@@ -14256,6 +14256,7 @@ MonoBehaviour:
   type: 0
   state: 0
   parent: 0
+  flower: {fileID: 0}
   m_file: 
   m_fileEntry:
     Path: 
@@ -14329,7 +14330,7 @@ GameObject:
   - component: {fileID: 1270796099906857360}
   - component: {fileID: 1270796099906857375}
   - component: {fileID: 1270796099906857374}
-  m_Layer: 0
+  m_Layer: 21
   m_Name: panel
   m_TagString: Untagged
   m_Icon: {fileID: 0}
@@ -14420,7 +14421,7 @@ GameObject:
   - component: {fileID: 3904152583573022314}
   - component: {fileID: 2591633957252031691}
   - component: {fileID: 2666852261318564540}
-  m_Layer: 16
+  m_Layer: 21
   m_Name: aura
   m_TagString: Untagged
   m_Icon: {fileID: 0}
@@ -19154,7 +19155,7 @@ GameObject:
   - component: {fileID: 2710361725971392831}
   - component: {fileID: 2710361725971392789}
   - component: {fileID: 2710361725971392797}
-  m_Layer: 0
+  m_Layer: 21
   m_Name: impact (aura)
   m_TagString: Untagged
   m_Icon: {fileID: 0}
@@ -23910,7 +23911,7 @@ GameObject:
   - component: {fileID: 9177925199029917313}
   - component: {fileID: 3679141250253871619}
   - component: {fileID: 7519155530151778121}
-  m_Layer: 11
+  m_Layer: 21
   m_Name: reveal ps
   m_TagString: Untagged
   m_Icon: {fileID: 0}
@@ -28683,7 +28684,7 @@ GameObject:
   m_Component:
   - component: {fileID: 3108522768499610545}
   - component: {fileID: 5963815290329920426}
-  m_Layer: 11
+  m_Layer: 21
   m_Name: Point Light
   m_TagString: Untagged
   m_Icon: {fileID: 0}
@@ -28753,7 +28754,7 @@ GameObject:
   - component: {fileID: 3817574490397779939}
   - component: {fileID: 3084561479943932490}
   - component: {fileID: 2453548540509390200}
-  m_Layer: 11
+  m_Layer: 21
   m_Name: discovery ps
   m_TagString: Untagged
   m_Icon: {fileID: 0}
@@ -33469,7 +33470,7 @@ GameObject:
   - component: {fileID: 4032502983988036841}
   - component: {fileID: 2609872408184791929}
   - component: {fileID: 2567470850076773811}
-  m_Layer: 11
+  m_Layer: 21
   m_Name: death ps
   m_TagString: Untagged
   m_Icon: {fileID: 0}
@@ -38225,6 +38226,10 @@ PrefabInstance:
     - target: {fileID: 100000, guid: 5a103a23ef73c4694b5508e034cf2d92, type: 3}
       propertyPath: m_Name
       value: mesh
+      objectReference: {fileID: 0}
+    - target: {fileID: 100000, guid: 5a103a23ef73c4694b5508e034cf2d92, type: 3}
+      propertyPath: m_Layer
+      value: 21
       objectReference: {fileID: 0}
     - target: {fileID: 400000, guid: 5a103a23ef73c4694b5508e034cf2d92, type: 3}
       propertyPath: m_LocalPosition.x

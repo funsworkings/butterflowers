@@ -3476,7 +3476,7 @@ Transform:
   m_PrefabInstance: {fileID: 0}
   m_PrefabAsset: {fileID: 0}
   m_GameObject: {fileID: 201810246}
-  m_LocalRotation: {x: 0.12156506, y: 0.000000008540025, z: -9.894066e-10, w: 0.9925835}
+  m_LocalRotation: {x: 0.12156507, y: -0.00000000854625, z: 0.0000000010402588, w: 0.9925835}
   m_LocalPosition: {x: 0, y: 9.595102, z: -21.852465}
   m_LocalScale: {x: 1, y: 1.3577, z: 1}
   m_Children:
@@ -11525,7 +11525,7 @@ Camera:
   m_Depth: 0
   m_CullingMask:
     serializedVersion: 2
-    m_Bits: 44343
+    m_Bits: 2141495
   m_RenderingPath: -1
   m_TargetTexture: {fileID: 0}
   m_TargetDisplay: 0
@@ -15534,7 +15534,7 @@ Camera:
   m_Depth: -18
   m_CullingMask:
     serializedVersion: 2
-    m_Bits: 1089335
+    m_Bits: 3186487
   m_RenderingPath: -1
   m_TargetTexture: {fileID: 0}
   m_TargetDisplay: 0
@@ -16112,7 +16112,7 @@ MonoBehaviour:
   filter: 1
   interactionMask:
     serializedVersion: 2
-    m_Bits: 1062912
+    m_Bits: 3160064
   interactionDistance: 10000
   multipleInteractions: 1
   down: 0
@@ -16128,6 +16128,10 @@ MonoBehaviour:
   cursor_icon: {fileID: 915320168}
   cursorToWorldRate: 0.003
   infocus: 1
+  _interaction: 0
+  dragInteractionMask:
+    serializedVersion: 2
+    m_Bits: 1054720
   brushRadius: 360
   beacon: {fileID: 0}
   target: {fileID: 0}
@@ -17418,7 +17422,7 @@ Camera:
   m_Depth: 0
   m_CullingMask:
     serializedVersion: 2
-    m_Bits: 40247
+    m_Bits: 2137399
   m_RenderingPath: -1
   m_TargetTexture: {fileID: 0}
   m_TargetDisplay: 0

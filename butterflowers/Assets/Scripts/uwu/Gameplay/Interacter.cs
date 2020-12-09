@@ -42,6 +42,13 @@ namespace uwu.Gameplay
 			[SerializeField] protected bool wait;
 			[SerializeField] List<Interactable> interactables = new List<Interactable>();
 
+			
+		#region Accessors
+
+		protected virtual LayerMask mask => interactionMask;
+		
+		#endregion
+			
 
 		protected virtual void Start()
 		{
@@ -82,11 +89,11 @@ namespace uwu.Gameplay
 			if (filter == Filter._3d || queryAll) 
 			{
 				if (multipleInteractions) {
-					hits = Physics.RaycastAll(ray, interactionDistance, interactionMask.value);
+					hits = Physics.RaycastAll(ray, interactionDistance, mask.value);
 				}
 				else {
 					var hit = new RaycastHit();
-					if (Physics.Raycast(ray, out hit, interactionDistance, interactionMask.value)) 
+					if (Physics.Raycast(ray, out hit, interactionDistance, mask.value)) 
 						hits = new RaycastHit[] {hit};
 					else
 						hits = new RaycastHit[]{};
@@ -120,7 +127,7 @@ namespace uwu.Gameplay
 					var @object = hit.collider.gameObject;
 					var interactable = @object.GetComponent<Interactable>();
 
-					if (interactable != null) 
+					if (interactable != null && !_frameInteractions.ContainsKey(interactable)) 
 						_frameInteractions.Add(interactable, hit);
 				}
 			}

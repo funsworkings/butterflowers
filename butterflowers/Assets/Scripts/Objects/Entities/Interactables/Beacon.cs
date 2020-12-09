@@ -77,6 +77,7 @@ public class Beacon: Interactable, IFlammable {
     public Type type = Type.None;
     public Locale state = Locale.Terrain;
     public AGENT parent = AGENT.NULL;
+    public Flower flower = null;
     
     [SerializeField] string m_file = null;
     [SerializeField] FileSystemEntry m_fileEntry;
@@ -257,7 +258,7 @@ public class Beacon: Interactable, IFlammable {
 
         ReturnToOrigin(99f);
         
-        if(state == Locale.Flower) CreateFlowerAtOrigin();
+        if(state == Locale.Flower) flower = CreateFlowerAtOrigin();
         if(state != Locale.Terrain) transform.localScale = Vector3.zero;
         
         Register();
@@ -326,7 +327,7 @@ public class Beacon: Interactable, IFlammable {
 
         transform.localScale = Vector3.zero;
         
-        CreateFlowerAtOrigin();
+        flower = CreateFlowerAtOrigin();
 
         Events.ReceiveEvent(EVENTCODE.BEACONFLOWER, AGENT.User, AGENT.Beacon, details: file);
         if (Flowered != null)
@@ -335,11 +336,13 @@ public class Beacon: Interactable, IFlammable {
         return true;
     }
 
-    void CreateFlowerAtOrigin()
+    Flower CreateFlowerAtOrigin()
     {
         var flowerInstance = Instantiate(pr_flower, origin, Quaternion.identity);
         var flower = flowerInstance.GetComponentInChildren<Flower>(); 
             flower.Grow(Objects.Entities.Interactables.Empty.Flower.Origin.Beacon, file, type);
+            
+        return flower;
     }
 
     public bool Deactivate()
@@ -394,10 +397,25 @@ public class Beacon: Interactable, IFlammable {
         ReturnToOrigin(-1f, initial:true);
     }
 
+    public void Ignite()
+    {
+        if (state != Locale.Drag) return;
+        state = Locale.Terrain;
+        
+        ReturnToOrigin(-1f, initial:true);
+        Destroy();
+    }
+
     public void Destroy()
     {
-        destroyed = true;
-        Fire();
+        if (state == Locale.Flower) 
+        {
+            flower.Fire();
+        }
+        else if (state != Locale.Planted && state != Locale.Nest) 
+        {
+            Fire();
+        }
     }
 
     public void Recover()

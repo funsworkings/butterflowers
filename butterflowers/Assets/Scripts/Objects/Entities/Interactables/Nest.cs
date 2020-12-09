@@ -460,7 +460,7 @@ public class Nest : Focusable, IReactToSunCycle, ISaveable, IFlammable
         Entity entity = other.GetComponent<Entity>();
         if (entity == null) return;
 
-        Debug.LogError("Nest collided with " + entity.name);
+        //Debug.LogError("Nest collided with " + entity.name);
 
         if (entity is IFlammable) 
         {
