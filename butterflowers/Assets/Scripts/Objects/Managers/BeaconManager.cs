@@ -93,7 +93,9 @@ public class BeaconManager : Spawner, IReactToSunCycle, ISaveable
 		Beacon.OnUnregister += onUnregisterBeacon;
 
 		Beacon.Activated += onActivatedBeacon;
+		Beacon.Deactivated += onDeactivatedBeacon;
         Beacon.Planted += onPlantedBeacon;
+        Beacon.Flowered += onFloweredBeacon;
         
         Library = Library.Instance;
 	        Library.onDeletedFiles += UserDeletedFiles;
@@ -106,7 +108,9 @@ public class BeaconManager : Spawner, IReactToSunCycle, ISaveable
 		Beacon.OnUnregister -= onUnregisterBeacon;
 
 		Beacon.Activated -= onActivatedBeacon;
+		Beacon.Deactivated -= onDeactivatedBeacon;
         Beacon.Planted -= onPlantedBeacon;
+        Beacon.Flowered -= onFloweredBeacon;
         
         Library.onDeletedFiles -= UserDeletedFiles;
         Library.onRecoverFiles -= UserRecoveredFiles;
@@ -273,11 +277,8 @@ public class BeaconManager : Spawner, IReactToSunCycle, ISaveable
             if (instance == null)
                 continue; // Bypass null beacon
 
-            if (s == Locale.Nest) 
-            {
-                onActivatedBeacon(instance); // Send to nest if immediately found
-                Events.ReceiveEvent(EVENTCODE.BEACONACTIVATE, AGENT.World, AGENT.Beacon, details: instance.file);
-            }
+            if (s == Locale.Nest)
+	            onActivatedBeacon(instance); // Send to nest if immediately found
         }
 
         if (deprecate) 
@@ -385,22 +386,40 @@ public class BeaconManager : Spawner, IReactToSunCycle, ISaveable
 		}
 
 		allBeacons.Remove(beacon);
-		if (onUpdateBeacons != null)
-			onUpdateBeacons();
+		
+		TriggerUpdateBeacons();
 	}
 
 	void onActivatedBeacon(Beacon beacon)
 	{
 		Nest.AddBeacon(beacon);
+		TriggerUpdateBeacons();
+	}
+
+	void onDeactivatedBeacon(Beacon beacon)
+	{
+		TriggerUpdateBeacons();
 	}
 
     void onPlantedBeacon(Beacon beacon)
     {
+	    TriggerUpdateBeacons();
 	    if (onPlantBeacon != null)
             onPlantBeacon(beacon);
     }
 
-	#endregion
+    void onFloweredBeacon(Beacon beacon)
+    {
+	    TriggerUpdateBeacons();
+    }
+
+    void TriggerUpdateBeacons()
+    {
+	    if (onUpdateBeacons != null)
+		    onUpdateBeacons();
+    }
+
+    #endregion
 	
 	#region Library callbacks
 
