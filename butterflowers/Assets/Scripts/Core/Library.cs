@@ -482,7 +482,11 @@ public class Library : Singleton<Library>, ITextureReceiver
 				}
 			}
 			
+			#if !UNITY_EDITOR
 			Debug.LogErrorFormat("User deleted {0} files\nUser recovered {1} files", deprecate.Count, recover.Count);
+			#else
+			Debug.LogWarningFormat("User deleted {0} files\nUser recovered {1} files", deprecate.Count, recover.Count);
+			#endif
 
 			if (deprecate.Count > 0 && onDeletedFiles != null)
 				onDeletedFiles(deprecate.ToArray());

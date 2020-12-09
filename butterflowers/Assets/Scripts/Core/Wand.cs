@@ -22,6 +22,16 @@ using Interactable = uwu.Gameplay.Interactable;
 
 public class Wand : Interacter
 {
+    #region Internal
+
+    public enum Interaction
+    {
+        Normal,
+        Drag
+    }
+    
+    #endregion
+    
     // External
     
     [SerializeField] WorldPreset preset;
@@ -43,20 +53,31 @@ public class Wand : Interacter
 
         public bool infocus = true;
 
-    [Header("Interaction")]
+    [Header("Interaction")] [SerializeField]
+        Interaction _interaction = Interaction.Normal;
+        [SerializeField] LayerMask dragInteractionMask;
         [SerializeField] float brushRadius = 12f;
         [SerializeField] Beacon beacon = null;
         [SerializeField] Entity target = null;
         [SerializeField] float defaultPointDistance = 10f;
         public bool global = true;
 
-        [Header("Debug")] 
-            [SerializeField] float pointDistance;
-            [SerializeField] Image debugCircle;
+    [Header("Debug")] 
+        [SerializeField] float pointDistance;
+        [SerializeField] Image debugCircle;
 
     #region Accessors
 
     protected override Vector3 origin => cursor.position;
+
+    protected override LayerMask mask
+    {
+        get
+        {
+            if (_interaction == Interaction.Drag) return dragInteractionMask;
+            return base.mask;
+        }
+    }
 
     public Vector3 position3d {
         get{
@@ -173,16 +194,18 @@ public class Wand : Interacter
     protected override void Update()
     {
         m_spells = infocus;
+        _interaction = (beacon == null) ? Interaction.Normal : Interaction.Drag;
 
         base.Update();
-        
+
         if (spells) 
         {
             UpdateTrajectory();
             HandleBeacon();
         }
-        else {
-            if (beacon != null) 
+        else 
+        {
+            if (beacon != null)
                 DropBeacon();
         }
     }
@@ -246,18 +269,10 @@ public class Wand : Interacter
 
     protected override void onReleaseInteractable(uwu.Gameplay.Interactable interactable)
     {
+        if (beacon == null) return;
+        
         var entity = interactable.GetComponent<Entity>();
-        if (entity != null) 
-        {
-            if (entity is Terrain) 
-            {
-                
-            }
-            else if (entity is Nest) 
-            {
-                
-            }
-        }
+        DropBeacon(entity);
     }
 
     #endregion
@@ -343,7 +358,6 @@ public class Wand : Interacter
             else 
             {
                 pointDistance = defaultPointDistance;
-                if(up) DropBeacon();
             }
         }
         else {
@@ -351,16 +365,24 @@ public class Wand : Interacter
         }
     }
 
-    void DropBeacon()
+    void DropBeacon(Entity target = null)
     {
         Vector3 origin = raycastHit.point;
         
-        if (target is Terrain)
-            beacon.PlantAtLocation(origin);
-        else if (target is Nest)
-            beacon.Activate();
-        else if(target is Tree)
-            beacon.FlowerAtLocation(origin);
+        Debug.LogWarning((target != null)?target.name:"NULL");
+
+        if (target != null) {
+            if (target is Terrain)
+                beacon.PlantAtLocation(origin);
+            else if (target is Nest)
+                beacon.Activate();
+            else if (target is Tree)
+                beacon.FlowerAtLocation(origin);
+            else if (target is Star)
+                beacon.Ignite();
+            else
+                beacon.Drop();
+        }
         else
             beacon.Drop();
         

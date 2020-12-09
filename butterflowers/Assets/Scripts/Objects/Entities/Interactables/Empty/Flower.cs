@@ -1,10 +1,11 @@
-﻿using UnityEngine;
+﻿using Interfaces;
+using UnityEngine;
 
 namespace Objects.Entities.Interactables.Empty
 {
 	using BeaconType = Beacon.Type;
 	
-	public class Flower : Interactable
+	public class Flower : Interactable, IFlammable
 	{
 		#region Internal
 		
@@ -19,6 +20,7 @@ namespace Objects.Entities.Interactables.Empty
 		// Properties
 		
 		Animator animator;
+		[SerializeField] ParticleSystem firePS;
 
 		string file;
 		BeaconType type;
@@ -61,6 +63,22 @@ namespace Objects.Entities.Interactables.Empty
 				beacons.CreateBeacon(file, type, Beacon.Locale.Terrain, Vector3.zero, load:false);
 		}
 
+		#endregion
+		
+		#region Flammable
+
+		public bool IsOnFire => firePS.isPlaying;
+		
+		public void Fire()
+		{
+			firePS.Play();
+		}
+
+		public void Extinguish()
+		{
+			firePS.Stop();
+		}
+		
 		#endregion
 	}
 }
