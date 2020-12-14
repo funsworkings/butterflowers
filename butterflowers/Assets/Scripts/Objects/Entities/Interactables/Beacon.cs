@@ -10,11 +10,10 @@ using Settings;
 using uwu.IO.SimpleFileBrowser.Scripts;
 using uwu.Snippets;
 using XNode.Examples.MathNodes;
-using AI;
+using Neue;
 using Interfaces;
 using Objects.Base;
 using Objects.Entities.Interactables.Empty;
-using Behaviour = AI.Types.Behaviour;
 
 public class Beacon: Interactable, IFlammable {
 
@@ -345,7 +344,7 @@ public class Beacon: Interactable, IFlammable {
         return flower;
     }
 
-    public bool Deactivate()
+    public bool Deactivate(Vector3 origin, bool resetOrigin = false)
     {
         Debug.LogFormat("Deactivate {0} when state is {1}", file, state);
         if (state != Locale.Nest) return false;
@@ -356,7 +355,8 @@ public class Beacon: Interactable, IFlammable {
 
         transform.position = Nest.transform.position; // Reset back to nest position at start of lerp
         transform.localScale = Vector3.zero;
-        
+
+        if (resetOrigin) this.origin = origin;
         ReturnToOrigin(-1f, initial:true);
 
         if (Deactivated != null)

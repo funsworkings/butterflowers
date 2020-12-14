@@ -8,8 +8,9 @@ using uwu.Data;
 using uwu.Extensions;
 using uwu.IO;
 using Wizard;
-using AI.Types;
 using Data;
+using Neue.Agent.Brain.Data;
+using Neue.Types;
 
 namespace uwu
 {

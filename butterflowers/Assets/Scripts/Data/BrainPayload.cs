@@ -1,4 +1,5 @@
-﻿using AI.Types;
+﻿using Neue.Agent.Brain.Data;
+using Neue.Types;
 using uwu;
 
 namespace Data

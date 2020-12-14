@@ -1,7 +1,8 @@
 ﻿using Noder.Nodes.Abstract;
 using System.Collections;
 using System.Collections.Generic;
-using AI.Types;
+using Neue.Agent.Brain.Types;
+using Neue.Types;
 using UnityEngine;
 using Wizard;
 

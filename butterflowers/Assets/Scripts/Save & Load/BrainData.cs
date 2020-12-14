@@ -1,4 +1,5 @@
-﻿using AI.Types;
+﻿using Neue.Agent.Brain.Data;
+using Neue.Types;
 
 namespace uwu
 {
@@ -17,6 +18,6 @@ namespace uwu
 
 		public Knowledge[] file_knowledge = new Knowledge[] { };
 		
-		public BehaviourProfile behaviourProfile = new BehaviourProfile();
+		public Profile profile = new Profile();
 	}
 }

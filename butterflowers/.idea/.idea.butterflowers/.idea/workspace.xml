@@ -34,20 +34,148 @@
   </component>
   <component name="ChangeListManager">
     <list default="true" id="6ebb3891-c912-403e-9e42-400f227dea0b" name="Default Changelist" comment="">
+      <change afterPath="$PROJECT_DIR$/Assets/Scripts/Neue/Agent/Actions/Movement/Navigation.cs" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/Assets/Scripts/Neue/Agent/Actions/Movement/Navigation.cs.meta" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/Assets/Scripts/Neue/Agent/Actions/Types.meta" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/Assets/Scripts/Neue/Agent/Brain/Data.meta" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/Assets/Scripts/Neue/Agent/Presets.meta" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/Assets/Scripts/Neue/Agent/Presets/MovementPreset.cs" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/Assets/Scripts/Neue/Agent/Presets/MovementPreset.cs.meta" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/Assets/Scripts/Neue/Agent1/Actions.cs" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/Assets/Scripts/Neue/Reference.meta" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/Assets/Scripts/Neue/Reference/Nodes.meta" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/Assets/Scripts/Neue/Reference/Nodes/Behaviours.meta" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/Assets/Scripts/Neue/Reference/Nodes/Behaviours/INode.cs" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/Assets/Scripts/Neue/Reference/Nodes/Behaviours/INode.cs.meta" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/Assets/Scripts/Neue/Reference/Types.meta" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/Assets/Scripts/Neue/Reference/Types/Frame.cs" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/Assets/Scripts/Neue/Reference/Types/Frame.cs.meta" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/Assets/Scripts/Neue/Reference/Types/FrameMap.cs" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/Assets/Scripts/Neue/Reference/Types/Maps.meta" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/Assets/Scripts/Neue/Reference/Types/Maps/FrameFloat.cs" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/Assets/Scripts/Neue/Reference/Types/Maps/FrameInt.cs" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/Assets/Scripts/Neue/Reference/Types/Maps/FrameSprite.cs" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/Assets/Scripts/Neue/Reference/Types/Maps/FrameString.cs" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/Assets/Scripts/Neue/Reference/Types/Maps/Groups.meta" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/Assets/Scripts/Neue/Reference/Types/Maps/Groups/FrameFloatGroup.cs" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/Assets/Scripts/Neue/Reference/Types/Maps/Groups/FrameIntGroup.cs" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/Assets/Scripts/Neue/Reference/Types/Maps/Groups/FrameSpriteGroup.cs" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/Assets/Scripts/Neue/Reference/Types/Maps/Groups/FrameStringGroup.cs" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/.idea/.idea.butterflowers/.idea/contentModel.xml" beforeDir="false" afterPath="$PROJECT_DIR$/.idea/.idea.butterflowers/.idea/contentModel.xml" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/.idea/.idea.butterflowers/.idea/workspace.xml" beforeDir="false" afterPath="$PROJECT_DIR$/.idea/.idea.butterflowers/.idea/workspace.xml" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/Assets/Materials/Canvas.mat" beforeDir="false" afterPath="$PROJECT_DIR$/Assets/Materials/Canvas.mat" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/Assets/Prefabs/Objects/beacon.prefab" beforeDir="false" afterPath="$PROJECT_DIR$/Assets/Prefabs/Objects/beacon.prefab" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/Assets/Prefabs/Objects/flower.prefab" beforeDir="false" afterPath="$PROJECT_DIR$/Assets/Prefabs/Objects/flower.prefab" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/Assets/Prefabs/Objects/tiny flower.prefab" beforeDir="false" afterPath="$PROJECT_DIR$/Assets/Prefabs/Objects/tiny flower.prefab" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/Assets/Packages/noder/Graphs/ModuleTree.cs" beforeDir="false" afterPath="$PROJECT_DIR$/Assets/Packages/noder/Graphs/ModuleTree.cs" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/Assets/Packages/noder/Nodes/Behaviours/Branches/MoodBranch.cs" beforeDir="false" afterPath="$PROJECT_DIR$/Assets/Packages/noder/Nodes/Behaviours/Branches/MoodBranch.cs" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/Assets/Packages/noder/Nodes/Behaviours/Branches/StanceBranch.cs" beforeDir="false" afterPath="$PROJECT_DIR$/Assets/Packages/noder/Nodes/Behaviours/Branches/StanceBranch.cs" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/Assets/Packages/noder/Nodes/Behaviours/Branches/SubMoodBranch.cs" beforeDir="false" afterPath="$PROJECT_DIR$/Assets/Packages/noder/Nodes/Behaviours/Branches/SubMoodBranch.cs" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/Assets/Packages/noder/Nodes/Behaviours/Comparisons/CompareMoodState.cs" beforeDir="false" afterPath="$PROJECT_DIR$/Assets/Packages/noder/Nodes/Behaviours/Comparisons/CompareMoodState.cs" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/Assets/Packages/noder/Nodes/Behaviours/Comparisons/CompareStanceState.cs" beforeDir="false" afterPath="$PROJECT_DIR$/Assets/Packages/noder/Nodes/Behaviours/Comparisons/CompareStanceState.cs" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/Assets/Packages/noder/Nodes/Behaviours/Core/BaseEventNode.cs" beforeDir="false" afterPath="$PROJECT_DIR$/Assets/Packages/noder/Nodes/Behaviours/Core/BaseEventNode.cs" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/Assets/Packages/noder/Nodes/Behaviours/Events/FailureEvent.cs" beforeDir="false" afterPath="$PROJECT_DIR$/Assets/Packages/noder/Nodes/Behaviours/Events/FailureEvent.cs" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/Assets/Packages/noder/Nodes/Behaviours/Events/Fireworks.cs" beforeDir="false" afterPath="$PROJECT_DIR$/Assets/Packages/noder/Nodes/Behaviours/Events/Fireworks.cs" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/Assets/Packages/noder/Nodes/Behaviours/Events/Hit.cs" beforeDir="false" afterPath="$PROJECT_DIR$/Assets/Packages/noder/Nodes/Behaviours/Events/Hit.cs" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/Assets/Packages/noder/Nodes/Behaviours/Fetch/MoodStateNode.cs" beforeDir="false" afterPath="$PROJECT_DIR$/Assets/Packages/noder/Nodes/Behaviours/Fetch/MoodStateNode.cs" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/Assets/Packages/noder/Nodes/Behaviours/Fetch/StanceStateNode.cs" beforeDir="false" afterPath="$PROJECT_DIR$/Assets/Packages/noder/Nodes/Behaviours/Fetch/StanceStateNode.cs" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/Assets/Packages/noder/Nodes/Behaviours/Fetch/SubMoodStateNode.cs" beforeDir="false" afterPath="$PROJECT_DIR$/Assets/Packages/noder/Nodes/Behaviours/Fetch/SubMoodStateNode.cs" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/Assets/Packages/noder/Nodes/Behaviours/States/ModuleNode.cs" beforeDir="false" afterPath="$PROJECT_DIR$/Assets/Packages/noder/Nodes/Behaviours/States/ModuleNode.cs" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/Assets/Prefabs/Objects/flower.prefab.meta" beforeDir="false" afterPath="$PROJECT_DIR$/Assets/Prefabs/Objects/flower.prefab.meta" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/Assets/Scenes/420_Terrain.unity" beforeDir="false" afterPath="$PROJECT_DIR$/Assets/Scenes/420_Terrain.unity" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/Assets/Scripts/AI.meta" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/Assets/Scripts/AI/Agent.meta" beforeDir="false" afterPath="$PROJECT_DIR$/Assets/Scripts/Neue/Agent1.meta" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/Assets/Scripts/AI/Agent/Actions.cs" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/Assets/Scripts/AI/Agent/Actions.cs.meta" beforeDir="false" afterPath="$PROJECT_DIR$/Assets/Scripts/Neue/Agent1/Actions.cs.meta" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/Assets/Scripts/AI/Agent/Body.cs" beforeDir="false" afterPath="$PROJECT_DIR$/Assets/Scripts/Neue/Agent1/Body.cs" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/Assets/Scripts/AI/Agent/Body.cs.meta" beforeDir="false" afterPath="$PROJECT_DIR$/Assets/Scripts/Neue/Agent1/Body.cs.meta" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/Assets/Scripts/AI/Agent/Brain.cs" beforeDir="false" afterPath="$PROJECT_DIR$/Assets/Scripts/Neue/Agent1/Brain.cs" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/Assets/Scripts/AI/Agent/Brain.cs.meta" beforeDir="false" afterPath="$PROJECT_DIR$/Assets/Scripts/Neue/Agent1/Brain.cs.meta" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/Assets/Scripts/AI/Agent/BrainOld.cs" beforeDir="false" afterPath="$PROJECT_DIR$/Assets/Scripts/___Deprecated/BrainOld.cs" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/Assets/Scripts/AI/Agent/BrainOld.cs.meta" beforeDir="false" afterPath="$PROJECT_DIR$/Assets/Scripts/___Deprecated/BrainOld.cs.meta" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/Assets/Scripts/AI/Scriptables.meta" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/Assets/Scripts/AI/Scriptables/BrainPreset.cs" beforeDir="false" afterPath="$PROJECT_DIR$/Assets/Scripts/Neue/Agent/Presets/BrainPreset.cs" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/Assets/Scripts/AI/Scriptables/BrainPreset.cs.meta" beforeDir="false" afterPath="$PROJECT_DIR$/Assets/Scripts/Neue/Agent/Presets/BrainPreset.cs.meta" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/Assets/Scripts/AI/Types.meta" beforeDir="false" afterPath="$PROJECT_DIR$/Assets/Scripts/Neue/Types.meta" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/Assets/Scripts/AI/Types/Action.cs" beforeDir="false" afterPath="$PROJECT_DIR$/Assets/Scripts/Neue/Types/Action.cs" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/Assets/Scripts/AI/Types/Action.cs.meta" beforeDir="false" afterPath="$PROJECT_DIR$/Assets/Scripts/Neue/Types/Action.cs.meta" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/Assets/Scripts/AI/Types/ActionSequence.cs" beforeDir="false" afterPath="$PROJECT_DIR$/Assets/Scripts/Neue/Types/ActionSequence.cs" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/Assets/Scripts/AI/Types/ActionSequence.cs.meta" beforeDir="false" afterPath="$PROJECT_DIR$/Assets/Scripts/Neue/Types/ActionSequence.cs.meta" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/Assets/Scripts/AI/Types/Advertisement.cs" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/Assets/Scripts/AI/Types/Advertisement.cs.meta" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/Assets/Scripts/AI/Types/Behaviour.cs" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/Assets/Scripts/AI/Types/Behaviour.cs.meta" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/Assets/Scripts/AI/Types/BehaviourGroup.cs" beforeDir="false" afterPath="$PROJECT_DIR$/Assets/Scripts/Neue/Reference/Types/FrameMapGroup.cs" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/Assets/Scripts/AI/Types/BehaviourGroup.cs.meta" beforeDir="false" afterPath="$PROJECT_DIR$/Assets/Scripts/Neue/Reference/Types/FrameMapGroup.cs.meta" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/Assets/Scripts/AI/Types/BehaviourMap.cs" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/Assets/Scripts/AI/Types/BehaviourMap.cs.meta" beforeDir="false" afterPath="$PROJECT_DIR$/Assets/Scripts/Neue/Reference/Types/FrameMap.cs.meta" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/Assets/Scripts/AI/Types/BehaviourProfile.cs" beforeDir="false" afterPath="$PROJECT_DIR$/Assets/Scripts/Neue/Agent/Brain/Data/Profile.cs" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/Assets/Scripts/AI/Types/BehaviourProfile.cs.meta" beforeDir="false" afterPath="$PROJECT_DIR$/Assets/Scripts/Neue/Agent/Brain/Data/Profile.cs.meta" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/Assets/Scripts/AI/Types/Editor.meta" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/Assets/Scripts/AI/Types/Editor/BehaviourProfilePropertyDrawer.cs" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/Assets/Scripts/AI/Types/Editor/BehaviourProfilePropertyDrawer.cs.meta" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/Assets/Scripts/AI/Types/FailureCode.cs" beforeDir="false" afterPath="$PROJECT_DIR$/Assets/Scripts/Neue/Agent/Actions/Types/FailureCode.cs" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/Assets/Scripts/AI/Types/FailureCode.cs.meta" beforeDir="false" afterPath="$PROJECT_DIR$/Assets/Scripts/Neue/Agent/Actions/Types/FailureCode.cs.meta" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/Assets/Scripts/AI/Types/Knowledge.cs" beforeDir="false" afterPath="$PROJECT_DIR$/Assets/Scripts/Neue/Agent/Brain/Data/Knowledge.cs" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/Assets/Scripts/AI/Types/Knowledge.cs.meta" beforeDir="false" afterPath="$PROJECT_DIR$/Assets/Scripts/Neue/Agent/Brain/Data/Knowledge.cs.meta" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/Assets/Scripts/AI/Types/Maps.meta" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/Assets/Scripts/AI/Types/Maps/BehaviourFloat.cs" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/Assets/Scripts/AI/Types/Maps/BehaviourFloat.cs.meta" beforeDir="false" afterPath="$PROJECT_DIR$/Assets/Scripts/Neue/Reference/Types/Maps/FrameFloat.cs.meta" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/Assets/Scripts/AI/Types/Maps/BehaviourFloatGroup.cs" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/Assets/Scripts/AI/Types/Maps/BehaviourFloatGroup.cs.meta" beforeDir="false" afterPath="$PROJECT_DIR$/Assets/Scripts/Neue/Reference/Types/Maps/Groups/FrameFloatGroup.cs.meta" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/Assets/Scripts/AI/Types/Maps/BehaviourInt.cs" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/Assets/Scripts/AI/Types/Maps/BehaviourInt.cs.meta" beforeDir="false" afterPath="$PROJECT_DIR$/Assets/Scripts/Neue/Reference/Types/Maps/FrameInt.cs.meta" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/Assets/Scripts/AI/Types/Maps/BehaviourIntGroup.cs" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/Assets/Scripts/AI/Types/Maps/BehaviourIntGroup.cs.meta" beforeDir="false" afterPath="$PROJECT_DIR$/Assets/Scripts/Neue/Reference/Types/Maps/Groups/FrameIntGroup.cs.meta" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/Assets/Scripts/AI/Types/Maps/BehaviourSprite.cs" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/Assets/Scripts/AI/Types/Maps/BehaviourSprite.cs.meta" beforeDir="false" afterPath="$PROJECT_DIR$/Assets/Scripts/Neue/Reference/Types/Maps/FrameSprite.cs.meta" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/Assets/Scripts/AI/Types/Maps/BehaviourSpriteGroup.cs" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/Assets/Scripts/AI/Types/Maps/BehaviourSpriteGroup.cs.meta" beforeDir="false" afterPath="$PROJECT_DIR$/Assets/Scripts/Neue/Reference/Types/Maps/Groups/FrameSpriteGroup.cs.meta" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/Assets/Scripts/AI/Types/Maps/BehaviourString.cs" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/Assets/Scripts/AI/Types/Maps/BehaviourString.cs.meta" beforeDir="false" afterPath="$PROJECT_DIR$/Assets/Scripts/Neue/Reference/Types/Maps/FrameString.cs.meta" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/Assets/Scripts/AI/Types/Maps/BehaviourStringGroup.cs" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/Assets/Scripts/AI/Types/Maps/BehaviourStringGroup.cs.meta" beforeDir="false" afterPath="$PROJECT_DIR$/Assets/Scripts/Neue/Reference/Types/Maps/Groups/FrameStringGroup.cs.meta" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/Assets/Scripts/AI/Types/Mood.cs" beforeDir="false" afterPath="$PROJECT_DIR$/Assets/Scripts/Neue/Agent/Brain/Types/Mood.cs" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/Assets/Scripts/AI/Types/Mood.cs.meta" beforeDir="false" afterPath="$PROJECT_DIR$/Assets/Scripts/Neue/Agent/Brain/Types/Mood.cs.meta" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/Assets/Scripts/AI/Types/SecondaryMood.cs" beforeDir="false" afterPath="$PROJECT_DIR$/Assets/Scripts/Neue/Agent/Brain/Types/SecondaryMood.cs" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/Assets/Scripts/AI/Types/SecondaryMood.cs.meta" beforeDir="false" afterPath="$PROJECT_DIR$/Assets/Scripts/Neue/Agent/Brain/Types/SecondaryMood.cs.meta" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/Assets/Scripts/AI/Types/Stance.cs" beforeDir="false" afterPath="$PROJECT_DIR$/Assets/Scripts/Neue/Agent/Brain/Types/Stance.cs" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/Assets/Scripts/AI/Types/Stance.cs.meta" beforeDir="false" afterPath="$PROJECT_DIR$/Assets/Scripts/Neue/Agent/Brain/Types/Stance.cs.meta" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/Assets/Scripts/AI/UI.meta" beforeDir="false" afterPath="$PROJECT_DIR$/Assets/Scripts/Neue/UI.meta" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/Assets/Scripts/AI/UI/HUD Elements.meta" beforeDir="false" afterPath="$PROJECT_DIR$/Assets/Scripts/Neue/UI/HUD Elements.meta" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/Assets/Scripts/AI/UI/HUD Elements/AttributeElement.cs" beforeDir="false" afterPath="$PROJECT_DIR$/Assets/Scripts/Neue/UI/HUD Elements/AttributeElement.cs" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/Assets/Scripts/AI/UI/HUD Elements/AttributeElement.cs.meta" beforeDir="false" afterPath="$PROJECT_DIR$/Assets/Scripts/Neue/UI/HUD Elements/AttributeElement.cs.meta" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/Assets/Scripts/AI/UI/HUD Elements/StatElement.cs" beforeDir="false" afterPath="$PROJECT_DIR$/Assets/Scripts/Neue/UI/HUD Elements/StatElement.cs" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/Assets/Scripts/AI/UI/HUD Elements/StatElement.cs.meta" beforeDir="false" afterPath="$PROJECT_DIR$/Assets/Scripts/Neue/UI/HUD Elements/StatElement.cs.meta" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/Assets/Scripts/AI/UI/HUD Elements/StatOverlayElement.cs" beforeDir="false" afterPath="$PROJECT_DIR$/Assets/Scripts/Neue/UI/HUD Elements/StatOverlayElement.cs" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/Assets/Scripts/AI/UI/HUD Elements/StatOverlayElement.cs.meta" beforeDir="false" afterPath="$PROJECT_DIR$/Assets/Scripts/Neue/UI/HUD Elements/StatOverlayElement.cs.meta" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/Assets/Scripts/AI/UI/HUD Elements/StatsContainer.cs" beforeDir="false" afterPath="$PROJECT_DIR$/Assets/Scripts/Neue/UI/HUD Elements/StatsContainer.cs" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/Assets/Scripts/AI/UI/HUD Elements/StatsContainer.cs.meta" beforeDir="false" afterPath="$PROJECT_DIR$/Assets/Scripts/Neue/UI/HUD Elements/StatsContainer.cs.meta" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/Assets/Scripts/AI/UI/HUDElement.cs" beforeDir="false" afterPath="$PROJECT_DIR$/Assets/Scripts/Neue/UI/HUDElement.cs" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/Assets/Scripts/AI/UI/HUDElement.cs.meta" beforeDir="false" afterPath="$PROJECT_DIR$/Assets/Scripts/Neue/UI/HUDElement.cs.meta" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/Assets/Scripts/AI/UI/MoodIconMapping.cs" beforeDir="false" afterPath="$PROJECT_DIR$/Assets/Scripts/Neue/UI/MoodIconMapping.cs" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/Assets/Scripts/AI/UI/MoodIconMapping.cs.meta" beforeDir="false" afterPath="$PROJECT_DIR$/Assets/Scripts/Neue/UI/MoodIconMapping.cs.meta" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/Assets/Scripts/AI/Utilities.meta" beforeDir="false" afterPath="$PROJECT_DIR$/Assets/Scripts/Neue/Utilities.meta" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/Assets/Scripts/AI/Utilities/AnimationRelay.cs" beforeDir="false" afterPath="$PROJECT_DIR$/Assets/Scripts/Neue/Utilities/AnimationRelay.cs" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/Assets/Scripts/AI/Utilities/AnimationRelay.cs.meta" beforeDir="false" afterPath="$PROJECT_DIR$/Assets/Scripts/Neue/Utilities/AnimationRelay.cs.meta" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/Assets/Scripts/Core/Events.cs" beforeDir="false" afterPath="$PROJECT_DIR$/Assets/Scripts/Core/Events.cs" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/Assets/Scripts/Core/Focusing.cs" beforeDir="false" afterPath="$PROJECT_DIR$/Assets/Scripts/Core/Focusing.cs" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/Assets/Scripts/Core/Library.cs" beforeDir="false" afterPath="$PROJECT_DIR$/Assets/Scripts/Core/Library.cs" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/Assets/Scripts/Core/Surveillance.cs" beforeDir="false" afterPath="$PROJECT_DIR$/Assets/Scripts/Core/Surveillance.cs" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/Assets/Scripts/Core/Wand.cs" beforeDir="false" afterPath="$PROJECT_DIR$/Assets/Scripts/Core/Wand.cs" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/Assets/Scripts/Core/World.cs" beforeDir="false" afterPath="$PROJECT_DIR$/Assets/Scripts/Core/World.cs" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/Assets/Scripts/Data/BrainPayload.cs" beforeDir="false" afterPath="$PROJECT_DIR$/Assets/Scripts/Data/BrainPayload.cs" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/Assets/Scripts/Objects/Base/Focusable.cs" beforeDir="false" afterPath="$PROJECT_DIR$/Assets/Scripts/Objects/Base/Focusable.cs" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/Assets/Scripts/Objects/Entities/Interactables/Beacon.cs" beforeDir="false" afterPath="$PROJECT_DIR$/Assets/Scripts/Objects/Entities/Interactables/Beacon.cs" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/Assets/Scripts/Objects/Entities/Interactables/Empty/Flower.cs" beforeDir="false" afterPath="$PROJECT_DIR$/Assets/Scripts/Objects/Entities/Interactables/Empty/Flower.cs" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/Assets/Scripts/Objects/Entities/Interactables/Nest.cs" beforeDir="false" afterPath="$PROJECT_DIR$/Assets/Scripts/Objects/Entities/Interactables/Nest.cs" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/Assets/Scripts/uwu/Gameplay/Interacter.cs" beforeDir="false" afterPath="$PROJECT_DIR$/Assets/Scripts/uwu/Gameplay/Interacter.cs" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/Assets/Scripts/Objects/Managers/ModuleTreeHelper.cs" beforeDir="false" afterPath="$PROJECT_DIR$/Assets/Scripts/Objects/Managers/ModuleTreeHelper.cs" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/Assets/Scripts/Save &amp; Load/BrainData.cs" beforeDir="false" afterPath="$PROJECT_DIR$/Assets/Scripts/Save &amp; Load/BrainData.cs" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/Assets/Scripts/Save &amp; Load/GameData.cs" beforeDir="false" afterPath="$PROJECT_DIR$/Assets/Scripts/Save &amp; Load/GameData.cs" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/Assets/Scripts/Save &amp; Load/GameDataSaveSystem.cs" beforeDir="false" afterPath="$PROJECT_DIR$/Assets/Scripts/Save &amp; Load/GameDataSaveSystem.cs" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/Assets/Scripts/Save &amp; Load/SceneData.cs" beforeDir="false" afterPath="$PROJECT_DIR$/Assets/Scripts/Save &amp; Load/SceneData.cs" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/Assets/Scripts/___Deprecated/Wizard/Appearance.cs" beforeDir="false" afterPath="$PROJECT_DIR$/Assets/Scripts/___Deprecated/Wizard/Appearance.cs" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/Assets/Scripts/___Deprecated/Wizard/Audio.cs" beforeDir="false" afterPath="$PROJECT_DIR$/Assets/Scripts/___Deprecated/Wizard/Audio.cs" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/Assets/Scripts/___Deprecated/Wizard/Controller.cs" beforeDir="false" afterPath="$PROJECT_DIR$/Assets/Scripts/___Deprecated/Wizard/Controller.cs" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/Assets/Scripts/___Deprecated/Wizard/Dialogue.cs" beforeDir="false" afterPath="$PROJECT_DIR$/Assets/Scripts/___Deprecated/Wizard/Dialogue.cs" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/Library/InspectorExpandedItems.asset" beforeDir="false" afterPath="$PROJECT_DIR$/Library/InspectorExpandedItems.asset" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/Library/assetDatabase3" beforeDir="false" afterPath="$PROJECT_DIR$/Library/assetDatabase3" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/ProjectSettings/TagManager.asset" beforeDir="false" afterPath="$PROJECT_DIR$/ProjectSettings/TagManager.asset" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/obj/Debug/Assembly-CSharp.csprojAssemblyReference.cache" beforeDir="false" afterPath="$PROJECT_DIR$/obj/Debug/Assembly-CSharp.csprojAssemblyReference.cache" afterDir="false" />
     </list>
     <option name="SHOW_DIALOG" value="false" />
     <option name="HIGHLIGHT_CONFLICTS" value="true" />
@@ -61,66 +189,68 @@
     <setting file="file://$PROJECT_DIR$/Assets/Scripts/Objects/Entities/Cage.cs" root0="FORCE_HIGHLIGHTING" />
     <setting file="file://$PROJECT_DIR$/Assets/Animations/Behaviours/BeaconAppearBehaviour.cs" root0="FORCE_HIGHLIGHTING" />
     <setting file="file://$PROJECT_DIR$/Assets/Scripts/uwu/Extensions/ExtraInput.cs" root0="FORCE_HIGHLIGHTING" />
+    <setting file="file://$PROJECT_DIR$/Assets/Scripts/Neue/Agent1/Actions.cs" root0="FORCE_HIGHLIGHTING" />
     <setting file="file://$PROJECT_DIR$/Assets/Scripts/Core/Surveillance.cs" root0="FORCE_HIGHLIGHTING" />
+    <setting file="file://$PROJECT_DIR$/Assets/Scripts/Neue/Agent1/Brain.cs" root0="FORCE_HIGHLIGHTING" />
     <setting file="file://$PROJECT_DIR$/Assets/Scripts/uwu/Animation/ComponentStateMachineBehaviour.cs" root0="FORCE_HIGHLIGHTING" />
     <setting file="file://$PROJECT_DIR$/Assets/Scripts/uwu/Extensions/BackgroundMonoBehaviour.cs" root0="FORCE_HIGHLIGHTING" />
-    <setting file="file://$PROJECT_DIR$/Assets/Scripts/AI/UI/HUD Elements/StatsContainer.cs" root0="FORCE_HIGHLIGHTING" />
+    <setting file="file://$PROJECT_DIR$/Assets/Scripts/Neue/UI/HUD Elements/StatsContainer.cs" root0="FORCE_HIGHLIGHTING" />
     <setting file="file://$PROJECT_DIR$/Assets/Scripts/UI/MenuCursor.cs" root0="FORCE_HIGHLIGHTING" />
   </component>
   <component name="IdeDocumentHistory">
     <option name="CHANGED_PATHS">
       <list>
-        <option value="$PROJECT_DIR$/Assets/Scripts/Data/SurveillanceLogData.cs" />
-        <option value="$PROJECT_DIR$/Assets/Scripts/Data/CompositeSurveillanceData.cs" />
-        <option value="$PROJECT_DIR$/Assets/Scripts/Data/SurveillanceDataDelta.cs" />
-        <option value="$PROJECT_DIR$/Assets/Scripts/UI/BeaconInfo.cs" />
-        <option value="$PROJECT_DIR$/Assets/Scripts/Objects/Base/Focusable.cs" />
-        <option value="$PROJECT_DIR$/Assets/Scripts/Presets/WorldPreset.cs" />
-        <option value="$PROJECT_DIR$/Assets/Scripts/Core/Focusing.cs" />
-        <option value="$PROJECT_DIR$/Assets/Scripts/___Deprecated/DesktopVisualization.cs" />
-        <option value="$PROJECT_DIR$/Assets/Cutscenes/Behaviours/DesktopVisualizationTrack/DesktopVisualizationTrackBehaviour.cs" />
-        <option value="$PROJECT_DIR$/Assets/Packages/noder/Nodes/Behaviours/Events/BeaconEvent.cs" />
-        <option value="$PROJECT_DIR$/Assets/Scripts/uwu/Save &amp; Load/ISaveable.cs" />
-        <option value="$PROJECT_DIR$/Assets/Scripts/Objects/Managers/VineManager.cs" />
-        <option value="$PROJECT_DIR$/Assets/Scripts/Objects/Entities/Cage.cs" />
-        <option value="$PROJECT_DIR$/Assets/Scripts/Objects/Managers/EventManager.cs" />
-        <option value="$PROJECT_DIR$/Assets/Scripts/Data/SunData.cs" />
-        <option value="$PROJECT_DIR$/Assets/Scripts/Objects/Types/WorldState.cs" />
-        <option value="$PROJECT_DIR$/Assets/Scripts/Save &amp; Load/SceneData.cs" />
-        <option value="$PROJECT_DIR$/Assets/Scripts/Objects/Managers/RemoteManager.cs" />
-        <option value="$PROJECT_DIR$/Assets/Scripts/Core/Surveillance.cs" />
-        <option value="$PROJECT_DIR$/Assets/Scripts/AI/Agent/Brain.cs" />
-        <option value="$PROJECT_DIR$/Assets/Scripts/Data/BrainPayload.cs" />
-        <option value="$PROJECT_DIR$/Assets/Scripts/Objects/Base/Manager.cs" />
-        <option value="$PROJECT_DIR$/Assets/Scripts/Objects/Managers/GradingManager.cs" />
-        <option value="$PROJECT_DIR$/Assets/Scripts/Data/LibraryPayload.cs" />
-        <option value="$PROJECT_DIR$/Assets/Scripts/Save &amp; Load/BrainData.cs" />
-        <option value="$PROJECT_DIR$/Assets/Scripts/Data/VineSceneData.cs" />
-        <option value="$PROJECT_DIR$/Assets/Scripts/Objects/Entities/Sun.cs" />
-        <option value="$PROJECT_DIR$/Assets/Packages/UnityWindowsFileDrag-Drop-master/B83.Win32.cs" />
-        <option value="$PROJECT_DIR$/Assets/Packages/UnityWindowsFileDrag-Drop-master/FileDragAndDrop.cs" />
-        <option value="$PROJECT_DIR$/Assets/Scripts/uwu/Textures/ITextureReceiver.cs" />
-        <option value="$PROJECT_DIR$/Assets/Scripts/uwu/Textures/TextureLoader.cs" />
-        <option value="$PROJECT_DIR$/Assets/Scripts/Objects/Entities/Quilt.cs" />
-        <option value="$PROJECT_DIR$/Assets/Scripts/Objects/Base/Entity.cs" />
-        <option value="$PROJECT_DIR$/Assets/Scripts/Objects/Base/Element.cs" />
-        <option value="$PROJECT_DIR$/Assets/Scripts/Global.cs" />
-        <option value="$PROJECT_DIR$/Assets/Scripts/uwu/Snippets/CameraFacingBillboard.cs" />
-        <option value="$PROJECT_DIR$/Assets/Scripts/Objects/Entities/Interactables/Vine.cs" />
-        <option value="$PROJECT_DIR$/Assets/Scripts/uwu/Animation/ComponentStateMachineBehaviour.cs" />
-        <option value="$PROJECT_DIR$/Assets/Animations/Behaviours/BeaconAppearBehaviour.cs" />
-        <option value="$PROJECT_DIR$/Assets/Scripts/Data/BeaconData.cs" />
-        <option value="$PROJECT_DIR$/Assets/Scripts/Save &amp; Load/GameDataSaveSystem.cs" />
-        <option value="$PROJECT_DIR$/Assets/Scripts/Interfaces/IFlammable.cs" />
-        <option value="$PROJECT_DIR$/Assets/Scripts/Objects/Base/Interactable.cs" />
-        <option value="$PROJECT_DIR$/Assets/Scripts/Core/World.cs" />
-        <option value="$PROJECT_DIR$/Assets/Scripts/Objects/Managers/BeaconManager.cs" />
-        <option value="$PROJECT_DIR$/Assets/Scripts/Objects/Entities/Interactables/Empty/Flower.cs" />
-        <option value="$PROJECT_DIR$/Assets/Scripts/Objects/Entities/Interactables/Beacon.cs" />
-        <option value="$PROJECT_DIR$/Assets/Scripts/Core/Library.cs" />
         <option value="$PROJECT_DIR$/Assets/Scripts/Objects/Entities/Interactables/Nest.cs" />
-        <option value="$PROJECT_DIR$/Assets/Scripts/uwu/Gameplay/Interacter.cs" />
-        <option value="$PROJECT_DIR$/Assets/Scripts/Core/Wand.cs" />
+        <option value="$PROJECT_DIR$/Assets/Scripts/Neue/Agent/BrainOld.cs" />
+        <option value="$PROJECT_DIR$/Assets/Scripts/___Deprecated/Wizard/Audio.cs" />
+        <option value="$PROJECT_DIR$/Assets/Scripts/___Deprecated/Wizard/Appearance.cs" />
+        <option value="$PROJECT_DIR$/Assets/Packages/noder/Nodes/Behaviours/Events/Fireworks.cs" />
+        <option value="$PROJECT_DIR$/Assets/Scripts/___Deprecated/Wizard/Dialogue.cs" />
+        <option value="$PROJECT_DIR$/Assets/Scripts/Neue/Behaviours/IRewarder.cs" />
+        <option value="$PROJECT_DIR$/Assets/Scripts/Core/World.cs" />
+        <option value="$PROJECT_DIR$/Assets/Scripts/Objects/Base/Focusable.cs" />
+        <option value="$PROJECT_DIR$/Assets/Scripts/Core/Focusing.cs" />
+        <option value="$PROJECT_DIR$/Assets/Scripts/Neue/Reference/Types/Reference.cs" />
+        <option value="$PROJECT_DIR$/Assets/Scripts/Neue/Reference/Images/Objects/Node.cs" />
+        <option value="$PROJECT_DIR$/Assets/Scripts/Neue/Reference/Types/FrameOfReference.cs" />
+        <option value="$PROJECT_DIR$/Assets/Scripts/Neue/Reference/Instances/Behaviours/IMovable.cs" />
+        <option value="$PROJECT_DIR$/Assets/Scripts/Neue/Reference/Instances/Behaviours/IResponder.cs" />
+        <option value="$PROJECT_DIR$/Assets/Scripts/Neue/Reference/Instances/Behaviours/INode.cs" />
+        <option value="$PROJECT_DIR$/Assets/Scripts/Neue/Reference/Behaviours/INode.cs" />
+        <option value="$PROJECT_DIR$/Assets/Scripts/Neue/Reference/Images/Objects/Image.cs" />
+        <option value="$PROJECT_DIR$/Assets/Scripts/Neue/Reference/Nodes/Behaviours/INode.cs" />
+        <option value="$PROJECT_DIR$/Assets/Scripts/Neue/Reference/Types/Frame.cs" />
+        <option value="$PROJECT_DIR$/Assets/Scripts/Neue/Reference/Nodes/Data/NodeData.cs" />
+        <option value="$PROJECT_DIR$/Assets/Scripts/Neue/Agent/Brain.cs" />
+        <option value="$PROJECT_DIR$/Assets/Scripts/Neue/Agent/Brain/Data/Knowledge.cs" />
+        <option value="$PROJECT_DIR$/Assets/Scripts/Neue/Agent/Brain/Data/BehaviourProfile.cs" />
+        <option value="$PROJECT_DIR$/Assets/Scripts/Neue/Agent/Actions/Types/FailureCode.cs" />
+        <option value="$PROJECT_DIR$/Assets/Scripts/Neue/Types/BehaviourMap.cs" />
+        <option value="$PROJECT_DIR$/Assets/Scripts/Neue/Types/FrameMap.cs" />
+        <option value="$PROJECT_DIR$/Assets/Scripts/Neue/Types/FrameMappings.cs" />
+        <option value="$PROJECT_DIR$/Assets/Scripts/Neue/Types/Maps/FrameFloatMappings.cs" />
+        <option value="$PROJECT_DIR$/Assets/Scripts/Neue/Types/Maps/FrameIntMappings.cs" />
+        <option value="$PROJECT_DIR$/Assets/Scripts/Neue/Types/Maps/BehaviourStringGroup.cs" />
+        <option value="$PROJECT_DIR$/Assets/Scripts/Neue/Types/Maps/FrameStringMappings.cs" />
+        <option value="$PROJECT_DIR$/Assets/Scripts/Neue/Types/Maps/FrameSpriteMappings.cs" />
+        <option value="$PROJECT_DIR$/Assets/Scripts/Neue/Types/FrameMapGroup.cs" />
+        <option value="$PROJECT_DIR$/Assets/Scripts/Neue/Types/Maps/FrameFloatGroup.cs" />
+        <option value="$PROJECT_DIR$/Assets/Scripts/Neue/Types/Maps/FrameIntGroup.cs" />
+        <option value="$PROJECT_DIR$/Assets/Scripts/Neue/Types/Maps/FrameSpriteGroup.cs" />
+        <option value="$PROJECT_DIR$/Assets/Scripts/Neue/Types/Maps/FrameStringGroup.cs" />
+        <option value="$PROJECT_DIR$/Assets/Scripts/Neue/Reference/Types/Maps/Groups/FrameStringGroup.cs" />
+        <option value="$PROJECT_DIR$/Assets/Scripts/Neue/Types/Frame.cs" />
+        <option value="$PROJECT_DIR$/Assets/Scripts/Neue/UI/HUDElement.cs" />
+        <option value="$PROJECT_DIR$/Assets/Scripts/Neue/UI/HUD Elements/StatElement.cs" />
+        <option value="$PROJECT_DIR$/Assets/Scripts/Neue/Reference/Types/FrameMap.cs" />
+        <option value="$PROJECT_DIR$/Assets/Scripts/Neue/Reference/Types/FrameMapGroup.cs" />
+        <option value="$PROJECT_DIR$/Assets/Scripts/Neue/Agent/Brain/Data/Profile.cs" />
+        <option value="$PROJECT_DIR$/Assets/Scripts/Neue/Agent/Brain/Presets/BrainPreset.cs" />
+        <option value="$PROJECT_DIR$/Assets/Scripts/Neue/Agent1/Brain.cs" />
+        <option value="$PROJECT_DIR$/Assets/Scripts/Neue/Agent/Actions/Movement/Presets/BrainPreset.cs" />
+        <option value="$PROJECT_DIR$/Assets/Scripts/Neue/Agent/Actions/Movement/Presets/MovementPreset.cs" />
+        <option value="$PROJECT_DIR$/Assets/Scripts/Neue/Agent/Presets/MovementPreset.cs" />
+        <option value="$PROJECT_DIR$/Assets/Scripts/Neue/Agent/Actions/Movement/Navigation.cs" />
       </list>
     </option>
   </component>
@@ -161,10 +291,10 @@
       </option>
       <method v="2" />
     </configuration>
-    <configuration name="Attach to Unity Editor" type="UNITY_DEBUG_RUN_CONFIGURATION" factoryName="Unity Debug" show_console_on_std_err="false" show_console_on_std_out="false" port="50000" address="localhost" ignored-value-for-modified-check="19900">
+    <configuration name="Attach to Unity Editor" type="UNITY_DEBUG_RUN_CONFIGURATION" factoryName="Unity Debug" show_console_on_std_err="false" show_console_on_std_out="false" port="50000" address="localhost">
       <option name="allowRunningInParallel" value="false" />
       <option name="listenPortForConnections" value="false" />
-      <option name="pid" value="19900" />
+      <option name="pid" />
       <option name="selectedOptions">
         <set />
       </option>
@@ -195,7 +325,8 @@
       <workItem from="1605189540608" duration="23927000" />
       <workItem from="1605536852664" duration="20460000" />
       <workItem from="1606329474393" duration="44197000" />
-      <workItem from="1606787032846" duration="80044000" />
+      <workItem from="1606787032846" duration="88682000" />
+      <workItem from="1607788803852" duration="18862000" />
     </task>
     <servers />
   </component>
@@ -224,10 +355,11 @@
       <screen x="0" y="0" width="1536" height="824" />
     </state>
     <state x="399" y="149" key="#com.intellij.ide.util.ExportDialog/0.0.1536.824@0.0.1536.824" timestamp="1600556556317" />
-    <state x="516" y="267" key="ANALYSIS_DLG_com.jetbrains.rider.actions.impl.cleanup.RiderCodeCleanupAction$actionPerformed$dlg$1" timestamp="1601602260644">
-      <screen x="0" y="0" width="1536" height="824" />
+    <state x="2780" y="96" key="ANALYSIS_DLG_com.jetbrains.rider.actions.impl.cleanup.RiderCodeCleanupAction$actionPerformed$dlg$1" timestamp="1607902273507">
+      <screen x="1920" y="-358" width="2560" height="1400" />
     </state>
-    <state x="516" y="267" key="ANALYSIS_DLG_com.jetbrains.rider.actions.impl.cleanup.RiderCodeCleanupAction$actionPerformed$dlg$1/0.0.1536.824@0.0.1536.824" timestamp="1601602260644" />
+    <state x="2780" y="96" key="ANALYSIS_DLG_com.jetbrains.rider.actions.impl.cleanup.RiderCodeCleanupAction$actionPerformed$dlg$1/0.0.1536.824/1920.-358.2560.1400@1920.-358.2560.1400" timestamp="1607902273507" />
+    <state x="516" y="267" key="ANALYSIS_DLG_com.jetbrains.rider.actions.impl.cleanup.RiderCodeCleanupAction$actionPerformed$dlg$1/0.0.1536.824@0.0.1536.824" timestamp="1607745255282" />
     <state width="1493" height="288" key="GridCell.Tab.0.bottom" timestamp="1607212147886">
       <screen x="0" y="0" width="1536" height="824" />
     </state>
@@ -302,6 +434,10 @@
     </state>
     <state x="2053" y="-261" key="SettingsEditor/0.0.1536.824/1920.-358.2560.1400@1920.-358.2560.1400" timestamp="1607391680643" />
     <state x="80" y="57" width="1178" height="710" key="SettingsEditor/0.0.1536.824@0.0.1536.824" timestamp="1606975225579" />
+    <state x="440" y="31" key="com.intellij.openapi.editor.actions.MultiplePasteAction$ClipboardContentChooser" timestamp="1607745865890">
+      <screen x="0" y="0" width="1536" height="824" />
+    </state>
+    <state x="440" y="31" key="com.intellij.openapi.editor.actions.MultiplePasteAction$ClipboardContentChooser/0.0.1536.824@0.0.1536.824" timestamp="1607745865890" />
     <state x="43" y="37" width="1507" height="810" key="dock-window-1" timestamp="1606582891568">
       <screen x="0" y="0" width="1536" height="824" />
     </state>
@@ -310,14 +446,15 @@
       <screen x="0" y="0" width="1536" height="824" />
     </state>
     <state x="415" y="11" width="705" height="801" key="find.popup/0.0.1536.824@0.0.1536.824" timestamp="1603723503687" />
-    <state x="425" y="187" width="672" height="677" key="run.anything.popup" timestamp="1607059001966">
-      <screen x="0" y="0" width="1536" height="824" />
-    </state>
-    <state x="425" y="187" width="672" height="677" key="run.anything.popup/0.0.1536.824@0.0.1536.824" timestamp="1607059001966" />
-    <state x="2638" y="-112" width="1120" height="1152" key="search.everywhere.popup" timestamp="1607488097167">
+    <state x="2628" y="-40" width="1120" height="1151" key="run.anything.popup" timestamp="1607910030966">
       <screen x="1920" y="-358" width="2560" height="1400" />
     </state>
-    <state x="2638" y="-112" width="1120" height="1152" key="search.everywhere.popup/0.0.1536.824/1920.-358.2560.1400@1920.-358.2560.1400" timestamp="1607488097167" />
+    <state x="2628" y="-40" width="1120" height="1151" key="run.anything.popup/0.0.1536.824/1920.-358.2560.1400@1920.-358.2560.1400" timestamp="1607910030966" />
+    <state x="425" y="187" width="672" height="677" key="run.anything.popup/0.0.1536.824@0.0.1536.824" timestamp="1607059001966" />
+    <state x="2638" y="-112" width="1120" height="1152" key="search.everywhere.popup" timestamp="1607910540607">
+      <screen x="1920" y="-358" width="2560" height="1400" />
+    </state>
+    <state x="2638" y="-112" width="1120" height="1152" key="search.everywhere.popup/0.0.1536.824/1920.-358.2560.1400@1920.-358.2560.1400" timestamp="1607910540607" />
     <state x="431" y="145" width="672" height="678" key="search.everywhere.popup/0.0.1536.824@0.0.1536.824" timestamp="1607355134390" />
   </component>
 </project>

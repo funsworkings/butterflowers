@@ -1,8 +1,4 @@
-﻿using System.Collections;
-using System.Collections.Generic;
-using UnityEngine;
-
-public static class Events
+﻿public static class Events
 {
     public static System.Action<EVENTCODE, AGENT, AGENT, string> onFireEvent;
     public static System.Action<EVENTCODE> onGlobalEvent;

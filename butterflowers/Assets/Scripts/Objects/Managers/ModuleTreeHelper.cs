@@ -1,8 +1,10 @@
-﻿using AI.Agent;
-using AI.Types;
-using UnityEngine;
+﻿using UnityEngine;
 using System.Collections.Generic;
 using System.Linq;
+using Neue.Agent;
+using Neue.Agent.Brain.Types;
+using Neue.Agent1;
+using Neue.Types;
 using Noder.Nodes.Behaviours.Entries;
 
 namespace Objects.Managers
@@ -14,7 +16,7 @@ namespace Objects.Managers
 		// Properties
 
 		[SerializeField] Brain brain;
-		[SerializeField] AI.Scriptables.BrainPreset brainPreset;
+		[SerializeField] Neue.Agent.Presets.BrainPreset brainPreset;
 		[SerializeField] BrainPreset oldPreset;
 		
 		[SerializeField] BeaconManager beacons;

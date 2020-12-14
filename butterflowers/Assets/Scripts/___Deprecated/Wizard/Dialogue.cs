@@ -10,7 +10,9 @@ using Noder.Nodes.External;
 using System.Linq;
 using Noder.Graphs;
 using System.Text;
-using AI.Types;
+using Neue.Agent;
+using Neue.Agent.Brain.Types;
+using Neue.Types;
 using TMPro;
 using uwu.Dialogue;
 using uwu.Extensions;
@@ -28,7 +30,7 @@ namespace Wizard {
 
         Controller controller;
         Memories memories;
-        Brain brain;
+        BrainOld brain;
 
         [SerializeField] GameObject alert;
 
@@ -147,7 +149,7 @@ namespace Wizard {
         void Awake()
         {
             controller = GetComponent<Controller>();
-            brain = GetComponent<Brain>();
+            brain = GetComponent<BrainOld>();
         }
 
         void Start()

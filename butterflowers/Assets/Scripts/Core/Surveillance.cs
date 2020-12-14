@@ -6,7 +6,6 @@ using Data;
 using Objects.Types;
 using Settings;
 using UnityEngine;
-using uwu;
 using uwu.Camera;
 using uwu.Extensions;
 using uwu.Snippets;

@@ -457,6 +457,7 @@
         <e p="Scripts" t="Include">
           <e p="___Deprecated" t="Include">
             <e p="BeaconFocalPoint.cs" t="Include" />
+            <e p="BrainOld.cs" t="Include" />
             <e p="Builder.cs" t="Include" />
             <e p="CollisionPlane.cs" t="Include" />
             <e p="ColorWithTimeOfDay.cs" t="Include" />
@@ -485,57 +486,6 @@
               <e p="Memories.cs" t="Include" />
               <e p="Memory.cs" t="Include" />
               <e p="Navigation.cs" t="Include" />
-            </e>
-          </e>
-          <e p="AI" t="Include">
-            <e p="Agent" t="Include">
-              <e p="Actions.cs" t="Include" />
-              <e p="Body.cs" t="Include" />
-              <e p="Brain.cs" t="Include" />
-              <e p="BrainOld.cs" t="Include" />
-            </e>
-            <e p="Scriptables" t="Include">
-              <e p="BrainPreset.cs" t="Include" />
-            </e>
-            <e p="Types" t="Include">
-              <e p="Action.cs" t="Include" />
-              <e p="ActionSequence.cs" t="Include" />
-              <e p="Advertisement.cs" t="Include" />
-              <e p="Behaviour.cs" t="Include" />
-              <e p="BehaviourGroup.cs" t="Include" />
-              <e p="BehaviourMap.cs" t="Include" />
-              <e p="BehaviourProfile.cs" t="Include" />
-              <e p="Editor" t="Include">
-                <e p="BehaviourProfilePropertyDrawer.cs" t="Include" />
-              </e>
-              <e p="FailureCode.cs" t="Include" />
-              <e p="Knowledge.cs" t="Include" />
-              <e p="Maps" t="Include">
-                <e p="BehaviourFloat.cs" t="Include" />
-                <e p="BehaviourFloatGroup.cs" t="Include" />
-                <e p="BehaviourInt.cs" t="Include" />
-                <e p="BehaviourIntGroup.cs" t="Include" />
-                <e p="BehaviourSprite.cs" t="Include" />
-                <e p="BehaviourSpriteGroup.cs" t="Include" />
-                <e p="BehaviourString.cs" t="Include" />
-                <e p="BehaviourStringGroup.cs" t="Include" />
-              </e>
-              <e p="Mood.cs" t="Include" />
-              <e p="SecondaryMood.cs" t="Include" />
-              <e p="Stance.cs" t="Include" />
-            </e>
-            <e p="UI" t="Include">
-              <e p="HUD Elements" t="Include">
-                <e p="AttributeElement.cs" t="Include" />
-                <e p="StatElement.cs" t="Include" />
-                <e p="StatOverlayElement.cs" t="Include" />
-                <e p="StatsContainer.cs" t="Include" />
-              </e>
-              <e p="HUDElement.cs" t="Include" />
-              <e p="MoodIconMapping.cs" t="Include" />
-            </e>
-            <e p="Utilities" t="Include">
-              <e p="AnimationRelay.cs" t="Include" />
             </e>
           </e>
           <e p="Cameras" t="Include">
@@ -577,6 +527,79 @@
             <e p="ChooseUsername.cs" t="Include" />
             <e p="MainMenu.cs" t="Include" />
             <e p="VersionText.cs" t="Include" />
+          </e>
+          <e p="Neue" t="Include">
+            <e p="Agent" t="Include">
+              <e p="Actions" t="Include">
+                <e p="Movement" t="Include">
+                  <e p="Navigation.cs" t="Include" />
+                </e>
+                <e p="Types" t="Include">
+                  <e p="FailureCode.cs" t="Include" />
+                </e>
+              </e>
+              <e p="Brain" t="Include">
+                <e p="Data" t="Include">
+                  <e p="Knowledge.cs" t="Include" />
+                  <e p="Profile.cs" t="Include" />
+                </e>
+                <e p="Types" t="Include">
+                  <e p="Mood.cs" t="Include" />
+                  <e p="SecondaryMood.cs" t="Include" />
+                  <e p="Stance.cs" t="Include" />
+                </e>
+              </e>
+              <e p="Presets" t="Include">
+                <e p="BrainPreset.cs" t="Include" />
+                <e p="MovementPreset.cs" t="Include" />
+              </e>
+            </e>
+            <e p="Agent1" t="Include">
+              <e p="Actions.cs" t="Include" />
+              <e p="Body.cs" t="Include" />
+              <e p="Brain.cs" t="Include" />
+            </e>
+            <e p="Reference" t="Include">
+              <e p="Nodes" t="Include">
+                <e p="Behaviours" t="Include">
+                  <e p="INode.cs" t="Include" />
+                </e>
+              </e>
+              <e p="Types" t="Include">
+                <e p="Frame.cs" t="Include" />
+                <e p="FrameMap.cs" t="Include" />
+                <e p="FrameMapGroup.cs" t="Include" />
+                <e p="Maps" t="Include">
+                  <e p="FrameFloat.cs" t="Include" />
+                  <e p="FrameInt.cs" t="Include" />
+                  <e p="FrameSprite.cs" t="Include" />
+                  <e p="FrameString.cs" t="Include" />
+                  <e p="Groups" t="Include">
+                    <e p="FrameFloatGroup.cs" t="Include" />
+                    <e p="FrameIntGroup.cs" t="Include" />
+                    <e p="FrameSpriteGroup.cs" t="Include" />
+                    <e p="FrameStringGroup.cs" t="Include" />
+                  </e>
+                </e>
+              </e>
+            </e>
+            <e p="Types" t="Include">
+              <e p="Action.cs" t="Include" />
+              <e p="ActionSequence.cs" t="Include" />
+            </e>
+            <e p="UI" t="Include">
+              <e p="HUD Elements" t="Include">
+                <e p="AttributeElement.cs" t="Include" />
+                <e p="StatElement.cs" t="Include" />
+                <e p="StatOverlayElement.cs" t="Include" />
+                <e p="StatsContainer.cs" t="Include" />
+              </e>
+              <e p="HUDElement.cs" t="Include" />
+              <e p="MoodIconMapping.cs" t="Include" />
+            </e>
+            <e p="Utilities" t="Include">
+              <e p="AnimationRelay.cs" t="Include" />
+            </e>
           </e>
           <e p="Objects" t="Include">
             <e p="Base" t="Include">

@@ -1,5 +1,7 @@
 ﻿using System.Collections;
 using System.Collections.Generic;
+using Neue.Agent;
+using Neue.Agent1;
 using UnityEngine;
 
 using Noder.Nodes.Behaviours.Core;

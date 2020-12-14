@@ -2,14 +2,14 @@
 using Settings;
 using System.Collections;
 using System.Collections.Generic;
-using AI;
+using Neue;
 using Interfaces;
+using UnityEditor;
 using UnityEngine;
 using UnityEngine.Events;
 using uwu;
 using uwu.Extensions;
 using uwu.Snippets;
-using Behaviour = AI.Types.Behaviour;
 using Object = System.Object;
 using Random = UnityEngine.Random;
 
@@ -60,13 +60,19 @@ public class Nest : Focusable, IReactToSunCycle, ISaveable, IFlammable
     [Header("Beacons")]
         [SerializeField] List<Beacon> m_beacons = new List<Beacon>();
         [SerializeField] int m_capacity = 12;
-        [SerializeField] float dropRadius = 3f;
+        [SerializeField] float dropRadius = 3f, dropDistance = 50f;
+        [SerializeField] LayerMask dropMask;
 
     [Header("Appearance")]
         [SerializeField] float colorSmoothSpeed = 1f;
         [SerializeField] Color inactiveColor, t_color;
 
-        #region Accessors
+    [Header("Debug")] 
+        [SerializeField] float safePointRadius = 1f;
+        [SerializeField] float safePointInterval = 1f;
+        [SerializeField] List<Vector3> safePoints = new List<Vector3>();
+
+    #region Accessors
 
     public float fill {
         get
@@ -122,6 +128,7 @@ public class Nest : Focusable, IReactToSunCycle, ISaveable, IFlammable
         Beacon.Destroyed += onDestroyBeacon;
 
         StartCoroutine("MaintainOnScreen");
+        //StartCoroutine("FetchSafePoints");
     }
 
     protected override void Update()
@@ -143,6 +150,13 @@ public class Nest : Focusable, IReactToSunCycle, ISaveable, IFlammable
 
         UpdateColorFromStateAndCapacity();
         UpdateInfoTextFromCapacity();
+    }
+
+    void OnDrawGizmos()
+    {
+        #if UNITY_EDITOR
+        DrawSafePoints();
+        #endif
     }
 
     protected override void OnDestroyed()
@@ -387,7 +401,19 @@ public class Nest : Focusable, IReactToSunCycle, ISaveable, IFlammable
         if(extinguish) Extinguish();
 
         Debug.LogFormat("Nest REMOVE = {0}", beacon.file);
-        beacon.Deactivate();
+
+        Vector3 origin = Vector3.zero;
+        bool resetBeaconOrigin = false;
+
+        try {
+            origin = FindSafePositionWithinRadius();
+            resetBeaconOrigin = true;
+        }
+        catch (System.Exception e) {
+            Debug.LogWarning(e.Message);
+        }
+
+        beacon.Deactivate(origin, resetBeaconOrigin);
 
         cometPS.Play();
 
@@ -397,6 +423,22 @@ public class Nest : Focusable, IReactToSunCycle, ISaveable, IFlammable
         Quilt.Pop(file);
 
         return true;
+    }
+
+    Vector3 FindSafePositionWithinRadius()
+    {
+        float height = Mathf.Min(transform.position.y + dropDistance / 4f, dropDistance / 2f);
+        Vector3 origin = transform.position + Vector3.up * height;
+
+        float angle = Random.Range(0f, 2f * Mathf.PI);
+        Vector3 offset = dropRadius * new Vector3(Mathf.Cos(angle), 0f, Mathf.Sin(angle));
+        var ray = new Ray(origin+offset, Vector3.down);
+        var hit = new RaycastHit();
+
+        if (Physics.Raycast(ray, out hit, dropDistance, dropMask.value))
+            return hit.point;
+
+        throw new SystemException("Nest unable to find safe point within radius!");
     }
 
     bool disposeduringframe = false;
@@ -538,4 +580,53 @@ public class Nest : Focusable, IReactToSunCycle, ISaveable, IFlammable
 
     #endregion
     
+    #region Debug
+
+    #if UNITY_EDITOR
+    
+    IEnumerator FetchSafePoints()
+    {
+        while (true) 
+        {
+            safePoints.Clear();
+
+            for (int i = 0; i < 10; i++) 
+            {
+                try {
+                    Vector3 pt = FindSafePositionWithinRadius();
+                    safePoints.Add(pt);
+                }
+                catch (System.Exception e) {
+                    Debug.LogWarning(e.Message);
+                }
+            }
+            
+            yield return new WaitForSecondsRealtime(safePointInterval);
+        }
+    }
+
+    void DrawSafePoints()
+    {
+        Handles.color = Color.green;
+        float radius = safePointRadius;
+        
+        Vector3[] points = GetSafePoints();
+        if (points == null)
+            return;
+        
+        foreach (Vector3 pt in points) 
+        {
+            Handles.DrawWireCube(pt, Vector3.one * radius);
+        }
+    }
+    
+    Vector3[] GetSafePoints()
+    {
+        if (safePoints.Count == 0) return null;
+        else return safePoints.ToArray();
+    }
+    
+    #endif
+    
+    #endregion
 }
