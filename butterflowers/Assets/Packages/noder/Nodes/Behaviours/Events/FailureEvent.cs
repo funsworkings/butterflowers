@@ -1,4 +1,5 @@
-﻿using AI.Types;
+﻿using Neue.Agent.Actions.Types;
+using Neue.Types;
 using Noder.Graphs;
 using Noder.Nodes.Behaviours.Core;
 

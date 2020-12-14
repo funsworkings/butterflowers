@@ -10,7 +10,6 @@ using UnityEngine.Events;
 using uwu;
 using uwu.Animation;
 using uwu.Snippets;
-using AI.Types;
 
 namespace Wizard {
 

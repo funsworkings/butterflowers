@@ -1,12 +1,8 @@
-﻿using System.Collections;
-using System.Collections.Generic;
-using System.Drawing;
-using System.Linq;
+﻿using System.Collections.Generic;
 using UnityEngine;
 
 using ui = UnityEngine.UI;
 using UnityEngine.Events;
-using UnityEngine.EventSystems;
 using uwu.Audio;
 using uwu.Camera;
 using uwu.Camera.Instances;
@@ -99,7 +95,7 @@ public class Focusing : MonoBehaviour
     void Update()
     {
         if (active) {
-            if (ExtraInput.GetScrollDown())
+            if (Input.GetKeyDown(KeyCode.Backspace))
                 LoseFocus();
         }
 

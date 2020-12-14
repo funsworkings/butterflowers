@@ -1,6 +1,6 @@
 ﻿using System.Collections;
 using System.Collections.Generic;
-using AI.Types.Mappings;
+using Neue.Reference.Types.Maps;
 using UnityEngine;
 
 using Noder.Nodes.Abstract;
@@ -10,7 +10,7 @@ namespace Noder.Nodes.Behaviours.Core {
 
     public abstract class BaseEventNode<E> : State {
         [Input(ShowBackingValue.Unconnected, ConnectionType.Override, typeConstraint = TypeConstraint.Inherited)] public E data;
-        [SerializeField] protected BehaviourInt rewards;
+        [SerializeField] protected FrameInt rewards;
         
         private bool fire = false;
 

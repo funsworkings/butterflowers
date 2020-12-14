@@ -65,7 +65,7 @@ public class Focusable : Interactable
         base.OnUpdate();
         
         if (queued) {
-            if (ExtraInput.GetScrollUp())
+            if (Input.GetKeyDown(KeyCode.LeftControl))
                 Focus();
         }
     }

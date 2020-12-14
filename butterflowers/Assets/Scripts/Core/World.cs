@@ -3,26 +3,17 @@ using System.Collections.Generic;
 using UnityEngine;
 
 using System.Linq;
-using TMPro;
-using FileSystemEntry = uwu.IO.SimpleFileBrowser.Scripts.FileSystemEntry;
-using Memory = Wizard.Memory;
-using System.Runtime.InteropServices;
-using AI.Agent;
 using Data;
+using Neue.Agent;
+using Neue.Agent1;
 using Objects.Base;
 using Objects.Managers;
 using Objects.Types;
 using UnityEngine.Events;
-using UnityEngine.Experimental.UIElements;
-using UnityEngine.UI;
 using uwu;
 using uwu.Camera;
-using uwu.Extensions;
-using uwu.Gameplay;
 using uwu.IO;
-using uwu.Snippets;
 using uwu.Snippets.Load;
-using uwu.UI.Behaviors.Visibility;
 
 
 /*
@@ -47,6 +38,7 @@ public class World : MonoBehaviour, ISaveable
 
     // External
 
+    [Header("General")]
     [SerializeField] Settings.WorldPreset Preset;
     [SerializeField] CameraManager CameraManager;
     [SerializeField] Focusing Focusing;
@@ -56,17 +48,19 @@ public class World : MonoBehaviour, ISaveable
     FileNavigator Files = null;
     Surveillance Surveillance = null;
 
-    ButterflowerManager Butterflowers = null;
-    BeaconManager Beacons = null;
-    VineManager Vines = null;
-    EventManager EventsM = null;
-    RemoteManager Remote = null;
-
+    [Header("Managers")]
+    [SerializeField] ButterflowerManager Butterflowers = null;
+    [SerializeField] BeaconManager Beacons = null;
+    [SerializeField] VineManager Vines = null;
+    [SerializeField] EventManager EventsM = null;
+    [SerializeField] RemoteManager Remote = null;
+    
+    [Header("Objects")]
     Sun Sun = null;
     Nest Nest = null;
     Quilt Quilt = null;
-    Cage Cage = null;
-    Brain AI = null;
+    [SerializeField] Cage Cage = null;
+    [SerializeField] Brain AI = null;
 
     [SerializeField] Wand wand;
 
@@ -130,14 +124,6 @@ public class World : MonoBehaviour, ISaveable
         Files = FileNavigator.Instance;
         Nest = Nest.Instance;
         Quilt = Quilt.Instance;
-
-        Butterflowers = FindObjectOfType<ButterflowerManager>();
-        Beacons = FindObjectOfType<BeaconManager>();
-        Vines = FindObjectOfType<VineManager>();
-        Remote = FindObjectOfType<RemoteManager>();
-        Cage = FindObjectOfType<Cage>();
-        EventsM = FindObjectOfType<EventManager>();
-        AI = FindObjectOfType<Brain>();
 
         /* * * * * * * * * * * * * * * * */
 
@@ -350,7 +336,7 @@ public class World : MonoBehaviour, ISaveable
     {
         AI.Reload(); // Construct behaviour profile
 
-        _Save.brainData.behaviourProfile = AI.Profile; // Assign profile
+        _Save.brainData.profile = AI.Profile; // Assign profile
         _Save.brainData.load = true;
     }
     

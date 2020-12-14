@@ -2,7 +2,7 @@
 using Noder.Nodes.Abstract;
 using System.Collections;
 using System.Collections.Generic;
-using AI.Types.Mappings;
+using Neue.Reference.Types.Maps;
 using UnityEngine;
 
 namespace Noder.Nodes.Behaviours.States {
@@ -11,7 +11,7 @@ namespace Noder.Nodes.Behaviours.States {
 
         [Input(ShowBackingValue.Always, ConnectionType.Override)] public ModuleTree tree;
         
-        public BehaviourInt rewards;
+        public FrameInt rewards;
 
         protected override void OnEnter()
         {

@@ -1,24 +1,12 @@
-﻿using System;
-using System.Collections;
-using System.Collections.Generic;
+﻿using System.Collections.Generic;
 using System.Linq;
 using B83.Win32;
 using Settings;
-using UnityEditor;
 using UnityEngine;
-using UnityEngine.AI;
-
-using UnityEngine.Events;
-using UnityEngine.EventSystems;
 using UnityEngine.UI;
-using uwu.Animation;
-using uwu.Extensions;
 using uwu.Gameplay;
 using uwu.Snippets;
-using uwu.UI.Behaviors.Visibility;
-using XNode.Examples.MathNodes;
 using Cursor = uwu.Snippets.Cursor;
-using Interactable = uwu.Gameplay.Interactable;
 
 public class Wand : Interacter
 {
@@ -269,6 +257,7 @@ public class Wand : Interacter
 
     protected override void onReleaseInteractable(uwu.Gameplay.Interactable interactable)
     {
+        return;
         if (beacon == null) return;
         
         var entity = interactable.GetComponent<Entity>();
@@ -341,7 +330,7 @@ public class Wand : Interacter
             if (cont) 
             {
                 Vector3 point = Vector3.zero;
-                if (Physics.Raycast(ray, out raycastHit, interactionDistance, interactionMask.value)) 
+                if (Physics.Raycast(ray, out raycastHit, interactionDistance, mask.value)) 
                 {
                     point = raycastHit.point;
                     pointDistance = raycastHit.distance;
@@ -358,6 +347,7 @@ public class Wand : Interacter
             else 
             {
                 pointDistance = defaultPointDistance;
+                if(up) DropBeacon(target);
             }
         }
         else {

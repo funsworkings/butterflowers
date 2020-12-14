@@ -1,5 +1,4 @@
-﻿using AI.Types;
-using Data;
+﻿using Data;
 using Objects.Types;
 
 namespace uwu

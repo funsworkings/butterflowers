@@ -1,5 +1,6 @@
 ﻿using System.Collections;
 using System.Collections.Generic;
+using Neue.Agent;
 using UnityEngine;
 using uwu.Audio;
 using Wizard;
@@ -17,7 +18,7 @@ public class Audio: AudioHandler {
 
     Controller controller;
 
-    Brain brain;
+    BrainOld brain;
 	Dialogue dialogue;
 
     #endregion
