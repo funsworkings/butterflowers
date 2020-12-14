@@ -1,6 +1,7 @@
 ﻿using Neue.Agent.Presets;
 using UnityEngine;
 using UnityEngine.AI;
+using uwu.Extensions;
 
 namespace Neue.Agent.Actions.Movement
 {
@@ -17,6 +18,10 @@ namespace Neue.Agent.Actions.Movement
 		int _pathIndex = 1;
 		
 		Vector3 _position;
+		float bearing = 0f;
+		float turn = 0f;
+		float move = 0f;
+		
 		Vector3 _next = new Vector3(float.PositiveInfinity, float.PositiveInfinity, float.PositiveInfinity);
 		Vector3 _destination = new Vector3(float.PositiveInfinity, float.PositiveInfinity, float.PositiveInfinity);
 		
@@ -38,6 +43,10 @@ namespace Neue.Agent.Actions.Movement
 
 		float moveSpeed (float angleBetween){ return preset.GetMoveSpeedFromBearing(angleBetween); }
 		float turnSpeed (float angleBetween){ return preset.GetTurnSpeedFromBearing(angleBetween); }
+
+		public float Turn => turn;
+		public float Move => Mathf.Clamp01(speed / preset.moveSpeed);
+		public float Bearing => bearing;
 		
 		#endregion
 		
@@ -69,7 +78,7 @@ namespace Neue.Agent.Actions.Movement
 			bool completedPath = !SetWaypoint();
 			
 			Vector3 direction = (_next - _position).normalized;
-			float angle = Vector3.SignedAngle(transform.forward, direction, Vector3.up);
+			float angle = bearing = Vector3.SignedAngle(transform.forward, direction, Vector3.up);
 
 			if (float.IsNaN(angle)) angle = 0f;
 			float abs_angle = Mathf.Abs(angle);
@@ -122,7 +131,7 @@ namespace Neue.Agent.Actions.Movement
 			float distance = Vector3.Distance(_position, _next);
 			if (distance > stoppingDistance) 
 			{
-				float t_speed = moveSpeed(bearing);
+				float t_speed = GetMoveSpeedFromBearing(bearing);
 				speed = Mathf.Lerp(speed, t_speed, preset.acceleration * Time.deltaTime);
 				
 				Vector3 movement = transform.forward * Time.deltaTime * speed;
@@ -159,7 +168,31 @@ namespace Neue.Agent.Actions.Movement
 			var newDir = Vector3.RotateTowards(transform.forward, direction, 50 * Time.deltaTime, 0.0f);
 			var newRot = Quaternion.LookRotation(newDir);
 	            
-			transform.rotation = Quaternion.Slerp(transform.rotation, newRot, Time.deltaTime * turnSpeed(bearing));
+			transform.rotation = Quaternion.Slerp(transform.rotation, newRot, Time.deltaTime * GetTurnSpeedFromBearing(bearing));
+		}
+		
+		#endregion
+		
+		#region Speeds
+		
+		float GetTurnSpeedFromBearing(float angle)
+		{
+			float ang_magnitude = angle.RemapNRB(0f, 180f, 0f, 1f);
+			float magnitude = preset.turnSpeedCurve.Evaluate(ang_magnitude);
+
+			turn = magnitude;
+			
+			float speed = turn * preset.maxTurnSpeed;
+			return speed;
+		}
+
+		float GetMoveSpeedFromBearing(float angle)
+		{
+			float ang_magnitude = angle.RemapNRB(0f, 180f, 0f, 1f);
+			float magnitude = preset.moveSpeedCurve.Evaluate(ang_magnitude);
+
+			move = (1f - magnitude);
+			return move * preset.moveSpeed;
 		}
 		
 		#endregion
