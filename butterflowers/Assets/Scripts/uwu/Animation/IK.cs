@@ -1,44 +1,57 @@
-﻿using UnityEngine;
+﻿using System;
+using UnityEditor;
+using UnityEngine;
 
 namespace uwu.Animation
 {
 	[RequireComponent(typeof(Animator))]
 	public class IK : MonoBehaviour
 	{
-		[SerializeField] Transform m_head_joint;
+		// Properties
+		
+		Animator animator;
+		
+		[SerializeField] Transform _head;
+		[SerializeField] Transform lookAtTarget = null;
 
-		[SerializeField] float body = 3f, head = 1f;
+		[SerializeField] float weight;
+		[SerializeField] Vector3 position;
+
+		// Attributes
+		
+		[SerializeField] float bodyPriority = 3f;
+		[SerializeField] float headPriority = 1f;
 
 		[SerializeField] float smoothLookAtWeightSpeed = 1f, smoothLookAtPositionSpeed = 1f;
 
-		[SerializeField] float m_lookAtWeight, t_lookAtWeight;
+		
+		[SerializeField] float t_lookAtWeight;
+		[SerializeField] Vector3 t_lookAtPosition;
+		
+		
+		#region Accessors
 
-		[SerializeField] Vector3 m_lookAtPosition, t_lookAtPosition;
-
-		[SerializeField] bool debugGizmos;
-		Animator animator;
-
+		public Transform head => _head;
+		
 		public float lookAtWeight
 		{
-			get => m_lookAtWeight;
+			get => weight;
 			set => t_lookAtWeight = value;
 		}
 
 		public Vector3 lookAtPosition
 		{
-			get => m_lookAtPosition;
-			set
-			{
-				t_lookAtPosition = value;
-
-				if (lookAtWeight <= .167f)
-					m_lookAtPosition = t_lookAtPosition;
-			}
+			get => position;
+			private set => t_lookAtPosition = value;
 		}
 
 		public Vector3 targetLookAtPosition => t_lookAtPosition;
+		public Vector3 resetPosition => head.position + heading * 1.33f;
+		public Vector3 heading => transform.forward;
+		
+		public Transform LookAtTarget { get => lookAtTarget; set { lookAtTarget = value; } }
 
-		public Transform headJoint => m_head_joint;
+		#endregion
 
 		void Awake()
 		{
@@ -47,17 +60,51 @@ namespace uwu.Animation
 
 		void Update()
 		{
-		}
+			if (lookAtTarget == null) weight = 0f;
 
+			if (weight <= 0f) lookAtPosition = resetPosition;
+			else lookAtPosition = lookAtTarget.position;
+			
+			SmoothLookAtParams();
+		}
+		
 		void OnAnimatorIK(int layerIndex)
 		{
-			var weight = m_lookAtWeight =
-				Mathf.Lerp(m_lookAtWeight, t_lookAtWeight, Time.deltaTime * smoothLookAtWeightSpeed);
-			var pos = m_lookAtPosition =
-				Vector3.Lerp(m_lookAtPosition, t_lookAtPosition, Time.deltaTime * smoothLookAtPositionSpeed);
+			animator.SetLookAtPosition(lookAtPosition);
+			animator.SetLookAtWeight(weight, bodyPriority, headPriority);
+		}
 
-			animator.SetLookAtPosition(m_lookAtPosition);
-			animator.SetLookAtWeight(weight, body, head);
+		#region Smoothing
+
+		void SmoothLookAtParams()
+		{
+			weight = Mathf.Lerp(weight, t_lookAtWeight, Time.deltaTime * smoothLookAtWeightSpeed);
+			position = Vector3.Lerp(position, t_lookAtPosition, Time.deltaTime * smoothLookAtPositionSpeed);
+		}
+		
+		#endregion
+	}
+
+	[CustomEditor(typeof(IK))]
+	public class IKEditor : Editor
+	{
+		void OnSceneGUI()
+		{
+			IK ik = (IK) target;
+			
+			Handles.color = Color.yellow;
+
+			if (ik.lookAtWeight <= 0f) 
+			{
+				Handles.DrawLine(ik.head.position, ik.resetPosition);
+			}
+			else {
+				var start = ik.head.position;
+				var end = ik.targetLookAtPosition;
+				var direction = (end - start);
+				
+				Handles.DrawWireArc(start,  ik.head.up, end, Vector3.SignedAngle(ik.heading, direction.normalized, ik.head.up), direction.magnitude);
+			}
 		}
 	}
 }

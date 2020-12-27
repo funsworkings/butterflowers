@@ -1,11 +1,12 @@
 ﻿using Neue.Agent.Presets;
+using Neue.Agent.Types;
 using UnityEngine;
 using UnityEngine.AI;
 using uwu.Extensions;
 
 namespace Neue.Agent.Actions.Movement
 {
-	public class Navigation : MonoBehaviour
+	public class Navigation : Module
 	{
 		// Events
 
@@ -27,6 +28,9 @@ namespace Neue.Agent.Actions.Movement
 		
 		[SerializeField] MovementPreset preset;
 		[SerializeField] float speed = 0f;
+
+		[SerializeField] float movementSpeed = -1f;
+		[SerializeField] float rotationSpeed = -1f;
 		
 		[SerializeField] bool moving = false;
 
@@ -47,7 +51,7 @@ namespace Neue.Agent.Actions.Movement
 		public float Turn => turn;
 		public float Move => Mathf.Clamp01(speed / preset.moveSpeed);
 		public float Bearing => bearing;
-		
+
 		#endregion
 		
 		
@@ -65,32 +69,7 @@ namespace Neue.Agent.Actions.Movement
 			
 			_next = _navMeshAgent.nextPosition;
 		}
-		
-		void Update()
-	    {
-			SetFinalAgentPosition(); // Apply position to agent
-			
-			if (Input.GetKey(KeyCode.Alpha1)) 
-			   WaitForTarget();
 
-			if (_path.corners == null || _path.corners.Length == 0) return; // Check valid path
-
-			bool completedPath = !SetWaypoint();
-			
-			Vector3 direction = (_next - _position).normalized;
-			float angle = bearing = Vector3.SignedAngle(transform.forward, direction, Vector3.up);
-
-			if (float.IsNaN(angle)) angle = 0f;
-			float abs_angle = Mathf.Abs(angle);
-
-			RotateTowardsDestination(direction, abs_angle);
-			//if (completedPath) return;
-			
-			bool isNextValid = (_next != _destination);
-			if (isNextValid) MoveTowardsDestination(abs_angle);
-			else speed = 0f;
-	    }
-		
 		void OnDrawGizmos()
 		{
 			DrawTarget();
@@ -126,6 +105,11 @@ namespace Neue.Agent.Actions.Movement
 		
 		#region Position
 
+		void SetMaxMoveFromBearing(float bearing)
+		{
+			movementSpeed = preset.moveSpeed;
+		}
+		
 		void MoveTowardsDestination(float bearing)
 		{
 			float distance = Vector3.Distance(_position, _next);
@@ -163,6 +147,12 @@ namespace Neue.Agent.Actions.Movement
 		
 		#region Rotation
 
+		void SetMaxRotationFromBearing(float bearing)
+		{
+			if (bearing >= preset.quickTurnThreshold) rotationSpeed = preset.quickTurnSpeed;
+			else rotationSpeed = preset.maxTurnSpeed;
+		}
+
 		void RotateTowardsDestination(Vector3 direction, float bearing)
 		{
 			var newDir = Vector3.RotateTowards(transform.forward, direction, 50 * Time.deltaTime, 0.0f);
@@ -182,7 +172,7 @@ namespace Neue.Agent.Actions.Movement
 
 			turn = magnitude;
 			
-			float speed = turn * preset.maxTurnSpeed;
+			float speed = turn * rotationSpeed;
 			return speed;
 		}
 
@@ -192,7 +182,7 @@ namespace Neue.Agent.Actions.Movement
 			float magnitude = preset.moveSpeedCurve.Evaluate(ang_magnitude);
 
 			move = (1f - magnitude);
-			return move * preset.moveSpeed;
+			return move * movementSpeed;
 		}
 		
 		#endregion
@@ -203,6 +193,10 @@ namespace Neue.Agent.Actions.Movement
 		{
 			_destination = point;
 			ConstructNewPath();
+
+			// Wipe initial speeds
+			rotationSpeed = -1f;
+			movementSpeed = -1f;
 
 			moving = WithinStoppingDistance(_destination);
 		}
@@ -246,6 +240,48 @@ namespace Neue.Agent.Actions.Movement
 					prev = _path.corners[i];
 				}
 			}
+		}
+		
+		#endregion
+		
+		#region Module
+
+		public override void Continue()
+		{
+			SetFinalAgentPosition(); // Apply position to agent
+			
+			if (Input.GetKey(KeyCode.Alpha1)) 
+				WaitForTarget();
+
+			if (_path.corners == null || _path.corners.Length == 0) return; // Check valid path
+
+			bool completedPath = !SetWaypoint();
+			
+			Vector3 direction = (_next - _position).normalized;
+			float angle = bearing = Vector3.SignedAngle(transform.forward, direction, Vector3.up);
+
+			if (float.IsNaN(angle)) angle = 0f;
+			float abs_angle = Mathf.Abs(angle);
+			
+			if(movementSpeed < 0f) SetMaxMoveFromBearing(abs_angle);
+			if(rotationSpeed < 0f) SetMaxRotationFromBearing(abs_angle);
+
+			RotateTowardsDestination(direction, abs_angle);
+			//if (completedPath) return;
+			
+			bool isNextValid = (_next != _destination);
+			if (isNextValid) MoveTowardsDestination(abs_angle);
+			else speed = 0f;
+		}
+
+		public override void Pause()
+		{
+			throw new System.NotImplementedException();
+		}
+
+		public override void Destroy()
+		{
+			throw new System.NotImplementedException();
 		}
 		
 		#endregion

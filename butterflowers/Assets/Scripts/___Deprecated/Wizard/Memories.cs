@@ -1,4 +1,5 @@
-﻿using System.Collections;
+﻿using System;
+using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
 using uwu.Generic;
@@ -6,6 +7,7 @@ using uwu.Generic;
 
 namespace Wizard {
 
+    [Obsolete("Obsolete API!", true)]
     [CreateAssetMenu(fileName = "New Wizard Memory BANK", menuName = "Internal/Wizard/Bank", order = 52)]
     public class Memories: ScriptableDatabase<Memory> {
  

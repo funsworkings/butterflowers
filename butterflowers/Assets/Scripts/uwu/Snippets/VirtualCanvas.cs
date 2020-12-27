@@ -7,8 +7,8 @@ namespace uwu.Snippets
 	{
 		[SerializeField] new UnityEngine.Camera camera;
 		[SerializeField] float thickness = 1f;
+		
 		float pr_asp = -1f;
-
 		float pr_fov = -1f;
 		float pr_ncp = -1f;
 
@@ -21,7 +21,8 @@ namespace uwu.Snippets
 			var fov = camera.fieldOfView;
 			var asp = camera.aspect;
 
-			if (ncp != pr_ncp || fov != pr_fov || asp != pr_asp) {
+			if (ncp != pr_ncp || fov != pr_fov || asp != pr_asp) 
+			{
 				var depth = ncp + (0.01f + thickness / 2f);
 
 				transform.parent = camera.transform;

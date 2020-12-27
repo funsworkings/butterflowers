@@ -1,9 +1,11 @@
-﻿using System.Collections;
+﻿using System;
+using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
 
 namespace Wizard {
 
+	[Obsolete("Obsolete API!", true)]
 	[CreateAssetMenu(fileName = "New Wizard Memory", menuName = "Internal/Wizard/Memory", order = 52)]
 	public class Memory : ScriptableObject {
 

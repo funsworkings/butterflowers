@@ -1,4 +1,5 @@
-﻿using System.Collections;
+﻿using System;
+using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
 
@@ -8,6 +9,7 @@ using uwu.Extensions;
 
 namespace Wizard {
 
+	[Obsolete("Obsolete API!", true)]
 	public class Navigation: MonoBehaviour {
 
 		#region Events
@@ -124,8 +126,8 @@ namespace Wizard {
 			else 
 				safeLookAt = lookAt.position;
 
-			ik.lookAtWeight = facing ? 1f : 0f;
-			ik.lookAtPosition = safeLookAt;
+			//ik.lookAtWeight = facing ? 1f : 0f;
+			//ik.lookAtPosition = safeLookAt;
 
 			// Fire look at event
 			if (facing && looking) 
@@ -174,7 +176,7 @@ namespace Wizard {
 		{
 			if (debug) {
 
-				var headJoint = ik.headJoint;
+				var headJoint = ik.head;
 				if (headJoint != null) {
 
 					float angleBetween = Vector3.Angle(ik.lookAtPosition, ik.targetLookAtPosition);

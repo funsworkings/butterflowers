@@ -169,7 +169,7 @@ public class Surveillance : MonoBehaviour, IReactToSunCycle
 		
 		while (true) 
 		{
-			recording = (World.state != WorldState.Remote && Sun.active); // Only record user/parallel actions
+			recording = Sun.active; // Only record user/parallel actions
 			if (recording) 
 			{
 				log_t += Time.deltaTime;

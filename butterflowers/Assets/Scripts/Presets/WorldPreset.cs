@@ -34,10 +34,7 @@ namespace Settings
         [Header("Texture Attributes")] 
             public Texture2D defaultNullTexture;
 
-            public TextureCollection starterFiles;
-            public Memories wizardFiles;
-
-        [Header("Spawn Attributes")]
+            [Header("Spawn Attributes")]
             public int amountOfButterflies = 100;
 
         [Header("Nest Attributes")]
@@ -79,10 +76,7 @@ namespace Settings
             public float cursorIdleTimeThreshold = 10f;
             public float cursorIdleDelay = 1f;
 
-        [Header("Miscellaneous Attributes")]
-            public TextureCollection worldTextures;
-
-        #region Time conversions
+            #region Time conversions
 
         public float minutesPerDay {
             get

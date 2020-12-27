@@ -1,14 +1,17 @@
-﻿using System.Collections;
+﻿using System;
+using System.Collections;
 using System.Collections.Generic;
 using Neue.Agent;
 using Neue.Agent1;
 using UnityEngine;
 
 using UnityEngine.Events;
+using Random = UnityEngine.Random;
 
 namespace Wizard 
 {
 
+    [Obsolete("Obsolete agent!", true)]
     public class Appearance: MonoBehaviour {
 
         Controller controller;

@@ -106,7 +106,6 @@ public class Beacon: Interactable, IFlammable {
         set
         {
             m_file = value;
-            RefreshInfo();
         }
     }
 
@@ -120,7 +119,6 @@ public class Beacon: Interactable, IFlammable {
         set
         {
             m_fileEntry = value;
-            RefreshInfo();
         }
     }
 
@@ -166,7 +164,6 @@ public class Beacon: Interactable, IFlammable {
 
     protected override void Update()
     {
-        if (!Active) HideTooltip();
         UpdateColor();
         
         base.Update();
@@ -240,8 +237,6 @@ public class Beacon: Interactable, IFlammable {
         animator = GetComponent<Animator>();
         renderer = GetComponentInChildren<MeshRenderer>();
         material = renderer.material;
-
-        CreateTooltip(tooltipContainer);
 
         this.type = type;
         this.state = state;
@@ -371,7 +366,6 @@ public class Beacon: Interactable, IFlammable {
         state = Locale.Destroyed;
 
         Unregister();
-        HideTooltip();
 
         if (Destroyed != null && events) 
         {
@@ -529,22 +523,4 @@ public class Beacon: Interactable, IFlammable {
     }
 
 	#endregion
-
-    #region Info
-
-    protected override void CreateTooltip(Transform container = null)
-    {
-        base.CreateTooltip(container);
-
-        beaconInfo = tooltipInstance.GetComponent<BeaconInfo>();
-        UpdateTooltipText(beaconInfo.parseTextFromBeacon(this));
-    }
-
-    protected void RefreshInfo()
-    {
-        if(beaconInfo != null)
-            UpdateTooltipText(beaconInfo.parseTextFromBeacon(this));
-    }
-
-    #endregion
 }
