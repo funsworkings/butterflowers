@@ -787,5 +787,49 @@ namespace uwu.Extensions
 		}
 		
 		#endregion
+		
+		#region Camera
+
+		/*public static Bounds GetBoundsFromCamera(this UnityEngine.Camera camera, float depth)
+		{
+			Bounds bounds = new Bounds();
+				
+			var depth = ncp + (0.01f + thickness / 2f);
+
+			transform.parent = camera.transform;
+
+			transform.localEulerAngles = Vector3.zero;
+			transform.localPosition = new Vector3(0f, 0f, depth);
+
+			var height = Mathf.Tan(fov * Mathf.Deg2Rad * 0.5f) * depth * 2f;
+			transform.localScale = new Vector3(height * asp, height, thickness);
+		}*/
+		
+		#endregion
+		
+		#region Screen
+		
+		//Get the screen size of an object in pixels, given its distance and diameter.
+		public static float DistanceAndDiameterToPixelSize(float distance, float diameter, UnityEngine.Camera camera){
+       
+			float pixelSize = (diameter * Mathf.Rad2Deg * Screen.height) / (distance * camera.fieldOfView);
+			return pixelSize;
+		}
+ 
+		//Get the distance of an object, given its screen size in pixels and diameter.
+		public static float PixelSizeAndDiameterToDistance(float pixelSize, float diameter, UnityEngine.Camera camera){
+ 
+			float distance = (diameter * Mathf.Rad2Deg * Screen.height) / (pixelSize * camera.fieldOfView);
+			return distance;
+		}
+ 
+		//Get the diameter of an object, given its screen size in pixels and distance.
+		public static float PixelSizeAndDistanceToDiameter(float pixelSize, float distance, UnityEngine.Camera camera){
+ 
+			float diameter = (pixelSize * distance * camera.fieldOfView) / (Mathf.Rad2Deg * Screen.height);
+			return diameter;
+		}
+		
+		#endregion
 	}
 }

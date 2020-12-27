@@ -1,4 +1,5 @@
-﻿using System.Collections;
+﻿using System;
+using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
 using System.Text.RegularExpressions;
@@ -17,8 +18,10 @@ using TMPro;
 using uwu.Dialogue;
 using uwu.Extensions;
 using uwu.UI.Behaviors.Visibility;
+using Random = UnityEngine.Random;
 
 namespace Wizard {
+    [Obsolete("Obsolete API!", true)]
     public class Dialogue: DialogueHandler {
 
         World world;

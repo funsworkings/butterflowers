@@ -16,7 +16,6 @@ public class MainMenu : MonoBehaviour
 
     [SerializeField] GameObject continuePanel;
     [SerializeField] Animator animation;
-    [SerializeField] SceneUtils sceneUtils;
 
     public enum Route
     {
@@ -28,20 +27,14 @@ public class MainMenu : MonoBehaviour
 
     public Route route = Route.NULL;
 
-    bool previousSceneFileExists = false;
-    bool previousBrainFileExists = false;
-    
+    bool previousSaveExists = false;
+
     void Start()
     {
         Save = GameDataSaveSystem.Instance;
 
-        previousSceneFileExists = Save.LoadGameData<SceneData>();
-        
-        previousBrainFileExists = Save.LoadGameData<BrainData>("brain.fns");
-        if (previousBrainFileExists) 
-            previousBrainFileExists = !string.IsNullOrEmpty(Save.brainData.username);
-
-        DisplayOptions(previousSceneFileExists && previousBrainFileExists);
+        previousSaveExists = Save.LoadGameData<GameData>();
+        DisplayOptions(previousSaveExists);
     }
 
     void DisplayOptions(bool previousSave) 
@@ -77,14 +70,12 @@ public class MainMenu : MonoBehaviour
 
     void RecoverGameData()
     {
-        if(!previousSceneFileExists) Save.LoadGameData<SceneData>(createIfEmpty: true);
-        if(!previousBrainFileExists) Save.LoadGameData<BrainData>("brain.fns", true);
+        if(!previousSaveExists) Save.LoadGameData<GameData>(createIfEmpty: true);
     }
     
     void WipeGameData()
     {
-        Save.WipeGameData<BrainData>("brain.fns");
-        Save.WipeGameData<SceneData>(); 
+        Save.WipeGameData<GameData>(); 
     }
 
     public void MoveToTheGame()

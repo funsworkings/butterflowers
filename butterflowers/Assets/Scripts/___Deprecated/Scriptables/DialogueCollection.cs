@@ -1,10 +1,12 @@
-﻿using System.Collections;
+﻿using System;
+using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
 
 using System.Linq;
 using uwu.Extensions;
 
+[Obsolete("Obsolete API!", true)]
 [CreateAssetMenu(fileName = "New Dialogue Collection", menuName = "Extras/Dialogue Collection", order = 52)]
 public class DialogueCollection : ScriptableObject
 {

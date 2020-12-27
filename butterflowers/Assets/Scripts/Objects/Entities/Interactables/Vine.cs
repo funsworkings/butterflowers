@@ -97,7 +97,6 @@ public class Vine : Interactable
         set
         {
             m_file = value;
-            defaultTooltipText = value;
         }
     }
 
@@ -276,8 +275,6 @@ public class Vine : Interactable
         // Update all vertices in line on LOAD
         line.positionCount = vertices.Count;
         line.SetPositions(vertices.ToArray());
-        
-        CreateTooltip(tooltipContainer);
 
         complete = flagComplete;
         if (flagComplete) 

@@ -1,10 +1,12 @@
-﻿using System.Collections;
+﻿using System;
+using System.Collections;
 using System.Collections.Generic;
 using Neue.Agent;
 using UnityEngine;
 using uwu.Audio;
 using Wizard;
 
+[Obsolete("Obsolete API!", true)]
 public class Audio: AudioHandler {
 
     #region External

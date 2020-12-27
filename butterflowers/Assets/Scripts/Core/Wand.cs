@@ -1,11 +1,14 @@
 ﻿using System.Collections.Generic;
 using System.Linq;
 using B83.Win32;
+using Interfaces;
 using Settings;
+using TMPro;
 using UnityEngine;
 using UnityEngine.UI;
 using uwu.Gameplay;
 using uwu.Snippets;
+using uwu.UI.Extras;
 using Cursor = uwu.Snippets.Cursor;
 
 public class Wand : Interacter
@@ -49,6 +52,10 @@ public class Wand : Interacter
         [SerializeField] Entity target = null;
         [SerializeField] float defaultPointDistance = 10f;
         public bool global = true;
+
+    [Header("UI")] 
+        [SerializeField] Tooltip info;
+        [SerializeField] TMP_Text infoText;
 
     [Header("Debug")] 
         [SerializeField] float pointDistance;
@@ -225,6 +232,8 @@ public class Wand : Interacter
         {
             UpdateCursorState(null);    
         }
+        
+        UpdateTooltip(_frameInteractions);
     }
 
     protected override void FilterInteractions(ref Dictionary<uwu.Gameplay.Interactable, RaycastHit> _frameInteractions)
@@ -457,7 +466,7 @@ public class Wand : Interacter
     {
         if (cursor_icon != null) 
         {
-            if (World.IsRemote || !spells) 
+            if (!spells) 
             {
                 cursor_icon.state = CustomCursor.State.Remote;
                 return;
@@ -481,6 +490,38 @@ public class Wand : Interacter
     }
 
 	#endregion
+    
+    #region Tooltips
+
+    void UpdateTooltip(Dictionary<uwu.Gameplay.Interactable, RaycastHit> _frameInteractions)
+    {
+        if (spells) 
+        {
+            string message = "";
+
+            foreach (KeyValuePair<uwu.Gameplay.Interactable, RaycastHit> hit in _frameInteractions) 
+            {
+                var _int = hit.Key.GetComponent<Entity>();
+                if (_int != null &&_int is ITooltip) 
+                {
+                    message = ((ITooltip) _int).GetInfo();
+                    break;
+                }
+            }
+            
+            if(string.IsNullOrEmpty(message)) info.Hide();
+            else 
+            {
+                infoText.text = message;
+                info.Show();
+            }
+            return;
+        }
+        
+        info.Hide();
+    }
+    
+    #endregion
     
     #region Debug
     

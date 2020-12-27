@@ -2,9 +2,9 @@
 {
 	public enum Frame
 	{
-		Destruction,
-		Nurture,
-		Quiet,
-		Order
+		Destruction = 0,
+		Nurture = 1,
+		Quiet = 2,
+		Order = 3
 	}
 }

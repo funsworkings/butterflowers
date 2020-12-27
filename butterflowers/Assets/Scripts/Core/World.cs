@@ -53,14 +53,12 @@ public class World : MonoBehaviour, ISaveable
     [SerializeField] BeaconManager Beacons = null;
     [SerializeField] VineManager Vines = null;
     [SerializeField] EventManager EventsM = null;
-    [SerializeField] RemoteManager Remote = null;
-    
+
     [Header("Objects")]
     Sun Sun = null;
     Nest Nest = null;
     Quilt Quilt = null;
     [SerializeField] Cage Cage = null;
-    [SerializeField] Brain AI = null;
 
     [SerializeField] Wand wand;
 
@@ -85,11 +83,6 @@ public class World : MonoBehaviour, ISaveable
 
     public Camera PlayerCamera => m_playerCamera;
 
-    public WorldState state => Remote._State;
-    public bool IsUser => (Remote._State == WorldState.User);
-    public bool IsRemote => (Remote._State == WorldState.Remote);
-    public bool IsParallel => (Remote._State == WorldState.Parallel);
-
     public bool IsFocused => Focusing.active;
 
     public Manager[] Managers => managers.ToArray();
@@ -113,8 +106,7 @@ public class World : MonoBehaviour, ISaveable
 
         _Save = GameDataSaveSystem.Instance;
 
-        _Save.LoadGameData<SceneData>(createIfEmpty: true);
-        _Save.LoadGameData<BrainData>("brain.fns", createIfEmpty: true);
+        _Save.LoadGameData<GameData>(createIfEmpty: true);
 
         while (!_Save.load)
             yield return null;
@@ -128,7 +120,6 @@ public class World : MonoBehaviour, ISaveable
         /* * * * * * * * * * * * * * * * */
 
         username = _Save.username;
-        Remote.Load(_Save.data.GAMESTATE); // Load game state
 
         /* * * * * * * * * * * * * * * * */
 
@@ -153,8 +144,8 @@ public class World : MonoBehaviour, ISaveable
 
         Dictionary<string, Texture2D[]> texturePacks = new Dictionary<string, Texture2D[]>() 
         {
-            {"WIZARD", Preset.wizardFiles.items.Select(mem => mem.image).ToArray()},
-            {"ENVIRONMENT", Preset.starterFiles.elements}
+            //{"WIZARD", Preset.wizardFiles.items.Select(mem => mem.image).ToArray()},
+            //{"ENVIRONMENT", Preset.starterFiles.elements}
         };
 
         Surveillance.Load(_Save.data.surveillanceData); // Load surveillance data
@@ -179,7 +170,6 @@ public class World : MonoBehaviour, ISaveable
 
         EventsM.Load(null);
         Nest.Load(_Save.nestOpen);
-        AI.Load(new BrainPayload(_Save.brainData, _Save.enviro_knowledge, _Save.file_knowledge));
         Beacons.Load((Preset.persistBeacons) ? _Save.beaconData : null);
         Vines.Load((Preset.persistVines) ? _Save.data.vines : null);
         Sun.Load(_Save.data.sun);
@@ -193,7 +183,6 @@ public class World : MonoBehaviour, ISaveable
         Beacons.onUpdateBeacons += DidUpdateBeacons;
         Library.onDiscoverFile += DidDiscoverFile;
         Library.OnRefreshItems += DidUpdateLibraryItems;
-        Remote.onParallel += DidBecomeParallel;
     }
 
     void UnsubscribeToEvents()
@@ -202,7 +191,6 @@ public class World : MonoBehaviour, ISaveable
         Beacons.onUpdateBeacons -= DidUpdateBeacons;
         Library.onDiscoverFile -= DidDiscoverFile;
         Library.OnRefreshItems -= DidUpdateLibraryItems;
-        Remote.onParallel -= DidBecomeParallel;
     }
 
     #endregion
@@ -331,15 +319,7 @@ public class World : MonoBehaviour, ISaveable
     {
         _Save.beacons = (Beacon[]) Beacons.Save();
     }
-    
-    void DidBecomeParallel()
-    {
-        AI.Reload(); // Construct behaviour profile
 
-        _Save.brainData.profile = AI.Profile; // Assign profile
-        _Save.brainData.load = true;
-    }
-    
     void DidDiscoverFile(string file)
     {
         Debug.LogFormat("Discovery was made => {0}", file);

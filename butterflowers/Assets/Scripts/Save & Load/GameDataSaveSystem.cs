@@ -16,69 +16,58 @@ namespace uwu
 {
 	public partial class GameDataSaveSystem : Singleton<GameDataSaveSystem>
 	{
-		[SerializeField] SceneData sceneDat;
+		[SerializeField] GameData sceneDat;
 		[SerializeField] BrainData brainDat;
 
-		public SceneData data
+		public GameData data
 		{
 			get
 			{
-				var dat = (SceneData)cache_data_lookup["save.dat"];
+				var dat = (GameData)cache_data_lookup["save.dat"];
 				sceneDat = dat;
 
 				return dat;
 			}
 		}
 
-		public BrainData brainData
-		{
-			get
-			{
-				var dat =  (BrainData) cache_data_lookup["brain.fns"];
-				brainDat = dat;
-
-				return dat;
-			}
-		}
-		
 		public bool load => data_lookup.ContainsKey(def_savefile);
 		
 		#region External access
 
 		public string username
 		{
-			get => (brainData == null) ? null : brainData.username;
-			set => brainData.username = value;
+			get => (data == null) ? null : data.username;
+			set => data.username = value;
 		}
 
 		public string[] directories
 		{
-			get { return brainData == null ? new string[] { } : brainData.directories; }
-			set => brainData.directories = value;
+			get { return data == null ? new string[] { } : data.directories; }
+			set => data.directories = value;
 		}
 
 		public string[] files
 		{
-			get { return brainData == null ? new string[] { } : brainData.files; }
-			set => brainData.files = value;
+			get { return data == null ? new string[] { } : data.files; }
+			set => data.files = value;
 		}
 		
 		public int[] user_files
 		{
-			get { return brainData == null ? new int[] { } : brainData.user_files; }
-			set => brainData.user_files = value;
+			get { return data == null ? new int[] { } : data.user_files; }
+			set => data.user_files = value;
 		}
 		
 		public int[] shared_files
 		{
-			get { return brainData == null ? new int[] { } : brainData.shared_files; }
-			set => brainData.shared_files = value;
+			get { return data == null ? new int[] { } : data.shared_files; }
+			set => data.shared_files = value;
 		}
 		
 		public int[] world_files
 		{
-			get { return brainData == null ? new int[] { } : brainData.world_files; }
-			set => brainData.world_files = value;
+			get { return data == null ? new int[] { } : data.world_files; }
+			set => data.world_files = value;
 		}
 
 		public SunData sun
@@ -91,12 +80,6 @@ namespace uwu
 		{
 			get => data == null ? 0f : data.sun.time;
 			set => data.sun.time = value;
-		}
-
-		public int chapter
-		{
-			get => data.chapter;
-			set => data.chapter = value;
 		}
 
 		public BeaconData[] beaconData
@@ -156,8 +139,8 @@ namespace uwu
 
 		public Knowledge[] file_knowledge
 		{
-			get { return brainData == null ? new Knowledge[] { } : brainData.file_knowledge; }
-			set => brainData.file_knowledge = value;
+			get { return data == null ? new Knowledge[] { } : data.file_knowledge; }
+			set => data.file_knowledge = value;
 		}
 
 		#endregion

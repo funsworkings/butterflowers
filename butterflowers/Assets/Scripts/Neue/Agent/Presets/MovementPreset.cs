@@ -6,12 +6,18 @@ namespace Neue.Agent.Presets
 	[CreateAssetMenu(fileName = "New Movement Preset", menuName = "Presets/Neue Agent/Movement", order = 0)]
 	public class MovementPreset : ScriptableObject
 	{
-		public float moveSpeed = 1f;
-		public AnimationCurve moveSpeedCurve;
-		public float acceleration = 1f;
-		
-		public float minTurnSpeed = 1f, maxTurnSpeed = 5f;
-		public AnimationCurve turnSpeedCurve;
+		[Header("Movement")]
+			public float moveSpeed = 1f;
+			public AnimationCurve moveSpeedCurve;
+			public float acceleration = 1f;
+			
+			public float minTurnSpeed = 1f, maxTurnSpeed = 5f, quickTurnSpeed = 10f;
+			[Range(0f, 180f)] public float quickTurnThreshold = 165f;
+			public AnimationCurve turnSpeedCurve;
+
+		[Header("Field of View")] 
+			public float fovFalloffAngle = 90f;
+			public AnimationCurve fovFalloffCurve;
 		
 		#region Accessors
 

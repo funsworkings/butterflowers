@@ -13,7 +13,7 @@ using uwu.Snippets;
 using Object = System.Object;
 using Random = UnityEngine.Random;
 
-public class Nest : Focusable, IReactToSunCycle, ISaveable, IFlammable
+public class Nest : Focusable, IReactToSunCycle, ISaveable, IFlammable, ITooltip
 {
     public static Nest Instance = null;
 
@@ -149,7 +149,6 @@ public class Nest : Focusable, IReactToSunCycle, ISaveable, IFlammable
         }
 
         UpdateColorFromStateAndCapacity();
-        UpdateInfoTextFromCapacity();
     }
 
     void OnDrawGizmos()
@@ -339,17 +338,20 @@ public class Nest : Focusable, IReactToSunCycle, ISaveable, IFlammable
     #endregion
 
     #region Info
-
-    void UpdateInfoTextFromCapacity()
+    
+    public string GetInfo()
     {
-        if (queue && infoText != null) {
+        if (queue) 
+        {
             string message = "{0}\n\n{1}";
-
             string capacity = string.Format("{0} / {1}", beacons.Length, this.capacity);
             
-            message = string.Format(message, capacity, defaultTooltipText);
-            UpdateTooltipText(message);
+            message = string.Format(message, capacity, "nest");
+            
+            return message;
         }
+
+        return null;
     }
 
 	#endregion

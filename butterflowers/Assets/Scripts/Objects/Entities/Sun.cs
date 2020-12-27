@@ -276,7 +276,7 @@ public class Sun : MonoBehaviour
 
             Events.ReceiveEvent(EVENTCODE.CYCLE, AGENT.World, AGENT.Terrain, days + "");
 
-            CycleObservers(World.state == WorldState.User);
+            CycleObservers(true);
 
             Pausers = FindObjectsOfType<MonoBehaviour>().OfType<IPauseSun>().ToArray();
             WaitForPausers();
