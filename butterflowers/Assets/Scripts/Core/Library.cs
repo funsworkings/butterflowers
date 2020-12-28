@@ -399,7 +399,8 @@ public class Library : Singleton<Library>, ITextureReceiver
 				if (type == FileType.World) RegisterTexture(file, GetWorldTexture(file));
 				else textureLoadTarget.Add(file);
 			}
-			else RegisterTexture(file, DEFAULT_NULL_TEXTURE); // Fallback to NULL texture
+			else 
+				RegisterTexture(file, DEFAULT_NULL_TEXTURE); // Fallback to NULL texture
 		}
 
 		return success;

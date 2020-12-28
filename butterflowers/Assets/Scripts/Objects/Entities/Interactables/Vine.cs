@@ -4,6 +4,7 @@ using System.Collections.Generic;
 using System.Linq;
 using System.Runtime.InteropServices;
 using Data;
+using Interfaces;
 using Objects.Entities;
 using Objects.Entities.Interactables.Empty;
 using UnityEngine;
@@ -11,7 +12,7 @@ using UnityEngine.Serialization;
 using uwu.Extensions;
 using XNode.Examples.MathNodes;
 
-public class Vine : Interactable
+public class Vine : Interactable, ITooltip, IFileContainer
 {
     #region Internal
 
@@ -91,7 +92,7 @@ public class Vine : Interactable
 
     public Vector3 end => line.GetPosition(line.positionCount - 1);
 
-    public string file
+    public string File
     {
         get { return m_file; }
         set
@@ -182,7 +183,7 @@ public class Vine : Interactable
 
     #region Growth
     
-    public void Initialize(VineManager manager, Cage cage, VineData data = null, Transform tooltipContainer = null)
+    public void Initialize(VineManager manager, Cage cage, VineData data = null)
     {
         Manager = manager;
 
@@ -194,9 +195,11 @@ public class Vine : Interactable
         {
             vertex = cage.GetClosestVertex(transform.position, out vertexIndex);
             
-            bool successQueue = cage.HoldVertex(vertexIndex);
-            if (successQueue) growHeight = preset.maximumVineGrowHeight;
-            else growHeight = Random.Range(preset.minimumVineGrowHeight, preset.maximumVineGrowHeight);
+            bool successQueue = cage.QueueVertex(vertexIndex);
+            if (successQueue) 
+                growHeight = preset.maximumVineGrowHeight;
+            else 
+                growHeight = Random.Range(preset.minimumVineGrowHeight, preset.maximumVineGrowHeight);
             
             waypoints = new List<Vector3>(ConstructNaturalLine());
             leaves = new List<Leaf>(ConstructAllLeaves());
@@ -215,7 +218,7 @@ public class Vine : Interactable
             state = (Status) data.status; // Assign status
             index = data.index;
             interval = data.interval;
-            file = data.file;
+            File = data.file;
             growHeight = data.height;
 
             transform.position = waypoints[0];
@@ -229,7 +232,7 @@ public class Vine : Interactable
             ParseAllLeaves(index, interval, true);
             
             vertex = cage.GetClosestVertex(waypoints.Last(), out vertexIndex);
-            cage.HoldVertex(vertexIndex);
+            cage.QueueVertex(vertexIndex);
         }
 
         gate = new List<Vector3>(ConstructGatedLine(vertex)); // Construct gate from waypoints
@@ -681,6 +684,15 @@ public class Vine : Interactable
     {
         foreach(Leaf l in leaves)
             l.Unflutter();
+    }
+    
+    #endregion
+
+    #region Info
+    
+    public string GetInfo()
+    {
+        return File;
     }
     
     #endregion

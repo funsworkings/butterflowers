@@ -8,6 +8,7 @@ using UnityEngine;
 using UnityEngine.UI;
 using uwu.Gameplay;
 using uwu.Snippets;
+using uwu.UI.Behaviors.Visibility;
 using uwu.UI.Extras;
 using Cursor = uwu.Snippets.Cursor;
 
@@ -55,6 +56,7 @@ public class Wand : Interacter
 
     [Header("UI")] 
         [SerializeField] Tooltip info;
+        [SerializeField] ToggleOpacity infoOpacity;
         [SerializeField] TMP_Text infoText;
 
     [Header("Debug")] 
@@ -232,8 +234,9 @@ public class Wand : Interacter
         {
             UpdateCursorState(null);    
         }
-        
-        UpdateTooltip(_frameInteractions);
+
+        var entities = SelectInteractables<Entity>(_frameInteractions);
+        UpdateTooltip(entities);
     }
 
     protected override void FilterInteractions(ref Dictionary<uwu.Gameplay.Interactable, RaycastHit> _frameInteractions)
@@ -249,9 +252,15 @@ public class Wand : Interacter
         IEnumerable<uwu.Gameplay.Interactable> typed_int = FilterInteractablesByType<E>(interactions_temp);
         uwu.Gameplay.Interactable closest_int = FindClosestInteractable(typed_int.ToList());
 
-        foreach (uwu.Gameplay.Interactable i in typed_int) {
+        foreach (uwu.Gameplay.Interactable i in typed_int) 
+        {
             if (i != closest_int) _frameInteractions.Remove(i); // Remove distant type item
         }
+    }
+
+    protected IEnumerable<E> SelectInteractables<E>(Dictionary<uwu.Gameplay.Interactable, RaycastHit> _frameInteractions) where E:MonoBehaviour
+    {
+        return _frameInteractions.Keys.Select(e => e.GetComponent<E>()).Where(_e => _e != null);
     }
 
     protected override void onGrabInteractable(uwu.Gameplay.Interactable interactable)
@@ -305,7 +314,7 @@ public class Wand : Interacter
 
         bool success = beacon.Activate();
         if (success)
-            Events.ReceiveEvent(EVENTCODE.BEACONACTIVATE, Agent, AGENT.Beacon, details: beacon.file);
+            Events.ReceiveEvent(EVENTCODE.BEACONACTIVATE, Agent, AGENT.Beacon, details: beacon.File);
 
         return success;
     }
@@ -316,7 +325,7 @@ public class Wand : Interacter
 
         bool success = beacon.Plant();
         if(success)
-            Events.ReceiveEvent(EVENTCODE.BEACONPLANT, Agent, AGENT.Beacon, details: beacon.file);
+            Events.ReceiveEvent(EVENTCODE.BEACONPLANT, Agent, AGENT.Beacon, details: beacon.File);
 
         return success;
     }
@@ -327,7 +336,7 @@ public class Wand : Interacter
 
         bool success = beacon.Delete(particles: true);
         if (success)
-            Events.ReceiveEvent(EVENTCODE.BEACONDELETE, Agent, AGENT.Beacon, details: beacon.file);
+            Events.ReceiveEvent(EVENTCODE.BEACONDELETE, Agent, AGENT.Beacon, details: beacon.File);
 
         return success;
     }
@@ -411,7 +420,7 @@ public class Wand : Interacter
 
         bool success = Nest.Instance.RemoveBeacon(beacon);
         if (success)
-            Events.ReceiveEvent(EVENTCODE.NESTPOP, Agent, AGENT.Beacon, details: beacon.file);
+            Events.ReceiveEvent(EVENTCODE.NESTPOP, Agent, AGENT.Beacon, details: beacon.File);
 
         return success;
     }
@@ -421,7 +430,7 @@ public class Wand : Interacter
         var beacon = Nest.Instance.RemoveLastBeacon();
         bool success = beacon != null;
         if (success)
-            Events.ReceiveEvent(EVENTCODE.NESTPOP, Agent, AGENT.Beacon, details: beacon.file);
+            Events.ReceiveEvent(EVENTCODE.NESTPOP, Agent, AGENT.Beacon, details: beacon.File);
 
         return success;
     }
@@ -493,32 +502,31 @@ public class Wand : Interacter
     
     #region Tooltips
 
-    void UpdateTooltip(Dictionary<uwu.Gameplay.Interactable, RaycastHit> _frameInteractions)
+    void UpdateTooltip(IEnumerable<Entity> entities)
     {
         if (spells) 
         {
             string message = "";
 
-            foreach (KeyValuePair<uwu.Gameplay.Interactable, RaycastHit> hit in _frameInteractions) 
+            foreach (Entity e in entities) 
             {
-                var _int = hit.Key.GetComponent<Entity>();
-                if (_int != null &&_int is ITooltip) 
+                if (e is ITooltip) 
                 {
-                    message = ((ITooltip) _int).GetInfo();
+                    message = ((ITooltip) e).GetInfo();
                     break;
                 }
             }
             
-            if(string.IsNullOrEmpty(message)) info.Hide();
+            if(string.IsNullOrEmpty(message)) infoOpacity.Hide();
             else 
             {
                 infoText.text = message;
-                info.Show();
+                infoOpacity.Show();
             }
             return;
         }
         
-        info.Hide();
+        infoOpacity.Hide();
     }
     
     #endregion

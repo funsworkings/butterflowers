@@ -160,7 +160,8 @@ namespace uwu.Gameplay
 
 		protected virtual void HandleInteractions(Dictionary<Interactable, RaycastHit> _frameInteractions)
 		{
-			foreach (KeyValuePair<Interactable, RaycastHit> hit in _frameInteractions) {
+			foreach (KeyValuePair<Interactable, RaycastHit> hit in _frameInteractions) 
+			{
 				var interactable = hit.Key;
 				var raycast = hit.Value;
 

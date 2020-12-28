@@ -381,7 +381,7 @@ public class Nest : Focusable, IReactToSunCycle, ISaveable, IFlammable, ITooltip
 
         onIngestBeacon.Invoke();
 
-        var file = beacon.file;
+        var file = beacon.File;
         Quilt.Push(file);
 
         return true;
@@ -402,7 +402,7 @@ public class Nest : Focusable, IReactToSunCycle, ISaveable, IFlammable, ITooltip
         
         if(extinguish) Extinguish();
 
-        Debug.LogFormat("Nest REMOVE = {0}", beacon.file);
+        Debug.LogFormat("Nest REMOVE = {0}", beacon.File);
 
         Vector3 origin = Vector3.zero;
         bool resetBeaconOrigin = false;
@@ -421,7 +421,7 @@ public class Nest : Focusable, IReactToSunCycle, ISaveable, IFlammable, ITooltip
 
         onReleaseBeacon.Invoke();
 
-        var file = beacon.file;
+        var file = beacon.File;
         Quilt.Pop(file);
 
         return true;
@@ -487,7 +487,7 @@ public class Nest : Focusable, IReactToSunCycle, ISaveable, IFlammable, ITooltip
     {
         if (!m_beacons.Contains(beacon)) return;
 
-        if(beacon.type != Beacon.Type.None) Quilt.Pop(beacon.file);
+        if(beacon.type != Beacon.Type.None) Quilt.Pop(beacon.File);
 
         m_beacons.Remove(beacon);
         cometPS.Play();
@@ -519,7 +519,7 @@ public class Nest : Focusable, IReactToSunCycle, ISaveable, IFlammable, ITooltip
         {
             var vine = (entity as Vine);
             
-            var file = vine.file;
+            var file = vine.File;
             if(!string.IsNullOrEmpty(file)) 
             {
                 vine.Flutter();
@@ -539,7 +539,7 @@ public class Nest : Focusable, IReactToSunCycle, ISaveable, IFlammable, ITooltip
         {
             var vine = (entity as Vine);
             
-            var file = vine.file;
+            var file = vine.File;
             if(!string.IsNullOrEmpty(file)) 
             {
                 vine.Unflutter();
