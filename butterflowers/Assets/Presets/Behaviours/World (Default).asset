@@ -31,8 +31,14 @@ MonoBehaviour:
   sunHoursPerDay: 0.00067
   directionOfGravity: {x: 0, y: -1, z: 0}
   defaultNullTexture: {fileID: 2800000, guid: 48b99aa691dd8744f9adf73fba436432, type: 3}
-  starterFiles: {fileID: 11400000, guid: e3e427dd97c719f418f51d145c525abd, type: 2}
-  wizardFiles: {fileID: 11400000, guid: a11a7773fa9f39649b779c417d4c7b19, type: 2}
+  defaultTextures:
+  - {fileID: 2800000, guid: 15207dc4ce6f9a34b97ef20fa6c6a3b8, type: 3}
+  - {fileID: 2800000, guid: e6433038352852545908f5162560c268, type: 3}
+  - {fileID: 2800000, guid: d0d0239689b23b54eac56c2db581d770, type: 3}
+  - {fileID: 2800000, guid: e024b66c8303c1740bc2e3344f32fc11, type: 3}
+  - {fileID: 2800000, guid: a1ba4fa9fc72b784585f4724634891a7, type: 3}
+  - {fileID: 2800000, guid: 511a3fee19f2c354199e1af31314e365, type: 3}
+  - {fileID: 2800000, guid: a2203213fc4dd244e90e1e9d1862c097, type: 3}
   amountOfButterflies: 1280
   nestCapacity: 6
   amountOfBeacons: 10
@@ -133,4 +139,3 @@ MonoBehaviour:
   cursorSpeedThreshold: 1
   cursorIdleTimeThreshold: 10
   cursorIdleDelay: 1
-  worldTextures: {fileID: 11400000, guid: e3e427dd97c719f418f51d145c525abd, type: 2}

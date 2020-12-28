@@ -15,7 +15,7 @@ using Interfaces;
 using Objects.Base;
 using Objects.Entities.Interactables.Empty;
 
-public class Beacon: Interactable, IFlammable {
+public class Beacon: Interactable, IFlammable, ITooltip, IFileContainer {
 
     #region Internal
 
@@ -79,9 +79,7 @@ public class Beacon: Interactable, IFlammable {
     public Flower flower = null;
     
     [SerializeField] string m_file = null;
-    [SerializeField] FileSystemEntry m_fileEntry;
-    public BeaconInfo beaconInfo;
-    
+
     public Vector3 origin = Vector3.zero;
     public Vector3 size = Vector3.one;
 
@@ -98,7 +96,7 @@ public class Beacon: Interactable, IFlammable {
     
     #region Accessors
 
-    public string file {
+    public string File {
         get
         {
             return m_file;
@@ -110,17 +108,6 @@ public class Beacon: Interactable, IFlammable {
     }
 
     public Vector3 Origin => origin;
-
-    public FileSystemEntry fileEntry {
-        get
-        {
-            return m_fileEntry;
-        }
-        set
-        {
-            m_fileEntry = value;
-        }
-    }
 
     public bool discovered {
         get
@@ -228,7 +215,7 @@ public class Beacon: Interactable, IFlammable {
             OnUnregister(this);
     }
 
-    public void Initialize(Type type, Locale state, Vector3 origin, Transform tooltipContainer, bool load = false)
+    public void Initialize(Type type, Locale state, Vector3 origin, bool load = false)
     {
         Room = World.Instance;
         Nest = Nest.Instance;
@@ -277,7 +264,7 @@ public class Beacon: Interactable, IFlammable {
         transform.position = Nest.transform.position; // Reset back to nest position at start of lerp
         transform.localScale = Vector3.zero;
 
-        Events.ReceiveEvent(EVENTCODE.BEACONACTIVATE, AGENT.User, AGENT.Beacon, details: file);
+        Events.ReceiveEvent(EVENTCODE.BEACONACTIVATE, AGENT.User, AGENT.Beacon, details: File);
         if (Activated != null)
             Activated(this);
 
@@ -299,7 +286,7 @@ public class Beacon: Interactable, IFlammable {
 
         transform.localScale = Vector3.zero;
 
-        Events.ReceiveEvent(EVENTCODE.BEACONPLANT, AGENT.User, AGENT.Beacon, details: file);
+        Events.ReceiveEvent(EVENTCODE.BEACONPLANT, AGENT.User, AGENT.Beacon, details: File);
         if (Planted != null)
             Planted(this);
 
@@ -323,7 +310,7 @@ public class Beacon: Interactable, IFlammable {
         
         flower = CreateFlowerAtOrigin();
 
-        Events.ReceiveEvent(EVENTCODE.BEACONFLOWER, AGENT.User, AGENT.Beacon, details: file);
+        Events.ReceiveEvent(EVENTCODE.BEACONFLOWER, AGENT.User, AGENT.Beacon, details: File);
         if (Flowered != null)
             Flowered(this);
         
@@ -334,14 +321,14 @@ public class Beacon: Interactable, IFlammable {
     {
         var flowerInstance = Instantiate(pr_flower, origin, Quaternion.identity);
         var flower = flowerInstance.GetComponentInChildren<Flower>(); 
-            flower.Grow(Objects.Entities.Interactables.Empty.Flower.Origin.Beacon, file, type);
+            flower.Grow(Objects.Entities.Interactables.Empty.Flower.Origin.Beacon, File, type);
             
         return flower;
     }
 
     public bool Deactivate(Vector3 origin, bool resetOrigin = false)
     {
-        Debug.LogFormat("Deactivate {0} when state is {1}", file, state);
+        Debug.LogFormat("Deactivate {0} when state is {1}", File, state);
         if (state != Locale.Nest) return false;
         state = Locale.Terrain;
 
@@ -523,4 +510,14 @@ public class Beacon: Interactable, IFlammable {
     }
 
 	#endregion
+
+    
+    #region Info
+    
+    public string GetInfo()
+    {
+        return File;
+    }
+    
+    #endregion
 }

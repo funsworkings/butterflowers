@@ -372,6 +372,7 @@
                 <e p="ActionSequence.cs" t="Include" />
               </e>
             </e>
+            <e p="BeaconInfo.cs" t="Include" />
             <e p="Behaviours" t="Include">
               <e p="Branches" t="Include">
                 <e p="BeaconEventBranch.cs" t="Include" />
@@ -656,6 +657,7 @@
                 <e p="Vine.cs" t="Include" />
               </e>
               <e p="Quilt.cs" t="Include" />
+              <e p="Sector.cs" t="Include" />
               <e p="Sun.cs" t="Include" />
               <e p="Terrain.cs" t="Include" />
             </e>
@@ -683,7 +685,6 @@
             <e p="BindDistortionWithOpacity.cs" t="Include" />
           </e>
           <e p="UI" t="Include">
-            <e p="BeaconInfo.cs" t="Include" />
             <e p="DayTracker.cs" t="Include" />
             <e p="EventLog.cs" t="Include" />
             <e p="MenuCursor.cs" t="Include" />

@@ -94,41 +94,13 @@ namespace uwu
 				var dat = new List<BeaconData>();
 				for (var i = 0; i < value.Length; i++) {
 					var beacon = value[i];
-					var parsed = new BeaconData(beacon.file, beacon.Origin, beacon.type, beacon.state);
+					var parsed = new BeaconData(beacon.File, beacon.Origin, beacon.type, beacon.state);
 
 					dat.Add(parsed);
 				}
 
 				data.beacons = dat.ToArray();
 			}
-		}
-
-		public VineData[] vineData
-		{
-			get { return data == null ? new VineData[] { } : data.vines.vines; }
-		}
-
-		public Vine[] vines
-		{
-			set
-			{
-				var dat = new List<VineData>();
-
-				for (var i = 0; i < value.Length; i++) {
-					var vine = value[i];
-					var parsed = new VineData(vine.state, vine.index, vine.interval, vine.height, vine.Waypoints, vine.file, vine.Leaves);
-
-					dat.Add(parsed);
-				}
-
-				data.vines.vines = dat.ToArray();
-			}
-		}
-
-		public bool nestOpen
-		{
-			get => data == null ? false : data.nestopen;
-			set => data.nestopen = value;
 		}
 
 		public float enviro_knowledge

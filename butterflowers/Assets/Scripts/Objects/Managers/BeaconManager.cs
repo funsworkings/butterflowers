@@ -36,8 +36,6 @@ public class BeaconManager : Spawner, IReactToSunCycle, ISaveable
 
     [SerializeField] WorldPreset preset;
 
-	[SerializeField] Transform m_beaconInfoContainer = null;
-
     #endregion
 
     #region Attributes
@@ -62,8 +60,6 @@ public class BeaconManager : Spawner, IReactToSunCycle, ISaveable
 	public Beacon[] InactiveBeacons => allBeacons.Where(beacon => !Nest.HasBeacon(beacon)).ToArray();
 	public Beacon[] PlantedBeacons => allBeacons.Where(beacon => beacon.state == Locale.Planted).ToArray();
 	public Beacon[] LiveBeacons => allBeacons.Where(beacon => (beacon.state != Locale.Planted || beacon.state != Locale.Destroyed)).ToArray();
-
-	public Transform BeaconInfoContainer => m_beaconInfoContainer;
 
 	public Beacon GetBeaconByFile(string file)
 	{
@@ -114,6 +110,11 @@ public class BeaconManager : Spawner, IReactToSunCycle, ISaveable
         
         Library.onDeletedFiles -= UserDeletedFiles;
         Library.onRecoverFiles -= UserRecoveredFiles;
+	}
+
+	void Update()
+	{
+		if(Input.GetKeyDown(KeyCode.B)) DebugBeaconFromPreset();
 	}
 
     #endregion
@@ -170,15 +171,14 @@ public class BeaconManager : Spawner, IReactToSunCycle, ISaveable
         var discovered = Library.HasDiscoveredFile(path); // Check if seen before
 
         var beacon = instance.GetComponent<Beacon>();
-            beacon.file = path;
-            beacon.fileEntry = null;
+            beacon.File = path;
             beacon.discovered = discovered; // Set if beacon has been discovered
             
         Debug.Log("Add beacon => " + path);
         
-        beacon.Initialize(type, state, origin, BeaconInfoContainer, load);
+        beacon.Initialize(type, state, origin, load);
 
-        Events.ReceiveEvent(EVENTCODE.BEACONADD, AGENT.World, AGENT.Beacon, details: beacon.file);
+        Events.ReceiveEvent(EVENTCODE.BEACONADD, AGENT.World, AGENT.Beacon, details: beacon.File);
 
         return beacon;
     }
@@ -205,7 +205,7 @@ public class BeaconManager : Spawner, IReactToSunCycle, ISaveable
         }
 
         if (success)
-            Events.ReceiveEvent(EVENTCODE.BEACONDELETE, AGENT.World, AGENT.Beacon, details: beacon.file);
+            Events.ReceiveEvent(EVENTCODE.BEACONDELETE, AGENT.World, AGENT.Beacon, details: beacon.File);
     }
 
     // If beacon is in subset, IGNORE
@@ -219,7 +219,7 @@ public class BeaconManager : Spawner, IReactToSunCycle, ISaveable
         var enviro = Library.WorldFiles;
 
         var files = desktop.Concat(enviro);
-        var blacklist = PlantedBeacons.Select(b => b.file);
+        var blacklist = PlantedBeacons.Select(b => b.File);
 
         files = files.Except(blacklist); // Ignore items from blacklist
 
@@ -359,7 +359,7 @@ public class BeaconManager : Spawner, IReactToSunCycle, ISaveable
 
     void onRegisterBeacon(Beacon beacon)
 	{
-		var file = beacon.file;
+		var file = beacon.File;
 		if (beacons.ContainsKey(file)) {
 			var list = beacons[file];
 			list.Add(beacon);
@@ -376,7 +376,7 @@ public class BeaconManager : Spawner, IReactToSunCycle, ISaveable
 
 	void onUnregisterBeacon(Beacon beacon)
 	{
-		var file = beacon.file;
+		var file = beacon.File;
 		if (beacons.ContainsKey(file)) {
 			var curr = beacons[file];
 			curr.Remove(beacon);
@@ -474,5 +474,23 @@ public class BeaconManager : Spawner, IReactToSunCycle, ISaveable
 		}
 	}
 
+	#endregion
+	
+	#region Debug
+
+	void DebugBeaconFromPreset()
+	{
+		var textures = preset.defaultTextures;
+
+		var index = Random.Range(0, textures.Length);
+		var texture = textures[index];
+
+		bool success = Library.RegisterFile(texture.name, Library.FileType.World, true);
+		if (success) 
+		{
+			CreateBeaconInstance(texture.name, Type.Wizard, Vector3.zero, false);
+		}
+	}
+	
 	#endregion
 }

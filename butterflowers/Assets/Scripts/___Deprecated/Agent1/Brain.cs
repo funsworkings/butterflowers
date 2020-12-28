@@ -705,7 +705,7 @@ namespace Neue.Agent1
 		{
 			if (beacon == null) return;
 
-			var file = beacon.file;
+			var file = beacon.File;
 			if (!fileKnowledgeLookup.ContainsKey(file))
 				AddKnowledgeToLookup(file);
 
@@ -786,7 +786,7 @@ namespace Neue.Agent1
 
 		public float FetchKnowledgeFromBeacon(Beacon beacon)
 		{
-			var file = beacon.file;
+			var file = beacon.File;
 			return FetchKnowledgeFromFile(file);
 		}
 

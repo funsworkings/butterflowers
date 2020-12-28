@@ -1,5 +1,7 @@
-﻿using System.Collections;
+﻿using System;
+using System.Collections;
 using System.Collections.Generic;
+using System.Linq;
 using Data;
 using Settings;
 using UnityEngine;
@@ -10,10 +12,15 @@ using Vertex = Cage.Vertex;
 public class VineManager : MonoBehaviour
 {
     #region External
-    
+
+    GameDataSaveSystem _Save;
     [SerializeField] BeaconManager Beacons;
 
     #endregion
+    
+    // Events
+
+    public System.Action onUpdateVines;
     
     // Collections
 
@@ -27,7 +34,6 @@ public class VineManager : MonoBehaviour
 
     [SerializeField] GameObject vinePrefab = null;
     [SerializeField] Transform vineRoot = null;
-    [SerializeField] Transform vineTooltips = null;
 
     bool load = false;
 
@@ -53,13 +59,33 @@ public class VineManager : MonoBehaviour
         cage.onUpdateActiveCorners -= onCageUpdatedActiveCorner;
     }
 
+    void Update()
+    {
+        if (!load) return;
+        if (_Save != null) _Save.data.vines = (VineSceneData) Save();
+    }
+
     #endregion
 
     #region Save/load
 
     public System.Object Save()
     {
-        return vines.ToArray();
+        VineSceneData dat = new VineSceneData();
+        
+        var vineDatas = new List<VineData>();
+        for (var i = 0; i < vines.Count; i++) 
+        {
+            var vine = vines[i];
+            var parsed = new VineData(vine.state, vine.index, vine.interval, vine.height, vine.Waypoints, vine.File, vine.Leaves);
+
+            vineDatas.Add(parsed);
+        }
+
+        dat.vines = vineDatas.ToArray();
+        dat.corners = cage.Sectors.Select(corner => (int)corner._Status).ToArray();
+        
+        return dat;
     }
 
     public void Load(System.Object dat)
@@ -71,12 +97,13 @@ public class VineManager : MonoBehaviour
         if (dat != null) {
             foreach (VineData v in data.vines) {
                 var vine = DropVine(transform.position, vineRoot.up);
-                    vine.Initialize(this, cage, v, vineTooltips);
+                    vine.Initialize(this, cage, v);
                     
                 vines.Add(vine);
             }
         }
 
+        _Save = GameDataSaveSystem.Instance;
         load = true;
     }
 
@@ -89,12 +116,14 @@ public class VineManager : MonoBehaviour
         var origin = beacon.origin;
         
         var vine = DropVine(origin, vineRoot.up);
-            vine.Initialize(this, cage,null, vineTooltips);
+            vine.Initialize(this, cage,null);
         
-        var file = beacon.file;
-            vine.file = file;
+        var file = beacon.File;
+            vine.File = file;
             
         vines.Add(vine);
+
+        if (onUpdateVines != null) onUpdateVines();
     }
 
     #endregion
@@ -148,13 +177,7 @@ public class VineManager : MonoBehaviour
 
     void onVineCompleteGateGrowth(Vine vine)
     {
-        int vertexInd = 0;
-        Vertex vertex = cage.GetClosestVertex(vine.end, out vertexInd);
-
-        if (vertex.active) 
-        {
-            vine.GrowFlower();
-        }
+        vine.GrowFlower();
     }
     
     #endregion
@@ -163,8 +186,7 @@ public class VineManager : MonoBehaviour
 
     void onCageUpdatedActiveCorner()
     {
-        var corners = cage.active;
-        //Save.data.corners = corners;
+        if (onUpdateVines != null) onUpdateVines();
     }
     
     #endregion

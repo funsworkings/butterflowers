@@ -163,7 +163,7 @@ public class Sun : MonoBehaviour
             //if (advanced)
             //  active = false; // Pause sun when crosses into new day (debug)
         }
-
+        
         _Save.sun = (SunData)Save();
     }
 

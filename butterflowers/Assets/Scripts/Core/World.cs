@@ -146,6 +146,7 @@ public class World : MonoBehaviour, ISaveable
         {
             //{"WIZARD", Preset.wizardFiles.items.Select(mem => mem.image).ToArray()},
             //{"ENVIRONMENT", Preset.starterFiles.elements}
+            { "WIZARD", Preset.defaultTextures }
         };
 
         Surveillance.Load(_Save.data.surveillanceData); // Load surveillance data
@@ -169,7 +170,7 @@ public class World : MonoBehaviour, ISaveable
         Loader.progress = 1f;
 
         EventsM.Load(null);
-        Nest.Load(_Save.nestOpen);
+        Nest.Load(_Save.data.nestopen);
         Beacons.Load((Preset.persistBeacons) ? _Save.beaconData : null);
         Vines.Load((Preset.persistVines) ? _Save.data.vines : null);
         Sun.Load(_Save.data.sun);
@@ -181,6 +182,7 @@ public class World : MonoBehaviour, ISaveable
     {
         Surveillance.onCaptureLog += DidCaptureLog;
         Beacons.onUpdateBeacons += DidUpdateBeacons;
+        Vines.onUpdateVines += DidUpdateVines;
         Library.onDiscoverFile += DidDiscoverFile;
         Library.OnRefreshItems += DidUpdateLibraryItems;
     }
@@ -189,6 +191,7 @@ public class World : MonoBehaviour, ISaveable
     {
         Surveillance.onCaptureLog -= DidCaptureLog;
         Beacons.onUpdateBeacons -= DidUpdateBeacons;
+        Vines.onUpdateVines -= DidUpdateVines;
         Library.onDiscoverFile -= DidDiscoverFile;
         Library.OnRefreshItems -= DidUpdateLibraryItems;
     }
@@ -318,6 +321,11 @@ public class World : MonoBehaviour, ISaveable
     void DidUpdateBeacons()
     {
         _Save.beacons = (Beacon[]) Beacons.Save();
+    }
+
+    void DidUpdateVines()
+    {
+        _Save.data.vines = (VineSceneData) Vines.Save();
     }
 
     void DidDiscoverFile(string file)

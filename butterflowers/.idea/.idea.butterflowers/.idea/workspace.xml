@@ -34,301 +34,32 @@
   </component>
   <component name="ChangeListManager">
     <list default="true" id="6ebb3891-c912-403e-9e42-400f227dea0b" name="Default Changelist" comment="">
-      <change afterPath="$PROJECT_DIR$/Assets/Scripts/Interfaces/ITooltip.cs" afterDir="false" />
-      <change afterPath="$PROJECT_DIR$/Assets/Scripts/Interfaces/ITooltip.cs.meta" afterDir="false" />
-      <change afterPath="$PROJECT_DIR$/Assets/Scripts/Miscellaneous.meta" afterDir="false" />
-      <change afterPath="$PROJECT_DIR$/Assets/Scripts/Neue/Agent/Actions/Base.cs" afterDir="false" />
-      <change afterPath="$PROJECT_DIR$/Assets/Scripts/Neue/Agent/Actions/Base.cs.meta" afterDir="false" />
-      <change afterPath="$PROJECT_DIR$/Assets/Scripts/Neue/Agent/Actions/Movement/FieldOfView.cs" afterDir="false" />
-      <change afterPath="$PROJECT_DIR$/Assets/Scripts/Neue/Agent/Actions/Movement/FieldOfView.cs.meta" afterDir="false" />
-      <change afterPath="$PROJECT_DIR$/Assets/Scripts/Neue/Agent/Base.cs" afterDir="false" />
-      <change afterPath="$PROJECT_DIR$/Assets/Scripts/Neue/Agent/Base.cs.meta" afterDir="false" />
-      <change afterPath="$PROJECT_DIR$/Assets/Scripts/Neue/Agent/Brain/Base.cs" afterDir="false" />
-      <change afterPath="$PROJECT_DIR$/Assets/Scripts/Neue/Agent/Brain/Base.cs.meta" afterDir="false" />
-      <change afterPath="$PROJECT_DIR$/Assets/Scripts/Neue/Agent/Brain/Capture.cs" afterDir="false" />
-      <change afterPath="$PROJECT_DIR$/Assets/Scripts/Neue/Agent/Brain/Capture.cs.meta" afterDir="false" />
-      <change afterPath="$PROJECT_DIR$/Assets/Scripts/Neue/Agent/Brain/Debug.cs" afterDir="false" />
-      <change afterPath="$PROJECT_DIR$/Assets/Scripts/Neue/Agent/Brain/Debug.cs.meta" afterDir="false" />
-      <change afterPath="$PROJECT_DIR$/Assets/Scripts/Neue/Agent/Brain/Priorities.cs" afterDir="false" />
-      <change afterPath="$PROJECT_DIR$/Assets/Scripts/Neue/Agent/Brain/Priorities.cs.meta" afterDir="false" />
-      <change afterPath="$PROJECT_DIR$/Assets/Scripts/Neue/Agent/Types/Module.cs" afterDir="false" />
-      <change afterPath="$PROJECT_DIR$/Assets/Scripts/Neue/Agent/Types/Module.cs.meta" afterDir="false" />
-      <change afterPath="$PROJECT_DIR$/Assets/Scripts/Neue/Reference/Debug.meta" afterDir="false" />
-      <change afterPath="$PROJECT_DIR$/Assets/Scripts/Neue/Reference/Debug/TestNode.cs" afterDir="false" />
-      <change afterPath="$PROJECT_DIR$/Assets/Scripts/Neue/Reference/Debug/TestNode.cs.meta" afterDir="false" />
-      <change afterPath="$PROJECT_DIR$/Assets/Scripts/Neue/Reference/Images/Image.cs" afterDir="false" />
-      <change afterPath="$PROJECT_DIR$/Assets/Scripts/Neue/Reference/Images/Image.cs.meta" afterDir="false" />
-      <change afterPath="$PROJECT_DIR$/Assets/Scripts/Neue/Reference/Nodes/Behaviours/IReadFrame.cs" afterDir="false" />
-      <change afterPath="$PROJECT_DIR$/Assets/Scripts/Neue/Reference/Nodes/Behaviours/IReadFrame.cs.meta" afterDir="false" />
-      <change afterPath="$PROJECT_DIR$/Assets/Scripts/Neue/Reference/Nodes/Behaviours/IWriteFrame.cs" afterDir="false" />
-      <change afterPath="$PROJECT_DIR$/Assets/Scripts/Neue/Reference/Nodes/Behaviours/IWriteFrame.cs.meta" afterDir="false" />
-      <change afterPath="$PROJECT_DIR$/Assets/Scripts/Neue/Reference/Nodes/Debug.meta" afterDir="false" />
-      <change afterPath="$PROJECT_DIR$/Assets/Scripts/Neue/Reference/Nodes/Debug/NodeFrame.cs" afterDir="false" />
-      <change afterPath="$PROJECT_DIR$/Assets/Scripts/Neue/Reference/Nodes/Debug/NodeFrame.cs.meta" afterDir="false" />
-      <change afterPath="$PROJECT_DIR$/Assets/Scripts/Neue/Reference/Utils.cs" afterDir="false" />
-      <change afterPath="$PROJECT_DIR$/Assets/Scripts/Neue/Reference/Utils.cs.meta" afterDir="false" />
-      <change afterPath="$PROJECT_DIR$/Assets/Scripts/___Deprecated/Misc.meta" afterDir="false" />
-      <change afterPath="$PROJECT_DIR$/Assets/Scripts/___Deprecated/Presets.meta" afterDir="false" />
-      <change afterPath="$PROJECT_DIR$/Assets/Scripts/___Deprecated/WorldState.cs" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/Assets/Scripts/Objects/Entities/Sector.cs" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/Assets/Scripts/Objects/Entities/Sector.cs.meta" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/.idea/.idea.butterflowers/.idea/contentModel.xml" beforeDir="false" afterPath="$PROJECT_DIR$/.idea/.idea.butterflowers/.idea/contentModel.xml" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/.idea/.idea.butterflowers/.idea/workspace.xml" beforeDir="false" afterPath="$PROJECT_DIR$/.idea/.idea.butterflowers/.idea/workspace.xml" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/Assets/Animations/Controllers/Entities/Wizard.controller" beforeDir="false" afterPath="$PROJECT_DIR$/Assets/Animations/Controllers/Entities/Wizard.controller" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/Assets/Animations/Masks/Wizard Action Layer.mask" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/Assets/Animations/Masks/Wizard Action Layer.mask.meta" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/Assets/Cutscenes/Behaviours/DesktopVisualizationTrack.meta" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/Assets/Cutscenes/Behaviours/DesktopVisualizationTrack/DesktopVisualizationTrackBehaviour.cs" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/Assets/Cutscenes/Behaviours/DesktopVisualizationTrack/DesktopVisualizationTrackBehaviour.cs.meta" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/Assets/Cutscenes/Behaviours/DesktopVisualizationTrack/DesktopVisualizationTrackClip.cs" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/Assets/Cutscenes/Behaviours/DesktopVisualizationTrack/DesktopVisualizationTrackClip.cs.meta" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/Assets/Cutscenes/Behaviours/DesktopVisualizationTrack/DesktopVisualizationTrackTrack.cs" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/Assets/Cutscenes/Behaviours/DesktopVisualizationTrack/DesktopVisualizationTrackTrack.cs.meta" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/Assets/Packages/noder/Graphs.meta" beforeDir="false" afterPath="$PROJECT_DIR$/Assets/Scripts/___Deprecated/Graphs.meta" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/Assets/Packages/noder/Graphs/DialogueTree.cs" beforeDir="false" afterPath="$PROJECT_DIR$/Assets/Scripts/___Deprecated/Graphs/DialogueTree.cs" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/Assets/Packages/noder/Graphs/DialogueTree.cs.meta" beforeDir="false" afterPath="$PROJECT_DIR$/Assets/Scripts/___Deprecated/Graphs/DialogueTree.cs.meta" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/Assets/Packages/noder/Graphs/ModuleTree.cs" beforeDir="false" afterPath="$PROJECT_DIR$/Assets/Scripts/___Deprecated/Graphs/ModuleTree.cs" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/Assets/Packages/noder/Graphs/ModuleTree.cs.meta" beforeDir="false" afterPath="$PROJECT_DIR$/Assets/Scripts/___Deprecated/Graphs/ModuleTree.cs.meta" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/Assets/Packages/noder/Nodes/Behaviours.meta" beforeDir="false" afterPath="$PROJECT_DIR$/Assets/Scripts/___Deprecated/Behaviours.meta" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/Assets/Packages/noder/Nodes/Behaviours/Branches.meta" beforeDir="false" afterPath="$PROJECT_DIR$/Assets/Scripts/___Deprecated/Behaviours/Branches.meta" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/Assets/Packages/noder/Nodes/Behaviours/Branches/BeaconEventBranch.cs" beforeDir="false" afterPath="$PROJECT_DIR$/Assets/Scripts/___Deprecated/Behaviours/Branches/BeaconEventBranch.cs" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/Assets/Packages/noder/Nodes/Behaviours/Branches/BeaconEventBranch.cs.meta" beforeDir="false" afterPath="$PROJECT_DIR$/Assets/Scripts/___Deprecated/Behaviours/Branches/BeaconEventBranch.cs.meta" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/Assets/Packages/noder/Nodes/Behaviours/Branches/EventCodeBranch.cs" beforeDir="false" afterPath="$PROJECT_DIR$/Assets/Scripts/___Deprecated/Behaviours/Branches/EventCodeBranch.cs" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/Assets/Packages/noder/Nodes/Behaviours/Branches/EventCodeBranch.cs.meta" beforeDir="false" afterPath="$PROJECT_DIR$/Assets/Scripts/___Deprecated/Behaviours/Branches/EventCodeBranch.cs.meta" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/Assets/Packages/noder/Nodes/Behaviours/Branches/MoodBranch.cs" beforeDir="false" afterPath="$PROJECT_DIR$/Assets/Scripts/___Deprecated/Behaviours/Branches/MoodBranch.cs" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/Assets/Packages/noder/Nodes/Behaviours/Branches/MoodBranch.cs.meta" beforeDir="false" afterPath="$PROJECT_DIR$/Assets/Scripts/___Deprecated/Behaviours/Branches/MoodBranch.cs.meta" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/Assets/Packages/noder/Nodes/Behaviours/Branches/PlayerIntentBranch.cs" beforeDir="false" afterPath="$PROJECT_DIR$/Assets/Scripts/___Deprecated/Behaviours/Branches/PlayerIntentBranch.cs" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/Assets/Packages/noder/Nodes/Behaviours/Branches/PlayerIntentBranch.cs.meta" beforeDir="false" afterPath="$PROJECT_DIR$/Assets/Scripts/___Deprecated/Behaviours/Branches/PlayerIntentBranch.cs.meta" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/Assets/Packages/noder/Nodes/Behaviours/Branches/RandomModuleBranch.cs" beforeDir="false" afterPath="$PROJECT_DIR$/Assets/Scripts/___Deprecated/Behaviours/Branches/RandomModuleBranch.cs" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/Assets/Packages/noder/Nodes/Behaviours/Branches/RandomModuleBranch.cs.meta" beforeDir="false" afterPath="$PROJECT_DIR$/Assets/Scripts/___Deprecated/Behaviours/Branches/RandomModuleBranch.cs.meta" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/Assets/Packages/noder/Nodes/Behaviours/Branches/StanceBranch.cs" beforeDir="false" afterPath="$PROJECT_DIR$/Assets/Scripts/___Deprecated/Behaviours/Branches/StanceBranch.cs" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/Assets/Packages/noder/Nodes/Behaviours/Branches/StanceBranch.cs.meta" beforeDir="false" afterPath="$PROJECT_DIR$/Assets/Scripts/___Deprecated/Behaviours/Branches/StanceBranch.cs.meta" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/Assets/Packages/noder/Nodes/Behaviours/Branches/SubMoodBranch.cs" beforeDir="false" afterPath="$PROJECT_DIR$/Assets/Scripts/___Deprecated/Behaviours/Branches/SubMoodBranch.cs" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/Assets/Packages/noder/Nodes/Behaviours/Branches/SubMoodBranch.cs.meta" beforeDir="false" afterPath="$PROJECT_DIR$/Assets/Scripts/___Deprecated/Behaviours/Branches/SubMoodBranch.cs.meta" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/Assets/Packages/noder/Nodes/Behaviours/Branches/SuggestionBranch.cs" beforeDir="false" afterPath="$PROJECT_DIR$/Assets/Scripts/___Deprecated/Behaviours/Branches/SuggestionBranch.cs" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/Assets/Packages/noder/Nodes/Behaviours/Branches/SuggestionBranch.cs.meta" beforeDir="false" afterPath="$PROJECT_DIR$/Assets/Scripts/___Deprecated/Behaviours/Branches/SuggestionBranch.cs.meta" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/Assets/Packages/noder/Nodes/Behaviours/Comparisons.meta" beforeDir="false" afterPath="$PROJECT_DIR$/Assets/Scripts/___Deprecated/Behaviours/Comparisons.meta" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/Assets/Packages/noder/Nodes/Behaviours/Comparisons/CompareEvent.cs" beforeDir="false" afterPath="$PROJECT_DIR$/Assets/Scripts/___Deprecated/Behaviours/Comparisons/CompareEvent.cs" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/Assets/Packages/noder/Nodes/Behaviours/Comparisons/CompareEvent.cs.meta" beforeDir="false" afterPath="$PROJECT_DIR$/Assets/Scripts/___Deprecated/Behaviours/Comparisons/CompareEvent.cs.meta" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/Assets/Packages/noder/Nodes/Behaviours/Comparisons/CompareMoodState.cs" beforeDir="false" afterPath="$PROJECT_DIR$/Assets/Scripts/___Deprecated/Behaviours/Comparisons/CompareMoodState.cs" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/Assets/Packages/noder/Nodes/Behaviours/Comparisons/CompareMoodState.cs.meta" beforeDir="false" afterPath="$PROJECT_DIR$/Assets/Scripts/___Deprecated/Behaviours/Comparisons/CompareMoodState.cs.meta" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/Assets/Packages/noder/Nodes/Behaviours/Comparisons/CompareStanceState.cs" beforeDir="false" afterPath="$PROJECT_DIR$/Assets/Scripts/___Deprecated/Behaviours/Comparisons/CompareStanceState.cs" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/Assets/Packages/noder/Nodes/Behaviours/Comparisons/CompareStanceState.cs.meta" beforeDir="false" afterPath="$PROJECT_DIR$/Assets/Scripts/___Deprecated/Behaviours/Comparisons/CompareStanceState.cs.meta" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/Assets/Packages/noder/Nodes/Behaviours/Core.meta" beforeDir="false" afterPath="$PROJECT_DIR$/Assets/Scripts/___Deprecated/Behaviours/Core.meta" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/Assets/Packages/noder/Nodes/Behaviours/Core/BaseEventNode.cs" beforeDir="false" afterPath="$PROJECT_DIR$/Assets/Scripts/___Deprecated/Behaviours/Core/BaseEventNode.cs" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/Assets/Packages/noder/Nodes/Behaviours/Core/BaseEventNode.cs.meta" beforeDir="false" afterPath="$PROJECT_DIR$/Assets/Scripts/___Deprecated/Behaviours/Core/BaseEventNode.cs.meta" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/Assets/Packages/noder/Nodes/Behaviours/Entry.meta" beforeDir="false" afterPath="$PROJECT_DIR$/Assets/Scripts/___Deprecated/Behaviours/Entry.meta" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/Assets/Packages/noder/Nodes/Behaviours/Entry/BindVector3.cs" beforeDir="false" afterPath="$PROJECT_DIR$/Assets/Scripts/___Deprecated/Behaviours/Entry/BindVector3.cs" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/Assets/Packages/noder/Nodes/Behaviours/Entry/BindVector3.cs.meta" beforeDir="false" afterPath="$PROJECT_DIR$/Assets/Scripts/___Deprecated/Behaviours/Entry/BindVector3.cs.meta" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/Assets/Packages/noder/Nodes/Behaviours/Entry/ExtractVector3.cs" beforeDir="false" afterPath="$PROJECT_DIR$/Assets/Scripts/___Deprecated/Behaviours/Entry/ExtractVector3.cs" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/Assets/Packages/noder/Nodes/Behaviours/Entry/ExtractVector3.cs.meta" beforeDir="false" afterPath="$PROJECT_DIR$/Assets/Scripts/___Deprecated/Behaviours/Entry/ExtractVector3.cs.meta" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/Assets/Packages/noder/Nodes/Behaviours/Entry/RandomBeacon.cs" beforeDir="false" afterPath="$PROJECT_DIR$/Assets/Scripts/___Deprecated/Behaviours/Entry/RandomBeacon.cs" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/Assets/Packages/noder/Nodes/Behaviours/Entry/RandomBeacon.cs.meta" beforeDir="false" afterPath="$PROJECT_DIR$/Assets/Scripts/___Deprecated/Behaviours/Entry/RandomBeacon.cs.meta" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/Assets/Packages/noder/Nodes/Behaviours/Entry/RandomBeaconEvent.cs" beforeDir="false" afterPath="$PROJECT_DIR$/Assets/Scripts/___Deprecated/Behaviours/Entry/RandomBeaconEvent.cs" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/Assets/Packages/noder/Nodes/Behaviours/Entry/RandomBeaconEvent.cs.meta" beforeDir="false" afterPath="$PROJECT_DIR$/Assets/Scripts/___Deprecated/Behaviours/Entry/RandomBeaconEvent.cs.meta" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/Assets/Packages/noder/Nodes/Behaviours/Entry/RandomDialogue.cs" beforeDir="false" afterPath="$PROJECT_DIR$/Assets/Scripts/___Deprecated/Behaviours/Entry/RandomDialogue.cs" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/Assets/Packages/noder/Nodes/Behaviours/Entry/RandomDialogue.cs.meta" beforeDir="false" afterPath="$PROJECT_DIR$/Assets/Scripts/___Deprecated/Behaviours/Entry/RandomDialogue.cs.meta" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/Assets/Packages/noder/Nodes/Behaviours/Entry/RandomDialogueSet.cs" beforeDir="false" afterPath="$PROJECT_DIR$/Assets/Scripts/___Deprecated/Behaviours/Entry/RandomDialogueSet.cs" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/Assets/Packages/noder/Nodes/Behaviours/Entry/RandomDialogueSet.cs.meta" beforeDir="false" afterPath="$PROJECT_DIR$/Assets/Scripts/___Deprecated/Behaviours/Entry/RandomDialogueSet.cs.meta" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/Assets/Packages/noder/Nodes/Behaviours/Entry/RandomGesture.cs" beforeDir="false" afterPath="$PROJECT_DIR$/Assets/Scripts/___Deprecated/Behaviours/Entry/RandomGesture.cs" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/Assets/Packages/noder/Nodes/Behaviours/Entry/RandomGesture.cs.meta" beforeDir="false" afterPath="$PROJECT_DIR$/Assets/Scripts/___Deprecated/Behaviours/Entry/RandomGesture.cs.meta" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/Assets/Packages/noder/Nodes/Behaviours/Entry/RandomGestureSet.cs" beforeDir="false" afterPath="$PROJECT_DIR$/Assets/Scripts/___Deprecated/Behaviours/Entry/RandomGestureSet.cs" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/Assets/Packages/noder/Nodes/Behaviours/Entry/RandomGestureSet.cs.meta" beforeDir="false" afterPath="$PROJECT_DIR$/Assets/Scripts/___Deprecated/Behaviours/Entry/RandomGestureSet.cs.meta" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/Assets/Packages/noder/Nodes/Behaviours/Entry/RandomModule.cs" beforeDir="false" afterPath="$PROJECT_DIR$/Assets/Scripts/___Deprecated/Behaviours/Entry/RandomModule.cs" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/Assets/Packages/noder/Nodes/Behaviours/Entry/RandomModule.cs.meta" beforeDir="false" afterPath="$PROJECT_DIR$/Assets/Scripts/___Deprecated/Behaviours/Entry/RandomModule.cs.meta" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/Assets/Packages/noder/Nodes/Behaviours/Entry/RandomModuleTree.cs" beforeDir="false" afterPath="$PROJECT_DIR$/Assets/Scripts/___Deprecated/Behaviours/Entry/RandomModuleTree.cs" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/Assets/Packages/noder/Nodes/Behaviours/Entry/RandomModuleTree.cs.meta" beforeDir="false" afterPath="$PROJECT_DIR$/Assets/Scripts/___Deprecated/Behaviours/Entry/RandomModuleTree.cs.meta" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/Assets/Packages/noder/Nodes/Behaviours/Entry/RandomWaypoint.cs" beforeDir="false" afterPath="$PROJECT_DIR$/Assets/Scripts/___Deprecated/Behaviours/Entry/RandomWaypoint.cs" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/Assets/Packages/noder/Nodes/Behaviours/Entry/RandomWaypoint.cs.meta" beforeDir="false" afterPath="$PROJECT_DIR$/Assets/Scripts/___Deprecated/Behaviours/Entry/RandomWaypoint.cs.meta" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/Assets/Packages/noder/Nodes/Behaviours/Events.meta" beforeDir="false" afterPath="$PROJECT_DIR$/Assets/Scripts/___Deprecated/Behaviours/Events.meta" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/Assets/Packages/noder/Nodes/Behaviours/Events/BeaconEvent.cs" beforeDir="false" afterPath="$PROJECT_DIR$/Assets/Scripts/___Deprecated/Behaviours/Events/BeaconEvent.cs" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/Assets/Packages/noder/Nodes/Behaviours/Events/BeaconEvent.cs.meta" beforeDir="false" afterPath="$PROJECT_DIR$/Assets/Scripts/___Deprecated/Behaviours/Events/BeaconEvent.cs.meta" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/Assets/Packages/noder/Nodes/Behaviours/Events/ClearNest.cs" beforeDir="false" afterPath="$PROJECT_DIR$/Assets/Scripts/___Deprecated/Behaviours/Events/ClearNest.cs" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/Assets/Packages/noder/Nodes/Behaviours/Events/ClearNest.cs.meta" beforeDir="false" afterPath="$PROJECT_DIR$/Assets/Scripts/___Deprecated/Behaviours/Events/ClearNest.cs.meta" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/Assets/Packages/noder/Nodes/Behaviours/Events/DialogueEvent.cs" beforeDir="false" afterPath="$PROJECT_DIR$/Assets/Scripts/___Deprecated/Behaviours/Events/DialogueEvent.cs" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/Assets/Packages/noder/Nodes/Behaviours/Events/DialogueEvent.cs.meta" beforeDir="false" afterPath="$PROJECT_DIR$/Assets/Scripts/___Deprecated/Behaviours/Events/DialogueEvent.cs.meta" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/Assets/Packages/noder/Nodes/Behaviours/Events/EnactGesture.cs" beforeDir="false" afterPath="$PROJECT_DIR$/Assets/Scripts/___Deprecated/Behaviours/Events/EnactGesture.cs" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/Assets/Packages/noder/Nodes/Behaviours/Events/EnactGesture.cs.meta" beforeDir="false" afterPath="$PROJECT_DIR$/Assets/Scripts/___Deprecated/Behaviours/Events/EnactGesture.cs.meta" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/Assets/Packages/noder/Nodes/Behaviours/Events/FailureEvent.cs" beforeDir="false" afterPath="$PROJECT_DIR$/Assets/Scripts/___Deprecated/Behaviours/Events/FailureEvent.cs" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/Assets/Packages/noder/Nodes/Behaviours/Events/FailureEvent.cs.meta" beforeDir="false" afterPath="$PROJECT_DIR$/Assets/Scripts/___Deprecated/Behaviours/Events/FailureEvent.cs.meta" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/Assets/Packages/noder/Nodes/Behaviours/Events/Fireworks.cs" beforeDir="false" afterPath="$PROJECT_DIR$/Assets/Scripts/___Deprecated/Behaviours/Events/Fireworks.cs" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/Assets/Packages/noder/Nodes/Behaviours/Events/Fireworks.cs.meta" beforeDir="false" afterPath="$PROJECT_DIR$/Assets/Scripts/___Deprecated/Behaviours/Events/Fireworks.cs.meta" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/Assets/Packages/noder/Nodes/Behaviours/Events/Hit.cs" beforeDir="false" afterPath="$PROJECT_DIR$/Assets/Scripts/___Deprecated/Behaviours/Events/Hit.cs" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/Assets/Packages/noder/Nodes/Behaviours/Events/Hit.cs.meta" beforeDir="false" afterPath="$PROJECT_DIR$/Assets/Scripts/___Deprecated/Behaviours/Events/Hit.cs.meta" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/Assets/Packages/noder/Nodes/Behaviours/Events/KickNest.cs" beforeDir="false" afterPath="$PROJECT_DIR$/Assets/Scripts/___Deprecated/Behaviours/Events/KickNest.cs" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/Assets/Packages/noder/Nodes/Behaviours/Events/KickNest.cs.meta" beforeDir="false" afterPath="$PROJECT_DIR$/Assets/Scripts/___Deprecated/Behaviours/Events/KickNest.cs.meta" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/Assets/Packages/noder/Nodes/Behaviours/Events/MoveToAgent.cs" beforeDir="false" afterPath="$PROJECT_DIR$/Assets/Scripts/___Deprecated/Behaviours/Events/MoveToAgent.cs" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/Assets/Packages/noder/Nodes/Behaviours/Events/MoveToAgent.cs.meta" beforeDir="false" afterPath="$PROJECT_DIR$/Assets/Scripts/___Deprecated/Behaviours/Events/MoveToAgent.cs.meta" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/Assets/Packages/noder/Nodes/Behaviours/Events/TakeSelfie.cs" beforeDir="false" afterPath="$PROJECT_DIR$/Assets/Scripts/___Deprecated/Behaviours/Events/TakeSelfie.cs" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/Assets/Packages/noder/Nodes/Behaviours/Events/TakeSelfie.cs.meta" beforeDir="false" afterPath="$PROJECT_DIR$/Assets/Scripts/___Deprecated/Behaviours/Events/TakeSelfie.cs.meta" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/Assets/Packages/noder/Nodes/Behaviours/Fetch.meta" beforeDir="false" afterPath="$PROJECT_DIR$/Assets/Scripts/___Deprecated/Behaviours/Fetch.meta" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/Assets/Packages/noder/Nodes/Behaviours/Fetch/Absorption.cs" beforeDir="false" afterPath="$PROJECT_DIR$/Assets/Scripts/___Deprecated/Behaviours/Fetch/Absorption.cs" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/Assets/Packages/noder/Nodes/Behaviours/Fetch/Absorption.cs.meta" beforeDir="false" afterPath="$PROJECT_DIR$/Assets/Scripts/___Deprecated/Behaviours/Fetch/Absorption.cs.meta" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/Assets/Packages/noder/Nodes/Behaviours/Fetch/AbsorptionThreshold.cs" beforeDir="false" afterPath="$PROJECT_DIR$/Assets/Scripts/___Deprecated/Behaviours/Fetch/AbsorptionThreshold.cs" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/Assets/Packages/noder/Nodes/Behaviours/Fetch/AbsorptionThreshold.cs.meta" beforeDir="false" afterPath="$PROJECT_DIR$/Assets/Scripts/___Deprecated/Behaviours/Fetch/AbsorptionThreshold.cs.meta" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/Assets/Packages/noder/Nodes/Behaviours/Fetch/Beacons.cs" beforeDir="false" afterPath="$PROJECT_DIR$/Assets/Scripts/___Deprecated/Behaviours/Fetch/Beacons.cs" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/Assets/Packages/noder/Nodes/Behaviours/Fetch/Beacons.cs.meta" beforeDir="false" afterPath="$PROJECT_DIR$/Assets/Scripts/___Deprecated/Behaviours/Fetch/Beacons.cs.meta" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/Assets/Packages/noder/Nodes/Behaviours/Fetch/ComfortThreshold.cs" beforeDir="false" afterPath="$PROJECT_DIR$/Assets/Scripts/___Deprecated/Behaviours/Fetch/ComfortThreshold.cs" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/Assets/Packages/noder/Nodes/Behaviours/Fetch/ComfortThreshold.cs.meta" beforeDir="false" afterPath="$PROJECT_DIR$/Assets/Scripts/___Deprecated/Behaviours/Fetch/ComfortThreshold.cs.meta" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/Assets/Packages/noder/Nodes/Behaviours/Fetch/Dialogues.cs" beforeDir="false" afterPath="$PROJECT_DIR$/Assets/Scripts/___Deprecated/Behaviours/Fetch/Dialogues.cs" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/Assets/Packages/noder/Nodes/Behaviours/Fetch/Dialogues.cs.meta" beforeDir="false" afterPath="$PROJECT_DIR$/Assets/Scripts/___Deprecated/Behaviours/Fetch/Dialogues.cs.meta" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/Assets/Packages/noder/Nodes/Behaviours/Fetch/FilterBeacons.cs" beforeDir="false" afterPath="$PROJECT_DIR$/Assets/Scripts/___Deprecated/Behaviours/Fetch/FilterBeacons.cs" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/Assets/Packages/noder/Nodes/Behaviours/Fetch/FilterBeacons.cs.meta" beforeDir="false" afterPath="$PROJECT_DIR$/Assets/Scripts/___Deprecated/Behaviours/Fetch/FilterBeacons.cs.meta" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/Assets/Packages/noder/Nodes/Behaviours/Fetch/FilterMemoryBeacons.cs" beforeDir="false" afterPath="$PROJECT_DIR$/Assets/Scripts/___Deprecated/Behaviours/Fetch/FilterMemoryBeacons.cs" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/Assets/Packages/noder/Nodes/Behaviours/Fetch/FilterMemoryBeacons.cs.meta" beforeDir="false" afterPath="$PROJECT_DIR$/Assets/Scripts/___Deprecated/Behaviours/Fetch/FilterMemoryBeacons.cs.meta" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/Assets/Packages/noder/Nodes/Behaviours/Fetch/GestureSet.cs" beforeDir="false" afterPath="$PROJECT_DIR$/Assets/Scripts/___Deprecated/Behaviours/Fetch/GestureSet.cs" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/Assets/Packages/noder/Nodes/Behaviours/Fetch/GestureSet.cs.meta" beforeDir="false" afterPath="$PROJECT_DIR$/Assets/Scripts/___Deprecated/Behaviours/Fetch/GestureSet.cs.meta" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/Assets/Packages/noder/Nodes/Behaviours/Fetch/HoB.cs" beforeDir="false" afterPath="$PROJECT_DIR$/Assets/Scripts/___Deprecated/Behaviours/Fetch/HoB.cs" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/Assets/Packages/noder/Nodes/Behaviours/Fetch/HoB.cs.meta" beforeDir="false" afterPath="$PROJECT_DIR$/Assets/Scripts/___Deprecated/Behaviours/Fetch/HoB.cs.meta" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/Assets/Packages/noder/Nodes/Behaviours/Fetch/HoBGestureThreshold.cs" beforeDir="false" afterPath="$PROJECT_DIR$/Assets/Scripts/___Deprecated/Behaviours/Fetch/HoBGestureThreshold.cs" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/Assets/Packages/noder/Nodes/Behaviours/Fetch/HoBGestureThreshold.cs.meta" beforeDir="false" afterPath="$PROJECT_DIR$/Assets/Scripts/___Deprecated/Behaviours/Fetch/HoBGestureThreshold.cs.meta" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/Assets/Packages/noder/Nodes/Behaviours/Fetch/IsRemote.cs" beforeDir="false" afterPath="$PROJECT_DIR$/Assets/Scripts/___Deprecated/Behaviours/Fetch/IsRemote.cs" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/Assets/Packages/noder/Nodes/Behaviours/Fetch/IsRemote.cs.meta" beforeDir="false" afterPath="$PROJECT_DIR$/Assets/Scripts/___Deprecated/Behaviours/Fetch/IsRemote.cs.meta" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/Assets/Packages/noder/Nodes/Behaviours/Fetch/IsSelf.cs" beforeDir="false" afterPath="$PROJECT_DIR$/Assets/Scripts/___Deprecated/Behaviours/Fetch/IsSelf.cs" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/Assets/Packages/noder/Nodes/Behaviours/Fetch/IsSelf.cs.meta" beforeDir="false" afterPath="$PROJECT_DIR$/Assets/Scripts/___Deprecated/Behaviours/Fetch/IsSelf.cs.meta" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/Assets/Packages/noder/Nodes/Behaviours/Fetch/LastEvent.cs" beforeDir="false" afterPath="$PROJECT_DIR$/Assets/Scripts/___Deprecated/Behaviours/Fetch/LastEvent.cs" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/Assets/Packages/noder/Nodes/Behaviours/Fetch/LastEvent.cs.meta" beforeDir="false" afterPath="$PROJECT_DIR$/Assets/Scripts/___Deprecated/Behaviours/Fetch/LastEvent.cs.meta" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/Assets/Packages/noder/Nodes/Behaviours/Fetch/MoodNode.cs" beforeDir="false" afterPath="$PROJECT_DIR$/Assets/Scripts/___Deprecated/Behaviours/Fetch/MoodNode.cs" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/Assets/Packages/noder/Nodes/Behaviours/Fetch/MoodNode.cs.meta" beforeDir="false" afterPath="$PROJECT_DIR$/Assets/Scripts/___Deprecated/Behaviours/Fetch/MoodNode.cs.meta" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/Assets/Packages/noder/Nodes/Behaviours/Fetch/MoodStateNode.cs" beforeDir="false" afterPath="$PROJECT_DIR$/Assets/Scripts/___Deprecated/Behaviours/Fetch/MoodStateNode.cs" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/Assets/Packages/noder/Nodes/Behaviours/Fetch/MoodStateNode.cs.meta" beforeDir="false" afterPath="$PROJECT_DIR$/Assets/Scripts/___Deprecated/Behaviours/Fetch/MoodStateNode.cs.meta" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/Assets/Packages/noder/Nodes/Behaviours/Fetch/NestFillAmount.cs" beforeDir="false" afterPath="$PROJECT_DIR$/Assets/Scripts/___Deprecated/Behaviours/Fetch/NestFillAmount.cs" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/Assets/Packages/noder/Nodes/Behaviours/Fetch/NestFillAmount.cs.meta" beforeDir="false" afterPath="$PROJECT_DIR$/Assets/Scripts/___Deprecated/Behaviours/Fetch/NestFillAmount.cs.meta" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/Assets/Packages/noder/Nodes/Behaviours/Fetch/NestTrajectory.cs" beforeDir="false" afterPath="$PROJECT_DIR$/Assets/Scripts/___Deprecated/Behaviours/Fetch/NestTrajectory.cs" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/Assets/Packages/noder/Nodes/Behaviours/Fetch/NestTrajectory.cs.meta" beforeDir="false" afterPath="$PROJECT_DIR$/Assets/Scripts/___Deprecated/Behaviours/Fetch/NestTrajectory.cs.meta" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/Assets/Packages/noder/Nodes/Behaviours/Fetch/PlayerIntent.cs" beforeDir="false" afterPath="$PROJECT_DIR$/Assets/Scripts/___Deprecated/Behaviours/Fetch/PlayerIntent.cs" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/Assets/Packages/noder/Nodes/Behaviours/Fetch/PlayerIntent.cs.meta" beforeDir="false" afterPath="$PROJECT_DIR$/Assets/Scripts/___Deprecated/Behaviours/Fetch/PlayerIntent.cs.meta" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/Assets/Packages/noder/Nodes/Behaviours/Fetch/StanceNode.cs" beforeDir="false" afterPath="$PROJECT_DIR$/Assets/Scripts/___Deprecated/Behaviours/Fetch/StanceNode.cs" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/Assets/Packages/noder/Nodes/Behaviours/Fetch/StanceNode.cs.meta" beforeDir="false" afterPath="$PROJECT_DIR$/Assets/Scripts/___Deprecated/Behaviours/Fetch/StanceNode.cs.meta" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/Assets/Packages/noder/Nodes/Behaviours/Fetch/StanceStateNode.cs" beforeDir="false" afterPath="$PROJECT_DIR$/Assets/Scripts/___Deprecated/Behaviours/Fetch/StanceStateNode.cs" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/Assets/Packages/noder/Nodes/Behaviours/Fetch/StanceStateNode.cs.meta" beforeDir="false" afterPath="$PROJECT_DIR$/Assets/Scripts/___Deprecated/Behaviours/Fetch/StanceStateNode.cs.meta" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/Assets/Packages/noder/Nodes/Behaviours/Fetch/SubMoodStateNode.cs" beforeDir="false" afterPath="$PROJECT_DIR$/Assets/Scripts/___Deprecated/Behaviours/Fetch/SubMoodStateNode.cs" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/Assets/Packages/noder/Nodes/Behaviours/Fetch/SubMoodStateNode.cs.meta" beforeDir="false" afterPath="$PROJECT_DIR$/Assets/Scripts/___Deprecated/Behaviours/Fetch/SubMoodStateNode.cs.meta" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/Assets/Packages/noder/Nodes/Behaviours/Fetch/Suggestion.cs" beforeDir="false" afterPath="$PROJECT_DIR$/Assets/Scripts/___Deprecated/Behaviours/Fetch/Suggestion.cs" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/Assets/Packages/noder/Nodes/Behaviours/Fetch/Suggestion.cs.meta" beforeDir="false" afterPath="$PROJECT_DIR$/Assets/Scripts/___Deprecated/Behaviours/Fetch/Suggestion.cs.meta" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/Assets/Packages/noder/Nodes/Behaviours/Fetch/Waypoints.cs" beforeDir="false" afterPath="$PROJECT_DIR$/Assets/Scripts/___Deprecated/Behaviours/Fetch/Waypoints.cs" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/Assets/Packages/noder/Nodes/Behaviours/Fetch/Waypoints.cs.meta" beforeDir="false" afterPath="$PROJECT_DIR$/Assets/Scripts/___Deprecated/Behaviours/Fetch/Waypoints.cs.meta" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/Assets/Packages/noder/Nodes/Behaviours/States.meta" beforeDir="false" afterPath="$PROJECT_DIR$/Assets/Scripts/___Deprecated/Behaviours/States.meta" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/Assets/Packages/noder/Nodes/Behaviours/States/ModuleNode.cs" beforeDir="false" afterPath="$PROJECT_DIR$/Assets/Scripts/___Deprecated/Behaviours/States/ModuleNode.cs" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/Assets/Packages/noder/Nodes/Behaviours/States/ModuleNode.cs.meta" beforeDir="false" afterPath="$PROJECT_DIR$/Assets/Scripts/___Deprecated/Behaviours/States/ModuleNode.cs.meta" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/Assets/Packages/noder/Nodes/External.meta" beforeDir="false" afterPath="$PROJECT_DIR$/Assets/Scripts/___Deprecated/External.meta" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/Assets/Packages/noder/Nodes/External/BaseDialogueNode.cs" beforeDir="false" afterPath="$PROJECT_DIR$/Assets/Scripts/___Deprecated/External/BaseDialogueNode.cs" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/Assets/Packages/noder/Nodes/External/BaseDialogueNode.cs.meta" beforeDir="false" afterPath="$PROJECT_DIR$/Assets/Scripts/___Deprecated/External/BaseDialogueNode.cs.meta" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/Assets/Packages/noder/Nodes/External/Dialogue.cs" beforeDir="false" afterPath="$PROJECT_DIR$/Assets/Scripts/___Deprecated/External/Dialogue.cs" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/Assets/Packages/noder/Nodes/External/Dialogue.cs.meta" beforeDir="false" afterPath="$PROJECT_DIR$/Assets/Scripts/___Deprecated/External/Dialogue.cs.meta" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/Assets/Packages/noder/Nodes/External/Editor.meta" beforeDir="false" afterPath="$PROJECT_DIR$/Assets/Scripts/___Deprecated/External/Editor.meta" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/Assets/Packages/noder/Nodes/External/Editor/BaseDialogueNodeEditor.cs" beforeDir="false" afterPath="$PROJECT_DIR$/Assets/Scripts/___Deprecated/External/Editor/BaseDialogueNodeEditor.cs" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/Assets/Packages/noder/Nodes/External/Editor/BaseDialogueNodeEditor.cs.meta" beforeDir="false" afterPath="$PROJECT_DIR$/Assets/Scripts/___Deprecated/External/Editor/BaseDialogueNodeEditor.cs.meta" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/Assets/Packages/noder/Nodes/External/Editor/MemoryEditor.cs" beforeDir="false" afterPath="$PROJECT_DIR$/Assets/Scripts/___Deprecated/External/Editor/MemoryEditor.cs" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/Assets/Packages/noder/Nodes/External/Editor/MemoryEditor.cs.meta" beforeDir="false" afterPath="$PROJECT_DIR$/Assets/Scripts/___Deprecated/External/Editor/MemoryEditor.cs.meta" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/Assets/Packages/noder/Nodes/External/LinkedMemoryNode.cs" beforeDir="false" afterPath="$PROJECT_DIR$/Assets/Scripts/___Deprecated/External/LinkedMemoryNode.cs" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/Assets/Packages/noder/Nodes/External/LinkedMemoryNode.cs.meta" beforeDir="false" afterPath="$PROJECT_DIR$/Assets/Scripts/___Deprecated/External/LinkedMemoryNode.cs.meta" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/Assets/Packages/noder/Nodes/External/Memory.cs" beforeDir="false" afterPath="$PROJECT_DIR$/Assets/Scripts/___Deprecated/External/Memory.cs" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/Assets/Packages/noder/Nodes/External/Memory.cs.meta" beforeDir="false" afterPath="$PROJECT_DIR$/Assets/Scripts/___Deprecated/External/Memory.cs.meta" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/Assets/Packages/noder/Nodes/External/TemporaryDialogue.cs" beforeDir="false" afterPath="$PROJECT_DIR$/Assets/Scripts/___Deprecated/External/TemporaryDialogue.cs" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/Assets/Packages/noder/Nodes/External/TemporaryDialogue.cs.meta" beforeDir="false" afterPath="$PROJECT_DIR$/Assets/Scripts/___Deprecated/External/TemporaryDialogue.cs.meta" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/Assets/Prefabs/Objects/wizzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzz.prefab" beforeDir="false" afterPath="$PROJECT_DIR$/Assets/Prefabs/Objects/wizzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzz.prefab" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/Assets/Presets/Neue Agent/Default Movement.asset" beforeDir="false" afterPath="$PROJECT_DIR$/Assets/Presets/Neue Agent/Default Movement.asset" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/Assets/Presets/Behaviours/World (Default).asset" beforeDir="false" afterPath="$PROJECT_DIR$/Assets/Presets/Behaviours/World (Default).asset" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/Assets/Scenes/420_Terrain.unity" beforeDir="false" afterPath="$PROJECT_DIR$/Assets/Scenes/420_Terrain.unity" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/Assets/Scenes/AI.unity" beforeDir="false" afterPath="$PROJECT_DIR$/Assets/Scenes/AI.unity" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/Assets/Scripts/Core/Surveillance.cs" beforeDir="false" afterPath="$PROJECT_DIR$/Assets/Scripts/Core/Surveillance.cs" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/Assets/Scripts/Core/Library.cs" beforeDir="false" afterPath="$PROJECT_DIR$/Assets/Scripts/Core/Library.cs" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/Assets/Scripts/Core/Wand.cs" beforeDir="false" afterPath="$PROJECT_DIR$/Assets/Scripts/Core/Wand.cs" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/Assets/Scripts/Core/World.cs" beforeDir="false" afterPath="$PROJECT_DIR$/Assets/Scripts/Core/World.cs" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/Assets/Scripts/Menu/MainMenu.cs" beforeDir="false" afterPath="$PROJECT_DIR$/Assets/Scripts/Menu/MainMenu.cs" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/Assets/Scripts/Neue/Agent/Actions/Motion.cs" beforeDir="false" afterPath="$PROJECT_DIR$/Assets/Scripts/Neue/Agent/Actions/Motion.cs" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/Assets/Scripts/Neue/Agent/Actions/Movement/Navigation.cs" beforeDir="false" afterPath="$PROJECT_DIR$/Assets/Scripts/Neue/Agent/Actions/Movement/Navigation.cs" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/Assets/Scripts/Neue/Agent/Presets/MovementPreset.cs" beforeDir="false" afterPath="$PROJECT_DIR$/Assets/Scripts/Neue/Agent/Presets/MovementPreset.cs" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/Assets/Scripts/Neue/Agent1.meta" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/Assets/Scripts/Neue/Agent1/Actions.cs" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/Assets/Scripts/Neue/Agent1/Actions.cs.meta" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/Assets/Scripts/Neue/Agent1/Body.cs" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/Assets/Scripts/Neue/Agent1/Body.cs.meta" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/Assets/Scripts/Neue/Agent1/Brain.cs" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/Assets/Scripts/Neue/Agent1/Brain.cs.meta" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/Assets/Scripts/Neue/Reference/Nodes/Behaviours/INode.cs" beforeDir="false" afterPath="$PROJECT_DIR$/Assets/Scripts/Neue/Reference/Nodes/Behaviours/INode.cs" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/Assets/Scripts/Neue/Reference/Nodes/Behaviours/INode.cs.meta" beforeDir="false" afterPath="$PROJECT_DIR$/Assets/Scripts/Neue/Reference/Nodes/Behaviours/INode.cs.meta" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/Assets/Scripts/Neue/Reference/Types/Frame.cs" beforeDir="false" afterPath="$PROJECT_DIR$/Assets/Scripts/Neue/Reference/Types/Frame.cs" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/Assets/Scripts/Neue/Types.meta" beforeDir="false" afterPath="$PROJECT_DIR$/Assets/Scripts/___Deprecated/Agent1/Types.meta" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/Assets/Scripts/Neue/Types/Action.cs" beforeDir="false" afterPath="$PROJECT_DIR$/Assets/Scripts/___Deprecated/Agent1/Types/Action.cs" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/Assets/Scripts/Neue/Types/Action.cs.meta" beforeDir="false" afterPath="$PROJECT_DIR$/Assets/Scripts/___Deprecated/Agent1/Types/Action.cs.meta" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/Assets/Scripts/Neue/Types/ActionSequence.cs" beforeDir="false" afterPath="$PROJECT_DIR$/Assets/Scripts/___Deprecated/Agent1/Types/ActionSequence.cs" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/Assets/Scripts/Neue/Types/ActionSequence.cs.meta" beforeDir="false" afterPath="$PROJECT_DIR$/Assets/Scripts/___Deprecated/Agent1/Types/ActionSequence.cs.meta" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/Assets/Scripts/Neue/Utilities/AnimationRelay.cs" beforeDir="false" afterPath="$PROJECT_DIR$/Assets/Scripts/Neue/Utilities/AnimationRelay.cs" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/Assets/Scripts/Objects/Base/Interactable.cs" beforeDir="false" afterPath="$PROJECT_DIR$/Assets/Scripts/Objects/Base/Interactable.cs" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/Assets/Scripts/Data/VineSceneData.cs" beforeDir="false" afterPath="$PROJECT_DIR$/Assets/Scripts/Data/VineSceneData.cs" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/Assets/Scripts/Interfaces/IFileContainer.cs" beforeDir="false" afterPath="$PROJECT_DIR$/Assets/Scripts/Interfaces/IFileContainer.cs" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/Assets/Scripts/Objects/Entities/Cage.cs" beforeDir="false" afterPath="$PROJECT_DIR$/Assets/Scripts/Objects/Entities/Cage.cs" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/Assets/Scripts/Objects/Entities/Interactables/Beacon.cs" beforeDir="false" afterPath="$PROJECT_DIR$/Assets/Scripts/Objects/Entities/Interactables/Beacon.cs" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/Assets/Scripts/Objects/Entities/Interactables/Nest.cs" beforeDir="false" afterPath="$PROJECT_DIR$/Assets/Scripts/Objects/Entities/Interactables/Nest.cs" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/Assets/Scripts/Objects/Entities/Interactables/Vine.cs" beforeDir="false" afterPath="$PROJECT_DIR$/Assets/Scripts/Objects/Entities/Interactables/Vine.cs" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/Assets/Scripts/Objects/Entities/Sun.cs" beforeDir="false" afterPath="$PROJECT_DIR$/Assets/Scripts/Objects/Entities/Sun.cs" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/Assets/Scripts/Objects/Managers/GradingManager.cs" beforeDir="false" afterPath="$PROJECT_DIR$/Assets/Scripts/___Deprecated/GradingManager.cs" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/Assets/Scripts/Objects/Managers/GradingManager.cs.meta" beforeDir="false" afterPath="$PROJECT_DIR$/Assets/Scripts/___Deprecated/GradingManager.cs.meta" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/Assets/Scripts/Objects/Managers/LoadingManager.cs" beforeDir="false" afterPath="$PROJECT_DIR$/Assets/Scripts/___Deprecated/LoadingManager.cs" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/Assets/Scripts/Objects/Managers/LoadingManager.cs.meta" beforeDir="false" afterPath="$PROJECT_DIR$/Assets/Scripts/___Deprecated/LoadingManager.cs.meta" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/Assets/Scripts/Objects/Managers/ModuleTreeHelper.cs" beforeDir="false" afterPath="$PROJECT_DIR$/Assets/Scripts/___Deprecated/ModuleTreeHelper.cs" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/Assets/Scripts/Objects/Managers/ModuleTreeHelper.cs.meta" beforeDir="false" afterPath="$PROJECT_DIR$/Assets/Scripts/___Deprecated/ModuleTreeHelper.cs.meta" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/Assets/Scripts/Objects/Managers/RemoteManager.cs" beforeDir="false" afterPath="$PROJECT_DIR$/Assets/Scripts/___Deprecated/RemoteManager.cs" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/Assets/Scripts/Objects/Managers/RemoteManager.cs.meta" beforeDir="false" afterPath="$PROJECT_DIR$/Assets/Scripts/___Deprecated/RemoteManager.cs.meta" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/Assets/Scripts/Objects/Managers/SummaryManager.cs" beforeDir="false" afterPath="$PROJECT_DIR$/Assets/Scripts/___Deprecated/SummaryManager.cs" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/Assets/Scripts/Objects/Managers/SummaryManager.cs.meta" beforeDir="false" afterPath="$PROJECT_DIR$/Assets/Scripts/___Deprecated/SummaryManager.cs.meta" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/Assets/Scripts/Objects/Managers/TooltipManager.cs" beforeDir="false" afterPath="$PROJECT_DIR$/Assets/Scripts/___Deprecated/TooltipManager.cs" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/Assets/Scripts/Objects/Managers/TooltipManager.cs.meta" beforeDir="false" afterPath="$PROJECT_DIR$/Assets/Scripts/___Deprecated/TooltipManager.cs.meta" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/Assets/Scripts/Objects/Types.meta" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/Assets/Scripts/Objects/Types/WorldState.cs" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/Assets/Scripts/Objects/Types/WorldState.cs.meta" beforeDir="false" afterPath="$PROJECT_DIR$/Assets/Scripts/___Deprecated/WorldState.cs.meta" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/Assets/Scripts/Presets/BrainPreset.cs" beforeDir="false" afterPath="$PROJECT_DIR$/Assets/Scripts/___Deprecated/Presets/BrainPreset.cs" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/Assets/Scripts/Presets/BrainPreset.cs.meta" beforeDir="false" afterPath="$PROJECT_DIR$/Assets/Scripts/___Deprecated/Presets/BrainPreset.cs.meta" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/Assets/Scripts/Objects/Managers/BeaconManager.cs" beforeDir="false" afterPath="$PROJECT_DIR$/Assets/Scripts/Objects/Managers/BeaconManager.cs" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/Assets/Scripts/Objects/Managers/VineManager.cs" beforeDir="false" afterPath="$PROJECT_DIR$/Assets/Scripts/Objects/Managers/VineManager.cs" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/Assets/Scripts/Presets/WorldPreset.cs" beforeDir="false" afterPath="$PROJECT_DIR$/Assets/Scripts/Presets/WorldPreset.cs" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/Assets/Scripts/Save &amp; Load/BrainData.cs" beforeDir="false" afterPath="$PROJECT_DIR$/Assets/Scripts/Save &amp; Load/BrainData.cs" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/Assets/Scripts/Save &amp; Load/GameData.cs" beforeDir="false" afterPath="$PROJECT_DIR$/Assets/Scripts/Save &amp; Load/GameData.cs" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/Assets/Scripts/Save &amp; Load/GameDataSaveSystem.cs" beforeDir="false" afterPath="$PROJECT_DIR$/Assets/Scripts/Save &amp; Load/GameDataSaveSystem.cs" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/Assets/Scripts/Save &amp; Load/SceneData.cs" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/Assets/Scripts/Save &amp; Load/SceneData.cs.meta" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/Assets/Scripts/Snippets/RelayWizardEvents.cs" beforeDir="false" afterPath="$PROJECT_DIR$/Assets/Scripts/___Deprecated/Misc/RelayWizardEvents.cs" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/Assets/Scripts/Snippets/RelayWizardEvents.cs.meta" beforeDir="false" afterPath="$PROJECT_DIR$/Assets/Scripts/___Deprecated/Misc/RelayWizardEvents.cs.meta" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/Assets/Scripts/___Deprecated/BeaconFocalPoint.cs" beforeDir="false" afterPath="$PROJECT_DIR$/Assets/Scripts/___Deprecated/Misc/BeaconFocalPoint.cs" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/Assets/Scripts/___Deprecated/BeaconFocalPoint.cs.meta" beforeDir="false" afterPath="$PROJECT_DIR$/Assets/Scripts/___Deprecated/Misc/BeaconFocalPoint.cs.meta" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/Assets/Scripts/___Deprecated/BrainOld.cs" beforeDir="false" afterPath="$PROJECT_DIR$/Assets/Scripts/___Deprecated/Misc/BrainOld.cs" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/Assets/Scripts/___Deprecated/BrainOld.cs.meta" beforeDir="false" afterPath="$PROJECT_DIR$/Assets/Scripts/___Deprecated/Misc/BrainOld.cs.meta" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/Assets/Scripts/___Deprecated/Builder.cs" beforeDir="false" afterPath="$PROJECT_DIR$/Assets/Scripts/___Deprecated/Misc/Builder.cs" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/Assets/Scripts/___Deprecated/Builder.cs.meta" beforeDir="false" afterPath="$PROJECT_DIR$/Assets/Scripts/___Deprecated/Misc/Builder.cs.meta" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/Assets/Scripts/___Deprecated/CollisionPlane.cs" beforeDir="false" afterPath="$PROJECT_DIR$/Assets/Scripts/___Deprecated/Misc/CollisionPlane.cs" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/Assets/Scripts/___Deprecated/CollisionPlane.cs.meta" beforeDir="false" afterPath="$PROJECT_DIR$/Assets/Scripts/___Deprecated/Misc/CollisionPlane.cs.meta" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/Assets/Scripts/___Deprecated/ColorWithTimeOfDay.cs" beforeDir="false" afterPath="$PROJECT_DIR$/Assets/Scripts/___Deprecated/Misc/ColorWithTimeOfDay.cs" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/Assets/Scripts/___Deprecated/ColorWithTimeOfDay.cs.meta" beforeDir="false" afterPath="$PROJECT_DIR$/Assets/Scripts/___Deprecated/Misc/ColorWithTimeOfDay.cs.meta" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/Assets/Scripts/___Deprecated/DesktopVisualization.cs" beforeDir="false" afterPath="$PROJECT_DIR$/Assets/Scripts/___Deprecated/Misc/DesktopVisualization.cs" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/Assets/Scripts/___Deprecated/DesktopVisualization.cs.meta" beforeDir="false" afterPath="$PROJECT_DIR$/Assets/Scripts/___Deprecated/Misc/DesktopVisualization.cs.meta" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/Assets/Scripts/___Deprecated/Discoveries.cs" beforeDir="false" afterPath="$PROJECT_DIR$/Assets/Scripts/___Deprecated/Misc/Discoveries.cs" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/Assets/Scripts/___Deprecated/Discoveries.cs.meta" beforeDir="false" afterPath="$PROJECT_DIR$/Assets/Scripts/___Deprecated/Misc/Discoveries.cs.meta" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/Assets/Scripts/___Deprecated/Follower.cs" beforeDir="false" afterPath="$PROJECT_DIR$/Assets/Scripts/___Deprecated/Misc/Follower.cs" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/Assets/Scripts/___Deprecated/Follower.cs.meta" beforeDir="false" afterPath="$PROJECT_DIR$/Assets/Scripts/___Deprecated/Misc/Follower.cs.meta" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/Assets/Scripts/___Deprecated/Preview.cs" beforeDir="false" afterPath="$PROJECT_DIR$/Assets/Scripts/___Deprecated/Misc/Preview.cs" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/Assets/Scripts/___Deprecated/Preview.cs.meta" beforeDir="false" afterPath="$PROJECT_DIR$/Assets/Scripts/___Deprecated/Misc/Preview.cs.meta" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/Assets/Scripts/___Deprecated/RotateWithTimeOfDay.cs" beforeDir="false" afterPath="$PROJECT_DIR$/Assets/Scripts/___Deprecated/Misc/RotateWithTimeOfDay.cs" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/Assets/Scripts/___Deprecated/RotateWithTimeOfDay.cs.meta" beforeDir="false" afterPath="$PROJECT_DIR$/Assets/Scripts/___Deprecated/Misc/RotateWithTimeOfDay.cs.meta" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/Assets/Scripts/___Deprecated/Scriptables/DialogueCollection.cs" beforeDir="false" afterPath="$PROJECT_DIR$/Assets/Scripts/___Deprecated/Scriptables/DialogueCollection.cs" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/Assets/Scripts/___Deprecated/Scriptables/Gesture.cs" beforeDir="false" afterPath="$PROJECT_DIR$/Assets/Scripts/___Deprecated/Scriptables/Gesture.cs" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/Assets/Scripts/___Deprecated/Scriptables/GestureCollection.cs" beforeDir="false" afterPath="$PROJECT_DIR$/Assets/Scripts/___Deprecated/Scriptables/GestureCollection.cs" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/Assets/Scripts/___Deprecated/Scriptables/TextureCollection.cs" beforeDir="false" afterPath="$PROJECT_DIR$/Assets/Scripts/Miscellaneous/TextureCollection.cs" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/Assets/Scripts/___Deprecated/Scriptables/TextureCollection.cs.meta" beforeDir="false" afterPath="$PROJECT_DIR$/Assets/Scripts/Miscellaneous/TextureCollection.cs.meta" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/Assets/Scripts/___Deprecated/Sequences.cs" beforeDir="false" afterPath="$PROJECT_DIR$/Assets/Scripts/___Deprecated/Misc/Sequences.cs" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/Assets/Scripts/___Deprecated/Sequences.cs.meta" beforeDir="false" afterPath="$PROJECT_DIR$/Assets/Scripts/___Deprecated/Misc/Sequences.cs.meta" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/Assets/Scripts/___Deprecated/Spell.cs" beforeDir="false" afterPath="$PROJECT_DIR$/Assets/Scripts/___Deprecated/Misc/Spell.cs" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/Assets/Scripts/___Deprecated/Spell.cs.meta" beforeDir="false" afterPath="$PROJECT_DIR$/Assets/Scripts/___Deprecated/Misc/Spell.cs.meta" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/Assets/Scripts/___Deprecated/Terminal.cs" beforeDir="false" afterPath="$PROJECT_DIR$/Assets/Scripts/___Deprecated/Misc/Terminal.cs" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/Assets/Scripts/___Deprecated/Terminal.cs.meta" beforeDir="false" afterPath="$PROJECT_DIR$/Assets/Scripts/___Deprecated/Misc/Terminal.cs.meta" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/Assets/Scripts/___Deprecated/Timeline.cs" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/Assets/Scripts/___Deprecated/Timeline.cs.meta" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/Assets/Scripts/___Deprecated/TrajectoryLine.cs" beforeDir="false" afterPath="$PROJECT_DIR$/Assets/Scripts/___Deprecated/Misc/TrajectoryLine.cs" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/Assets/Scripts/___Deprecated/TrajectoryLine.cs.meta" beforeDir="false" afterPath="$PROJECT_DIR$/Assets/Scripts/___Deprecated/Misc/TrajectoryLine.cs.meta" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/Assets/Scripts/___Deprecated/Unknown.cs" beforeDir="false" afterPath="$PROJECT_DIR$/Assets/Scripts/___Deprecated/Misc/Unknown.cs" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/Assets/Scripts/___Deprecated/Unknown.cs.meta" beforeDir="false" afterPath="$PROJECT_DIR$/Assets/Scripts/___Deprecated/Misc/Unknown.cs.meta" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/Assets/Scripts/___Deprecated/Wizard/Appearance.cs" beforeDir="false" afterPath="$PROJECT_DIR$/Assets/Scripts/___Deprecated/Wizard/Appearance.cs" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/Assets/Scripts/___Deprecated/Wizard/Audio.cs" beforeDir="false" afterPath="$PROJECT_DIR$/Assets/Scripts/___Deprecated/Wizard/Audio.cs" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/Assets/Scripts/___Deprecated/Wizard/Controller.cs" beforeDir="false" afterPath="$PROJECT_DIR$/Assets/Scripts/___Deprecated/Wizard/Controller.cs" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/Assets/Scripts/___Deprecated/Wizard/Dialogue.cs" beforeDir="false" afterPath="$PROJECT_DIR$/Assets/Scripts/___Deprecated/Wizard/Dialogue.cs" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/Assets/Scripts/___Deprecated/Wizard/Memories.cs" beforeDir="false" afterPath="$PROJECT_DIR$/Assets/Scripts/___Deprecated/Wizard/Memories.cs" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/Assets/Scripts/___Deprecated/Wizard/Memory.cs" beforeDir="false" afterPath="$PROJECT_DIR$/Assets/Scripts/___Deprecated/Wizard/Memory.cs" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/Assets/Scripts/___Deprecated/Wizard/Navigation.cs" beforeDir="false" afterPath="$PROJECT_DIR$/Assets/Scripts/___Deprecated/Wizard/Navigation.cs" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/Assets/Scripts/uwu/Animation/IK.cs" beforeDir="false" afterPath="$PROJECT_DIR$/Assets/Scripts/uwu/Animation/IK.cs" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/Assets/Scripts/uwu/Extensions/Extensions.cs" beforeDir="false" afterPath="$PROJECT_DIR$/Assets/Scripts/uwu/Extensions/Extensions.cs" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/Assets/Scripts/uwu/Snippets/VirtualCanvas.cs" beforeDir="false" afterPath="$PROJECT_DIR$/Assets/Scripts/uwu/Snippets/VirtualCanvas.cs" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/Assets/Scripts/UI/BeaconInfo.cs" beforeDir="false" afterPath="$PROJECT_DIR$/Assets/Scripts/___Deprecated/BeaconInfo.cs" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/Assets/Scripts/UI/BeaconInfo.cs.meta" beforeDir="false" afterPath="$PROJECT_DIR$/Assets/Scripts/___Deprecated/BeaconInfo.cs.meta" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/Assets/Scripts/___Deprecated/Agent1/Brain.cs" beforeDir="false" afterPath="$PROJECT_DIR$/Assets/Scripts/___Deprecated/Agent1/Brain.cs" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/Assets/Scripts/___Deprecated/ModuleTreeHelper.cs" beforeDir="false" afterPath="$PROJECT_DIR$/Assets/Scripts/___Deprecated/ModuleTreeHelper.cs" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/Assets/Scripts/uwu/Gameplay/Interacter.cs" beforeDir="false" afterPath="$PROJECT_DIR$/Assets/Scripts/uwu/Gameplay/Interacter.cs" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/Library/InspectorExpandedItems.asset" beforeDir="false" afterPath="$PROJECT_DIR$/Library/InspectorExpandedItems.asset" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/Library/assetDatabase3" beforeDir="false" afterPath="$PROJECT_DIR$/Library/assetDatabase3" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/obj/Debug/Assembly-CSharp.csprojAssemblyReference.cache" beforeDir="false" afterPath="$PROJECT_DIR$/obj/Debug/Assembly-CSharp.csprojAssemblyReference.cache" afterDir="false" />
@@ -354,17 +85,6 @@
   <component name="IdeDocumentHistory">
     <option name="CHANGED_PATHS">
       <list>
-        <option value="$PROJECT_DIR$/Assets/Scripts/___Deprecated/Behaviours/Fetch/ComfortThreshold.cs" />
-        <option value="$PROJECT_DIR$/Assets/Scripts/___Deprecated/Behaviours/Fetch/Dialogues.cs" />
-        <option value="$PROJECT_DIR$/Assets/Scripts/___Deprecated/Behaviours/Fetch/FilterBeacons.cs" />
-        <option value="$PROJECT_DIR$/Assets/Scripts/___Deprecated/Behaviours/Fetch/FilterMemoryBeacons.cs" />
-        <option value="$PROJECT_DIR$/Assets/Scripts/___Deprecated/Behaviours/Fetch/GestureSet.cs" />
-        <option value="$PROJECT_DIR$/Assets/Scripts/___Deprecated/Behaviours/Fetch/HoB.cs" />
-        <option value="$PROJECT_DIR$/Assets/Scripts/___Deprecated/Behaviours/Fetch/HoBGestureThreshold.cs" />
-        <option value="$PROJECT_DIR$/Assets/Scripts/___Deprecated/Behaviours/Fetch/IsRemote.cs" />
-        <option value="$PROJECT_DIR$/Assets/Scripts/___Deprecated/Behaviours/Fetch/IsSelf.cs" />
-        <option value="$PROJECT_DIR$/Assets/Scripts/___Deprecated/Behaviours/Fetch/LastEvent.cs" />
-        <option value="$PROJECT_DIR$/Assets/Scripts/___Deprecated/Behaviours/Fetch/MoodNode.cs" />
         <option value="$PROJECT_DIR$/Assets/Scripts/___Deprecated/Behaviours/Fetch/MoodStateNode.cs" />
         <option value="$PROJECT_DIR$/Assets/Scripts/___Deprecated/Behaviours/Fetch/NestFillAmount.cs" />
         <option value="$PROJECT_DIR$/Assets/Scripts/___Deprecated/Behaviours/Fetch/NestTrajectory.cs" />
@@ -390,21 +110,32 @@
         <option value="$PROJECT_DIR$/Assets/Scripts/Neue/Types/Action.cs" />
         <option value="$PROJECT_DIR$/Assets/Scripts/Neue/Types/ActionSequence.cs" />
         <option value="$PROJECT_DIR$/Assets/Scripts/Objects/Types/WorldState.cs" />
-        <option value="$PROJECT_DIR$/Assets/Scripts/Save &amp; Load/GameData.cs" />
-        <option value="$PROJECT_DIR$/Assets/Scripts/Presets/WorldPreset.cs" />
         <option value="$PROJECT_DIR$/Assets/Scripts/Core/Surveillance.cs" />
         <option value="$PROJECT_DIR$/Assets/Scripts/Menu/MainMenu.cs" />
-        <option value="$PROJECT_DIR$/Assets/Scripts/Objects/Entities/Sun.cs" />
         <option value="$PROJECT_DIR$/Assets/Scripts/___Deprecated/Agent1/Brain.cs" />
         <option value="$PROJECT_DIR$/Assets/Scripts/Miscellaneous/TextureCollection.cs" />
-        <option value="$PROJECT_DIR$/Assets/Scripts/Core/World.cs" />
         <option value="$PROJECT_DIR$/Assets/Scripts/Interfaces/ITooltip.cs" />
         <option value="$PROJECT_DIR$/Assets/Scripts/Objects/Base/Interactable.cs" />
-        <option value="$PROJECT_DIR$/Assets/Scripts/Objects/Entities/Interactables/Beacon.cs" />
         <option value="$PROJECT_DIR$/Assets/Scripts/Objects/Entities/Interactables/Nest.cs" />
-        <option value="$PROJECT_DIR$/Assets/Scripts/Objects/Entities/Interactables/Vine.cs" />
         <option value="$PROJECT_DIR$/Assets/Scripts/___Deprecated/Agent1/Body.cs" />
+        <option value="$PROJECT_DIR$/Assets/Scripts/uwu/Gameplay/Interacter.cs" />
         <option value="$PROJECT_DIR$/Assets/Scripts/Core/Wand.cs" />
+        <option value="$PROJECT_DIR$/Assets/Scripts/Save &amp; Load/GameData.cs" />
+        <option value="$PROJECT_DIR$/Assets/Scripts/Data/VineSceneData.cs" />
+        <option value="$PROJECT_DIR$/Assets/Scripts/Presets/WorldPreset.cs" />
+        <option value="$PROJECT_DIR$/Assets/Scripts/Interfaces/IFileContainer.cs" />
+        <option value="$PROJECT_DIR$/Assets/Scripts/Objects/Entities/Interactables/Beacon.cs" />
+        <option value="$PROJECT_DIR$/Assets/Scripts/___Deprecated/BeaconInfo.cs" />
+        <option value="$PROJECT_DIR$/Assets/Scripts/Core/Library.cs" />
+        <option value="$PROJECT_DIR$/Assets/Scripts/Objects/Managers/BeaconManager.cs" />
+        <option value="$PROJECT_DIR$/Assets/Packages/xNode/Scripts/Editor/NodeGraphEditor.cs" />
+        <option value="$PROJECT_DIR$/Assets/Scripts/Core/World.cs" />
+        <option value="$PROJECT_DIR$/Assets/Scripts/Objects/Entities/Interactables/Vine.cs" />
+        <option value="$PROJECT_DIR$/Assets/Scripts/Save &amp; Load/GameDataSaveSystem.cs" />
+        <option value="$PROJECT_DIR$/Assets/Scripts/Objects/Entities/Sun.cs" />
+        <option value="$PROJECT_DIR$/Assets/Scripts/Objects/Managers/VineManager.cs" />
+        <option value="$PROJECT_DIR$/Assets/Scripts/Objects/Entities/Sector.cs" />
+        <option value="$PROJECT_DIR$/Assets/Scripts/Objects/Entities/Cage.cs" />
       </list>
     </option>
   </component>
@@ -482,7 +213,7 @@
       <workItem from="1606787032846" duration="88682000" />
       <workItem from="1607788803852" duration="25915000" />
       <workItem from="1608258868610" duration="12652000" />
-      <workItem from="1608612324602" duration="14200000" />
+      <workItem from="1608612324602" duration="28114000" />
     </task>
     <servers />
   </component>
@@ -602,17 +333,19 @@
       <screen x="0" y="0" width="1536" height="824" />
     </state>
     <state x="415" y="11" width="705" height="801" key="find.popup/0.0.1536.824@0.0.1536.824" timestamp="1608524933137" />
-    <state x="2628" y="-40" width="1120" height="1151" key="run.anything.popup" timestamp="1607910030966">
-      <screen x="1920" y="-358" width="2560" height="1400" />
+    <state x="2628" y="-31" width="1120" height="1151" key="run.anything.popup" timestamp="1609183842522">
+      <screen x="1920" y="-349" width="2560" height="1400" />
     </state>
+    <state x="2628" y="-31" width="1120" height="1151" key="run.anything.popup/0.0.1536.824/1920.-349.2560.1400@1920.-349.2560.1400" timestamp="1609183842522" />
     <state x="2628" y="-40" width="1120" height="1151" key="run.anything.popup/0.0.1536.824/1920.-358.2560.1400@1920.-358.2560.1400" timestamp="1607910030966" />
     <state x="425" y="187" width="672" height="677" key="run.anything.popup/0.0.1536.824@0.0.1536.824" timestamp="1607059001966" />
-    <state x="79" y="-1194" width="1120" height="1152" key="search.everywhere.popup" timestamp="1609043539164">
-      <screen x="-638" y="-1440" width="2560" height="1400" />
+    <state x="2637" y="-103" width="1120" height="1152" key="search.everywhere.popup" timestamp="1609183585920">
+      <screen x="1920" y="-349" width="2560" height="1400" />
     </state>
     <state x="-1842" y="-112" width="1120" height="1152" key="search.everywhere.popup/0.0.1536.824/-2560.-358.2560.1400@-2560.-358.2560.1400" timestamp="1608687095751" />
     <state x="79" y="-1194" width="1120" height="1152" key="search.everywhere.popup/0.0.1536.824/-638.-1440.2560.1400@-638.-1440.2560.1400" timestamp="1609043539164" />
+    <state x="2637" y="-103" width="1120" height="1152" key="search.everywhere.popup/0.0.1536.824/1920.-349.2560.1400@1920.-349.2560.1400" timestamp="1609183585920" />
     <state x="2638" y="-112" width="1120" height="1152" key="search.everywhere.popup/0.0.1536.824/1920.-358.2560.1400@1920.-358.2560.1400" timestamp="1607998254801" />
-    <state x="430" y="145" width="672" height="678" key="search.everywhere.popup/0.0.1536.824@0.0.1536.824" timestamp="1608703179011" />
+    <state x="430" y="145" width="672" height="678" key="search.everywhere.popup/0.0.1536.824@0.0.1536.824" timestamp="1609122636832" />
   </component>
 </project>

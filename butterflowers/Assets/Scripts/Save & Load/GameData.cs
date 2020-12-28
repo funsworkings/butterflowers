@@ -14,7 +14,7 @@ namespace uwu
         public SunData sun = new SunData();
 
         public BeaconData[] beacons = new BeaconData[] { };
-        public VineSceneData vines = new VineSceneData(); 
+        public VineSceneData vines = new VineSceneData();
         public SurveillanceData[] surveillanceData = new SurveillanceData[]{};
 		
         public bool nestopen = false;

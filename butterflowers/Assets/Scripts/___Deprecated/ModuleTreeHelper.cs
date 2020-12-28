@@ -64,7 +64,7 @@ namespace Objects.Managers
 		
 		#region Beacon filters
 		
-		public string[] getBeacons() { return beacons.LiveBeacons.Select(beacon => beacon.file).ToArray(); }
+		public string[] getBeacons() { return beacons.LiveBeacons.Select(beacon => beacon.File).ToArray(); }
 
 		public string[] filterBeacons(string[] raw, FilterBeacons.Filter filter)
 		{
@@ -102,7 +102,7 @@ namespace Objects.Managers
 					break;
 			}
 
-			return source.Select(beacon => beacon.file).ToArray();
+			return source.Select(beacon => beacon.File).ToArray();
 		}
 		
 		#endregion
