@@ -43,8 +43,7 @@ public class Butterfly : MonoBehaviour
     // Properties
     
     Wand[] wands;
-
-    Animator animator;
+    
     TrailRenderer trailRenderer;
     Renderer[] renderers;
     new Material material;
@@ -70,6 +69,8 @@ public class Butterfly : MonoBehaviour
 
     Vector3 color0, color1;
     public float colorSpeed = 0f;
+
+    [SerializeField] string shaderAnimationSpeedParam;
 
     [Header("Movement")]
 
@@ -234,7 +235,6 @@ public class Butterfly : MonoBehaviour
         quilt = FindObjectOfType<Quilt>();
         mother = FindObjectOfType<ButterflowerManager>();
         wands = FindObjectsOfType<Wand>();
-        animator = GetComponentInChildren<Animator>();
 
         renderers = GetComponentsInChildren<Renderer>();
         propertyBlock = new MaterialPropertyBlock();
@@ -472,7 +472,10 @@ public class Butterfly : MonoBehaviour
     void AdjustAnimatorSpeed()
     {
         float speed = (state == State.Dying) ? preset.maxAnimationSpeed : preset.minAnimationSpeed;
-        animator.speed += (speed - animator.speed) * Time.deltaTime;
+        float lastSpeed = propertyBlock.GetFloat(shaderAnimationSpeedParam);
+        
+        float currentSpeed = (speed - lastSpeed) * Time.deltaTime;
+        propertyBlock.SetFloat(shaderAnimationSpeedParam, currentSpeed);
     }
     
     #endregion
