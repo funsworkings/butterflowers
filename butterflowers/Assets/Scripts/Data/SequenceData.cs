@@ -5,7 +5,7 @@ namespace Data
 	[System.Serializable]
 	public class SequenceData
 	{
-		public int index = 0;
+		public int index = -1;
 		public Frame[] frames = new Frame[]{};
 	}
 }

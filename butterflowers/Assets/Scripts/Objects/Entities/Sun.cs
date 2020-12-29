@@ -60,6 +60,12 @@ public class Sun : MonoBehaviour
     public bool active = true;
 
     #region Accessors
+    
+    public float intensity
+    {
+        get { return light.intensity; }
+        set { light.intensity = value; }
+    }
 
 	public float time
     {
