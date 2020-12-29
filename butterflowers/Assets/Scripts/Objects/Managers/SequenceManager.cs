@@ -138,9 +138,9 @@ namespace Objects.Managers
 			lt = 0f;
 			while (!SmoothLight(ref lt, true)) 
 				yield return null;
-			
-			
-			sceneCaption.Push(_scene.Message);
+
+			string debugMessage = "It is {0} on the {1}th day in the year of our Lord, 2020";
+			sceneCaption.Push(string.Format(debugMessage, Enum.GetName(typeof(Frame), frames[index]).ToUpper(), index + 1));
 			
 			inprogress = false;
 		}
