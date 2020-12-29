@@ -238,7 +238,7 @@ namespace uwu.Dialogue
 		{
 			speaking = true;
 			while (inprogress) {
-				m_body = queue[0];
+				m_body = queue[0]; 
 				m_current = "";
 
 				OnStart(m_body);
