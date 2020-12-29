@@ -6,6 +6,7 @@ namespace UnityStandardAssets.Utility
 {
     public class SimpleActivatorMenu : MonoBehaviour
     {
+        /*
         // An incredibly simple menu which, when given references
         // to gameobjects in the scene
         public GUIText camSwitchButton;
@@ -35,5 +36,6 @@ namespace UnityStandardAssets.Utility
             m_CurrentActiveObject = nextactiveobject;
             camSwitchButton.text = objects[m_CurrentActiveObject].name;
         }
+        */
     }
 }
