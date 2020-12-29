@@ -278,7 +278,7 @@ namespace uwu.Dialogue
 				var pr_autoprogress = autoprogress;
 
 				while (waiting && t < t_body) {
-					if (autoprogress) t += Time.deltaTime;
+					if (autoprogress) t += Time.unscaledDeltaTime;
 
 					if (autoprogress != pr_autoprogress) // IMMEDIATELY BREAK FROM LOOP IF AUTOPROGRESS PARAM HAS CHANGED
 						break;
