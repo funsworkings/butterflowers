@@ -53,6 +53,7 @@ public class World : MonoBehaviour, ISaveable
     [SerializeField] BeaconManager Beacons = null;
     [SerializeField] VineManager Vines = null;
     [SerializeField] EventManager EventsM = null;
+    [SerializeField] SequenceManager Sequence = null;
 
     [Header("Objects")]
     Sun Sun = null;

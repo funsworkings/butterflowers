@@ -16,12 +16,13 @@ namespace uwu
         public BeaconData[] beacons = new BeaconData[] { };
         public VineSceneData vines = new VineSceneData();
         public SurveillanceData[] surveillanceData = new SurveillanceData[]{};
+        public SequenceData sequence = new SequenceData();
 		
         public bool nestopen = false;
 		
         public float enviro_knowledge = 0f;
-	        
-	    [Header("Neue")]
+
+        [Header("Neue")]
 	    public string username = null;
 
 	    public string[] directories = new string[]{};

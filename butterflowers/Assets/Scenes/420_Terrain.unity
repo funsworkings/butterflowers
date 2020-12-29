@@ -1420,6 +1420,7 @@ MonoBehaviour:
   Beacons: {fileID: 85862406}
   Vines: {fileID: 1272537101}
   EventsM: {fileID: 1190223769}
+  Sequence: {fileID: 0}
   Cage: {fileID: 131292716}
   wand: {fileID: 900886785}
   username: 
@@ -3459,7 +3460,7 @@ Transform:
   m_PrefabInstance: {fileID: 0}
   m_PrefabAsset: {fileID: 0}
   m_GameObject: {fileID: 201810246}
-  m_LocalRotation: {x: 0.12156506, y: 0.00000000853992, z: -9.885531e-10, w: 0.9925835}
+  m_LocalRotation: {x: 0.12156506, y: 0.000000008539918, z: -9.885411e-10, w: 0.9925835}
   m_LocalPosition: {x: 0, y: 9.595102, z: -21.852465}
   m_LocalScale: {x: 1, y: 1.3577, z: 1}
   m_Children:
@@ -8566,6 +8567,7 @@ Transform:
   - {fileID: 1657525263}
   - {fileID: 988829047}
   - {fileID: 894577355}
+  - {fileID: 1271150531}
   m_Father: {fileID: 1434293601}
   m_RootOrder: 1
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
@@ -14052,6 +14054,171 @@ Transform:
   m_Father: {fileID: 792321115}
   m_RootOrder: 6
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
+--- !u!1 &1271150530
+GameObject:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  serializedVersion: 6
+  m_Component:
+  - component: {fileID: 1271150531}
+  - component: {fileID: 1271150532}
+  m_Layer: 0
+  m_Name: Sequence (Manager)
+  m_TagString: Untagged
+  m_Icon: {fileID: 0}
+  m_NavMeshLayer: 0
+  m_StaticEditorFlags: 0
+  m_IsActive: 1
+--- !u!4 &1271150531
+Transform:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 1271150530}
+  m_LocalRotation: {x: 0, y: 0, z: 0, w: 1}
+  m_LocalPosition: {x: 0, y: 0, z: 0}
+  m_LocalScale: {x: 1, y: 1, z: 1}
+  m_Children: []
+  m_Father: {fileID: 689851640}
+  m_RootOrder: 8
+  m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
+--- !u!114 &1271150532
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 1271150530}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: e215ad397e8e4aaf9677396c1af00808, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
+  index: -1
+  frames: 
+  sequences:
+  - sequences:
+    - frame: 0
+      message: DESTRUCT 0
+      audio: {fileID: 0}
+      mesh: {fileID: 0}
+    - frame: 1
+      message: NURTURE 0
+      audio: {fileID: 0}
+      mesh: {fileID: 0}
+    - frame: 2
+      message: QUIET 0
+      audio: {fileID: 0}
+      mesh: {fileID: 0}
+    - frame: 3
+      message: ORDER 0
+      audio: {fileID: 0}
+      mesh: {fileID: 0}
+  - sequences:
+    - frame: 0
+      message: DESTRUCT 1
+      audio: {fileID: 0}
+      mesh: {fileID: 0}
+    - frame: 1
+      message: NURTURE 1
+      audio: {fileID: 0}
+      mesh: {fileID: 0}
+    - frame: 2
+      message: QUIET 1
+      audio: {fileID: 0}
+      mesh: {fileID: 0}
+    - frame: 3
+      message: ORDER 1
+      audio: {fileID: 0}
+      mesh: {fileID: 0}
+  - sequences:
+    - frame: 0
+      message: DESTRUCT 2
+      audio: {fileID: 0}
+      mesh: {fileID: 0}
+    - frame: 1
+      message: NURTURE 2
+      audio: {fileID: 0}
+      mesh: {fileID: 0}
+    - frame: 2
+      message: QUIET 2
+      audio: {fileID: 0}
+      mesh: {fileID: 0}
+    - frame: 3
+      message: ORDER 2
+      audio: {fileID: 0}
+      mesh: {fileID: 0}
+  - sequences:
+    - frame: 0
+      message: DESTRUCT 3
+      audio: {fileID: 0}
+      mesh: {fileID: 0}
+    - frame: 1
+      message: NURTURE 3
+      audio: {fileID: 0}
+      mesh: {fileID: 0}
+    - frame: 2
+      message: QUIET 3
+      audio: {fileID: 0}
+      mesh: {fileID: 0}
+    - frame: 3
+      message: ORDER 3
+      audio: {fileID: 0}
+      mesh: {fileID: 0}
+  - sequences:
+    - frame: 0
+      message: DESTRUCT 4
+      audio: {fileID: 0}
+      mesh: {fileID: 0}
+    - frame: 1
+      message: NURTURE 4
+      audio: {fileID: 0}
+      mesh: {fileID: 0}
+    - frame: 2
+      message: QUIET 4
+      audio: {fileID: 0}
+      mesh: {fileID: 0}
+    - frame: 3
+      message: ORDER 4
+      audio: {fileID: 0}
+      mesh: {fileID: 0}
+  - sequences:
+    - frame: 0
+      message: DESTRUCT 5
+      audio: {fileID: 0}
+      mesh: {fileID: 0}
+    - frame: 1
+      message: NURTURE 5
+      audio: {fileID: 0}
+      mesh: {fileID: 0}
+    - frame: 2
+      message: QUIET 5
+      audio: {fileID: 0}
+      mesh: {fileID: 0}
+    - frame: 3
+      message: ORDER 5
+      audio: {fileID: 0}
+      mesh: {fileID: 0}
+  - sequences:
+    - frame: 0
+      message: DESTRUCT 6
+      audio: {fileID: 0}
+      mesh: {fileID: 0}
+    - frame: 1
+      message: NURTURE 6
+      audio: {fileID: 0}
+      mesh: {fileID: 0}
+    - frame: 2
+      message: QUIET 6
+      audio: {fileID: 0}
+      mesh: {fileID: 0}
+    - frame: 3
+      message: ORDER 6
+      audio: {fileID: 0}
+      mesh: {fileID: 0}
 --- !u!1 &1272537099
 GameObject:
   m_ObjectHideFlags: 0
