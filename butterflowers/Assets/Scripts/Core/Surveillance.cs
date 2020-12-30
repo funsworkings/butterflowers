@@ -3,7 +3,10 @@ using System.Collections;
 using System.Collections.Generic;
 using System.Linq;
 using Data;
-using Objects.Types;
+using Neue.Agent.Brain.Data;
+using Neue.Reference.Types;
+using Neue.Reference.Types.Maps;
+using Neue.Reference.Types.Maps.Groups;
 using Settings;
 using UnityEngine;
 using uwu.Camera;
@@ -39,6 +42,8 @@ public class Surveillance : MonoBehaviour, IReactToSunCycle
 	// Properties
 	
 	[SerializeField] WorldPreset Preset;
+	[SerializeField] Neue.Agent.Presets.BrainPreset BrainPreset;
+	
 	[SerializeField] bool recording = true;
 
 	Camera previousMainCamera;
@@ -324,6 +329,91 @@ public class Surveillance : MonoBehaviour, IReactToSunCycle
 		comp.AverageTimeSpentInDefault = logs.Select(l => l.timeSpentInDefault).Average();
 		
 		return comp;
+	}
+	
+	#endregion
+	
+	#region Profiling
+	
+	public Profile ConstructBehaviourProfile()
+	{
+		var profile = new Profile();
+
+		var compositeLog = CreateCompositeAverageLog(true);
+		var logs = allLogs;
+
+		var maps = new List<FrameFloat>();
+
+		var behaviours = System.Enum.GetValues(typeof(Frame));
+		foreach (int behaviourVal in behaviours) {
+			var b = (Frame) behaviourVal;
+
+			var map = new FrameFloat();
+			map.frame = b;
+			map.value = CalculateBehaviourWeightForProfile(b, compositeLog, logs);
+
+			maps.Add(map);
+		}
+
+		var group = new FrameFloatGroup();
+		group.behaviours = maps;
+
+		profile.weights = group;
+		return profile;
+	}
+	
+	float CalculateBehaviourWeightForProfile(Frame frame, CompositeSurveillanceData composite,
+		SurveillanceData[] history)
+	{
+		var delta = new SurveillanceDataDelta(Preset.baselineSurveillanceData, composite);
+		var factors = new List<float>();
+		
+		switch (frame) {
+			case Frame.Order:
+				factors.AddRange(new float[] {
+					1f - delta.discoveries,
+					delta.hob,
+					1f - delta.cursorspeed,
+					1f - delta.volatility,
+					1f - delta.nestKicks
+				});
+
+				break;
+			case Frame.Quiet:
+				factors.AddRange(new float[] {
+					1f - delta.volatility,
+					delta.beaconsPlanted,
+					1f - delta.nestKicks
+				});
+
+				break;
+			case Frame.Nurture:
+				factors.AddRange(new float[] {
+					delta.beaconsPlanted,
+					1f - delta.beaconsAdded,
+					delta.hob,
+					delta.nestfill,
+					delta.filesAdded
+				});
+
+				break;
+			case Frame.Destruction:
+				factors.AddRange(new float[] {
+					delta.filesRemoved,
+					1f - delta.hob,
+					1f - delta.nestfill,
+					delta.cursorspeed,
+					delta.beaconsAdded,
+					delta.nestSpills
+				});
+
+				break;
+		}
+
+		var average = factors.Average() / BrainPreset.baselineDeltaPercentage;
+		var avg = average.RemapNRB(-1f, 1f, 0f, 1f);
+
+		return avg;
 	}
 	
 	#endregion

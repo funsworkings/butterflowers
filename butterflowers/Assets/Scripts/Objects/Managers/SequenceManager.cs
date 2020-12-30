@@ -3,6 +3,7 @@ using System.Collections;
 using Data;
 using Interfaces;
 using Neue.Reference.Types;
+using Neue.Reference.Types.Maps;
 using Objects.Entities;
 using Settings;
 using TMPro;
@@ -118,7 +119,20 @@ namespace Objects.Managers
 		{
 			if (Cage.Completed && t_index < frames.Length) 
 			{
-				frames[t_index] = (Frame)(Random.Range(0, 4)); // Assign random framing
+				var _frames = World.Instance.Profile.weights.behaviours;
+				var _frame = Frame.Destruction;
+				var _maxFrame = Mathf.NegativeInfinity;
+				
+				foreach (FrameFloat frame in _frames) 
+				{
+					if (frame.value > _maxFrame) 
+					{
+						_maxFrame = frame.value;
+						_frame = frame.frame;
+					}
+				}
+				
+				frames[t_index] = _frame; // Assign random framing
 				return true;
 			}
 			
