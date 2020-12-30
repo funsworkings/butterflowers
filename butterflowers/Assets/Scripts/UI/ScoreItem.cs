@@ -42,6 +42,12 @@ namespace UI
 		
 		public bool completed = false;
 		
+		#region Accessors
+
+		public bool Lerp => lerp;
+		
+		#endregion
+		
 		#region Monobehaviour callbacks
 
 		void OnEnable()
