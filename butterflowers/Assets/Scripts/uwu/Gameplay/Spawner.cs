@@ -40,7 +40,8 @@ namespace uwu.Gameplay
 			CalculateBounds();
 			Debug.LogFormat("name: {0} center: {1} extents:{2}", gameObject.name, m_center, m_extents);
 
-			if (continuous) {
+			if (continuous) 
+			{
 				StartCoroutine("SpawnContinously");
 			}
 			else {

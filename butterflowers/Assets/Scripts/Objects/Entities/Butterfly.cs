@@ -13,11 +13,10 @@ public class Butterfly : MonoBehaviour
     
     public enum State
     {
-        Hidden,
-        Easing,
-        Alive,
-        Freeze,
-        Dying
+        Hidden = -1,
+        Easing = 0,
+        Alive = 1,
+        Dying = 2
     }
     
     #endregion
@@ -65,10 +64,7 @@ public class Butterfly : MonoBehaviour
     
     Vector4 uv1, uv2;
 
-    [SerializeField] Color final;
-
     Vector3 color0, color1;
-    public float colorSpeed = 0f;
 
     [SerializeField] string shaderAnimationSpeedParam;
 
@@ -76,7 +72,7 @@ public class Butterfly : MonoBehaviour
 
     public Vector3 origin = Vector3.zero;
     [SerializeField] Vector3 velocity = Vector3.zero;
-    [SerializeField] Vector3 acceleration = Vector3.zero;
+    [SerializeField] float scale = 1f;
     
     [Header("State")]
     
@@ -84,11 +80,6 @@ public class Butterfly : MonoBehaviour
 
     float timeSinceAlive = 0f;
     float timeSinceDeath = 0f;
-    float timeSinceFrozen = 0f;
-
-    float freezeTime = 3.3f;
-
-    float lifetime = 0f;
 
     #region Accessors
     
@@ -112,9 +103,17 @@ public class Butterfly : MonoBehaviour
 
     public Vector3 Velocity
     {
-        get { return acceleration; }
-        set { acceleration = value; }
+        get { return velocity; }
+        set { velocity = value; }
     }
+
+    public float Scale
+    {
+        get { return scale; }
+        set { scale = value; }
+    }
+
+    public State _State => state;
     
     #endregion
 
@@ -148,7 +147,6 @@ public class Butterfly : MonoBehaviour
             return;
         }
 
-
         float dt = Time.deltaTime;
 
         timeSinceAlive += dt;
@@ -164,52 +162,16 @@ public class Butterfly : MonoBehaviour
             timeSinceDeath += dt;
         }
 
-        bool dampen = false;
-
-        if (state == State.Easing) {
-            MoveTowardsSpawn(dt);
-        }
-        else if (state == State.Alive) {
-            if (wand != null && wand.spells) {
-                float attraction = MoveWithWand(wand, str); // 0 - 1
-                if (attraction <= 0f)
-                    dampen = true;
-            }
-            else {
-                MoveTowardsSpawn(dt);
-                dampen = true;
-            }
-
-            MoveWithNoise(str);
-        }
-        else if (state == State.Freeze) {
-            velocity = Vector3.zero;
-
-            timeSinceFrozen += dt;
-            if (timeSinceFrozen > freezeTime) 
-            {
-                state = State.Alive;
-                m_wand = null;
-            }
+        if (state == State.Alive) 
+        {
+            if (wand != null && wand.spells)
+                WaitForWand(wand, str); // 0 - 1
         }
 
         AdjustAnimatorSpeed();
 
-        velocity += acceleration * Time.deltaTime;
-        if (state != State.Dying)
-            ClampVelocity();
-
-        if (dampen)
-            velocity *= (1f - preset.velocityDampening * dt);
-
         var directionOfTravel = velocity * dt;
-        //if (wand != null) {
-        //    directionOfTravel = wand.Camera.transform.TransformVector(directionOfTravel); // Localize vector of travel
-        //}
-        
         trailRenderer.enabled = (state == State.Alive && velocity.magnitude > preset.velocityTrailThreshold);
-        
-        transform.position += directionOfTravel;
     }
 
     #endregion
@@ -267,11 +229,9 @@ public class Butterfly : MonoBehaviour
         }
 
         velocity = Vector3.zero;
-        acceleration = Vector3.zero;
         transform.localScale = Vector3.zero;
 
         timeSinceAlive = timeSinceDeath = 0f;
-        lifetime = Random.Range(preset.minLifetime, preset.maxLifetime);
 
         trails = null; // Ensure new trails created for every butterfly on respawn
 
@@ -296,45 +256,12 @@ public class Butterfly : MonoBehaviour
         onDeath();
     }
 
-    public void Freeze()
-    {
-        if (state != State.Alive) return;
-        
-        state = State.Freeze;
-        timeSinceFrozen = 0f;
-    }
-
     #endregion
 
     #region Movement
 
-    void ClampVelocity(){
-        float speed = velocity.magnitude;
-              speed = Mathf.Min(speed, preset.maxSpeed);
-
-        velocity = (speed * velocity.normalized);
-    }
-
-    void MoveTowardsSpawn(float dt)
+    void WaitForWand(Wand wand, float dt)
     {
-        Vector3 dir = (origin - transform.position);
-        if (dir.magnitude < 1f)
-            state = State.Alive; // Break out out Ease State if close enough to origin
-
-        velocity = (dir);
-    }
-
-    void MoveWithNoise(float dt){
-        Vector2 screen = positionRelativeToCamera * preset.noiseSize;
-        float noise = Mathf.PerlinNoise(screen.x, screen.y);
-
-        Vector3 dir = Random.insideUnitSphere;
-        float speed = preset.noiseAmount * noise;
-
-        velocity += (dir * speed * dt);
-    }
-
-    float MoveWithWand(Wand wand, float dt){
         Vector3 target = wand.trajectory2d;
         Vector3 current = positionRelativeToCamera;
 
@@ -343,11 +270,9 @@ public class Butterfly : MonoBehaviour
         float radius = wand.radius;
         float dist = direction.magnitude;
         float offset = dist / radius;
-
-        var magnitude = 0f;
-        if (offset <= 1f) {
-            var distanceMagnitude = preset.distanceAttractionCurve.Evaluate(offset);
-
+        
+        if (offset <= 1f) 
+        {
             float minSpeed = preset.minimumWandSpeed;
             float maxSpeed = preset.maximumWandSpeed;
             
@@ -355,29 +280,8 @@ public class Butterfly : MonoBehaviour
 
             //Check if killing butterfly, SPEED TOO GREAT
             if (wandSpeedInterval > 1f)
-            {
                 onDeath(AGENT.User); // Flag butterfly for death
-                magnitude = distanceMagnitude;
-            }
-            else {
-                var speedMagnitude = preset.speedAttractionCurve.Evaluate(wandSpeedInterval);
-                magnitude = speedMagnitude * distanceMagnitude;
-            }
-
-            Vector3 vel = wand.velocity2d;
-            float vel_m = vel.magnitude;
-            
-            Vector3 dir = -(direction.normalized);
-            
-            velocity += wand.velocity3d * magnitude * preset.attraction;
         }
-
-        return magnitude;
-    }
-    
-    void MoveTowardsGround(float t)
-    {
-        velocity += Vector3.down * Mathf.Pow(t, 2f) * preset.gravity;
     }
 
     #endregion
@@ -421,20 +325,6 @@ public class Butterfly : MonoBehaviour
 
     #endregion
 
-    #region Coloring
-
-    void UpdateMaterials() {
-        float death = (state == State.Dying) ? Mathf.Clamp01((timeSinceDeath - preset.deathColorDelay) / preset.deathTransitionTime) : 0f;
-
-        var prop = propertyBlock;
-        prop.SetFloat("_Death", death);
-        foreach (Renderer r in renderers) {
-            r.SetPropertyBlock(prop);
-        }
-    }
-
-    #endregion
-    
     #region Trails
     
     void CreateTrails()
@@ -538,11 +428,6 @@ public class Butterfly : MonoBehaviour
 
     void FallToGround(float timeSinceDeath)
     {
-        float duration = preset.descentTime;
-        
-        //float dt = Time.deltaTime;
-        //dt *= (1f - Mathf.Clamp01((timeSinceDeath) / duration));
-
         float d = (timeSinceDeath - preset.deathColorDelay) / preset.deathTransitionTime; // Go full white --> .167 = time to go white
         if (d >= 0f && d <= 1f)
         {
@@ -552,13 +437,12 @@ public class Butterfly : MonoBehaviour
                 r.SetPropertyBlock(prop);
             }
         }
-
-        MoveTowardsGround(timeSinceDeath);
-        if (positionRelativeToCamera.y <= 64f || timeSinceDeath > preset.timeDead)
-            Die();
+        
+        if (timeSinceDeath > preset.timeDead) Die();
     }
     
-    IEnumerator TriggerDeathFromQuiltSpeed(){
+    IEnumerator TriggerDeathFromQuiltSpeed()
+    {
         while (state == State.Alive || state == State.Easing) {
             yield return new WaitForSeconds(preset.colorRefresh);
 
@@ -566,7 +450,6 @@ public class Butterfly : MonoBehaviour
 
             if (Random.Range(0f, 1f) < prob) {
                 onDeath(AGENT.Inhabitants);
-                final = baseColor;
             }
         }
     }
@@ -583,38 +466,4 @@ public class Butterfly : MonoBehaviour
     }
 
 	#endregion
-    
-    
-    
-    #region Deprecated
-    
-    /*
-    
-    void MoveWithWand(Wand wand, float dt, float multiplier)
-    {
-        Vector3 vel = wand.velocity;
-        float speed = vel.magnitude;
-
-        float magnitude = 1f - Mathf.Pow(speed / preset.minimumWandSpeed, 2f);
-
-        Vector3 dir = driver.MoveRelativeToCamera(vel.normalized);
-        velocity += dir * magnitude * preset.follow * multiplier * dt;
-    }
-
-    void MoveTowardsCenter(float dt){
-        Vector3 viewPosition = driver.ConvertToViewport(transform.position);
-        Vector3 center = (Vector3.one * .5f);
-
-        Vector3 direction = driver.MoveRelativeToCamera(center - viewPosition); // Grab vector to center of screen
-
-        float distanceFromCenter = direction.magnitude;
-        float magnitude = Mathf.Max(0f, (distanceFromCenter - preset.minCenterDistance));
-
-        Vector3 dir = (center - viewPosition).normalized;
-        velocity +=  new Vector3(dir.x, dir.y, 0f) * preset.centerStrength * Mathf.Pow(magnitude, 2f);
-    }
-
-*/
-    
-    #endregion
 }
