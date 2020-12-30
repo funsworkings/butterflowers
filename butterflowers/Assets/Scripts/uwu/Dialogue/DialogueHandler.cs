@@ -185,13 +185,12 @@ namespace uwu.Dialogue
 
 		public virtual void Dispose()
 		{
-			if (speaking) {
-				OnDispose();
-				if (onDispose != null)
-					onDispose();
-
+			OnDispose();
+			if (onDispose != null)
+				onDispose();
+			
+			if (speaking)
 				StopCoroutine("Speak");
-			}
 
 			queue = new List<string>();
 
@@ -256,7 +255,7 @@ namespace uwu.Dialogue
 						onProgress(m_current);
 
 					var t_symbol = timeBetweenSymbols;
-					if (!reachedEndOfBody) yield return new WaitForSeconds(t_symbol);
+					if (!reachedEndOfBody) yield return new WaitForSecondsRealtime(t_symbol);
 				}
 
 				m_current = m_body;
@@ -277,9 +276,9 @@ namespace uwu.Dialogue
 
 				var pr_autoprogress = autoprogress;
 
-				while (waiting && t < t_body) {
+				while (waiting && t < t_body) 
+				{
 					if (autoprogress) t += Time.unscaledDeltaTime;
-
 					if (autoprogress != pr_autoprogress) // IMMEDIATELY BREAK FROM LOOP IF AUTOPROGRESS PARAM HAS CHANGED
 						break;
 

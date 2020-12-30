@@ -29,10 +29,12 @@ public class Cage : MonoBehaviour
     // Properties
     
     [SerializeField] Sector[] sectors;
+    [SerializeField] bool complete = false;
     
     #region Accessors
 
     public Sector[] Sectors => sectors;
+    public bool Completed => complete;
     
     #endregion
 
@@ -105,26 +107,26 @@ public class Cage : MonoBehaviour
         return true;
     }
 
-    bool CheckIfComplete(bool events = true)
+    void CheckIfComplete(bool events = true)
     {
-        bool complete = true;
+        bool _complete = true;
         foreach (Sector sector in sectors) 
         {
             if (sector._Status != Sector.Status.Active) 
             {
-                complete = false;
+                _complete = false;
                 break;
             }
         }
 
-        if (complete && events) {
+        if (_complete && events) {
 
             if (onCompleteCorners != null)
                 onCompleteCorners();
 
         }
 
-        return complete;
+        complete = _complete;
     }
     
     #endregion

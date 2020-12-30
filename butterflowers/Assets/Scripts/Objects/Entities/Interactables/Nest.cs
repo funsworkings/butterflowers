@@ -343,7 +343,7 @@ public class Nest : Focusable, IReactToSunCycle, ISaveable, IFlammable, ITooltip
     {
         if (queue) 
         {
-            string message = "{0}\n\n{1}";
+            string message = "{0}\n{1}";
             string capacity = string.Format("{0} / {1}", beacons.Length, this.capacity);
             
             message = string.Format(message, capacity, "nest");

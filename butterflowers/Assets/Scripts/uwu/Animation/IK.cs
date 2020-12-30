@@ -84,6 +84,8 @@ namespace uwu.Animation
 		
 		#endregion
 	}
+	
+	#if UNITY_EDITOR
 
 	[CustomEditor(typeof(IK))]
 	public class IKEditor : Editor
@@ -107,4 +109,6 @@ namespace uwu.Animation
 			}
 		}
 	}
+	
+	#endif
 }
