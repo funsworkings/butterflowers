@@ -12,9 +12,9 @@ namespace Objects.Entities
 		[Serializable]
 		public struct Scene
 		{
+			[TextArea(2, 32)]
 			public string message;
-			public string Message => Extensions.RandomString(128);
-			
+
 			public AudioClip audio;
 			public GameObject mesh;
 		}

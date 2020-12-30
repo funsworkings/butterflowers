@@ -1,24 +1,31 @@
 ﻿using System;
 using System.Collections;
 using Data;
+using Interfaces;
 using Neue.Reference.Types;
 using Objects.Entities;
+using Settings;
 using TMPro;
 using UnityEngine;
 using uwu;
 using uwu.Dialogue;
+using uwu.UI.Behaviors.Visibility;
 using Random = UnityEngine.Random;
 
 namespace Objects.Managers
 {
-	public class SequenceManager : MonoBehaviour, ISaveable, IReactToSunCycle
+	public class SequenceManager : MonoBehaviour, ISaveable, IReactToSunCycle, IPauseSun
 	{
 		// External
 
 		Sun Sun;
+		GameDataSaveSystem _Save;
+		[SerializeField] Cage Cage;
 		
 		// Properties
 
+		[SerializeField] WorldPreset preset;
+		[SerializeField] ToggleOpacity opacity;
 		[SerializeField] DialogueHandler sceneCaption;
 		[SerializeField] AudioSource sceneAudio;
 
@@ -35,14 +42,26 @@ namespace Objects.Managers
 		
 		[SerializeField] AnimationCurve meshScaleCurve;
 		[SerializeField] float meshScaleTime = 1f;
+
+		[SerializeField] float startDelay = 1f, endDelay = 1f;
 		
 
+		#region Accessors
+
+		public bool Pause => inprogress;
+		
+		#endregion
+		
+		
 		void Start()
 		{
 			Sun = Sun.Instance;
+			_Save = GameDataSaveSystem.Instance;
 
 			frames = new Frame[7];
 			sequences = GetComponentsInChildren<Sequence>();
+			
+			sceneCaption.Dispose(); // Clear text in caption
 		}
 
 		#region Save/load
@@ -59,6 +78,10 @@ namespace Objects.Managers
 		public void Load(object data)
 		{
 			SequenceData seq = (SequenceData) data;
+			if(!preset.persistSequence) 
+				seq = new SequenceData();
+			
+			
 			index = seq.index;
 			frames = seq.frames;
 
@@ -80,19 +103,22 @@ namespace Objects.Managers
 
 		public void Cycle(bool refresh)
 		{
-			if (NeedsToTriggerScene()) // Trigger cutscene
+			int t_index = (index + 1);
+			
+			if (NeedsToTriggerScene(t_index)) // Trigger cutscene
 			{
-				StartCoroutine(PlayScene()); // Play scene
+				inprogress = true;
+				StartCoroutine(PlayScene(t_index)); // Play scene
 			}
 		}
 		
 		#region Scenes
 
-		bool NeedsToTriggerScene()
+		bool NeedsToTriggerScene(int t_index)
 		{
-			if (++index < frames.Length) 
+			if (Cage.Completed && t_index < frames.Length) 
 			{
-				frames[index] = (Frame)(Random.Range(0, 4)); // Assign random framing
+				frames[t_index] = (Frame)(Random.Range(0, 4)); // Assign random framing
 				return true;
 			}
 			
@@ -110,7 +136,7 @@ namespace Objects.Managers
 			return null;
 		}
 
-		Sequence.Scene FetchScene()
+		Sequence.Scene FetchScene(int index)
 		{
 			Frame frame = frames[index];
 			Sequence sequence = FetchSequence(frame);
@@ -118,31 +144,43 @@ namespace Objects.Managers
 			return sequence.Trigger(index);
 		}
 
-		IEnumerator PlayScene()
+		IEnumerator PlayScene(int _index)
 		{
-			inprogress = true;
-			
-			Sequence.Scene _scene = FetchScene();
+			Sequence.Scene _scene = FetchScene(_index);
 			
 			Vector3 baseMeshScale = _scene.mesh.transform.localScale;
 			_scene.mesh.transform.localScale = Vector3.zero;
+			
+			opacity.Show();
 			
 			float lt = 0f;
 			while (!SmoothLight(ref lt, false))
 				yield return null;
 			
+			yield return new WaitForSecondsRealtime(startDelay);
+			
 			float st = 0f;
 			while (!ScaleMesh(ref st, _scene.mesh, baseMeshScale))
 				yield return null;
+			
+			yield return new WaitForSeconds(endDelay);
 
 			lt = 0f;
 			while (!SmoothLight(ref lt, true)) 
 				yield return null;
 
-			string debugMessage = "It is {0} on the {1}th day in the year of our Lord, 2020";
-			sceneCaption.Push(string.Format(debugMessage, Enum.GetName(typeof(Frame), frames[index]).ToUpper(), index + 1));
+			//string debugMessage = "It is {0} on the {1}th day in the year of our Lord, 2020";
+			//sceneCaption.Push(string.Format(debugMessage, Enum.GetName(typeof(Frame), frames[_index]).ToUpper(), _index));
+
+			sceneCaption.Push(_scene.message);
+			while (sceneCaption.inprogress) 
+				yield return null;
 			
 			inprogress = false;
+			opacity.Hide();
+			++index;
+
+			_Save.data.sequence = (SequenceData)Save(); // Overwrite save!
 		}
 		
 		#region Ops

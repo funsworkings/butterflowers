@@ -16,6 +16,7 @@ namespace Settings
             public bool persistKnowledge = false;
             public bool persistBeacons = false;
             public bool persistVines = false;
+            public bool persistSequence = false;
             public bool alwaysIntro = false;
             public bool alwaysAbsorb = false;
             public bool useWizard = false;

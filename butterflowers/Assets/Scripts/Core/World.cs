@@ -14,6 +14,7 @@ using uwu;
 using uwu.Camera;
 using uwu.IO;
 using uwu.Snippets.Load;
+using uwu.UI.Behaviors.Visibility;
 
 
 /*
@@ -27,7 +28,7 @@ using uwu.Snippets.Load;
 
 
 
-public class World : MonoBehaviour, ISaveable
+public class World : MonoBehaviour, ISaveable, IReactToSunCycle
 {
     public static World Instance = null;
     public static bool LOAD = false;
@@ -71,6 +72,8 @@ public class World : MonoBehaviour, ISaveable
 
     [SerializeField] Camera m_playerCamera = null;
     [SerializeField] Loading Loader = null;
+
+    [SerializeField] ToggleOpacity gamePanel;
 
     // Collections
     
@@ -151,8 +154,7 @@ public class World : MonoBehaviour, ISaveable
         };
 
         Surveillance.Load(_Save.data.surveillanceData); // Load surveillance data
-        
-        
+
         var lib_payload = new LibraryPayload();
             lib_payload.directories = _Save.directories;
             lib_payload.files = _Save.files;
@@ -171,12 +173,31 @@ public class World : MonoBehaviour, ISaveable
         Loader.progress = 1f;
 
         EventsM.Load(null);
+        Sequence.Load(_Save.data.sequence);
         Nest.Load(_Save.data.nestopen);
         Beacons.Load((Preset.persistBeacons) ? _Save.beaconData : null);
         Vines.Load((Preset.persistVines) ? _Save.data.vines : null);
         Sun.Load(_Save.data.sun);
         
         LOAD = true;
+    }
+
+    public void Cycle(bool refresh)
+    {
+        StartCoroutine(Advance());
+    }
+    
+    IEnumerator Advance()
+    {
+        yield return new WaitForEndOfFrame();
+
+        while (!Sun.active) 
+        {
+            gamePanel.Hide();
+            yield return null;
+        }
+
+        gamePanel.Show();
     }
 
     void SubscribeToEvents()
