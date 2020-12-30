@@ -118,8 +118,6 @@ public class Butterfly : MonoBehaviour
     
     #endregion
 
-    #region Monobehavior callbacks
-
     void Awake()
     {
         trailRenderer = GetComponentInChildren<TrailRenderer>();
@@ -212,8 +210,6 @@ public class Butterfly : MonoBehaviour
         transform.position += directionOfTravel;
     }
 
-    #endregion
-
     #region Initialization and registration
 
     void Register()
@@ -294,14 +290,6 @@ public class Butterfly : MonoBehaviour
     public void Kill()
     {
         onDeath();
-    }
-
-    public void Freeze()
-    {
-        if (state != State.Alive) return;
-        
-        state = State.Freeze;
-        timeSinceFrozen = 0f;
     }
 
     #endregion
@@ -583,38 +571,4 @@ public class Butterfly : MonoBehaviour
     }
 
 	#endregion
-    
-    
-    
-    #region Deprecated
-    
-    /*
-    
-    void MoveWithWand(Wand wand, float dt, float multiplier)
-    {
-        Vector3 vel = wand.velocity;
-        float speed = vel.magnitude;
-
-        float magnitude = 1f - Mathf.Pow(speed / preset.minimumWandSpeed, 2f);
-
-        Vector3 dir = driver.MoveRelativeToCamera(vel.normalized);
-        velocity += dir * magnitude * preset.follow * multiplier * dt;
-    }
-
-    void MoveTowardsCenter(float dt){
-        Vector3 viewPosition = driver.ConvertToViewport(transform.position);
-        Vector3 center = (Vector3.one * .5f);
-
-        Vector3 direction = driver.MoveRelativeToCamera(center - viewPosition); // Grab vector to center of screen
-
-        float distanceFromCenter = direction.magnitude;
-        float magnitude = Mathf.Max(0f, (distanceFromCenter - preset.minCenterDistance));
-
-        Vector3 dir = (center - viewPosition).normalized;
-        velocity +=  new Vector3(dir.x, dir.y, 0f) * preset.centerStrength * Mathf.Pow(magnitude, 2f);
-    }
-
-*/
-    
-    #endregion
 }

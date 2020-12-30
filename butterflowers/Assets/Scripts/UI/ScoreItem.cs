@@ -24,6 +24,8 @@ namespace UI
 		
 		// Properties
 
+		Animator animator;
+
 		[SerializeField] TMP_Text labelField;
 		[SerializeField] TMP_Text scoreField, progressField;
 		
@@ -47,8 +49,6 @@ namespace UI
 		public bool Lerp => lerp;
 		
 		#endregion
-		
-		#region Monobehaviour callbacks
 
 		void OnEnable()
 		{
@@ -106,8 +106,6 @@ namespace UI
 			}
 		}
 
-		#endregion
-		
 		#region Operations
 
 		public void SetScore(int previousScore, int currentScore, float speed)

@@ -109,3 +109,16 @@ public static class COLOR_LOOKUP
         { AGENT.Unknown, "#BEFFD7" }
     };
 }
+
+
+public static class Copy
+{
+    public static string FocusText = string.Format("Press {0} to focus", Controls.Focus.ToString());
+    public static string LoseFocusText = string.Format("Press {0} to lose focus", Controls.LoseFocus.ToString());
+}
+
+public static class Controls
+{
+    public static KeyCode Focus = KeyCode.LeftControl;
+    public static KeyCode LoseFocus = KeyCode.Escape;
+}

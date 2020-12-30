@@ -177,7 +177,7 @@ namespace Objects.Managers
 			while (!ScaleMesh(ref st, _scene.mesh, baseMeshScale))
 				yield return null;
 			
-			yield return new WaitForSeconds(endDelay);
+			yield return new WaitForSecondsRealtime(endDelay);
 
 			lt = 0f;
 			while (!SmoothLight(ref lt, true)) 

@@ -95,7 +95,7 @@ public class Focusing : MonoBehaviour
     void Update()
     {
         if (active) {
-            if (Input.GetKeyDown(KeyCode.Backspace))
+            if (Input.GetKeyDown(Controls.LoseFocus))
                 LoseFocus();
         }
 
