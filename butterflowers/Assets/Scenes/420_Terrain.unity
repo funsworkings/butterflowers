@@ -1444,6 +1444,10 @@ MonoBehaviour:
   m_playerCamera: {fileID: 534669904}
   Loader: {fileID: 1422909087}
   gamePanel: {fileID: 415711558}
+  profile:
+    weights:
+      behaviours: []
+      defaultValue: 0
   managers: []
   entities: []
   interactables: []
@@ -3804,7 +3808,7 @@ Transform:
   m_PrefabInstance: {fileID: 0}
   m_PrefabAsset: {fileID: 0}
   m_GameObject: {fileID: 201810246}
-  m_LocalRotation: {x: 0.12156506, y: 0.00000001055755, z: -0.0000000012281239, w: 0.9925835}
+  m_LocalRotation: {x: 0.12156505, y: -0.000000013581906, z: 0.0000000016392674, w: 0.9925835}
   m_LocalPosition: {x: 0, y: 9.595102, z: -21.852465}
   m_LocalScale: {x: 1, y: 1.3577, z: 1}
   m_Children:
@@ -6840,6 +6844,7 @@ MonoBehaviour:
   logs: []
   eventsDuringLog: 
   Preset: {fileID: 11400000, guid: 45ffdf5e02efb4848942aaeb5d029f6e, type: 2}
+  BrainPreset: {fileID: 11400000, guid: c1033047439f93541948c99d3eb9e2fb, type: 2}
   recording: 1
   lastPhotoCaption: 
   lastPhotoPath: 
@@ -26724,7 +26729,7 @@ MonoBehaviour:
   m_outlineColor:
     serializedVersion: 2
     rgba: 4278190080
-  m_fontSize: 25.1
+  m_fontSize: 25.15
   m_fontSizeBase: 36
   m_fontWeight: 400
   m_enableAutoSizing: 1

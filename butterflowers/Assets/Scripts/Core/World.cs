@@ -5,6 +5,7 @@ using UnityEngine;
 using System.Linq;
 using Data;
 using Neue.Agent;
+using Neue.Agent.Brain.Data;
 using Neue.Agent1;
 using Objects.Base;
 using Objects.Managers;
@@ -74,6 +75,7 @@ public class World : MonoBehaviour, ISaveable, IReactToSunCycle
     [SerializeField] Loading Loader = null;
 
     [SerializeField] ToggleOpacity gamePanel;
+    [SerializeField] Profile profile;
 
     // Collections
     
@@ -93,6 +95,8 @@ public class World : MonoBehaviour, ISaveable, IReactToSunCycle
     public Entity[] Entities => entities.ToArray();
     public Interactable[] Interactables => interactables.ToArray();
     public Focusable[] Focusables => focusables.ToArray();
+
+    public Profile Profile => profile;
 
     #endregion
 
@@ -184,6 +188,8 @@ public class World : MonoBehaviour, ISaveable, IReactToSunCycle
 
     public void Cycle(bool refresh)
     {
+        profile = Surveillance.ConstructBehaviourProfile(); // Create new behaviour profile
+        
         StartCoroutine(Advance());
     }
     
