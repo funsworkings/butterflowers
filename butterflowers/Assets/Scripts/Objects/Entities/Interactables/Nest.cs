@@ -346,7 +346,7 @@ public class Nest : Focusable, IReactToSunCycle, ISaveable, IFlammable, ITooltip
             string message = "{0}\n{1}";
             string capacity = string.Format("{0} / {1}", beacons.Length, this.capacity);
             
-            message = string.Format(message, capacity, "nest");
+            message = string.Format(message, capacity, string.Format("nest ({0})", Copy.FocusText));
             
             return message;
         }
