@@ -52,8 +52,6 @@ public class Butterfly : MonoBehaviour
     [Header("Base")]
 
     [SerializeField] Preset preset;
-    public AGENT agent = AGENT.NULL;
-    [SerializeField] Wand m_wand = null;
     
     [Header("Appearance")]
     
@@ -81,12 +79,9 @@ public class Butterfly : MonoBehaviour
     
     public State state = State.Hidden;
 
-    float timeSinceAlive = 0f;
-    float timeSinceDeath = 0f;
+    float timeInState = 0f;
 
     #region Accessors
-    
-    public Wand wand => m_wand;
 
     public Vector3 positionRelativeToCamera
     {
@@ -120,7 +115,32 @@ public class Butterfly : MonoBehaviour
         set { scale = value; }
     }
 
-    public State _State => state;
+    public float TimeInState
+    {
+        get { return timeInState; }
+        set { timeInState = value; }
+    }
+
+    public State _State
+    {
+        get { return state; }
+        set
+        {
+            bool flag_change = (state != value);
+            if (flag_change) 
+            {
+                if (value == State.Dying) 
+                {
+                    if (Dying != null) 
+                        Dying(this);
+                }
+
+                timeInState = 0f;
+            }
+
+            state = value;
+        }
+    }
     
     #endregion
 
@@ -138,51 +158,24 @@ public class Butterfly : MonoBehaviour
         Reset();
     }
 
-    void OnDestroy(){
-        StopCoroutine("RefreshWand");
-
+    void OnDestroy()
+    {
         Unregister();
     }
 
     void Update()
     {
-        if(state == State.Hidden)
-        {
-            transform.position = nest.transform.position; // Follow nest in space if hidden
-            transform.localScale = Vector3.zero;
+        timeInState += Time.deltaTime;
+        if (state == State.Hidden) return;
 
-            return;
-        }
-
-        float dt = Time.deltaTime;
-
-        timeSinceAlive += dt;
-
-        EvaluateScaleFromState();
-
-        float str = dt;
         if (state == State.Dying)
         {
-            CreateTrails(); // Ensure trails are set
-            FallToGround(timeSinceDeath);
-
-            timeSinceDeath += dt;
+            //CreateTrails(); // Ensure trails are set
+            ContinueDying(timeInState);
         }
 
-        if (state == State.Easing) 
-        {
-            CheckIfAlive();
-        }
-        else if (state == State.Alive) 
-        {
-            if (wand != null && wand.spells)
-                WaitForWand(wand, str); // 0 - 1
-        }
-
-        AdjustAnimatorSpeed();
-
-        var directionOfTravel = velocity * dt;
-        trailRenderer.enabled = (state == State.Alive && velocity.magnitude > preset.velocityTrailThreshold);
+        //AdjustAnimatorSpeed();
+        //trailRenderer.enabled = (state == State.Alive && velocity.magnitude > preset.velocityTrailThreshold);
     }
 
     #endregion
@@ -214,8 +207,6 @@ public class Butterfly : MonoBehaviour
 
         material = renderers[0].sharedMaterial;
         material.SetFloat("_OverrideColorWeight", (quilt == null) ? 1f : 0f);
-
-        StartCoroutine("RefreshWand");
     }
     
     #endregion
@@ -228,119 +219,24 @@ public class Butterfly : MonoBehaviour
         {
             state = State.Alive;
             transform.position = origin;
-
-            StartCoroutine("TriggerDeathFromQuiltSpeed");
         }
         else
         {
             state = State.Hidden;
             transform.position = nest.transform.position;
-
-            StopCoroutine("TriggerDeathFromQuiltSpeed");
         }
 
         velocity = Vector3.zero;
         transform.localScale = Vector3.zero;
 
-        timeSinceAlive = timeSinceDeath = 0f;
+        timeInState = 0f;
 
         trails = null; // Ensure new trails created for every butterfly on respawn
-
-        var prop = propertyBlock;
-        prop.SetFloat("_Death", 0f);
+        
+        propertyBlock.SetFloat("_Death", 0f);
         foreach (Renderer r in renderers) {
-            r.SetPropertyBlock(prop);
+            r.SetPropertyBlock(propertyBlock);
         }
-    }
-    
-    public void Release()
-    {
-        if (state == State.Hidden)
-        {
-            state = State.Easing;
-            StartCoroutine("TriggerDeathFromQuiltSpeed");
-        }
-    }
-
-    public void Kill()
-    {
-        onDeath();
-    }
-
-    #endregion
-
-    #region State ops
-
-    void CheckIfAlive()
-    {
-        Vector3 dir = (origin - transform.position);
-        if (dir.magnitude < 1f)
-            state = State.Alive; // Break out out Ease State if close enough to origin
-
-        velocity = (dir);
-    }
-
-    void WaitForWand(Wand wand, float dt)
-    {
-        Vector3 target = wand.trajectory2d;
-        Vector3 current = positionRelativeToCamera;
-
-        Vector3 direction = (target - current);
-        
-        float radius = wand.radius;
-        float dist = direction.magnitude;
-        float offset = dist / radius;
-        
-        if (offset <= 1f) 
-        {
-            float minSpeed = preset.minimumWandSpeed;
-            float maxSpeed = preset.maximumWandSpeed;
-            
-            var wandSpeedInterval = (wand.speed - minSpeed) / (maxSpeed - minSpeed);
-
-            //Check if killing butterfly, SPEED TOO GREAT
-            if (wandSpeedInterval > 1f)
-                onDeath(AGENT.User); // Flag butterfly for death
-        }
-    }
-
-    #endregion
-
-    #region Scaling
-    
-    void EvaluateScaleFromState()
-    {
-        float scale = preset.scale;
-        if (timeSinceAlive <= preset.timeToGrow)
-            GrowOverTime(ref scale);
-        else 
-        {
-            if(wand != null) 
-                GrowWithWand(wand, ref scale);
-            if (nest != null && nest.energy > 0f)
-                GrowWithNest(ref scale);
-        }
-        transform.localScale = Vector3.one * scale;
-    }
-
-    void GrowOverTime(ref float scale)
-    {
-        float interval = timeSinceAlive / preset.timeToGrow;
-        scale = Mathf.Lerp(0f, preset.scale, Mathf.Pow(interval, 2f));
-    }
-
-    void GrowWithWand(Wand wand, ref float scale)
-    {
-        Vector3 dir = (wand.position3d - positionRelativeToCamera);
-        float magnitude = Mathf.Clamp01(1f - dir.magnitude / (wand.radius*6f)) + ((nest == null)?0f:nest.energy*preset.energyGrowth);
-
-        scale *= (1f + Mathf.Pow(magnitude, 2f));
-    }
-
-    void GrowWithNest(ref float scale)
-    {
-        //float magnitude = nest.energy;
-        //scale *= (1f + magnitude*2f);
     }
 
     #endregion
@@ -390,100 +286,32 @@ public class Butterfly : MonoBehaviour
     
     #endregion
 
-    #region Wands
-
-    IEnumerator RefreshWand()
-    {
-        Wand temp = null;
-
-        while (true) {
-            temp = null;
-
-            if (wands.Length == 1) temp = wands[0];
-            if (state == State.Alive && wands.Length > 1) {
-                
-                float maxDistance = Mathf.Infinity;
-                
-                for (int i = 0; i < wands.Length; i++) 
-                {
-                    var w = wands[i];
-                    float dist = 0f;
-
-                    if (w.global) 
-                    {
-                        dist = (w.position2d - positionRelativeToCamera).magnitude;
-                    }
-                    else {
-                        dist = (w.position3d - transform.position).magnitude;
-                    }
-
-                    
-                    if (dist <= w.radius && dist <= maxDistance) 
-                    {
-                        temp = w;
-                        maxDistance = dist;
-                    }
-                }
-            }
-
-            m_wand = temp;
-
-            yield return new WaitForSeconds(.33f);
-        }
-    }
-
-	#endregion
-
-	#region Dying
+    #region Death
     
     void Die()
     {
-        trails.transform.parent = null;
-        DestroyTrails();
+        //trails.transform.parent = null;
+        //DestroyTrails();
 
         state = State.Hidden;
         if (Died != null)
             Died(this);
     }
 
-    void FallToGround(float timeSinceDeath)
+    void ContinueDying(float timeSinceDeath)
     {
         float d = (timeSinceDeath - preset.deathColorDelay) / preset.deathTransitionTime; // Go full white --> .167 = time to go white
         if (d >= 0f && d <= 1f)
         {
-            var prop = propertyBlock;
-            prop.SetFloat("_Death", Mathf.Clamp01(d));
+            propertyBlock.SetFloat("_Death", Mathf.Clamp01(d));
             foreach (Renderer r in renderers) {
-                r.SetPropertyBlock(prop);
+                r.SetPropertyBlock(propertyBlock);
             }
         }
         
-        if (timeSinceDeath > preset.timeDead) Die();
-    }
-    
-    IEnumerator TriggerDeathFromQuiltSpeed()
-    {
-        while (state == State.Alive || state == State.Easing) {
-            yield return new WaitForSeconds(preset.colorRefresh);
-
-            float prob = preset.deathProbabilityCurve.Evaluate((quilt == null) ? 0f : quilt.speedInterval);
-
-            if (Random.Range(0f, 1f) < prob) {
-                onDeath(AGENT.Inhabitants);
-            }
-        }
+        if (timeSinceDeath > preset.timeDead) 
+            Die();
     }
 
-	void onDeath(AGENT agent = AGENT.World)
-    {
-        bool flag = (state != State.Dying);
-
-        state = State.Dying;
-        if (flag && Dying != null) {
-            this.agent = agent;
-            Dying(this);
-        }
-    }
-
-	#endregion
+    #endregion
 }
