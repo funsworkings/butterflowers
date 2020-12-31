@@ -1,4 +1,5 @@
 ﻿using Interfaces;
+using Objects.Base;
 using UnityEngine;
 
 namespace Objects.Entities.Interactables.Empty

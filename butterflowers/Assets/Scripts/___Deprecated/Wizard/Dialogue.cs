@@ -11,6 +11,7 @@ using Noder.Nodes.External;
 using System.Linq;
 using Noder.Graphs;
 using System.Text;
+using Core;
 using Neue.Agent;
 using Neue.Agent.Brain.Types;
 using Neue.Types;

@@ -1,141 +1,139 @@
-﻿using System.Collections;
-using System.Collections.Generic;
-using TMPro;
-using UnityEngine;
-using uwu.UI.Behaviors.Visibility;
-using uwu.UI.Extras;
+﻿using UnityEngine;
 using NativeInteractable = uwu.Gameplay.Interactable;
 
-[RequireComponent(typeof(NativeInteractable))]
-public class Interactable : Entity
+namespace Objects.Base
 {
+    [RequireComponent(typeof(NativeInteractable))]
+    public class Interactable : Entity
+    {
 
-    // Properties
+        // Properties
 
-    NativeInteractable m_interactable;
+        NativeInteractable m_interactable;
 
-    // Attributes
+        // Attributes
 
-    [Header("Interaction")]
+        [Header("Interaction")]
         [SerializeField] bool m_interactive = true;
         bool hovering = false;
     
         
-	#region Accessors
+        #region Accessors
 
-    public bool interactive 
-    {
-        get
+        public bool interactive 
         {
-            return m_interactive && Sun.active;
-        }
-        set
-        {
-            m_interactive = value;
-            m_interactable.enabled = value;
-        }
-    }
-
-    public NativeInteractable interactable
-    {
-        get { return m_interactable; }
-        set
-        {
-            if (m_interactable != value) 
+            get
             {
-                UnsubscribeFromInteractableEvents();
-                m_interactable = value;
-                SubscribeToInteractableEvents();
+                return m_interactive && Sun.active;
+            }
+            set
+            {
+                m_interactive = value;
+                m_interactable.enabled = value;
             }
         }
-    }
 
-    #endregion
+        public NativeInteractable interactable
+        {
+            get { return m_interactable; }
+            set
+            {
+                if (m_interactable != value) 
+                {
+                    UnsubscribeFromInteractableEvents();
+                    m_interactable = value;
+                    SubscribeToInteractableEvents();
+                }
+            }
+        }
 
-    #region Monobehaviour callbacks
+        #endregion
 
-    protected virtual void Awake()
-    {
-        m_interactable = GetComponent<NativeInteractable>();
-        if (m_interactable == null)
-            m_interactable = gameObject.AddComponent<NativeInteractable>();
-    }
+        #region Monobehaviour callbacks
 
-	// Start is called before the first frame update
-	protected override void OnStart()
-    {
-        base.OnStart();
+        protected virtual void Awake()
+        {
+            m_interactable = GetComponent<NativeInteractable>();
+            if (m_interactable == null)
+                m_interactable = gameObject.AddComponent<NativeInteractable>();
+        }
 
-        SubscribeToInteractableEvents();
+        // Start is called before the first frame update
+        protected override void OnStart()
+        {
+            base.OnStart();
 
-        interactive = m_interactive; // Set interactive behaviours
-    }
+            SubscribeToInteractableEvents();
 
-    protected override void Update()
-    {
-        m_interactable.enabled = interactive;
-        base.Update();
-    }
+            interactive = m_interactive; // Set interactive behaviours
+        }
 
-    protected override void OnDestroyed()
-    {
-        base.OnDestroyed();
+        protected override void Update()
+        {
+            m_interactable.enabled = interactive;
+            base.Update();
+        }
+
+        protected override void OnDestroyed()
+        {
+            base.OnDestroyed();
         
-        UnsubscribeFromInteractableEvents();
-    }
+            UnsubscribeFromInteractableEvents();
+        }
 
-	#endregion
+        #endregion
     
-    #region Interactable event subscriptions
+        #region Interactable event subscriptions
 
-    void SubscribeToInteractableEvents()
-    {
-        interactable.onHover += onHover;
-        interactable.onUnhover += onUnhover;
+        void SubscribeToInteractableEvents()
+        {
+            interactable.onHover += onHover;
+            interactable.onUnhover += onUnhover;
 
-        interactable.onGrab += onGrab;
-        interactable.onContinue += onContinue;
-        interactable.onRelease += onRelease;
-    }
+            interactable.onGrab += onGrab;
+            interactable.onContinue += onContinue;
+            interactable.onRelease += onRelease;
+        }
 
-    void UnsubscribeFromInteractableEvents()
-    {
-        interactable.onHover -= onHover;
-        interactable.onUnhover -= onUnhover;
+        void UnsubscribeFromInteractableEvents()
+        {
+            interactable.onHover -= onHover;
+            interactable.onUnhover -= onUnhover;
 
-        interactable.onGrab -= onGrab;
-        interactable.onContinue -= onContinue;
-        interactable.onRelease -= onRelease;
-    }
+            interactable.onGrab -= onGrab;
+            interactable.onContinue -= onContinue;
+            interactable.onRelease -= onRelease;
+        }
     
-    #endregion
+        #endregion
 
-    #region Interactable callbacks
+        #region Interactable callbacks
 
-    protected virtual void onHover(Vector3 point, Vector3 normal)
-    {
-        hovering = true;
+        protected virtual void onHover(Vector3 point, Vector3 normal)
+        {
+            hovering = true;
+        }
+
+        protected virtual void onUnhover(Vector3 point, Vector3 normal)
+        {
+            hovering = false;
+        }
+
+        protected virtual void onGrab(Vector3 point, Vector3 normal)
+        {
+
+        }
+
+        protected virtual void onContinue(Vector3 point, Vector3 normal)
+        {
+
+        }
+
+        protected virtual void onRelease(Vector3 point, Vector3 normal)
+        {
+
+        }
+
+        #endregion
     }
-
-    protected virtual void onUnhover(Vector3 point, Vector3 normal)
-    {
-        hovering = false;
-    }
-
-    protected virtual void onGrab(Vector3 point, Vector3 normal)
-    {
-
-    }
-
-    protected virtual void onContinue(Vector3 point, Vector3 normal)
-    {
-
-    }
-
-    protected virtual void onRelease(Vector3 point, Vector3 normal)
-    {
-
-    }
-
-    #endregion
 }

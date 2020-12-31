@@ -5,7 +5,7 @@ using UnityEngine;
 
 using Noder.Nodes.Behaviours.Core;
 using Noder.Graphs;
-using Kick = Wand.Kick;
+using Kick = Core.Wand.Kick;
 
 namespace Noder.Nodes.Behaviours.Events {
 

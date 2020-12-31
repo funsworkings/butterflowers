@@ -61,7 +61,7 @@ namespace uwu.Gameplay
 				StopCoroutine("SpawnContinously");
 		}
 
-		public GameObject[] Spawn(int amount = 0)
+		public virtual GameObject[] Spawn(int amount = 0)
 		{
 			if (prefab == null || amount == 0)
 				return null;

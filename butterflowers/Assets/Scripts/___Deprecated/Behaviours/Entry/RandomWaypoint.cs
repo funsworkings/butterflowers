@@ -4,6 +4,7 @@ using System.Collections.Generic;
 using UnityEngine;
 
 using Noder.Nodes.Entries;
+using Objects.Base;
 
 namespace Noder.Nodes.Behaviours.Entries {
 
