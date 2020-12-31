@@ -3,7 +3,7 @@ using System.Collections;
 using System.Collections.Generic;
 using Noder.Nodes.Behaviours.Core;
 using Noder.Graphs;
-using Kick = Wand.Kick;
+using Kick = Core.Wand.Kick;
 using Object = UnityEngine.Object;
 
 namespace Noder.Nodes.Behaviours.Events {

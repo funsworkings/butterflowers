@@ -7,6 +7,7 @@ using Neue.Agent.Brain.Types;
 using Neue.Agent1;
 using Neue.Types;
 using Noder.Nodes.Behaviours.Entries;
+using Objects.Base;
 
 namespace Objects.Managers
 {

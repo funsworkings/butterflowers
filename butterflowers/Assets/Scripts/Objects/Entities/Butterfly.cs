@@ -1,5 +1,6 @@
 ﻿using System.Collections;
 using System.Collections.Generic;
+using Core;
 using UnityEngine;
 using UnityEngine.Rendering;
 
@@ -71,6 +72,8 @@ public class Butterfly : MonoBehaviour
     [Header("Movement")]
 
     public Vector3 origin = Vector3.zero;
+    public Vector3 m_positionRelativeToCamera;
+    
     [SerializeField] Vector3 velocity = Vector3.zero;
     [SerializeField] float scale = 1f;
     
@@ -89,7 +92,11 @@ public class Butterfly : MonoBehaviour
     {
         get
         {
-            return driver.ConvertToScreen(transform.position);
+            return m_positionRelativeToCamera;
+        }
+        set
+        {
+            m_positionRelativeToCamera = value;
         }
     }
 
@@ -162,7 +169,11 @@ public class Butterfly : MonoBehaviour
             timeSinceDeath += dt;
         }
 
-        if (state == State.Alive) 
+        if (state == State.Easing) 
+        {
+            CheckIfAlive();
+        }
+        else if (state == State.Alive) 
         {
             if (wand != null && wand.spells)
                 WaitForWand(wand, str); // 0 - 1
@@ -258,7 +269,16 @@ public class Butterfly : MonoBehaviour
 
     #endregion
 
-    #region Movement
+    #region State ops
+
+    void CheckIfAlive()
+    {
+        Vector3 dir = (origin - transform.position);
+        if (dir.magnitude < 1f)
+            state = State.Alive; // Break out out Ease State if close enough to origin
+
+        velocity = (dir);
+    }
 
     void WaitForWand(Wand wand, float dt)
     {
