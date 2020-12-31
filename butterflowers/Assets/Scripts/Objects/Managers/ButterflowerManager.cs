@@ -5,85 +5,97 @@ using System.Linq;
 using Core;
 using UnityEngine;
 
-using UnityEngine.Networking;
 using Settings;
 using Unity.Burst;
 using Unity.Collections;
 using Unity.Collections.LowLevel.Unsafe;
+using Unity.Entities;
 using Unity.Jobs;
 using Unity.Mathematics;
-using Unity.Entities;
 using Unity.Jobs.LowLevel.Unsafe;
+using Unity.Rendering;
+using Unity.Transforms;
 using UnityEngine.Events;
 using uwu.Gameplay;
 using UnityEngine.Jobs;
 using uwu.Extensions;
 using Extensions = uwu.Extensions.Extensions;
 using Random = UnityEngine.Random;
+using World = Unity.Entities.World;
 
 public class ButterflowerManager : Spawner, IReactToSunCycle
 {
     public static ButterflowerManager Instance = null;
 
     public UnityEvent onAllDead;
+    
+    #region Internal
 
-    #region External
+    public enum Op
+    {
+        Nothing = -1,
+        
+        Kill = 0,
+        Release = 1
+    }
+    
+    #endregion
+
+    // External
 
     [SerializeField] new Camera camera;
 
-    #endregion
-    
     // Properties
 
     [SerializeField] WorldPreset preset = null;
     [SerializeField] ButterflyPreset butterflyPreset;
     [SerializeField] Wand wand;
+    [SerializeField] Nest nest;
+    [SerializeField] Quilt quilt;
     [SerializeField] Canvas canvas;
+
+    [SerializeField] Op op = Op.Nothing;
 
     // Attributes
 
     bool respawn = true;
-
-    [SerializeField] float offsetDistance = 0f;
+    
     [SerializeField] int alive = 0, dead = 0;
 
-    [SerializeField] int player_kills = 0, wizard_kills = 0, shared_kills = 0, misc_kills = 0;
-
-    public float player_hatred => (dead > 0) ? (float)(player_kills + shared_kills/2F) / dead: 0F;
-    public float wiz_hatred => (dead > 0)? (float)(wizard_kills + shared_kills/2F) / dead: 0F;
-    public float shared_hatred => (dead > 0)? (float)shared_kills / dead: 0F;
-    public float enviro_hated => (dead > 0) ? (float)misc_kills / dead : 0F;
-
-    public float minKillDistance => offsetDistance/2f;
-
+    [Header("Butterfly attributes")] 
+        [SerializeField] Mesh butterflyMesh;
+        [SerializeField] Material butterflyMaterial;
+    
     // Collections
 
     List<Butterfly> butterflies = new List<Butterfly>();
 
     NativeArray<int> states;
-    NativeArray<Vector3> origins;
-    NativeArray<Vector3> positions;
-    NativeArray<Vector3> relPositions;
-    NativeArray<Vector3> velocities;
+    NativeArray<float3> origins;
+    NativeArray<float3> positions;
+    NativeArray<float3> relPositions;
+    NativeArray<float3> velocities;
+    NativeArray<float> tsi;
+    NativeArray<float> _wand;
     NativeArray<Unity.Mathematics.Random> _randoms;
     TransformAccessArray transforms;
 
     NativeArray<float> distanceCurve;
     NativeArray<float> speedCurve;
+    NativeArray<float> deathCurve;
 
     // Jobs
 
-    RelPositionButterflyJob m_RelPosJob;
-    JobHandle m_RelPosJobHandle;
+    PreBuildButterflyJob m_PreBuildJob;
+    JobHandle m_PreBuildJobHandle;
 
     VelocityButterflyJob m_VelocityJob;
     JobHandle m_VelocityJobHandle;
-    
-    TranslateButterflyJob m_TranslateJob;
-    JobHandle m_TranslateJobHandle;
-    
 
-	protected override void Awake()
+    ScaleButterflyJob m_ScaleJob;
+    JobHandle m_ScaleJobHandle;
+
+    protected override void Awake()
     {
         Instance = this;
 
@@ -102,19 +114,22 @@ public class ButterflowerManager : Spawner, IReactToSunCycle
         Butterfly.Died += ResetButterfly;
 
         CalculateBounds();
-        
+
         var entities = Spawn(amount);
         var _transforms = entities.Select(e => e.transform).ToArray();
 
         states = new NativeArray<int>(amount, Allocator.Persistent);
-        origins = new NativeArray<Vector3>(amount, Allocator.Persistent);
-        positions = new NativeArray<Vector3>(amount, Allocator.Persistent);
-        relPositions = new NativeArray<Vector3>(amount, Allocator.Persistent);
-        velocities = new NativeArray<Vector3>(amount, Allocator.Persistent);
+        origins = new NativeArray<float3>(amount, Allocator.Persistent);
+        positions = new NativeArray<float3>(amount, Allocator.Persistent);
+        relPositions = new NativeArray<float3>(amount, Allocator.Persistent);
+        velocities = new NativeArray<float3>(amount, Allocator.Persistent);
+        tsi = new NativeArray<float>(amount, Allocator.Persistent);
+        _wand = new NativeArray<float>(amount, Allocator.Persistent);
         transforms = new TransformAccessArray(_transforms);
         
         distanceCurve = new NativeArray<float>(butterflyPreset.distanceAttractionCurve.GenerateCurveArray(), Allocator.Persistent);
         speedCurve = new NativeArray<float>(butterflyPreset.speedAttractionCurve.GenerateCurveArray(), Allocator.Persistent);
+        deathCurve = new NativeArray<float>(butterflyPreset.deathProbabilityCurve.GenerateCurveArray(), Allocator.Persistent);;
     }
 
     protected override void Update()
@@ -127,85 +142,126 @@ public class ButterflowerManager : Spawner, IReactToSunCycle
             origins[i] = butterflies[i].origin;
             positions[i] = butterflies[i].transform.position;
             velocities[i] = butterflies[i].Velocity;
+            tsi[i] = butterflies[i].TimeInState;
         }
 
         float dt = Time.deltaTime;
+        
+        // Bind new randoms
+        _randoms = new NativeArray<Unity.Mathematics.Random>(JobsUtility.MaxJobThreadCount, Allocator.Persistent, NativeArrayOptions.UninitializedMemory);
+        var r = (uint) Random.Range(int.MinValue, int.MaxValue);
+        for (int i = 0; i < JobsUtility.MaxJobThreadCount; i++)
+            _randoms[i] = new Unity.Mathematics.Random(r == 0 ? r + 1 : r);
+        
 
         Camera camera = wand.Camera;
         Transform camera_t = camera.transform;
 
-        m_RelPosJob = new RelPositionButterflyJob() 
+        m_PreBuildJob = new PreBuildButterflyJob() 
         {
-            relPosition = relPositions,
+            op = (int)op,
             
+            relPosition = relPositions,
+            state = states,
+            wand = _wand,
+            
+            origin = origins,
             position = positions,
+
             cameraPosition = camera_t.position,
             cameraMatrix = camera.projectionMatrix,
             cameraUp = camera_t.up,
             cameraRight = camera_t.right,
             cameraForward = camera_t.forward,
-            
             pixelWidth = camera.pixelWidth,
             pixelHeight = camera.pixelHeight,
-            scaleFactor = canvas.scaleFactor
-        };
-        
-        
-        _randoms = new NativeArray<Unity.Mathematics.Random>(JobsUtility.MaxJobThreadCount, Allocator.Persistent, NativeArrayOptions.UninitializedMemory);
-        var r = (uint) Random.Range(int.MinValue, int.MaxValue);
-        for (int i = 0; i < JobsUtility.MaxJobThreadCount; i++)
-            _randoms[i] = new Unity.Mathematics.Random(r == 0 ? r + 1 : r);
-
-        m_VelocityJob = new VelocityButterflyJob() 
-        {
-            state = states,
-            origin = origins,
-            position = positions,
-            positionRelCamera = relPositions,
-            velocity = velocities,
+            scaleFactor = canvas.scaleFactor,
             
-            randoms = _randoms,
-            
-            deltaTime = dt,
-            distanceCurve = distanceCurve,
-            speedCurve = speedCurve,
-            gravity = butterflyPreset.gravity,
-            noiseSize = butterflyPreset.noiseSize,
-            noiseAmount = butterflyPreset.noiseAmount,
-            dampening = butterflyPreset.velocityDampening,
-            attraction = butterflyPreset.attraction,
-            maxSpeed = butterflyPreset.maxSpeed,
+            wandTrajectory2d = wand.trajectory2d,
+            wandRadius = wand.radius,
+            wandSpeed = wand.speed,
             minWandSpeed = butterflyPreset.minimumWandSpeed,
             maxWandSpeed = butterflyPreset.maximumWandSpeed,
             
-            wandTrajectory = wand.trajectory2d,
-            wandVelocity3d = wand.velocity3d,
-            wandRadius = wand.radius,
-            wandSpeed = wand.speed
+            quiltSpeed = quilt.speedInterval,
+            deathCurve = deathCurve
         };
 
-        m_TranslateJob = new TranslateButterflyJob() 
-        {
-            velocity = velocities,
-            deltaTime = dt
-        };
-
-        m_RelPosJobHandle = m_RelPosJob.Schedule(amount, 1);
-        m_VelocityJobHandle = m_VelocityJob.Schedule(amount, 64, m_RelPosJobHandle);
-        m_TranslateJobHandle = m_TranslateJob.Schedule(transforms, m_VelocityJobHandle);
-    }
-
-    void LateUpdate()
-    {
-        m_TranslateJobHandle.Complete();
+        m_PreBuildJobHandle = m_PreBuildJob.Schedule(amount, 1);
         
+        if (op == Op.Nothing)  // Do not apply velocity OR scale updates in op during frame
+        {
+            m_VelocityJob = new VelocityButterflyJob() 
+            {
+                state = states,
+                origin = origins,
+                position = positions,
+                positionRelCamera = relPositions,
+                timeInState = tsi,
+                wand = _wand,
+                
+                velocity = velocities,
+
+                deltaTime = dt,
+                distanceCurve = distanceCurve,
+                speedCurve = speedCurve,
+                gravity = butterflyPreset.gravity,
+                noiseSize = butterflyPreset.noiseSize,
+                noiseAmount = butterflyPreset.noiseAmount,
+                dampening = butterflyPreset.velocityDampening,
+                attraction = butterflyPreset.attraction,
+                maxSpeed = butterflyPreset.maxSpeed,
+                minWandSpeed = butterflyPreset.minimumWandSpeed,
+                maxWandSpeed = butterflyPreset.maximumWandSpeed,
+                
+                wandVelocity3d = wand.velocity3d,
+                wandSpeed = wand.speed,
+            
+                nestPosition = nest.transform.position
+            };
+
+            m_ScaleJob = new ScaleButterflyJob() 
+            {
+                state = states,
+                timeInState = tsi,
+                relPosition = relPositions,
+                
+                scale = butterflyPreset.scale,
+                growTime = butterflyPreset.timeToGrow,
+            
+                wandPosition3d = wand.position3d,
+                wandRadius = wand.radius,
+            
+                nestEnergy = nest.energy,
+                energyGrowth = butterflyPreset.energyGrowth
+            };
+            
+            
+            m_VelocityJobHandle = m_VelocityJob.Schedule(transforms, m_PreBuildJobHandle);
+            m_ScaleJobHandle = m_ScaleJob.Schedule(transforms, m_PreBuildJobHandle);
+            
+            m_VelocityJobHandle.Complete();
+            m_ScaleJobHandle.Complete();
+        }
+        else 
+        {
+            m_PreBuildJobHandle.Complete();    
+        }
+        
+        _randoms.Dispose(); // Wipe random values
+        
+        
+        // Assignment!
+
         for (int i = 0; i < amount; i++) 
         {
-            butterflies[i].positionRelativeToCamera = relPositions[i];
-            butterflies[i].Velocity = velocities[i];
+            butterflies[i]._State = (Butterfly.State) states[i]; // Assign state
+            
+            butterflies[i].positionRelativeToCamera = relPositions[i]; // Assign position rel camera
+            butterflies[i].Velocity = velocities[i]; // Assign velocity
         }
 
-        _randoms.Dispose();
+        op = Op.Nothing;
     }
 
     protected override void OnDestroy() {
@@ -217,7 +273,6 @@ public class ButterflowerManager : Spawner, IReactToSunCycle
         Butterfly.Dying -= ButterflyDying;
         Butterfly.Died -= ResetButterfly;
 
-        
         // Dispose all native arrays (JOBS)
 
         states.Dispose();
@@ -225,10 +280,13 @@ public class ButterflowerManager : Spawner, IReactToSunCycle
         positions.Dispose();
         relPositions.Dispose();
         velocities.Dispose();
+        _wand.Dispose();
+        tsi.Dispose();
         transforms.Dispose();
 
         distanceCurve.Dispose();
         speedCurve.Dispose();
+        deathCurve.Dispose();
 
         _randoms.Dispose();
     }
@@ -243,15 +301,12 @@ public class ButterflowerManager : Spawner, IReactToSunCycle
     #endregion
 
     #region Spawner overrides
-    
+
     void ResetButterfly(Butterfly butterfly)
     {
-        if (alive == 0)
-            onAllDead.Invoke();
+        if (alive == 0) onAllDead.Invoke();
 
         if (!respawn) return;
-
-        InstantiatePrefab(butterfly.gameObject);
         butterfly.Reset();
     }
 
@@ -269,12 +324,8 @@ public class ButterflowerManager : Spawner, IReactToSunCycle
         base.onInstantiatePrefab(obj, refresh);
 
         alive++;
-        if (refresh) {
+        if (refresh) 
             dead--;
-
-            var b = obj.GetComponent<Butterfly>();
-            SubDying(b);
-        }
     }
 
     #endregion
@@ -284,14 +335,12 @@ public class ButterflowerManager : Spawner, IReactToSunCycle
     public void KillButterflies(bool infinite = true)
     {
         respawn = infinite;
-        foreach (Butterfly butterfly in butterflies)
-            butterfly.Kill();
+        op = Op.Kill;
     }
 
     public void ReleaseButterflies()
     {
-        foreach (Butterfly butterfly in butterflies)
-            butterfly.Release();
+        op = Op.Release;
     }
 
     #endregion
@@ -307,10 +356,8 @@ public class ButterflowerManager : Spawner, IReactToSunCycle
     {
         butterflies.Remove(butterfly);
 
-        if (butterfly.state == Butterfly.State.Dying) {
+        if (butterfly.state == Butterfly.State.Dying) 
             dead--;
-            SubDying(butterfly);
-        }
         else
             alive--;
     }
@@ -318,38 +365,12 @@ public class ButterflowerManager : Spawner, IReactToSunCycle
     void ButterflyDying(Butterfly butterfly)
     {
         ++dead;
-        AddDying(butterfly);
-
         --alive;
     }
 
     #endregion
 
-    #region Health operations
-
-    void AddDying(Butterfly butterfly)
-    {
-        if (butterfly.agent == AGENT.User)
-            ++player_kills;
-        else if (butterfly.agent == AGENT.Wizard)
-            ++wizard_kills;
-        else if (butterfly.agent == AGENT.Inhabitants)
-            ++shared_kills;
-        else
-            ++misc_kills;
-    }
-
-    void SubDying(Butterfly butterfly)
-    {
-        if (butterfly.agent == AGENT.User)
-            --player_kills;
-        else if (butterfly.agent == AGENT.Wizard)
-            --wizard_kills;
-        else if (butterfly.agent == AGENT.Inhabitants)
-            --shared_kills;
-        else
-            --misc_kills;
-    }
+    #region Health
 
     public float GetHealth()
     {
@@ -364,17 +385,41 @@ public class ButterflowerManager : Spawner, IReactToSunCycle
     #region Jobs
 
     [BurstCompile]
-    struct RelPositionButterflyJob : IJobParallelFor
+    struct PreBuildButterflyJob : IJobParallelFor
     {
-        public NativeArray<Vector3> relPosition;
+        [ReadOnly] public int op;
+        
+        public NativeArray<float3> relPosition;
+        public NativeArray<int> state;
+        public NativeArray<float> wand;
 
-        [ReadOnly] public NativeArray<Vector3> position;
-        [ReadOnly] public Vector3 cameraPosition;
+        [ReadOnly] public NativeArray<float3> origin;
+        [ReadOnly] public NativeArray<float3> position;
+
+        //[NativeDisableContainerSafetyRestriction] public NativeArray<Unity.Mathematics.Random> randoms;
+        //[NativeSetThreadIndex] int _threadID;
+        
+        [ReadOnly] public float3 cameraPosition;
         [ReadOnly] public float4x4 cameraMatrix;
-        [ReadOnly] public Vector3 cameraUp, cameraForward, cameraRight;
+        [ReadOnly] public float3 cameraUp, cameraForward, cameraRight;
         [ReadOnly] public float pixelWidth, pixelHeight, scaleFactor;
+            
+        [ReadOnly] public float3 wandTrajectory2d;
+        [ReadOnly] public float wandRadius;
+        [ReadOnly] public float wandSpeed;
+        [ReadOnly] public float minWandSpeed, maxWandSpeed;
+
+        [ReadOnly] public float quiltSpeed;
+        [ReadOnly] public NativeArray<float> deathCurve;
 
         public void Execute(int index)
+        {
+            ExecuteRelativePosition(index);
+            ExecuteWandStrength(index);
+            ExecuteStateChanges(index);
+        }
+        
+        void ExecuteRelativePosition(int index)
         {
             float2 scpt = Extensions.ConvertWorldToScreenCoordinates(position[index],
                 cameraPosition,
@@ -386,20 +431,85 @@ public class ButterflowerManager : Spawner, IReactToSunCycle
             
             relPosition[index] = new float3(scpt.x, scpt.y, 0);
         }
+
+        void ExecuteWandStrength(int index)
+        {
+            float3 target = wandTrajectory2d;
+            float3 current = relPosition[index];
+
+            float3 direction = (target - current);
+        
+            float radius = wandRadius;
+            float dist = math.distance(float3.zero, direction);
+            
+            wand[index] = dist / radius;
+        }
+        
+        void ExecuteStateChanges(int index)
+        {
+            if (op == -1) // Null op
+            {
+                if (state[index] == 0) // Easing
+                {
+                    if (CheckForArrival(index)) state[index] = 1; // Has arrived!
+                }
+                else if (state[index] == 1) // Alive
+                {
+                    if( CheckForWandDeath(index)) state[index] = 2;
+                    //if (CheckForQuiltDeath(index) || CheckForWandDeath(index)) state[index] = 2;
+                }
+            }
+            else 
+            {
+                state[index] = op;
+            }
+        }
+
+        bool CheckForArrival(int index)
+        {
+            float distance = math.distance(position[index], origin[index]);
+            return distance < 1f;
+        }
+
+        bool CheckForWandDeath(int index)
+        {
+            if (wand[index] <= 1f) 
+            {
+                float minSpeed = minWandSpeed;
+                float maxSpeed = maxWandSpeed;
+            
+                var wandSpeedInterval = (wandSpeed - minSpeed) / (maxSpeed - minSpeed);
+                return (wandSpeedInterval > 1f);
+            }
+            
+            return false;
+        }
+
+        /*
+        bool CheckForQuiltDeath(int index)
+        {
+            int deathIndex = (int) (math.clamp(quiltSpeed, 0f, 1f) * 256);
+            float probability = randoms[_threadID].NextFloat(0f, 1f);
+
+            return probability < deathCurve[deathIndex];
+        }
+        */
     }
 
     [BurstCompile]
-    struct VelocityButterflyJob : IJobParallelFor
+    struct VelocityButterflyJob : IJobParallelForTransform
     {
         [ReadOnly] public NativeArray<int> state;
-        [ReadOnly] public NativeArray<Vector3> origin;
-        [ReadOnly] public NativeArray<Vector3> positionRelCamera;
-        [ReadOnly] public NativeArray<Vector3> position;
+        [ReadOnly] public NativeArray<float3> origin;
+        [ReadOnly] public NativeArray<float3> positionRelCamera;
+        [ReadOnly] public NativeArray<float3> position;
+        [ReadOnly] public NativeArray<float> wand;
+        [ReadOnly] public NativeArray<float> timeInState;
         
-        public NativeArray<Vector3> velocity;
+        public NativeArray<float3> velocity;
 
-        [NativeDisableContainerSafetyRestriction] public NativeArray<Unity.Mathematics.Random> randoms;
-        [NativeSetThreadIndex] int _threadID;
+        //[NativeDisableContainerSafetyRestriction] public NativeArray<Unity.Mathematics.Random> randoms;
+        //[NativeSetThreadIndex] int _threadID;
         
         [ReadOnly] public NativeArray<float> distanceCurve, speedCurve;
         [ReadOnly] public float deltaTime;
@@ -411,21 +521,22 @@ public class ButterflowerManager : Spawner, IReactToSunCycle
         [ReadOnly] public float maxSpeed;
         [ReadOnly] public float minWandSpeed, maxWandSpeed;
 
-        [ReadOnly] public Vector3 wandTrajectory, wandVelocity3d;
-        [ReadOnly] public float wandRadius;
+        [ReadOnly] public float3 wandVelocity3d;
         [ReadOnly] public float wandSpeed;
 
-        public void Execute(int index)
+        [ReadOnly] public float3 nestPosition;
+
+        public void Execute(int index, TransformAccess transform)
         {
             bool dampen = false;
             
             if (state[index] == -1) // Hidden
             { 
-                velocity[index] = Vector3.zero;
+                velocity[index] = float3.zero;
             }
             else if (state[index] == 0) // Easing
             {
-                Vector3 dir = origin[index] - position[index];
+                float3 dir = origin[index] - position[index];
                 velocity[index] = dir;
             }
             else if (state[index] == 1) // Alive
@@ -433,29 +544,37 @@ public class ButterflowerManager : Spawner, IReactToSunCycle
                 float strength = MoveWithWand(index);
 
                 // Move with noise
-                MoveWithNoise(index);
+                //MoveWithNoise(index);
                 if (strength <= 0f)
                     dampen = true;
             }
             else  // Dying
             {
-                velocity[index] += (Vector3.down * gravity);
+                velocity[index] += (new float3(0, -1, 0) * gravity);
             }
 
             if(state[index] < 2) // Not dying
                 ClampVelocity(index);
 
-            if(dampen) velocity[index] *= (1f - dampening * deltaTime); // Dampen velocity
+            if(dampen) velocity[index] *= (1f - dampening * deltaTime); // Dampen velocity\
+
+            /*if (state[index] != -1) {
+                float3 vel = velocity[index] * deltaTime;
+                Vector3 offset = new Vector3(vel.x, vel.y, vel.z);
+
+                transform.position += offset;
+            }
+            else*/
+                transform.position = nestPosition;
         }
 
         float MoveWithWand(int index)
         {
-            Vector3 direction = wandTrajectory - positionRelCamera[index];
-            float offset = direction.magnitude / wandRadius;
+            float wand = this.wand[index];
             
             var attract = 0f;
-            if (offset <= 1f) {
-                var distanceIndex = (int) (Mathf.Clamp01(offset) * 256);
+            if (wand <= 1f) {
+                var distanceIndex = (int) (math.clamp(wand, 0f, 1f) * 256);
                 var distanceMagnitude = distanceCurve[distanceIndex];
 
                 float minSpeed = minWandSpeed;
@@ -467,7 +586,7 @@ public class ButterflowerManager : Spawner, IReactToSunCycle
                     attract = distanceMagnitude;
                 }
                 else {
-                    var speedIndex = (int)(Mathf.Clamp01(wandSpeedInterval) * 256);
+                    var speedIndex = (int)(math.clamp(wandSpeedInterval, 0f, 1f) * 256);
                     var speedMagnitude = speedCurve[speedIndex];
                     
                     attract = speedMagnitude * distanceMagnitude;
@@ -479,50 +598,71 @@ public class ButterflowerManager : Spawner, IReactToSunCycle
             return attract;
         }
 
+        /*
         void MoveWithNoise(int index)
         {
-            Vector2 screen = positionRelCamera[index] * noiseSize;
+            float3 screen = positionRelCamera[index] * noiseSize;
             float _noise = Mathf.PerlinNoise(screen.x, screen.y);
 
             var r = randoms[_threadID];
-            Vector3 noiseDir = r.NextFloat3Direction();
+            float3 noiseDir = r.NextFloat3Direction();
             
             float speed = noiseAmount * _noise;
             velocity[index] += (noiseDir * speed * deltaTime);
         }
+        */
 
         void ClampVelocity(int index)
         {
-            float speed = velocity[index].magnitude;
-            speed = Mathf.Min(speed, maxSpeed);
-
-            velocity[index] = (speed * velocity[index].normalized);
-        }
-    }
-
-    [BurstCompile]
-    struct TranslateButterflyJob : IJobParallelForTransform
-    {
-        [ReadOnly] public NativeArray<Vector3> velocity;
-        [ReadOnly] public float deltaTime;
-
-        public void Execute(int index, TransformAccess transform)
-        {
-            Vector3 vel = velocity[index] * deltaTime;
-            transform.position += vel;
+            float speed = math.length(velocity[index]);
+            speed = math.min(speed, maxSpeed);
+            
+            velocity[index] = (speed *  math.normalize(velocity[index]));
         }
     }
 
     [BurstCompile]
     struct ScaleButterflyJob : IJobParallelForTransform
     {
-        public NativeArray<float3> scale;
-        [ReadOnly] public float deltaTime;
+        [ReadOnly] public NativeArray<int> state;
+        [ReadOnly] public NativeArray<float3> relPosition;
+        [ReadOnly] public NativeArray<float> timeInState;
+        
+        [ReadOnly] public float scale;
+        [ReadOnly] public float growTime;
+
+        [ReadOnly] public float3 wandPosition3d;
+        [ReadOnly] public float wandRadius;
+
+        [ReadOnly] public float nestEnergy;
+        [ReadOnly] public float energyGrowth;
 
         public void Execute(int index, TransformAccess transform)
         {
-            scale[index] += new float3(deltaTime, deltaTime, deltaTime);
-            transform.localScale = scale[index];
+            float _scale = scale;
+            
+            if (state[index] == -1) 
+            {
+                _scale = 0f;
+            }
+            else 
+            {
+                if (state[index] == 0 && timeInState[index] < growTime) 
+                {
+                    float i = timeInState[index] / growTime;
+                    _scale = math.lerp(0f, scale, math.pow(i, 2f));
+                }
+                else 
+                {
+                    float3 dir = wandPosition3d - relPosition[index];
+                    float magnitude = math.clamp(1f - math.length(dir) / (wandRadius * 6f), 0f, 1f) +
+                                      (nestEnergy * energyGrowth);
+
+                    _scale *= (1f + math.pow(magnitude, 2f));
+                }
+            }
+            
+            transform.localScale = new float3(1f,1f,1f) * _scale;
         }
     }
     
