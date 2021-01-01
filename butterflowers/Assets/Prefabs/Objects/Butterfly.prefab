@@ -174,8 +174,6 @@ GameObject:
   m_Component:
   - component: {fileID: 5556437273785765610}
   - component: {fileID: 5556437273785765614}
-  - component: {fileID: 114254769642422460}
-  - component: {fileID: 8755695293889584031}
   m_Layer: 15
   m_Name: Butterfly
   m_TagString: Untagged
@@ -218,33 +216,6 @@ MonoBehaviour:
   origin: {x: 0, y: 0, z: 0}
   m_positionRelativeToCamera: {x: 0, y: 0, z: 0}
   state: 0
---- !u!114 &114254769642422460
-MonoBehaviour:
-  m_ObjectHideFlags: 0
-  m_CorrespondingSourceObject: {fileID: 0}
-  m_PrefabInstance: {fileID: 0}
-  m_PrefabAsset: {fileID: 0}
-  m_GameObject: {fileID: 5556437273785765615}
-  m_Enabled: 1
-  m_EditorHideFlags: 0
-  m_Script: {fileID: 11500000, guid: 4b07e1ca857be497c959db8b96d84008, type: 3}
-  m_Name: 
-  m_EditorClassIdentifier: 
-  refresh: 0
-  continuous: 1
---- !u!65 &8755695293889584031
-BoxCollider:
-  m_ObjectHideFlags: 0
-  m_CorrespondingSourceObject: {fileID: 0}
-  m_PrefabInstance: {fileID: 0}
-  m_PrefabAsset: {fileID: 0}
-  m_GameObject: {fileID: 5556437273785765615}
-  m_Material: {fileID: 0}
-  m_IsTrigger: 1
-  m_Enabled: 0
-  serializedVersion: 2
-  m_Size: {x: 1, y: 1, z: 1}
-  m_Center: {x: 0, y: 0, z: 0}
 --- !u!1001 &4212495206180200249
 PrefabInstance:
   m_ObjectHideFlags: 0
