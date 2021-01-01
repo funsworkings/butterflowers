@@ -174,9 +174,9 @@ public class ButterflowerManager : Spawner, IReactToSunCycle
             cameraUp = camera_t.up,
             cameraRight = camera_t.right,
             cameraForward = camera_t.forward,
-            pixelWidth = camera.pixelWidth,
-            pixelHeight = camera.pixelHeight,
-            scaleFactor = canvas.scaleFactor,
+            pixelWidth = camera.scaledPixelWidth,
+            pixelHeight = camera.scaledPixelHeight,
+            scaleFactor = 1f,
             
             wandTrajectory2d = wand.trajectory2d,
             wandRadius = wand.radius,
