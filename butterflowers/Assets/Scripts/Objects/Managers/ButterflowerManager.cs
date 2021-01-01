@@ -13,7 +13,6 @@ using Unity.Entities;
 using Unity.Jobs;
 using Unity.Mathematics;
 using Unity.Jobs.LowLevel.Unsafe;
-using Unity.Rendering;
 using Unity.Transforms;
 using UnityEngine.Events;
 using uwu.Gameplay;
@@ -35,8 +34,8 @@ public class ButterflowerManager : Spawner, IReactToSunCycle
     {
         Nothing = -1,
         
-        Kill = 0,
-        Release = 1
+        Release = 1,
+        Kill = 3
     }
     
     #endregion
@@ -55,6 +54,7 @@ public class ButterflowerManager : Spawner, IReactToSunCycle
     [SerializeField] Canvas canvas;
 
     [SerializeField] Op op = Op.Nothing;
+    [SerializeField] int _op = -1;
 
     // Attributes
 
@@ -117,6 +117,7 @@ public class ButterflowerManager : Spawner, IReactToSunCycle
 
         var entities = Spawn(amount);
         var _transforms = entities.Select(e => e.transform).ToArray();
+        var _butterflies = entities.Select(e => e.GetComponent<Butterfly>()).ToArray();
 
         states = new NativeArray<int>(amount, Allocator.Persistent);
         origins = new NativeArray<float3>(amount, Allocator.Persistent);
@@ -129,22 +130,19 @@ public class ButterflowerManager : Spawner, IReactToSunCycle
         
         distanceCurve = new NativeArray<float>(butterflyPreset.distanceAttractionCurve.GenerateCurveArray(), Allocator.Persistent);
         speedCurve = new NativeArray<float>(butterflyPreset.speedAttractionCurve.GenerateCurveArray(), Allocator.Persistent);
-        deathCurve = new NativeArray<float>(butterflyPreset.deathProbabilityCurve.GenerateCurveArray(), Allocator.Persistent);;
+        deathCurve = new NativeArray<float>(butterflyPreset.deathProbabilityCurve.GenerateCurveArray(), Allocator.Persistent);
+
+        for (int i = 0; i < _butterflies.Length; i++) 
+        {
+            origins[i] = _butterflies[i].origin;
+            positions[i] = _butterflies[i].transform.position;
+        }
     }
 
     protected override void Update()
     {
         base.Update();
-
-        for (int i = 0; i < butterflies.Count; i++) 
-        {
-            states[i] = (int)butterflies[i]._State;
-            origins[i] = butterflies[i].origin;
-            positions[i] = butterflies[i].transform.position;
-            velocities[i] = butterflies[i].Velocity;
-            tsi[i] = butterflies[i].TimeInState;
-        }
-
+        
         float dt = Time.deltaTime;
         
         // Bind new randoms
@@ -152,7 +150,6 @@ public class ButterflowerManager : Spawner, IReactToSunCycle
         var r = (uint) Random.Range(int.MinValue, int.MaxValue);
         for (int i = 0; i < JobsUtility.MaxJobThreadCount; i++)
             _randoms[i] = new Unity.Mathematics.Random(r == 0 ? r + 1 : r);
-        
 
         Camera camera = wand.Camera;
         Transform camera_t = camera.transform;
@@ -164,9 +161,12 @@ public class ButterflowerManager : Spawner, IReactToSunCycle
             relPosition = relPositions,
             state = states,
             wand = _wand,
+            tsi = tsi,
             
             origin = origins,
             position = positions,
+            
+            deltaTime = dt,
 
             cameraPosition = camera_t.position,
             cameraMatrix = camera.projectionMatrix,
@@ -184,86 +184,80 @@ public class ButterflowerManager : Spawner, IReactToSunCycle
             maxWandSpeed = butterflyPreset.maximumWandSpeed,
             
             quiltSpeed = quilt.speedInterval,
-            deathCurve = deathCurve
+            deathCurve = deathCurve,
+            timeToDie = butterflyPreset.timeDead,
+            
+            nestOpen = (nest.open)? 1:0,
+            nestPosition = nest.transform.position
         };
 
-        m_PreBuildJobHandle = m_PreBuildJob.Schedule(amount, 1);
-        
-        if (op == Op.Nothing)  // Do not apply velocity OR scale updates in op during frame
+        m_VelocityJob = new VelocityButterflyJob() 
         {
-            m_VelocityJob = new VelocityButterflyJob() 
-            {
-                state = states,
-                origin = origins,
-                position = positions,
-                positionRelCamera = relPositions,
-                timeInState = tsi,
-                wand = _wand,
+            state = states,
+            origin = origins,
+            position = positions,
+            positionRelCamera = relPositions,
+            timeInState = tsi,
+            wand = _wand,
                 
-                velocity = velocities,
+            velocity = velocities,
 
-                deltaTime = dt,
-                distanceCurve = distanceCurve,
-                speedCurve = speedCurve,
-                gravity = butterflyPreset.gravity,
-                noiseSize = butterflyPreset.noiseSize,
-                noiseAmount = butterflyPreset.noiseAmount,
-                dampening = butterflyPreset.velocityDampening,
-                attraction = butterflyPreset.attraction,
-                maxSpeed = butterflyPreset.maxSpeed,
-                minWandSpeed = butterflyPreset.minimumWandSpeed,
-                maxWandSpeed = butterflyPreset.maximumWandSpeed,
+            deltaTime = dt,
+            distanceCurve = distanceCurve,
+            speedCurve = speedCurve,
+            gravity = butterflyPreset.gravity,
+            noiseSize = butterflyPreset.noiseSize,
+            noiseAmount = butterflyPreset.noiseAmount,
+            dampening = butterflyPreset.velocityDampening,
+            attraction = butterflyPreset.attraction,
+            maxSpeed = butterflyPreset.maxSpeed,
+            minWandSpeed = butterflyPreset.minimumWandSpeed,
+            maxWandSpeed = butterflyPreset.maximumWandSpeed,
                 
-                wandVelocity3d = wand.velocity3d,
-                wandSpeed = wand.speed,
+            wandVelocity3d = wand.velocity3d,
+            wandSpeed = wand.speed,
             
-                nestPosition = nest.transform.position
-            };
+            nestPosition = nest.transform.position
+        };
 
-            m_ScaleJob = new ScaleButterflyJob() 
-            {
-                state = states,
-                timeInState = tsi,
-                relPosition = relPositions,
+        m_ScaleJob = new ScaleButterflyJob() 
+        {
+            state = states,
+            timeInState = tsi,
+            relPosition = relPositions,
                 
-                scale = butterflyPreset.scale,
-                growTime = butterflyPreset.timeToGrow,
+            scale = butterflyPreset.scale,
+            growTime = butterflyPreset.timeToGrow,
             
-                wandPosition3d = wand.position3d,
-                wandRadius = wand.radius,
+            wandPosition3d = wand.position3d,
+            wandRadius = wand.radius,
             
-                nestEnergy = nest.energy,
-                energyGrowth = butterflyPreset.energyGrowth
-            };
+            nestEnergy = nest.energy,
+            energyGrowth = butterflyPreset.energyGrowth
+        };
             
             
-            m_VelocityJobHandle = m_VelocityJob.Schedule(transforms, m_PreBuildJobHandle);
-            m_ScaleJobHandle = m_ScaleJob.Schedule(transforms, m_PreBuildJobHandle);
-            
-            m_VelocityJobHandle.Complete();
-            m_ScaleJobHandle.Complete();
+        m_PreBuildJobHandle = m_PreBuildJob.Schedule(amount, 2);
+        m_VelocityJobHandle = m_VelocityJob.Schedule(transforms, m_PreBuildJobHandle);
+        m_ScaleJobHandle = m_ScaleJob.Schedule(transforms, m_VelocityJobHandle);
+        
+        
+        
+        m_ScaleJobHandle.Complete();
+
+        _randoms.Dispose(); // Wipe random values
+        
+        if (_op > 0) 
+        {
+            op = (Op) _op;
+            _op = -1;
         }
         else 
         {
-            m_PreBuildJobHandle.Complete();    
+            op = Op.Nothing;
         }
         
-        _randoms.Dispose(); // Wipe random values
-        
-        
-        // Assignment!
-
-        for (int i = 0; i < amount; i++) 
-        {
-            butterflies[i]._State = (Butterfly.State) states[i]; // Assign state
-            
-            butterflies[i].positionRelativeToCamera = relPositions[i]; // Assign position rel camera
-            butterflies[i].Velocity = velocities[i]; // Assign velocity
-        }
-
-        op = Op.Nothing;
     }
-
     protected override void OnDestroy() {
         base.OnDestroy();
 
@@ -335,12 +329,12 @@ public class ButterflowerManager : Spawner, IReactToSunCycle
     public void KillButterflies(bool infinite = true)
     {
         respawn = infinite;
-        op = Op.Kill;
+        _op = (int)Op.Kill;
     }
 
     public void ReleaseButterflies()
     {
-        op = Op.Release;
+        _op = (int)Op.Release;
     }
 
     #endregion
@@ -392,12 +386,16 @@ public class ButterflowerManager : Spawner, IReactToSunCycle
         public NativeArray<float3> relPosition;
         public NativeArray<int> state;
         public NativeArray<float> wand;
+        public NativeArray<float> tsi;
 
         [ReadOnly] public NativeArray<float3> origin;
-        [ReadOnly] public NativeArray<float3> position;
+        
+        public NativeArray<float3> position;
 
         //[NativeDisableContainerSafetyRestriction] public NativeArray<Unity.Mathematics.Random> randoms;
         //[NativeSetThreadIndex] int _threadID;
+
+        [ReadOnly] public float deltaTime;
         
         [ReadOnly] public float3 cameraPosition;
         [ReadOnly] public float4x4 cameraMatrix;
@@ -410,7 +408,12 @@ public class ButterflowerManager : Spawner, IReactToSunCycle
         [ReadOnly] public float minWandSpeed, maxWandSpeed;
 
         [ReadOnly] public float quiltSpeed;
+
+        [ReadOnly] public Vector3 nestPosition;
+        [ReadOnly] public int nestOpen;
+        
         [ReadOnly] public NativeArray<float> deathCurve;
+        [ReadOnly] public float timeToDie;
 
         public void Execute(int index)
         {
@@ -444,25 +447,55 @@ public class ButterflowerManager : Spawner, IReactToSunCycle
             
             wand[index] = dist / radius;
         }
+
+        void IncrementTSI(int index)
+        {
+            tsi[index] += deltaTime;
+        }
         
         void ExecuteStateChanges(int index)
         {
+            int previousState = state[index];
+            
             if (op == -1) // Null op
             {
-                if (state[index] == 0) // Easing
+                if (state[index] == 1) // Easing
                 {
-                    if (CheckForArrival(index)) state[index] = 1; // Has arrived!
+                    if (CheckForArrival(index)) 
+                        state[index] = 2; // Has arrived!
                 }
-                else if (state[index] == 1) // Alive
+                else if (state[index] == 2) // Alive
                 {
-                    if( CheckForWandDeath(index)) state[index] = 2;
+                    if (CheckForWandDeath(index))
+                        state[index] = 3;
+
                     //if (CheckForQuiltDeath(index) || CheckForWandDeath(index)) state[index] = 2;
+                }
+                else if (state[index] == 3) // Dying
+                {
+                    if (CheckForCompleteDeath(index)) 
+                    {
+                        if (nestOpen == 1) 
+                        {
+                            state[index] = 2;
+                            position[index] = origin[index];
+                        }
+                        else 
+                        {
+                            state[index] = 0;
+                            position[index] = nestPosition;
+                        }
+                        
+                    }
                 }
             }
             else 
             {
                 state[index] = op;
             }
+
+            IncrementTSI(index); // Increment time within state
+            if (previousState != state[index]) tsi[index] = 0f; // Reset TSI
         }
 
         bool CheckForArrival(int index)
@@ -485,6 +518,11 @@ public class ButterflowerManager : Spawner, IReactToSunCycle
             return false;
         }
 
+        bool CheckForCompleteDeath(int index)
+        {
+            return tsi[index] > timeToDie;
+        }
+
         /*
         bool CheckForQuiltDeath(int index)
         {
@@ -502,11 +540,11 @@ public class ButterflowerManager : Spawner, IReactToSunCycle
         [ReadOnly] public NativeArray<int> state;
         [ReadOnly] public NativeArray<float3> origin;
         [ReadOnly] public NativeArray<float3> positionRelCamera;
-        [ReadOnly] public NativeArray<float3> position;
         [ReadOnly] public NativeArray<float> wand;
         [ReadOnly] public NativeArray<float> timeInState;
         
         public NativeArray<float3> velocity;
+        public NativeArray<float3> position;
 
         //[NativeDisableContainerSafetyRestriction] public NativeArray<Unity.Mathematics.Random> randoms;
         //[NativeSetThreadIndex] int _threadID;
@@ -530,42 +568,40 @@ public class ButterflowerManager : Spawner, IReactToSunCycle
         {
             bool dampen = false;
             
-            if (state[index] == -1) // Hidden
+            if (state[index] == 0) // Hidden
             { 
                 velocity[index] = float3.zero;
             }
-            else if (state[index] == 0) // Easing
+            else if (state[index] == 1) // Easing
             {
                 float3 dir = origin[index] - position[index];
                 velocity[index] = dir;
             }
-            else if (state[index] == 1) // Alive
+            else if (state[index] == 2) // Alive
             {
                 float strength = MoveWithWand(index);
 
                 // Move with noise
                 //MoveWithNoise(index);
-                if (strength <= 0f)
-                    dampen = true;
+                if (strength <= 0f) dampen = true;
+                ClampVelocity(index);
             }
             else  // Dying
             {
-                velocity[index] += (new float3(0, -1, 0) * gravity);
+                velocity[index] += new float3(0, -gravity, 0);
             }
-
-            if(state[index] < 2) // Not dying
-                ClampVelocity(index);
-
+            
             if(dampen) velocity[index] *= (1f - dampening * deltaTime); // Dampen velocity\
 
-            /*if (state[index] != -1) {
+            if (state[index] != 0) 
+            {
                 float3 vel = velocity[index] * deltaTime;
-                Vector3 offset = new Vector3(vel.x, vel.y, vel.z);
-
-                transform.position += offset;
+                transform.position = position[index] + vel;
             }
-            else*/
+            else
                 transform.position = nestPosition;
+
+            position[index] = transform.position; // Write to position array
         }
 
         float MoveWithWand(int index)
@@ -614,10 +650,16 @@ public class ButterflowerManager : Spawner, IReactToSunCycle
 
         void ClampVelocity(int index)
         {
-            float speed = math.length(velocity[index]);
-            speed = math.min(speed, maxSpeed);
+            float3 vel = velocity[index];
+            float magnitude = vel.x * vel.x + vel.y * vel.y + vel.z * vel.z;
             
-            velocity[index] = (speed *  math.normalize(velocity[index]));
+            if (magnitude > 0f) 
+            {
+                float speed = math.sqrt(magnitude);
+                speed = math.min(speed, maxSpeed);
+                
+                velocity[index] = (speed *  math.normalize(velocity[index]));
+            }
         }
     }
 
@@ -641,13 +683,13 @@ public class ButterflowerManager : Spawner, IReactToSunCycle
         {
             float _scale = scale;
             
-            if (state[index] == -1) 
+            if (state[index] == 0) 
             {
                 _scale = 0f;
             }
             else 
             {
-                if (state[index] == 0 && timeInState[index] < growTime) 
+                if (state[index] == 1 && timeInState[index] < growTime) 
                 {
                     float i = timeInState[index] / growTime;
                     _scale = math.lerp(0f, scale, math.pow(i, 2f));
@@ -662,7 +704,7 @@ public class ButterflowerManager : Spawner, IReactToSunCycle
                 }
             }
             
-            transform.localScale = new float3(1f,1f,1f) * _scale;
+            transform.localScale = Vector3.one * _scale;
         }
     }
     
