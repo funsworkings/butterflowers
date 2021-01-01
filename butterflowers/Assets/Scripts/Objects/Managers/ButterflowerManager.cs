@@ -18,6 +18,7 @@ using UnityEngine.Events;
 using uwu.Gameplay;
 using UnityEngine.Jobs;
 using uwu.Extensions;
+using uwu.Snippets;
 using Extensions = uwu.Extensions.Extensions;
 using Random = UnityEngine.Random;
 using World = Unity.Entities.World;
@@ -217,7 +218,8 @@ public class ButterflowerManager : Spawner, IReactToSunCycle
             wandVelocity3d = wand.velocity3d,
             wandSpeed = wand.speed,
             
-            nestPosition = nest.transform.position
+            nestPosition = nest.transform.position,
+            cameraPosition = camera_t.position
         };
 
         m_ScaleJob = new ScaleButterflyJob() 
@@ -350,7 +352,10 @@ public class ButterflowerManager : Spawner, IReactToSunCycle
     {
         butterflies.Remove(butterfly);
 
-        if (butterfly.state == Butterfly.State.Dying) 
+        int index = butterfly.transform.GetSiblingIndex();
+        Butterfly.State state = (Butterfly.State)states[index];
+        
+        if (state == Butterfly.State.Dying) 
             dead--;
         else
             alive--;
@@ -563,6 +568,7 @@ public class ButterflowerManager : Spawner, IReactToSunCycle
         [ReadOnly] public float wandSpeed;
 
         [ReadOnly] public float3 nestPosition;
+        [ReadOnly] public float3 cameraPosition;
 
         public void Execute(int index, TransformAccess transform)
         {
@@ -588,7 +594,7 @@ public class ButterflowerManager : Spawner, IReactToSunCycle
             }
             else  // Dying
             {
-                velocity[index] += new float3(0, -gravity, 0);
+                velocity[index] += new float3(0, -1, 0) * (gravity + math.pow(timeInState[index], 4f));
             }
             
             if(dampen) velocity[index] *= (1f - dampening * deltaTime); // Dampen velocity\
@@ -602,6 +608,8 @@ public class ButterflowerManager : Spawner, IReactToSunCycle
                 transform.position = nestPosition;
 
             position[index] = transform.position; // Write to position array
+            
+            if(state[index] == 1 || state[index] == 2) FaceCamera(index, transform);
         }
 
         float MoveWithWand(int index)
@@ -660,6 +668,14 @@ public class ButterflowerManager : Spawner, IReactToSunCycle
                 
                 velocity[index] = (speed *  math.normalize(velocity[index]));
             }
+        }
+
+        void FaceCamera(int index, TransformAccess transform)
+        {
+            float3 dir = math.normalize(cameraPosition - position[index]);
+            quaternion rot = quaternion.LookRotationSafe(dir, new float3(0, 1, 0));
+
+            transform.rotation = rot;
         }
     }
 

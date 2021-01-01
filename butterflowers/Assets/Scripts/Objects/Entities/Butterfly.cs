@@ -33,11 +33,7 @@ public class Butterfly : MonoBehaviour
     public static event OnDying Dying;
 
     // External
-
-    CameraDriver driver;
     
-    Nest nest;
-    ButterflowerManager mother;
     Quilt quilt;
     
     // Properties
@@ -70,13 +66,6 @@ public class Butterfly : MonoBehaviour
     [Header("Movement")]
 
     public Vector3 origin = Vector3.zero;
-    public Vector3 m_positionRelativeToCamera;
-
-    [Header("State")]
-    
-    public State state = State.Hidden;
-
-    float timeInState = 0f;
 
     #region Accessors
 
@@ -88,33 +77,6 @@ public class Butterfly : MonoBehaviour
         }
     }
 
-    public float TimeInState
-    {
-        get { return timeInState; }
-        set { timeInState = value; }
-    }
-
-    public State _State
-    {
-        get { return state; }
-        set
-        {
-            bool flag_change = (state != value);
-            if (flag_change) 
-            {
-                if (value == State.Dying) 
-                {
-                    if (Dying != null) 
-                        Dying(this);
-                }
-
-                timeInState = 0f;
-            }
-
-            state = value;
-        }
-    }
-    
     #endregion
 
     #region Monobehavior callbacks
@@ -139,19 +101,16 @@ public class Butterfly : MonoBehaviour
 
     void Update()
     {
-        return;
-        
-        timeInState += Time.deltaTime;
-        if (state == State.Hidden) return;
-
+        /*
         if (state == State.Dying)
         {
             //CreateTrails(); // Ensure trails are set
             ContinueDying(timeInState);
         }
 
-        //AdjustAnimatorSpeed();
-        //trailRenderer.enabled = (state == State.Alive && velocity.magnitude > preset.velocityTrailThreshold);
+        AdjustAnimatorSpeed();
+        trailRenderer.enabled = (state == State.Alive && velocity.magnitude > preset.velocityTrailThreshold);
+        */
     }
 
     #endregion
@@ -172,10 +131,7 @@ public class Butterfly : MonoBehaviour
 
     void Init()
     {
-        driver = CameraDriver.Instance;
-        nest = Nest.Instance;
         quilt = FindObjectOfType<Quilt>();
-        mother = FindObjectOfType<ButterflowerManager>();
         wands = FindObjectsOfType<Wand>();
 
         renderers = GetComponentsInChildren<Renderer>();
@@ -191,21 +147,6 @@ public class Butterfly : MonoBehaviour
 
     public void Reset()
     {
-        if (nest == null || nest.open)
-        {
-            state = State.Alive;
-            transform.position = origin;
-        }
-        else
-        {
-            state = State.Hidden;
-            transform.position = nest.transform.position;
-        }
-        
-        transform.localScale = Vector3.one * .067f;
-
-        timeInState = 0f;
-
         trails = null; // Ensure new trails created for every butterfly on respawn
         
         propertyBlock.SetFloat("_Death", 0f);
@@ -252,26 +193,18 @@ public class Butterfly : MonoBehaviour
     
     void AdjustAnimatorSpeed()
     {
+        /*
         float speed = (state == State.Dying) ? preset.maxAnimationSpeed : preset.minAnimationSpeed;
         float lastSpeed = propertyBlock.GetFloat(shaderAnimationSpeedParam);
         
         float currentSpeed = (speed - lastSpeed) * Time.deltaTime;
         propertyBlock.SetFloat(shaderAnimationSpeedParam, currentSpeed);
+        */
     }
     
     #endregion
 
     #region Death
-    
-    void Die()
-    {
-        //trails.transform.parent = null;
-        //DestroyTrails();
-
-        state = State.Hidden;
-        if (Died != null)
-            Died(this);
-    }
 
     void ContinueDying(float timeSinceDeath)
     {
@@ -283,9 +216,6 @@ public class Butterfly : MonoBehaviour
                 r.SetPropertyBlock(propertyBlock);
             }
         }
-        
-        if (timeSinceDeath > preset.timeDead) 
-            Die();
     }
 
     #endregion
