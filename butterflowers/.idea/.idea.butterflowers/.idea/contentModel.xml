@@ -532,6 +532,19 @@
             <e p="VineData.cs" t="Include" />
             <e p="VineSceneData.cs" t="Include" />
           </e>
+          <e p="ECS" t="Include">
+            <e p="butterflowers" t="Include">
+              <e p="Components" t="Include">
+                <e p="MovementData.cs" t="Include" />
+                <e p="StateData.cs" t="Include" />
+              </e>
+              <e p="Systems" t="Include">
+                <e p="BindSystem.cs" t="Include" />
+                <e p="MovementSystem.cs" t="Include" />
+                <e p="ScaleSystem.cs" t="Include" />
+              </e>
+            </e>
+          </e>
           <e p="Global.cs" t="Include" />
           <e p="Interfaces" t="Include">
             <e p="IFileContainer.cs" t="Include" />

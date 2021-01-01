@@ -14,10 +14,10 @@ public class Butterfly : MonoBehaviour
     
     public enum State
     {
-        Hidden = -1,
-        Easing = 0,
-        Alive = 1,
-        Dying = 2
+        Hidden = 0,
+        Easing = 1,
+        Alive = 2,
+        Dying = 3
     }
     
     #endregion
@@ -71,10 +71,7 @@ public class Butterfly : MonoBehaviour
 
     public Vector3 origin = Vector3.zero;
     public Vector3 m_positionRelativeToCamera;
-    
-    [SerializeField] Vector3 velocity = Vector3.zero;
-    [SerializeField] float scale = 1f;
-    
+
     [Header("State")]
     
     public State state = State.Hidden;
@@ -83,36 +80,12 @@ public class Butterfly : MonoBehaviour
 
     #region Accessors
 
-    public Vector3 positionRelativeToCamera
-    {
-        get
-        {
-            return m_positionRelativeToCamera;
-        }
-        set
-        {
-            m_positionRelativeToCamera = value;
-        }
-    }
-
     public Vector3 position
     {
         set
         {
             origin = value;
         }
-    }
-
-    public Vector3 Velocity
-    {
-        get { return velocity; }
-        set { velocity = value; }
-    }
-
-    public float Scale
-    {
-        get { return scale; }
-        set { scale = value; }
     }
 
     public float TimeInState
@@ -155,6 +128,7 @@ public class Butterfly : MonoBehaviour
     {
         Register();
         Init();
+        
         Reset();
     }
 
@@ -165,6 +139,8 @@ public class Butterfly : MonoBehaviour
 
     void Update()
     {
+        return;
+        
         timeInState += Time.deltaTime;
         if (state == State.Hidden) return;
 
@@ -225,9 +201,8 @@ public class Butterfly : MonoBehaviour
             state = State.Hidden;
             transform.position = nest.transform.position;
         }
-
-        velocity = Vector3.zero;
-        transform.localScale = Vector3.zero;
+        
+        transform.localScale = Vector3.one * .067f;
 
         timeInState = 0f;
 
