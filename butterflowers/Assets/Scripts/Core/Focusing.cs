@@ -1,7 +1,6 @@
 ﻿using System.Collections.Generic;
+using Objects.Base;
 using UnityEngine;
-
-using ui = UnityEngine.UI;
 using UnityEngine.Events;
 using uwu.Audio;
 using uwu.Camera;
@@ -9,45 +8,47 @@ using uwu.Camera.Instances;
 using uwu.Extensions;
 using uwu.UI.Behaviors.Visibility;
 
-public class Focusing : MonoBehaviour
+namespace Core
 {
-    #region Internal
-
-    public enum State 
+    public class Focusing : MonoBehaviour
     {
-        None,
-        Environment
-    }
+        #region Internal
 
-    #endregion
+        public enum State 
+        {
+            None,
+            Environment
+        }
 
-    // Events
+        #endregion
 
-    public UnityEvent onFocus, onLoseFocus;
-    public static System.Action<State, State> onUpdateActiveState;
+        // Events
 
-	// External
+        public UnityEvent onFocus, onLoseFocus;
+        public static System.Action<State, State> onUpdateActiveState;
 
-	[SerializeField] CameraManager CameraManager;
-    [SerializeField] FocusCamera Camera;
-    [SerializeField] AudioHandler BackgroundAudio;
+        // External
 
-    // Properties
+        [SerializeField] CameraManager CameraManager;
+        [SerializeField] FocusCamera Camera;
+        [SerializeField] AudioHandler BackgroundAudio;
 
-	[SerializeField] Focusable m_focus = null;
-    [SerializeField] CameraVisualBlend CameraBlending;
-    [SerializeField] ToggleOpacity overlayOpacity;
+        // Properties
 
-    // Attributes
+        [SerializeField] Focusable m_focus = null;
+        [SerializeField] CameraVisualBlend CameraBlending;
+        [SerializeField] ToggleOpacity overlayOpacity;
 
-    [SerializeField] State m_state = State.None;
+        // Attributes
 
-    [SerializeField] float minFocusDistance = 1f, maxFocusDistance = 10f;
+        [SerializeField] State m_state = State.None;
+
+        [SerializeField] float minFocusDistance = 1f, maxFocusDistance = 10f;
     
-    [Header("Camera blends")]
+        [Header("Camera blends")]
         [SerializeField] CameraVisualBlendDefinition[] loseFocusBlends;
 
-    [Header("Audio")]
+        [Header("Audio")]
         [SerializeField] float minBGPitch = .4f, maxBGPitch = 1f;
         [SerializeField] float minBGLP = 300f, maxBGLP = 5000f;
         [SerializeField] float minBGVol = 0f, maxBGVol = 1f;
@@ -55,200 +56,201 @@ public class Focusing : MonoBehaviour
         [SerializeField] float lowpass = 0f, lowPassSmoothSpeed = .1f;
         [SerializeField] string lowPassFilterParam = null;
         
-    // Collections
+        // Collections
     
-    Focusable[] focuses = new Focusable[]{};
+        Focusable[] focuses = new Focusable[]{};
     
-    #region Accessors
+        #region Accessors
 
-    public bool active {
-        get
-        {
-            return (m_state != State.None);
-        }
-    }
-
-    public State state => m_state;
-    
-    public Focusable focus => m_focus;
-    public GameCamera FallbackCamera => CameraManager.DefaultCamera;
-
-    #endregion
-
-    #region Monobehaviour callbacks
-
-    void OnEnable() {
-        Focusable.FocusOnPoint += SetFocus;
-    }
-
-    void OnDisable()
-    {
-        Focusable.FocusOnPoint -= SetFocus;
-    }
-
-    void Start()
-    {
-        focuses = FindObjectsOfType<Focusable>();
-    }
-
-    // Update is called once per frame
-    void Update()
-    {
-        if (active) {
-            if (Input.GetKeyDown(Controls.LoseFocus))
-                LoseFocus();
-        }
-
-        EvaluateState();
-        EvaluateAudio();
-    }
-    
-    void Dispose()
-    {
-        if (m_focus != null) 
-            m_focus.LoseFocus(); // Clear default focus
-    }
-
-    #endregion
-
-    #region State
-
-    void EvaluateState()
-    {
-        State state = State.None;
-
-        if (focus == null)
-            state = State.None;
-        else
-            state = State.Environment;
-
-        if (state != this.state) 
-        {
-            m_state = state;
-            if (onUpdateActiveState != null)
-                onUpdateActiveState(m_state, state);
-        }
-    }
-
-	#endregion
-
-    #region Focus
-
-	public void SetFocus(Focusable focus)
-    {
-        if (focus == this.m_focus) return;
-
-        if (focus.dispose) {
-            Dispose();
-
-            this.m_focus = focus;
-
-            Camera = focus.camera;
-            if (Camera != null) 
+        public bool active {
+            get
             {
-                Camera.Focus(focus.transform);
+                return (m_state != State.None);
+            }
+        }
 
-                CameraBlending.blendDefinition = null;
-                CameraBlending.BlendTo(Camera);
+        public State state => m_state;
+    
+        public Focusable focus => m_focus;
+        public GameCamera FallbackCamera => CameraManager.DefaultCamera;
+
+        #endregion
+
+        #region Monobehaviour callbacks
+
+        void OnEnable() {
+            Focusable.FocusOnPoint += SetFocus;
+        }
+
+        void OnDisable()
+        {
+            Focusable.FocusOnPoint -= SetFocus;
+        }
+
+        void Start()
+        {
+            focuses = FindObjectsOfType<Focusable>();
+        }
+
+        // Update is called once per frame
+        void Update()
+        {
+            if (active) {
+                if (Input.GetKeyDown(KeyCode.Backspace))
+                    LoseFocus();
+            }
+
+            EvaluateState();
+            EvaluateAudio();
+        }
+    
+        void Dispose()
+        {
+            if (m_focus != null) 
+                m_focus.LoseFocus(); // Clear default focus
+        }
+
+        #endregion
+
+        #region State
+
+        void EvaluateState()
+        {
+            State state = State.None;
+
+            if (focus == null)
+                state = State.None;
+            else
+                state = State.Environment;
+
+            if (state != this.state) 
+            {
+                m_state = state;
+                if (onUpdateActiveState != null)
+                    onUpdateActiveState(m_state, state);
+            }
+        }
+
+        #endregion
+
+        #region Focus
+
+        public void SetFocus(Focusable focus)
+        {
+            if (focus == this.m_focus) return;
+
+            if (focus.dispose) {
+                Dispose();
+
+                this.m_focus = focus;
+
+                Camera = focus.camera;
+                if (Camera != null) 
+                {
+                    Camera.Focus(focus.transform);
+
+                    CameraBlending.blendDefinition = null;
+                    CameraBlending.BlendTo(Camera);
                 
-                Events.ReceiveEvent(EVENTCODE.REFOCUS, AGENT.User, focus.Agent);
+                    Events.ReceiveEvent(EVENTCODE.REFOCUS, AGENT.User, focus.Agent);
+                }
             }
+        
+            onFocus.Invoke();
+            overlayOpacity.Show();
         }
-        
-        onFocus.Invoke();
-        overlayOpacity.Show();
-    }
 
-    public void LoseFocus()
-    {
-        Dispose();
-        m_focus = null;
-        
-        var loseFocusBlend = loseFocusBlends.PickRandomSubset(1)[0];
-
-        CameraBlending.blendDefinition = loseFocusBlend;
-        CameraBlending.BlendTo(CameraManager.DefaultCamera);
-
-        onLoseFocus.Invoke();
-        overlayOpacity.Hide();
-    }
-
-    public Focusable[] FindVisibleFocuses()
-    {
-        List<Focusable> focus = new List<Focusable>();
-        if (active) 
-            focus.Add(null); // Add escape option
-
-        foreach (Focusable f in focuses) 
+        public void LoseFocus()
         {
-            if (f != this.focus) 
+            Dispose();
+            m_focus = null;
+        
+            var loseFocusBlend = loseFocusBlends.PickRandomSubset(1)[0];
+
+            CameraBlending.blendDefinition = loseFocusBlend;
+            CameraBlending.BlendTo(CameraManager.DefaultCamera);
+
+            onLoseFocus.Invoke();
+            overlayOpacity.Hide();
+        }
+
+        public Focusable[] FindVisibleFocuses()
+        {
+            List<Focusable> focus = new List<Focusable>();
+            if (active) 
+                focus.Add(null); // Add escape option
+
+            foreach (Focusable f in focuses) 
             {
-                var pos = Vector2.zero;
-                if (f.transform.IsVisible(CameraManager.MainCamera, out pos))
-                    focus.Add(f);
+                if (f != this.focus) 
+                {
+                    var pos = Vector2.zero;
+                    if (f.transform.IsVisible(CameraManager.MainCamera, out pos))
+                        focus.Add(f);
+                }
             }
-        }
         
-        return focus.ToArray();
-    }
-
-    #endregion
-
-    #region Audio
-
-    void EvaluateAudio()
-    {
-        if (active) 
-        {
-            SetBackgroundAudioFromDistance(-1f);
-            SetBackgroundVolumeFromDistance(-1f);
-        }
-        else 
-        {
-            BackgroundAudio.pitch = 1f;
-            BackgroundAudio.volume = 1f;
-
-            lowpass = maxBGLP;
+            return focus.ToArray();
         }
 
-        SmoothLowPassFilter();
+        #endregion
+
+        #region Audio
+
+        void EvaluateAudio()
+        {
+            if (active) 
+            {
+                SetBackgroundAudioFromDistance(-1f);
+                SetBackgroundVolumeFromDistance(-1f);
+            }
+            else 
+            {
+                BackgroundAudio.pitch = 1f;
+                BackgroundAudio.volume = 1f;
+
+                lowpass = maxBGLP;
+            }
+
+            SmoothLowPassFilter();
+        }
+
+        void SetBackgroundAudioFromDistance(float distance = -1f)
+        {
+            if (BackgroundAudio == null || Camera == null) return;
+
+            if(distance < 0f)
+                distance = Vector3.Distance(m_focus.transform.position, Camera.transform.position);
+
+            float pitch = distance.RemapNRB(minFocusDistance, maxFocusDistance, minBGPitch, maxBGPitch);
+            BackgroundAudio.pitch = pitch;
+
+            lowpass = distance.RemapNRB(minFocusDistance, maxFocusDistance, minBGLP, maxBGLP);
+        }
+
+        void SmoothLowPassFilter()
+        {
+            var mixer = BackgroundAudio.Mixer;
+            if (mixer == null) return;
+
+            float current = 0f;
+            mixer.GetFloat(lowPassFilterParam, out current);
+
+            float target = Mathf.Lerp(current, lowpass, Time.deltaTime * lowPassSmoothSpeed);
+            mixer.SetFloat(lowPassFilterParam, target);
+        }
+
+        void SetBackgroundVolumeFromDistance(float distance = -1f)
+        {
+            if (BackgroundAudio == null || Camera == null) return;
+
+            if(distance < 0f)
+                distance = Vector3.Distance(m_focus.transform.position, Camera.transform.position);
+
+            float vol = distance.RemapNRB(minFocusDistance, maxFocusDistance, minBGVol, maxBGVol);
+            BackgroundAudio.volume = vol;
+        }
+
+        #endregion
     }
-
-    void SetBackgroundAudioFromDistance(float distance = -1f)
-    {
-        if (BackgroundAudio == null || Camera == null) return;
-
-        if(distance < 0f)
-            distance = Vector3.Distance(m_focus.transform.position, Camera.transform.position);
-
-        float pitch = distance.RemapNRB(minFocusDistance, maxFocusDistance, minBGPitch, maxBGPitch);
-        BackgroundAudio.pitch = pitch;
-
-        lowpass = distance.RemapNRB(minFocusDistance, maxFocusDistance, minBGLP, maxBGLP);
-    }
-
-    void SmoothLowPassFilter()
-    {
-        var mixer = BackgroundAudio.Mixer;
-        if (mixer == null) return;
-
-        float current = 0f;
-        mixer.GetFloat(lowPassFilterParam, out current);
-
-        float target = Mathf.Lerp(current, lowpass, Time.deltaTime * lowPassSmoothSpeed);
-        mixer.SetFloat(lowPassFilterParam, target);
-    }
-
-    void SetBackgroundVolumeFromDistance(float distance = -1f)
-    {
-        if (BackgroundAudio == null || Camera == null) return;
-
-        if(distance < 0f)
-            distance = Vector3.Distance(m_focus.transform.position, Camera.transform.position);
-
-        float vol = distance.RemapNRB(minFocusDistance, maxFocusDistance, minBGVol, maxBGVol);
-        BackgroundAudio.volume = vol;
-    }
-
-    #endregion
 }

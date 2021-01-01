@@ -40,7 +40,8 @@ namespace uwu.Gameplay
 			CalculateBounds();
 			Debug.LogFormat("name: {0} center: {1} extents:{2}", gameObject.name, m_center, m_extents);
 
-			if (continuous) {
+			if (continuous) 
+			{
 				StartCoroutine("SpawnContinously");
 			}
 			else {
@@ -60,7 +61,7 @@ namespace uwu.Gameplay
 				StopCoroutine("SpawnContinously");
 		}
 
-		public GameObject[] Spawn(int amount = 0)
+		public virtual GameObject[] Spawn(int amount = 0)
 		{
 			if (prefab == null || amount == 0)
 				return null;

@@ -43,6 +43,7 @@ namespace Settings {
         public float timeToGrow = 1f;
         
         public AnimationCurve deathProbabilityCurve;
+        public int curveResolution = 256;
     }
 
 }
