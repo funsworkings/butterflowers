@@ -16,7 +16,7 @@ GameObject:
   m_Icon: {fileID: 0}
   m_NavMeshLayer: 0
   m_StaticEditorFlags: 0
-  m_IsActive: 1
+  m_IsActive: 0
 --- !u!4 &4202940932334495050
 Transform:
   m_ObjectHideFlags: 0
@@ -174,8 +174,6 @@ GameObject:
   m_Component:
   - component: {fileID: 5556437273785765610}
   - component: {fileID: 5556437273785765614}
-  - component: {fileID: 114254769642422460}
-  - component: {fileID: 8755695293889584031}
   m_Layer: 15
   m_Name: Butterfly
   m_TagString: Untagged
@@ -212,44 +210,12 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: 
   preset: {fileID: 11400000, guid: d61cb4af776ad4144b8d58cf71187d87, type: 2}
-  agent: 0
-  m_wand: {fileID: 0}
   trailsPrefab: {fileID: 382550191870845936, guid: fee354e8b11564a1c84451cf147ab5b4,
     type: 3}
-  final: {r: 0, g: 0, b: 0, a: 0}
-  colorSpeed: 0
   shaderAnimationSpeedParam: 
   origin: {x: 0, y: 0, z: 0}
-  velocity: {x: 0, y: 0, z: 0}
-  acceleration: {x: 0, y: 0, z: 0}
+  m_positionRelativeToCamera: {x: 0, y: 0, z: 0}
   state: 0
---- !u!114 &114254769642422460
-MonoBehaviour:
-  m_ObjectHideFlags: 0
-  m_CorrespondingSourceObject: {fileID: 0}
-  m_PrefabInstance: {fileID: 0}
-  m_PrefabAsset: {fileID: 0}
-  m_GameObject: {fileID: 5556437273785765615}
-  m_Enabled: 1
-  m_EditorHideFlags: 0
-  m_Script: {fileID: 11500000, guid: 4b07e1ca857be497c959db8b96d84008, type: 3}
-  m_Name: 
-  m_EditorClassIdentifier: 
-  refresh: 0
-  continuous: 1
---- !u!65 &8755695293889584031
-BoxCollider:
-  m_ObjectHideFlags: 0
-  m_CorrespondingSourceObject: {fileID: 0}
-  m_PrefabInstance: {fileID: 0}
-  m_PrefabAsset: {fileID: 0}
-  m_GameObject: {fileID: 5556437273785765615}
-  m_Material: {fileID: 0}
-  m_IsTrigger: 1
-  m_Enabled: 1
-  serializedVersion: 2
-  m_Size: {x: 1, y: 1, z: 1}
-  m_Center: {x: 0, y: 0, z: 0}
 --- !u!1001 &4212495206180200249
 PrefabInstance:
   m_ObjectHideFlags: 0

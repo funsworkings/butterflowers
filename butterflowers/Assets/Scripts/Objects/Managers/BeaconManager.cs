@@ -4,6 +4,7 @@ using UnityEngine;
 
 using System.Linq;
 using B83.Win32;
+using Core;
 using Type = Beacon.Type;
 using Locale = Beacon.Locale;
 using Settings;

@@ -50,7 +50,7 @@ public class CollisionPlane : MonoBehaviour
         {
             if (type == Type.Death) 
             {
-                butterflower.Kill();
+//                butterflower.Kill();
             }
         }
 
