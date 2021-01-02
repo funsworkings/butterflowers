@@ -27,7 +27,8 @@ namespace Objects.Managers
 		// Properties
 
 		[SerializeField] WorldPreset preset;
-		[SerializeField] ToggleOpacity opacity;
+		[SerializeField] ToggleOpacity opacity, frameOpacity;
+		[SerializeField] TMP_Text frameText;
 		[SerializeField] DialogueHandler sceneCaption;
 		[SerializeField] AudioSource sceneAudio;
 
@@ -46,7 +47,7 @@ namespace Objects.Managers
 		[SerializeField] float meshScaleTime = 1f;
 
 		[SerializeField] float startDelay = 1f, endDelay = 1f;
-		
+		[SerializeField] float frameDelay = 3f;
 
 		#region Accessors
 
@@ -161,6 +162,7 @@ namespace Objects.Managers
 
 		IEnumerator PlayScene(int _index)
 		{
+			Frame frame = frames[_index];
 			Sequence.Scene _scene = FetchScene(_index);
 			
 			Vector3 baseMeshScale = _scene.mesh.transform.localScale;
@@ -186,6 +188,14 @@ namespace Objects.Managers
 
 			//string debugMessage = "It is {0} on the {1}th day in the year of our Lord, 2020";
 			//sceneCaption.Push(string.Format(debugMessage, Enum.GetName(typeof(Frame), frames[_index]).ToUpper(), _index));
+
+			var framing = System.Enum.GetName(typeof(Frame), frame).ToUpper();
+			frameText.text = framing;
+			
+			frameOpacity.Show();
+			while (!frameOpacity.Visible) yield return null;
+			yield return new WaitForSecondsRealtime(frameDelay);
+			frameOpacity.Hide();
 
 			sceneCaption.Push(_scene.message);
 			while (sceneCaption.inprogress) 
