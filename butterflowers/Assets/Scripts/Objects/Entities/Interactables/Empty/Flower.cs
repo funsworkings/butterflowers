@@ -1,5 +1,7 @@
-﻿using Interfaces;
+﻿using System.Collections;
+using Interfaces;
 using Objects.Base;
+using Settings;
 using UnityEngine;
 
 namespace Objects.Entities.Interactables.Empty
@@ -19,6 +21,8 @@ namespace Objects.Entities.Interactables.Empty
 		#endregion
 
 		// Properties
+
+		[SerializeField] WorldPreset preset;
 		
 		Animator animator;
 		[SerializeField] ParticleSystem firePS;
@@ -61,7 +65,12 @@ namespace Objects.Entities.Interactables.Empty
 			if (file == null) return;
 			
 			var beacons = FindObjectOfType<BeaconManager>();
-				beacons.CreateBeacon(file, type, Beacon.Locale.Terrain, Vector3.zero, load:false);
+			var @params = new Hashtable() 
+			{
+				{ "position" , transform.position }
+			};
+			
+			beacons.CreateBeacon(file, type, Beacon.Locale.Terrain, @params, fromSave:false, transition: BeaconManager.TransitionType.Flower);
 		}
 
 		#endregion

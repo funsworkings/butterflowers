@@ -34,27 +34,24 @@ public class FileDragAndDrop : MonoBehaviour
 
     void OnFiles(List<string> aFiles, POINT aPos)
     {
-        foreach (string s in aFiles) 
+        IEnumerable<string> validFiles = aFiles.Where(file =>
+                Files.ExtensionMatchesFilter(Path.GetExtension(file).ToLowerInvariant())
+        );
+
+        bool multiple = validFiles.Count() > 1;
+        
+        foreach (string _file in validFiles) 
         {
-            Debug.LogError(s);
+            Debug.LogError(_file);
             
-            var info = new FileInfo(s);
+            var info = new FileInfo(_file);
             var path = info.FullName;
             
-            var ext = System.IO.Path.GetExtension(s).ToLowerInvariant();
-            bool success = Files.ExtensionMatchesFilter(ext);
-
-            if (success) 
-            {
-                bool exists = Lib.RegisterFileInstance(path, aPos);
-                if(exists) 
-                    wand.AddBeacon(path, aPos); // Add beacon to scene via wand
-                else
-                    Debug.LogErrorFormat("File => {0} does not exist on user's desktop!", path);
-            }
-            else {
-                Debug.LogErrorFormat("File => {0} does not match extensions!", path);
-            }
+            bool exists = Lib.RegisterFileInstance(path, aPos);
+            if (exists)
+                wand.AddBeacon(path, aPos, random:multiple); // Add beacon to scene via wand
+            else
+                Debug.LogErrorFormat("File => {0} does not exist on user's desktop!", path);
         }
     }
 }

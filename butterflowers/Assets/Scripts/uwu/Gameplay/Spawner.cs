@@ -139,6 +139,14 @@ namespace uwu.Gameplay
 			pos = position;
 		}
 
+		public Vector3 FetchPosition()
+		{
+			Vector3 pos = Vector3.zero;
+			DecidePosition(ref pos);
+			
+			return pos;
+		}
+
 		public virtual void DecideRotation(ref Quaternion rot)
 		{
 			rot = prefab.transform.rotation;
@@ -149,7 +157,8 @@ namespace uwu.Gameplay
 			var refresh = true;
 
 			var instance = inst;
-			if (instance == null) {
+			if (instance == null) 
+			{
 				refresh = false;
 				instance = Instantiate(prefab);
 				instances.Add(instance);
