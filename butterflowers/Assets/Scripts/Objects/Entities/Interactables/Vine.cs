@@ -209,7 +209,8 @@ public class Vine : Interactable, ITooltip, IFileContainer
             index = 0;
             interval = 1f;
         }
-        else {
+        else 
+        {
             var len = data.waypoints_x.Length; // Get length of all waypoints
             
             waypoints = new List<Vector3>();

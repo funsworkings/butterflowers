@@ -30,6 +30,8 @@ public class Cage : MonoBehaviour
     
     [SerializeField] Sector[] sectors;
     [SerializeField] bool complete = false;
+
+    public bool load = false;
     
     #region Accessors
 
@@ -47,6 +49,7 @@ public class Cage : MonoBehaviour
             sector.Load(this, statuses[index++]);
 
         CheckIfComplete(events: false);
+        load = true;
     }
     
     #endregion

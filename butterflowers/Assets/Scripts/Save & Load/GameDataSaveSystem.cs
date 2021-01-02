@@ -82,24 +82,28 @@ namespace uwu
 			set => data.sun.time = value;
 		}
 
-		public BeaconData[] beaconData
+		public BeaconSceneData beaconData
 		{
-			get { return data == null ? new BeaconData[] { } : data.beacons; }
+			get { return data == null ? new BeaconSceneData() : data.beacons; }
 		}
 
 		public Beacon[] beacons
 		{
 			set
 			{
+				BeaconSceneData _dat = new BeaconSceneData();
+				
 				var dat = new List<BeaconData>();
-				for (var i = 0; i < value.Length; i++) {
+				for (var i = 0; i < value.Length; i++) 
+				{
 					var beacon = value[i];
 					var parsed = new BeaconData(beacon.File, beacon.Origin, beacon.type, beacon.state);
 
 					dat.Add(parsed);
 				}
 
-				data.beacons = dat.ToArray();
+				_dat.beacons = dat.ToArray();
+				data.beacons = _dat;
 			}
 		}
 

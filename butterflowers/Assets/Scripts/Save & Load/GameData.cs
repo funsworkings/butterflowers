@@ -13,7 +13,7 @@ namespace uwu
 	    [Header("Base")]
         public SunData sun = new SunData();
 
-        public BeaconData[] beacons = new BeaconData[] { };
+        public BeaconSceneData beacons = new BeaconSceneData();
         public VineSceneData vines = new VineSceneData();
         public SurveillanceData[] surveillanceData = new SurveillanceData[]{};
         public SequenceData sequence = new SequenceData();

@@ -23,7 +23,7 @@ namespace Objects.Entities
 
 		// Properties
 
-		Cage cage;
+		[SerializeField] Cage cage;
 
 		[SerializeField] Transform vertex;
 		[SerializeField] Status status = Status.Wait;
@@ -43,8 +43,6 @@ namespace Objects.Entities
 
 		public void Load(Cage cage, int _status)
 		{
-			this.cage = cage;
-			
 			status = (Status)_status;
 			load = true;
 		}

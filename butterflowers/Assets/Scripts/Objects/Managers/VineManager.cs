@@ -91,16 +91,22 @@ public class VineManager : MonoBehaviour
     public void Load(System.Object dat)
     {
         var data = (VineSceneData) dat;
-        
+        StartCoroutine(ReliableLoad(data));
+    }
+
+    IEnumerator ReliableLoad(VineSceneData data)
+    {
         cage.Initialize(data.corners);
+        while (!cage.load) yield return null;
         
-        if (dat != null) {
-            foreach (VineData v in data.vines) {
-                var vine = DropVine(transform.position, vineRoot.up);
-                    vine.Initialize(this, cage, v);
-                    
-                vines.Add(vine);
-            }
+        yield return new WaitForEndOfFrame();
+        
+        foreach (VineData v in data.vines) 
+        {
+            var vine = DropVine(transform.position, vineRoot.up);
+            vine.Initialize(this, cage, v);
+                
+            vines.Add(vine);
         }
 
         _Save = GameDataSaveSystem.Instance;

@@ -315,7 +315,7 @@ namespace Core
         {
             if (beacon == null) return false;
 
-            bool success = beacon.Activate();
+            bool success = beacon.AddToNest();
             if (success)
                 Events.ReceiveEvent(EVENTCODE.BEACONACTIVATE, Agent, AGENT.Beacon, details: beacon.File);
 
@@ -325,19 +325,14 @@ namespace Core
         public bool PlantBeacon(Beacon beacon)
         {
             if (beacon == null) return false;
-
-            bool success = beacon.Plant();
-            if(success)
-                Events.ReceiveEvent(EVENTCODE.BEACONPLANT, Agent, AGENT.Beacon, details: beacon.File);
-
-            return success;
+            return beacon.Plant(beacon.Origin);;
         }
     
         public bool DestroyBeacon(Beacon beacon) 
         {
             if (beacon == null) return false;
 
-            bool success = beacon.Delete(particles: true);
+            bool success = beacon.Delete();
             if (success)
                 Events.ReceiveEvent(EVENTCODE.BEACONDELETE, Agent, AGENT.Beacon, details: beacon.File);
 
@@ -384,18 +379,18 @@ namespace Core
 
             if (target != null) {
                 if (target is Terrain)
-                    beacon.PlantAtLocation(origin);
+                    beacon.Plant(origin);
                 else if (target is Nest)
-                    beacon.Activate();
+                    beacon.AddToNest();
                 else if (target is Tree)
-                    beacon.FlowerAtLocation(origin);
+                    beacon.Flower(origin);
                 else if (target is Star)
-                    beacon.Ignite();
+                    beacon.Destroy();
                 else
-                    beacon.Drop();
+                    beacon.Release();
             }
             else
-                beacon.Drop();
+                beacon.Release();
         
             beacon = null;
             target = null;

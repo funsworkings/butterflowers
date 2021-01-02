@@ -128,7 +128,6 @@ namespace Core
 
             /* * * * * * * * * * * * * * * * */
 
-
             SubscribeToEvents(); // Add all event listeners
 
             StartCoroutine("Initialize");
