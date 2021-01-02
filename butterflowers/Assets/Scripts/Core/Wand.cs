@@ -15,7 +15,7 @@ using Cursor = uwu.Snippets.Cursor;
 
 namespace Core
 {
-    public class Wand : Interacter
+    public class Wand : Interacter, IReactToSunCycle
     {
         #region Internal
 
@@ -541,5 +541,14 @@ namespace Core
         }
     
         #endregion
+
+        public void Cycle(bool refresh)
+        {
+            if (beacon != null) // Dispose of beacon held
+            {
+                beacon.Release();
+                beacon = null;
+            }   
+        }
     }
 }

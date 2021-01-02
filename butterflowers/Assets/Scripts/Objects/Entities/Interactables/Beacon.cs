@@ -145,13 +145,8 @@ public class Beacon: Interactable, IFlammable, ITooltip, IFileContainer {
     protected override void Update()
     {
         UpdateColor();
-        
         base.Update();
-    }
-
-    protected override void OnUpdate()
-    {
-        base.OnUpdate();
+        
         if (!returnToOrigin) return; // Ignore update calls
         
         lerp_t += Time.deltaTime;
