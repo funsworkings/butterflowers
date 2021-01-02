@@ -127,7 +127,7 @@ public class Nest : Focusable, IReactToSunCycle, ISaveable, IFlammable, ITooltip
 
         damage.onHit.AddListener(SpillKick);
 
-        Beacon.Destroyed += onDestroyBeacon;
+        Beacon.Deleted += onDestroyBeacon;
 
         StartCoroutine("MaintainOnScreen");
         //StartCoroutine("FetchSafePoints");
@@ -166,7 +166,7 @@ public class Nest : Focusable, IReactToSunCycle, ISaveable, IFlammable, ITooltip
 
         damage.onHit.RemoveListener(SpillKick);
 
-        Beacon.Destroyed -= onDestroyBeacon;
+        Beacon.Deleted -= onDestroyBeacon;
 
         StopCoroutine("MaintainOnScreen");
     }
@@ -417,7 +417,7 @@ public class Nest : Focusable, IReactToSunCycle, ISaveable, IFlammable, ITooltip
             Debug.LogWarning(e.Message);
         }
 
-        beacon.Deactivate(origin, resetBeaconOrigin);
+        beacon.RemoveFromNest(origin, resetBeaconOrigin);
 
         cometPS.Play();
 

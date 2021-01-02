@@ -5,6 +5,7 @@ using UnityEngine;
 using System.Linq;
 using B83.Win32;
 using Core;
+using Data;
 using Type = Beacon.Type;
 using Locale = Beacon.Locale;
 using Settings;
@@ -93,6 +94,7 @@ public class BeaconManager : Spawner, IReactToSunCycle, ISaveable
 		Beacon.Deactivated += onDeactivatedBeacon;
         Beacon.Planted += onPlantedBeacon;
         Beacon.Flowered += onFloweredBeacon;
+        Beacon.Destroyed += onDestroyedBeacon;
         
         Library = Library.Instance;
 	        Library.onDeletedFiles += UserDeletedFiles;
@@ -108,6 +110,7 @@ public class BeaconManager : Spawner, IReactToSunCycle, ISaveable
 		Beacon.Deactivated -= onDeactivatedBeacon;
         Beacon.Planted -= onPlantedBeacon;
         Beacon.Flowered -= onFloweredBeacon;
+        Beacon.Destroyed -= onDestroyedBeacon;
         
         Library.onDeletedFiles -= UserDeletedFiles;
         Library.onRecoverFiles -= UserRecoveredFiles;
@@ -177,7 +180,7 @@ public class BeaconManager : Spawner, IReactToSunCycle, ISaveable
             
         Debug.Log("Add beacon => " + path);
         
-        beacon.Initialize(type, state, origin, load);
+        beacon.Register(type, state, origin, load);
 
         Events.ReceiveEvent(EVENTCODE.BEACONADD, AGENT.World, AGENT.Beacon, details: beacon.File);
 
@@ -273,6 +276,8 @@ public class BeaconManager : Spawner, IReactToSunCycle, ISaveable
             Vector3 loc = new Vector3(beacon.x, beacon.y, beacon.z);
             Type t = (Type)beacon.type;
             Locale s = (Locale)beacon.state;
+            
+            Debug.LogFormat("Success restore beacon!  file= {0}  locale={1}", p, s);
 
             var instance = CreateBeacon(p, t, s, loc, usePosition:true);
             if (instance == null)
@@ -361,7 +366,8 @@ public class BeaconManager : Spawner, IReactToSunCycle, ISaveable
     void onRegisterBeacon(Beacon beacon)
 	{
 		var file = beacon.File;
-		if (beacons.ContainsKey(file)) {
+		if (beacons.ContainsKey(file)) 
+		{
 			var list = beacons[file];
 			list.Add(beacon);
 
@@ -394,6 +400,9 @@ public class BeaconManager : Spawner, IReactToSunCycle, ISaveable
 	void onActivatedBeacon(Beacon beacon)
 	{
 		Nest.AddBeacon(beacon);
+		
+		Events.ReceiveEvent(EVENTCODE.BEACONACTIVATE, AGENT.User, AGENT.Beacon, details: beacon.File);
+		
 		TriggerUpdateBeacons();
 	}
 
@@ -404,6 +413,8 @@ public class BeaconManager : Spawner, IReactToSunCycle, ISaveable
 
     void onPlantedBeacon(Beacon beacon)
     {
+	    Events.ReceiveEvent(EVENTCODE.BEACONPLANT, AGENT.User, AGENT.Beacon, details: beacon.File);
+	    
 	    TriggerUpdateBeacons();
 	    if (onPlantBeacon != null)
             onPlantBeacon(beacon);
@@ -411,7 +422,22 @@ public class BeaconManager : Spawner, IReactToSunCycle, ISaveable
 
     void onFloweredBeacon(Beacon beacon)
     {
+	    Events.ReceiveEvent(EVENTCODE.BEACONFLOWER, AGENT.User, AGENT.Beacon, details: beacon.File);
 	    TriggerUpdateBeacons();
+    }
+
+    void onDestroyedBeacon(Beacon beacon)
+    {
+	    var file = beacon.File;
+	    var others = beacons[file];
+
+	    foreach (Beacon b in others) 
+	    {
+		    if (b != beacon && (b.state == Locale.Terrain || b.state == Locale.Nest)) 
+		    {
+				b.Fire();    
+		    }    
+	    }
     }
 
     void TriggerUpdateBeacons()
@@ -426,6 +452,7 @@ public class BeaconManager : Spawner, IReactToSunCycle, ISaveable
 
 	void UserDeletedFiles(string[] files)
 	{
+		/*
 		foreach (string file in files) 
 		{
 			if (beacons.ContainsKey(file)) 
@@ -435,10 +462,12 @@ public class BeaconManager : Spawner, IReactToSunCycle, ISaveable
 					b.Destroy();	
 			}	
 		}
+		*/
 	}
 
 	void UserRecoveredFiles(string[] files)
 	{
+		/*
 		foreach (string file in files) 
 		{
 			if (beacons.ContainsKey(file)) 
@@ -448,6 +477,7 @@ public class BeaconManager : Spawner, IReactToSunCycle, ISaveable
 					b.Recover();
 			}	
 		}
+		*/
 	}
 	
 	#endregion
@@ -470,8 +500,8 @@ public class BeaconManager : Spawner, IReactToSunCycle, ISaveable
 
 		if (dat != null) 
 		{
-			var beacons = (BeaconData[]) dat;
-			RestoreBeacons(beacons);
+			var beacons = (BeaconSceneData) dat;
+			RestoreBeacons(beacons.beacons);
 		}
 	}
 

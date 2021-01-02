@@ -58,15 +58,14 @@ public class Beacon: Interactable, IFlammable, ITooltip, IFileContainer {
     // Events
 
 	public static System.Action<Beacon> OnRegister, OnUnregister;
-    public static System.Action<Beacon> Activated, Deactivated, Destroyed, Planted, Flowered;
+    public static System.Action<Beacon> Activated, Deactivated, Destroyed, Deleted, Planted, Flowered;
     public static System.Action<Beacon> onUpdateState;
 
     // Properties
 
     [SerializeField] WorldPreset preset;
     [SerializeField] ParticleSystem deathPS, addPS, appearPS;
-
-    Animator animator;
+    
     new MeshRenderer renderer;
     new Collider collider;
     Material material;
@@ -143,13 +142,6 @@ public class Beacon: Interactable, IFlammable, ITooltip, IFileContainer {
 
     #region Monobehaviour callbacks
 
-    protected override void Awake() 
-    {
-        base.Awake();
-
-        animator = GetComponent<Animator>();
-    }
-
     protected override void Update()
     {
         UpdateColor();
@@ -160,18 +152,10 @@ public class Beacon: Interactable, IFlammable, ITooltip, IFileContainer {
     protected override void OnUpdate()
     {
         base.OnUpdate();
-
-        // Interactions on hover (E / P)
-        if (hovered)
-            EvaluateState();
-
-        if (returnToOrigin) 
-        {
-            lerp_t += Time.deltaTime;
-            ReturnToOrigin(lerp_t);
-        }
+        if (!returnToOrigin) return; // Ignore update calls
         
-        EvaluateState();
+        lerp_t += Time.deltaTime;
+        ReturnToOrigin(lerp_t);
     }
 
     void OnDisable() 
@@ -204,8 +188,43 @@ public class Beacon: Interactable, IFlammable, ITooltip, IFileContainer {
 
 	#region Registration & Initialization
 
-	public void Register()
+	public void Register(Type type, Locale state, Vector3 origin, bool load = false)
     {
+        Room = World.Instance;
+        Nest = Nest.Instance;
+
+        collider = GetComponent<Collider>();
+        renderer = GetComponentInChildren<MeshRenderer>();
+        material = renderer.material;
+
+        this.type = type;
+        var targetState = state;
+        this.origin = origin;
+        
+        this.size = preset.normalBeaconScale * Vector3.one;
+        this.lerp_duration = preset.beaconLerpDuration;
+        this.scaleCurve = preset.beaconScaleCurve;
+
+        ReturnToOrigin(99f);
+
+        switch (targetState) 
+        {
+            case Locale.Flower:
+                Flower(origin);
+                break;
+            case Locale.Nest:
+                AddToNest();
+                break;
+            case Locale.Planted:
+                Plant(origin);
+                break;
+            case Locale.Terrain:
+                ToggleCapabilities(true);
+                break;
+            default: break;
+        }
+        this.state = state;
+
         if (OnRegister != null)
             OnRegister(this);
     }
@@ -216,44 +235,13 @@ public class Beacon: Interactable, IFlammable, ITooltip, IFileContainer {
             OnUnregister(this);
     }
 
-    public void Initialize(Type type, Locale state, Vector3 origin, bool load = false)
-    {
-        Room = World.Instance;
-        Nest = Nest.Instance;
-
-        collider = GetComponent<Collider>();
-        animator = GetComponent<Animator>();
-        renderer = GetComponentInChildren<MeshRenderer>();
-        material = renderer.material;
-
-        this.type = type;
-        this.state = state;
-        this.origin = origin;
-        
-        this.size = preset.normalBeaconScale * Vector3.one;
-        this.lerp_duration = preset.beaconLerpDuration;
-        this.scaleCurve = preset.beaconScaleCurve;
-        
-        
-        if(load) animator.SetInteger("open", 1);
-        else animator.SetInteger("open", 0);
-
-        ReturnToOrigin(99f);
-        
-        if(state == Locale.Flower) flower = CreateFlowerAtOrigin();
-        if(state != Locale.Terrain) transform.localScale = Vector3.zero;
-        
-        Register();
-    }
-
-
     #endregion
 
     #region Operations
 
-    public bool Activate() 
+    public bool AddToNest() 
     {
-        if (state != Locale.Drag) return false;
+        if (state == Locale.Nest) return false;
         state = Locale.Nest;
 
         var impact = Instantiate(pr_impactPS, transform.position, transform.rotation);
@@ -263,71 +251,15 @@ public class Beacon: Interactable, IFlammable, ITooltip, IFileContainer {
         deathPS.Stop();
         
         transform.position = Nest.transform.position; // Reset back to nest position at start of lerp
-        transform.localScale = Vector3.zero;
-
-        Events.ReceiveEvent(EVENTCODE.BEACONACTIVATE, AGENT.User, AGENT.Beacon, details: File);
+        ToggleCapabilities(false);
+        
         if (Activated != null)
             Activated(this);
 
         return true;
     }
-
-    public void PlantAtLocation(Vector3 point)
-    {
-        if (state != Locale.Drag) return;
-        
-        origin = point;
-        Plant();
-    }
-
-    public bool Plant()
-    {
-        if (state != Locale.Drag) return false;
-        state = Locale.Planted;
-
-        transform.localScale = Vector3.zero;
-
-        Events.ReceiveEvent(EVENTCODE.BEACONPLANT, AGENT.User, AGENT.Beacon, details: File);
-        if (Planted != null)
-            Planted(this);
-
-        return true;
-    }
-
-    public void FlowerAtLocation(Vector3 point)
-    {
-        if (state != Locale.Drag) return;
-
-        origin = point;
-        Flower();
-    }
-
-    public bool Flower()
-    {
-        if (state != Locale.Drag) return false;
-        state = Locale.Flower;
-
-        transform.localScale = Vector3.zero;
-        
-        flower = CreateFlowerAtOrigin();
-
-        Events.ReceiveEvent(EVENTCODE.BEACONFLOWER, AGENT.User, AGENT.Beacon, details: File);
-        if (Flowered != null)
-            Flowered(this);
-        
-        return true;
-    }
-
-    Flower CreateFlowerAtOrigin()
-    {
-        var flowerInstance = Instantiate(pr_flower, origin, Quaternion.identity);
-        var flower = flowerInstance.GetComponentInChildren<Flower>(); 
-            flower.Grow(Objects.Entities.Interactables.Empty.Flower.Origin.Beacon, File, type);
-            
-        return flower;
-    }
-
-    public bool Deactivate(Vector3 origin, bool resetOrigin = false)
+    
+    public bool RemoveFromNest(Vector3 origin, bool resetOrigin = false)
     {
         Debug.LogFormat("Deactivate {0} when state is {1}", File, state);
         if (state != Locale.Nest) return false;
@@ -348,16 +280,52 @@ public class Beacon: Interactable, IFlammable, ITooltip, IFileContainer {
         return true;
     }
 
-    public bool Delete(bool events = true, bool particles = false)
+    public bool Plant(Vector3 point)
+    {
+        if (state == Locale.Planted) return false;
+        state = Locale.Planted;
+        
+        origin = point;
+        ToggleCapabilities(false);
+
+        if (Planted != null)
+            Planted(this);
+
+        return true;
+    }
+
+    public bool Flower(Vector3 point)
+    {
+        if (state == Locale.Flower) return false;
+        state = Locale.Flower;
+        
+        origin = point;
+        ToggleCapabilities(false);
+
+        if (flower == null) 
+        {
+            var flowerInstance = Instantiate(pr_flower, origin, Quaternion.identity);
+            
+            flower = flowerInstance.GetComponentInChildren<Flower>(); 
+            flower.Grow(Objects.Entities.Interactables.Empty.Flower.Origin.Beacon, File, type);    
+        }
+
+        if (Flowered != null)
+            Flowered(this);
+        
+        return true;
+    }
+
+    public bool Delete(bool events = true)
     {
         if (state == Locale.Destroyed) return false;
         state = Locale.Destroyed;
 
         Unregister();
 
-        if (Destroyed != null && events) 
+        if (Deleted != null && events) 
         {
-            Destroyed(this);
+            Deleted(this);
         }
         
         Destroy(gameObject);
@@ -371,7 +339,7 @@ public class Beacon: Interactable, IFlammable, ITooltip, IFileContainer {
         state = Locale.Drag;
     }
 
-    public void Drop()
+    public void Release()
     {
         if (state != Locale.Drag) return;
         state = Locale.Terrain;
@@ -379,53 +347,18 @@ public class Beacon: Interactable, IFlammable, ITooltip, IFileContainer {
         ReturnToOrigin(-1f, initial:true);
     }
 
-    public void Ignite()
+    public bool Destroy()
     {
-        if (state != Locale.Drag) return;
+        if (state != Locale.Drag) return false;
         state = Locale.Terrain;
         
         ReturnToOrigin(-1f, initial:true);
-        Destroy();
-    }
+        Fire();
 
-    public void Destroy()
-    {
-        if (state == Locale.Flower) 
-        {
-            flower.Fire();
-        }
-        else if (state != Locale.Planted && state != Locale.Nest) 
-        {
-            Fire();
-        }
-    }
+        if (Destroyed != null) 
+            Destroyed(this);
 
-    public void Recover()
-    {
-        return; // Ignore recovery from save
-        
-        destroyed = false;
-        Extinguish();
-    }
-
-    #endregion
-
-    #region State
-
-    void EvaluateState()
-    {
-        renderer.enabled = true;
-
-        if (state == Locale.Terrain && !returnToOrigin) 
-        {
-            interactive = true;
-            collider.enabled = true;
-        }
-        else 
-        {
-            interactive = false;
-            collider.enabled = false;
-        }
+        return true;
     }
 
     #endregion
@@ -447,6 +380,18 @@ public class Beacon: Interactable, IFlammable, ITooltip, IFileContainer {
         material.color = actual;
     }
 
+    #endregion
+    
+    #region Capabilities
+
+    void ToggleCapabilities(bool capable)
+    {
+        interactive = capable;
+        collider.enabled = capable;
+
+        transform.localScale = (capable) ? size : Vector3.zero;
+    }
+    
     #endregion
     
     #region Flammable
@@ -504,15 +449,17 @@ public class Beacon: Interactable, IFlammable, ITooltip, IFileContainer {
         transform.localScale = Vector3.Lerp(scaleA, scaleB, scaleCurve.Evaluate(i));
         transform.position = Vector3.Lerp(releasePosition, dest_pos, i);
 
-        if (complete) {
+        if (complete) 
+        {
             returnToOrigin = false; // Stop lerping if arrived
+            ToggleCapabilities(true); // Re-enable capabilities
+            
             deathPS.Stop();
         }
     }
 
 	#endregion
 
-    
     #region Info
     
     public string GetInfo()
