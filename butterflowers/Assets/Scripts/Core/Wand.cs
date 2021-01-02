@@ -1,4 +1,5 @@
-﻿using System.Collections.Generic;
+﻿using System.Collections;
+using System.Collections.Generic;
 using System.Linq;
 using B83.Win32;
 using Interfaces;
@@ -291,24 +292,30 @@ namespace Core
 
         // BEACONS
 
-        public bool AddBeacon(string file, POINT point)
+        public bool AddBeacon(string file, POINT point, bool random = false)
         {
-            var ray = camera.ScreenPointToRay(new Vector3(point.x, (Screen.height - point.y), 0f));
-            var hit = new RaycastHit();
- 
-            Debug.LogErrorFormat("Wand attempt to add file => {0} at position => {1}", file, point);
-         
-            if (Physics.Raycast(ray, out hit, Mathf.Infinity, interactionMask.value)) // Found suitable position 
+            var @params = new Hashtable();
+            
+            if (!random) 
             {
-                var position = hit.point;
-                beacons.CreateBeaconInstance(file, Beacon.Type.Desktop, position, true);
+                var ray = camera.ScreenPointToRay(new Vector3(point.x, (Screen.height - point.y), 0f));
+                var hit = new RaycastHit();
+
+                Debug.LogErrorFormat("Wand attempt to add file => {0} at position => {1}", file, point);
+
+                if (Physics.Raycast(ray, out hit, Mathf.Infinity, interactionMask.value)) // Found suitable position 
+                {
+                    var position = hit.point;
+                    @params.Add("position", point);
+                    @params.Add("origin", point);
+                    
+                    beacons.CreateBeacon(file, Beacon.Type.Desktop, Beacon.Locale.Terrain, @params, fromSave: false, transition: BeaconManager.TransitionType.Spawn);
+                    return true;
+                }
             }
-            else 
-            {
-                beacons.CreateBeaconInstance(file, Beacon.Type.Desktop, Vector3.zero, false);
-            }
- 
-            return false;
+            
+            beacons.CreateBeacon(file, Beacon.Type.Desktop, Beacon.Locale.Terrain, @params, fromSave:false, transition: BeaconManager.TransitionType.Spawn);
+            return true;
         }
 
         public bool ActivateBeacon(Beacon beacon) 

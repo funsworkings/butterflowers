@@ -6,6 +6,7 @@ using System.Linq;
 using B83.Win32;
 using Core;
 using Data;
+using Objects.Entities.Interactables.Empty;
 using Type = Beacon.Type;
 using Locale = Beacon.Locale;
 using Settings;
@@ -13,6 +14,7 @@ using uwu;
 using uwu.Extensions;
 using uwu.Gameplay;
 using Object = System.Object;
+using Transition = Beacon.Transition;
 
 public class BeaconManager : Spawner, IReactToSunCycle, ISaveable
 {
@@ -33,10 +35,25 @@ public class BeaconManager : Spawner, IReactToSunCycle, ISaveable
     Library Library;
 
     #endregion
+    
+    #region Internal
+
+    public enum TransitionType
+    {
+	    NULL,
+	    
+	    Flower,
+	    Spawn
+    }
+    
+    #endregion
 
     #region Properties
 
     [SerializeField] WorldPreset preset;
+    
+    public Transition flowerTransition;
+    public Transition spawnTransition;
 
     #endregion
 
@@ -165,31 +182,60 @@ public class BeaconManager : Spawner, IReactToSunCycle, ISaveable
 
     #region Operations
 
-    public Beacon CreateBeacon(string path, Type type, Locale state, Vector3 position, bool usePosition = false, bool load= true)
+    public Beacon CreateBeacon(string path, Type type, Locale state, Hashtable @params = null,
+	    TransitionType transition = TransitionType.NULL, bool fromSave = false)
     {
-        var instance = InstantiatePrefab(); // Create new beacon prefab
-        if (usePosition) 
-	        instance.transform.position = position;
+	    Vector3 position = Vector3.zero;
+	    Quaternion rotation = Quaternion.identity;
+	    Vector3 origin = Vector3.zero;
 
-        var origin = instance.transform.position;
-        var discovered = Library.HasDiscoveredFile(path); // Check if seen before
+	    bool requirePosition = false;
+	    bool requireOrigin = false;
 
-        var beacon = instance.GetComponent<Beacon>();
-            beacon.File = path;
-            beacon.discovered = discovered; // Set if beacon has been discovered
-            
-        Debug.Log("Add beacon => " + path);
-        
-        beacon.Register(type, state, origin, load);
+	    if (@params== null || !@params.ContainsKey("position")) { DecidePosition(ref position); requirePosition = true; }
+	    else position = (Vector3) @params["position"];
 
-        Events.ReceiveEvent(EVENTCODE.BEACONADD, AGENT.World, AGENT.Beacon, details: beacon.File);
+	    if (@params== null || !@params.ContainsKey("origin")){ if(requirePosition) origin = position; else DecidePosition(ref origin);}
+	    else origin = (Vector3) @params["origin"];
 
-        return beacon;
+	    var beacon = InstantiatePrefab().GetComponent<Beacon>();
+	    return RegisterBeacon(beacon, path, type, state, position, rotation, origin, fromSave, transition);
     }
 
-    public void CreateBeaconInstance(string path, Type type, Vector3 point, bool usePosition)
+    Beacon RegisterBeacon(Beacon beacon, string path, Type type, Locale state, Vector3 position, Quaternion rotation, Vector3 origin, bool load, TransitionType transition)
     {
-	    CreateBeacon(path, type, Locale.Terrain, point, usePosition: usePosition, load:false);
+	    var discovered = Library.HasDiscoveredFile(path); // Check if seen before
+	    
+	    beacon.File = path;
+	    beacon.discovered = discovered; // Set if beacon has been discovered
+
+	    beacon.transform.position = position;
+	    beacon.transform.rotation = rotation;
+
+
+	    Transition _transition = default(Transition);
+	    if (transition == TransitionType.Flower) 
+	    {
+		    _transition = flowerTransition;
+		    _transition.posA = position;
+		    _transition.posB = origin;
+		    _transition.scaleA = Vector3.zero;
+		    _transition.scaleB = preset.normalBeaconScale * Vector3.one;
+	    }
+	    else if (transition == TransitionType.Spawn) 
+	    {
+		    _transition = spawnTransition;
+		    _transition.posA = _transition.posB = origin;
+		    _transition.scaleA = Vector3.zero;
+		    _transition.scaleB = preset.normalBeaconScale * Vector3.one;
+	    }
+
+	    beacon.Register(type, state, origin, _transition, load);
+	    Events.ReceiveEvent(EVENTCODE.BEACONADD, AGENT.World, AGENT.Beacon, details: beacon.File);
+	    
+	    Debug.LogWarning("Beacon was added = " + beacon.File);
+	    
+	    return beacon;
     }
 
     public void DeleteBeacon(Beacon beacon, bool overridenest = false)
@@ -279,7 +325,13 @@ public class BeaconManager : Spawner, IReactToSunCycle, ISaveable
             
             Debug.LogFormat("Success restore beacon!  file= {0}  locale={1}", p, s);
 
-            var instance = CreateBeacon(p, t, s, loc, usePosition:true);
+            var @params = new Hashtable() 
+            {
+	            { "position" , loc },
+	            { "origin" , loc }
+            };
+
+            var instance = CreateBeacon(p, t, s, @params, fromSave:true);
             if (instance == null)
                 continue; // Bypass null beacon
 
@@ -326,8 +378,7 @@ public class BeaconManager : Spawner, IReactToSunCycle, ISaveable
                 }
             }
 
-            if (!exists)
-                CreateBeacon(files[i], type, state, Vector3.zero);
+            if (!exists) CreateBeacon(files[i], type, state, fromSave: false);
         }
     }
 
@@ -506,6 +557,32 @@ public class BeaconManager : Spawner, IReactToSunCycle, ISaveable
 	}
 
 	#endregion
+
+	#region Transitions
+
+	public Transition FromFlowerTransition(Flower flower, Vector3 origin)
+	{
+		Transition t = flowerTransition;
+			t.posA = flower.transform.position;
+			t.posB = origin;
+			t.scaleA = Vector3.zero;
+			t.scaleB = preset.normalBeaconScale * Vector3.one;
+
+		return t;
+	}
+
+	public Transition FromSpawnTransition(Vector3 origin)
+	{
+		Transition t = spawnTransition;
+			t.posA = origin;
+			t.posB = origin;
+			t.scaleA = Vector3.zero;
+			t.scaleB = preset.normalBeaconScale * Vector3.one;
+
+		return t;
+	}
+
+	#endregion
 	
 	#region Debug
 
@@ -519,7 +596,7 @@ public class BeaconManager : Spawner, IReactToSunCycle, ISaveable
 		bool success = Library.RegisterFile(texture.name, Library.FileType.World, true);
 		if (success) 
 		{
-			CreateBeaconInstance(texture.name, Type.Wizard, Vector3.zero, false);
+			CreateBeacon(texture.name, Beacon.Type.Wizard, Beacon.Locale.Terrain, fromSave: false, transition: TransitionType.Spawn);
 		}
 	}
 	
