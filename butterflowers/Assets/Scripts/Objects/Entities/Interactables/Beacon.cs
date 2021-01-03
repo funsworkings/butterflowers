@@ -492,7 +492,7 @@ public class Beacon: Interactable, IFlammable, ITooltip, IFileContainer {
 
     #region Info
     
-    public override string GetInfo()
+    public string GetInfo()
     {
         return File.AppendActionableInformation(this);
     }

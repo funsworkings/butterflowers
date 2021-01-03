@@ -115,14 +115,14 @@ public static class COLOR_LOOKUP
 
 public static class Copy
 {
-    public static string FocusText = string.Format("Press {0} to focus", Controls.Focus.ToString());
-    public static string LoseFocusText = string.Format("Press {0} to lose focus", Controls.LoseFocus.ToString());
+    public static string FocusText = string.Format("Press {0} to FOCUS", Controls.Focus.ToString());
+    public static string LoseFocusText = string.Format("Press {0} to LOSE FOCUS", Controls.LoseFocus.ToString());
 
     public static string AppendActionableInformation(this string info, Entity entity)
     {
         string actions = "";
         
-        if (entity is Nest) actions += "\nClick to kick";
+        if (entity is Nest) actions += "\nClick to KICK";
         else if (entity is Beacon) actions += "\nDrag into nest to ADD, terrain to PLANT, tree to FLOWER, star to DESTROY";
         else if (entity is Flower) actions += "\nClick to DUPLICATE";
 

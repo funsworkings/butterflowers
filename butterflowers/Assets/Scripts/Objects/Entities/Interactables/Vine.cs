@@ -692,7 +692,7 @@ public class Vine : Interactable, ITooltip, IFileContainer
 
     #region Info
     
-    public override string GetInfo()
+    public string GetInfo()
     {
         return File;
     }

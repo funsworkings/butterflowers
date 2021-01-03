@@ -341,7 +341,7 @@ public class Nest : Focusable, IReactToSunCycle, ISaveable, IFlammable, ITooltip
 
     #region Info
     
-    public override string GetInfo()
+    public string GetInfo()
     {
         if (queue) 
         {
