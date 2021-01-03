@@ -91,7 +91,7 @@ namespace Objects.Entities.Interactables.Empty
 		
 		#endregion
 
-		public override string GetInfo()
+		public string GetInfo()
 		{
 			return file.AppendActionableInformation(this);
 		}

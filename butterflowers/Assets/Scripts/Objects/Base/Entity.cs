@@ -3,7 +3,7 @@ using UnityEngine;
 
 namespace Objects.Base
 {
-	public abstract class Entity : Element, ITooltip
+	public abstract class Entity : Element
 	{
 		// Properties
 
@@ -21,10 +21,5 @@ namespace Objects.Base
 		}
 
 		#endregion
-
-		public virtual string GetInfo()
-		{
-			return gameObject.name.AppendActionableInformation(this);
-		}
 	}
 }
