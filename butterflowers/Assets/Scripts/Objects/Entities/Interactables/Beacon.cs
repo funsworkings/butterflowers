@@ -330,6 +330,7 @@ public class Beacon: Interactable, IFlammable, ITooltip, IFileContainer {
         origin = point;
         
         ToggleCapabilities(false);
+        Extinguish();
         transform.localScale = Vector3.zero;
 
         if (Planted != null && events)
@@ -346,6 +347,7 @@ public class Beacon: Interactable, IFlammable, ITooltip, IFileContainer {
         origin = point;
         
         ToggleCapabilities(false);
+        Extinguish();
         transform.localScale = Vector3.zero;
 
         if (flower == null) 
