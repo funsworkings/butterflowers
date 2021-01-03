@@ -1,4 +1,6 @@
 ﻿using System.Collections.Generic;
+using Objects.Base;
+using Objects.Entities.Interactables.Empty;
 using UnityEngine;
 
 public enum GAMESTATE {
@@ -115,6 +117,29 @@ public static class Copy
 {
     public static string FocusText = string.Format("Press {0} to focus", Controls.Focus.ToString());
     public static string LoseFocusText = string.Format("Press {0} to lose focus", Controls.LoseFocus.ToString());
+
+    public static string AppendActionableInformation(this string info, Entity entity)
+    {
+        string actions = "";
+        
+        if (entity is Nest) actions += "\nClick to kick";
+        else if (entity is Beacon) actions += "\nDrag into nest to ADD, terrain to PLANT, tree to FLOWER, star to DESTROY";
+        else if (entity is Flower) actions += "\nClick to DUPLICATE";
+
+        if (entity is Focusable) 
+        {
+            if (!(entity as Focusable).isFocused) actions += ("\n" + FocusText);
+            else actions += ("\n" + LoseFocusText);
+        }
+
+        if (!string.IsNullOrEmpty(actions)) 
+        {
+            actions = actions.Insert(0, "\n");
+            return info += string.Format("<size=50%><i>{0}</i></size>", actions);
+        }
+
+        return info;
+    }
 }
 
 public static class Controls

@@ -6,8 +6,5 @@ using UnityEngine;
 
 public class Star : Focusable, ITooltip
 {
-	public string GetInfo()
-	{
-		return "magic star";
-	}
+
 }

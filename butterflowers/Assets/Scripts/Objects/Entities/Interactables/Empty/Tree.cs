@@ -6,8 +6,4 @@ using UnityEngine;
 
 public class Tree : Focusable, ITooltip
 {
-	public string GetInfo()
-	{
-		return "treeeeeee";
-	}
 }
