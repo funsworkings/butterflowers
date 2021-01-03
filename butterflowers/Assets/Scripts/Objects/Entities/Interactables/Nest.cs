@@ -341,14 +341,15 @@ public class Nest : Focusable, IReactToSunCycle, ISaveable, IFlammable, ITooltip
 
     #region Info
     
-    public string GetInfo()
+    public override string GetInfo()
     {
         if (queue) 
         {
-            string message = "{0}\n{1}";
+            string message = "{0} ({1})";
             string capacity = string.Format("{0} / {1}", beacons.Length, this.capacity);
             
-            message = string.Format(message, capacity, string.Format("nest ({0})", Copy.FocusText));
+            message = string.Format(message, "nest", capacity);
+            message = message.AppendActionableInformation(this);
             
             return message;
         }

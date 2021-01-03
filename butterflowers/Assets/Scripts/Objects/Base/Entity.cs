@@ -1,8 +1,9 @@
-﻿using UnityEngine;
+﻿using Interfaces;
+using UnityEngine;
 
 namespace Objects.Base
 {
-	public abstract class Entity : Element
+	public abstract class Entity : Element, ITooltip
 	{
 		// Properties
 
@@ -20,5 +21,10 @@ namespace Objects.Base
 		}
 
 		#endregion
+
+		public virtual string GetInfo()
+		{
+			return gameObject.name.AppendActionableInformation(this);
+		}
 	}
 }

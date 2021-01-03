@@ -8,7 +8,7 @@ namespace Objects.Entities.Interactables.Empty
 {
 	using BeaconType = Beacon.Type;
 	
-	public class Flower : Interactable, IFlammable
+	public class Flower : Interactable, IFlammable, ITooltip
 	{
 		#region Internal
 		
@@ -90,5 +90,10 @@ namespace Objects.Entities.Interactables.Empty
 		}
 		
 		#endregion
+
+		public override string GetInfo()
+		{
+			return file.AppendActionableInformation(this);
+		}
 	}
 }

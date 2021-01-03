@@ -157,7 +157,7 @@ namespace Core
             }
         
             onFocus.Invoke();
-            overlayOpacity.Show();
+            //overlayOpacity.Show();
         }
 
         public void LoseFocus()
@@ -171,7 +171,7 @@ namespace Core
             CameraBlending.BlendTo(CameraManager.DefaultCamera);
 
             onLoseFocus.Invoke();
-            overlayOpacity.Hide();
+            //overlayOpacity.Hide();
         }
 
         public Focusable[] FindVisibleFocuses()
