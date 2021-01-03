@@ -9,6 +9,7 @@ using Data;
 using Interfaces;
 using Objects.Types;
 using Settings;
+using TMPro;
 using uwu;
 
 public class Sun : MonoBehaviour
@@ -40,6 +41,9 @@ public class Sun : MonoBehaviour
 	// Properties
 
 	new Light light;
+
+    [SerializeField] Animator dayTracker;
+    [SerializeField] TMP_Text previousDayText, currentDayText;
     
     // Attributes
 
@@ -200,6 +204,7 @@ public class Sun : MonoBehaviour
             
         WaitForPausers();
         onLoadSunData();
+        InitializeUI();
     }
     
     #endregion
@@ -278,7 +283,8 @@ public class Sun : MonoBehaviour
 
     bool EvaluateDay()
     {
-        if (days > previousDays) {
+        if (days > previousDays) 
+        {
             Debug.LogFormat("Sun advanced!  from:{0} to:{1}", days-1, days);
 
             Events.ReceiveEvent(EVENTCODE.CYCLE, AGENT.World, AGENT.Terrain, days + "");
@@ -287,6 +293,7 @@ public class Sun : MonoBehaviour
 
             Pausers = FindObjectsOfType<MonoBehaviour>().OfType<IPauseSun>().ToArray();
             WaitForPausers();
+            AdvanceUI(days-1, days);
             
             if (onCycle != null)
                 onCycle();
@@ -296,6 +303,23 @@ public class Sun : MonoBehaviour
         return false;
     }
 
+    #endregion
+    
+    #region UI
+
+    void InitializeUI()
+    {
+        currentDayText.text = days.ToString();
+    }
+
+    void AdvanceUI(int previous, int current)
+    {
+        previousDayText.text = (previous).ToString();
+        currentDayText.text = (current).ToString();
+        
+        dayTracker.SetTrigger("advance");
+    }
+    
     #endregion
     
     #region Listeners and observers
