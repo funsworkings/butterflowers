@@ -111,9 +111,6 @@ public class ButterflowerManager : Spawner, IReactToSunCycle
         Butterfly.OnRegister += AddButterfly;
         Butterfly.OnUnregister += RemoveButterfly;
 
-        Butterfly.Dying += ButterflyDying;
-        Butterfly.Died += ResetButterfly;
-
         CalculateBounds();
 
         var entities = Spawn(amount);
@@ -266,9 +263,6 @@ public class ButterflowerManager : Spawner, IReactToSunCycle
         Butterfly.OnRegister -= AddButterfly;
         Butterfly.OnUnregister -= RemoveButterfly;
 
-        Butterfly.Dying -= ButterflyDying;
-        Butterfly.Died -= ResetButterfly;
-
         // Dispose all native arrays (JOBS)
 
         states.Dispose();
@@ -373,6 +367,15 @@ public class ButterflowerManager : Spawner, IReactToSunCycle
 
     public float GetHealth()
     {
+        int alive = 0, dead = 0;
+        foreach (int state in states) 
+        {
+            if (state == 3) // Dying 
+                dead++;
+            else
+                alive++;
+        }
+        
         int total = (alive + dead);
         if (total == 0) return 1f;
 
