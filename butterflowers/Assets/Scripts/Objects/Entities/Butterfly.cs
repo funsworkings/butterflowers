@@ -26,12 +26,6 @@ public class Butterfly : MonoBehaviour
     
     public static System.Action<Butterfly> OnRegister, OnUnregister;
 
-    public delegate void OnDeath(Butterfly butterfly);
-    public static event OnDeath Died;
-
-    public delegate void OnDying(Butterfly butterfly);
-    public static event OnDying Dying;
-
     // External
     
     Quilt quilt;
