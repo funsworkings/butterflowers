@@ -537,7 +537,19 @@ public class BeaconManager : Spawner, IReactToSunCycle, ISaveable
 
 	public Object Save()
 	{
-		return allBeacons.ToArray();
+		BeaconSceneData _dat = new BeaconSceneData();
+				
+		var dat = new List<BeaconData>();
+		for (var i = 0; i < allBeacons.Count; i++) 
+		{
+			var beacon = allBeacons[i];
+			var parsed = new BeaconData(beacon.File, beacon.Origin, beacon.type, beacon.state);
+
+			dat.Add(parsed);
+		}
+		_dat.beacons = dat.ToArray();
+		
+		return _dat;
 	}
 
 	public void Load(Object dat)

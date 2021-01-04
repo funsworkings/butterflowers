@@ -156,11 +156,11 @@ namespace Core
             Surveillance.Load(_Save.data.surveillanceData); // Load surveillance data
 
             var lib_payload = new LibraryPayload();
-            lib_payload.directories = _Save.directories;
-            lib_payload.files = _Save.files;
-            lib_payload.userFiles = _Save.user_files;
-            lib_payload.sharedFiles = _Save.shared_files;
-            lib_payload.worldFiles = _Save.world_files;
+            lib_payload.directories = _Save.data.directories;
+            lib_payload.files = _Save.data.files;
+            lib_payload.userFiles = _Save.data.user_files;
+            lib_payload.sharedFiles = _Save.data.shared_files;
+            lib_payload.worldFiles = _Save.data.world_files;
             
             Library.Load(lib_payload, Preset.defaultNullTexture, texturePacks, Preset.loadTexturesInEditor);
 
@@ -175,7 +175,7 @@ namespace Core
             EventsM.Load(null);
             Sequence.Load(_Save.data.sequence);
             Nest.Load(_Save.data.nestopen);
-            Beacons.Load((Preset.persistBeacons) ? _Save.beaconData : null);
+            Beacons.Load((Preset.persistBeacons) ? _Save.data.beacons : null);
             Vines.Load((Preset.persistVines) ? _Save.data.vines : null);
             Sun.Load(_Save.data.sun);
         
@@ -192,6 +192,16 @@ namespace Core
         IEnumerator Advance()
         {
             yield return new WaitForEndOfFrame();
+            
+            SaveLibraryItems();
+            _Save.data.sun = (SunData) Sun.Save();
+            _Save.data.surveillanceData = (SurveillanceData[])Surveillance.Save();
+            _Save.data.sequence = (SequenceData) Sequence.Save();
+            _Save.data.nestopen = (bool) Nest.Save();
+            _Save.data.beacons = (BeaconSceneData) Beacons.Save();
+            _Save.data.vines = (VineSceneData) Vines.Save();
+
+            _Save.SaveGameData(); // Save all game data
 
             while (!Sun.active) 
             {
@@ -204,20 +214,12 @@ namespace Core
 
         void SubscribeToEvents()
         {
-            Surveillance.onCaptureLog += DidCaptureLog;
-            Beacons.onUpdateBeacons += DidUpdateBeacons;
-            Vines.onUpdateVines += DidUpdateVines;
             Library.onDiscoverFile += DidDiscoverFile;
-            Library.OnRefreshItems += DidUpdateLibraryItems;
         }
 
         void UnsubscribeToEvents()
         {
-            Surveillance.onCaptureLog -= DidCaptureLog;
-            Beacons.onUpdateBeacons -= DidUpdateBeacons;
-            Vines.onUpdateVines -= DidUpdateVines;
             Library.onDiscoverFile -= DidDiscoverFile;
-            Library.OnRefreshItems -= DidUpdateLibraryItems;
         }
 
         #endregion
@@ -327,31 +329,6 @@ namespace Core
     
         #region Entity callbacks
 
-        void DidUpdateLibraryItems()
-        {
-            var payload = (LibraryPayload) Library.Save();
-            _Save.directories = payload.directories;
-            _Save.files = payload.files;
-            _Save.user_files = payload.userFiles;
-            _Save.shared_files = payload.sharedFiles;
-            _Save.world_files = payload.worldFiles;
-        }
-
-        void DidCaptureLog()
-        {
-            _Save.data.surveillanceData = (SurveillanceData[])Surveillance.Save();
-        }
-
-        void DidUpdateBeacons()
-        {
-            _Save.beacons = (Beacon[]) Beacons.Save();
-        }
-
-        void DidUpdateVines()
-        {
-            _Save.data.vines = (VineSceneData) Vines.Save();
-        }
-
         void DidDiscoverFile(string file)
         {
             Debug.LogFormat("Discovery was made => {0}", file);
@@ -367,6 +344,16 @@ namespace Core
         public object Save()
         {
             return -1;
+        }
+        
+        void SaveLibraryItems()
+        {
+            var payload = (LibraryPayload) Library.Save();
+                _Save.data.directories = payload.directories;
+                _Save.data.files = payload.files;
+                _Save.data.user_files = payload.userFiles;
+                _Save.data.shared_files = payload.sharedFiles;
+                _Save.data.world_files = payload.worldFiles;
         }
 
         public void Load(object data)
