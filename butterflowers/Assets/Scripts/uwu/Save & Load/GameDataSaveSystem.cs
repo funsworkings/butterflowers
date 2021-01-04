@@ -25,6 +25,10 @@ namespace uwu
 			
 			protected List<object> datas = new List<object>();
 
+		
+		
+		#region Autosaving
+		
 		bool m_autosave;
 		public bool autosave
 		{
@@ -40,37 +44,7 @@ namespace uwu
 				m_autosave = value;
 			}
 		}
-
-		#region Monobehaviour callbacks
-
-		void OnEnable()
-		{
-			autosave = true;
-		}
-
-		void OnDisable()
-		{
-			SaveAllGameData();
-			autosave = false;
-		}
-
-		void OnApplicationPause(bool pause)
-		{
-			if (pause) 
-			{
-				SaveAllGameData();
-				autosave = false;
-			}
-			else 
-			{
-				autosave = true;
-			}
-		}
 		
-		#endregion 
-		
-		#region Save & load
-
 		IEnumerator Autosave()
 		{
 			while (true) 
@@ -79,13 +53,17 @@ namespace uwu
 				SaveAllGameData();
 			}
 		}
+		
+		#endregion
 
+		#region Save & load
+		
 		public bool HasData(string file)
 		{
 			return data_lookup.ContainsKey(file);
 		}
 
-		bool SaveGameData(string file = null, bool useCacheSave = false)
+		public bool SaveGameData(string file = null, bool useCacheSave = false)
 		{
 			if (file == null) file = def_savefile;
 

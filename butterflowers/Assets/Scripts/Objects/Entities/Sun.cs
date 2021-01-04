@@ -22,8 +22,7 @@ public class Sun : MonoBehaviour
     public static System.Action onCycle, onStateChange; // Day event
 
     // External
-
-	GameDataSaveSystem _Save = null;
+    
     [SerializeField] Settings.WorldPreset Preset;
 
     World World;
@@ -132,7 +131,6 @@ public class Sun : MonoBehaviour
 	void Awake()
     {
         Instance = this;
-        _Save = GameDataSaveSystem.Instance;
 
         light = GetComponent<Light>();
 
@@ -174,8 +172,6 @@ public class Sun : MonoBehaviour
             //if (advanced)
             //  active = false; // Pause sun when crosses into new day (debug)
         }
-        
-        _Save.sun = (SunData)Save();
     }
 
 	#endregion

@@ -59,12 +59,6 @@ public class VineManager : MonoBehaviour
         cage.onUpdateActiveCorners -= onCageUpdatedActiveCorner;
     }
 
-    void Update()
-    {
-        if (!load) return;
-        if (_Save != null) _Save.data.vines = (VineSceneData) Save();
-    }
-
     #endregion
 
     #region Save/load

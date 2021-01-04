@@ -204,8 +204,6 @@ namespace Objects.Managers
 			inprogress = false;
 			opacity.Hide();
 			++index;
-
-			_Save.data.sequence = (SequenceData)Save(); // Overwrite save!
 		}
 		
 		#region Ops
