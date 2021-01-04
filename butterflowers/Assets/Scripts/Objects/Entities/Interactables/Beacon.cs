@@ -51,6 +51,9 @@ public class Beacon: Interactable, IFlammable, ITooltip, IFileContainer {
     [System.Serializable]
     public struct Transition
     {
+        [System.Serializable] public class Event :UnityEvent<Beacon, Vector3> {}
+        public Event onBegin, onEnd;
+
         [HideInInspector] public Vector3 posA, posB;
         [HideInInspector] public Vector3 scaleA, scaleB;
 
@@ -66,6 +69,8 @@ public class Beacon: Interactable, IFlammable, ITooltip, IFileContainer {
 
         public bool Continue(Beacon beacon, float dt)
         {
+            bool flagStart = (time <= 0f), flagEnd = (time+dt >= duration);
+
             time += dt;
 
             float interval = Mathf.Clamp01(time / duration);
@@ -78,6 +83,9 @@ public class Beacon: Interactable, IFlammable, ITooltip, IFileContainer {
 
             beacon.transform.position = position;
             beacon.transform.localScale = scale;
+            
+            if(flagStart) onBegin.Invoke(beacon, position);
+            if(flagEnd) onEnd.Invoke(beacon, position);
             
             return time >= duration;
         }
@@ -100,6 +108,7 @@ public class Beacon: Interactable, IFlammable, ITooltip, IFileContainer {
 
     [SerializeField] WorldPreset preset;
     [SerializeField] ParticleSystem deathPS, addPS, appearPS;
+    [SerializeField] TrailRenderer trails;
     
     new MeshRenderer renderer;
     new Collider collider;
@@ -177,6 +186,8 @@ public class Beacon: Interactable, IFlammable, ITooltip, IFileContainer {
     public bool visible => state == Locale.Terrain;
 
     public ParticleSystem AppearPS => appearPS;
+
+    public TrailRenderer Trails => trails;
 
     #endregion
 
@@ -264,6 +275,11 @@ public class Beacon: Interactable, IFlammable, ITooltip, IFileContainer {
         this.state = state;
         
         StartTransition(transition);
+        if (transitioning) 
+        {
+            transitioning = !this.transition.Continue(this, Time.deltaTime);
+            ToggleCapabilities(!transitioning);
+        }
 
         if (OnRegister != null)
             OnRegister(this);

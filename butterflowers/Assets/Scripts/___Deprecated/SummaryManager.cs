@@ -11,7 +11,6 @@ using uwu.UI.Behaviors.Visibility;
 
 namespace Objects.Managers
 {
-	[Obsolete("Obsolete API!", true)]
 	public class SummaryManager : MonoBehaviour, IPauseSun, IReactToSunCycle
 	{
 		#region Internal

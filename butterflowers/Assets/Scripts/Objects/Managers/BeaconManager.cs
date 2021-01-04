@@ -55,6 +55,8 @@ public class BeaconManager : Spawner, IReactToSunCycle, ISaveable
     public Transition flowerTransition;
     public Transition spawnTransition;
 
+    [SerializeField] GameObject impactPS;
+
     #endregion
 
     #region Attributes
@@ -572,26 +574,16 @@ public class BeaconManager : Spawner, IReactToSunCycle, ISaveable
 
 	#region Transitions
 
-	public Transition FromFlowerTransition(Flower flower, Vector3 origin)
+	public void OnBeginFlower(Beacon beacon, Vector3 position)
 	{
-		Transition t = flowerTransition;
-			t.posA = flower.transform.position;
-			t.posB = origin;
-			t.scaleA = Vector3.zero;
-			t.scaleB = preset.normalBeaconScale * Vector3.one;
-
-		return t;
+		//Instantiate(impactPS, position, Quaternion.identity); // Spawn impact!
+		beacon.Trails.enabled = true;
 	}
 
-	public Transition FromSpawnTransition(Vector3 origin)
+	public void OnEndFlower(Beacon beacon, Vector3 position)
 	{
-		Transition t = spawnTransition;
-			t.posA = origin;
-			t.posB = origin;
-			t.scaleA = Vector3.zero;
-			t.scaleB = preset.normalBeaconScale * Vector3.one;
-
-		return t;
+		//Instantiate(impactPS, position, Quaternion.identity); // Spawn impact!
+		beacon.Trails.enabled = false;
 	}
 
 	#endregion
