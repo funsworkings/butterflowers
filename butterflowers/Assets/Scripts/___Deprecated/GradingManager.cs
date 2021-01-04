@@ -12,7 +12,6 @@ using uwu.UI.Behaviors.Visibility;
 
 namespace Objects.Managers
 {
-	[Obsolete("Obsolete API!", true)]
 	public class GradingManager : MonoBehaviour
 	{
 		// External
@@ -27,22 +26,22 @@ namespace Objects.Managers
 		[SerializeField] TMP_Text score;
 
 		[SerializeField] Transform scoreItemParent;
-		ScoreItem[] scoreItems;
+		ScoreCard[] scoreItems;
 
-		[SerializeField] ScoreItem addedFiles;
-		[SerializeField] ScoreItem removedFiles;
-		[SerializeField] ScoreItem discoveries;
-		[SerializeField] ScoreItem healthOfButterflies;
-		[SerializeField] ScoreItem beaconsPlanted;
-		[SerializeField] ScoreItem beaconsAdded;
-		[SerializeField] ScoreItem cursorVelocity;
-		[SerializeField] ScoreItem timeInNest;
-		[SerializeField] ScoreItem timeInTree;
-		[SerializeField] ScoreItem timeInMagicStar;
-		[SerializeField] ScoreItem timeInDefault;
-		[SerializeField] ScoreItem nestFill;
-		[SerializeField] ScoreItem nestKicks;
-		[SerializeField] ScoreItem nestSpills;
+		[SerializeField] ScoreCard addedFiles;
+		[SerializeField] ScoreCard removedFiles;
+		[SerializeField] ScoreCard discoveries;
+		[SerializeField] ScoreCard healthOfButterflies;
+		[SerializeField] ScoreCard beaconsPlanted;
+		[SerializeField] ScoreCard beaconsAdded;
+		[SerializeField] ScoreCard cursorVelocity;
+		[SerializeField] ScoreCard timeInNest;
+		[SerializeField] ScoreCard timeInTree;
+		[SerializeField] ScoreCard timeInMagicStar;
+		[SerializeField] ScoreCard timeInDefault;
+		[SerializeField] ScoreCard nestFill;
+		[SerializeField] ScoreCard nestKicks;
+		[SerializeField] ScoreCard nestSpills;
 
 		[SerializeField] ToggleScale scoreScaler;
 
@@ -50,8 +49,7 @@ namespace Objects.Managers
 		[SerializeField] Animation scoreDropdownAnimation;
 		
 		// Attributes
-
-		[SerializeField] float scoreLerpSpeed = 1f;
+		
 		[SerializeField] float timeBetweenScores = .1f;
 		[SerializeField] float timeBeforeStroke = .3f;
 		
@@ -65,18 +63,10 @@ namespace Objects.Managers
 
 		void Start()
 		{
-			scoreItems = scoreItemParent.GetComponentsInChildren<ScoreItem>();
+			scoreItems = scoreItemParent.GetComponentsInChildren<ScoreCard>();
 			HideScores();
 		}
-		
-		void Update()
-		{
-			if (refreshComposite) {
-				composite = Surveillance.CreateCompositeAverageLog();
-				refreshComposite = false;
-			}
-		}
-		
+
 		#endregion
 
 		#region Operations
@@ -89,8 +79,8 @@ namespace Objects.Managers
 			StartCoroutine(ShowingScores(compositeLog, log));
 			
 			/*****/
-				char grade = CalculateGrade(log, compositeLog);
-				score.text = grade.ToString();
+				//char grade = CalculateGrade(log, compositeLog);
+				//score.text = grade.ToString();
 			/*****/
 		}
 
@@ -134,14 +124,22 @@ namespace Objects.Managers
 		public void HideScores()
 		{
 			StopAllCoroutines();
-			foreach(ScoreItem item in scoreItems)
-				item.gameObject.SetActive(false);;
+			foreach (ScoreCard item in scoreItems) 
+			{
+				HideScoreItem(item);
+			}
 		}
 
-		void ShowScoreItem(ScoreItem item, float previousScore, float currentScore)
+		void ShowScoreItem(ScoreCard card, float previousScore, float currentScore)
 		{
-			item.gameObject.SetActive(true);
-			item.SetScore(previousScore, currentScore, scoreLerpSpeed);
+			card.gameObject.SetActive(true);
+			card.ShowScore(previousScore, currentScore);
+		}
+
+		void HideScoreItem(ScoreCard card)
+		{
+			card.HideScore();
+			card.gameObject.SetActive(false);
 		}
 
 		#endregion
