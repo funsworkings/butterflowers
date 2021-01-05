@@ -80,7 +80,7 @@ Material:
         m_Scale: {x: 1, y: 1}
         m_Offset: {x: 0, y: 0}
     - _Texture1:
-        m_Texture: {fileID: 2800000, guid: a1ba4fa9fc72b784585f4724634891a7, type: 3}
+        m_Texture: {fileID: 8400000, guid: ff6f3aa6e1be04a159213d070f9b2f04, type: 2}
         m_Scale: {x: 1, y: 1}
         m_Offset: {x: 0, y: 0}
     - _TextureSample1:
@@ -117,6 +117,7 @@ Material:
     - _SrcBlend: 1
     - _Strength: 1
     - _Tiling: 1
+    - _TimeOffset: 0
     - _UVSec: 0
     - _ZOffset: 10000
     - _ZWrite: 1
