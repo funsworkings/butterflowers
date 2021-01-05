@@ -144,6 +144,8 @@ public class Butterfly : MonoBehaviour
         trails = null; // Ensure new trails created for every butterfly on respawn
         
         propertyBlock.SetFloat("_Death", 0f);
+        propertyBlock.SetFloat("_TimeOffset", Random.Range(0f, 1f));
+        propertyBlock.SetFloat("_Speed", Random.Range(0.5f, 1.5f));
         foreach (Renderer r in renderers) {
             r.SetPropertyBlock(propertyBlock);
         }
@@ -206,6 +208,8 @@ public class Butterfly : MonoBehaviour
         if (d >= 0f && d <= 1f)
         {
             propertyBlock.SetFloat("_Death", Mathf.Clamp01(d));
+            propertyBlock.SetFloat("_TimeOffset", Random.Range(0f, 1f));
+            propertyBlock.SetFloat("_Speed", Random.Range(0.5f, 1.5f));
             foreach (Renderer r in renderers) {
                 r.SetPropertyBlock(propertyBlock);
             }
