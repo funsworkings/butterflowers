@@ -26,22 +26,7 @@ namespace Objects.Managers
 		[SerializeField] TMP_Text score;
 
 		[SerializeField] Transform scoreItemParent;
-		ScoreCard[] scoreItems;
-
-		[SerializeField] ScoreCard addedFiles;
-		[SerializeField] ScoreCard removedFiles;
-		[SerializeField] ScoreCard discoveries;
-		[SerializeField] ScoreCard healthOfButterflies;
-		[SerializeField] ScoreCard beaconsPlanted;
-		[SerializeField] ScoreCard beaconsAdded;
-		[SerializeField] ScoreCard cursorVelocity;
-		[SerializeField] ScoreCard timeInNest;
-		[SerializeField] ScoreCard timeInTree;
-		[SerializeField] ScoreCard timeInMagicStar;
-		[SerializeField] ScoreCard timeInDefault;
-		[SerializeField] ScoreCard nestFill;
-		[SerializeField] ScoreCard nestKicks;
-		[SerializeField] ScoreCard nestSpills;
+		[SerializeField] ScoreCard[] scoreItems;
 
 		[SerializeField] ToggleScale scoreScaler;
 
@@ -86,39 +71,11 @@ namespace Objects.Managers
 
 		IEnumerator ShowingScores(CompositeSurveillanceData compositeLog, CompositeSurveillanceData log)
 		{
-			yield return new WaitForSecondsRealtime(timeBetweenScores);
-			ShowScoreItem(addedFiles, compositeLog.filesAdded,log.filesAdded);
-			yield return new WaitForSecondsRealtime(timeBetweenScores);
-			ShowScoreItem(removedFiles,compositeLog.filesRemoved,log.filesRemoved);
-			yield return new WaitForSecondsRealtime(timeBetweenScores);
-			ShowScoreItem(discoveries, compositeLog.discoveries,log.discoveries);
-			
-			yield return new WaitForSecondsRealtime(timeBetweenScores);
-			ShowScoreItem(healthOfButterflies,compositeLog.AverageHoB,log.averageHoB);
-			
-			yield return new WaitForSecondsRealtime(timeBetweenScores);
-			ShowScoreItem(beaconsAdded,compositeLog.beaconsAdded,log.beaconsAdded);
-			yield return new WaitForSecondsRealtime(timeBetweenScores);
-			ShowScoreItem(beaconsPlanted,compositeLog.beaconsPlanted,log.beaconsPlanted);
-			
-			yield return new WaitForSecondsRealtime(timeBetweenScores);
-			ShowScoreItem(nestFill,compositeLog.AverageNestFill,log.averageNestFill);
-			yield return new WaitForSecondsRealtime(timeBetweenScores);
-			ShowScoreItem(nestKicks,compositeLog.nestKicks,log.nestKicks);
-			yield return new WaitForSecondsRealtime(timeBetweenScores);
-			ShowScoreItem(nestSpills,compositeLog.nestSpills,log.nestSpills);
-			
-			yield return new WaitForSecondsRealtime(timeBetweenScores);
-			ShowScoreItem(timeInNest,compositeLog.AverageTimeSpentInNest, log.timeSpentInNest);
-			yield return new WaitForSecondsRealtime(timeBetweenScores);
-			ShowScoreItem(timeInTree,compositeLog.AverageTimeSpentInTree,log.timeSpentInTree);
-			yield return new WaitForSecondsRealtime(timeBetweenScores);
-			ShowScoreItem(timeInMagicStar,compositeLog.AverageTimeSpentInMagicStar,log.timeSpentInMagicStar);
-			yield return new WaitForSecondsRealtime(timeBetweenScores);
-			ShowScoreItem(timeInDefault,compositeLog.AverageTimeSpentInDefault,log.timeSpentInDefault);
-			
-			yield return new WaitForSecondsRealtime(timeBetweenScores);
-			ShowScoreItem(cursorVelocity, compositeLog.AverageCursorSpeed, log.averageCursorSpeed);
+			foreach (ScoreCard card in scoreItems) 
+			{
+				yield return new WaitForSecondsRealtime(timeBetweenScores);
+				ShowScoreItem(card, compositeLog, log);
+			}
 		}
 
 		public void HideScores()
@@ -130,10 +87,10 @@ namespace Objects.Managers
 			}
 		}
 
-		void ShowScoreItem(ScoreCard card, float previousScore, float currentScore)
+		void ShowScoreItem(ScoreCard card, CompositeSurveillanceData average, CompositeSurveillanceData current)
 		{
 			card.gameObject.SetActive(true);
-			card.ShowScore(previousScore, currentScore);
+			card.ShowScore(average, current);
 		}
 
 		void HideScoreItem(ScoreCard card)

@@ -34,18 +34,39 @@
   </component>
   <component name="ChangeListManager">
     <list default="true" id="6ebb3891-c912-403e-9e42-400f227dea0b" name="Default Changelist" comment="">
+      <change afterPath="$PROJECT_DIR$/Assets/Scripts/UI/Score Cards/BeaconsAdded.cs" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/Assets/Scripts/UI/Score Cards/BeaconsAdded.cs.meta" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/Assets/Scripts/UI/Score Cards/BeaconsPlanted.cs" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/Assets/Scripts/UI/Score Cards/BeaconsPlanted.cs.meta" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/Assets/Scripts/UI/Score Cards/CursorSpeed.cs" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/Assets/Scripts/UI/Score Cards/CursorSpeed.cs.meta" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/Assets/Scripts/UI/Score Cards/Discoveries.cs" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/Assets/Scripts/UI/Score Cards/Discoveries.cs.meta" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/Assets/Scripts/UI/Score Cards/FilesAdded.cs" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/Assets/Scripts/UI/Score Cards/FilesAdded.cs.meta" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/Assets/Scripts/UI/Score Cards/FilesRemoved.cs" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/Assets/Scripts/UI/Score Cards/FilesRemoved.cs.meta" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/Assets/Scripts/UI/Score Cards/HoB.cs" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/Assets/Scripts/UI/Score Cards/HoB.cs.meta" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/Assets/Scripts/UI/Score Cards/NestFill.cs" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/Assets/Scripts/UI/Score Cards/NestFill.cs.meta" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/Assets/Scripts/UI/Score Cards/NestKicks.cs" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/Assets/Scripts/UI/Score Cards/NestKicks.cs.meta" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/Assets/Scripts/UI/Score Cards/NestSpills.cs" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/Assets/Scripts/UI/Score Cards/NestSpills.cs.meta" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/.idea/.idea.butterflowers/.idea/contentModel.xml" beforeDir="false" afterPath="$PROJECT_DIR$/.idea/.idea.butterflowers/.idea/contentModel.xml" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/.idea/.idea.butterflowers/.idea/workspace.xml" beforeDir="false" afterPath="$PROJECT_DIR$/.idea/.idea.butterflowers/.idea/workspace.xml" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/Assets/Animations/Clips/Score card/score_card_drop.anim" beforeDir="false" afterPath="$PROJECT_DIR$/Assets/Animations/Clips/Score card/score_card_drop.anim" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/Assets/Animations/Clips/Score card/score_card_hidden.anim" beforeDir="false" afterPath="$PROJECT_DIR$/Assets/Animations/Clips/Score card/score_card_hidden.anim" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/Assets/Materials/Canvas.mat" beforeDir="false" afterPath="$PROJECT_DIR$/Assets/Materials/Canvas.mat" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/Assets/Prefabs/Objects/beacon.prefab" beforeDir="false" afterPath="$PROJECT_DIR$/Assets/Prefabs/Objects/beacon.prefab" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/Assets/Scenes/420_Terrain.unity" beforeDir="false" afterPath="$PROJECT_DIR$/Assets/Scenes/420_Terrain.unity" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/Assets/Scripts/Objects/Entities/Interactables/Beacon.cs" beforeDir="false" afterPath="$PROJECT_DIR$/Assets/Scripts/Objects/Entities/Interactables/Beacon.cs" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/Assets/Scripts/Objects/Managers/BeaconManager.cs" beforeDir="false" afterPath="$PROJECT_DIR$/Assets/Scripts/Objects/Managers/BeaconManager.cs" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/Assets/Scripts/UI/ScoreItem.cs" beforeDir="false" afterPath="$PROJECT_DIR$/Assets/Scripts/UI/ScoreCard.cs" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/Assets/Scripts/UI/ScoreItem.cs.meta" beforeDir="false" afterPath="$PROJECT_DIR$/Assets/Scripts/UI/ScoreCard.cs.meta" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/Assets/Scripts/UI/Score Items.meta" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/Assets/Scripts/UI/ScoreCard.cs" beforeDir="false" afterPath="$PROJECT_DIR$/Assets/Scripts/UI/ScoreCard.cs" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/Assets/Scripts/___Deprecated/GradingManager.cs" beforeDir="false" afterPath="$PROJECT_DIR$/Assets/Scripts/___Deprecated/GradingManager.cs" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/Assets/Scripts/___Deprecated/SummaryManager.cs" beforeDir="false" afterPath="$PROJECT_DIR$/Assets/Scripts/___Deprecated/SummaryManager.cs" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/Library/InspectorExpandedItems.asset" beforeDir="false" afterPath="$PROJECT_DIR$/Library/InspectorExpandedItems.asset" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/Library/LastSceneManagerSetup.txt" beforeDir="false" afterPath="$PROJECT_DIR$/Library/LastSceneManagerSetup.txt" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/Library/expandedItems" beforeDir="false" afterPath="$PROJECT_DIR$/Library/expandedItems" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/obj/Debug/Assembly-CSharp.csprojAssemblyReference.cache" beforeDir="false" afterPath="$PROJECT_DIR$/obj/Debug/Assembly-CSharp.csprojAssemblyReference.cache" afterDir="false" />
     </list>
     <option name="SHOW_DIALOG" value="false" />
     <option name="HIGHLIGHT_CONFLICTS" value="true" />
@@ -70,18 +91,6 @@
   <component name="IdeDocumentHistory">
     <option name="CHANGED_PATHS">
       <list>
-        <option value="$PROJECT_DIR$/Assets/Scripts/Objects/Base/Interactable.cs" />
-        <option value="$PROJECT_DIR$/Assets/Scripts/___Deprecated/Agent1/Body.cs" />
-        <option value="$PROJECT_DIR$/Assets/Scripts/uwu/Gameplay/Interacter.cs" />
-        <option value="$PROJECT_DIR$/Assets/Scripts/Data/VineSceneData.cs" />
-        <option value="$PROJECT_DIR$/Assets/Scripts/Interfaces/IFileContainer.cs" />
-        <option value="$PROJECT_DIR$/Assets/Scripts/___Deprecated/BeaconInfo.cs" />
-        <option value="$PROJECT_DIR$/Assets/Scripts/Core/Library.cs" />
-        <option value="$PROJECT_DIR$/Assets/Packages/xNode/Scripts/Editor/NodeGraphEditor.cs" />
-        <option value="$PROJECT_DIR$/Assets/Scripts/Scriptables/Sequence.cs" />
-        <option value="$PROJECT_DIR$/Assets/Standard Assets/Utility/SimpleActivatorMenu.cs" />
-        <option value="$PROJECT_DIR$/Assets/Scripts/uwu/Animation/IK.cs" />
-        <option value="$PROJECT_DIR$/Assets/Scripts/Data/SequenceData.cs" />
         <option value="$PROJECT_DIR$/Assets/Scripts/Presets/WorldPreset.cs" />
         <option value="$PROJECT_DIR$/Assets/Scripts/Objects/Miscellaneous/Sequence.cs" />
         <option value="$PROJECT_DIR$/Assets/Scripts/uwu/Dialogue/DialogueHandler.cs" />
@@ -116,11 +125,23 @@
         <option value="$PROJECT_DIR$/Assets/Scripts/Save &amp; Load/GameDataSaveSystem.cs" />
         <option value="$PROJECT_DIR$/Assets/Scripts/Objects/Managers/ButterflowerManager.cs" />
         <option value="$PROJECT_DIR$/Assets/Scripts/Objects/Entities/Butterfly.cs" />
-        <option value="$PROJECT_DIR$/Assets/Scripts/___Deprecated/GradingManager.cs" />
         <option value="$PROJECT_DIR$/Assets/Scripts/___Deprecated/SummaryManager.cs" />
-        <option value="$PROJECT_DIR$/Assets/Scripts/UI/ScoreCard.cs" />
         <option value="$PROJECT_DIR$/Assets/Scripts/Objects/Entities/Interactables/Beacon.cs" />
         <option value="$PROJECT_DIR$/Assets/Scripts/Objects/Managers/BeaconManager.cs" />
+        <option value="$PROJECT_DIR$/Assets/Scripts/UI/Score Cards/FilesAdded.cs" />
+        <option value="$PROJECT_DIR$/Assets/Scripts/UI/Score Cards/FilesRemoved.cs" />
+        <option value="$PROJECT_DIR$/Assets/Scripts/UI/Score Cards/Discoveries.cs" />
+        <option value="$PROJECT_DIR$/Assets/Scripts/UI/Score Cards/HoB.cs" />
+        <option value="$PROJECT_DIR$/Assets/Scripts/UI/Score Cards/BeaconsRemoved.cs" />
+        <option value="$PROJECT_DIR$/Assets/Scripts/UI/Score Cards/BeaconsPlanted.cs" />
+        <option value="$PROJECT_DIR$/Assets/Scripts/UI/Score Cards/BeaconsAdded.cs" />
+        <option value="$PROJECT_DIR$/Assets/Scripts/UI/Score Cards/NestFill.cs" />
+        <option value="$PROJECT_DIR$/Assets/Scripts/UI/Score Cards/NestKicks.cs" />
+        <option value="$PROJECT_DIR$/Assets/Scripts/UI/Score Cards/NestSpills.cs" />
+        <option value="$PROJECT_DIR$/Assets/Scripts/UI/Score Cards/CursorSpeed.cs" />
+        <option value="$PROJECT_DIR$/Assets/Scripts/___Deprecated/GradingManager.cs" />
+        <option value="$PROJECT_DIR$/Assets/Scripts/UI/ScoreCard.cs" />
+        <option value="$PROJECT_DIR$/Assets/Scripts/UI/ScoreDeck.cs" />
       </list>
     </option>
   </component>
@@ -201,7 +222,8 @@
       <workItem from="1608612324602" duration="33292000" />
       <workItem from="1609265175990" duration="5940000" />
       <workItem from="1609283104196" duration="12641000" />
-      <workItem from="1609457340484" duration="49411000" />
+      <workItem from="1609457340484" duration="56187000" />
+      <workItem from="1609860409850" duration="2768000" />
     </task>
     <servers />
   </component>
@@ -299,9 +321,10 @@
       <screen x="0" y="0" width="1536" height="824" />
     </state>
     <state width="1493" height="288" key="GridCell.Tab.3.right/0.0.1536.824@0.0.1536.824" timestamp="1607212147886" />
-    <state x="601" y="129" key="RiderGenerateDialog" timestamp="1609218534248">
-      <screen x="0" y="0" width="1536" height="824" />
+    <state x="-1558" y="-130" key="RiderGenerateDialog" timestamp="1609862716819">
+      <screen x="-2560" y="-349" width="2560" height="1400" />
     </state>
+    <state x="-1558" y="-130" key="RiderGenerateDialog/0.0.1536.824/-2560.-349.2560.1400@-2560.-349.2560.1400" timestamp="1609862716819" />
     <state x="2922" y="-139" key="RiderGenerateDialog/0.0.1536.824/1920.-358.2560.1400@1920.-358.2560.1400" timestamp="1607481067179" />
     <state x="601" y="129" key="RiderGenerateDialog/0.0.1536.824@0.0.1536.824" timestamp="1609218534248" />
     <state x="80" y="57" width="1178" height="710" key="SettingsEditor" timestamp="1609302331072">

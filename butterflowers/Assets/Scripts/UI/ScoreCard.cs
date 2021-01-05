@@ -1,13 +1,14 @@
 ﻿using System;
+using Data;
 using TMPro;
 using UnityEngine;
+using UnityEngine.EventSystems;
 using UnityEngine.UI;
 
 namespace UI
 {
-	public class ScoreCard : MonoBehaviour
+	public abstract class ScoreCard : MonoBehaviour, IPointerEnterHandler, IPointerExitHandler
 	{
-		
 		#region Internal
 
 		public enum Type
@@ -21,7 +22,8 @@ namespace UI
 		
 		// Properties
 
-		Animator animator;
+		ScoreDeck deck;
+		[HideInInspector] public RectTransform rect;
 		
 		[SerializeField] Image deltaField;
 		[SerializeField] TMP_Text labelField, scoreField, averageField;
@@ -30,21 +32,26 @@ namespace UI
 		
 		[SerializeField] Type type = Type.Integer;
 		[SerializeField] string unitMeasurement = "";
-
+		
 
 		void Awake()
 		{
-			animator = GetComponent<Animator>();
+			rect = GetComponent<RectTransform>();
 		}
 
 		void Start()
 		{
-			labelField.text = gameObject.name;
+			deck = GetComponentInParent<ScoreDeck>();
+
+			labelField.text = Label;
 		}
 
 		#region Operations
 
-		public void ShowScore(float average, float score)
+		protected abstract string Label { get; }
+		public abstract void ShowScore(CompositeSurveillanceData average, CompositeSurveillanceData score);
+
+		protected void ShowScore(float average, float score)
 		{
 			if (type == Type.Percentage) 
 			{
@@ -62,14 +69,11 @@ namespace UI
 			if (diff > 0f) direction = 1;
 			else if (diff < 0f) direction = -1;
 			UpdateDelta(direction); // Update delta arrow UI 
-			
-			animator.SetTrigger("drop");
-			animator.SetBool("visible", true);
 		}
 
 		public void HideScore()
 		{
-			animator.SetBool("visible", false);
+			
 		}
 		
 		#endregion
@@ -97,6 +101,20 @@ namespace UI
 				deltaField.transform.localScale = new Vector3(1f, -1f, 1f);
 				deltaField.color = Color.red;
 			}
+		}
+		
+		#endregion
+		
+		#region  Pointer events
+		
+		public void OnPointerEnter(PointerEventData eventData)
+		{
+			deck.Enter(this);
+		}
+
+		public void OnPointerExit(PointerEventData eventData)
+		{
+			//deck.Exit(this);
 		}
 		
 		#endregion
