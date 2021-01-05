@@ -33,6 +33,15 @@ namespace UI
 		[SerializeField] Type type = Type.Integer;
 		[SerializeField] string unitMeasurement = "";
 		
+		
+		#region Accessors
+		
+		Transform scoreItem => transform.GetChild(1);
+		Transform averageItem => transform.GetChild(2);
+		Transform descriptionItem => transform.GetChild(3);
+		
+		#endregion
+		
 
 		void Awake()
 		{
@@ -42,6 +51,11 @@ namespace UI
 		void Start()
 		{
 			deck = GetComponentInParent<ScoreDeck>();
+
+			labelField = descriptionItem.GetComponent<TMP_Text>();
+			scoreField = scoreItem.GetComponentInChildren<TMP_Text>();
+			deltaField = scoreItem.GetComponentInChildren<Image>();
+			averageField = averageItem.GetComponentInChildren<TMP_Text>();
 
 			labelField.text = Label;
 		}

@@ -26,7 +26,7 @@ namespace Objects.Managers
 		[SerializeField] TMP_Text score;
 
 		[SerializeField] Transform scoreItemParent;
-		[SerializeField] ScoreCard[] scoreItems;
+		[SerializeField] ScoreDeck scores;
 
 		[SerializeField] ToggleScale scoreScaler;
 
@@ -37,18 +37,12 @@ namespace Objects.Managers
 		
 		[SerializeField] float timeBetweenScores = .1f;
 		[SerializeField] float timeBeforeStroke = .3f;
-		
-		[Header("Debug")]
-			[SerializeField] float[] scores = new float[]{};
-			[SerializeField] CompositeSurveillanceData composite;
-			[SerializeField] bool refreshComposite = false;
-			
-			
+
+
 		#region Monobehaviour callbacks
 
 		void Start()
 		{
-			scoreItems = scoreItemParent.GetComponentsInChildren<ScoreCard>();
 			HideScores();
 		}
 
@@ -61,7 +55,11 @@ namespace Objects.Managers
 			var log = new CompositeSurveillanceData(Surveillance.activeLog);
 			var compositeLog = Surveillance.CreateCompositeAverageLog();
 
-			StartCoroutine(ShowingScores(compositeLog, log));
+			foreach (ScoreCard card in scores.Items) 
+			{
+				ShowScoreItem(card, compositeLog, log);
+			}
+			scores.Open();
 			
 			/*****/
 				//char grade = CalculateGrade(log, compositeLog);
@@ -69,19 +67,10 @@ namespace Objects.Managers
 			/*****/
 		}
 
-		IEnumerator ShowingScores(CompositeSurveillanceData compositeLog, CompositeSurveillanceData log)
-		{
-			foreach (ScoreCard card in scoreItems) 
-			{
-				yield return new WaitForSecondsRealtime(timeBetweenScores);
-				ShowScoreItem(card, compositeLog, log);
-			}
-		}
-
 		public void HideScores()
 		{
-			StopAllCoroutines();
-			foreach (ScoreCard item in scoreItems) 
+			scores.Close();
+			foreach (ScoreCard item in scores.Items) 
 			{
 				HideScoreItem(item);
 			}
@@ -89,14 +78,12 @@ namespace Objects.Managers
 
 		void ShowScoreItem(ScoreCard card, CompositeSurveillanceData average, CompositeSurveillanceData current)
 		{
-			card.gameObject.SetActive(true);
 			card.ShowScore(average, current);
 		}
 
 		void HideScoreItem(ScoreCard card)
 		{
 			card.HideScore();
-			card.gameObject.SetActive(false);
 		}
 
 		#endregion
@@ -105,6 +92,7 @@ namespace Objects.Managers
 
 		public char CalculateGrade(CompositeSurveillanceData current, CompositeSurveillanceData composite)
 		{
+			/*
 			float fileadd = CalculatePercentageIncrease(composite.filesAdded, current.filesAdded);
 			float fileremove = -CalculatePercentageIncrease(composite.filesRemoved, current.filesRemoved);
 			float discovery = CalculatePercentageIncrease(composite.discoveries, current.discoveries);
@@ -129,6 +117,9 @@ namespace Objects.Managers
 				return 'D';
 			else
 				return 'F';
+				*/
+
+			return 'A';
 		}
 
 		float CalculatePercentageIncrease(float a, float b)

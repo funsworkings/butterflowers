@@ -33,6 +33,12 @@ namespace UI
         [Range(0f, 180f)] public float offset = 90f;
         [SerializeField] float focusSpeed = 1f;
         [SerializeField] float duration = 1f;
+        
+        #region Accessors
+
+        public ScoreCard[] Items => cards;
+
+        #endregion
 
 
         // Start is called before the first frame update
@@ -67,8 +73,8 @@ namespace UI
             {
                 if (cardInFocus != null) 
                 {
-                    cardInFocus.rect.anchoredPosition = Vector2.Lerp(cardInFocus.rect.anchoredPosition, anchor.anchoredPosition, Time.deltaTime * focusSpeed); 
-                    cardInFocus.rect.rotation = Quaternion.Lerp(cardInFocus.rect.rotation, anchor.rotation, Time.deltaTime * focusSpeed);
+                    cardInFocus.rect.anchoredPosition = Vector2.Lerp(cardInFocus.rect.anchoredPosition, anchor.anchoredPosition, Time.unscaledDeltaTime * focusSpeed); 
+                    cardInFocus.rect.rotation = Quaternion.Lerp(cardInFocus.rect.rotation, anchor.rotation, Time.unscaledDeltaTime * focusSpeed);
                     
                     if(Input.GetMouseButtonDown(0)) Exit(cardInFocus);
                 }    
