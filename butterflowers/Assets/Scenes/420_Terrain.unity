@@ -3219,7 +3219,7 @@ Transform:
   m_PrefabInstance: {fileID: 0}
   m_PrefabAsset: {fileID: 0}
   m_GameObject: {fileID: 201810246}
-  m_LocalRotation: {x: 0.12156507, y: -0.0000000050892752, z: 6.304753e-10, w: 0.9925835}
+  m_LocalRotation: {x: 0.12156508, y: -0.000000020864588, z: 0.0000000025043372, w: 0.9925835}
   m_LocalPosition: {x: 0, y: 9.595102, z: -21.852465}
   m_LocalScale: {x: 1, y: 1.3577, z: 1}
   m_Children:
@@ -7078,7 +7078,7 @@ Camera:
     height: 1
   near clip plane: 0.1
   far clip plane: 5000
-  field of view: 30
+  field of view: 14
   orthographic: 0
   orthographic size: 5
   m_Depth: 0
@@ -7103,8 +7103,8 @@ Transform:
   m_PrefabInstance: {fileID: 0}
   m_PrefabAsset: {fileID: 0}
   m_GameObject: {fileID: 534669902}
-  m_LocalRotation: {x: 0.12156507, y: -0.0000000050892752, z: 6.304753e-10, w: 0.9925835}
-  m_LocalPosition: {x: 0, y: 9.595102, z: -33.205246}
+  m_LocalRotation: {x: 0.011049519, y: -0.9863622, z: 0.07446293, w: 0.14636582}
+  m_LocalPosition: {x: 19.457602, y: 14.52165, z: 40.472775}
   m_LocalScale: {x: 1, y: 1, z: 1}
   m_Children:
   - {fileID: 2418050}
@@ -10623,7 +10623,6 @@ GameObject:
   - component: {fileID: 770706734}
   - component: {fileID: 770706735}
   - component: {fileID: 770706736}
-  - component: {fileID: 770706737}
   m_Layer: 5
   m_Name: summary panel
   m_TagString: Untagged
@@ -10677,7 +10676,7 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 85170ebb2b8ca794b90b39d71f6573e5, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  shown: 1
+  shown: 0
   lerps: 1
   lerping: 0
   value: 0
@@ -10689,35 +10688,13 @@ MonoBehaviour:
       m_Calls: []
   OnHide:
     m_PersistentCalls:
-      m_Calls:
-      - m_Target: {fileID: 770706737}
-        m_MethodName: ResetTrigger
-        m_Mode: 5
-        m_Arguments:
-          m_ObjectArgument: {fileID: 0}
-          m_ObjectArgumentAssemblyTypeName: UnityEngine.Object, UnityEngine
-          m_IntArgument: 0
-          m_FloatArgument: 0
-          m_StringArgument: visible
-          m_BoolArgument: 0
-        m_CallState: 2
+      m_Calls: []
   OnToggle:
     m_PersistentCalls:
       m_Calls: []
   onShown:
     m_PersistentCalls:
-      m_Calls:
-      - m_Target: {fileID: 770706737}
-        m_MethodName: SetTrigger
-        m_Mode: 5
-        m_Arguments:
-          m_ObjectArgument: {fileID: 0}
-          m_ObjectArgumentAssemblyTypeName: UnityEngine.Object, UnityEngine
-          m_IntArgument: 0
-          m_FloatArgument: 0
-          m_StringArgument: visible
-          m_BoolArgument: 0
-        m_CallState: 2
+      m_Calls: []
   onHidden:
     m_PersistentCalls:
       m_Calls: []
@@ -10727,25 +10704,6 @@ MonoBehaviour:
   text: {fileID: 0}
   visible: 1
   hidden: 0
---- !u!95 &770706737
-Animator:
-  serializedVersion: 3
-  m_ObjectHideFlags: 0
-  m_CorrespondingSourceObject: {fileID: 0}
-  m_PrefabInstance: {fileID: 0}
-  m_PrefabAsset: {fileID: 0}
-  m_GameObject: {fileID: 770706733}
-  m_Enabled: 0
-  m_Avatar: {fileID: 0}
-  m_Controller: {fileID: 9100000, guid: 6ec033c710e2eb54286dc22691d114af, type: 2}
-  m_CullingMode: 0
-  m_UpdateMode: 2
-  m_ApplyRootMotion: 0
-  m_LinearVelocityBlending: 0
-  m_WarningMessage: 
-  m_HasTransformHierarchy: 1
-  m_AllowConstantClipSamplingOptimization: 1
-  m_KeepAnimatorControllerStateOnDisable: 0
 --- !u!1 &775674648
 GameObject:
   m_ObjectHideFlags: 0
@@ -16425,37 +16383,15 @@ MonoBehaviour:
   m_EditorClassIdentifier: 
   Surveillance: {fileID: 481301901}
   Preset: {fileID: 11400000, guid: 45ffdf5e02efb4848942aaeb5d029f6e, type: 2}
-  animator: {fileID: 770706737}
+  animator: {fileID: 0}
   score: {fileID: 650351835}
   scoreItemParent: {fileID: 0}
-  scoreItems: []
+  scores: {fileID: 1923385170}
   scoreScaler: {fileID: 0}
   strokeImage: {fileID: 36787166}
   scoreDropdownAnimation: {fileID: 36787168}
   timeBetweenScores: 1.5
   timeBeforeStroke: 0.3
-  scores: []
-  composite:
-    timestamp: 0
-    filesAdded: 0
-    filesRemoved: 0
-    logs: []
-    photo: 
-    AverageHoB: 0
-    AverageNestFill: 0
-    AverageCursorSpeed: 0
-    AverageTimeSpentInNest: 0
-    AverageTimeSpentInMagicStar: 0
-    AverageTimeSpentInTree: 0
-    AverageTimeSpentInDefault: 0
-    FilesAdded: 0
-    FilesRemoved: 0
-    Discoveries: 0
-    BeaconsAdded: 0
-    BeaconsPlanted: 0
-    NestKicks: 0
-    NestSpills: 0
-  refreshComposite: 0
 --- !u!1 &1198347967
 GameObject:
   m_ObjectHideFlags: 0
@@ -26625,7 +26561,7 @@ GameObject:
   m_Icon: {fileID: 0}
   m_NavMeshLayer: 0
   m_StaticEditorFlags: 0
-  m_IsActive: 0
+  m_IsActive: 1
 --- !u!4 &1657525263
 Transform:
   m_ObjectHideFlags: 0
@@ -28639,7 +28575,7 @@ MonoBehaviour:
   m_outlineColor:
     serializedVersion: 2
     rgba: 4278190080
-  m_fontSize: 25.15
+  m_fontSize: 25.1
   m_fontSizeBase: 36
   m_fontWeight: 400
   m_enableAutoSizing: 1
@@ -38961,35 +38897,35 @@ PrefabInstance:
     m_Modifications:
     - target: {fileID: 1854825635, guid: bbe889dad4ed0dd48a0243ced6070a70, type: 3}
       propertyPath: m_LocalRotation.w
-      value: 0.774646
+      value: 0.7753395
       objectReference: {fileID: 0}
     - target: {fileID: 1854825635, guid: bbe889dad4ed0dd48a0243ced6070a70, type: 3}
       propertyPath: m_LocalRotation.x
-      value: -0.0953135
+      value: -0.2430324
       objectReference: {fileID: 0}
     - target: {fileID: 1854825635, guid: bbe889dad4ed0dd48a0243ced6070a70, type: 3}
       propertyPath: m_LocalRotation.y
-      value: 0.6122631
+      value: -0.57960695
       objectReference: {fileID: 0}
     - target: {fileID: 1854825635, guid: bbe889dad4ed0dd48a0243ced6070a70, type: 3}
       propertyPath: m_LocalRotation.z
-      value: -0.12638433
+      value: -0.061966576
       objectReference: {fileID: 0}
     - target: {fileID: 1981574397, guid: bbe889dad4ed0dd48a0243ced6070a70, type: 3}
       propertyPath: m_LocalRotation.w
-      value: 0.7955508
+      value: 0.7884141
       objectReference: {fileID: 0}
     - target: {fileID: 1981574397, guid: bbe889dad4ed0dd48a0243ced6070a70, type: 3}
       propertyPath: m_LocalRotation.x
-      value: -0.07001968
+      value: -0.22646262
       objectReference: {fileID: 0}
     - target: {fileID: 1981574397, guid: bbe889dad4ed0dd48a0243ced6070a70, type: 3}
       propertyPath: m_LocalRotation.y
-      value: 0.582722
+      value: -0.56965804
       objectReference: {fileID: 0}
     - target: {fileID: 1981574397, guid: bbe889dad4ed0dd48a0243ced6070a70, type: 3}
       propertyPath: m_LocalRotation.z
-      value: -0.15043633
+      value: -0.051065415
       objectReference: {fileID: 0}
     - target: {fileID: 1995632988, guid: bbe889dad4ed0dd48a0243ced6070a70, type: 3}
       propertyPath: overrideCamera
