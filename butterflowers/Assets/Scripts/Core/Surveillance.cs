@@ -425,7 +425,6 @@ namespace Core
 		void OnReceiveEvent(EVENTCODE @event, AGENT agentA, AGENT agentB, string details)
 		{
 			if (!recording) return;
-		
 			if (agentA == AGENT.User) 
 				eventsDuringLog.Add(@event);
 		}

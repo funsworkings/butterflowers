@@ -34,12 +34,53 @@
   </component>
   <component name="ChangeListManager">
     <list default="true" id="6ebb3891-c912-403e-9e42-400f227dea0b" name="Default Changelist" comment="">
+      <change afterPath="$PROJECT_DIR$/Assets/Scripts/UI/Summary Cards/PhotoOfTheDay.cs" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/Assets/Scripts/UI/Summary Cards/PhotoOfTheDay.cs.meta" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/Assets/Scripts/UI/SummaryCardTrigger.cs" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/Assets/Scripts/UI/SummaryCardTrigger.cs.meta" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/.idea/.idea.butterflowers/.idea/contentModel.xml" beforeDir="false" afterPath="$PROJECT_DIR$/.idea/.idea.butterflowers/.idea/contentModel.xml" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/.idea/.idea.butterflowers/.idea/workspace.xml" beforeDir="false" afterPath="$PROJECT_DIR$/.idea/.idea.butterflowers/.idea/workspace.xml" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/Assets/Materials/Canvas.mat" beforeDir="false" afterPath="$PROJECT_DIR$/Assets/Materials/Canvas.mat" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/Assets/Materials/Distortion.mat" beforeDir="false" afterPath="$PROJECT_DIR$/Assets/Materials/Distortion.mat" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/Assets/Prefabs/Objects/flower.prefab" beforeDir="false" afterPath="$PROJECT_DIR$/Assets/Prefabs/Objects/flower.prefab" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/Assets/Prefabs/UI/score card.prefab" beforeDir="false" afterPath="$PROJECT_DIR$/Assets/Prefabs/UI/score card.prefab" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/Assets/Scenes/420_Terrain.unity" beforeDir="false" afterPath="$PROJECT_DIR$/Assets/Scenes/420_Terrain.unity" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/Assets/Scripts/UI/ScoreCard.cs" beforeDir="false" afterPath="$PROJECT_DIR$/Assets/Scripts/UI/ScoreCard.cs" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/Assets/Scripts/UI/ScoreDeck.cs" beforeDir="false" afterPath="$PROJECT_DIR$/Assets/Scripts/UI/ScoreDeck.cs" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/Assets/Scripts/Core/Surveillance.cs" beforeDir="false" afterPath="$PROJECT_DIR$/Assets/Scripts/Core/Surveillance.cs" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/Assets/Scripts/Core/Wand.cs" beforeDir="false" afterPath="$PROJECT_DIR$/Assets/Scripts/Core/Wand.cs" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/Assets/Scripts/Core/World.cs" beforeDir="false" afterPath="$PROJECT_DIR$/Assets/Scripts/Core/World.cs" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/Assets/Scripts/Objects/Managers/SequenceManager.cs" beforeDir="false" afterPath="$PROJECT_DIR$/Assets/Scripts/Objects/Managers/SequenceManager.cs" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/Assets/Scripts/UI/Score Cards.meta" beforeDir="false" afterPath="$PROJECT_DIR$/Assets/Scripts/UI/Summary Cards.meta" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/Assets/Scripts/UI/Score Cards/BeaconsAdded.cs" beforeDir="false" afterPath="$PROJECT_DIR$/Assets/Scripts/UI/Summary Cards/BeaconsAdded.cs" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/Assets/Scripts/UI/Score Cards/BeaconsAdded.cs.meta" beforeDir="false" afterPath="$PROJECT_DIR$/Assets/Scripts/UI/Summary Cards/BeaconsAdded.cs.meta" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/Assets/Scripts/UI/Score Cards/BeaconsPlanted.cs" beforeDir="false" afterPath="$PROJECT_DIR$/Assets/Scripts/UI/Summary Cards/BeaconsPlanted.cs" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/Assets/Scripts/UI/Score Cards/BeaconsPlanted.cs.meta" beforeDir="false" afterPath="$PROJECT_DIR$/Assets/Scripts/UI/Summary Cards/BeaconsPlanted.cs.meta" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/Assets/Scripts/UI/Score Cards/CursorSpeed.cs" beforeDir="false" afterPath="$PROJECT_DIR$/Assets/Scripts/UI/Summary Cards/CursorSpeed.cs" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/Assets/Scripts/UI/Score Cards/CursorSpeed.cs.meta" beforeDir="false" afterPath="$PROJECT_DIR$/Assets/Scripts/UI/Summary Cards/CursorSpeed.cs.meta" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/Assets/Scripts/UI/Score Cards/Discoveries.cs" beforeDir="false" afterPath="$PROJECT_DIR$/Assets/Scripts/UI/Summary Cards/Discoveries.cs" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/Assets/Scripts/UI/Score Cards/Discoveries.cs.meta" beforeDir="false" afterPath="$PROJECT_DIR$/Assets/Scripts/UI/Summary Cards/Discoveries.cs.meta" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/Assets/Scripts/UI/Score Cards/FilesAdded.cs" beforeDir="false" afterPath="$PROJECT_DIR$/Assets/Scripts/UI/Summary Cards/FilesAdded.cs" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/Assets/Scripts/UI/Score Cards/FilesAdded.cs.meta" beforeDir="false" afterPath="$PROJECT_DIR$/Assets/Scripts/UI/Summary Cards/FilesAdded.cs.meta" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/Assets/Scripts/UI/Score Cards/FilesRemoved.cs" beforeDir="false" afterPath="$PROJECT_DIR$/Assets/Scripts/UI/Summary Cards/FilesRemoved.cs" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/Assets/Scripts/UI/Score Cards/FilesRemoved.cs.meta" beforeDir="false" afterPath="$PROJECT_DIR$/Assets/Scripts/UI/Summary Cards/FilesRemoved.cs.meta" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/Assets/Scripts/UI/Score Cards/HoB.cs" beforeDir="false" afterPath="$PROJECT_DIR$/Assets/Scripts/UI/Summary Cards/HoB.cs" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/Assets/Scripts/UI/Score Cards/HoB.cs.meta" beforeDir="false" afterPath="$PROJECT_DIR$/Assets/Scripts/UI/Summary Cards/HoB.cs.meta" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/Assets/Scripts/UI/Score Cards/NestFill.cs" beforeDir="false" afterPath="$PROJECT_DIR$/Assets/Scripts/UI/Summary Cards/NestFill.cs" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/Assets/Scripts/UI/Score Cards/NestFill.cs.meta" beforeDir="false" afterPath="$PROJECT_DIR$/Assets/Scripts/UI/Summary Cards/NestFill.cs.meta" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/Assets/Scripts/UI/Score Cards/NestKicks.cs" beforeDir="false" afterPath="$PROJECT_DIR$/Assets/Scripts/UI/Summary Cards/NestKicks.cs" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/Assets/Scripts/UI/Score Cards/NestKicks.cs.meta" beforeDir="false" afterPath="$PROJECT_DIR$/Assets/Scripts/UI/Summary Cards/NestKicks.cs.meta" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/Assets/Scripts/UI/Score Cards/NestSpills.cs" beforeDir="false" afterPath="$PROJECT_DIR$/Assets/Scripts/UI/Summary Cards/NestSpills.cs" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/Assets/Scripts/UI/Score Cards/NestSpills.cs.meta" beforeDir="false" afterPath="$PROJECT_DIR$/Assets/Scripts/UI/Summary Cards/NestSpills.cs.meta" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/Assets/Scripts/UI/Score Cards/summary panel.prefab" beforeDir="false" afterPath="$PROJECT_DIR$/Assets/Scripts/UI/Summary Cards/summary panel.prefab" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/Assets/Scripts/UI/Score Cards/summary panel.prefab.meta" beforeDir="false" afterPath="$PROJECT_DIR$/Assets/Scripts/UI/Summary Cards/summary panel.prefab.meta" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/Assets/Scripts/UI/ScoreCard.cs" beforeDir="false" afterPath="$PROJECT_DIR$/Assets/Scripts/UI/SummaryCard.cs" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/Assets/Scripts/UI/ScoreCard.cs.meta" beforeDir="false" afterPath="$PROJECT_DIR$/Assets/Scripts/UI/SummaryCard.cs.meta" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/Assets/Scripts/UI/ScoreDeck.cs" beforeDir="false" afterPath="$PROJECT_DIR$/Assets/Scripts/UI/SummaryDeck.cs" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/Assets/Scripts/UI/ScoreDeck.cs.meta" beforeDir="false" afterPath="$PROJECT_DIR$/Assets/Scripts/UI/SummaryDeck.cs.meta" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/Assets/Scripts/___Deprecated/GradingManager.cs" beforeDir="false" afterPath="$PROJECT_DIR$/Assets/Scripts/___Deprecated/GradingManager.cs" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/Assets/Scripts/___Deprecated/SummaryManager.cs" beforeDir="false" afterPath="$PROJECT_DIR$/Assets/Scripts/___Deprecated/SummaryManager.cs" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/Library/InspectorExpandedItems.asset" beforeDir="false" afterPath="$PROJECT_DIR$/Library/InspectorExpandedItems.asset" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/Library/SpriteAtlasDatabase.asset" beforeDir="false" afterPath="$PROJECT_DIR$/Library/SpriteAtlasDatabase.asset" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/obj/Debug/Assembly-CSharp.csprojAssemblyReference.cache" beforeDir="false" afterPath="$PROJECT_DIR$/obj/Debug/Assembly-CSharp.csprojAssemblyReference.cache" afterDir="false" />
     </list>
     <option name="SHOW_DIALOG" value="false" />
     <option name="HIGHLIGHT_CONFLICTS" value="true" />
@@ -64,12 +105,7 @@
   <component name="IdeDocumentHistory">
     <option name="CHANGED_PATHS">
       <list>
-        <option value="$PROJECT_DIR$/Assets/Scripts/Presets/WorldPreset.cs" />
-        <option value="$PROJECT_DIR$/Assets/Scripts/Objects/Miscellaneous/Sequence.cs" />
-        <option value="$PROJECT_DIR$/Assets/Scripts/uwu/Dialogue/DialogueHandler.cs" />
-        <option value="$PROJECT_DIR$/Assets/Scripts/UI/ScoreItem.cs" />
         <option value="$PROJECT_DIR$/Assets/Scripts/Objects/Base/Focusable.cs" />
-        <option value="$PROJECT_DIR$/Assets/Scripts/Core/Surveillance.cs" />
         <option value="$PROJECT_DIR$/Assets/Scripts/___Deprecated/Misc/CollisionPlane.cs" />
         <option value="$PROJECT_DIR$/Assets/Scripts/uwu/Extensions/Extensions.cs" />
         <option value="$PROJECT_DIR$/Assets/Scripts/Presets/ButterflyPreset.cs" />
@@ -80,7 +116,6 @@
         <option value="$PROJECT_DIR$/Assets/Scripts/Snippets/FitViaScale.cs" />
         <option value="$PROJECT_DIR$/Assets/Packages/UnityWindowsFileDrag-Drop-master/FileDragAndDrop.cs" />
         <option value="$PROJECT_DIR$/Assets/Scripts/uwu/Gameplay/Spawner.cs" />
-        <option value="$PROJECT_DIR$/Assets/Scripts/Core/Wand.cs" />
         <option value="$PROJECT_DIR$/Assets/Scripts/Core/Focusing.cs" />
         <option value="$PROJECT_DIR$/Assets/Scripts/Objects/Base/Entity.cs" />
         <option value="$PROJECT_DIR$/Assets/Scripts/Objects/Entities/Interactables/Nest.cs" />
@@ -91,30 +126,36 @@
         <option value="$PROJECT_DIR$/Assets/Scripts/Global.cs" />
         <option value="$PROJECT_DIR$/Assets/Scripts/Objects/Managers/TutorialManager.cs" />
         <option value="$PROJECT_DIR$/Assets/Scripts/Objects/Entities/Sun.cs" />
-        <option value="$PROJECT_DIR$/Assets/Scripts/Objects/Managers/SequenceManager.cs" />
         <option value="$PROJECT_DIR$/Assets/Scripts/Objects/Managers/VineManager.cs" />
         <option value="$PROJECT_DIR$/Assets/Scripts/uwu/Save &amp; Load/GameDataSaveSystem.cs" />
-        <option value="$PROJECT_DIR$/Assets/Scripts/Core/World.cs" />
         <option value="$PROJECT_DIR$/Assets/Scripts/Save &amp; Load/GameDataSaveSystem.cs" />
         <option value="$PROJECT_DIR$/Assets/Scripts/Objects/Managers/ButterflowerManager.cs" />
         <option value="$PROJECT_DIR$/Assets/Scripts/Objects/Entities/Butterfly.cs" />
-        <option value="$PROJECT_DIR$/Assets/Scripts/___Deprecated/SummaryManager.cs" />
         <option value="$PROJECT_DIR$/Assets/Scripts/Objects/Entities/Interactables/Beacon.cs" />
         <option value="$PROJECT_DIR$/Assets/Scripts/Objects/Managers/BeaconManager.cs" />
+        <option value="$PROJECT_DIR$/Assets/Scripts/UI/Score Cards/BeaconsRemoved.cs" />
+        <option value="$PROJECT_DIR$/Assets/Scripts/UI/ScoreDeck.cs" />
+        <option value="$PROJECT_DIR$/Assets/Scripts/UI/ScoreCard.cs" />
+        <option value="$PROJECT_DIR$/Assets/Scripts/UI/Score Cards/BeaconsAdded.cs" />
+        <option value="$PROJECT_DIR$/Assets/Scripts/UI/Score Cards/BeaconsPlanted.cs" />
+        <option value="$PROJECT_DIR$/Assets/Scripts/UI/Score Cards/CursorSpeed.cs" />
+        <option value="$PROJECT_DIR$/Assets/Scripts/UI/Score Cards/Discoveries.cs" />
         <option value="$PROJECT_DIR$/Assets/Scripts/UI/Score Cards/FilesAdded.cs" />
         <option value="$PROJECT_DIR$/Assets/Scripts/UI/Score Cards/FilesRemoved.cs" />
-        <option value="$PROJECT_DIR$/Assets/Scripts/UI/Score Cards/Discoveries.cs" />
         <option value="$PROJECT_DIR$/Assets/Scripts/UI/Score Cards/HoB.cs" />
-        <option value="$PROJECT_DIR$/Assets/Scripts/UI/Score Cards/BeaconsRemoved.cs" />
-        <option value="$PROJECT_DIR$/Assets/Scripts/UI/Score Cards/BeaconsPlanted.cs" />
-        <option value="$PROJECT_DIR$/Assets/Scripts/UI/Score Cards/BeaconsAdded.cs" />
         <option value="$PROJECT_DIR$/Assets/Scripts/UI/Score Cards/NestFill.cs" />
-        <option value="$PROJECT_DIR$/Assets/Scripts/UI/Score Cards/NestKicks.cs" />
         <option value="$PROJECT_DIR$/Assets/Scripts/UI/Score Cards/NestSpills.cs" />
-        <option value="$PROJECT_DIR$/Assets/Scripts/UI/Score Cards/CursorSpeed.cs" />
+        <option value="$PROJECT_DIR$/Assets/Scripts/UI/Score Cards/NestKicks.cs" />
         <option value="$PROJECT_DIR$/Assets/Scripts/___Deprecated/GradingManager.cs" />
-        <option value="$PROJECT_DIR$/Assets/Scripts/UI/ScoreCard.cs" />
-        <option value="$PROJECT_DIR$/Assets/Scripts/UI/ScoreDeck.cs" />
+        <option value="$PROJECT_DIR$/Assets/Scripts/UI/SummaryCardTrigger.cs" />
+        <option value="$PROJECT_DIR$/Assets/Scripts/Core/Surveillance.cs" />
+        <option value="$PROJECT_DIR$/Assets/Scripts/___Deprecated/SummaryManager.cs" />
+        <option value="$PROJECT_DIR$/Assets/Scripts/Objects/Managers/SequenceManager.cs" />
+        <option value="$PROJECT_DIR$/Assets/Scripts/Core/World.cs" />
+        <option value="$PROJECT_DIR$/Assets/Scripts/Core/Wand.cs" />
+        <option value="$PROJECT_DIR$/Assets/Scripts/UI/SummaryDeck.cs" />
+        <option value="$PROJECT_DIR$/Assets/Scripts/UI/SummaryCard.cs" />
+        <option value="$PROJECT_DIR$/Assets/Scripts/UI/Summary Cards/PhotoOfTheDay.cs" />
       </list>
     </option>
   </component>
@@ -294,10 +335,11 @@
       <screen x="0" y="0" width="1536" height="824" />
     </state>
     <state width="1493" height="288" key="GridCell.Tab.3.right/0.0.1536.824@0.0.1536.824" timestamp="1607212147886" />
-    <state x="-1558" y="-130" key="RiderGenerateDialog" timestamp="1609862716819">
-      <screen x="-2560" y="-349" width="2560" height="1400" />
+    <state x="601" y="129" key="RiderGenerateDialog" timestamp="1609901624895">
+      <screen x="0" y="0" width="1536" height="824" />
     </state>
     <state x="-1558" y="-130" key="RiderGenerateDialog/0.0.1536.824/-2560.-349.2560.1400@-2560.-349.2560.1400" timestamp="1609862716819" />
+    <state x="601" y="129" key="RiderGenerateDialog/0.0.1536.824/-2560.-349.2560.1400@0.0.1536.824" timestamp="1609901624895" />
     <state x="2922" y="-139" key="RiderGenerateDialog/0.0.1536.824/1920.-358.2560.1400@1920.-358.2560.1400" timestamp="1607481067179" />
     <state x="601" y="129" key="RiderGenerateDialog/0.0.1536.824@0.0.1536.824" timestamp="1609218534248" />
     <state x="80" y="57" width="1178" height="710" key="SettingsEditor" timestamp="1609302331072">
@@ -323,10 +365,11 @@
     <state x="2628" y="-31" width="1120" height="1151" key="run.anything.popup/0.0.1536.824/1920.-349.2560.1400@1920.-349.2560.1400" timestamp="1609375011181" />
     <state x="2628" y="-40" width="1120" height="1151" key="run.anything.popup/0.0.1536.824/1920.-358.2560.1400@1920.-358.2560.1400" timestamp="1607910030966" />
     <state x="425" y="187" width="672" height="677" key="run.anything.popup/0.0.1536.824@0.0.1536.824" timestamp="1609791387421" />
-    <state x="-1843" y="-103" width="1120" height="1152" key="search.everywhere.popup" timestamp="1609866378624">
+    <state x="-1843" y="-103" width="1120" height="1152" key="search.everywhere.popup" timestamp="1609908351414">
       <screen x="-2560" y="-349" width="2560" height="1400" />
     </state>
-    <state x="-1843" y="-103" width="1120" height="1152" key="search.everywhere.popup/0.0.1536.824/-2560.-349.2560.1400@-2560.-349.2560.1400" timestamp="1609866378624" />
+    <state x="-1843" y="-103" width="1120" height="1152" key="search.everywhere.popup/0.0.1536.824/-2560.-349.2560.1400@-2560.-349.2560.1400" timestamp="1609908351414" />
+    <state x="430" y="145" width="672" height="679" key="search.everywhere.popup/0.0.1536.824/-2560.-349.2560.1400@0.0.1536.824" timestamp="1609900664665" />
     <state x="-1842" y="-112" width="1120" height="1152" key="search.everywhere.popup/0.0.1536.824/-2560.-358.2560.1400@-2560.-358.2560.1400" timestamp="1608687095751" />
     <state x="79" y="-1194" width="1120" height="1152" key="search.everywhere.popup/0.0.1536.824/-638.-1440.2560.1400@-638.-1440.2560.1400" timestamp="1609043539164" />
     <state x="2637" y="-103" width="1120" height="1152" key="search.everywhere.popup/0.0.1536.824/1920.-349.2560.1400@1920.-349.2560.1400" timestamp="1609698996642" />

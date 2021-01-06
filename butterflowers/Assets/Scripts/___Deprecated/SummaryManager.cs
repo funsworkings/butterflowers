@@ -11,7 +11,7 @@ using uwu.UI.Behaviors.Visibility;
 
 namespace Objects.Managers
 {
-	public class SummaryManager : MonoBehaviour, IPauseSun, IReactToSunCycle
+	public class SummaryManager : MonoBehaviour, IPauseSun
 	{
 		#region Internal
 
@@ -61,19 +61,7 @@ namespace Objects.Managers
 		}
 
 		#endregion
-		
-		#region Cycle
 
-		public void Cycle(bool refresh)
-		{
-			if (refresh) 
-			{
-				ShowSummary();
-			}
-		}
-		
-		#endregion
-		
 		#region Show and hide
 
 		public void ShowSummary()

@@ -1,12 +1,9 @@
 ﻿using Data;
-using UnityEngine;
 
-namespace UI.Score_Cards
+namespace UI.Summary_Cards
 {
-	public class FilesAdded : ScoreCard
+	public class FilesAdded : SummaryCard
 	{
-		protected override string Label => "# of files added";
-		
 		public override void ShowScore(CompositeSurveillanceData average, CompositeSurveillanceData score)
 		{
 			ShowScore(average.filesAdded, score.filesAdded);

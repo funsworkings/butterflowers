@@ -1,6 +1,7 @@
 ﻿using System.Collections;
 using System.Collections.Generic;
 using Data;
+using Interfaces;
 using Neue.Agent.Brain.Data;
 using Objects.Base;
 using Objects.Managers;
@@ -26,7 +27,7 @@ using uwu.UI.Behaviors.Visibility;
 
 namespace Core
 {
-    public class World : MonoBehaviour, ISaveable, IReactToSunCycle
+    public class World : MonoBehaviour, ISaveable, IReactToSunCycle, IPauseSun
     {
         public static World Instance = null;
         public static bool LOAD = false;
@@ -52,6 +53,7 @@ namespace Core
         [SerializeField] BeaconManager Beacons = null;
         [SerializeField] VineManager Vines = null;
         [SerializeField] EventManager EventsM = null;
+        [SerializeField] SummaryManager Summary = null;
         [SerializeField] SequenceManager Sequence = null;
 
         [Header("Objects")]
@@ -74,6 +76,8 @@ namespace Core
         [SerializeField] ToggleOpacity gamePanel;
         [SerializeField] Profile profile;
 
+        [SerializeField] bool wait = false;
+
         // Collections
     
         [Header("Entities")] 
@@ -86,6 +90,7 @@ namespace Core
 
         public Camera PlayerCamera => m_playerCamera;
 
+        public bool Pause => wait;
         public bool IsFocused => Focusing.active;
 
         public Manager[] Managers => managers.ToArray();
@@ -185,12 +190,14 @@ namespace Core
         public void Cycle(bool refresh)
         {
             profile = Surveillance.ConstructBehaviourProfile(); // Create new behaviour profile
-        
+
+            wait = true;
             StartCoroutine(Advance());
         }
     
         IEnumerator Advance()
         {
+            Sun.active = false;
             yield return new WaitForEndOfFrame();
             
             SaveLibraryItems();
@@ -202,13 +209,14 @@ namespace Core
             _Save.data.vines = (VineSceneData) Vines.Save();
 
             _Save.SaveGameData(); // Save all game data
+            
+            Summary.ShowSummary();
+            while (Summary.Pause) yield return null;
+            
+            Sequence.Cycle();
+            while (Sequence.Pause) yield return null;
 
-            while (!Sun.active) 
-            {
-                gamePanel.Hide();
-                yield return null;
-            }
-
+            wait = false;
             gamePanel.Show();
         }
 

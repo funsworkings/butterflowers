@@ -6,6 +6,7 @@ using Data;
 using Settings;
 using TMPro;
 using UI;
+using UI.Summary_Cards;
 using UnityEngine;
 using UnityEngine.UI;
 using uwu.UI.Behaviors.Visibility;
@@ -26,7 +27,7 @@ namespace Objects.Managers
 		[SerializeField] TMP_Text score;
 
 		[SerializeField] Transform scoreItemParent;
-		[SerializeField] ScoreDeck scores;
+		[SerializeField] SummaryDeck deck;
 
 		[SerializeField] ToggleScale scoreScaler;
 
@@ -55,11 +56,11 @@ namespace Objects.Managers
 			var log = new CompositeSurveillanceData(Surveillance.activeLog);
 			var compositeLog = Surveillance.CreateCompositeAverageLog();
 
-			foreach (ScoreCard card in scores.Items) 
+			foreach (SummaryCard card in deck.Items) 
 			{
 				ShowScoreItem(card, compositeLog, log);
 			}
-			scores.Open();
+			deck.Open();
 			
 			/*****/
 				//char grade = CalculateGrade(log, compositeLog);
@@ -69,19 +70,22 @@ namespace Objects.Managers
 
 		public void HideScores()
 		{
-			scores.Close();
-			foreach (ScoreCard item in scores.Items) 
+			deck.Close();
+			foreach (SummaryCard item in deck.Items) 
 			{
 				HideScoreItem(item);
 			}
 		}
 
-		void ShowScoreItem(ScoreCard card, CompositeSurveillanceData average, CompositeSurveillanceData current)
+		void ShowScoreItem(SummaryCard card, CompositeSurveillanceData average, CompositeSurveillanceData current)
 		{
-			card.ShowScore(average, current);
+			if (!(card is PhotoOfTheDay)) 
+			{
+				card.ShowScore(average, current);
+			}
 		}
 
-		void HideScoreItem(ScoreCard card)
+		void HideScoreItem(SummaryCard card)
 		{
 			card.HideScore();
 		}

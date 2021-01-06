@@ -7,7 +7,7 @@ using UnityEngine.UI;
 
 namespace UI
 {
-	public abstract class ScoreCard : MonoBehaviour, IPointerEnterHandler, IPointerExitHandler
+	public abstract class SummaryCard : MonoBehaviour
 	{
 		#region Internal
 
@@ -17,28 +17,59 @@ namespace UI
 			Percentage,
 			AverageOverTime
 		}
+
+		public enum State
+		{
+			Normal,
+			
+			Queue,
+			Focus
+		}
 		
 		#endregion
 		
 		// Properties
 
-		ScoreDeck deck;
-		[HideInInspector] public RectTransform rect;
+		protected SummaryDeck deck;
 		
-		[SerializeField] Image deltaField;
-		[SerializeField] TMP_Text labelField, scoreField, averageField;
+		[HideInInspector] public RectTransform rect;
+		protected SummaryCardTrigger trigger;
+		
+		[HideInInspector] Image deltaField;
+		[HideInInspector] TMP_Text labelField, scoreField, averageField;
+
+		
 		
 		// Attributes
-		
+
+		[SerializeField] string label;
 		[SerializeField] Type type = Type.Integer;
 		[SerializeField] string unitMeasurement = "";
 		
-		
+		[HideInInspector] public Vector3 normalScale;
+		public Vector3 focusScale = Vector2.one;
+
+		[SerializeField] bool m_focus = false;
+
+		[HideInInspector] public State state = State.Normal;
+
 		#region Accessors
 		
-		Transform scoreItem => transform.GetChild(1);
-		Transform averageItem => transform.GetChild(2);
-		Transform descriptionItem => transform.GetChild(3);
+		Transform scoreItem => transform.GetChild(2);
+		Transform averageItem => transform.GetChild(3);
+		Transform descriptionItem => transform.GetChild(4);
+
+		public bool focus
+		{
+			get { return m_focus; }
+			set
+			{
+				m_focus = value;
+				
+				if(value) trigger.Grow();
+				else trigger.Shrink();
+			}
+		}
 		
 		#endregion
 		
@@ -48,21 +79,24 @@ namespace UI
 			rect = GetComponent<RectTransform>();
 		}
 
-		void Start()
+		protected virtual void Start()
 		{
-			deck = GetComponentInParent<ScoreDeck>();
+			deck = GetComponentInParent<SummaryDeck>();
+			trigger = GetComponentInChildren<SummaryCardTrigger>();
 
 			labelField = descriptionItem.GetComponent<TMP_Text>();
 			scoreField = scoreItem.GetComponentInChildren<TMP_Text>();
 			deltaField = scoreItem.GetComponentInChildren<Image>();
 			averageField = averageItem.GetComponentInChildren<TMP_Text>();
 
-			labelField.text = Label;
+			labelField.text = label;
+
+			normalScale = rect.localScale;
+			focusScale.Scale(normalScale);
 		}
 
 		#region Operations
-
-		protected abstract string Label { get; }
+		
 		public abstract void ShowScore(CompositeSurveillanceData average, CompositeSurveillanceData score);
 
 		protected void ShowScore(float average, float score)
@@ -121,14 +155,14 @@ namespace UI
 		
 		#region  Pointer events
 		
-		public void OnPointerEnter(PointerEventData eventData)
+		public void Enter()
 		{
-			deck.Enter(this);
+			deck.Queue(this);
 		}
 
-		public void OnPointerExit(PointerEventData eventData)
+		public void Exit()
 		{
-			//deck.Exit(this);
+			deck.Dequeue(this);
 		}
 		
 		#endregion

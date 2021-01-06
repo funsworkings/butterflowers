@@ -1,12 +1,9 @@
 ﻿using Data;
-using UnityEngine;
 
-namespace UI.Score_Cards
+namespace UI.Summary_Cards
 {
-	public class Discoveries : ScoreCard
+	public class Discoveries : SummaryCard
 	{
-		protected override string Label => "# of discoveries";
-		
 		public override void ShowScore(CompositeSurveillanceData average, CompositeSurveillanceData score)
 		{
 			ShowScore(average.discoveries, score.discoveries);

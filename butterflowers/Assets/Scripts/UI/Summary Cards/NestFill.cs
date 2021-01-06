@@ -1,12 +1,9 @@
 ﻿using Data;
-using UnityEngine;
 
-namespace UI.Score_Cards
+namespace UI.Summary_Cards
 {
-	public class NestFill : ScoreCard
+	public class NestFill : SummaryCard
 	{
-		protected override string Label => "nest fill";
-		
 		public override void ShowScore(CompositeSurveillanceData average, CompositeSurveillanceData score)
 		{
 			ShowScore(average.AverageNestFill, score.averageNestFill);

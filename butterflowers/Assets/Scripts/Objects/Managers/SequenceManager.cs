@@ -16,7 +16,7 @@ using Random = UnityEngine.Random;
 
 namespace Objects.Managers
 {
-	public class SequenceManager : MonoBehaviour, ISaveable, IReactToSunCycle, IPauseSun
+	public class SequenceManager : MonoBehaviour, ISaveable, IPauseSun
 	{
 		// External
 
@@ -104,7 +104,7 @@ namespace Objects.Managers
 		
 		#endregion
 
-		public void Cycle(bool refresh)
+		public void Cycle()
 		{
 			int t_index = (index + 1);
 			

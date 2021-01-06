@@ -29,6 +29,8 @@ namespace Core
         #endregion
     
         // External
+
+        Sun sun;
     
         [SerializeField] WorldPreset preset;
         [SerializeField] ButterflowerManager butterflowers;
@@ -190,17 +192,19 @@ namespace Core
         protected override void Start()
         {
             base.Start();
+            
+            sun = Sun.Instance;
         }
 
         protected override void Update()
         {
-            m_spells = infocus;
+            m_spells = infocus && sun.active;
             _interaction = (beacon == null) ? Interaction.Normal : Interaction.Drag;
-
-            base.Update();
 
             if (spells) 
             {
+                base.Update();
+                
                 UpdateTrajectory();
                 HandleBeacon();
             }
