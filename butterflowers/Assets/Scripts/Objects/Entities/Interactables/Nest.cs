@@ -245,7 +245,8 @@ public class Nest : Focusable, IReactToSunCycle, ISaveable, IFlammable, ITooltip
         bool success = this.m_beacons.Count > 0;
 
         var beacons = this.m_beacons.ToArray();
-        for (int i = 0; i < beacons.Length; i++) {
+        for (int i = 0; i < beacons.Length; i++) 
+        {
             if (release) RemoveBeacon(beacons[i]);
             else beacons[i].Delete();
         }
@@ -396,7 +397,8 @@ public class Nest : Focusable, IReactToSunCycle, ISaveable, IFlammable, ITooltip
         m_beacons.Remove(beacon);
 
         bool extinguish = true;
-        foreach (Beacon b in beacons) {
+        foreach (Beacon b in beacons) 
+        {
             if (b.IsOnFire) {
                 extinguish = false;
                 break;
