@@ -29,6 +29,7 @@ namespace Objects.Entities.Interactables.Empty
 
 		string file;
 		BeaconType type;
+		public Origin origin;
 		
 		protected override void Awake()
 		{
@@ -42,14 +43,18 @@ namespace Objects.Entities.Interactables.Empty
 
 		public void Grow(Origin origin)
 		{
-			int profileIndex = (int) origin;
+			this.origin = origin;
 			
+			int profileIndex = (int) origin;
+
 			animator.SetInteger("growProfile", profileIndex);
 			animator.SetBool("visible", true);
 		}
 
 		public void Grow(Origin origin, string file, BeaconType type)
 		{
+			this.origin = origin;
+			
 			Grow(origin);
 			
 			this.file = file;
@@ -62,6 +67,7 @@ namespace Objects.Entities.Interactables.Empty
 
 		protected override void onGrab(Vector3 point, Vector3 normal)
 		{
+			if (origin != Origin.Beacon) return;
 			if (file == null) return;
 			
 			var beacons = FindObjectOfType<BeaconManager>();
@@ -93,7 +99,7 @@ namespace Objects.Entities.Interactables.Empty
 
 		public string GetInfo()
 		{
-			return file.AppendActionableInformation(this);
+			return (origin == Origin.Beacon)? file.AppendActionableInformation(this):null;
 		}
 	}
 }

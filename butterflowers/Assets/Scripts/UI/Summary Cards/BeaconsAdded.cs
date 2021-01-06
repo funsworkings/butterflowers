@@ -1,12 +1,9 @@
 ﻿using Data;
-using UnityEngine;
 
-namespace UI.Score_Cards
+namespace UI.Summary_Cards
 {
-	public class BeaconsAdded : ScoreCard
+	public class BeaconsAdded : SummaryCard
 	{
-		protected override string Label => "# of beacons added";
-		
 		public override void ShowScore(CompositeSurveillanceData average, CompositeSurveillanceData score)
 		{
 			ShowScore(average.beaconsAdded, score.beaconsAdded);

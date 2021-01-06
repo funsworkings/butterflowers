@@ -1,12 +1,9 @@
 ﻿using Data;
-using UnityEngine;
 
-namespace UI.Score_Cards
+namespace UI.Summary_Cards
 {
-	public class HoB : ScoreCard
+	public class HoB : SummaryCard
 	{
-		protected override string Label => "butterflowers";
-		
 		public override void ShowScore(CompositeSurveillanceData average, CompositeSurveillanceData score)
 		{
 			ShowScore(average.AverageHoB, score.averageHoB);

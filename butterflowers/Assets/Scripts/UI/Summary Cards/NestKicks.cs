@@ -1,12 +1,9 @@
 ﻿using Data;
-using UnityEngine;
 
-namespace UI.Score_Cards
+namespace UI.Summary_Cards
 {
-	public class NestKicks : ScoreCard
+	public class NestKicks : SummaryCard
 	{
-		protected override string Label => "# of nest kicks";
-		
 		public override void ShowScore(CompositeSurveillanceData average, CompositeSurveillanceData score)
 		{
 			ShowScore(average.nestKicks, score.nestKicks);

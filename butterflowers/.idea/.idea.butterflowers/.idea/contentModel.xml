@@ -707,7 +707,7 @@
             <e p="DayTracker.cs" t="Include" />
             <e p="EventLog.cs" t="Include" />
             <e p="MenuCursor.cs" t="Include" />
-            <e p="Score Cards" t="Include">
+            <e p="Summary Cards" t="Include">
               <e p="BeaconsAdded.cs" t="Include" />
               <e p="BeaconsPlanted.cs" t="Include" />
               <e p="CursorSpeed.cs" t="Include" />
@@ -718,9 +718,11 @@
               <e p="NestFill.cs" t="Include" />
               <e p="NestKicks.cs" t="Include" />
               <e p="NestSpills.cs" t="Include" />
+              <e p="PhotoOfTheDay.cs" t="Include" />
             </e>
-            <e p="ScoreCard.cs" t="Include" />
-            <e p="ScoreDeck.cs" t="Include" />
+            <e p="SummaryCard.cs" t="Include" />
+            <e p="SummaryCardTrigger.cs" t="Include" />
+            <e p="SummaryDeck.cs" t="Include" />
           </e>
           <e p="uwu" t="Include">
             <e p="Animation" t="Include">
