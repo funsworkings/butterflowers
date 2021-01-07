@@ -26,8 +26,7 @@ namespace Objects.Managers
 		// Properties
 
 		[SerializeField] GradingManager Grading;
-
-		[SerializeField] ToggleOpacity gamePanel;
+		
 		[SerializeField] ToggleOpacity summaryPanel;
 
 		[SerializeField] RawImage photoOfTheDay;
@@ -69,30 +68,33 @@ namespace Objects.Managers
 			m_active = true;
 			panel = Panel.Grades;
 
-			StartCoroutine("WaitForSummary");
+			StartCoroutine("Show");
 		}
 
-		IEnumerator WaitForSummary()
+		IEnumerator Show()
 		{
-			while (Surveillance.Instance.photoInProgress) 
-				yield return null;
+			while (Surveillance.Instance.photoInProgress) yield return null;
 			
 			DisplayPhotoOfTheDay();
 			Grading.ShowScores();
 			
-			gamePanel.Hide();
 			summaryPanel.Show();
 		}
 
 		public void HideSummary()
 		{
-			summaryPanel.Hide();
-			gamePanel.Show();
-			
-			Grading.HideScores();
+			StartCoroutine("Hide");
+		}
 
+		IEnumerator Hide()
+		{
+			Grading.HideScores();
+			while (Grading.inprogress) yield return null;
+
+			summaryPanel.Hide();
+			while (summaryPanel.Visible) yield return null;
+			
 			m_active = false;
-			panel = Panel.Grades;
 		}
 
 		#endregion

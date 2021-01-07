@@ -19,11 +19,12 @@ using uwu.Gameplay;
 using UnityEngine.Jobs;
 using uwu.Extensions;
 using uwu.Snippets;
+using uwu.Snippets.Load;
 using Extensions = uwu.Extensions.Extensions;
 using Random = UnityEngine.Random;
 using World = Unity.Entities.World;
 
-public class ButterflowerManager : Spawner, IReactToSunCycle
+public class ButterflowerManager : Spawner, IReactToSunCycle, ILoadDependent
 {
     public static ButterflowerManager Instance = null;
 
@@ -56,6 +57,10 @@ public class ButterflowerManager : Spawner, IReactToSunCycle
 
     [SerializeField] Op op = Op.Nothing;
     [SerializeField] int _op = -1;
+
+    [SerializeField] int maxBatchSize = 10;
+
+    int totalCount = 0;
 
     // Attributes
 
@@ -96,12 +101,14 @@ public class ButterflowerManager : Spawner, IReactToSunCycle
     ScaleButterflyJob m_ScaleJob;
     JobHandle m_ScaleJobHandle;
 
+
+    public float Progress { get => (totalCount * 1f / amount); }
+    public bool Completed { get => totalCount == amount; }
+
     protected override void Awake()
     {
         Instance = this;
-
-        amount = (preset != null)? preset.amountOfButterflies:100;
-
+        
         base.Awake();
     }
 
@@ -112,10 +119,32 @@ public class ButterflowerManager : Spawner, IReactToSunCycle
         Butterfly.OnUnregister += RemoveButterfly;
 
         CalculateBounds();
+    }
 
-        var entities = Spawn(amount);
-        var _transforms = entities.Select(e => e.transform).ToArray();
-        var _butterflies = entities.Select(e => e.GetComponent<Butterfly>()).ToArray();
+    public void Load()
+    {
+        if (Completed) return;
+        
+        amount = (preset != null)? preset.amountOfButterflies:100;
+        StartCoroutine("Spawning");
+    }
+
+    IEnumerator Spawning()
+    {
+        List<GameObject> objects = new List<GameObject>();
+        int batchSize = 0;
+        
+        while (totalCount < amount) 
+        {
+            batchSize = Random.Range(1, Mathf.Min(maxBatchSize, amount - totalCount));
+            objects.AddRange(Spawn(batchSize));
+
+            totalCount += batchSize;
+            yield return new WaitForEndOfFrame();
+        }
+        
+        var _transforms = objects.Select(e => e.transform).ToArray();
+        var _butterflies = objects.Select(e => e.GetComponent<Butterfly>()).ToArray();
 
         states = new NativeArray<int>(amount, Allocator.Persistent);
         origins = new NativeArray<float3>(amount, Allocator.Persistent);
@@ -140,6 +169,8 @@ public class ButterflowerManager : Spawner, IReactToSunCycle
     protected override void Update()
     {
         base.Update();
+
+        if (!Completed) return; // Ignore update until spawned
         
         float dt = Time.deltaTime;
         

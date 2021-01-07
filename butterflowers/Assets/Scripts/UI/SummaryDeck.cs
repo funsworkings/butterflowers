@@ -1,5 +1,6 @@
 ﻿using System.Collections;
 using System.Collections.Generic;
+using Neue.Agent.Brain;
 using UnityEngine;
 using UnityEngine.Events;
 using uwu.Extensions;
@@ -14,18 +15,18 @@ namespace UI
         public enum State
         {
             Disabled,
-            
+
             Normal,
             Focus
         }
-        
+
         #endregion
-        
-        
+
+
         // Events
 
         public UnityEvent onOpen, onClose;
-        
+
         // Collections
 
         [SerializeField] SummaryCard[] cards;
@@ -38,58 +39,71 @@ namespace UI
         [SerializeField] float t = 0f;
 
         [SerializeField] RectTransform anchor;
-        [SerializeField] SummaryCard cardInQueue, cardInFocus = null;
-
-        [SerializeField] AnimationCurve elasticCurve;
+        Animator animator;
         
+        [SerializeField] SummaryCard cardInQueue, cardInFocus = null;
+        [SerializeField] int startingCardIndex = -1;
+        [SerializeField] AnimationCurve elasticCurve;
+
         // Attributes
 
         [SerializeField] float width, height;
         [Range(1f, 180f)] public float range = 180f;
         [Range(0f, 180f)] public float offset = 90f;
         [SerializeField] float focusSpeed = 1f;
-        [SerializeField] float duration = 1f;
-        
+        [SerializeField] float openDuration, closeDuration;
+
+        [HideInInspector] public bool inprogress = false;
+
         #region Accessors
 
+        public State _State => state;
         public SummaryCard[] Items => cards;
+
+        float duration => (open) ? openDuration : closeDuration;
 
         #endregion
 
+        void Awake()
+        {
+            animator = GetComponent<Animator>();
+        }
 
         // Start is called before the first frame update
         void Start()
         {
             cards = GetComponentsInChildren<SummaryCard>();
+            
             for (int i = 0; i < cards.Length; i++) 
             {
-                cardIndices.Add(cards[i], i);
+                var card = cards[i];
+                if (startingCardIndex < 0)
+                    startingCardIndex = card.transform.GetSiblingIndex();
+                
+                cardIndices.Add(card, i);
             }
+            
+            PlaceAnchor();
         }
 
         // Update is called once per frame
         void Update()
         {
-            if (Input.GetKeyDown(KeyCode.P)) 
-            {
-                if(open) Close();
-                else Open();
-            }
-
             if (state == State.Disabled) 
             {
-                if (t >= 0f && t <= duration)
+                inprogress = (t >= 0f && t <= duration);
+                
+                if (inprogress) 
                 {
                     float dt = Time.unscaledDeltaTime;
                     t += (open) ? dt : -dt;
 
                     float ti = Mathf.Clamp01(t / duration);
-                    for (int i = 0; i < cards.Length; i++) 
-                    {
+                    for (int i = 0; i < cards.Length; i++) {
                         PlaceCard(cards[i], i, elasticCurve.Evaluate(ti));
                     }
 
-                    if (t < 0f) 
+                    if (t < 0f)
                         onClose.Invoke();
                     else if (t > duration) 
                     {
@@ -100,17 +114,19 @@ namespace UI
             }
             else if (state == State.Normal) 
             {
-                if (cardInQueue != null) 
-                {
-                    if (Input.GetMouseButtonUp(0)) 
-                        SelectCardInQueue();   
+                if (cardInQueue != null) {
+                    if (Input.GetMouseButtonUp(0))
+                        SelectCardInQueue();
                 }
             }
             else 
             {
-                cardInFocus.rect.anchoredPosition = Vector2.Lerp(cardInFocus.rect.anchoredPosition, anchor.anchoredPosition, Time.unscaledDeltaTime * focusSpeed); 
-                cardInFocus.rect.rotation = Quaternion.Lerp(cardInFocus.rect.rotation, anchor.rotation, Time.unscaledDeltaTime * focusSpeed);
-                cardInFocus.rect.localScale = Vector3.Lerp(cardInFocus.rect.localScale, cardInFocus.focusScale, Time.unscaledDeltaTime * focusSpeed); 
+                cardInFocus.rect.anchoredPosition = Vector2.Lerp(cardInFocus.rect.anchoredPosition,
+                    anchor.anchoredPosition, Time.unscaledDeltaTime * focusSpeed);
+                cardInFocus.rect.rotation = Quaternion.Lerp(cardInFocus.rect.rotation, anchor.rotation,
+                    Time.unscaledDeltaTime * focusSpeed);
+                cardInFocus.rect.localScale = Vector3.Lerp(cardInFocus.rect.localScale, cardInFocus.focusScale,
+                    Time.unscaledDeltaTime * focusSpeed);
 
                 if (cardInFocus == cardInQueue) 
                 {
@@ -122,10 +138,10 @@ namespace UI
 
         void Dispose()
         {
-            if(cardInQueue != null) Dequeue(cardInQueue);
-            if(cardInFocus != null) DeselectCardInFocus();
+            if (cardInQueue != null) Dequeue(cardInQueue);
+            if (cardInFocus != null) DeselectCardInFocus();
         }
-        
+
         #region Ops
 
         public void Open()
@@ -137,20 +153,34 @@ namespace UI
             state = State.Disabled;
         }
 
-        public void Close()
+        public void Close(bool immediate = false)
         {
-            t = (open) ? duration : 0f;
+            t = (open && !immediate) ? closeDuration : 0f;
             open = false;
 
             Dispose();
             state = State.Disabled;
         }
-        
-        float GetInterval(int index){ return (index * 1f / (cards.Length-1)); }
-        
+
+        public void Drop()
+        {
+            animator.SetTrigger("drop");
+        }
+
+        float GetInterval(int index)
+        {
+            return (index * 1f / (cards.Length - 1));
+        }
+
         #endregion
 
         #region Placement
+
+        void PlaceAnchor()
+        {
+            Vector2 position = new Vector2(width * 2f, height);
+            anchor.anchoredPosition = position;
+        }
 
         void PlaceCard(SummaryCard card, float time)
         {
@@ -168,10 +198,10 @@ namespace UI
             Vector2 circle = new Vector2(Mathf.Cos(angleRads) * width, Mathf.Sin(angleRads) * height);
             Vector3 rotation = new Vector3(0f, 0f, angle - 90f);
             
-            card.rect.anchoredPosition = circle;
+            card.rect.anchoredPosition = circle + new Vector2(width*2f, 0f);
             card.rect.eulerAngles = rotation;
             card.rect.localScale = card.normalScale;
-            
+
             ResetToIndex(card);
         }
         
@@ -179,8 +209,8 @@ namespace UI
         
         #region Order
         
-        void BringToFront(SummaryCard card){ card.transform.SetSiblingIndex(cards.Length-1); }
-        void ResetToIndex(SummaryCard card){ card.transform.SetSiblingIndex(cardIndices[card]); }
+        void BringToFront(SummaryCard card){ card.transform.SetSiblingIndex(startingCardIndex + cards.Length-1); }
+        void ResetToIndex(SummaryCard card){ card.transform.SetSiblingIndex(startingCardIndex + cardIndices[card]); }
         
         #endregion
         
