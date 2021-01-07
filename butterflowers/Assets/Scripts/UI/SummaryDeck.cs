@@ -45,6 +45,9 @@ namespace UI
         [SerializeField] int startingCardIndex = -1;
         [SerializeField] AnimationCurve elasticCurve;
 
+        int cardsBeforeQueue = 0;
+        int tempDelayBeforeQueue = 0;
+
         // Attributes
 
         [SerializeField] float width, height;
@@ -221,6 +224,9 @@ namespace UI
             if (state == State.Disabled) return;
             if (cardInQueue != null) return;
             
+            if (++cardsBeforeQueue <= tempDelayBeforeQueue) return;
+            cardsBeforeQueue = tempDelayBeforeQueue = 0;
+            
             cardInQueue = card;
             if(state == State.Normal) BringToFront(cardInQueue);
         }
@@ -252,6 +258,7 @@ namespace UI
             PlaceCard(cardInFocus, 1f);
             cardInFocus.focus = false;
             cardInFocus = null;
+            tempDelayBeforeQueue = 1;
 
             state = State.Normal;
         }
