@@ -168,14 +168,12 @@ namespace Core
             lib_payload.worldFiles = _Save.data.world_files;
             
             Library.Load(lib_payload, Preset.defaultNullTexture, texturePacks, Preset.loadTexturesInEditor);
-
-            while (Library.loadProgress < 1f) 
-            {
-                Loader.progress = Library.loadProgress;
-                yield return null;
-            }
-
-            Loader.progress = 1f;
+            Butterflowers.Load();
+            
+            yield return new WaitForEndOfFrame();
+            
+            Loader.Load();
+            while (Loader.IsLoading) yield return null;
 
             EventsM.Load(null);
             Sequence.Load(_Save.data.sequence);
@@ -209,6 +207,8 @@ namespace Core
             _Save.data.vines = (VineSceneData) Vines.Save();
 
             _Save.SaveGameData(); // Save all game data
+            yield return new WaitForEndOfFrame();
+            gamePanel.Hide();
             
             Summary.ShowSummary();
             while (Summary.Pause) yield return null;

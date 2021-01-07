@@ -21,6 +21,8 @@ namespace Objects.Managers
 		
 		// Properties
 
+		[HideInInspector] public bool inprogress = false;
+
 		[SerializeField] WorldPreset Preset;
 		[SerializeField] Animator animator;
 		
@@ -60,21 +62,38 @@ namespace Objects.Managers
 			{
 				ShowScoreItem(card, compositeLog, log);
 			}
-			deck.Open();
+
+			inprogress = true;
+			StartCoroutine("DisplayDeck");
+
+			/*****/
+			//char grade = CalculateGrade(log, compositeLog);
+			//score.text = grade.ToString();
+			/*****/
+		}
+
+		IEnumerator DisplayDeck()
+		{
+			deck.Close(immediate:true);
+			yield return new WaitForEndOfFrame();
 			
-			/*****/
-				//char grade = CalculateGrade(log, compositeLog);
-				//score.text = grade.ToString();
-			/*****/
+			deck.Drop();
+			yield return new WaitForSecondsRealtime(1f);
+			deck.Open();
 		}
 
 		public void HideScores()
 		{
+			StopAllCoroutines();
+			StartCoroutine("DisposeDeck");
+		}
+
+		IEnumerator DisposeDeck()
+		{
 			deck.Close();
-			foreach (SummaryCard item in deck.Items) 
-			{
-				HideScoreItem(item);
-			}
+			while (deck.inprogress || deck._State != SummaryDeck.State.Disabled) yield return null;
+			
+			inprogress = false;
 		}
 
 		void ShowScoreItem(SummaryCard card, CompositeSurveillanceData average, CompositeSurveillanceData current)
@@ -132,6 +151,20 @@ namespace Objects.Managers
 				a = .001f; // Turn into small value
 			
 			return Mathf.Clamp((b - a)/a, -1f, 1f);
+		}
+		
+		#endregion
+		
+		#region Deck callbacks
+
+		void DeckDidOpen()
+		{
+			
+		}
+		
+		void DeckDidClose()
+		{
+			
 		}
 		
 		#endregion
