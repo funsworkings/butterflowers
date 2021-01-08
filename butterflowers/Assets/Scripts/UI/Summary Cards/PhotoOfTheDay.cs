@@ -10,6 +10,8 @@ namespace UI.Summary_Cards
 		[SerializeField] RawImage imageField;
 		[SerializeField] TMP_Text captionField;
 
+		public RawImage Image => imageField;
+
 		protected override void Start()
 		{
 			deck = GetComponentInParent<SummaryDeck>();
