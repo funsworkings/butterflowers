@@ -150,11 +150,8 @@ namespace UI
                 cardInFocus.rect.localScale = Vector3.Lerp(cardInFocus.rect.localScale, cardInFocus.focusScale,
                     Time.unscaledDeltaTime * focusSpeed);
 
-                if (cardInFocus == cardInQueue) 
-                {
-                    if (Input.GetMouseButtonUp(0))
-                        DeselectCardInFocus();
-                }
+                if (Input.GetMouseButtonUp(0))
+                    DeselectCardInFocus();
             }
         }
 
@@ -222,7 +219,7 @@ namespace UI
 
             card.rect.anchoredPosition = circle;
             card.rect.eulerAngles = rotation;
-            card.rect.localScale = card.normalScale * canvas.scaleFactor * 2f;
+            card.rect.localScale = card.normalScale;
 
             ResetToIndex(card);
         }

@@ -53,6 +53,8 @@ namespace Core
 		public string lastPhotoCaption, lastPhotoPath;
 		public Texture2D lastPhotoTaken;
 		public bool photoInProgress = false;
+
+		public bool inprogress = false;
 	
 		#region Accessors
 
@@ -97,6 +99,7 @@ namespace Core
 
 		public void Cycle(bool refresh)
 		{
+			inprogress = true;
 			StartCoroutine("AdvanceLog");
 		}
 
@@ -105,12 +108,17 @@ namespace Core
 			TakePicture();
 			photoInProgress = true;
 
-			while (photoInProgress)
-				yield return null;
+			while (photoInProgress) yield return null;
+			yield return new WaitForEndOfFrame();
+			
+			var log = CaptureFrameLog();
+			AttachEventsToLog(ref log);
 
 			activeLog.photo = lastPhotoPath;
+			activeLog.logs = activeLog.logs.Append(log).ToArray();
 
-			yield return new WaitForEndOfFrame();
+			inprogress = false;
+			while (World.Pause) yield return null;
 		
 			CreateLog();
 		}
@@ -315,6 +323,7 @@ namespace Core
 				comp.Discoveries = (int) logs.Select(l => l.discoveries).Average();
 
 				comp.BeaconsAdded = (int) logs.Select(l => l.beaconsAdded).Average();
+				comp.BeaconsDestroyed = (int) logs.Select(l => l.beaconsDestroyed).Average();
 				comp.BeaconsPlanted = (int) logs.Select(l => l.beaconsPlanted).Average();
 
 				comp.NestKicks = (int) logs.Select(l => l.nestKicks).Average();
@@ -424,19 +433,17 @@ namespace Core
 
 		void OnReceiveEvent(EVENTCODE @event, AGENT agentA, AGENT agentB, string details)
 		{
-			if (!recording) return;
+			if (!recording && !inprogress) return;
 			if (agentA == AGENT.User) 
 				eventsDuringLog.Add(@event);
 		}
 
 		void AttachEventsToLog(ref SurveillanceLogData log)
 		{
-			if (activeLog != null) {
-				EVENTCODE[] events = eventsDuringLog.ToArray();
-				log.AppendEvents(events);
-			
-				eventsDuringLog = new List<EVENTCODE>(); // Wipe event cache
-			}
+			EVENTCODE[] events = eventsDuringLog.ToArray();
+			log.AppendEvents(events);
+		
+			eventsDuringLog = new List<EVENTCODE>(); // Wipe event cache
 		}
 
 		#endregion

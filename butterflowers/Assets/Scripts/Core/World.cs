@@ -197,6 +197,8 @@ namespace Core
         {
             Sun.active = false;
             yield return new WaitForEndOfFrame();
+
+            while (Surveillance.inprogress) yield return null;
             
             SaveLibraryItems();
             _Save.data.sun = (SunData) Sun.Save();
@@ -208,6 +210,7 @@ namespace Core
 
             _Save.SaveGameData(); // Save all game data
             yield return new WaitForEndOfFrame();
+            
             gamePanel.Hide();
             
             Summary.ShowSummary();
