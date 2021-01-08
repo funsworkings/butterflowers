@@ -7,11 +7,12 @@ using Data;
 using UnityEngine;
 using uwu.Extensions;
 using uwu.IO;
+using uwu.Snippets.Load;
 using uwu.Textures;
 
 namespace Core
 {
-	public class Library : Singleton<Library>, ITextureReceiver
+	public class Library : Singleton<Library>, ITextureReceiver, ILoadDependent
 	{
 		public bool READ_IN_EDITOR_MODE = true;
 		public Texture2D DEFAULT_NULL_TEXTURE;
@@ -74,7 +75,8 @@ namespace Core
 		{
 			get
 			{
-				if (initialized) {
+				if (initialized) 
+				{
 					int files = textureLoadTarget.Count();
 					if (files == 0)
 						return 1f;
@@ -86,7 +88,10 @@ namespace Core
 				return 0f;
 			}
 		}
-	
+
+		public float Progress { get => loadProgress; }
+		public bool Completed { get => loadProgress >= 1f; }
+
 		public string[] UserFiles => FILE_LOOKUP[FileType.User].ToArray();
 		public string[] SharedFiles => FILE_LOOKUP[FileType.Shared].ToArray();
 		public string[] WorldFiles => FILE_LOOKUP[FileType.World].ToArray();

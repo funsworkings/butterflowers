@@ -1,6 +1,7 @@
 ﻿using System.Collections;
 using System.Collections.Generic;
 using Data;
+using Interfaces;
 using Neue.Agent.Brain.Data;
 using Objects.Base;
 using Objects.Managers;
@@ -26,7 +27,7 @@ using uwu.UI.Behaviors.Visibility;
 
 namespace Core
 {
-    public class World : MonoBehaviour, ISaveable, IReactToSunCycle
+    public class World : MonoBehaviour, ISaveable, IReactToSunCycle, IPauseSun
     {
         public static World Instance = null;
         public static bool LOAD = false;
@@ -52,6 +53,7 @@ namespace Core
         [SerializeField] BeaconManager Beacons = null;
         [SerializeField] VineManager Vines = null;
         [SerializeField] EventManager EventsM = null;
+        [SerializeField] SummaryManager Summary = null;
         [SerializeField] SequenceManager Sequence = null;
 
         [Header("Objects")]
@@ -74,6 +76,8 @@ namespace Core
         [SerializeField] ToggleOpacity gamePanel;
         [SerializeField] Profile profile;
 
+        [SerializeField] bool wait = false;
+
         // Collections
     
         [Header("Entities")] 
@@ -86,6 +90,7 @@ namespace Core
 
         public Camera PlayerCamera => m_playerCamera;
 
+        public bool Pause => wait;
         public bool IsFocused => Focusing.active;
 
         public Manager[] Managers => managers.ToArray();
@@ -163,14 +168,12 @@ namespace Core
             lib_payload.worldFiles = _Save.data.world_files;
             
             Library.Load(lib_payload, Preset.defaultNullTexture, texturePacks, Preset.loadTexturesInEditor);
-
-            while (Library.loadProgress < 1f) 
-            {
-                Loader.progress = Library.loadProgress;
-                yield return null;
-            }
-
-            Loader.progress = 1f;
+            Butterflowers.Load();
+            
+            yield return new WaitForEndOfFrame();
+            
+            Loader.Load();
+            while (Loader.IsLoading) yield return null;
 
             EventsM.Load(null);
             Sequence.Load(_Save.data.sequence);
@@ -178,6 +181,9 @@ namespace Core
             Beacons.Load((Preset.persistBeacons) ? _Save.data.beacons : null);
             Vines.Load((Preset.persistVines) ? _Save.data.vines : null);
             Sun.Load(_Save.data.sun);
+            
+            yield return new WaitForEndOfFrame();
+            Surveillance.New(onload: true); // Trigger surveillance
         
             LOAD = true;
         }
@@ -185,13 +191,19 @@ namespace Core
         public void Cycle(bool refresh)
         {
             profile = Surveillance.ConstructBehaviourProfile(); // Create new behaviour profile
-        
+
+            wait = true;
             StartCoroutine(Advance());
         }
     
         IEnumerator Advance()
         {
+            Sun.active = false;
             yield return new WaitForEndOfFrame();
+            
+            Surveillance.Stop();
+            Surveillance.Dispose();
+            while (Surveillance.recording) yield return null;
             
             SaveLibraryItems();
             _Save.data.sun = (SunData) Sun.Save();
@@ -202,13 +214,19 @@ namespace Core
             _Save.data.vines = (VineSceneData) Vines.Save();
 
             _Save.SaveGameData(); // Save all game data
+            yield return new WaitForEndOfFrame();
+            
+            gamePanel.Hide();
+            
+            Summary.ShowSummary();
+            while (Summary.Pause) yield return null;
+            
+            Sequence.Cycle();
+            while (Sequence.Pause) yield return null;
 
-            while (!Sun.active) 
-            {
-                gamePanel.Hide();
-                yield return null;
-            }
+            Surveillance.New(); // Trigger surveillance
 
+            wait = false;
             gamePanel.Show();
         }
 

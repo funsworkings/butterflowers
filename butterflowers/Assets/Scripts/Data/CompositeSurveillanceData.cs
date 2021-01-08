@@ -20,6 +20,7 @@ namespace Data
 		public int FilesRemoved = 0;
 		public int Discoveries = 0;
 		public int BeaconsAdded = 0;
+		public int BeaconsDestroyed = 0;
 		public int BeaconsPlanted = 0;
 		public int NestKicks = 0;
 		public int NestSpills = 0;
@@ -28,11 +29,22 @@ namespace Data
 		
 		public CompositeSurveillanceData(SurveillanceData dat)
 		{
+			AverageHoB = dat.averageHoB;
+			AverageNestFill = dat.averageNestFill;
+			AverageCursorSpeed = dat.averageCursorSpeed;
+
+			AverageTimeSpentInNest = dat.timeSpentInNest;
+			AverageTimeSpentInMagicStar = dat.timeSpentInMagicStar;
+			AverageTimeSpentInTree = dat.timeSpentInTree;
+			AverageTimeSpentInDefault = dat.timeSpentInDefault;
+			
+			
 			FilesAdded = dat.filesAdded;
 			FilesRemoved = dat.filesRemoved;
 			Discoveries = dat.discoveries;
 
 			BeaconsAdded = dat.beaconsAdded;
+			BeaconsDestroyed = dat.beaconsDestroyed;
 			BeaconsPlanted = dat.beaconsPlanted;
 
 			NestKicks = dat.nestKicks;
