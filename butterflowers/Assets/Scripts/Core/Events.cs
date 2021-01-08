@@ -1,4 +1,7 @@
-﻿namespace Core
+﻿using Neue.Agent.Brain;
+using UnityEngine;
+
+namespace Core
 {
     public static class Events
     {
@@ -10,6 +13,8 @@
 
         public static void ReceiveEvent(EVENTCODE @event, AGENT agentA, AGENT agentB, string details = null)
         {
+            UnityEngine.Debug.LogWarningFormat("Received event of type => {0}", @event);
+            
             bool isbeacon = (agentB == AGENT.Beacon);
             if (isbeacon && string.IsNullOrEmpty(details)) return;
 
