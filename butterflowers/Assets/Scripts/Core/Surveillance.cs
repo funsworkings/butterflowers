@@ -54,8 +54,6 @@ namespace Core
 		public Texture2D lastPhotoTaken;
 		public bool photoInProgress = false;
 
-		public bool inprogress = false;
-	
 		#region Accessors
 
 		public SurveillanceData activeLog => (logs.Count > 0) ? logs.Last() : null;
@@ -85,11 +83,6 @@ namespace Core
 		void Awake()
 		{
 			Instance = this;
-		}
-
-		void Start()
-		{
-			SubscribeToEvents();
 		}
 
 		void OnDestroy()
@@ -135,10 +128,11 @@ namespace Core
 			while (photoInProgress) 
 				yield return null;
 
+			yield return new WaitForEndOfFrame();
+			
 			var log = CaptureFrameLog();
 			activeLog.logs = activeLog.logs.Append(log).ToArray();
 			
-			yield return new WaitForSecondsRealtime(5f);
 			recording = false;
 		}
 		
@@ -161,6 +155,8 @@ namespace Core
 				logs = new List<SurveillanceData>(previousLogs);
 			else
 				logs = new List<SurveillanceData>();
+			
+			SubscribeToEvents();
 		}
 	
 		#endregion
@@ -257,9 +253,7 @@ namespace Core
 			else
 				log.agentInFocus = AGENT.NULL; // No agent currently in focus
 			
-			
 			AttachEventsToLog(ref log);
-
 			return log;
 		}
 	
@@ -445,8 +439,7 @@ namespace Core
 		void OnReceiveEvent(EVENTCODE @event, AGENT agentA, AGENT agentB, string details)
 		{
 			if (!recording) return;
-			if (agentA == AGENT.User) 
-				eventsDuringLog.Add(@event);
+			eventsDuringLog.Add(@event);
 		}
 
 		void AttachEventsToLog(ref SurveillanceLogData log)
