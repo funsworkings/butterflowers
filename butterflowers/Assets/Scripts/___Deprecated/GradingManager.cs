@@ -53,10 +53,12 @@ namespace Objects.Managers
 
 		#region Operations
 
+		[SerializeField] CompositeSurveillanceData current, average;
+
 		public void ShowScores()
 		{
-			var log = new CompositeSurveillanceData(Surveillance.activeLog);
-			var compositeLog = Surveillance.CreateCompositeAverageLog();
+			var log = current = new CompositeSurveillanceData(Surveillance.activeLog);
+			var compositeLog = average = Surveillance.CreateCompositeAverageLog();
 
 			foreach (SummaryCard card in deck.Items) 
 			{

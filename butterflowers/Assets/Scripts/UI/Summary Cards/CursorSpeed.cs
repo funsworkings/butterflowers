@@ -6,7 +6,7 @@ namespace UI.Summary_Cards
 	{
 		public override void ShowScore(CompositeSurveillanceData average, CompositeSurveillanceData score)
 		{
-			ShowScore(average.AverageCursorSpeed, score.averageCursorSpeed);
+			ShowScore(average.AverageCursorSpeed, score.AverageCursorSpeed);
 		}
 	}
 }
