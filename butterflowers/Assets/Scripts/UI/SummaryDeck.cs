@@ -1,4 +1,5 @@
-﻿using System.Collections;
+﻿using System;
+using System.Collections;
 using System.Collections.Generic;
 using Neue.Agent.Brain;
 using UnityEngine;
@@ -34,11 +35,14 @@ namespace UI
 
         // Properties
 
+        Canvas canvas;
+
         [SerializeField] State state = State.Disabled;
         [SerializeField] bool open = false;
         [SerializeField] float t = 0f;
 
         [SerializeField] RectTransform anchor;
+        RectTransform rect;
         Animator animator;
         
         [SerializeField] SummaryCard cardInQueue, cardInFocus = null;
@@ -65,16 +69,31 @@ namespace UI
 
         float duration => (open) ? openDuration : closeDuration;
 
+        float _width => rect.rect.width * canvas.scaleFactor / 4f;
+        float _height => rect.rect.height * canvas.scaleFactor / 4f;
+
         #endregion
 
         void Awake()
         {
+            rect = GetComponent<RectTransform>();
             animator = GetComponent<Animator>();
+        }
+
+        void OnEnable()
+        {
+            WindowResize.Instance.onResize += onResize;
+        }
+
+        void OnDisable()
+        {
+            WindowResize.Instance.onResize -= onResize;
         }
 
         // Start is called before the first frame update
         void Start()
         {
+            canvas = GetComponentInParent<Canvas>();
             cards = GetComponentsInChildren<SummaryCard>();
             
             for (int i = 0; i < cards.Length; i++) 
@@ -86,7 +105,7 @@ namespace UI
                 cardIndices.Add(card, i);
             }
             
-            PlaceAnchor();
+            //PlaceAnchor();
         }
 
         // Update is called once per frame
@@ -181,7 +200,7 @@ namespace UI
 
         void PlaceAnchor()
         {
-            Vector2 position = new Vector2(width * 2f, height);
+            Vector2 position = new Vector2(0f, _height);
             anchor.anchoredPosition = position;
         }
 
@@ -198,10 +217,10 @@ namespace UI
             float angle = Mathf.Clamp(180f - (interval * range * time + offset), 0f, 180f); // Target angle of card
             float angleRads = angle * Mathf.Deg2Rad;
             
-            Vector2 circle = new Vector2(Mathf.Cos(angleRads) * width, Mathf.Sin(angleRads) * height);
+            Vector2 circle = new Vector2(Mathf.Cos(angleRads) * _width, Mathf.Sin(angleRads) * _height);
             Vector3 rotation = new Vector3(0f, 0f, angle - 90f);
-            
-            card.rect.anchoredPosition = circle + new Vector2(width*2f, 0f);
+
+            card.rect.anchoredPosition = circle;
             card.rect.eulerAngles = rotation;
             card.rect.localScale = card.normalScale;
 
@@ -212,7 +231,7 @@ namespace UI
         
         #region Order
         
-        void BringToFront(SummaryCard card){ card.transform.SetSiblingIndex(startingCardIndex + cards.Length-1); }
+        void BringToFront(SummaryCard card){ card.transform.SetSiblingIndex(startingCardIndex + cards.Length); }
         void ResetToIndex(SummaryCard card){ card.transform.SetSiblingIndex(startingCardIndex + cardIndices[card]); }
         
         #endregion
@@ -263,6 +282,27 @@ namespace UI
             state = State.Normal;
         }
 
+        #endregion
+        
+        #region Resizing
+
+        void onResize(int width, int height)
+        {
+            for (int i = 0; i < cards.Length; i++) 
+            {
+                var card = cards[i];
+                if (card == cardInFocus) 
+                {
+                    cardInFocus.rect.anchoredPosition = anchor.anchoredPosition;
+                    BringToFront(cardInFocus);
+                }
+                else 
+                {    
+                    PlaceCard(card, t);
+                }
+            }
+        }
+        
         #endregion
     }
 

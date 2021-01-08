@@ -3,6 +3,7 @@ using System.Collections;
 using Core;
 using Interfaces;
 using TMPro;
+using UI.Summary_Cards;
 using UnityEngine;
 using UnityEngine.UIElements;
 using UnityEngine.UI;
@@ -29,7 +30,7 @@ namespace Objects.Managers
 		
 		[SerializeField] ToggleOpacity summaryPanel;
 
-		[SerializeField] RawImage photoOfTheDay;
+		[SerializeField] PhotoOfTheDay photoOfTheDay;
 		[SerializeField] TMP_Text photoCaption;
 
 		public bool Pause => active;
@@ -52,9 +53,10 @@ namespace Objects.Managers
 
 		void Start()
 		{
-			var photoRect = photoOfTheDay.rectTransform;
+			/*var photoRect = photoOfTheDay.rectTransform;
 				basePhotoWidth = photoRect.sizeDelta.x;
 				basePhotoHeight = photoRect.sizeDelta.y;
+			*/
 			
 			HideSummary(); // Hide summary immediately on start
 		}
@@ -107,8 +109,10 @@ namespace Objects.Managers
 			var photo = Surveillance.Instance.lastPhotoTaken;
 			var valid = photo != null;
 
-			photoOfTheDay.enabled = valid;
-			if (valid) {
+			//photoOfTheDay.gameObject.SetActive(valid);
+			if (valid) 
+			{
+				/*
 				var w = (float)photo.width;
 				var h = (float)photo.height;
 				var aspect = 1f;
@@ -125,12 +129,11 @@ namespace Objects.Managers
 					h = basePhotoHeight;
 					w = basePhotoHeight * aspect;
 				}
-
-				photoOfTheDay.rectTransform.sizeDelta = new Vector2(w, h);
-				photoOfTheDay.texture = photo;
+				*/
+				
+				string caption = string.Format("{0}.jpg", photoName);
+				photoOfTheDay.ShowPhoto(photo, caption);
 			}
-
-			photoCaption.text = string.Format("{0}.jpg", photoName);
 		}
 		
 		#endregion

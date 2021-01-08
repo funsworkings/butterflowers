@@ -107,7 +107,7 @@ public class Beacon: Interactable, IFlammable, ITooltip, IFileContainer {
     // Properties
 
     [SerializeField] WorldPreset preset;
-    [SerializeField] ParticleSystem deathPS, addPS, appearPS;
+    [SerializeField] ParticleSystem deathPS;
     [SerializeField] TrailRenderer trails;
     
     new MeshRenderer renderer;
@@ -184,8 +184,6 @@ public class Beacon: Interactable, IFlammable, ITooltip, IFileContainer {
     }
     
     public bool visible => state == Locale.Terrain;
-
-    public ParticleSystem AppearPS => appearPS;
 
     public TrailRenderer Trails => trails;
 
@@ -303,9 +301,6 @@ public class Beacon: Interactable, IFlammable, ITooltip, IFileContainer {
         var impact = Instantiate(pr_impactPS, transform.position, transform.rotation);
         impact.GetComponent<ParticleSystem>().Play(); // Trigger particle sys
 
-        addPS.Play();
-        deathPS.Stop();
-        
         transform.position = Nest.transform.position; // Reset back to nest position at start of lerp
         
         ToggleCapabilities(false);
@@ -322,9 +317,6 @@ public class Beacon: Interactable, IFlammable, ITooltip, IFileContainer {
         Debug.LogFormat("Deactivate {0} when state is {1}", File, state);
         if (state != Locale.Nest) return false;
         state = Locale.Terrain;
-
-        deathPS.Play();
-        addPS.Stop();
 
         transform.position = Nest.transform.position; // Reset back to nest position at start of lerp
         transform.localScale = Vector3.zero;
