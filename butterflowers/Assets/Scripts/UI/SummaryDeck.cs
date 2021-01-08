@@ -222,7 +222,7 @@ namespace UI
 
             card.rect.anchoredPosition = circle;
             card.rect.eulerAngles = rotation;
-            card.rect.localScale = card.normalScale;
+            card.rect.localScale = card.normalScale * canvas.scaleFactor * 2f;
 
             ResetToIndex(card);
         }
