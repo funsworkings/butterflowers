@@ -6,6 +6,7 @@ using Data;
 using Settings;
 using TMPro;
 using UI;
+using UI.Summary_Cards;
 using UnityEngine;
 using UnityEngine.UI;
 using uwu.UI.Behaviors.Visibility;
@@ -20,28 +21,15 @@ namespace Objects.Managers
 		
 		// Properties
 
+		[HideInInspector] public bool inprogress = false;
+
 		[SerializeField] WorldPreset Preset;
 		[SerializeField] Animator animator;
 		
 		[SerializeField] TMP_Text score;
 
 		[SerializeField] Transform scoreItemParent;
-		ScoreCard[] scoreItems;
-
-		[SerializeField] ScoreCard addedFiles;
-		[SerializeField] ScoreCard removedFiles;
-		[SerializeField] ScoreCard discoveries;
-		[SerializeField] ScoreCard healthOfButterflies;
-		[SerializeField] ScoreCard beaconsPlanted;
-		[SerializeField] ScoreCard beaconsAdded;
-		[SerializeField] ScoreCard cursorVelocity;
-		[SerializeField] ScoreCard timeInNest;
-		[SerializeField] ScoreCard timeInTree;
-		[SerializeField] ScoreCard timeInMagicStar;
-		[SerializeField] ScoreCard timeInDefault;
-		[SerializeField] ScoreCard nestFill;
-		[SerializeField] ScoreCard nestKicks;
-		[SerializeField] ScoreCard nestSpills;
+		[SerializeField] SummaryDeck deck;
 
 		[SerializeField] ToggleScale scoreScaler;
 
@@ -52,18 +40,12 @@ namespace Objects.Managers
 		
 		[SerializeField] float timeBetweenScores = .1f;
 		[SerializeField] float timeBeforeStroke = .3f;
-		
-		[Header("Debug")]
-			[SerializeField] float[] scores = new float[]{};
-			[SerializeField] CompositeSurveillanceData composite;
-			[SerializeField] bool refreshComposite = false;
-			
-			
+
+
 		#region Monobehaviour callbacks
 
 		void Start()
 		{
-			scoreItems = scoreItemParent.GetComponentsInChildren<ScoreCard>();
 			HideScores();
 		}
 
@@ -71,75 +53,62 @@ namespace Objects.Managers
 
 		#region Operations
 
+		[SerializeField] CompositeSurveillanceData current, average;
+
 		public void ShowScores()
 		{
-			var log = new CompositeSurveillanceData(Surveillance.activeLog);
-			var compositeLog = Surveillance.CreateCompositeAverageLog();
+			var log = current = new CompositeSurveillanceData(Surveillance.activeLog);
+			var compositeLog = average = Surveillance.CreateCompositeAverageLog();
 
-			StartCoroutine(ShowingScores(compositeLog, log));
-			
+			foreach (SummaryCard card in deck.Items) 
+			{
+				ShowScoreItem(card, compositeLog, log);
+			}
+
+			inprogress = true;
+			StartCoroutine("DisplayDeck");
+
 			/*****/
-				//char grade = CalculateGrade(log, compositeLog);
-				//score.text = grade.ToString();
+			//char grade = CalculateGrade(log, compositeLog);
+			//score.text = grade.ToString();
 			/*****/
 		}
 
-		IEnumerator ShowingScores(CompositeSurveillanceData compositeLog, CompositeSurveillanceData log)
+		IEnumerator DisplayDeck()
 		{
-			yield return new WaitForSecondsRealtime(timeBetweenScores);
-			ShowScoreItem(addedFiles, compositeLog.filesAdded,log.filesAdded);
-			yield return new WaitForSecondsRealtime(timeBetweenScores);
-			ShowScoreItem(removedFiles,compositeLog.filesRemoved,log.filesRemoved);
-			yield return new WaitForSecondsRealtime(timeBetweenScores);
-			ShowScoreItem(discoveries, compositeLog.discoveries,log.discoveries);
+			deck.Close(immediate:true);
+			yield return new WaitForEndOfFrame();
 			
-			yield return new WaitForSecondsRealtime(timeBetweenScores);
-			ShowScoreItem(healthOfButterflies,compositeLog.AverageHoB,log.averageHoB);
-			
-			yield return new WaitForSecondsRealtime(timeBetweenScores);
-			ShowScoreItem(beaconsAdded,compositeLog.beaconsAdded,log.beaconsAdded);
-			yield return new WaitForSecondsRealtime(timeBetweenScores);
-			ShowScoreItem(beaconsPlanted,compositeLog.beaconsPlanted,log.beaconsPlanted);
-			
-			yield return new WaitForSecondsRealtime(timeBetweenScores);
-			ShowScoreItem(nestFill,compositeLog.AverageNestFill,log.averageNestFill);
-			yield return new WaitForSecondsRealtime(timeBetweenScores);
-			ShowScoreItem(nestKicks,compositeLog.nestKicks,log.nestKicks);
-			yield return new WaitForSecondsRealtime(timeBetweenScores);
-			ShowScoreItem(nestSpills,compositeLog.nestSpills,log.nestSpills);
-			
-			yield return new WaitForSecondsRealtime(timeBetweenScores);
-			ShowScoreItem(timeInNest,compositeLog.AverageTimeSpentInNest, log.timeSpentInNest);
-			yield return new WaitForSecondsRealtime(timeBetweenScores);
-			ShowScoreItem(timeInTree,compositeLog.AverageTimeSpentInTree,log.timeSpentInTree);
-			yield return new WaitForSecondsRealtime(timeBetweenScores);
-			ShowScoreItem(timeInMagicStar,compositeLog.AverageTimeSpentInMagicStar,log.timeSpentInMagicStar);
-			yield return new WaitForSecondsRealtime(timeBetweenScores);
-			ShowScoreItem(timeInDefault,compositeLog.AverageTimeSpentInDefault,log.timeSpentInDefault);
-			
-			yield return new WaitForSecondsRealtime(timeBetweenScores);
-			ShowScoreItem(cursorVelocity, compositeLog.AverageCursorSpeed, log.averageCursorSpeed);
+			deck.Drop();
+			yield return new WaitForSecondsRealtime(1f);
+			deck.Open();
 		}
 
 		public void HideScores()
 		{
 			StopAllCoroutines();
-			foreach (ScoreCard item in scoreItems) 
+			StartCoroutine("DisposeDeck");
+		}
+
+		IEnumerator DisposeDeck()
+		{
+			deck.Close();
+			while (deck.inprogress || deck._State != SummaryDeck.State.Disabled) yield return null;
+			
+			inprogress = false;
+		}
+
+		void ShowScoreItem(SummaryCard card, CompositeSurveillanceData average, CompositeSurveillanceData current)
+		{
+			if (!(card is PhotoOfTheDay)) 
 			{
-				HideScoreItem(item);
+				card.ShowScore(average, current);
 			}
 		}
 
-		void ShowScoreItem(ScoreCard card, float previousScore, float currentScore)
-		{
-			card.gameObject.SetActive(true);
-			card.ShowScore(previousScore, currentScore);
-		}
-
-		void HideScoreItem(ScoreCard card)
+		void HideScoreItem(SummaryCard card)
 		{
 			card.HideScore();
-			card.gameObject.SetActive(false);
 		}
 
 		#endregion
@@ -148,6 +117,7 @@ namespace Objects.Managers
 
 		public char CalculateGrade(CompositeSurveillanceData current, CompositeSurveillanceData composite)
 		{
+			/*
 			float fileadd = CalculatePercentageIncrease(composite.filesAdded, current.filesAdded);
 			float fileremove = -CalculatePercentageIncrease(composite.filesRemoved, current.filesRemoved);
 			float discovery = CalculatePercentageIncrease(composite.discoveries, current.discoveries);
@@ -172,6 +142,9 @@ namespace Objects.Managers
 				return 'D';
 			else
 				return 'F';
+				*/
+
+			return 'A';
 		}
 
 		float CalculatePercentageIncrease(float a, float b)
@@ -180,6 +153,20 @@ namespace Objects.Managers
 				a = .001f; // Turn into small value
 			
 			return Mathf.Clamp((b - a)/a, -1f, 1f);
+		}
+		
+		#endregion
+		
+		#region Deck callbacks
+
+		void DeckDidOpen()
+		{
+			
+		}
+		
+		void DeckDidClose()
+		{
+			
 		}
 		
 		#endregion

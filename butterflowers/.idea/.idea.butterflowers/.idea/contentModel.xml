@@ -1454,7 +1454,23 @@
             <e p="DayTracker.cs" t="Include" />
             <e p="EventLog.cs" t="Include" />
             <e p="MenuCursor.cs" t="Include" />
-            <e p="ScoreCard.cs" t="Include" />
+            <e p="Summary Cards" t="Include">
+              <e p="BeaconsAdded.cs" t="Include" />
+              <e p="BeaconsDestroyed.cs" t="Include" />
+              <e p="BeaconsPlanted.cs" t="Include" />
+              <e p="CursorSpeed.cs" t="Include" />
+              <e p="Discoveries.cs" t="Include" />
+              <e p="FilesAdded.cs" t="Include" />
+              <e p="FilesRemoved.cs" t="Include" />
+              <e p="HoB.cs" t="Include" />
+              <e p="NestFill.cs" t="Include" />
+              <e p="NestKicks.cs" t="Include" />
+              <e p="NestSpills.cs" t="Include" />
+              <e p="PhotoOfTheDay.cs" t="Include" />
+            </e>
+            <e p="SummaryCard.cs" t="Include" />
+            <e p="SummaryCardTrigger.cs" t="Include" />
+            <e p="SummaryDeck.cs" t="Include" />
           </e>
           <e p="uwu" t="Include">
             <e p="Animation" t="Include">
@@ -1608,6 +1624,7 @@
               <e p="Line.cs" t="Include" />
               <e p="LineDot.cs" t="Include" />
               <e p="Load" t="Include">
+                <e p="ILoadDependent.cs" t="Include" />
                 <e p="Loading.cs" t="Include" />
                 <e p="LoadingBar.cs" t="Include" />
                 <e p="LoadingImageOpacity.cs" t="Include" />
@@ -1630,6 +1647,7 @@
               <e p="TimeControl.cs" t="Include" />
               <e p="VirtualCanvas.cs" t="Include" />
               <e p="VirtualCursor.cs" t="Include" />
+              <e p="WindowResize.cs" t="Include" />
             </e>
             <e p="Sound" t="Include">
               <e p="FadeOverDistance.cs" t="Include" />

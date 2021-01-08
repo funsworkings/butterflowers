@@ -1,4 +1,6 @@
 ﻿using System;
+using System.Collections;
+using System.Linq;
 using UnityEngine;
 using UnityEngine.Events;
 
@@ -6,70 +8,66 @@ namespace uwu.Snippets.Load
 {
 	public class Loading : MonoBehaviour
 	{
-		[SerializeField] float m_progress;
+		// Events
+		
+		public Action<float> onProgress;
+		public UnityEvent onComplete;
+		
+		// Properties
 
-		[SerializeField] bool smooth;
-		[SerializeField] float smoothSpeed = 1f, minSpeed = -1f, maxSpeed = -1f;
-		float t_progress;
+		[SerializeField] bool loading = false;
+		
+		
+		#region Accessors
 
-		public float progress
+		public bool IsLoading => loading;
+		
+		#endregion
+
+
+		#region Ops
+
+		public void Load()
 		{
-			get => m_progress;
-			set
-			{
-				var val = Mathf.Clamp01(value);
+			ILoadDependent[] dependencies = FindObjectsOfType<MonoBehaviour>().OfType<ILoadDependent>().ToArray();
+			
+			StartCoroutine("Continue", dependencies);
+			loading = true;
+		}
 
-				if (smooth) {
-					t_progress = val;
+		IEnumerator Continue(ILoadDependent[] dependencies)
+		{
+			float progress = 0f;
+			int dependents = dependencies.Length;
+
+			if (onProgress != null)
+				onProgress(0f);
+			
+			do {
+				progress = 0f;
+				if (dependents > 0) 
+				{
+					for (int i = 0; i < dependents; i++) 
+					{
+						var _dependency = dependencies[i];
+						
+						float _progress = (_dependency.Completed)? 1f:_dependency.Progress;
+						progress += _progress / dependents;
+					}
 				}
-				else {
-					m_progress = val;
-					onUpdateProgress();
-				}
-			}
-		}
+				else progress = 1f;
 
-		// Start is called before the first frame update
-		void Start()
-		{
-			m_progress = t_progress = 0f;
-		}
-
-		// Update is called once per frame
-		void Update()
-		{
-			if (!smooth) return;
-
-			m_progress = Mathf.Clamp01(m_progress);
-			t_progress = Mathf.Clamp01(t_progress);
-
-			if (m_progress >= t_progress) m_progress = t_progress; // Immediately move back if progress reverts
-
-			var speed = (t_progress - m_progress) * smoothSpeed;
-			if (minSpeed > 0f) speed = Mathf.Max(speed, minSpeed);
-			if (maxSpeed > 0f) speed = Mathf.Min(speed, maxSpeed);
-
-			m_progress = Mathf.Clamp(m_progress + speed * Time.deltaTime, 0f, t_progress);
-			onUpdateProgress();
-		}
-
-		void onUpdateProgress()
-		{
-			if (m_progress >= 1f) {
-				onComplete.Invoke();
-			}
-			else {
 				if (onProgress != null)
 					onProgress(progress);
-			}
+
+				yield return null;
+			
+			} while (progress < 1f);
+			
+			onComplete.Invoke();
+			loading = false;
 		}
-
-		#region Events
-
-		public UnityEvent onComplete;
-
-		public Action<float> onProgress;
-
+		
 		#endregion
 	}
 }

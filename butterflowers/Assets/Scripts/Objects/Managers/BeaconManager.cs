@@ -234,7 +234,7 @@ public class BeaconManager : Spawner, IReactToSunCycle, ISaveable
 
 	    beacon.Register(type, state, origin, _transition, load);
 	    Events.ReceiveEvent(EVENTCODE.BEACONADD, AGENT.World, AGENT.Beacon, details: beacon.File);
-	    
+
 	    Debug.LogWarning("Beacon was added = " + beacon.File);
 	    
 	    return beacon;
@@ -242,9 +242,12 @@ public class BeaconManager : Spawner, IReactToSunCycle, ISaveable
 
     public void DeleteBeacon(Beacon beacon, bool overridenest = false)
     {
-        bool success = !(beacon.state == Locale.Planted);
+        bool success = !(beacon.state == Locale.Planted || beacon.state == Locale.Flower);
 
-        if (success) {
+        if (success) 
+        {
+	        Events.ReceiveEvent(EVENTCODE.BEACONDELETE, AGENT.User, AGENT.Beacon, details: beacon.File);
+
 	        if (overridenest)
 		        beacon.Delete();
 	        else 
@@ -255,9 +258,6 @@ public class BeaconManager : Spawner, IReactToSunCycle, ISaveable
 			        success = false;
 	        }
         }
-
-        if (success)
-            Events.ReceiveEvent(EVENTCODE.BEACONDELETE, AGENT.World, AGENT.Beacon, details: beacon.File);
     }
 
     // If beacon is in subset, IGNORE
@@ -349,7 +349,8 @@ public class BeaconManager : Spawner, IReactToSunCycle, ISaveable
 
     public void WipeBeacons()
     {
-	    foreach (KeyValuePair<string, List<Beacon>> lookup in beacons) 
+	    KeyValuePair<string, List<Beacon>>[] cache = beacons.ToArray();
+	    foreach (KeyValuePair<string, List<Beacon>> lookup in cache) 
 	    {
 		    var file = lookup.Key;
 		    var beacons = lookup.Value.ToArray();
@@ -448,6 +449,8 @@ public class BeaconManager : Spawner, IReactToSunCycle, ISaveable
 		allBeacons.Remove(beacon);
 		
 		TriggerUpdateBeacons();
+		
+		Destroy(beacon.gameObject);
 	}
 
 	void onActivatedBeacon(Beacon beacon)

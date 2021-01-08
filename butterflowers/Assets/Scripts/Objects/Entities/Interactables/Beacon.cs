@@ -374,18 +374,17 @@ public class Beacon: Interactable, IFlammable, ITooltip, IFileContainer {
 
     public bool Delete(bool events = true)
     {
+        Debug.LogFormat("Attempt to delete beacon => {0}", m_file);
+        
         if (state == Locale.Destroyed) return false;
         state = Locale.Destroyed;
-
-        Unregister();
 
         if (Deleted != null && events) 
         {
             Deleted(this);
         }
         
-        Destroy(gameObject);
-
+        Unregister();
         return true;
     }
 
