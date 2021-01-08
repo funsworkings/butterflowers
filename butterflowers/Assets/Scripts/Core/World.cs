@@ -181,6 +181,9 @@ namespace Core
             Beacons.Load((Preset.persistBeacons) ? _Save.data.beacons : null);
             Vines.Load((Preset.persistVines) ? _Save.data.vines : null);
             Sun.Load(_Save.data.sun);
+            
+            yield return new WaitForEndOfFrame();
+            Surveillance.New(onload: true); // Trigger surveillance
         
             LOAD = true;
         }
@@ -197,8 +200,10 @@ namespace Core
         {
             Sun.active = false;
             yield return new WaitForEndOfFrame();
-
-            while (Surveillance.inprogress) yield return null;
+            
+            Surveillance.Stop();
+            Surveillance.Dispose();
+            while (Surveillance.recording) yield return null;
             
             SaveLibraryItems();
             _Save.data.sun = (SunData) Sun.Save();
@@ -218,6 +223,8 @@ namespace Core
             
             Sequence.Cycle();
             while (Sequence.Pause) yield return null;
+
+            Surveillance.New(); // Trigger surveillance
 
             wait = false;
             gamePanel.Show();

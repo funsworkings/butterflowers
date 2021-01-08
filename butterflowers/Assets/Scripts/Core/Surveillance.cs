@@ -15,7 +15,7 @@ using uwu.Snippets;
 
 namespace Core
 {
-	public class Surveillance : MonoBehaviour, IReactToSunCycle
+	public class Surveillance : MonoBehaviour
 	{
 		public static Surveillance Instance = null;
 	
@@ -46,7 +46,7 @@ namespace Core
 		[SerializeField] WorldPreset Preset;
 		[SerializeField] Neue.Agent.Presets.BrainPreset BrainPreset;
 	
-		[SerializeField] bool recording = true;
+		public bool recording = true;
 
 		Camera previousMainCamera;
 
@@ -87,6 +87,11 @@ namespace Core
 			Instance = this;
 		}
 
+		void Start()
+		{
+			SubscribeToEvents();
+		}
+
 		void OnDestroy()
 		{
 			StopAllCoroutines();
@@ -94,37 +99,51 @@ namespace Core
 		}
 
 		#endregion
+		
+		#region Ops
 
-		#region Cycle
-
-		public void Cycle(bool refresh)
+		public void New(bool onload = false)
 		{
-			inprogress = true;
-			StartCoroutine("AdvanceLog");
+			if (onload) 
+			{
+				EnsureLog();
+			}
+			else 
+			{
+				CreateLog();
+			}
+
+			StartCoroutine("Capturing");
+			recording = true;
 		}
 
-		IEnumerator AdvanceLog()
+		public void Stop()
+		{
+			StopAllCoroutines();
+		}
+
+		public void Dispose()
+		{
+			StartCoroutine("Disposal");
+		}
+
+		IEnumerator Disposal()
 		{
 			TakePicture();
-			photoInProgress = true;
-
-			while (photoInProgress) yield return null;
-			yield return new WaitForEndOfFrame();
 			
+			photoInProgress = true;
+			while (photoInProgress) 
+				yield return null;
+
 			var log = CaptureFrameLog();
-			AttachEventsToLog(ref log);
-
-			activeLog.photo = lastPhotoPath;
 			activeLog.logs = activeLog.logs.Append(log).ToArray();
-
-			inprogress = false;
-			while (World.Pause) yield return null;
-		
-			CreateLog();
+			
+			yield return new WaitForSecondsRealtime(5f);
+			recording = false;
 		}
-
+		
 		#endregion
-	
+
 		#region Save/load
 
 		public object Save()
@@ -138,20 +157,10 @@ namespace Core
 			World = World.Instance;
 
 			var previousLogs = (SurveillanceData[]) data;
-		
-			if (data != null) 
-			{
+			if (data != null)
 				logs = new List<SurveillanceData>(previousLogs);
-			}
-			else 
-			{
+			else
 				logs = new List<SurveillanceData>();
-			}
-			EnsureLog();
-		
-			SubscribeToEvents();
-		
-			StartCoroutine("Capturing");
 		}
 	
 		#endregion
@@ -175,43 +184,14 @@ namespace Core
 		}
 	
 		#endregion
-	
-		#region Capturing
-
-		IEnumerator Capturing()
-		{
-			float log_t = 0f;
 		
-			while (true) 
-			{
-				recording = Sun.active; // Only record user/parallel actions
-				if (recording) 
-				{
-					log_t += Time.deltaTime;
-					if (log_t > Preset.surveillanceLogRate) 
-					{
-						var log = CaptureFrameLog();
-						AttachEventsToLog(ref log);
-					
-						activeLog.logs = activeLog.logs.Append(log).ToArray();
-
-						if (onCaptureLog != null)
-							onCaptureLog();
-
-						log_t = 0f;
-					}
-				}
-
-				yield return null;
-			}
-		}
-
+		#region Log creation
+		
 		public void CreateLog()
 		{
 			var log = new SurveillanceData();
-			log.timestamp = Sun.days;
-			
-			log.logs = new SurveillanceLogData[]{}; // Wipe daily logs
+				log.timestamp = Sun.days;
+				log.logs = new SurveillanceLogData[]{}; // Wipe daily logs
 
 			logs.Add(log); // Append new log to 
 		}
@@ -223,7 +203,8 @@ namespace Core
 			var timestamp = Sun.days;
 		
 			SurveillanceData lastLog = (logs != null && logs.Count > 0)? logs.Last():null;
-			if (lastLog != null) {
+			if (lastLog != null) 
+			{
 				var lastTimestamp = lastLog.timestamp;
 				if (lastTimestamp != timestamp)
 					flagCreate = true;
@@ -232,6 +213,33 @@ namespace Core
 				flagCreate = true;
 		
 			if(flagCreate) CreateLog();
+		}
+		
+		#endregion
+	
+		#region Capturing
+
+		IEnumerator Capturing()
+		{
+			float log_t = 0f;
+		
+			while (true) 
+			{
+				log_t += Time.deltaTime;
+				
+				if (log_t > Preset.surveillanceLogRate) 
+				{
+					var log = CaptureFrameLog();
+					activeLog.logs = activeLog.logs.Append(log).ToArray();
+
+					if (onCaptureLog != null)
+						onCaptureLog();
+
+					log_t = 0f;
+				}
+
+				yield return null;
+			}
 		}
 
 		SurveillanceLogData CaptureFrameLog()
@@ -248,6 +256,9 @@ namespace Core
 				log.agentInFocus = focus.Agent;
 			else
 				log.agentInFocus = AGENT.NULL; // No agent currently in focus
+			
+			
+			AttachEventsToLog(ref log);
 
 			return log;
 		}
@@ -433,7 +444,7 @@ namespace Core
 
 		void OnReceiveEvent(EVENTCODE @event, AGENT agentA, AGENT agentB, string details)
 		{
-			if (!recording && !inprogress) return;
+			if (!recording) return;
 			if (agentA == AGENT.User) 
 				eventsDuringLog.Add(@event);
 		}
