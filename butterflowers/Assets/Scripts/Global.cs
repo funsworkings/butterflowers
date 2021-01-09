@@ -1,4 +1,5 @@
 ﻿using System.Collections.Generic;
+using Core;
 using Objects.Base;
 using Objects.Entities.Interactables.Empty;
 using UnityEngine;
@@ -123,7 +124,7 @@ public static class Copy
         string actions = "";
         
         if (entity is Nest) actions += "\nClick to KICK";
-        else if (entity is Beacon) actions += "\nDrag into nest to ADD, terrain to PLANT, tree to FLOWER, star to DESTROY";
+        //else if (entity is Beacon) actions += "\nDrag into nest to ADD, terrain to PLANT, tree to FLOWER, star to DESTROY";
         else if (entity is Flower) actions += "\nClick to DUPLICATE";
 
         if (entity is Focusable) 
@@ -136,6 +137,28 @@ public static class Copy
         {
             actions = actions.Insert(0, "\n");
             return info += string.Format("<size=50%><i>{0}</i></size>", actions);
+        }
+
+        return info;
+    }
+
+    public static string AppendContextualInformation(this string info, Entity entity, Wand.DragContext context)
+    {
+        string contextual = "";
+
+        if (entity is Beacon) 
+        {
+            if (context == Wand.DragContext.Addition) contextual = "ADD to NEST";
+            else if (context == Wand.DragContext.Destroy) contextual = "DESTROY";
+            else if (context == Wand.DragContext.Flower) contextual = "FLOWER";
+            else if (context == Wand.DragContext.Plant) contextual = "PLANT";
+            else if (context == Wand.DragContext.Release) contextual = "";
+        }
+
+        if (!string.IsNullOrEmpty(contextual)) 
+        {
+            contextual = contextual.Insert(0, "\n");
+            info += string.Format("<size=50%><i>{0}</i></size>", contextual);
         }
 
         return info;

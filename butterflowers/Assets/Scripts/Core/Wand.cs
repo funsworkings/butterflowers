@@ -7,6 +7,8 @@ using Objects.Base;
 using Settings;
 using TMPro;
 using UnityEngine;
+using UnityEngine.EventSystems;
+using UnityEngine.Serialization;
 using UnityEngine.UI;
 using uwu.Gameplay;
 using uwu.Snippets;
@@ -25,6 +27,16 @@ namespace Core
             Normal,
             Drag
         }
+
+        public enum DragContext
+        {
+            Release,
+            
+            Addition,
+            Flower,
+            Plant,
+            Destroy
+        }
     
         #endregion
     
@@ -39,7 +51,7 @@ namespace Core
         // Properties
     
         SimpleVelocity _simpleVelocity;
-
+        
         // Attributes
 
         [Header("General")]
@@ -51,14 +63,22 @@ namespace Core
 
         public bool infocus = true;
 
-        [Header("Interaction")] [SerializeField]
-        Interaction _interaction = Interaction.Normal;
+        [Header("Interaction")] 
+        
+        [SerializeField] Interaction _interaction = Interaction.Normal;
         [SerializeField] LayerMask dragInteractionMask;
-        [SerializeField] float brushRadius = 12f;
-        [SerializeField] Beacon beacon = null;
-        [SerializeField] Collider target = null;
-        [SerializeField] float defaultPointDistance = 10f;
-        public bool global = true;
+        
+        IInteractable _interactable = null;
+        RaycastHit _interactableHit;
+        Collider _interactableCollider = null;
+
+        [SerializeField, FormerlySerializedAs("brushRadius")] float _radius = 12f;
+
+        [Header("Drag")]
+            [SerializeField] Beacon beacon = null;
+            [SerializeField] DragContext context = DragContext.Release;
+            [SerializeField] float defaultPointDistance = 10f;
+            [SerializeField] float pointDistance;
 
         [Header("Layers")] 
             [SerializeField] LayerMask additionMask;
@@ -67,13 +87,9 @@ namespace Core
             [SerializeField] LayerMask destroyMask;
 
         [Header("UI")] 
-        [SerializeField] Tooltip info;
-        [SerializeField] ToggleOpacity infoOpacity;
-        [SerializeField] TMP_Text infoText;
-
-        [Header("Debug")] 
-        [SerializeField] float pointDistance;
-        [SerializeField] Image debugCircle;
+            [SerializeField] Tooltip info;
+            [SerializeField] ToggleOpacity infoOpacity;
+            [SerializeField] TMP_Text infoText;
 
         #region Accessors
 
@@ -154,7 +170,7 @@ namespace Core
 
         public float speed2d => velocity2d.magnitude;
 
-        public float radius => brushRadius;
+        public float radius => _radius;
     
         public Camera Camera => camera;
 
@@ -194,19 +210,14 @@ namespace Core
         protected override void Update()
         {
             m_spells = infocus && sun.active;
+            
+            base.Update();
 
-            if (spells) 
-            {
-                base.Update();
-                
-                UpdateTrajectory();
-                HandleBeacon();
-            }
-            else 
-            {
-                if (beacon != null)
-                    DropBeacon();
-            }
+            HandleDrag();
+
+            UpdateTrajectory();
+            UpdateCursorState();
+            UpdateTooltip();
         }
     
         void OnApplicationFocus(bool hasFocus)
@@ -236,44 +247,128 @@ namespace Core
             }
         }
 
-        protected override void HandleInteractions(Dictionary<IInteractable, RaycastHit> _frameInteractions)
+        protected override void QueryInteractions(out RaycastHit[] hits, out RaycastResult[] hits2d)
         {
             if (spells) 
             {
-                base.HandleInteractions(_frameInteractions);
+                base.QueryInteractions(out hits, out hits2d);
+            }
+            else // Wipe all interactions during frame
+            {
+                hits = new RaycastHit[]{};
+                hits2d = new RaycastResult[]{};
+            }
+        }
 
-                var hits = _frameInteractions.Values.ToArray();
-                UpdateCursorState(hits);
+        protected override void HandleInteractions(Dictionary<IInteractable, RaycastHit> _frameInteractions)
+        {
+            base.HandleInteractions(_frameInteractions);
+
+            if (_frameInteractions.Count() > 0) 
+            {
+                var _interaction = _frameInteractions.ElementAt(0);
+                
+                _interactable = _interaction.Key;
+                _interactableHit = _interaction.Value;
+                _interactableCollider = _interactableHit.collider;
             }
             else 
             {
-                UpdateCursorState(null);    
+                _interactable = null;
+                _interactableCollider = null;
             }
-
-            var entities = SelectInteractables<Entity>(_frameInteractions);
-            UpdateTooltip(entities);
         }
-
-        protected IEnumerable<E> SelectInteractables<E>(Dictionary<IInteractable, RaycastHit> _frameInteractions) where E:MonoBehaviour
-        {
-            var entities = _frameInteractions.Select(_interaction => _interaction.Value.collider.GetComponent<E>())
-                .Where(_e => _e != null);
-
-            return entities;
-        }
-
+        
         protected override void onGrabInteractable(IInteractable interactable, RaycastHit hit)
         {
-            var beacon = hit.collider.GetComponent<Beacon>();
-            if (beacon != null && this.beacon == null) 
+            GrabBeacon(interactable, hit);
+        }
+
+        #endregion
+        
+        #region Beacons
+        
+        void HandleDrag()
+        {
+            context = GetContextFromTarget(); // Get drag context
+            
+            if (_interaction == Interaction.Drag) 
             {
-                this.beacon = beacon;
+                if (cont) 
+                {
+                    Vector3 point = Vector3.zero;
+                    
+                    if (_interactableCollider != null) 
+                    {
+                        point = _interactableHit.point;
+                        pointDistance = _interactableHit.distance;
+                    }
+                    else 
+                    {
+                        point = camera.ScreenToWorldPoint(new Vector3(origin.x, origin.y, pointDistance));
+                    }
+                    
+                    beacon.transform.position = point;
+                }
+                else 
+                {
+                    pointDistance = defaultPointDistance;
+                    
+                    if(up) DropBeacon(); // Release beacon
+                }
+            }
+            else 
+            {
+                pointDistance = defaultPointDistance;
+            }
+        }
+
+        void GrabBeacon(IInteractable interactable, RaycastHit hit)
+        {
+            if (_interaction == Interaction.Drag) return;
+            
+            var _beacon = hit.collider.GetComponent<Beacon>();
+            if (_beacon != null && beacon == null) 
+            {
                 _interaction = Interaction.Drag;
+                beacon = _beacon;
                 
                 beacon.Grab();
             }
         }
 
+        void DropBeacon()
+        {
+            if (beacon != null) 
+            {
+                Vector3 origin = _interactableHit.point;
+
+                switch (context) 
+                {
+                    case DragContext.Addition:
+                        beacon.AddToNest();
+                        break;
+                    case DragContext.Flower:
+                        beacon.Flower(origin);
+                        break;
+                    case DragContext.Plant:
+                        beacon.Plant(origin);
+                        break;
+                    case DragContext.Destroy:
+                        beacon.Destroy();
+                        break;
+                    case DragContext.Release:
+                    default:
+                        beacon.Release();
+                        break;
+                }
+            }
+
+            _interaction = Interaction.Normal;
+            context = DragContext.Release;
+            beacon = null;
+        }
+        
         #endregion
 
         #region Remote access
@@ -332,64 +427,6 @@ namespace Core
                 Events.ReceiveEvent(EVENTCODE.BEACONDELETE, Agent, AGENT.Beacon, details: beacon.File);
 
             return success;
-        }
-
-        void HandleBeacon()
-        {
-            if (beacon != null) 
-            {
-                if (cont) 
-                {
-                    Vector3 point = Vector3.zero;
-                    if (Physics.Raycast(ray, out raycastHit, interactionDistance, mask.value)) 
-                    {
-                        point = raycastHit.point;
-                        pointDistance = raycastHit.distance;
-                        target = raycastHit.collider;
-                    }
-                    else {
-                        point = camera.ScreenToWorldPoint(new Vector3(origin.x, origin.y, pointDistance));
-                        target = null;
-                    }
-
-                    beacon.transform.position = point;
-                }
-                else 
-                {
-                    pointDistance = defaultPointDistance;
-                    if(up) DropBeacon();
-                }
-            }
-            else {
-                pointDistance = defaultPointDistance;
-            }
-        }
-
-        void DropBeacon()
-        {
-            Vector3 origin = raycastHit.point;
-
-            if (target != null) 
-            {
-                var targetLayer = target.gameObject.layer;
-
-                if (plantMask == (plantMask | (1 << targetLayer)))
-                    beacon.Plant(origin);
-                else if (additionMask == (additionMask | (1 << targetLayer)))
-                    beacon.AddToNest();
-                else if (flowerMask == (flowerMask | (1 << targetLayer)))
-                    beacon.Flower(origin);
-                else if (destroyMask == (destroyMask | (1 << targetLayer)))
-                    beacon.Destroy();
-                else
-                    beacon.Release();
-            }
-            else
-                beacon.Release();
-        
-            beacon = null;
-            target = null;
-            _interaction = Interaction.Normal;
         }
 
         // NEST
@@ -465,18 +502,12 @@ namespace Core
 
         #region Cursor and trajectory
 
-        void UpdateCursorState(RaycastHit[] hits)
+        void UpdateCursorState()
         {
             if (cursor_icon != null) 
             {
-                if (!spells) 
-                {
-                    cursor_icon.state = CustomCursor.State.Remote;
-                    return;
-                }
-            
                 // Update cursor
-                if (hits != null && hits.Length > 0)
+                if (_interactable.IsValid())
                     cursor_icon.state = CustomCursor.State.Hover;
                 else
                     cursor_icon.state = CustomCursor.State.Normal;
@@ -486,37 +517,69 @@ namespace Core
         void UpdateTrajectory()
         {
             Vector2 dir = new Vector2(cursor.velocity.x, cursor.velocity.y);
-            dir = dir.normalized * brushRadius/2f;
+            dir = dir.normalized * _radius/2f;
 
             Vector3 t_trajectory2d = position2d + new Vector3(dir.x, dir.y, 0f);
             m_trajectory2d = Vector3.Lerp(m_trajectory2d, t_trajectory2d, Time.deltaTime * 3f);
         }
 
         #endregion
+        
+        #region Layers
+
+        DragContext GetContextFromTarget()
+        {
+            if (_interactableCollider != null) 
+            {
+                var targetLayer = _interactableCollider.gameObject.layer;
+
+                if (plantMask == (plantMask | (1 << targetLayer)))
+                    return DragContext.Plant;
+                if (additionMask == (additionMask | (1 << targetLayer)))
+                    return DragContext.Addition;
+                if (flowerMask == (flowerMask | (1 << targetLayer)))
+                    return DragContext.Flower;
+                if (destroyMask == (destroyMask | (1 << targetLayer)))
+                    return DragContext.Destroy;
+            }
+            
+            return DragContext.Release;
+        }
+        
+        #endregion
     
         #region Tooltips
 
-        void UpdateTooltip(IEnumerable<Entity> entities)
+        void UpdateTooltip()
         {
             if (spells) 
             {
                 string message = "";
 
-                foreach (Entity e in entities) 
+                if (_interaction == Interaction.Normal) 
                 {
-                    if (e is ITooltip) 
+                    if (_interactable.IsValid() && _interactable is ITooltip) 
                     {
-                        message = ((ITooltip) e).GetInfo();
-                        break;
+                        message = ((ITooltip) _interactable).GetInfo();
                     }
                 }
-            
-                if(string.IsNullOrEmpty(message)) infoOpacity.Hide();
                 else 
                 {
+                    if (beacon != null) 
+                    {
+                        message = beacon.GetInfo().AppendContextualInformation(beacon, context);
+                    }
+                }
+
+                if (string.IsNullOrEmpty(message)) 
+                {
+                    infoOpacity.Hide();
+                }
+                else {
                     infoText.text = message;
                     infoOpacity.Show();
                 }
+
                 return;
             }
         
@@ -524,27 +587,10 @@ namespace Core
         }
     
         #endregion
-    
-        #region Debug
-    
-        void UpdateDebugCircle()
-        {
-            Color col = (global)? Color.green:Color.yellow;
-
-            debugCircle.color = new Color(col.r, col.g, col.b, .33f);
-            debugCircle.rectTransform.sizeDelta = new Vector2(brushRadius*2f, brushRadius*2f);
-            debugCircle.rectTransform.position = trajectory2d;
-        }
-    
-        #endregion
 
         public void Cycle(bool refresh)
         {
-            if (beacon != null) // Dispose of beacon held
-            {
-                beacon.Release();
-                beacon = null;
-            }   
+            DropBeacon(); 
         }
     }
 }
