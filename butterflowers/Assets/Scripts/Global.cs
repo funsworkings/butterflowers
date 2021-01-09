@@ -124,7 +124,7 @@ public static class Copy
         string actions = "";
         
         if (entity is Nest) actions += "\nClick to KICK";
-        //else if (entity is Beacon) actions += "\nDrag into nest to ADD, terrain to PLANT, tree to FLOWER, star to DESTROY";
+        else if (entity is Beacon) actions += "\nDrag into objects";
         else if (entity is Flower) actions += "\nClick to DUPLICATE";
 
         if (entity is Focusable) 
@@ -148,7 +148,7 @@ public static class Copy
 
         if (entity is Beacon) 
         {
-            if (context == Wand.DragContext.Addition) contextual = "ADD to NEST";
+            if (context == Wand.DragContext.Addition) contextual = "ABSORB";
             else if (context == Wand.DragContext.Destroy) contextual = "DESTROY";
             else if (context == Wand.DragContext.Flower) contextual = "FLOWER";
             else if (context == Wand.DragContext.Plant) contextual = "PLANT";
