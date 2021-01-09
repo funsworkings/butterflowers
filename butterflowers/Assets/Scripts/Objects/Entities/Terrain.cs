@@ -3,7 +3,7 @@ using System.Collections.Generic;
 using Objects.Base;
 using UnityEngine;
 
-public class Terrain : Entity
+public class Terrain : Interactable
 {
 	
 }

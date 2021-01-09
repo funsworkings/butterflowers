@@ -29,7 +29,7 @@ namespace uwu.Gameplay
 		
 		// Collections
 		
-		Dictionary<IInteractable, RaycastHit> frameInteractions = new Dictionary<IInteractable, RaycastHit>();
+		protected Dictionary<IInteractable, RaycastHit> frameInteractions = new Dictionary<IInteractable, RaycastHit>();
 
 		// Attributes
 
@@ -79,7 +79,7 @@ namespace uwu.Gameplay
 		
 		#region Interact
 
-		void QueryInteractions(out RaycastHit[] hits, out RaycastResult[] hits2d)
+		protected virtual void QueryInteractions(out RaycastHit[] hits, out RaycastResult[] hits2d)
 		{
 			ray = camera.ScreenPointToRay(origin);
 
