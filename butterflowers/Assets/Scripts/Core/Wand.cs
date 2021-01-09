@@ -567,7 +567,7 @@ namespace Core
                 {
                     if (beacon != null) 
                     {
-                        message = beacon.GetInfo().AppendContextualInformation(beacon, context);
+                        message = beacon.File.AppendContextualInformation(beacon, context);
                     }
                 }
 
