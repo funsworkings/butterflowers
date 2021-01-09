@@ -662,7 +662,7 @@ GameObject:
   m_Component:
   - component: {fileID: 58810646}
   - component: {fileID: 58810647}
-  m_Layer: 0
+  m_Layer: 2
   m_Name: World
   m_TagString: Untagged
   m_Icon: {fileID: 0}
@@ -893,7 +893,7 @@ PrefabInstance:
       objectReference: {fileID: 0}
     - target: {fileID: 100000, guid: 025f10692bbc17b4399faf94ff7fcc8b, type: 3}
       propertyPath: m_Layer
-      value: 20
+      value: 24
       objectReference: {fileID: 0}
     - target: {fileID: 100000, guid: 025f10692bbc17b4399faf94ff7fcc8b, type: 3}
       propertyPath: m_StaticEditorFlags
@@ -978,7 +978,7 @@ GameObject:
   - component: {fileID: 74782384}
   - component: {fileID: 74782386}
   - component: {fileID: 74782385}
-  m_Layer: 0
+  m_Layer: 2
   m_Name: Sphere
   m_TagString: Untagged
   m_Icon: {fileID: 0}
@@ -1056,7 +1056,7 @@ GameObject:
   m_Component:
   - component: {fileID: 85862405}
   - component: {fileID: 85862406}
-  m_Layer: 0
+  m_Layer: 2
   m_Name: Beacon (Manager)
   m_TagString: Untagged
   m_Icon: {fileID: 0}
@@ -1335,7 +1335,7 @@ GameObject:
   m_Icon: {fileID: 0}
   m_NavMeshLayer: 0
   m_StaticEditorFlags: 0
-  m_IsActive: 1
+  m_IsActive: 0
 --- !u!4 &86240246
 Transform:
   m_ObjectHideFlags: 0
@@ -1381,7 +1381,7 @@ Camera:
   m_Depth: -1
   m_CullingMask:
     serializedVersion: 2
-    m_Bits: 1118208
+    m_Bits: 59838464
   m_RenderingPath: -1
   m_TargetTexture: {fileID: 0}
   m_TargetDisplay: 0
@@ -1862,7 +1862,7 @@ GameObject:
   m_Component:
   - component: {fileID: 131292714}
   - component: {fileID: 131292716}
-  m_Layer: 0
+  m_Layer: 2
   m_Name: vine cage
   m_TagString: Untagged
   m_Icon: {fileID: 0}
@@ -1920,7 +1920,7 @@ GameObject:
   m_Component:
   - component: {fileID: 133547052}
   - component: {fileID: 133547053}
-  m_Layer: 0
+  m_Layer: 2
   m_Name: Quiet
   m_TagString: Untagged
   m_Icon: {fileID: 0}
@@ -2009,7 +2009,6 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: 
   m_agent: 9
-  m_interactive: 1
   onFocused:
     m_PersistentCalls:
       m_Calls: []
@@ -2445,7 +2444,7 @@ GameObject:
   - component: {fileID: 155505708}
   - component: {fileID: 155505710}
   - component: {fileID: 155505709}
-  m_Layer: 0
+  m_Layer: 2
   m_Name: Sphere (3)
   m_TagString: Untagged
   m_Icon: {fileID: 0}
@@ -2523,7 +2522,7 @@ GameObject:
   m_Component:
   - component: {fileID: 155698730}
   - component: {fileID: 155698731}
-  m_Layer: 0
+  m_Layer: 2
   m_Name: Camera Blend
   m_TagString: Untagged
   m_Icon: {fileID: 0}
@@ -2674,7 +2673,7 @@ GameObject:
   m_Component:
   - component: {fileID: 166675946}
   - component: {fileID: 166675945}
-  m_Layer: 0
+  m_Layer: 2
   m_Name: butterfly spawn
   m_TagString: Untagged
   m_Icon: {fileID: 0}
@@ -2976,7 +2975,7 @@ GameObject:
   - component: {fileID: 195150297}
   - component: {fileID: 195150299}
   - component: {fileID: 195150298}
-  m_Layer: 0
+  m_Layer: 2
   m_Name: Sphere (4)
   m_TagString: Untagged
   m_Icon: {fileID: 0}
@@ -3069,7 +3068,8 @@ Transform:
   m_PrefabInstance: {fileID: 0}
   m_PrefabAsset: {fileID: 0}
   m_GameObject: {fileID: 201810246}
-  m_LocalRotation: {x: 0.12156507, y: -0.0000000050892752, z: 6.304753e-10, w: 0.9925835}
+  m_LocalRotation: {x: 0.121565074, y: 0.000000018978835, z: -0.0000000022284417,
+    w: 0.9925835}
   m_LocalPosition: {x: 0, y: 9.595102, z: -21.852465}
   m_LocalScale: {x: 1, y: 1.3577, z: 1}
   m_Children:
@@ -3275,6 +3275,11 @@ PrefabInstance:
       propertyPath: m_Name
       value: sector (3)
       objectReference: {fileID: 0}
+    - target: {fileID: 9143658633952325509, guid: b201a0ba730e70a4ea50f8a5f4f2e4f2,
+        type: 3}
+      propertyPath: m_Layer
+      value: 2
+      objectReference: {fileID: 0}
     - target: {fileID: 9143658633952325510, guid: b201a0ba730e70a4ea50f8a5f4f2e4f2,
         type: 3}
       propertyPath: m_RootOrder
@@ -3401,7 +3406,7 @@ GameObject:
   - component: {fileID: 214334916}
   - component: {fileID: 214334918}
   - component: {fileID: 214334917}
-  m_Layer: 0
+  m_Layer: 2
   m_Name: Cutscenes
   m_TagString: Untagged
   m_Icon: {fileID: 0}
@@ -3833,7 +3838,7 @@ GameObject:
   m_Component:
   - component: {fileID: 247339872}
   - component: {fileID: 247339871}
-  m_Layer: 0
+  m_Layer: 2
   m_Name: Butterflower (Manager)
   m_TagString: Untagged
   m_Icon: {fileID: 0}
@@ -4239,7 +4244,7 @@ GameObject:
   - component: {fileID: 256750995}
   - component: {fileID: 256750997}
   - component: {fileID: 256750996}
-  m_Layer: 0
+  m_Layer: 2
   m_Name: Sphere (1)
   m_TagString: Untagged
   m_Icon: {fileID: 0}
@@ -4318,7 +4323,7 @@ GameObject:
   - component: {fileID: 259035393}
   - component: {fileID: 259035395}
   - component: {fileID: 259035394}
-  m_Layer: 0
+  m_Layer: 2
   m_Name: Sphere (5)
   m_TagString: Untagged
   m_Icon: {fileID: 0}
@@ -4520,7 +4525,7 @@ GameObject:
   serializedVersion: 6
   m_Component:
   - component: {fileID: 269327399}
-  m_Layer: 12
+  m_Layer: 25
   m_Name: anchor
   m_TagString: Untagged
   m_Icon: {fileID: 0}
@@ -4828,7 +4833,7 @@ GameObject:
   m_Component:
   - component: {fileID: 323736447}
   - component: {fileID: 323736448}
-  m_Layer: 0
+  m_Layer: 2
   m_Name: Order
   m_TagString: Untagged
   m_Icon: {fileID: 0}
@@ -5325,7 +5330,7 @@ GameObject:
   serializedVersion: 6
   m_Component:
   - component: {fileID: 429509113}
-  m_Layer: 0
+  m_Layer: 2
   m_Name: vertex (BL)
   m_TagString: Untagged
   m_Icon: {fileID: 0}
@@ -5471,7 +5476,7 @@ GameObject:
   - component: {fileID: 449903212}
   - component: {fileID: 449903214}
   - component: {fileID: 449903213}
-  m_Layer: 0
+  m_Layer: 2
   m_Name: Sphere (5)
   m_TagString: Untagged
   m_Icon: {fileID: 0}
@@ -5550,7 +5555,7 @@ GameObject:
   - component: {fileID: 466665732}
   - component: {fileID: 466665734}
   - component: {fileID: 466665733}
-  m_Layer: 0
+  m_Layer: 2
   m_Name: Sphere (6)
   m_TagString: Untagged
   m_Icon: {fileID: 0}
@@ -6341,7 +6346,7 @@ MonoBehaviour:
   type: 0
   unitMeasurement: 
   normalScale: {x: 0, y: 0, z: 0}
-  focusScale: {x: 1, y: 1, z: 0}
+  focusScale: {x: 1.3, y: 1.3, z: 1.3}
   m_focus: 0
   state: 0
 --- !u!1 &478646748
@@ -6465,7 +6470,7 @@ GameObject:
   m_Component:
   - component: {fileID: 481301900}
   - component: {fileID: 481301901}
-  m_Layer: 0
+  m_Layer: 2
   m_Name: Surveillance
   m_TagString: Untagged
   m_Icon: {fileID: 0}
@@ -6514,7 +6519,6 @@ MonoBehaviour:
   lastPhotoPath: 
   lastPhotoTaken: {fileID: 0}
   photoInProgress: 0
-  inprogress: 0
 --- !u!1 &502971272
 GameObject:
   m_ObjectHideFlags: 0
@@ -6835,7 +6839,7 @@ GameObject:
   - component: {fileID: 532876912}
   - component: {fileID: 532876914}
   - component: {fileID: 532876913}
-  m_Layer: 0
+  m_Layer: 2
   m_Name: Sphere (2)
   m_TagString: Untagged
   m_Icon: {fileID: 0}
@@ -6942,7 +6946,7 @@ Camera:
   m_GameObject: {fileID: 534669902}
   m_Enabled: 1
   serializedVersion: 2
-  m_ClearFlags: 3
+  m_ClearFlags: 1
   m_BackGroundColor: {r: 0.19215687, g: 0.3019608, b: 0.4745098, a: 0}
   m_projectionMatrixMode: 1
   m_GateFitMode: 2
@@ -6958,13 +6962,13 @@ Camera:
     height: 1
   near clip plane: 0.1
   far clip plane: 5000
-  field of view: 30
+  field of view: 14
   orthographic: 0
   orthographic size: 5
   m_Depth: 0
   m_CullingMask:
     serializedVersion: 2
-    m_Bits: 2141495
+    m_Bits: 4294967295
   m_RenderingPath: -1
   m_TargetTexture: {fileID: 0}
   m_TargetDisplay: 0
@@ -6983,8 +6987,8 @@ Transform:
   m_PrefabInstance: {fileID: 0}
   m_PrefabAsset: {fileID: 0}
   m_GameObject: {fileID: 534669902}
-  m_LocalRotation: {x: 0.12156507, y: -0.0000000050892752, z: 6.304753e-10, w: 0.9925835}
-  m_LocalPosition: {x: 0, y: 9.595102, z: -33.205246}
+  m_LocalRotation: {x: 0.011049519, y: -0.9863622, z: 0.07446293, w: 0.14636582}
+  m_LocalPosition: {x: 19.457602, y: 14.52165, z: 40.472775}
   m_LocalScale: {x: 1, y: 1, z: 1}
   m_Children:
   - {fileID: 2418050}
@@ -7233,7 +7237,7 @@ GameObject:
   m_Component:
   - component: {fileID: 546851778}
   - component: {fileID: 546851779}
-  m_Layer: 0
+  m_Layer: 2
   m_Name: Destruction
   m_TagString: Untagged
   m_Icon: {fileID: 0}
@@ -7314,7 +7318,7 @@ GameObject:
   - component: {fileID: 553357778}
   - component: {fileID: 553357780}
   - component: {fileID: 553357779}
-  m_Layer: 0
+  m_Layer: 2
   m_Name: Sphere
   m_TagString: Untagged
   m_Icon: {fileID: 0}
@@ -7519,7 +7523,7 @@ GameObject:
   serializedVersion: 6
   m_Component:
   - component: {fileID: 598854285}
-  m_Layer: 0
+  m_Layer: 2
   m_Name: vertex (TL)
   m_TagString: Untagged
   m_Icon: {fileID: 0}
@@ -7582,7 +7586,7 @@ GameObject:
   - component: {fileID: 619690090}
   - component: {fileID: 619690092}
   - component: {fileID: 619690093}
-  m_Layer: 0
+  m_Layer: 2
   m_Name: Sun
   m_TagString: Untagged
   m_Icon: {fileID: 0}
@@ -8506,7 +8510,7 @@ GameObject:
   - component: {fileID: 647757984}
   - component: {fileID: 647757986}
   - component: {fileID: 647757985}
-  m_Layer: 0
+  m_Layer: 2
   m_Name: Sphere (6)
   m_TagString: Untagged
   m_Icon: {fileID: 0}
@@ -8688,7 +8692,7 @@ RectTransform:
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
   m_AnchorMin: {x: 0, y: 1}
   m_AnchorMax: {x: 1, y: 1}
-  m_AnchoredPosition: {x: -34.24951, y: -34.44995}
+  m_AnchoredPosition: {x: -34.249634, y: -34.44995}
   m_SizeDelta: {x: -1538.2, y: 67.1}
   m_Pivot: {x: 0.9999995, y: 0.9999996}
 --- !u!114 &655187684
@@ -9376,7 +9380,7 @@ GameObject:
   serializedVersion: 6
   m_Component:
   - component: {fileID: 689851640}
-  m_Layer: 0
+  m_Layer: 2
   m_Name: Managers
   m_TagString: Untagged
   m_Icon: {fileID: 0}
@@ -9467,7 +9471,7 @@ MonoBehaviour:
   type: 0
   unitMeasurement: 
   normalScale: {x: 0, y: 0, z: 0}
-  focusScale: {x: 1.25, y: 1.25, z: 1.25}
+  focusScale: {x: 1.3, y: 1.3, z: 1.3}
   m_focus: 0
   state: 0
   imageField: {fileID: 723675779}
@@ -9521,7 +9525,7 @@ GameObject:
   - component: {fileID: 711978462}
   - component: {fileID: 711978464}
   - component: {fileID: 711978463}
-  m_Layer: 0
+  m_Layer: 2
   m_Name: Quilt
   m_TagString: Untagged
   m_Icon: {fileID: 0}
@@ -9630,7 +9634,7 @@ GameObject:
   - component: {fileID: 716682425}
   - component: {fileID: 716682427}
   - component: {fileID: 716682426}
-  m_Layer: 0
+  m_Layer: 2
   m_Name: Sphere (3)
   m_TagString: Untagged
   m_Icon: {fileID: 0}
@@ -10117,7 +10121,7 @@ GameObject:
   - component: {fileID: 732655775}
   - component: {fileID: 732655777}
   - component: {fileID: 732655776}
-  m_Layer: 0
+  m_Layer: 2
   m_Name: Sphere (4)
   m_TagString: Untagged
   m_Icon: {fileID: 0}
@@ -10249,7 +10253,7 @@ GameObject:
   - component: {fileID: 760954936}
   - component: {fileID: 760954938}
   - component: {fileID: 760954937}
-  m_Layer: 0
+  m_Layer: 2
   m_Name: Sphere (1)
   m_TagString: Untagged
   m_Icon: {fileID: 0}
@@ -10596,7 +10600,7 @@ GameObject:
   - component: {fileID: 793650574}
   - component: {fileID: 793650576}
   - component: {fileID: 793650575}
-  m_Layer: 0
+  m_Layer: 2
   m_Name: Sphere (5)
   m_TagString: Untagged
   m_Icon: {fileID: 0}
@@ -10690,6 +10694,11 @@ PrefabInstance:
         type: 3}
       propertyPath: m_Name
       value: sector (1)
+      objectReference: {fileID: 0}
+    - target: {fileID: 9143658633952325509, guid: b201a0ba730e70a4ea50f8a5f4f2e4f2,
+        type: 3}
+      propertyPath: m_Layer
+      value: 2
       objectReference: {fileID: 0}
     - target: {fileID: 9143658633952325510, guid: b201a0ba730e70a4ea50f8a5f4f2e4f2,
         type: 3}
@@ -11401,7 +11410,7 @@ GameObject:
   - component: {fileID: 857452067}
   - component: {fileID: 857452069}
   - component: {fileID: 857452068}
-  m_Layer: 0
+  m_Layer: 2
   m_Name: Sphere (3)
   m_TagString: Untagged
   m_Icon: {fileID: 0}
@@ -11480,7 +11489,7 @@ GameObject:
   - component: {fileID: 862895998}
   - component: {fileID: 862895999}
   - component: {fileID: 862896000}
-  m_Layer: 0
+  m_Layer: 2
   m_Name: AI
   m_TagString: Untagged
   m_Icon: {fileID: 0}
@@ -11688,7 +11697,7 @@ GameObject:
   - component: {fileID: 875157282}
   - component: {fileID: 875157284}
   - component: {fileID: 875157285}
-  m_Layer: 13
+  m_Layer: 0
   m_Name: Picture Camera
   m_TagString: Untagged
   m_Icon: {fileID: 0}
@@ -11818,7 +11827,7 @@ Camera:
   m_Depth: -18
   m_CullingMask:
     serializedVersion: 2
-    m_Bits: 3186487
+    m_Bits: 4294967295
   m_RenderingPath: -1
   m_TargetTexture: {fileID: 0}
   m_TargetDisplay: 0
@@ -12108,7 +12117,7 @@ GameObject:
   m_Component:
   - component: {fileID: 884296804}
   - component: {fileID: 884296805}
-  m_Layer: 0
+  m_Layer: 2
   m_Name: Nurture
   m_TagString: Untagged
   m_Icon: {fileID: 0}
@@ -12409,7 +12418,7 @@ GameObject:
   m_Component:
   - component: {fileID: 894577355}
   - component: {fileID: 894577356}
-  m_Layer: 0
+  m_Layer: 2
   m_Name: Module Tree Helper
   m_TagString: Untagged
   m_Icon: {fileID: 0}
@@ -12483,14 +12492,12 @@ MonoBehaviour:
   filter: 1
   interactionMask:
     serializedVersion: 2
-    m_Bits: 3160064
+    m_Bits: 62918656
   interactionDistance: 10000
-  multipleInteractions: 1
+  multipleInteractions: 0
   down: 0
   cont: 0
   up: 0
-  wait: 0
-  interactables: []
   preset: {fileID: 11400000, guid: 45ffdf5e02efb4848942aaeb5d029f6e, type: 2}
   butterflowers: {fileID: 247339871}
   beacons: {fileID: 85862406}
@@ -12502,12 +12509,24 @@ MonoBehaviour:
   _interaction: 0
   dragInteractionMask:
     serializedVersion: 2
-    m_Bits: 1054720
+    m_Bits: 62914560
   brushRadius: 360
   beacon: {fileID: 0}
   target: {fileID: 0}
   defaultPointDistance: 10
   global: 1
+  additionMask:
+    serializedVersion: 2
+    m_Bits: 4194304
+  flowerMask:
+    serializedVersion: 2
+    m_Bits: 8388608
+  plantMask:
+    serializedVersion: 2
+    m_Bits: 16777216
+  destroyMask:
+    serializedVersion: 2
+    m_Bits: 33554432
   info: {fileID: 2041183566}
   infoOpacity: {fileID: 234570732}
   infoText: {fileID: 1315027342}
@@ -12709,7 +12728,7 @@ MonoBehaviour:
   type: 0
   unitMeasurement: 
   normalScale: {x: 0, y: 0, z: 0}
-  focusScale: {x: 1, y: 1, z: 0}
+  focusScale: {x: 1.3, y: 1.3, z: 1.3}
   m_focus: 0
   state: 0
 --- !u!1001 &932565629
@@ -13360,7 +13379,7 @@ GameObject:
   - component: {fileID: 971304733}
   - component: {fileID: 971304735}
   - component: {fileID: 971304734}
-  m_Layer: 0
+  m_Layer: 2
   m_Name: Sphere (4)
   m_TagString: Untagged
   m_Icon: {fileID: 0}
@@ -13700,7 +13719,7 @@ GameObject:
   m_Component:
   - component: {fileID: 988829047}
   - component: {fileID: 988829048}
-  m_Layer: 0
+  m_Layer: 2
   m_Name: Remote (Manager)
   m_TagString: Untagged
   m_Icon: {fileID: 0}
@@ -13808,7 +13827,7 @@ GameObject:
   m_Component:
   - component: {fileID: 1012865804}
   - component: {fileID: 1012865803}
-  m_Layer: 0
+  m_Layer: 2
   m_Name: File Navigator
   m_TagString: Untagged
   m_Icon: {fileID: 0}
@@ -13868,7 +13887,7 @@ GameObject:
   - component: {fileID: 1017953415}
   - component: {fileID: 1017953417}
   - component: {fileID: 1017953416}
-  m_Layer: 0
+  m_Layer: 2
   m_Name: Sphere (2)
   m_TagString: Untagged
   m_Icon: {fileID: 0}
@@ -15102,7 +15121,7 @@ GameObject:
   m_Component:
   - component: {fileID: 1190223768}
   - component: {fileID: 1190223769}
-  m_Layer: 0
+  m_Layer: 2
   m_Name: Events (Manager)
   m_TagString: Untagged
   m_Icon: {fileID: 0}
@@ -15512,7 +15531,7 @@ MonoBehaviour:
   type: 1
   unitMeasurement: '%'
   normalScale: {x: 0, y: 0, z: 0}
-  focusScale: {x: 1, y: 1, z: 0}
+  focusScale: {x: 1.3, y: 1.3, z: 1.3}
   m_focus: 0
   state: 0
 --- !u!1001 &1197617810
@@ -15860,7 +15879,7 @@ GameObject:
   m_Component:
   - component: {fileID: 1197990839}
   - component: {fileID: 1197990840}
-  m_Layer: 0
+  m_Layer: 2
   m_Name: Grading (Manager)
   m_TagString: Untagged
   m_Icon: {fileID: 0}
@@ -16243,7 +16262,7 @@ GameObject:
   m_Component:
   - component: {fileID: 1209675536}
   - component: {fileID: 1209675537}
-  m_Layer: 0
+  m_Layer: 2
   m_Name: Tooltips (Manager)
   m_TagString: Untagged
   m_Icon: {fileID: 0}
@@ -16305,7 +16324,7 @@ MonoBehaviour:
   type: 1
   unitMeasurement: '%'
   normalScale: {x: 0, y: 0, z: 0}
-  focusScale: {x: 1, y: 1, z: 0}
+  focusScale: {x: 1.3, y: 1.3, z: 1.3}
   m_focus: 0
   state: 0
 --- !u!1 &1236800783
@@ -16419,7 +16438,7 @@ MonoBehaviour:
   type: 0
   unitMeasurement: 
   normalScale: {x: 0, y: 0, z: 0}
-  focusScale: {x: 1, y: 1, z: 0}
+  focusScale: {x: 1.3, y: 1.3, z: 1.3}
   m_focus: 0
   state: 0
 --- !u!1 &1250209902
@@ -16433,7 +16452,7 @@ GameObject:
   - component: {fileID: 1250209903}
   - component: {fileID: 1250209905}
   - component: {fileID: 1250209904}
-  m_Layer: 0
+  m_Layer: 2
   m_Name: Sphere (2)
   m_TagString: Untagged
   m_Icon: {fileID: 0}
@@ -16584,7 +16603,7 @@ GameObject:
   serializedVersion: 6
   m_Component:
   - component: {fileID: 1266717263}
-  m_Layer: 20
+  m_Layer: 12
   m_Name: terrain
   m_TagString: Untagged
   m_Icon: {fileID: 0}
@@ -16616,7 +16635,7 @@ GameObject:
   m_Component:
   - component: {fileID: 1271150531}
   - component: {fileID: 1271150532}
-  m_Layer: 0
+  m_Layer: 2
   m_Name: Sequence (Manager)
   m_TagString: Untagged
   m_Icon: {fileID: 0}
@@ -16760,7 +16779,7 @@ GameObject:
   m_Component:
   - component: {fileID: 1272537100}
   - component: {fileID: 1272537101}
-  m_Layer: 0
+  m_Layer: 2
   m_Name: Vines (Manager)
   m_TagString: Untagged
   m_Icon: {fileID: 0}
@@ -16993,7 +17012,7 @@ GameObject:
   serializedVersion: 6
   m_Component:
   - component: {fileID: 1307582774}
-  m_Layer: 0
+  m_Layer: 2
   m_Name: vertex (TR)
   m_TagString: Untagged
   m_Icon: {fileID: 0}
@@ -17318,7 +17337,7 @@ GameObject:
   m_Component:
   - component: {fileID: 1328403283}
   - component: {fileID: 1328403284}
-  m_Layer: 11
+  m_Layer: 22
   m_Name: Point Light
   m_TagString: Untagged
   m_Icon: {fileID: 0}
@@ -17410,7 +17429,7 @@ GameObject:
   m_Component:
   - component: {fileID: 1363847710}
   - component: {fileID: 1363847711}
-  m_Layer: 0
+  m_Layer: 2
   m_Name: Loading (Manager)
   m_TagString: Untagged
   m_Icon: {fileID: 0}
@@ -17466,7 +17485,6 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: 
   m_agent: 9
-  m_interactive: 1
   onFocused:
     m_PersistentCalls:
       m_Calls: []
@@ -17518,7 +17536,7 @@ GameObject:
   - component: {fileID: 1384232144}
   - component: {fileID: 1384232146}
   - component: {fileID: 1384232145}
-  m_Layer: 0
+  m_Layer: 2
   m_Name: Sphere
   m_TagString: Untagged
   m_Icon: {fileID: 0}
@@ -18234,7 +18252,7 @@ GameObject:
   m_Component:
   - component: {fileID: 1408375784}
   - component: {fileID: 1408375785}
-  m_Layer: 13
+  m_Layer: 0
   m_Name: Flash
   m_TagString: Untagged
   m_Icon: {fileID: 0}
@@ -18327,7 +18345,7 @@ GameObject:
   - component: {fileID: 1421906692}
   - component: {fileID: 1421906694}
   - component: {fileID: 1421906693}
-  m_Layer: 0
+  m_Layer: 2
   m_Name: Sphere (1)
   m_TagString: Untagged
   m_Icon: {fileID: 0}
@@ -18555,7 +18573,6 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: 
   m_agent: 8
-  m_interactive: 1
   onFocused:
     m_PersistentCalls:
       m_Calls: []
@@ -18579,7 +18596,7 @@ GameObject:
   serializedVersion: 6
   m_Component:
   - component: {fileID: 1434293601}
-  m_Layer: 0
+  m_Layer: 2
   m_Name: Core
   m_TagString: Untagged
   m_Icon: {fileID: 0}
@@ -19129,7 +19146,7 @@ MonoBehaviour:
   type: 0
   unitMeasurement: 
   normalScale: {x: 0, y: 0, z: 0}
-  focusScale: {x: 1, y: 1, z: 0}
+  focusScale: {x: 1.3, y: 1.3, z: 1.3}
   m_focus: 0
   state: 0
 --- !u!1001 &1458771547
@@ -19622,7 +19639,7 @@ GameObject:
   - component: {fileID: 1467851597}
   - component: {fileID: 1467851599}
   - component: {fileID: 1467851598}
-  m_Layer: 0
+  m_Layer: 2
   m_Name: Sphere (5)
   m_TagString: Untagged
   m_Icon: {fileID: 0}
@@ -20142,7 +20159,7 @@ GameObject:
   - component: {fileID: 1526540393}
   - component: {fileID: 1526540395}
   - component: {fileID: 1526540394}
-  m_Layer: 0
+  m_Layer: 2
   m_Name: Sphere (4)
   m_TagString: Untagged
   m_Icon: {fileID: 0}
@@ -20221,7 +20238,7 @@ GameObject:
   - component: {fileID: 1527179098}
   - component: {fileID: 1527179100}
   - component: {fileID: 1527179099}
-  m_Layer: 0
+  m_Layer: 2
   m_Name: Trajectory
   m_TagString: Untagged
   m_Icon: {fileID: 0}
@@ -20499,18 +20516,6 @@ MeshCollider:
   m_Convex: 0
   m_CookingOptions: 30
   m_Mesh: {fileID: 4300000, guid: 025f10692bbc17b4399faf94ff7fcc8b, type: 3}
---- !u!114 &1531332831
-MonoBehaviour:
-  m_ObjectHideFlags: 0
-  m_CorrespondingSourceObject: {fileID: 0}
-  m_PrefabInstance: {fileID: 0}
-  m_PrefabAsset: {fileID: 0}
-  m_GameObject: {fileID: 1531332829}
-  m_Enabled: 1
-  m_EditorHideFlags: 0
-  m_Script: {fileID: 11500000, guid: eef10f3e409894d559e3f2f7c07247c4, type: 3}
-  m_Name: 
-  m_EditorClassIdentifier: 
 --- !u!114 &1531332832
 MonoBehaviour:
   m_ObjectHideFlags: 0
@@ -20813,7 +20818,7 @@ GameObject:
   - component: {fileID: 1586535994}
   - component: {fileID: 1586535996}
   - component: {fileID: 1586535995}
-  m_Layer: 11
+  m_Layer: 22
   m_Name: death ps
   m_TagString: Untagged
   m_Icon: {fileID: 0}
@@ -25981,7 +25986,7 @@ GameObject:
   m_Component:
   - component: {fileID: 1657525263}
   - component: {fileID: 1657525264}
-  m_Layer: 0
+  m_Layer: 2
   m_Name: Summary (Manager)
   m_TagString: Untagged
   m_Icon: {fileID: 0}
@@ -26031,7 +26036,7 @@ GameObject:
   serializedVersion: 6
   m_Component:
   - component: {fileID: 1677838454}
-  m_Layer: 13
+  m_Layer: 23
   m_Name: anchor
   m_TagString: Untagged
   m_Icon: {fileID: 0}
@@ -26121,7 +26126,7 @@ GameObject:
   serializedVersion: 6
   m_Component:
   - component: {fileID: 1735488354}
-  m_Layer: 0
+  m_Layer: 2
   m_Name: Camera Look At
   m_TagString: Untagged
   m_Icon: {fileID: 0}
@@ -26255,7 +26260,7 @@ MonoBehaviour:
   type: 0
   unitMeasurement: 
   normalScale: {x: 0, y: 0, z: 0}
-  focusScale: {x: 1, y: 1, z: 0}
+  focusScale: {x: 1.3, y: 1.3, z: 1.3}
   m_focus: 0
   state: 0
 --- !u!1 &1763608295
@@ -27494,7 +27499,7 @@ GameObject:
   - component: {fileID: 1855379862}
   - component: {fileID: 1855379864}
   - component: {fileID: 1855379863}
-  m_Layer: 0
+  m_Layer: 2
   m_Name: Sphere (6)
   m_TagString: Untagged
   m_Icon: {fileID: 0}
@@ -27703,7 +27708,7 @@ GameObject:
   - component: {fileID: 1882485459}
   - component: {fileID: 1882485461}
   - component: {fileID: 1882485460}
-  m_Layer: 0
+  m_Layer: 2
   m_Name: Sphere (3)
   m_TagString: Untagged
   m_Icon: {fileID: 0}
@@ -28026,7 +28031,7 @@ MonoBehaviour:
   m_outlineColor:
     serializedVersion: 2
     rgba: 4278190080
-  m_fontSize: 25.15
+  m_fontSize: 25.2
   m_fontSizeBase: 36
   m_fontWeight: 400
   m_enableAutoSizing: 1
@@ -28206,7 +28211,6 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: 
   m_agent: 9
-  m_interactive: 1
   onFocused:
     m_PersistentCalls:
       m_Calls: []
@@ -28257,7 +28261,7 @@ GameObject:
   m_Component:
   - component: {fileID: 1907150961}
   - component: {fileID: 1907150962}
-  m_Layer: 0
+  m_Layer: 2
   m_Name: Tutorial (Manager)
   m_TagString: Untagged
   m_Icon: {fileID: 0}
@@ -28313,7 +28317,7 @@ MonoBehaviour:
   type: 2
   unitMeasurement: px/s
   normalScale: {x: 0, y: 0, z: 0}
-  focusScale: {x: 1, y: 1, z: 0}
+  focusScale: {x: 1.3, y: 1.3, z: 1.3}
   m_focus: 0
   state: 0
 --- !u!1001 &1922122645
@@ -28811,7 +28815,7 @@ RectTransform:
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
   m_AnchorMin: {x: 0, y: 0}
   m_AnchorMax: {x: 1, y: 1}
-  m_AnchoredPosition: {x: 4.140381, y: 161.69}
+  m_AnchoredPosition: {x: 4.140381, y: 161.68982}
   m_SizeDelta: {x: -568.28076, y: -524}
   m_Pivot: {x: 0.5, y: 0.000000031180946}
 --- !u!114 &1923385170
@@ -29810,7 +29814,7 @@ GameObject:
   - component: {fileID: 1969311503}
   - component: {fileID: 1969311502}
   - component: {fileID: 1969311504}
-  m_Layer: 0
+  m_Layer: 2
   m_Name: Focusing
   m_TagString: Untagged
   m_Icon: {fileID: 0}
@@ -30148,7 +30152,7 @@ GameObject:
   - component: {fileID: 1970994501}
   - component: {fileID: 1970994503}
   - component: {fileID: 1970994502}
-  m_Layer: 13
+  m_Layer: 0
   m_Name: Particle System
   m_TagString: Untagged
   m_Icon: {fileID: 0}
@@ -34961,7 +34965,7 @@ GameObject:
   - component: {fileID: 1977054026}
   - component: {fileID: 1977054028}
   - component: {fileID: 1977054027}
-  m_Layer: 0
+  m_Layer: 2
   m_Name: Sphere (1)
   m_TagString: Untagged
   m_Icon: {fileID: 0}
@@ -35122,7 +35126,7 @@ GameObject:
   serializedVersion: 6
   m_Component:
   - component: {fileID: 1993439510}
-  m_Layer: 0
+  m_Layer: 2
   m_Name: vertex (BR)
   m_TagString: Untagged
   m_Icon: {fileID: 0}
@@ -35253,7 +35257,7 @@ GameObject:
   - component: {fileID: 2029369775}
   - component: {fileID: 2029369777}
   - component: {fileID: 2029369776}
-  m_Layer: 0
+  m_Layer: 2
   m_Name: Sphere (6)
   m_TagString: Untagged
   m_Icon: {fileID: 0}
@@ -35754,7 +35758,7 @@ MonoBehaviour:
   type: 0
   unitMeasurement: 
   normalScale: {x: 0, y: 0, z: 0}
-  focusScale: {x: 1, y: 1, z: 0}
+  focusScale: {x: 1.3, y: 1.3, z: 1.3}
   m_focus: 0
   state: 0
 --- !u!1 &2032687483
@@ -35804,7 +35808,7 @@ GameObject:
   serializedVersion: 6
   m_Component:
   - component: {fileID: 2036616000}
-  m_Layer: 11
+  m_Layer: 12
   m_Name: vine spawn
   m_TagString: Untagged
   m_Icon: {fileID: 0}
@@ -36625,7 +36629,7 @@ GameObject:
   - component: {fileID: 2063379114}
   - component: {fileID: 2063379116}
   - component: {fileID: 2063379115}
-  m_Layer: 0
+  m_Layer: 2
   m_Name: Sphere (2)
   m_TagString: Untagged
   m_Icon: {fileID: 0}
@@ -36702,7 +36706,7 @@ GameObject:
   serializedVersion: 6
   m_Component:
   - component: {fileID: 2065585765}
-  m_Layer: 12
+  m_Layer: 2
   m_Name: anchor (center)
   m_TagString: Untagged
   m_Icon: {fileID: 0}
@@ -36749,6 +36753,11 @@ PrefabInstance:
         type: 3}
       propertyPath: m_Name
       value: sector (2)
+      objectReference: {fileID: 0}
+    - target: {fileID: 9143658633952325509, guid: b201a0ba730e70a4ea50f8a5f4f2e4f2,
+        type: 3}
+      propertyPath: m_Layer
+      value: 2
       objectReference: {fileID: 0}
     - target: {fileID: 9143658633952325510, guid: b201a0ba730e70a4ea50f8a5f4f2e4f2,
         type: 3}
@@ -38083,7 +38092,7 @@ GameObject:
   serializedVersion: 6
   m_Component:
   - component: {fileID: 2129256867}
-  m_Layer: 11
+  m_Layer: 22
   m_Name: anchor
   m_TagString: Untagged
   m_Icon: {fileID: 0}
@@ -38145,7 +38154,7 @@ GameObject:
   - component: {fileID: 2140352767}
   - component: {fileID: 2140352769}
   - component: {fileID: 2140352768}
-  m_Layer: 0
+  m_Layer: 2
   m_Name: Sphere
   m_TagString: Untagged
   m_Icon: {fileID: 0}
@@ -38386,7 +38395,42 @@ PrefabInstance:
     - target: {fileID: 2240893488076964279, guid: cb5f8373690aa5e429aab5fb71c63e92,
         type: 3}
       propertyPath: m_Layer
-      value: 12
+      value: 25
+      objectReference: {fileID: 0}
+    - target: {fileID: 5406430880233448330, guid: cb5f8373690aa5e429aab5fb71c63e92,
+        type: 3}
+      propertyPath: m_Layer
+      value: 25
+      objectReference: {fileID: 0}
+    - target: {fileID: 5406430880528334491, guid: cb5f8373690aa5e429aab5fb71c63e92,
+        type: 3}
+      propertyPath: m_Layer
+      value: 25
+      objectReference: {fileID: 0}
+    - target: {fileID: 5406430880582415105, guid: cb5f8373690aa5e429aab5fb71c63e92,
+        type: 3}
+      propertyPath: m_Layer
+      value: 25
+      objectReference: {fileID: 0}
+    - target: {fileID: 5406430881093183245, guid: cb5f8373690aa5e429aab5fb71c63e92,
+        type: 3}
+      propertyPath: m_Layer
+      value: 25
+      objectReference: {fileID: 0}
+    - target: {fileID: 5406430881111594106, guid: cb5f8373690aa5e429aab5fb71c63e92,
+        type: 3}
+      propertyPath: m_Layer
+      value: 25
+      objectReference: {fileID: 0}
+    - target: {fileID: 5406430881196885304, guid: cb5f8373690aa5e429aab5fb71c63e92,
+        type: 3}
+      propertyPath: m_Layer
+      value: 25
+      objectReference: {fileID: 0}
+    - target: {fileID: 5622067750285388390, guid: cb5f8373690aa5e429aab5fb71c63e92,
+        type: 3}
+      propertyPath: m_Layer
+      value: 25
       objectReference: {fileID: 0}
     - target: {fileID: 6957970616294988437, guid: cb5f8373690aa5e429aab5fb71c63e92,
         type: 3}
@@ -38698,37 +38742,45 @@ PrefabInstance:
   m_Modification:
     m_TransformParent: {fileID: 443611955}
     m_Modifications:
+    - target: {fileID: 1854825634, guid: bbe889dad4ed0dd48a0243ced6070a70, type: 3}
+      propertyPath: m_Layer
+      value: 23
+      objectReference: {fileID: 0}
     - target: {fileID: 1854825635, guid: bbe889dad4ed0dd48a0243ced6070a70, type: 3}
       propertyPath: m_LocalRotation.w
-      value: 0.774646
+      value: 0.7753395
       objectReference: {fileID: 0}
     - target: {fileID: 1854825635, guid: bbe889dad4ed0dd48a0243ced6070a70, type: 3}
       propertyPath: m_LocalRotation.x
-      value: -0.0953135
+      value: -0.2430324
       objectReference: {fileID: 0}
     - target: {fileID: 1854825635, guid: bbe889dad4ed0dd48a0243ced6070a70, type: 3}
       propertyPath: m_LocalRotation.y
-      value: 0.6122631
+      value: -0.57960695
       objectReference: {fileID: 0}
     - target: {fileID: 1854825635, guid: bbe889dad4ed0dd48a0243ced6070a70, type: 3}
       propertyPath: m_LocalRotation.z
-      value: -0.12638433
+      value: -0.061966576
+      objectReference: {fileID: 0}
+    - target: {fileID: 1981574396, guid: bbe889dad4ed0dd48a0243ced6070a70, type: 3}
+      propertyPath: m_Layer
+      value: 23
       objectReference: {fileID: 0}
     - target: {fileID: 1981574397, guid: bbe889dad4ed0dd48a0243ced6070a70, type: 3}
       propertyPath: m_LocalRotation.w
-      value: 0.7955508
+      value: 0.7884141
       objectReference: {fileID: 0}
     - target: {fileID: 1981574397, guid: bbe889dad4ed0dd48a0243ced6070a70, type: 3}
       propertyPath: m_LocalRotation.x
-      value: -0.07001968
+      value: -0.22646262
       objectReference: {fileID: 0}
     - target: {fileID: 1981574397, guid: bbe889dad4ed0dd48a0243ced6070a70, type: 3}
       propertyPath: m_LocalRotation.y
-      value: 0.582722
+      value: -0.56965804
       objectReference: {fileID: 0}
     - target: {fileID: 1981574397, guid: bbe889dad4ed0dd48a0243ced6070a70, type: 3}
       propertyPath: m_LocalRotation.z
-      value: -0.15043633
+      value: -0.051065415
       objectReference: {fileID: 0}
     - target: {fileID: 1995632988, guid: bbe889dad4ed0dd48a0243ced6070a70, type: 3}
       propertyPath: overrideCamera
@@ -38809,8 +38861,14 @@ PrefabInstance:
       propertyPath: m_Name
       value: shadetreesgrow
       objectReference: {fileID: 0}
+    - target: {fileID: 2909332177878926027, guid: bbe889dad4ed0dd48a0243ced6070a70,
+        type: 3}
+      propertyPath: m_Layer
+      value: 23
+      objectReference: {fileID: 0}
     m_RemovedComponents:
     - {fileID: 1995632988, guid: bbe889dad4ed0dd48a0243ced6070a70, type: 3}
+    - {fileID: 1995632990, guid: bbe889dad4ed0dd48a0243ced6070a70, type: 3}
   m_SourcePrefab: {fileID: 100100000, guid: bbe889dad4ed0dd48a0243ced6070a70, type: 3}
 --- !u!1001 &3447281704964185446
 PrefabInstance:
@@ -38823,6 +38881,11 @@ PrefabInstance:
         type: 3}
       propertyPath: m_Name
       value: nest1
+      objectReference: {fileID: 0}
+    - target: {fileID: 3447281704321886848, guid: e4ffaf7dd570b28469327a4909aedfd2,
+        type: 3}
+      propertyPath: m_Layer
+      value: 22
       objectReference: {fileID: 0}
     - target: {fileID: 3447281704321886857, guid: e4ffaf7dd570b28469327a4909aedfd2,
         type: 3}
@@ -38976,6 +39039,21 @@ PrefabInstance:
       propertyPath: onHit.m_PersistentCalls.m_Calls.Array.data[0].m_Target
       value: 
       objectReference: {fileID: 534669908}
+    - target: {fileID: 3447281704549602386, guid: e4ffaf7dd570b28469327a4909aedfd2,
+        type: 3}
+      propertyPath: m_Layer
+      value: 22
+      objectReference: {fileID: 0}
+    - target: {fileID: 3447281705127446571, guid: e4ffaf7dd570b28469327a4909aedfd2,
+        type: 3}
+      propertyPath: m_Layer
+      value: 22
+      objectReference: {fileID: 0}
+    - target: {fileID: 3447281705891665375, guid: e4ffaf7dd570b28469327a4909aedfd2,
+        type: 3}
+      propertyPath: m_Layer
+      value: 22
+      objectReference: {fileID: 0}
     m_RemovedComponents:
     - {fileID: 3447281704321886857, guid: e4ffaf7dd570b28469327a4909aedfd2, type: 3}
   m_SourcePrefab: {fileID: 100100000, guid: e4ffaf7dd570b28469327a4909aedfd2, type: 3}
@@ -39114,6 +39192,11 @@ PrefabInstance:
         type: 3}
       propertyPath: m_Name
       value: sector
+      objectReference: {fileID: 0}
+    - target: {fileID: 9143658633952325509, guid: b201a0ba730e70a4ea50f8a5f4f2e4f2,
+        type: 3}
+      propertyPath: m_Layer
+      value: 2
       objectReference: {fileID: 0}
     - target: {fileID: 9143658633952325510, guid: b201a0ba730e70a4ea50f8a5f4f2e4f2,
         type: 3}

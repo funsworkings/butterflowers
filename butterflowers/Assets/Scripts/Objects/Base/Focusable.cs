@@ -103,10 +103,10 @@ namespace Objects.Base
             base.onHover(point, normal);
         }
 
-        protected override void onUnhover(Vector3 point, Vector3 normal) {
+        protected override void onUnhover() {
             queued = false;
 
-            base.onUnhover(point, normal);
+            base.onUnhover();
         }
 
         #endregion

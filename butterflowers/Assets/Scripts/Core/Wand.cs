@@ -16,7 +16,7 @@ using Cursor = uwu.Snippets.Cursor;
 
 namespace Core
 {
-    public class Wand : Interacter, IReactToSunCycle
+    public class Wand : Interacter<Entity>, IReactToSunCycle
     {
         #region Internal
 
@@ -56,9 +56,15 @@ namespace Core
         [SerializeField] LayerMask dragInteractionMask;
         [SerializeField] float brushRadius = 12f;
         [SerializeField] Beacon beacon = null;
-        [SerializeField] Entity target = null;
+        [SerializeField] Collider target = null;
         [SerializeField] float defaultPointDistance = 10f;
         public bool global = true;
+
+        [Header("Layers")] 
+            [SerializeField] LayerMask additionMask;
+            [SerializeField] LayerMask flowerMask;
+            [SerializeField] LayerMask plantMask;
+            [SerializeField] LayerMask destroyMask;
 
         [Header("UI")] 
         [SerializeField] Tooltip info;
@@ -70,17 +76,6 @@ namespace Core
         [SerializeField] Image debugCircle;
 
         #region Accessors
-
-        protected override Vector3 origin => cursor.position;
-
-        protected override LayerMask mask
-        {
-            get
-            {
-                if (_interaction == Interaction.Drag) return dragInteractionMask;
-                return base.mask;
-            }
-        }
 
         public Vector3 position3d {
             get{
@@ -199,7 +194,6 @@ namespace Core
         protected override void Update()
         {
             m_spells = infocus && sun.active;
-            _interaction = (beacon == null) ? Interaction.Normal : Interaction.Drag;
 
             if (spells) 
             {
@@ -228,8 +222,21 @@ namespace Core
         #endregion
 
         #region Interacter
+        
+        protected override Vector3 origin => cursor.position;
 
-        protected override void HandleInteractions(Dictionary<uwu.Gameplay.Interactable, RaycastHit> _frameInteractions)
+        protected override LayerMask mask
+        {
+            get
+            {
+                if (_interaction == Interaction.Drag) 
+                    return dragInteractionMask;
+                
+                return base.mask;
+            }
+        }
+
+        protected override void HandleInteractions(Dictionary<IInteractable, RaycastHit> _frameInteractions)
         {
             if (spells) 
             {
@@ -247,47 +254,24 @@ namespace Core
             UpdateTooltip(entities);
         }
 
-        protected override void FilterInteractions(ref Dictionary<uwu.Gameplay.Interactable, RaycastHit> _frameInteractions)
+        protected IEnumerable<E> SelectInteractables<E>(Dictionary<IInteractable, RaycastHit> _frameInteractions) where E:MonoBehaviour
         {
-            ExcludeDistantInteractables<Beacon>(ref _frameInteractions);
-            ExcludeDistantInteractables<Vine>(ref _frameInteractions);
+            var entities = _frameInteractions.Select(_interaction => _interaction.Value.collider.GetComponent<E>())
+                .Where(_e => _e != null);
+
+            return entities;
         }
 
-        void ExcludeDistantInteractables<E>(ref Dictionary<uwu.Gameplay.Interactable, RaycastHit> _frameInteractions) where E:MonoBehaviour
+        protected override void onGrabInteractable(IInteractable interactable, RaycastHit hit)
         {
-            var interactions_temp = _frameInteractions.Keys;
-        
-            IEnumerable<uwu.Gameplay.Interactable> typed_int = FilterInteractablesByType<E>(interactions_temp);
-            uwu.Gameplay.Interactable closest_int = FindClosestInteractable(typed_int.ToList());
-
-            foreach (uwu.Gameplay.Interactable i in typed_int) 
-            {
-                if (i != closest_int) _frameInteractions.Remove(i); // Remove distant type item
-            }
-        }
-
-        protected IEnumerable<E> SelectInteractables<E>(Dictionary<uwu.Gameplay.Interactable, RaycastHit> _frameInteractions) where E:MonoBehaviour
-        {
-            return _frameInteractions.Keys.Select(e => e.GetComponent<E>()).Where(_e => _e != null);
-        }
-
-        protected override void onGrabInteractable(uwu.Gameplay.Interactable interactable)
-        {
-            var beacon = interactable.GetComponent<Beacon>();
+            var beacon = hit.collider.GetComponent<Beacon>();
             if (beacon != null && this.beacon == null) 
             {
                 this.beacon = beacon;
+                _interaction = Interaction.Drag;
+                
                 beacon.Grab();
             }
-        }
-
-        protected override void onReleaseInteractable(uwu.Gameplay.Interactable interactable)
-        {
-            return;
-            if (beacon == null) return;
-        
-            var entity = interactable.GetComponent<Entity>();
-            DropBeacon(entity);
         }
 
         #endregion
@@ -361,8 +345,7 @@ namespace Core
                     {
                         point = raycastHit.point;
                         pointDistance = raycastHit.distance;
-
-                        target = raycastHit.collider.GetComponent<Entity>();
+                        target = raycastHit.collider;
                     }
                     else {
                         point = camera.ScreenToWorldPoint(new Vector3(origin.x, origin.y, pointDistance));
@@ -374,7 +357,7 @@ namespace Core
                 else 
                 {
                     pointDistance = defaultPointDistance;
-                    if(up) DropBeacon(target);
+                    if(up) DropBeacon();
                 }
             }
             else {
@@ -382,20 +365,21 @@ namespace Core
             }
         }
 
-        void DropBeacon(Entity target = null)
+        void DropBeacon()
         {
             Vector3 origin = raycastHit.point;
-        
-            Debug.LogWarning((target != null)?target.name:"NULL");
 
-            if (target != null) {
-                if (target is Terrain)
+            if (target != null) 
+            {
+                var targetLayer = target.gameObject.layer;
+
+                if (plantMask == (plantMask | (1 << targetLayer)))
                     beacon.Plant(origin);
-                else if (target is Nest)
+                else if (additionMask == (additionMask | (1 << targetLayer)))
                     beacon.AddToNest();
-                else if (target is Tree)
+                else if (flowerMask == (flowerMask | (1 << targetLayer)))
                     beacon.Flower(origin);
-                else if (target is Star)
+                else if (destroyMask == (destroyMask | (1 << targetLayer)))
                     beacon.Destroy();
                 else
                     beacon.Release();
@@ -405,6 +389,7 @@ namespace Core
         
             beacon = null;
             target = null;
+            _interaction = Interaction.Normal;
         }
 
         // NEST
