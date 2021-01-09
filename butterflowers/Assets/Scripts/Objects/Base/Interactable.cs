@@ -1,122 +1,52 @@
 ﻿using UnityEngine;
-using NativeInteractable = uwu.Gameplay.Interactable;
+using uwu.Gameplay;
 
 namespace Objects.Base
 {
-    [RequireComponent(typeof(NativeInteractable))]
-    public class Interactable : Entity
+    public class Interactable : Entity, IInteractable
     {
-
-        // Properties
-
-        NativeInteractable m_interactable;
-
-        // Attributes
-
-        [Header("Interaction")]
-        [SerializeField] bool m_interactive = true;
-        bool hovering = false;
-    
         
-        #region Accessors
-
-        public bool interactive 
-        {
-            get
-            {
-                return m_interactive && Sun.active;
-            }
-            set
-            {
-                m_interactive = value;
-                m_interactable.enabled = value;
-            }
-        }
-
-        public NativeInteractable interactable
-        {
-            get { return m_interactable; }
-            set
-            {
-                if (m_interactable != value) 
-                {
-                    UnsubscribeFromInteractableEvents();
-                    m_interactable = value;
-                    SubscribeToInteractableEvents();
-                }
-            }
-        }
-
-        #endregion
-
-        #region Monobehaviour callbacks
-
-        protected virtual void Awake()
-        {
-            m_interactable = GetComponent<NativeInteractable>();
-            if (m_interactable == null)
-                m_interactable = gameObject.AddComponent<NativeInteractable>();
-        }
-
-        // Start is called before the first frame update
-        protected override void OnStart()
-        {
-            base.OnStart();
-
-            SubscribeToInteractableEvents();
-
-            interactive = m_interactive; // Set interactive behaviours
-        }
-
-        protected override void Update()
-        {
-            m_interactable.enabled = interactive;
-            base.Update();
-        }
-
-        protected override void OnDestroyed()
-        {
-            base.OnDestroyed();
+        protected virtual void Awake(){}
         
-            UnsubscribeFromInteractableEvents();
-        }
-
-        #endregion
-    
-        #region Interactable event subscriptions
-
-        void SubscribeToInteractableEvents()
+        #region IInteractable impl
+        
+        public void Hover(RaycastHit hit)
         {
-            interactable.onHover += onHover;
-            interactable.onUnhover += onUnhover;
-
-            interactable.onGrab += onGrab;
-            interactable.onContinue += onContinue;
-            interactable.onRelease += onRelease;
+            onHover(hit.point, hit.normal);
         }
 
-        void UnsubscribeFromInteractableEvents()
+        public void Unhover()
         {
-            interactable.onHover -= onHover;
-            interactable.onUnhover -= onUnhover;
-
-            interactable.onGrab -= onGrab;
-            interactable.onContinue -= onContinue;
-            interactable.onRelease -= onRelease;
+            onUnhover();
         }
-    
+
+        public void Grab(RaycastHit hit)
+        {
+            onGrab(hit.point, hit.normal);
+        }
+
+        public void Continue(RaycastHit hit)
+        {
+            onContinue(hit.point, hit.normal);
+        }
+
+        public void Release(RaycastHit hit)
+        {
+            onRelease(hit.point, hit.normal);
+        }
+        
         #endregion
 
         #region Interactable callbacks
 
         protected virtual void onHover(Vector3 point, Vector3 normal)
         {
-            hovering = true;
+
         }
 
-        protected virtual void onUnhover(Vector3 point, Vector3 normal)
+        protected virtual void onUnhover()
         {
-            hovering = false;
+
         }
 
         protected virtual void onGrab(Vector3 point, Vector3 normal)

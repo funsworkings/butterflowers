@@ -182,11 +182,11 @@ public class Nest : Focusable, IReactToSunCycle, ISaveable, IFlammable, ITooltip
         base.onHover(origin, normal);
     }
 
-    protected override void onUnhover(Vector3 origin, Vector3 normal)
+    protected override void onUnhover()
     {
         queue = false;
 
-        base.onUnhover(origin, normal);
+        base.onUnhover();
     }
 
     protected override void onGrab(Vector3 origin, Vector3 direction)

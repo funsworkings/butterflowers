@@ -221,12 +221,12 @@ public class Beacon: Interactable, IFlammable, ITooltip, IFileContainer {
         base.onHover(point, normal);
     }
 
-    protected override void onUnhover(Vector3 point, Vector3 normal)
+    protected override void onUnhover()
     {
         if (!Active) return;
         hovered = false;
 
-        base.onUnhover(point, normal);
+        base.onUnhover();
     }
 
 	#endregion
@@ -391,7 +391,9 @@ public class Beacon: Interactable, IFlammable, ITooltip, IFileContainer {
     public void Grab()
     {
         if (state != Locale.Terrain) return;
+        
         state = Locale.Drag;
+        ToggleCapabilities(false);
     }
 
     public void Release()
@@ -399,6 +401,7 @@ public class Beacon: Interactable, IFlammable, ITooltip, IFileContainer {
         if (state != Locale.Drag) return;
         state = Locale.Terrain;
         
+        ToggleCapabilities(true);
         ReleaseTransition();
     }
 
@@ -441,7 +444,6 @@ public class Beacon: Interactable, IFlammable, ITooltip, IFileContainer {
 
     void ToggleCapabilities(bool capable)
     {
-        interactive = capable;
         collider.enabled = capable;
     }
     

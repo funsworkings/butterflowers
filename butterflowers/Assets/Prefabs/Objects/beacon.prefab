@@ -11,7 +11,7 @@ GameObject:
   - component: {fileID: 123617472}
   - component: {fileID: 123617474}
   - component: {fileID: 123617473}
-  m_Layer: 21
+  m_Layer: 12
   m_Name: trail ps
   m_TagString: Untagged
   m_Icon: {fileID: 0}
@@ -4765,7 +4765,7 @@ GameObject:
   - component: {fileID: 1338636721}
   - component: {fileID: 1338636723}
   - component: {fileID: 1338636722}
-  m_Layer: 21
+  m_Layer: 12
   m_Name: appear ps
   m_TagString: Untagged
   m_Icon: {fileID: 0}
@@ -9537,7 +9537,7 @@ GameObject:
   - component: {fileID: 5373311980257788958}
   - component: {fileID: 7121029688608262579}
   - component: {fileID: 2657779654409832757}
-  m_Layer: 21
+  m_Layer: 12
   m_Name: planting ps
   m_TagString: Untagged
   m_Icon: {fileID: 0}
@@ -14358,9 +14358,8 @@ GameObject:
   - component: {fileID: 1270796099338416106}
   - component: {fileID: 1270796099338416105}
   - component: {fileID: 1270796099338416104}
-  - component: {fileID: 3173907804839275053}
   - component: {fileID: 91193539}
-  m_Layer: 21
+  m_Layer: 12
   m_Name: beacon
   m_TagString: Untagged
   m_Icon: {fileID: 0}
@@ -14403,15 +14402,10 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: 
   m_agent: 0
-  m_interactive: 1
   preset: {fileID: 11400000, guid: 45ffdf5e02efb4848942aaeb5d029f6e, type: 2}
   deathPS: {fileID: 2567470850076773811}
-  addPS: {fileID: 123617474}
-  appearPS: {fileID: 1338636723}
   trails: {fileID: 91193539}
   pr_impactPS: {fileID: 5683122868263647427, guid: ada8750f99e3ae240a0cdbd90f03ffe1,
-    type: 3}
-  pr_shinePS: {fileID: 1311559724632354285, guid: 3ed5efbaf97b2a94989b8edf335c7b76,
     type: 3}
   pr_flower: {fileID: 8040875481186664252, guid: f20db615abd81b74d9d5880fd72a699e,
     type: 3}
@@ -14564,18 +14558,6 @@ BoxCollider:
   serializedVersion: 2
   m_Size: {x: 0.33, y: 0.67, z: 0.33}
   m_Center: {x: 0, y: 0, z: 0}
---- !u!114 &3173907804839275053
-MonoBehaviour:
-  m_ObjectHideFlags: 0
-  m_CorrespondingSourceObject: {fileID: 0}
-  m_PrefabInstance: {fileID: 0}
-  m_PrefabAsset: {fileID: 0}
-  m_GameObject: {fileID: 1270796099338416119}
-  m_Enabled: 1
-  m_EditorHideFlags: 0
-  m_Script: {fileID: 11500000, guid: eef10f3e409894d559e3f2f7c07247c4, type: 3}
-  m_Name: 
-  m_EditorClassIdentifier: 
 --- !u!96 &91193539
 TrailRenderer:
   serializedVersion: 2
@@ -14685,7 +14667,7 @@ GameObject:
   - component: {fileID: 1270796099906857360}
   - component: {fileID: 1270796099906857375}
   - component: {fileID: 1270796099906857374}
-  m_Layer: 21
+  m_Layer: 12
   m_Name: panel
   m_TagString: Untagged
   m_Icon: {fileID: 0}
@@ -14778,7 +14760,7 @@ GameObject:
   - component: {fileID: 3904152583573022314}
   - component: {fileID: 2591633957252031691}
   - component: {fileID: 2666852261318564540}
-  m_Layer: 21
+  m_Layer: 12
   m_Name: aura
   m_TagString: Untagged
   m_Icon: {fileID: 0}
@@ -19568,7 +19550,7 @@ GameObject:
   - component: {fileID: 2710361725971392831}
   - component: {fileID: 2710361725971392789}
   - component: {fileID: 2710361725971392797}
-  m_Layer: 21
+  m_Layer: 12
   m_Name: impact (aura)
   m_TagString: Untagged
   m_Icon: {fileID: 0}
@@ -24380,7 +24362,7 @@ GameObject:
   - component: {fileID: 9177925199029917313}
   - component: {fileID: 3679141250253871619}
   - component: {fileID: 7519155530151778121}
-  m_Layer: 21
+  m_Layer: 12
   m_Name: reveal ps
   m_TagString: Untagged
   m_Icon: {fileID: 0}
@@ -29209,7 +29191,7 @@ GameObject:
   m_Component:
   - component: {fileID: 3108522768499610545}
   - component: {fileID: 5963815290329920426}
-  m_Layer: 21
+  m_Layer: 12
   m_Name: Point Light
   m_TagString: Untagged
   m_Icon: {fileID: 0}
@@ -29302,7 +29284,7 @@ GameObject:
   - component: {fileID: 3817574490397779939}
   - component: {fileID: 3084561479943932490}
   - component: {fileID: 2453548540509390200}
-  m_Layer: 21
+  m_Layer: 12
   m_Name: discovery ps
   m_TagString: Untagged
   m_Icon: {fileID: 0}
@@ -34074,7 +34056,7 @@ GameObject:
   - component: {fileID: 4032502983988036841}
   - component: {fileID: 2609872408184791929}
   - component: {fileID: 2567470850076773811}
-  m_Layer: 21
+  m_Layer: 12
   m_Name: death ps
   m_TagString: Untagged
   m_Icon: {fileID: 0}
@@ -38889,7 +38871,7 @@ PrefabInstance:
       objectReference: {fileID: 0}
     - target: {fileID: 100000, guid: 5a103a23ef73c4694b5508e034cf2d92, type: 3}
       propertyPath: m_Layer
-      value: 21
+      value: 12
       objectReference: {fileID: 0}
     - target: {fileID: 400000, guid: 5a103a23ef73c4694b5508e034cf2d92, type: 3}
       propertyPath: m_RootOrder
