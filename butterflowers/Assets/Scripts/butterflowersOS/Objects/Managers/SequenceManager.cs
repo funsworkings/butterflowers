@@ -12,6 +12,7 @@ using TMPro;
 using UnityEngine;
 using uwu;
 using uwu.Dialogue;
+using uwu.Extensions;
 using uwu.UI.Behaviors.Visibility;
 
 namespace butterflowersOS.Objects.Managers
@@ -22,8 +23,10 @@ namespace butterflowersOS.Objects.Managers
 
 		Sun Sun;
 		GameDataSaveSystem _Save;
+		
 		[SerializeField] Cage Cage;
 		[SerializeField] Focusing Focus;
+		[SerializeField] ButterflowerManager Butterflowers;
 		
 		// Properties
 
@@ -37,7 +40,7 @@ namespace butterflowersOS.Objects.Managers
 
 		[SerializeField] int index = -1;
 		[SerializeField] Frame[] frames = new Frame[]{};
-		[SerializeField] bool inprogress = false;
+		[SerializeField] bool inprogress = false, read = false;
 		
 		// Attributes
 
@@ -53,6 +56,8 @@ namespace butterflowersOS.Objects.Managers
 		#region Accessors
 
 		public bool Pause => inprogress;
+		public bool Read => read;
+		
 		public bool Complete => (Cage.Completed && (index + 1) < frames.Length);
 		
 		#endregion
@@ -106,7 +111,7 @@ namespace butterflowersOS.Objects.Managers
 		
 		#endregion
 
-		public void Cycle()
+		public bool Cycle()
 		{
 			int t_index = (index + 1);
 			
@@ -114,7 +119,12 @@ namespace butterflowersOS.Objects.Managers
 			{
 				inprogress = true;
 				StartCoroutine(PlayScene(t_index)); // Play scene
+
+				return true;
 			}
+
+			inprogress = read = false;
+			return false;
 		}
 		
 		#region Scenes
@@ -208,23 +218,25 @@ namespace butterflowersOS.Objects.Managers
 			frameOpacity.Hide();
 
 			sceneCaption.Push(_scene.message);
-
 			if (_scene.audio != null) // Play scene audio!
 			{
 				sceneAudio.clip = _scene.audio;
 				sceneAudio.Play();
 			}
-
-			while (sceneCaption.inprogress || sceneAudio.isPlaying) yield return null;
-			if(didFocusOnMesh) Focus.LoseFocus();
-
-			yield return new WaitForSecondsRealtime(closeDelay);
 			
-			inprogress = false;
+			while (sceneCaption.inprogress || sceneAudio.isPlaying) 
+			{
+				read = true;
+				inprogress = false;
+				
+				yield return null;
+			}
+
+			inprogress = read = false;
 			opacity.Hide();
 			++index;
 		}
-		
+
 		#region Ops
 
 		bool SmoothLight(ref float lt, bool _in)

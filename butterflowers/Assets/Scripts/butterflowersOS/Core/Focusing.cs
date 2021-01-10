@@ -145,7 +145,8 @@ namespace butterflowersOS.Core
         {
             if (focus == this.m_focus) return;
 
-            if (focus.dispose) {
+            if (focus.dispose) 
+            {
                 Dispose();
 
                 this.m_focus = focus;

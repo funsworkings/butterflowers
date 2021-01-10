@@ -878,7 +878,7 @@ Transform:
   m_LocalScale: {x: 1, y: 1, z: 1}
   m_Children: []
   m_Father: {fileID: 792321115}
-  m_RootOrder: 5
+  m_RootOrder: 6
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
 --- !u!1001 &74781605
 PrefabInstance:
@@ -1931,7 +1931,7 @@ Transform:
   - {fileID: 429509113}
   - {fileID: 598854285}
   m_Father: {fileID: 792321115}
-  m_RootOrder: 7
+  m_RootOrder: 8
   m_LocalEulerAnglesHint: {x: -0.78900003, y: 0, z: 0}
 --- !u!114 &131292716
 MonoBehaviour:
@@ -4001,6 +4001,8 @@ MonoBehaviour:
   nest: {fileID: 735639530}
   quilt: {fileID: 711978464}
   canvas: {fileID: 62689479}
+  variableSpawnRoot: {fileID: 1397711246}
+  currentRoot: {fileID: 0}
   op: -1
   _op: -1
   maxBatchSize: 100
@@ -9510,7 +9512,7 @@ Transform:
   m_LocalScale: {x: 16.945, y: 0.06812603, z: 17.438507}
   m_Children: []
   m_Father: {fileID: 792321115}
-  m_RootOrder: 4
+  m_RootOrder: 5
   m_LocalEulerAnglesHint: {x: 1.005, y: 0, z: 0}
 --- !u!1 &655187682
 GameObject:
@@ -11517,6 +11519,7 @@ Transform:
   - {fileID: 570444125}
   - {fileID: 4761068}
   - {fileID: 166675946}
+  - {fileID: 1397711246}
   - {fileID: 648117584}
   - {fileID: 64920589}
   - {fileID: 1266717263}
@@ -17993,7 +17996,7 @@ Transform:
   m_Children:
   - {fileID: 74781606}
   m_Father: {fileID: 792321115}
-  m_RootOrder: 6
+  m_RootOrder: 7
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
 --- !u!1 &1271150530
 GameObject:
@@ -18045,6 +18048,7 @@ MonoBehaviour:
   m_EditorClassIdentifier: 
   Cage: {fileID: 131292716}
   Focus: {fileID: 1969311502}
+  Butterflowers: {fileID: 247339871}
   preset: {fileID: 11400000, guid: 45ffdf5e02efb4848942aaeb5d029f6e, type: 2}
   opacity: {fileID: 670236018}
   frameOpacity: {fileID: 971433927}
@@ -18054,6 +18058,7 @@ MonoBehaviour:
   index: -1
   frames: 
   inprogress: 0
+  read: 0
   lightTransitionInCurve:
     serializedVersion: 2
     m_Curve:
@@ -18391,10 +18396,10 @@ RectTransform:
   m_Father: {fileID: 1651315632}
   m_RootOrder: 0
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
-  m_AnchorMin: {x: 0.5, y: 0.5}
-  m_AnchorMax: {x: 0.5, y: 0.5}
-  m_AnchoredPosition: {x: 0.00027084, y: -501}
-  m_SizeDelta: {x: 1396.9, y: 0}
+  m_AnchorMin: {x: 0, y: 0}
+  m_AnchorMax: {x: 1, y: 0}
+  m_AnchoredPosition: {x: 0.00024414062, y: 60.99997}
+  m_SizeDelta: {x: -523.1, y: 0}
   m_Pivot: {x: 0.5, y: -0.0000010295755}
 --- !u!114 &1296845640
 MonoBehaviour:
@@ -19477,6 +19482,50 @@ RectTransform:
     type: 3}
   m_PrefabInstance: {fileID: 1387581386}
   m_PrefabAsset: {fileID: 0}
+--- !u!1 &1397711245
+GameObject:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  serializedVersion: 6
+  m_Component:
+  - component: {fileID: 1397711246}
+  - component: {fileID: 1397711247}
+  m_Layer: 2
+  m_Name: '**variable butterfly spawn'
+  m_TagString: Untagged
+  m_Icon: {fileID: 0}
+  m_NavMeshLayer: 0
+  m_StaticEditorFlags: 0
+  m_IsActive: 1
+--- !u!4 &1397711246
+Transform:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 1397711245}
+  m_LocalRotation: {x: 0, y: 0, z: 0, w: 1}
+  m_LocalPosition: {x: 0, y: 4.57, z: -0.01}
+  m_LocalScale: {x: 1, y: 1, z: 1}
+  m_Children: []
+  m_Father: {fileID: 792321115}
+  m_RootOrder: 4
+  m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
+--- !u!65 &1397711247
+BoxCollider:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 1397711245}
+  m_Material: {fileID: 0}
+  m_IsTrigger: 1
+  m_Enabled: 1
+  serializedVersion: 2
+  m_Size: {x: 1, y: 1, z: 1}
+  m_Center: {x: 0, y: 0, z: 0}
 --- !u!1 &1400484776
 GameObject:
   m_ObjectHideFlags: 0

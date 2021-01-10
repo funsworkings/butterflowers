@@ -26,6 +26,8 @@ namespace uwu.Gameplay
 
 		public Vector3 extents => m_extents;
 
+		protected virtual Transform spawnRoot => root;
+
 		protected virtual void Awake()
 		{
 			if (root == null)
@@ -132,10 +134,10 @@ namespace uwu.Gameplay
 			float bx = boundsMultiplier.x, by = boundsMultiplier.y, bz = boundsMultiplier.z;
 
 			offset = m_center + new Vector3(Random.Range(-extents.x, extents.x) * bx,
-				Random.Range(-extents.y, extents.y) * @by,
+				Random.Range(-extents.y, extents.y) * by,
 				Random.Range(-extents.z, extents.z) * bz);
 
-			position = root.TransformPoint(offset) + boundsOffset;
+			position = spawnRoot.TransformPoint(offset) + boundsOffset;
 			pos = position;
 		}
 
@@ -189,9 +191,9 @@ namespace uwu.Gameplay
 
 		protected virtual void CalculateBounds()
 		{
-			var col = root.GetComponent<Collider>();
+			var col = spawnRoot.GetComponent<Collider>();
 
-			m_center = root.InverseTransformPoint(col.bounds.center);
+			m_center = spawnRoot.InverseTransformPoint(col.bounds.center);
 			m_extents = col.bounds.extents;
 
 			col.enabled = false; // Disable collider after fetching center+bounds

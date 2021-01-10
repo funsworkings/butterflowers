@@ -27,17 +27,17 @@ namespace butterflowersOS.Objects.Managers
         public static ButterflowerManager Instance = null;
 
         public UnityEvent onAllDead;
-    
+
         #region Internal
 
         public enum Op
         {
             Nothing = -1,
-        
+
             Release = 1,
             Kill = 3
         }
-    
+
         #endregion
 
         // External
@@ -52,6 +52,8 @@ namespace butterflowersOS.Objects.Managers
         [SerializeField] Nest nest;
         [SerializeField] Quilt quilt;
         [SerializeField] Canvas canvas;
+        [SerializeField] Transform variableSpawnRoot;
+        [SerializeField] Transform currentRoot;
 
         [SerializeField] Op op = Op.Nothing;
         [SerializeField] int _op = -1;
@@ -63,13 +65,14 @@ namespace butterflowersOS.Objects.Managers
         // Attributes
 
         bool respawn = true;
-    
+
         [SerializeField] int alive = 0, dead = 0;
 
-        [Header("Butterfly attributes")] 
-        [SerializeField] Mesh butterflyMesh;
+        [Header("Butterfly attributes")] [SerializeField]
+        Mesh butterflyMesh;
+
         [SerializeField] Material butterflyMaterial;
-    
+
         // Collections
 
         List<Butterfly> butterflies = new List<Butterfly>();
@@ -100,13 +103,23 @@ namespace butterflowersOS.Objects.Managers
         JobHandle m_ScaleJobHandle;
 
 
-        public float Progress { get => (totalCount * 1f / amount); }
-        public bool Completed { get => totalCount == amount; }
+        public float Progress
+        {
+            get => (totalCount * 1f / amount);
+        }
+
+        public bool Completed
+        {
+            get => totalCount == amount;
+        }
+
+        public Transform VariableRoot => variableSpawnRoot;
+        
 
         protected override void Awake()
         {
             Instance = this;
-        
+
             base.Awake();
         }
 
@@ -116,32 +129,36 @@ namespace butterflowersOS.Objects.Managers
             Butterfly.OnRegister += AddButterfly;
             Butterfly.OnUnregister += RemoveButterfly;
 
+            ResetToDefaultRoot(); // Set to default root
             CalculateBounds();
         }
 
         public void Load()
         {
             if (Completed) return;
-        
-            amount = (preset != null)? preset.amountOfButterflies:100;
+
+            amount = (preset != null) ? preset.amountOfButterflies : 100;
             StartCoroutine("Spawning");
         }
 
         bool load = false;
+
         IEnumerator Spawning()
         {
             List<GameObject> objects = new List<GameObject>();
+            GameObject[] batch;
             int batchSize = 0;
-        
-            while (totalCount < amount) 
-            {
+
+            while (totalCount < amount) {
                 batchSize = Random.Range(1, Mathf.Min(maxBatchSize, amount - totalCount));
-                objects.AddRange(Spawn(batchSize));
+                
+                batch = Spawn(batchSize);
+                objects.AddRange(batch);
 
                 totalCount += batchSize;
                 yield return new WaitForEndOfFrame();
             }
-        
+
             var _transforms = objects.Select(e => e.transform).ToArray();
             var _butterflies = objects.Select(e => e.GetComponent<Butterfly>()).ToArray();
 
@@ -153,13 +170,15 @@ namespace butterflowersOS.Objects.Managers
             tsi = new NativeArray<float>(amount, Allocator.Persistent);
             _wand = new NativeArray<float>(amount, Allocator.Persistent);
             transforms = new TransformAccessArray(_transforms);
-        
-            distanceCurve = new NativeArray<float>(butterflyPreset.distanceAttractionCurve.GenerateCurveArray(), Allocator.Persistent);
-            speedCurve = new NativeArray<float>(butterflyPreset.speedAttractionCurve.GenerateCurveArray(), Allocator.Persistent);
-            deathCurve = new NativeArray<float>(butterflyPreset.deathProbabilityCurve.GenerateCurveArray(), Allocator.Persistent);
 
-            for (int i = 0; i < _butterflies.Length; i++) 
-            {
+            distanceCurve = new NativeArray<float>(butterflyPreset.distanceAttractionCurve.GenerateCurveArray(),
+                Allocator.Persistent);
+            speedCurve = new NativeArray<float>(butterflyPreset.speedAttractionCurve.GenerateCurveArray(),
+                Allocator.Persistent);
+            deathCurve = new NativeArray<float>(butterflyPreset.deathProbabilityCurve.GenerateCurveArray(),
+                Allocator.Persistent);
+
+            for (int i = 0; i < _butterflies.Length; i++) {
                 origins[i] = _butterflies[i].origin;
                 positions[i] = _butterflies[i].transform.position;
             }
@@ -172,11 +191,12 @@ namespace butterflowersOS.Objects.Managers
             base.Update();
 
             if (!Completed || !load) return; // Ignore update until spawned
-        
+
             float dt = Time.deltaTime;
-        
+
             // Bind new randoms
-            _randoms = new NativeArray<Unity.Mathematics.Random>(JobsUtility.MaxJobThreadCount, Allocator.Persistent, NativeArrayOptions.UninitializedMemory);
+            _randoms = new NativeArray<Unity.Mathematics.Random>(JobsUtility.MaxJobThreadCount, Allocator.Persistent,
+                NativeArrayOptions.UninitializedMemory);
             var r = (uint) Random.Range(int.MinValue, int.MaxValue);
             for (int i = 0; i < JobsUtility.MaxJobThreadCount; i++)
                 _randoms[i] = new Unity.Mathematics.Random(r == 0 ? r + 1 : r);
@@ -184,18 +204,17 @@ namespace butterflowersOS.Objects.Managers
             Camera camera = wand.Camera;
             Transform camera_t = camera.transform;
 
-            m_PreBuildJob = new PreBuildButterflyJob() 
-            {
-                op = (int)op,
-            
+            m_PreBuildJob = new PreBuildButterflyJob() {
+                op = (int) op,
+
                 relPosition = relPositions,
                 state = states,
                 wand = _wand,
                 tsi = tsi,
-            
+
                 origin = origins,
                 position = positions,
-            
+
                 deltaTime = dt,
 
                 cameraPosition = camera_t.position,
@@ -206,30 +225,29 @@ namespace butterflowersOS.Objects.Managers
                 pixelWidth = camera.scaledPixelWidth,
                 pixelHeight = camera.scaledPixelHeight,
                 scaleFactor = 1f,
-            
+
                 wandTrajectory2d = wand.trajectory2d,
                 wandRadius = wand.radius,
                 wandSpeed = wand.speed,
                 minWandSpeed = butterflyPreset.minimumWandSpeed,
                 maxWandSpeed = butterflyPreset.maximumWandSpeed,
-            
+
                 quiltSpeed = quilt.speedInterval,
                 deathCurve = deathCurve,
                 timeToDie = butterflyPreset.timeDead,
-            
-                nestOpen = (nest.open)? 1:0,
+
+                nestOpen = (nest.open) ? 1 : 0,
                 nestPosition = nest.transform.position
             };
 
-            m_VelocityJob = new VelocityButterflyJob() 
-            {
+            m_VelocityJob = new VelocityButterflyJob() {
                 state = states,
                 origin = origins,
                 position = positions,
                 positionRelCamera = relPositions,
                 timeInState = tsi,
                 wand = _wand,
-                
+
                 velocity = velocities,
 
                 deltaTime = dt,
@@ -243,53 +261,52 @@ namespace butterflowersOS.Objects.Managers
                 maxSpeed = butterflyPreset.maxSpeed,
                 minWandSpeed = butterflyPreset.minimumWandSpeed,
                 maxWandSpeed = butterflyPreset.maximumWandSpeed,
-                
+
                 wandVelocity3d = wand.velocity3d,
                 wandSpeed = wand.speed,
-            
+
                 nestPosition = nest.transform.position,
                 cameraPosition = camera_t.position
             };
 
-            m_ScaleJob = new ScaleButterflyJob() 
-            {
+            m_ScaleJob = new ScaleButterflyJob() {
                 state = states,
                 timeInState = tsi,
                 relPosition = relPositions,
-                
+
                 scale = butterflyPreset.scale,
                 growTime = butterflyPreset.timeToGrow,
-            
+
                 wandPosition3d = wand.position3d,
                 wandRadius = wand.radius,
-            
+
                 nestEnergy = nest.energy,
                 energyGrowth = butterflyPreset.energyGrowth
             };
-            
-            
+
+
             m_PreBuildJobHandle = m_PreBuildJob.Schedule(amount, 2);
             m_VelocityJobHandle = m_VelocityJob.Schedule(transforms, m_PreBuildJobHandle);
             m_ScaleJobHandle = m_ScaleJob.Schedule(transforms, m_VelocityJobHandle);
-        
-        
-        
+
+
+
             m_ScaleJobHandle.Complete();
 
             _randoms.Dispose(); // Wipe random values
-        
-            if (_op > 0) 
-            {
+
+            if (_op > 0) {
                 op = (Op) _op;
                 _op = -1;
             }
-            else 
-            {
+            else {
                 op = Op.Nothing;
             }
-        
+
         }
-        protected override void OnDestroy() {
+
+        protected override void OnDestroy()
+        {
             base.OnDestroy();
 
             Butterfly.OnRegister -= AddButterfly;
@@ -319,10 +336,26 @@ namespace butterflowersOS.Objects.Managers
         {
             KillButterflies();
         }
-    
+
+        #endregion
+
+        #region Root
+
+        public void UseVariableRoot()
+        {
+            currentRoot = variableSpawnRoot;
+        }
+
+        public void ResetToDefaultRoot()
+        {
+            currentRoot = root;
+        }
+
         #endregion
 
         #region Spawner overrides
+
+        protected override Transform spawnRoot => currentRoot;
 
         void ResetButterfly(Butterfly butterfly)
         {
@@ -330,6 +363,16 @@ namespace butterflowersOS.Objects.Managers
 
             if (!respawn) return;
             butterfly.Reset();
+        }
+        
+        protected override void CalculateBounds()
+        {
+            var col = spawnRoot.GetComponent<Collider>();
+
+            m_center = spawnRoot.InverseTransformPoint(col.bounds.center);
+            m_extents = spawnRoot.InverseTransformVector(col.bounds.extents);
+
+            col.enabled = false; // Disable collider after fetching center+bounds
         }
 
         protected override void SetPrefabAttributes(GameObject instance, Vector3 position, Quaternion rotation)
@@ -349,6 +392,22 @@ namespace butterflowersOS.Objects.Managers
             if (refresh) 
                 dead--;
         }
+        
+        public void ResetAllOrigins()
+        {
+            CalculateBounds(); // Re-caclulate bounds!
+            
+            for (int i = 0; i < butterflies.Count; i++) 
+            {
+                var _butterfly = butterflies[i];
+                
+                var _origin = _butterfly.origin;
+                DecidePosition(ref _origin);
+
+                origins[i] = _butterfly.origin = _origin;
+            }
+        }
+
 
         #endregion
 
@@ -422,7 +481,7 @@ namespace butterflowersOS.Objects.Managers
         struct PreBuildButterflyJob : IJobParallelFor
         {
             [ReadOnly] public int op;
-        
+
             public NativeArray<float3> relPosition;
             public NativeArray<int> state;
             public NativeArray<float> wand;
@@ -577,6 +636,8 @@ namespace butterflowersOS.Objects.Managers
         [BurstCompile]
         struct VelocityButterflyJob : IJobParallelForTransform
         {
+            [ReadOnly] public float4x4 boundsMatrix;
+            
             [ReadOnly] public NativeArray<int> state;
             [ReadOnly] public NativeArray<float3> origin;
             [ReadOnly] public NativeArray<float3> positionRelCamera;

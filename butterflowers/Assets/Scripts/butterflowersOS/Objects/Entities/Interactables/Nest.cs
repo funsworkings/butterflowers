@@ -309,7 +309,7 @@ namespace butterflowersOS.Objects.Entities.Interactables
             {
                 yield return new WaitForSeconds(3f);
 
-                if (!Focusing.active && open)  // Ignore if focus is focused on somethings
+                if (!Focusing.active && open && !World.Pause)  // Ignore if focus is focused on somethings
                 {
                     Vector2 screen_pos = Vector2.zero;
 
@@ -338,7 +338,7 @@ namespace butterflowersOS.Objects.Entities.Interactables
             else
                 t_color = inactiveColor;
 
-            mat.color = Color.Lerp(mat.color, t_color, Time.deltaTime * colorSmoothSpeed);
+            mat.color = Color.Lerp(mat.color, t_color, Time.unscaledDeltaTime * colorSmoothSpeed);
         }
 
         #endregion
