@@ -185,10 +185,10 @@ namespace butterflowersOS.Core
             Beacons.Load((Preset.persistBeacons) ? _Save.data.beacons : null);
             Vines.Load((Preset.persistVines) ? _Save.data.vines : null);
             Sun.Load(_Save.data.sun);
-            
+
             yield return new WaitForEndOfFrame();
             Surveillance.New(onload: true); // Trigger surveillance
-        
+
             LOAD = true;
         }
 
@@ -229,6 +229,7 @@ namespace butterflowersOS.Core
             while (Sequence.Pause) yield return null;
 
             Surveillance.New(); // Trigger surveillance
+            Beacons.RefreshBeacons(); // Refresh all beacons
 
             wait = false;
             gamePanel.Show();

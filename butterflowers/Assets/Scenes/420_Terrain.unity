@@ -3068,8 +3068,7 @@ Transform:
   m_PrefabInstance: {fileID: 0}
   m_PrefabAsset: {fileID: 0}
   m_GameObject: {fileID: 201810246}
-  m_LocalRotation: {x: 0.121565074, y: 0.000000018978835, z: -0.0000000022284417,
-    w: 0.9925835}
+  m_LocalRotation: {x: 0.12156508, y: -0.000000020864588, z: 0.0000000025043372, w: 0.9925835}
   m_LocalPosition: {x: 0, y: 9.595102, z: -21.852465}
   m_LocalScale: {x: 1, y: 1.3577, z: 1}
   m_Children:
@@ -17937,18 +17936,6 @@ MonoBehaviour:
   anchor: {fileID: 1677838454}
   dispose: 1
   overrideCamera: {fileID: 164604285}
---- !u!114 &1377914531
-MonoBehaviour:
-  m_ObjectHideFlags: 0
-  m_CorrespondingSourceObject: {fileID: 0}
-  m_PrefabInstance: {fileID: 0}
-  m_PrefabAsset: {fileID: 0}
-  m_GameObject: {fileID: 1377914528}
-  m_Enabled: 1
-  m_EditorHideFlags: 0
-  m_Script: {fileID: 11500000, guid: eef10f3e409894d559e3f2f7c07247c4, type: 3}
-  m_Name: 
-  m_EditorClassIdentifier: 
 --- !u!64 &1377914533
 MeshCollider:
   m_ObjectHideFlags: 0
@@ -18986,18 +18973,6 @@ BoxCollider:
   serializedVersion: 2
   m_Size: {x: 2, y: 3, z: 2}
   m_Center: {x: 0, y: 0, z: 0}
---- !u!114 &1427391673
-MonoBehaviour:
-  m_ObjectHideFlags: 0
-  m_CorrespondingSourceObject: {fileID: 0}
-  m_PrefabInstance: {fileID: 0}
-  m_PrefabAsset: {fileID: 0}
-  m_GameObject: {fileID: 1427391670}
-  m_Enabled: 1
-  m_EditorHideFlags: 0
-  m_Script: {fileID: 11500000, guid: eef10f3e409894d559e3f2f7c07247c4, type: 3}
-  m_Name: 
-  m_EditorClassIdentifier: 
 --- !u!114 &1427391674
 MonoBehaviour:
   m_ObjectHideFlags: 0
@@ -28469,7 +28444,7 @@ MonoBehaviour:
   m_outlineColor:
     serializedVersion: 2
     rgba: 4278190080
-  m_fontSize: 25.15
+  m_fontSize: 25.1
   m_fontSizeBase: 36
   m_fontWeight: 400
   m_enableAutoSizing: 1
@@ -28663,18 +28638,6 @@ MonoBehaviour:
   anchor: {fileID: 1677838454}
   dispose: 1
   overrideCamera: {fileID: 164604285}
---- !u!114 &1901877602
-MonoBehaviour:
-  m_ObjectHideFlags: 0
-  m_CorrespondingSourceObject: {fileID: 0}
-  m_PrefabInstance: {fileID: 0}
-  m_PrefabAsset: {fileID: 0}
-  m_GameObject: {fileID: 1901877599}
-  m_Enabled: 1
-  m_EditorHideFlags: 0
-  m_Script: {fileID: 11500000, guid: eef10f3e409894d559e3f2f7c07247c4, type: 3}
-  m_Name: 
-  m_EditorClassIdentifier: 
 --- !u!64 &1901877604
 MeshCollider:
   m_ObjectHideFlags: 0
@@ -39495,6 +39458,7 @@ PrefabInstance:
       objectReference: {fileID: 0}
     m_RemovedComponents:
     - {fileID: 3447281704321886857, guid: e4ffaf7dd570b28469327a4909aedfd2, type: 3}
+    - {fileID: 3447281704321886861, guid: e4ffaf7dd570b28469327a4909aedfd2, type: 3}
   m_SourcePrefab: {fileID: 100100000, guid: e4ffaf7dd570b28469327a4909aedfd2, type: 3}
 --- !u!1001 &3804926315591205367
 PrefabInstance:

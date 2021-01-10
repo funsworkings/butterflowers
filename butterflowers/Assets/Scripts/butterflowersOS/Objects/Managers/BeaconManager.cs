@@ -1,5 +1,6 @@
 ﻿using System.Collections;
 using System.Collections.Generic;
+using System.IO;
 using System.Linq;
 using butterflowersOS.Core;
 using butterflowersOS.Data;
@@ -10,6 +11,8 @@ using UnityEngine;
 using uwu;
 using uwu.Extensions;
 using uwu.Gameplay;
+using uwu.IO;
+using uwu.IO.SimpleFileBrowser.Scripts;
 using Type = butterflowersOS.Objects.Entities.Interactables.Beacon.Type;
 using Locale = butterflowersOS.Objects.Entities.Interactables.Beacon.Locale;
 using Object = System.Object;
@@ -34,6 +37,7 @@ namespace butterflowersOS.Objects.Managers
 		Nest Nest;
 		GameDataSaveSystem SaveSys;
 		Library Library;
+		FileNavigator Files;
 
 		#endregion
     
@@ -80,6 +84,10 @@ namespace butterflowersOS.Objects.Managers
 
 		public Beacon[] ActiveBeacons => allBeacons.Where(beacon => Nest.HasBeacon(beacon)).ToArray();
 		public Beacon[] InactiveBeacons => allBeacons.Where(beacon => !Nest.HasBeacon(beacon)).ToArray();
+		
+		public Beacon[] NestBeacons => allBeacons.Where(beacon => beacon.state == Locale.Nest).ToArray();
+		public Beacon[] TerrainBeacons => allBeacons.Where(beacon => beacon.state == Locale.Terrain).ToArray();
+		public Beacon[] FlowerBeacons => allBeacons.Where(beacon => beacon.state == Locale.Flower).ToArray();
 		public Beacon[] PlantedBeacons => allBeacons.Where(beacon => beacon.state == Locale.Planted).ToArray();
 		public Beacon[] LiveBeacons => allBeacons.Where(beacon => (beacon.state != Locale.Planted || beacon.state != Locale.Destroyed)).ToArray();
 
@@ -266,8 +274,29 @@ namespace butterflowersOS.Objects.Managers
 
 		public void RefreshBeacons()
 		{
+			var beacons = TerrainBeacons;
+		
+			int amountToSpawn = preset.amountOfBeacons - beacons.Length;
+			if (amountToSpawn <= 0) return; // Do not spawn additional beacons if there are some available
+
+			var directories = Library.ALL_DIRECTORIES.Where(dir => Directory.Exists(dir)); // Valid directories in file sys
+			foreach (string directory in directories) 
+			{
+				var fileEntries = Files.GetFiles(directory);
+				if (fileEntries.Length > 0) 
+				{
+					foreach (FileSystemEntry fileEntry in fileEntries) 
+					{
+						CreateBeacon(fileEntry.Path, Type.Desktop, Locale.Terrain); // Create beacon from file
+					}	
+				}
+			}
+
+			return;
+			
 			//DeleteDeprecatedBeacons(lib);
 
+			/*
 			var desktop = Library.UserFiles;
 			var enviro = Library.WorldFiles;
 
@@ -306,19 +335,17 @@ namespace butterflowersOS.Objects.Managers
         
 			CreateBeacons(desktop, Type.Desktop, Locale.Terrain);
 			CreateBeacons(enviro, Type.External, Locale.Terrain);
+			*/
 		}
 
 		public void RestoreBeacons(BeaconData[] data, bool deprecate = false)
 		{
 			Debug.LogFormat("Recovered {0} beacons from save!", data.Length);
 
-			if (data == null || data.Length == 0) // Ignore restore if data is empty
+			if (data == null || data.Length == 0) return; // Ignore restore if data is empty
+			
+			for (int i = 0; i < data.Length; i++) 
 			{
-				RefreshBeacons();
-				return;
-			}
-
-			for (int i = 0; i < data.Length; i++) {
 				var beacon = data[i];
 
 				string p = beacon.path;
@@ -566,6 +593,7 @@ namespace butterflowersOS.Objects.Managers
 			Nest = Nest.Instance;
 			SaveSys = GameDataSaveSystem.Instance;
 			Library = Library.Instance;
+			Files = FileNavigator.Instance;
 
 			if (dat != null) 
 			{

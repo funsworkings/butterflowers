@@ -293,6 +293,12 @@ namespace uwu.IO
 			return files;
 		}
 
+		public FileSystemEntry[] GetFiles(string directory)
+		{
+			if(!Directory.Exists(directory)) return new FileSystemEntry[]{};
+			return GetFilesInDirectory(directory, FileType.Normal, filters);
+		}
+
 		public string[] GetPaths()
 		{
 			return fileLookup.Keys.ToArray();
