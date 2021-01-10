@@ -34,10 +34,21 @@ using uwu.UI.Behaviors.Visibility;
 
 namespace butterflowersOS.Core
 {
-    public class World : MonoBehaviour, ISaveable, IReactToSunCycle, IPauseSun
+    public class World : MonoBehaviour, ISaveable, IReactToSunCycleReliable, IPauseSun
     {
         public static World Instance = null;
         public static bool LOAD = false;
+        
+        
+        #region Internal
+
+        public enum AdvanceType
+        {
+            Broken,
+            Continuous
+        }
+        
+        #endregion
 
         // Events
 
@@ -202,21 +213,25 @@ namespace butterflowersOS.Core
             wait = true;
             StartCoroutine(Advance());
         }
-    
-        IEnumerator Advance()
-        {
-            Sun.active = false;
-            yield return new WaitForEndOfFrame();
-
-            /*string path = GetExportPath();
+        
+        /*string path = GetExportPath();
             bool success = ExportProfile(path);
             
             Debug.LogWarningFormat("{0} generating profile => {1}", (success)? "Success":"Fail", path);*/
-
+    
+        public AdvanceType type = AdvanceType.Continuous;
+        IEnumerator Advance()
+        {
+            if (type == AdvanceType.Broken)  // Deactivate sun
+            {
+                Sun.active = false;
+                yield return new WaitForEndOfFrame();
+            }
+            
             Surveillance.Stop();
             Surveillance.Dispose();
             while (Surveillance.recording) yield return null;
-            
+
             SaveLibraryItems();
             _Save.data.sun = (SunData) Sun.Save();
             _Save.data.surveillanceData = (SurveillanceData[])Surveillance.Save();
@@ -227,17 +242,19 @@ namespace butterflowersOS.Core
 
             _Save.SaveGameData(); // Save all game data
             yield return new WaitForEndOfFrame();
-            
-            gamePanel.Hide();
-            
-            Summary.ShowSummary(profile);
-            while (Summary.Pause) yield return null;
-            
-            bool didLoadSequence = Sequence.Cycle();
-            if (didLoadSequence) 
+
+            if (type == AdvanceType.Broken)  // Wait for summary and sequence items
             {
-                while (Sequence.Pause) yield return null;
-                Nest.RandomKick(); // Re-activate nest after sequence pause
+                gamePanel.Hide();
+
+                Summary.ShowSummary(profile);
+                while (Summary.Pause) yield return null;
+
+                bool didLoadSequence = Sequence.Cycle();
+                if (didLoadSequence) {
+                    while (Sequence.Pause) yield return null;
+                    Nest.RandomKick(); // Re-activate nest after sequence pause
+                }
             }
 
             Surveillance.New(); // Trigger surveillance

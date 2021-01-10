@@ -327,8 +327,15 @@ namespace butterflowersOS.Objects.Entities
         void CycleObservers(bool refresh)
         {
             Observers = FindObjectsOfType<MonoBehaviour>().OfType<IReactToSunCycle>().ToArray();
-            foreach(IReactToSunCycle o in Observers)
-                o.Cycle(refresh);
+
+            bool includeAll = (World.type == World.AdvanceType.Broken);
+            bool success = false;
+            
+            foreach (IReactToSunCycle o in Observers) 
+            {
+                success = (includeAll || (o is IReactToSunCycleReliable));
+                if(success) o.Cycle(refresh);
+            }
         }
 
         void WaitForPausers()
