@@ -636,7 +636,7 @@ namespace butterflowersOS.Objects.Managers
 			var index = Random.Range(0, textures.Length);
 			var texture = textures[index];
 
-			bool success = Library.RegisterFile(texture.name, Library.FileType.World, true);
+			bool success = Library.RegisterFile(texture.name, Library.FileType.World, load:true);
 			if (success) 
 			{
 				CreateBeacon(texture.name, Beacon.Type.Wizard, Beacon.Locale.Terrain, fromSave: false, transition: TransitionType.Spawn);
