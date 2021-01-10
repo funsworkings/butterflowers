@@ -305,7 +305,8 @@ namespace butterflowersOS.Objects.Entities.Interactables
 
         IEnumerator MaintainOnScreen()
         {
-            while (true) {
+            while (true) 
+            {
                 yield return new WaitForSeconds(3f);
 
                 if (!Focusing.active && open)  // Ignore if focus is focused on somethings

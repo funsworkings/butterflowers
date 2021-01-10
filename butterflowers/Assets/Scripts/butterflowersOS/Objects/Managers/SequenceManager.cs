@@ -2,6 +2,7 @@
 using butterflowersOS.Core;
 using butterflowersOS.Data;
 using butterflowersOS.Interfaces;
+using butterflowersOS.Objects.Base;
 using butterflowersOS.Objects.Entities;
 using butterflowersOS.Objects.Miscellaneous;
 using butterflowersOS.Presets;
@@ -22,6 +23,7 @@ namespace butterflowersOS.Objects.Managers
 		Sun Sun;
 		GameDataSaveSystem _Save;
 		[SerializeField] Cage Cage;
+		[SerializeField] Focusing Focus;
 		
 		// Properties
 
@@ -45,7 +47,7 @@ namespace butterflowersOS.Objects.Managers
 		[SerializeField] AnimationCurve meshScaleCurve;
 		[SerializeField] float meshScaleTime = 1f;
 
-		[SerializeField] float startDelay = 1f, endDelay = 1f;
+		[SerializeField] float startDelay = 1f, endDelay = 1f, closeDelay = 1f;
 		[SerializeField] float frameDelay = 3f;
 
 		#region Accessors
@@ -182,6 +184,14 @@ namespace butterflowersOS.Objects.Managers
 			
 			yield return new WaitForSecondsRealtime(endDelay);
 
+			bool didFocusOnMesh = false;
+
+			var focusable = _scene.mesh.GetComponent<Focusable>();
+			if (focusable != null) 
+			{
+				didFocusOnMesh = focusable.Focus(); // Set focus to mesh focus!
+			}
+
 			lt = 0f;
 			while (!SmoothLight(ref lt, true)) 
 				yield return null;
@@ -198,8 +208,17 @@ namespace butterflowersOS.Objects.Managers
 			frameOpacity.Hide();
 
 			sceneCaption.Push(_scene.message);
-			while (sceneCaption.inprogress) 
-				yield return null;
+
+			if (_scene.audio != null) // Play scene audio!
+			{
+				sceneAudio.clip = _scene.audio;
+				sceneAudio.Play();
+			}
+
+			while (sceneCaption.inprogress || sceneAudio.isPlaying) yield return null;
+			if(didFocusOnMesh) Focus.LoseFocus();
+
+			yield return new WaitForSecondsRealtime(closeDelay);
 			
 			inprogress = false;
 			opacity.Hide();
