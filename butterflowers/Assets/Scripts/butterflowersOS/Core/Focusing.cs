@@ -154,6 +154,10 @@ namespace butterflowersOS.Core
                 
                     Events.ReceiveEvent(EVENTCODE.REFOCUS, AGENT.User, focus.Agent);
                 }
+                else 
+                {
+                    LoseFocus();    
+                }
             }
         
             onFocus.Invoke();
