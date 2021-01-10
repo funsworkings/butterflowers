@@ -70,7 +70,7 @@ public class FileDragAndDrop : MonoBehaviour
         foreach (string aFile in aFiles) 
         {
             var ext = Path.GetExtension(aFile).ToLowerInvariant();
-            if (ext == "fns") // Matches 
+            if (ext == ".fns" || ext == ".FNS") // Matches 
             {
                 BrainData dat = DataHandler.Read<BrainData>(aFile);
                 if (dat != null) 

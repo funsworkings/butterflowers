@@ -391,11 +391,13 @@ namespace butterflowersOS.Core
             {
                 _Save.data.brain = data;
                 _Save.data.profileGenerated = _Save.IsProfileValid();
+                _Save.data.profile = profile = data.profile;
             }
             else 
             {
                 _Save.data.brain = default(BrainData);
                 _Save.data.profileGenerated = false;
+                _Save.data.profile = profile = Surveillance.ConstructBehaviourProfile();
             }
 
             type = (_Save.data.profileGenerated) ? AdvanceType.Continuous : AdvanceType.Broken; // Adjust type from generated profile
@@ -408,6 +410,8 @@ namespace butterflowersOS.Core
         
             _Save.data.brain = brainData;
             _Save.data.profileGenerated = true;
+            _Save.data.profile = profile = brainData.profile;
+            
             type = AdvanceType.Continuous;
             
             //AggregateBrainFiles(brainData);
@@ -426,6 +430,8 @@ namespace butterflowersOS.Core
             
             _Save.data.brain = null;
             _Save.data.profileGenerated = false;
+            _Save.data.profile = profile = Surveillance.ConstructBehaviourProfile();
+            
             type = AdvanceType.Broken;
 
             Debug.LogWarning("Successfully wiped brain profile for user => " + (string.IsNullOrEmpty(username)? "NULL":username));
