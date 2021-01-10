@@ -279,17 +279,24 @@ namespace butterflowersOS.Objects.Managers
 			int amountToSpawn = preset.amountOfBeacons - beacons.Length;
 			if (amountToSpawn <= 0) return; // Do not spawn additional beacons if there are some available
 
-			var directories = Library.ALL_DIRECTORIES.Where(dir => Directory.Exists(dir)); // Valid directories in file sys
-			foreach (string directory in directories) 
+			var directories = Library.ALL_DIRECTORIES.Where(dir => Directory.Exists(dir)).ToArray(); // Valid directories in file sys
+			
+			var subdirectories = directories;
+			if (directories.Length > 3) subdirectories = directories.PickRandomSubset(3).ToArray();
+
+			var _files = subdirectories.Select(subdir => Files.GetFiles(subdir));
+			var files = new List<FileSystemEntry>();
+			
+			foreach(FileSystemEntry[] entries in _files)
+				files.AddRange(entries);
+			
+			amountToSpawn = Mathf.Min(files.Count, amountToSpawn);
+			if (amountToSpawn == 0) return; // Ignore request to create more files, aren't enough!
+
+			for (int i = 0; i < amountToSpawn; i++) 
 			{
-				var fileEntries = Files.GetFiles(directory);
-				if (fileEntries.Length > 0) 
-				{
-					foreach (FileSystemEntry fileEntry in fileEntries) 
-					{
-						CreateBeacon(fileEntry.Path, Type.Desktop, Locale.Terrain); // Create beacon from file
-					}	
-				}
+				var _file = files.ElementAt(Random.Range(0, files.Count()));
+				CreateBeacon(_file.Path, Type.Desktop, Locale.Terrain); // Create beacon from file
 			}
 
 			return;
