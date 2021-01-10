@@ -19,6 +19,20 @@ namespace butterflowersOS.Objects.Managers
 {
 	public class SequenceManager : MonoBehaviour, ISaveable, IPauseSun
 	{
+		#region Internal
+
+		public enum TriggerReason
+		{
+			Nothing,
+			Block,
+			
+			CageNotCompleted,
+			SequenceHasCompleted
+		}
+		
+		#endregion
+		
+		
 		// External
 
 		Sun Sun;
@@ -111,46 +125,45 @@ namespace butterflowersOS.Objects.Managers
 		
 		#endregion
 
-		public bool Cycle()
+		public TriggerReason Cycle()
 		{
 			int t_index = (index + 1);
-			
-			if (NeedsToTriggerScene(t_index)) // Trigger cutscene
+
+			var reason = NeedsToTriggerScene(t_index);
+			if (reason == TriggerReason.Nothing) // Trigger cutscene
 			{
 				inprogress = true;
 				StartCoroutine(PlayScene(t_index)); // Play scene
 
-				return true;
+				return reason;
 			}
 
 			inprogress = read = false;
-			return false;
+			return reason;
 		}
 		
 		#region Scenes
 
-		bool NeedsToTriggerScene(int t_index)
+		TriggerReason NeedsToTriggerScene(int t_index)
 		{
-			if (Cage.Completed && t_index < frames.Length) 
+			if (!Cage.Completed) return TriggerReason.CageNotCompleted;
+			if (t_index >= frames.Length) return TriggerReason.SequenceHasCompleted;
+		
+			var _frames = World.Instance.Profile.weights.behaviours;
+			var _frame = Frame.Destruction;
+			var _maxFrame = Mathf.NegativeInfinity;
+				
+			foreach (FrameFloat frame in _frames) 
 			{
-				var _frames = World.Instance.Profile.weights.behaviours;
-				var _frame = Frame.Destruction;
-				var _maxFrame = Mathf.NegativeInfinity;
-				
-				foreach (FrameFloat frame in _frames) 
+				if (frame.value > _maxFrame) 
 				{
-					if (frame.value > _maxFrame) 
-					{
-						_maxFrame = frame.value;
-						_frame = frame.frame;
-					}
+					_maxFrame = frame.value;
+					_frame = frame.frame;
 				}
-				
-				frames[t_index] = _frame; // Assign random framing
-				return true;
 			}
-			
-			return false; 
+				
+			frames[t_index] = _frame; // Assign random framing
+			return TriggerReason.Nothing;
 		}
 
 		Sequence FetchSequence(Frame frame)

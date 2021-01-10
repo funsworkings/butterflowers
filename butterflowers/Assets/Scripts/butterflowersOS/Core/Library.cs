@@ -165,14 +165,29 @@ namespace butterflowersOS.Core
 			if (textureLoadTarget.Count > 0) // Load all necessary textures
 			{
 				// Load all textures from restore
-#if !UNITY_EDITOR
-			LoadTextures(textureLoadTarget.ToArray());
-#else
+				#if !UNITY_EDITOR
+					LoadTextures(textureLoadTarget.ToArray());
+				#else
+				
 				if (READ_IN_EDITOR_MODE) LoadTextures(textureLoadTarget.ToArray());
-#endif
+				
+				#endif
 			}
 
 			initialized = true;
+		}
+
+		public void Aggregate(LibraryPayload payload)
+		{
+			var files = payload.files;
+
+			var user_files = payload.userFiles;
+			var shared_files = payload.sharedFiles;
+			var world_files = payload.worldFiles;
+
+			foreach (int uf in user_files) RegisterFile(files[uf], FileType.User);
+			foreach (int sf in shared_files) RegisterFile(files[sf], FileType.Shared);
+			foreach (int wf in world_files) RegisterFile(files[wf], FileType.World);
 		}
 
 		void Restore()
@@ -362,10 +377,8 @@ namespace butterflowersOS.Core
 			return success;
 		}
 
-		public bool RegisterFile(string file, FileType type, bool load = false)
+		public bool RegisterFile(string file, FileType type, string directory = null, bool load = false)
 		{
-			string directory = null;
-
 			bool success = true;
 			bool @new = !ALL_FILES.Contains(file); // New entry to files
 

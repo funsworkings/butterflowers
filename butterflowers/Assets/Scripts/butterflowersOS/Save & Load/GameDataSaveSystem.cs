@@ -1,4 +1,6 @@
-﻿using butterflowersOS;
+﻿using System;
+using System.Globalization;
+using butterflowersOS;
 using Neue.Agent.Brain.Data;
 using UnityEngine;
 using uwu.Extensions;
@@ -41,6 +43,14 @@ namespace uwu
 		{
 			get { return data == null ? new Knowledge[] { } : data.file_knowledge; }
 			set => data.file_knowledge = value;
+		}
+
+		public bool IsProfileValid()
+		{
+			if (data == null) return false;
+
+			var brainData = data.brain;
+			return brainData.IsProfileValid();
 		}
 
 		#endregion
