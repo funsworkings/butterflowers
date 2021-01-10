@@ -1,5 +1,6 @@
 ﻿using System.Collections.Generic;
 using butterflowersOS.Objects.Base;
+using butterflowersOS.Objects.Entities;
 using UnityEngine;
 using UnityEngine.Events;
 using uwu.Audio;
@@ -32,6 +33,8 @@ namespace butterflowersOS.Core
         [SerializeField] CameraManager CameraManager;
         [SerializeField] FocusCamera Camera;
         [SerializeField] AudioHandler BackgroundAudio;
+
+        Sun sun;
 
         // Properties
 
@@ -78,7 +81,8 @@ namespace butterflowersOS.Core
 
         #region Monobehaviour callbacks
 
-        void OnEnable() {
+        void OnEnable() 
+        {
             Focusable.FocusOnPoint += SetFocus;
         }
 
@@ -90,12 +94,14 @@ namespace butterflowersOS.Core
         void Start()
         {
             focuses = FindObjectsOfType<Focusable>();
+            sun = Sun.Instance;
         }
 
         // Update is called once per frame
         void Update()
         {
-            if (active) {
+            if (active && sun.active) 
+            {
                 if (Input.GetKeyDown(KeyCode.Backspace))
                     LoseFocus();
             }
