@@ -1,9 +1,9 @@
 ﻿using System;
 using System.Collections;
-using Core;
-using Interfaces;
+using butterflowersOS.Core;
+using butterflowersOS.Interfaces;
+using butterflowersOS.UI.Summary_Cards;
 using TMPro;
-using UI.Summary_Cards;
 using UnityEngine;
 using UnityEngine.UIElements;
 using UnityEngine.UI;

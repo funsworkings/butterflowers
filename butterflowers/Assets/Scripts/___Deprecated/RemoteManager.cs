@@ -1,7 +1,8 @@
 ﻿using System;
-using Core;
+using butterflowersOS.Core;
+using butterflowersOS.Objects.Entities;
+using butterflowersOS.Presets;
 using Objects.Types;
-using Settings;
 using UnityEngine;
 using uwu;
 using uwu.UI.Behaviors.Visibility;

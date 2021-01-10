@@ -1251,64 +1251,141 @@
             </e>
             <e p="WorldState.cs" t="Include" />
           </e>
-          <e p="Cameras" t="Include">
-            <e p="NestCamera.cs" t="Include" />
-          </e>
-          <e p="Core" t="Include">
-            <e p="Events.cs" t="Include" />
-            <e p="Focusing.cs" t="Include" />
-            <e p="Library.cs" t="Include" />
-            <e p="Surveillance.cs" t="Include" />
-            <e p="Wand.cs" t="Include" />
-            <e p="World.cs" t="Include" />
-          </e>
-          <e p="Data" t="Include">
-            <e p="BeaconData.cs" t="Include" />
-            <e p="BeaconSceneData.cs" t="Include" />
-            <e p="BrainPayload.cs" t="Include" />
-            <e p="CompositeSurveillanceData.cs" t="Include" />
-            <e p="LeafBundleData.cs" t="Include" />
-            <e p="LeafData.cs" t="Include" />
-            <e p="LibraryPayload.cs" t="Include" />
-            <e p="Log.cs" t="Include" />
-            <e p="LogData.cs" t="Include" />
-            <e p="SequenceData.cs" t="Include" />
-            <e p="SunData.cs" t="Include" />
-            <e p="SurveillanceData.cs" t="Include" />
-            <e p="SurveillanceDataDelta.cs" t="Include" />
-            <e p="SurveillanceLogData.cs" t="Include" />
-            <e p="VineData.cs" t="Include" />
-            <e p="VineSceneData.cs" t="Include" />
-          </e>
-          <e p="ECS" t="Include">
-            <e p="butterflowers" t="Include">
-              <e p="Components" t="Include">
-                <e p="MovementData.cs" t="Include" />
-                <e p="StateData.cs" t="Include" />
-              </e>
-              <e p="Systems" t="Include">
-                <e p="BindSystem.cs" t="Include" />
-                <e p="MovementSystem.cs" t="Include" />
-                <e p="ScaleSystem.cs" t="Include" />
+          <e p="butterflowersOS" t="Include">
+            <e p="Cameras" t="Include">
+              <e p="NestCamera.cs" t="Include" />
+            </e>
+            <e p="Core" t="Include">
+              <e p="Events.cs" t="Include" />
+              <e p="Focusing.cs" t="Include" />
+              <e p="Library.cs" t="Include" />
+              <e p="Surveillance.cs" t="Include" />
+              <e p="Wand.cs" t="Include" />
+              <e p="World.cs" t="Include" />
+            </e>
+            <e p="Data" t="Include">
+              <e p="BeaconData.cs" t="Include" />
+              <e p="BeaconSceneData.cs" t="Include" />
+              <e p="BrainPayload.cs" t="Include" />
+              <e p="CompositeSurveillanceData.cs" t="Include" />
+              <e p="LeafBundleData.cs" t="Include" />
+              <e p="LeafData.cs" t="Include" />
+              <e p="LibraryPayload.cs" t="Include" />
+              <e p="Log.cs" t="Include" />
+              <e p="LogData.cs" t="Include" />
+              <e p="SequenceData.cs" t="Include" />
+              <e p="SunData.cs" t="Include" />
+              <e p="SurveillanceData.cs" t="Include" />
+              <e p="SurveillanceDataDelta.cs" t="Include" />
+              <e p="SurveillanceLogData.cs" t="Include" />
+              <e p="VineData.cs" t="Include" />
+              <e p="VineSceneData.cs" t="Include" />
+            </e>
+            <e p="ECS" t="Include">
+              <e p="butterflowers" t="Include">
+                <e p="Components" t="Include">
+                  <e p="MovementData.cs" t="Include" />
+                  <e p="StateData.cs" t="Include" />
+                </e>
+                <e p="Systems" t="Include">
+                  <e p="BindSystem.cs" t="Include" />
+                  <e p="MovementSystem.cs" t="Include" />
+                  <e p="ScaleSystem.cs" t="Include" />
+                </e>
               </e>
             </e>
-          </e>
-          <e p="Global.cs" t="Include" />
-          <e p="Interfaces" t="Include">
-            <e p="IFileContainer.cs" t="Include" />
-            <e p="IFlammable.cs" t="Include" />
-            <e p="IPauseSun.cs" t="Include" />
-            <e p="IReactToSun.cs" t="Include" />
-            <e p="IReactToSunCycle.cs" t="Include" />
-            <e p="ITooltip.cs" t="Include" />
-          </e>
-          <e p="Menu" t="Include">
-            <e p="ChooseUsername.cs" t="Include" />
-            <e p="MainMenu.cs" t="Include" />
-            <e p="VersionText.cs" t="Include" />
-          </e>
-          <e p="Miscellaneous" t="Include">
-            <e p="TextureCollection.cs" t="Include" />
+            <e p="Global.cs" t="Include" />
+            <e p="Interfaces" t="Include">
+              <e p="IFileContainer.cs" t="Include" />
+              <e p="IFlammable.cs" t="Include" />
+              <e p="IPauseSun.cs" t="Include" />
+              <e p="IReactToSun.cs" t="Include" />
+              <e p="IReactToSunCycle.cs" t="Include" />
+              <e p="ITooltip.cs" t="Include" />
+            </e>
+            <e p="Menu" t="Include">
+              <e p="ChooseUsername.cs" t="Include" />
+              <e p="MainMenu.cs" t="Include" />
+              <e p="VersionText.cs" t="Include" />
+            </e>
+            <e p="Miscellaneous" t="Include">
+              <e p="TextureCollection.cs" t="Include" />
+            </e>
+            <e p="Objects" t="Include">
+              <e p="Base" t="Include">
+                <e p="Element.cs" t="Include" />
+                <e p="Entity.cs" t="Include" />
+                <e p="Focusable.cs" t="Include" />
+                <e p="Interactable.cs" t="Include" />
+                <e p="Manager.cs" t="Include" />
+              </e>
+              <e p="Entities" t="Include">
+                <e p="Butterfly.cs" t="Include" />
+                <e p="Cage.cs" t="Include" />
+                <e p="Interactables" t="Include">
+                  <e p="Beacon.cs" t="Include" />
+                  <e p="Empty" t="Include">
+                    <e p="Flower.cs" t="Include" />
+                    <e p="Star.cs" t="Include" />
+                    <e p="Tree.cs" t="Include" />
+                  </e>
+                  <e p="Nest.cs" t="Include" />
+                  <e p="Vine.cs" t="Include" />
+                </e>
+                <e p="Quilt.cs" t="Include" />
+                <e p="Sector.cs" t="Include" />
+                <e p="Sun.cs" t="Include" />
+                <e p="Terrain.cs" t="Include" />
+              </e>
+              <e p="Managers" t="Include">
+                <e p="BeaconManager.cs" t="Include" />
+                <e p="ButterflowerManager.cs" t="Include" />
+                <e p="EventManager.cs" t="Include" />
+                <e p="SequenceManager.cs" t="Include" />
+                <e p="TutorialManager.cs" t="Include" />
+                <e p="VineManager.cs" t="Include" />
+              </e>
+              <e p="Miscellaneous" t="Include">
+                <e p="Flares.cs" t="Include" />
+                <e p="Leaf.cs" t="Include" />
+                <e p="Sequence.cs" t="Include" />
+              </e>
+            </e>
+            <e p="Presets" t="Include">
+              <e p="ButterflyPreset.cs" t="Include" />
+              <e p="WorldPreset.cs" t="Include" />
+            </e>
+            <e p="Save &amp; Load" t="Include">
+              <e p="BrainData.cs" t="Include" />
+              <e p="GameData.cs" t="Include" />
+              <e p="GameDataSaveSystem.cs" t="Include" />
+            </e>
+            <e p="Snippets" t="Include">
+              <e p="BindDistortionWithOpacity.cs" t="Include" />
+              <e p="FitViaScale.cs" t="Include" />
+            </e>
+            <e p="UI" t="Include">
+              <e p="DayTracker.cs" t="Include" />
+              <e p="EventLog.cs" t="Include" />
+              <e p="MenuCursor.cs" t="Include" />
+              <e p="Summary Cards" t="Include">
+                <e p="BeaconsAdded.cs" t="Include" />
+                <e p="BeaconsDestroyed.cs" t="Include" />
+                <e p="BeaconsPlanted.cs" t="Include" />
+                <e p="CursorSpeed.cs" t="Include" />
+                <e p="Discoveries.cs" t="Include" />
+                <e p="FilesAdded.cs" t="Include" />
+                <e p="FilesRemoved.cs" t="Include" />
+                <e p="HoB.cs" t="Include" />
+                <e p="NestFill.cs" t="Include" />
+                <e p="NestKicks.cs" t="Include" />
+                <e p="NestSpills.cs" t="Include" />
+                <e p="PhotoOfTheDay.cs" t="Include" />
+              </e>
+              <e p="SummaryCard.cs" t="Include" />
+              <e p="SummaryCardTrigger.cs" t="Include" />
+              <e p="SummaryDeck.cs" t="Include" />
+            </e>
           </e>
           <e p="Neue" t="Include">
             <e p="Agent" t="Include">
@@ -1396,81 +1473,6 @@
             <e p="Utilities" t="Include">
               <e p="AnimationRelay.cs" t="Include" />
             </e>
-          </e>
-          <e p="Objects" t="Include">
-            <e p="Base" t="Include">
-              <e p="Element.cs" t="Include" />
-              <e p="Entity.cs" t="Include" />
-              <e p="Focusable.cs" t="Include" />
-              <e p="Interactable.cs" t="Include" />
-              <e p="Manager.cs" t="Include" />
-            </e>
-            <e p="Entities" t="Include">
-              <e p="Butterfly.cs" t="Include" />
-              <e p="Cage.cs" t="Include" />
-              <e p="Interactables" t="Include">
-                <e p="Beacon.cs" t="Include" />
-                <e p="Empty" t="Include">
-                  <e p="Flower.cs" t="Include" />
-                  <e p="Star.cs" t="Include" />
-                  <e p="Tree.cs" t="Include" />
-                </e>
-                <e p="Nest.cs" t="Include" />
-                <e p="Vine.cs" t="Include" />
-              </e>
-              <e p="Quilt.cs" t="Include" />
-              <e p="Sector.cs" t="Include" />
-              <e p="Sun.cs" t="Include" />
-              <e p="Terrain.cs" t="Include" />
-            </e>
-            <e p="Managers" t="Include">
-              <e p="BeaconManager.cs" t="Include" />
-              <e p="ButterflowerManager.cs" t="Include" />
-              <e p="EventManager.cs" t="Include" />
-              <e p="SequenceManager.cs" t="Include" />
-              <e p="TutorialManager.cs" t="Include" />
-              <e p="VineManager.cs" t="Include" />
-            </e>
-            <e p="Miscellaneous" t="Include">
-              <e p="Flares.cs" t="Include" />
-              <e p="Leaf.cs" t="Include" />
-              <e p="Sequence.cs" t="Include" />
-            </e>
-          </e>
-          <e p="Presets" t="Include">
-            <e p="ButterflyPreset.cs" t="Include" />
-            <e p="WorldPreset.cs" t="Include" />
-          </e>
-          <e p="Save &amp; Load" t="Include">
-            <e p="BrainData.cs" t="Include" />
-            <e p="GameData.cs" t="Include" />
-            <e p="GameDataSaveSystem.cs" t="Include" />
-          </e>
-          <e p="Snippets" t="Include">
-            <e p="BindDistortionWithOpacity.cs" t="Include" />
-            <e p="FitViaScale.cs" t="Include" />
-          </e>
-          <e p="UI" t="Include">
-            <e p="DayTracker.cs" t="Include" />
-            <e p="EventLog.cs" t="Include" />
-            <e p="MenuCursor.cs" t="Include" />
-            <e p="Summary Cards" t="Include">
-              <e p="BeaconsAdded.cs" t="Include" />
-              <e p="BeaconsDestroyed.cs" t="Include" />
-              <e p="BeaconsPlanted.cs" t="Include" />
-              <e p="CursorSpeed.cs" t="Include" />
-              <e p="Discoveries.cs" t="Include" />
-              <e p="FilesAdded.cs" t="Include" />
-              <e p="FilesRemoved.cs" t="Include" />
-              <e p="HoB.cs" t="Include" />
-              <e p="NestFill.cs" t="Include" />
-              <e p="NestKicks.cs" t="Include" />
-              <e p="NestSpills.cs" t="Include" />
-              <e p="PhotoOfTheDay.cs" t="Include" />
-            </e>
-            <e p="SummaryCard.cs" t="Include" />
-            <e p="SummaryCardTrigger.cs" t="Include" />
-            <e p="SummaryDeck.cs" t="Include" />
           </e>
           <e p="uwu" t="Include">
             <e p="Animation" t="Include">

@@ -1,11 +1,13 @@
 ﻿using System;
 using System.Collections;
 using System.Collections.Generic;
+using butterflowersOS;
+using butterflowersOS.Objects.Entities.Interactables;
 using UnityEngine;
 
 using Noder.Nodes.Behaviours.Core;
 using Noder.Graphs;
-using Kick = Core.Wand.Kick;
+using Kick = butterflowersOS.Core.Wand.Kick;
 
 namespace Noder.Nodes.Behaviours.Events {
 

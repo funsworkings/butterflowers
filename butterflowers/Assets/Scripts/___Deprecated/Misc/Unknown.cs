@@ -1,9 +1,12 @@
 ﻿using System;
-using Settings;
 using System.Collections;
 using System.Collections.Generic;
 using System.Data;
-using Core;
+using butterflowersOS;
+using butterflowersOS.Core;
+using butterflowersOS.Objects.Entities.Interactables;
+using butterflowersOS.Objects.Managers;
+using butterflowersOS.Presets;
 using UnityEngine;
 using UnityEngine.Profiling;
 using uwu.Extensions;

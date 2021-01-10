@@ -1,5 +1,4 @@
-﻿using System;
-using Neue.Reference.Nodes.Behaviours;
+﻿using Neue.Reference.Nodes.Behaviours;
 using UnityEngine;
 using UnityEngine.UI;
 using uwu.Extensions;
