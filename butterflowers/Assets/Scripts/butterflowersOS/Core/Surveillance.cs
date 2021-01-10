@@ -132,11 +132,14 @@ namespace butterflowersOS.Core
 				yield return null;
 
 			yield return new WaitForEndOfFrame();
-			
-			var log = CaptureFrameLog();
-			activeLog.logs = activeLog.logs.Append(log).ToArray();
-			
-			recording = false;
+
+			if (recording) 
+			{
+				var log = CaptureFrameLog();
+				activeLog.logs = activeLog.logs.Append(log).ToArray();
+
+				recording = false;
+			}
 		}
 		
 		#endregion

@@ -160,7 +160,7 @@ namespace butterflowersOS
 
             if (!string.IsNullOrEmpty(contextual)) 
             {
-                contextual = contextual.Insert(0, "\n");
+                contextual = contextual.Insert(0, "\n\n");
                 info += string.Format("<size=50%><i>{0}</i></size>", contextual);
             }
 
