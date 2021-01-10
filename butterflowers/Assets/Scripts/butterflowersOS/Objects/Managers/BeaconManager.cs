@@ -285,8 +285,8 @@ namespace butterflowersOS.Objects.Managers
 			if (directories.Length > 3) subdirectories = directories.PickRandomSubset(3).ToArray();
 
 			var _files = subdirectories.Select(subdir => Files.GetFiles(subdir));
-			var files = new List<FileSystemEntry>();
 			
+			var files = new List<FileSystemEntry>();
 			foreach(FileSystemEntry[] entries in _files)
 				files.AddRange(entries);
 			
