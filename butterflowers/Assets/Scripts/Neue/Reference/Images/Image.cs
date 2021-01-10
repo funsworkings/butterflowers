@@ -1,8 +1,8 @@
 ﻿using System;
 using System.Collections.Generic;
+using System.Linq;
 using Neue.Reference.Nodes.Behaviours;
 using UnityEngine;
-using System.Linq;
 
 namespace Neue.Reference.Images
 {

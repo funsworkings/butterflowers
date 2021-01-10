@@ -1,5 +1,4 @@
 ﻿using Neue.Agent.Brain.Types;
-using Neue.Types;
 using UnityEngine;
 
 namespace Neue.UI

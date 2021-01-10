@@ -1,12 +1,12 @@
 ﻿using System;
 using System.Collections;
 using System.Linq;
-using Core;
-using Data;
-using Settings;
+using butterflowersOS.Core;
+using butterflowersOS.Data;
+using butterflowersOS.Presets;
+using butterflowersOS.UI;
+using butterflowersOS.UI.Summary_Cards;
 using TMPro;
-using UI;
-using UI.Summary_Cards;
 using UnityEngine;
 using UnityEngine.UI;
 using uwu.UI.Behaviors.Visibility;

@@ -1,6 +1,5 @@
 ﻿using Neue.Reference.Types;
 using Neue.Reference.Types.Maps.Groups;
-using Neue.Types;
 
 namespace Neue.Agent.Brain.Data
 {

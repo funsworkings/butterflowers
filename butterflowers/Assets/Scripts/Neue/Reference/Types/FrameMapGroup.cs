@@ -1,6 +1,5 @@
 ﻿using System;
 using System.Collections.Generic;
-using Neue.Types;
 
 namespace Neue.Reference.Types
 {

@@ -6,7 +6,6 @@ using Neue.Reference.Images;
 using Neue.Reference.Nodes.Behaviours;
 using Neue.Reference.Nodes.Debug;
 using UnityEngine;
-using uwu.UI.Behaviors.Visibility;
 
 namespace Neue.Agent.Brain
 {

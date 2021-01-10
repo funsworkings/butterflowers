@@ -5,7 +5,7 @@ using Neue.Agent;
 using Neue.Agent1;
 using Noder.Nodes.Behaviours.Core;
 using Noder.Graphs;
-using Kick = Core.Wand.Kick;
+using Kick = butterflowersOS.Core.Wand.Kick;
 using Wizard;
 using Object = UnityEngine.Object;
 
