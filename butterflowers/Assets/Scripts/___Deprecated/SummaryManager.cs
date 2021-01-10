@@ -3,6 +3,7 @@ using System.Collections;
 using butterflowersOS.Core;
 using butterflowersOS.Interfaces;
 using butterflowersOS.UI.Summary_Cards;
+using Neue.Agent.Brain.Data;
 using TMPro;
 using UnityEngine;
 using UnityEngine.UIElements;
@@ -65,7 +66,7 @@ namespace Objects.Managers
 
 		#region Show and hide
 
-		public void ShowSummary()
+		public void ShowSummary(Profile profile = null)
 		{
 			m_active = true;
 			panel = Panel.Grades;

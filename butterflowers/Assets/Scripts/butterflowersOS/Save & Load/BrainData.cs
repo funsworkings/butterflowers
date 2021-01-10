@@ -15,8 +15,6 @@ namespace butterflowersOS
 		public int[] shared_files = new int[] { };
 		public int[] world_files = new int[] { };
 
-		public Knowledge[] file_knowledge = new Knowledge[] { };
-		
 		public Profile profile = new Profile();
 
 		public BrainData(){}
@@ -31,7 +29,6 @@ namespace butterflowersOS
 			this.shared_files = dat.shared_files;
 			this.world_files = dat.world_files;
 
-			this.file_knowledge = dat.file_knowledge;
 			this.profile = dat.profile;
 		}
 	}

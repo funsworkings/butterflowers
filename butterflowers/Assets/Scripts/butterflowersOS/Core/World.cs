@@ -1,5 +1,7 @@
-﻿using System.Collections;
+﻿using System;
+using System.Collections;
 using System.Collections.Generic;
+using System.IO;
 using butterflowersOS.Data;
 using butterflowersOS.Interfaces;
 using butterflowersOS.Objects.Base;
@@ -13,6 +15,7 @@ using UnityEngine;
 using UnityEngine.Events;
 using uwu;
 using uwu.Camera;
+using uwu.Data;
 using uwu.IO;
 using uwu.Snippets.Load;
 using uwu.UI.Behaviors.Visibility;
@@ -204,7 +207,12 @@ namespace butterflowersOS.Core
         {
             Sun.active = false;
             yield return new WaitForEndOfFrame();
+
+            /*string path = GetExportPath();
+            bool success = ExportProfile(path);
             
+            Debug.LogWarningFormat("{0} generating profile => {1}", (success)? "Success":"Fail", path);*/
+
             Surveillance.Stop();
             Surveillance.Dispose();
             while (Surveillance.recording) yield return null;
@@ -222,7 +230,7 @@ namespace butterflowersOS.Core
             
             gamePanel.Hide();
             
-            Summary.ShowSummary();
+            Summary.ShowSummary(profile);
             while (Summary.Pause) yield return null;
             
             Sequence.Cycle();
@@ -319,6 +327,26 @@ namespace butterflowersOS.Core
             return 1f;
         }
 
+        #endregion
+        
+        #region Export
+
+        public string GetExportPath()
+        {
+            var desktop = Environment.GetFolderPath(Environment.SpecialFolder.Desktop);
+            var path = Path.Combine(desktop, _Save.data.username + ".fns");
+            
+            return path;
+        }
+
+        public bool ExportProfile(string path)
+        {
+            var data = new BrainData(_Save.data);
+            bool success = DataHandler.Write(data, path); // Write
+            
+            return success;
+        }
+        
         #endregion
 
         #region Suggestions
