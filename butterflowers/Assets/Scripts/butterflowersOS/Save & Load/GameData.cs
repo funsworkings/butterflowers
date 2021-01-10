@@ -32,6 +32,7 @@ namespace uwu
 	    public Knowledge[] file_knowledge = new Knowledge[] { };
 		
 	    public Profile profile = new Profile();
+	    public bool profileGenerated = false;
     }
 
 }

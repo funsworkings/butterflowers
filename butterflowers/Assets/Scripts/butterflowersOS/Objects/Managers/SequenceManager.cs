@@ -51,6 +51,7 @@ namespace butterflowersOS.Objects.Managers
 		#region Accessors
 
 		public bool Pause => inprogress;
+		public bool Complete => (Cage.Completed && (index + 1) < frames.Length);
 		
 		#endregion
 		
