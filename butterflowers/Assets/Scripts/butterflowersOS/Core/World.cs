@@ -284,13 +284,6 @@ namespace butterflowersOS.Core
                 while (Sequence.Read)
                     yield return null; // Wait for sequence captions to finish before showing game UI panel
             }
-            else 
-            {
-                if (sequenceReason == SequenceManager.TriggerReason.SequenceHasCompleted) // Sequence has already completed
-                {
-                    ExportNeueAgent();
-                }
-            }
 
             gamePanel.Show();
         }
