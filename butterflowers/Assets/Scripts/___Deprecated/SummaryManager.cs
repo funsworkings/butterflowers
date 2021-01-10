@@ -1,7 +1,8 @@
 ﻿using System;
 using System.Collections;
-using Core;
-using Interfaces;
+using butterflowersOS.Core;
+using butterflowersOS.Interfaces;
+using butterflowersOS.UI.Summary_Cards;
 using TMPro;
 using UnityEngine;
 using UnityEngine.UIElements;
@@ -11,7 +12,7 @@ using uwu.UI.Behaviors.Visibility;
 
 namespace Objects.Managers
 {
-	public class SummaryManager : MonoBehaviour, IPauseSun, IReactToSunCycle
+	public class SummaryManager : MonoBehaviour, IPauseSun
 	{
 		#region Internal
 
@@ -26,11 +27,10 @@ namespace Objects.Managers
 		// Properties
 
 		[SerializeField] GradingManager Grading;
-
-		[SerializeField] ToggleOpacity gamePanel;
+		
 		[SerializeField] ToggleOpacity summaryPanel;
 
-		[SerializeField] RawImage photoOfTheDay;
+		[SerializeField] PhotoOfTheDay photoOfTheDay;
 		[SerializeField] TMP_Text photoCaption;
 
 		public bool Pause => active;
@@ -53,27 +53,16 @@ namespace Objects.Managers
 
 		void Start()
 		{
-			var photoRect = photoOfTheDay.rectTransform;
+			/*var photoRect = photoOfTheDay.rectTransform;
 				basePhotoWidth = photoRect.sizeDelta.x;
 				basePhotoHeight = photoRect.sizeDelta.y;
+			*/
 			
 			HideSummary(); // Hide summary immediately on start
 		}
 
 		#endregion
-		
-		#region Cycle
 
-		public void Cycle(bool refresh)
-		{
-			if (refresh) 
-			{
-				ShowSummary();
-			}
-		}
-		
-		#endregion
-		
 		#region Show and hide
 
 		public void ShowSummary()
@@ -81,30 +70,33 @@ namespace Objects.Managers
 			m_active = true;
 			panel = Panel.Grades;
 
-			StartCoroutine("WaitForSummary");
+			StartCoroutine("Show");
 		}
 
-		IEnumerator WaitForSummary()
+		IEnumerator Show()
 		{
-			while (Surveillance.Instance.photoInProgress) 
-				yield return null;
+			while (Surveillance.Instance.photoInProgress) yield return null;
 			
 			DisplayPhotoOfTheDay();
 			Grading.ShowScores();
 			
-			gamePanel.Hide();
 			summaryPanel.Show();
 		}
 
 		public void HideSummary()
 		{
-			summaryPanel.Hide();
-			gamePanel.Show();
-			
-			Grading.HideScores();
+			StartCoroutine("Hide");
+		}
 
+		IEnumerator Hide()
+		{
+			Grading.HideScores();
+			while (Grading.inprogress) yield return null;
+
+			summaryPanel.Hide();
+			while (summaryPanel.Visible) yield return null;
+			
 			m_active = false;
-			panel = Panel.Grades;
 		}
 
 		#endregion
@@ -117,8 +109,10 @@ namespace Objects.Managers
 			var photo = Surveillance.Instance.lastPhotoTaken;
 			var valid = photo != null;
 
-			photoOfTheDay.enabled = valid;
-			if (valid) {
+			//photoOfTheDay.gameObject.SetActive(valid);
+			if (valid) 
+			{
+				/*
 				var w = (float)photo.width;
 				var h = (float)photo.height;
 				var aspect = 1f;
@@ -135,12 +129,11 @@ namespace Objects.Managers
 					h = basePhotoHeight;
 					w = basePhotoHeight * aspect;
 				}
-
-				photoOfTheDay.rectTransform.sizeDelta = new Vector2(w, h);
-				photoOfTheDay.texture = photo;
+				*/
+				
+				string caption = string.Format("{0}.jpg", photoName);
+				photoOfTheDay.ShowPhoto(photo, caption);
 			}
-
-			photoCaption.text = string.Format("{0}.jpg", photoName);
 		}
 		
 		#endregion

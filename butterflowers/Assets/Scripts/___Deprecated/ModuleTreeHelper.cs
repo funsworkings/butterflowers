@@ -2,12 +2,15 @@
 using UnityEngine;
 using System.Collections.Generic;
 using System.Linq;
+using butterflowersOS;
+using butterflowersOS.Objects.Base;
+using butterflowersOS.Objects.Entities.Interactables;
+using butterflowersOS.Objects.Managers;
 using Neue.Agent;
 using Neue.Agent.Brain.Types;
 using Neue.Agent1;
 using Neue.Types;
 using Noder.Nodes.Behaviours.Entries;
-using Objects.Base;
 
 namespace Objects.Managers
 {

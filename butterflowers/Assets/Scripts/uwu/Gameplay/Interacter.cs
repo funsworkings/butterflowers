@@ -7,7 +7,7 @@ namespace uwu.Gameplay
 {
 	using Camera = UnityEngine.Camera;
 	
-	public abstract class Interacter : MonoBehaviour
+	public abstract class Interacter<E> : MonoBehaviour where E:MonoBehaviour
 	{
 		#region Internal
 
@@ -26,6 +26,10 @@ namespace uwu.Gameplay
 		
 		protected Ray ray;
 		protected RaycastHit raycastHit;
+		
+		// Collections
+		
+		protected Dictionary<IInteractable, RaycastHit> frameInteractions = new Dictionary<IInteractable, RaycastHit>();
 
 		// Attributes
 
@@ -39,16 +43,7 @@ namespace uwu.Gameplay
 			[SerializeField] protected bool down;
 			[SerializeField] protected bool cont;
 			[SerializeField] protected bool up;
-			[SerializeField] protected bool wait;
-			[SerializeField] List<Interactable> interactables = new List<Interactable>();
 
-			
-		#region Accessors
-
-		protected virtual LayerMask mask => interactionMask;
-		
-		#endregion
-			
 
 		protected virtual void Start()
 		{
@@ -60,27 +55,31 @@ namespace uwu.Gameplay
 			down = Input.GetMouseButtonDown(0);
 			cont = Input.GetMouseButton(0);
 			up = Input.GetMouseButtonUp(0);
-			wait = (!down && !cont && !up);
-			
+
 			/* * * * * * * * * * * * * * * * * * * * * */
 
 			var hits3d = new RaycastHit[] { };
 			var hits2d = new RaycastResult[] { };
 			
 			QueryInteractions(out hits3d, out hits2d);
+			
+			/* * * * * * * * * * * * * * * * * * * * * */
+			
+			Dictionary<IInteractable, RaycastHit> _frameInteractions = new Dictionary<IInteractable, RaycastHit>();
+			List<E> _frameEntities = new List<E>();
 
-			var _frameInteractions = ParseInteractions(hits3d, hits2d);
+			ParseInteractions(ref _frameInteractions, hits3d, hits2d);
 			FilterInteractions(ref _frameInteractions);
 
 			HandleInteractions(_frameInteractions);
-			DisposeInteractions(_frameInteractions.Keys.ToList());
+			DisposeInteractions(_frameInteractions);
 			
-			interactables = _frameInteractions.Keys.ToList();
+			frameInteractions = _frameInteractions;
 		}
 		
 		#region Interact
 
-		void QueryInteractions(out RaycastHit[] hits, out RaycastResult[] hits2d)
+		protected virtual void QueryInteractions(out RaycastHit[] hits, out RaycastResult[] hits2d)
 		{
 			ray = camera.ScreenPointToRay(origin);
 
@@ -88,10 +87,12 @@ namespace uwu.Gameplay
 
 			if (filter == Filter._3d || queryAll) 
 			{
-				if (multipleInteractions) {
+				if (multipleInteractions) 
+				{
 					hits = Physics.RaycastAll(ray, interactionDistance, mask.value);
 				}
-				else {
+				else 
+				{
 					var hit = new RaycastHit();
 					if (Physics.Raycast(ray, out hit, interactionDistance, mask.value)) 
 						hits = new RaycastHit[] {hit};
@@ -116,19 +117,19 @@ namespace uwu.Gameplay
 				hits2d = new RaycastResult[]{};
 		}
 
-		Dictionary<Interactable, RaycastHit> ParseInteractions(RaycastHit[] hits3d, RaycastResult[] hits2d)
+		void ParseInteractions(ref Dictionary<IInteractable, RaycastHit> _frameInteractions, RaycastHit[] hits3d, RaycastResult[] hits2d)
 		{
-			Dictionary<Interactable, RaycastHit> _frameInteractions = new Dictionary<Interactable, RaycastHit>();
-			
 			if (hits3d != null) 
 			{
 				foreach(RaycastHit hit in hits3d)
 				{
 					var @object = hit.collider.gameObject;
-					var interactable = @object.GetComponent<Interactable>();
+					var interactable = @object.GetComponent<IInteractable>();
 
-					if (interactable != null && !_frameInteractions.ContainsKey(interactable)) 
+					if (interactable.IsValid() && !_frameInteractions.ContainsKey(interactable)) 
+					{
 						_frameInteractions.Add(interactable, hit);
+					}
 				}
 			}
 
@@ -139,41 +140,56 @@ namespace uwu.Gameplay
 					var hit = RaycastHitFromResult(hit2d);
 
 					var @object = hit2d.gameObject;
-					var interactable = @object.GetComponent<Interactable>();
+					var interactable = @object.GetComponent<IInteractable>();
 
-					if (interactable != null)
+					if (interactable.IsValid() && !_frameInteractions.ContainsKey(interactable)) 
+					{
 						_frameInteractions.Add(interactable, hit);
+					}
 				}
 			}
-
-			return _frameInteractions;
 		}
-
-		void DisposeInteractions(List<Interactable> _frameInteractables)
+		
+		protected virtual void HandleInteractions(Dictionary<IInteractable, RaycastHit> _frameInteractions)
 		{
-			foreach (Interactable interactable in interactables) 
-			{
-				if(!_frameInteractables.Contains(interactable))
-					interactable.Unhover();
-			}
-		}
-
-		protected virtual void HandleInteractions(Dictionary<Interactable, RaycastHit> _frameInteractions)
-		{
-			foreach (KeyValuePair<Interactable, RaycastHit> hit in _frameInteractions) 
+			foreach (KeyValuePair<IInteractable, RaycastHit> hit in _frameInteractions) 
 			{
 				var interactable = hit.Key;
 				var raycast = hit.Value;
 
-				if(down) { interactable.Grab(raycast); onGrabInteractable(interactable); }
-				else if(cont) { interactable.Continue(raycast); onContinueInteractable(interactable);}
-				else if(up) { interactable.Release(raycast); onReleaseInteractable(interactable); }
-				else interactable.Hover(raycast);
+				if (interactable.IsValid()) 
+				{
+					if (down) {
+						interactable.Grab(raycast);
+						onGrabInteractable(interactable, raycast);
+					}
+					else if (cont) {
+						interactable.Continue(raycast);
+						onContinueInteractable(interactable, raycast);
+					}
+					else if (up) {
+						interactable.Release(raycast);
+						onReleaseInteractable(interactable, raycast);
+					}
+					else interactable.Hover(raycast);
+				}
+			}
+		}
+		
+		void DisposeInteractions(Dictionary<IInteractable, RaycastHit> _frameInteractables)
+		{
+			foreach (KeyValuePair<IInteractable, RaycastHit> interaction in frameInteractions) 
+			{
+				if (!_frameInteractables.ContainsKey(interaction.Key)) {
+					var interactable = interaction.Key;
+					if(interactable.IsValid())
+						interactable.Unhover();
+				}
 			}
 		}
 
 		#endregion
-		
+
 		#region Helpers
 
 		RaycastHit RaycastHitFromResult(RaycastResult hit2d)
@@ -190,46 +206,18 @@ namespace uwu.Gameplay
 			return hit;
 		}
 
-		protected IEnumerable<Interactable> FilterInteractablesByType<E>(IEnumerable<Interactable> interactions)
-		{
-			List<Interactable> filtered = new List<Interactable>();
-			
-			foreach (Interactable e in interactions) 
-			{
-				if (e.GetComponent<E>() != null) 
-					filtered.Add(e);	
-			}
-
-			return filtered;
-		}
-
-		protected Interactable FindClosestInteractable(IEnumerable<Interactable> interactables)
-		{
-			float minDistance = Mathf.Infinity;
-			Interactable closest = null;
-
-			foreach (Interactable i in interactables) {
-				float d = Vector3.Distance(transform.position, i.transform.position);
-				if (d <= minDistance) {
-					minDistance = d;
-					closest = i;
-				}
-			}
-
-			return closest;
-		}
-		
 		#endregion
 		
 		#region Abstract components
 
 		protected abstract Vector3 origin { get; }
+		protected virtual LayerMask mask => interactionMask;
 		
-		protected virtual void FilterInteractions(ref Dictionary<Interactable, RaycastHit> _frameInteractions){}
+		protected virtual void FilterInteractions(ref Dictionary<IInteractable, RaycastHit> _frameInteractions){}
 
-		protected virtual void onGrabInteractable(Interactable interactable){}
-		protected virtual void onContinueInteractable(Interactable interactable){}
-		protected virtual void onReleaseInteractable(Interactable interactable){}
+		protected virtual void onGrabInteractable(IInteractable interactable, RaycastHit hit){}
+		protected virtual void onContinueInteractable(IInteractable interactable, RaycastHit hit){}
+		protected virtual void onReleaseInteractable(IInteractable interactable, RaycastHit hit){}
 		
 		#endregion
 	}

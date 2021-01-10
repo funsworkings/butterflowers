@@ -1,8 +1,9 @@
 ﻿using System;
-using Core;
+using butterflowersOS;
+using butterflowersOS.Core;
+using butterflowersOS.Objects.Base;
 using Noder.Graphs;
 using Noder.Nodes.Behaviours.Core;
-using Objects.Base;
 using UnityEngine;
 using uwu.Camera.Instances;
 using uwu.Extensions;

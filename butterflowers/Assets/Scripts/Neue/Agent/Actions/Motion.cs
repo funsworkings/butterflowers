@@ -1,7 +1,6 @@
 ﻿using Neue.Agent.Actions.Movement;
 using Neue.Agent.Types;
 using UnityEngine;
-using uwu.Extensions;
 
 namespace Neue.Agent.Actions
 {

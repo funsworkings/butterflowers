@@ -19,7 +19,7 @@ MonoBehaviour:
   persistKnowledge: 1
   persistBeacons: 1
   persistVines: 1
-  persistSequence: 0
+  persistSequence: 1
   alwaysIntro: 0
   alwaysAbsorb: 0
   useWizard: 0
@@ -73,7 +73,7 @@ MonoBehaviour:
   daysToGrowVine: 0.05
   minimumVineGrowHeight: 5
   maximumVineGrowHeight: 8
-  vineWidth: 0.08
+  vineWidth: 0.067
   minimumLeavesPerSegment: 5
   maximumLeavesPerSegment: 10
   leafDensityPerSegment: 0.18
@@ -133,6 +133,7 @@ MonoBehaviour:
     FilesRemoved: 0
     Discoveries: 0
     BeaconsAdded: 0
+    BeaconsDestroyed: 0
     BeaconsPlanted: 0
     NestKicks: 0
     NestSpills: 0
