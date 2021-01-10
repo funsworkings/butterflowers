@@ -19,7 +19,7 @@ MonoBehaviour:
   persistKnowledge: 1
   persistBeacons: 1
   persistVines: 1
-  persistSequence: 1
+  persistSequence: 0
   alwaysIntro: 0
   alwaysAbsorb: 0
   useWizard: 0
@@ -135,6 +135,7 @@ MonoBehaviour:
     BeaconsAdded: 0
     BeaconsDestroyed: 0
     BeaconsPlanted: 0
+    BeaconsFlowered: 0
     NestKicks: 0
     NestSpills: 0
   unknownPersistenceThreshold: 0.33
