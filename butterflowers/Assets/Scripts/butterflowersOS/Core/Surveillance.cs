@@ -333,6 +333,7 @@ namespace butterflowersOS.Core
 				comp.BeaconsAdded = (int) logs.Select(l => l.beaconsAdded).Average();
 				comp.BeaconsDestroyed = (int) logs.Select(l => l.beaconsDestroyed).Average();
 				comp.BeaconsPlanted = (int) logs.Select(l => l.beaconsPlanted).Average();
+				comp.BeaconsFlowered = (int) logs.Select(l => l.beaconsFlowered).Average();
 
 				comp.NestKicks = (int) logs.Select(l => l.nestKicks).Average();
 				comp.NestSpills = (int) logs.Select(l => l.nestSpills).Average();

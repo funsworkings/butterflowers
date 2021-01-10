@@ -41,6 +41,7 @@ namespace butterflowersOS.Data
 		public int beaconsAdded => logs.Select(log => log.SortEventsByType(EVENTCODE.BEACONACTIVATE).Count()).Sum(); // Gluttony, destruction
 		public int beaconsDestroyed => logs.Select(log => log.SortEventsByType(EVENTCODE.BEACONDELETE).Count()).Sum(); // Gluttony, destruction
 		public int beaconsPlanted => logs.Select(log => log.SortEventsByType(EVENTCODE.BEACONPLANT).Count()).Sum(); // Nurture, rest
+		public int beaconsFlowered => logs.Select(log => log.SortEventsByType(EVENTCODE.BEACONFLOWER).Count()).Sum(); // Nurture, rest
 		public int nestKicks => logs.Select(log => log.SortEventsByType(EVENTCODE.NESTKICK).Count()).Sum(); // Play, rest
 		public int nestSpills => logs.Select(log => log.SortEventsByType(EVENTCODE.NESTSPILL).Count()).Sum(); // Destruction, gluttony
 
