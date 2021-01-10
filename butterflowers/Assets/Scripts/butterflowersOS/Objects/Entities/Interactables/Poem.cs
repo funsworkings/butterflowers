@@ -11,7 +11,7 @@ namespace butterflowersOS.Objects.Entities.Interactables
     {
         public string GetInfo()
         {
-            return gameObject.name;
+            return gameObject.name.AppendActionableInformation(this);
         }
     }
 

@@ -233,13 +233,19 @@ namespace butterflowersOS.Core
             Summary.ShowSummary(profile);
             while (Summary.Pause) yield return null;
             
-            Sequence.Cycle();
-            while (Sequence.Pause) yield return null;
+            bool didLoadSequence = Sequence.Cycle();
+            if (didLoadSequence) 
+            {
+                while (Sequence.Pause) yield return null;
+                Nest.RandomKick(); // Re-activate nest after sequence pause
+            }
 
             Surveillance.New(); // Trigger surveillance
             Beacons.RefreshBeacons(); // Refresh all beacons
 
             wait = false;
+
+            while (Sequence.Read) yield return null;
             gamePanel.Show();
         }
 
