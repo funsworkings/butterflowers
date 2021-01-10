@@ -20,6 +20,7 @@ namespace butterflowersOS.Data
 		public int BeaconsAdded = 0;
 		public int BeaconsDestroyed = 0;
 		public int BeaconsPlanted = 0;
+		public int BeaconsFlowered = 0;
 		public int NestKicks = 0;
 		public int NestSpills = 0;
 
@@ -44,6 +45,7 @@ namespace butterflowersOS.Data
 			BeaconsAdded = dat.beaconsAdded;
 			BeaconsDestroyed = dat.beaconsDestroyed;
 			BeaconsPlanted = dat.beaconsPlanted;
+			BeaconsFlowered = dat.beaconsFlowered;
 
 			NestKicks = dat.nestKicks;
 			NestSpills = dat.nestSpills;
