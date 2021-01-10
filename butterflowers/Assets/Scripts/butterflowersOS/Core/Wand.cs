@@ -393,8 +393,8 @@ namespace butterflowersOS.Core
                 if (Physics.Raycast(ray, out hit, Mathf.Infinity, interactionMask.value)) // Found suitable position 
                 {
                     var position = hit.point;
-                    @params.Add("position", point);
-                    @params.Add("origin", point);
+                    @params.Add("position", position);
+                    @params.Add("origin", position);
                     
                     beacons.CreateBeacon(file, Beacon.Type.Desktop, Beacon.Locale.Terrain, @params, fromSave: false, transition: BeaconManager.TransitionType.Spawn);
                     return true;

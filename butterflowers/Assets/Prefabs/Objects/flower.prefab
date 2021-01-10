@@ -12,7 +12,6 @@ GameObject:
   - component: {fileID: 573763726}
   - component: {fileID: 1766958475}
   - component: {fileID: 714161338}
-  - component: {fileID: 714161337}
   m_Layer: 12
   m_Name: flower
   m_TagString: Untagged
@@ -69,9 +68,9 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: 
   m_agent: 0
-  m_interactive: 1
   preset: {fileID: 0}
   firePS: {fileID: 0}
+  origin: 0
 --- !u!65 &714161338
 BoxCollider:
   m_ObjectHideFlags: 0
@@ -85,18 +84,6 @@ BoxCollider:
   serializedVersion: 2
   m_Size: {x: 1, y: 1, z: 1}
   m_Center: {x: 0, y: 0, z: 0}
---- !u!114 &714161337
-MonoBehaviour:
-  m_ObjectHideFlags: 0
-  m_CorrespondingSourceObject: {fileID: 0}
-  m_PrefabInstance: {fileID: 0}
-  m_PrefabAsset: {fileID: 0}
-  m_GameObject: {fileID: 1984411663683584353}
-  m_Enabled: 1
-  m_EditorHideFlags: 0
-  m_Script: {fileID: 11500000, guid: eef10f3e409894d559e3f2f7c07247c4, type: 3}
-  m_Name: 
-  m_EditorClassIdentifier: 
 --- !u!1001 &5042240003626103682
 PrefabInstance:
   m_ObjectHideFlags: 0

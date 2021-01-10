@@ -127,6 +127,7 @@ namespace butterflowersOS.Objects.Managers
             StartCoroutine("Spawning");
         }
 
+        bool load = false;
         IEnumerator Spawning()
         {
             List<GameObject> objects = new List<GameObject>();
@@ -162,13 +163,15 @@ namespace butterflowersOS.Objects.Managers
                 origins[i] = _butterflies[i].origin;
                 positions[i] = _butterflies[i].transform.position;
             }
+
+            load = true;
         }
 
         protected override void Update()
         {
             base.Update();
 
-            if (!Completed) return; // Ignore update until spawned
+            if (!Completed || !load) return; // Ignore update until spawned
         
             float dt = Time.deltaTime;
         
