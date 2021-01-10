@@ -1,5 +1,4 @@
 ﻿using Neue.Reference.Types;
-using Neue.Types;
 using UnityEngine;
 using UnityEngine.UI;
 

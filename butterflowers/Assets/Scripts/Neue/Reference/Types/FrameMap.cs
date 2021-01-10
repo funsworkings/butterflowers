@@ -1,6 +1,4 @@
-﻿using Neue.Types;
-
-namespace Neue.Reference.Types
+﻿namespace Neue.Reference.Types
 {
 	[System.Serializable]
 	public class FrameMap<E>
