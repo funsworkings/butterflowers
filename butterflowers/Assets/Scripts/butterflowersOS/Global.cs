@@ -171,6 +171,7 @@ namespace butterflowersOS
     public static class Controls
     {
         public static KeyCode Focus = KeyCode.LeftControl;
-        public static KeyCode LoseFocus = KeyCode.Escape;
+        public static KeyCode LoseFocus = KeyCode.Backspace;
     }
+    
 }

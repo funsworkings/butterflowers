@@ -32,8 +32,7 @@ namespace butterflowersOS.Objects.Base
 
 		protected void OnDestroy()
 		{
-			World.UnregisterEntity(this);
-	    
+			if(World != null) World.UnregisterEntity(this);
 			OnDestroyed();
 		}
 

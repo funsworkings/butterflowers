@@ -4,6 +4,7 @@ using System.Collections.Generic;
 using System.IO;
 using butterflowersOS.Data;
 using butterflowersOS.Interfaces;
+using butterflowersOS.Menu;
 using butterflowersOS.Objects.Base;
 using butterflowersOS.Objects.Entities;
 using butterflowersOS.Objects.Entities.Interactables;
@@ -91,12 +92,21 @@ namespace butterflowersOS.Core
         // Properties
 
         [SerializeField] Camera m_playerCamera = null;
-        [SerializeField] Loading Loader = null;
+        [SerializeField] Loader Loader = null;
 
         [SerializeField] ToggleOpacity gamePanel;
+        [SerializeField] PauseMenu pauseMenu;
         [SerializeField] Profile profile;
 
         [SerializeField] bool wait = false;
+        [SerializeField] bool dispose = false;
+
+        private float m_TimeScale = 1f;
+        public float TimeScale
+        {
+            get { return m_TimeScale; }
+            private set { m_TimeScale = value; }
+        }
 
         // Collections
     
@@ -135,6 +145,7 @@ namespace butterflowersOS.Core
             Sun.active = false; // Initialize sun to inactive on start
 
             _Save = GameDataSaveSystem.Instance;
+            Loader = Loader.Instance;
 
             _Save.LoadGameData<GameData>(createIfEmpty: true);
 
@@ -162,6 +173,13 @@ namespace butterflowersOS.Core
             SubscribeToEvents(); // Add all event listeners
 
             StartCoroutine("Initialize");
+        }
+
+        void Update()
+        {
+            if (!dispose) return;
+            
+            UpdateTimeScale();
         }
 
         void OnDestroy()
@@ -192,8 +210,9 @@ namespace butterflowersOS.Core
             
             yield return new WaitForEndOfFrame();
             
-            Loader.Load();
+            Loader.Load(.33f, 1f);
             while (Loader.IsLoading) yield return null;
+            Loader.Dispose();
 
             EventsM.Load(null);
             Sequence.Load(_Save.data.sequence);
@@ -345,6 +364,16 @@ namespace butterflowersOS.Core
             }
         }
 
+        #endregion
+        
+        #region Time scale
+
+        void UpdateTimeScale()
+        {
+            if (pauseMenu.IsVisible) TimeScale = 0f;
+            else TimeScale = 1f;
+        }
+        
         #endregion
 
         #region Beacons

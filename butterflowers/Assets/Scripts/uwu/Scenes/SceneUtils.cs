@@ -82,7 +82,8 @@ namespace uwu.Scenes
 			LoadOp op = null;
 			queue.TryGetValue(scene.id, out op);
 
-			if (op == null) {
+			if (op == null) 
+			{
 				var operation = new LoadOp();
 
 				try {

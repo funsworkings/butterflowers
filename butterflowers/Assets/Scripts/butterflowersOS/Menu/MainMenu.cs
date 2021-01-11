@@ -1,6 +1,7 @@
 ﻿using UnityEngine;
 using UnityEngine.SceneManagement;
 using uwu;
+using uwu.Snippets.Load;
 
 namespace butterflowersOS.Menu
 {
@@ -28,9 +29,14 @@ namespace butterflowersOS.Menu
         void Start()
         {
             Save = GameDataSaveSystem.Instance;
+            
+            Time.timeScale = 1f;
+            Loader.Instance.Dispose();
 
             previousSaveExists = Save.LoadGameData<GameData>();
+            
             DisplayOptions(previousSaveExists);
+            animation.SetTrigger("reset");
         }
 
         void DisplayOptions(bool previousSave) 
@@ -82,7 +88,7 @@ namespace butterflowersOS.Menu
                 return;
             }
             Debug.LogWarning("Move!");
-            SceneManager.LoadScene(1);
+            SceneLoader.Instance.GoToScene(1, 0f, .33f);
         }
     }
 }

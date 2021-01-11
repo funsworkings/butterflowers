@@ -1306,7 +1306,9 @@
             </e>
             <e p="Menu" t="Include">
               <e p="ChooseUsername.cs" t="Include" />
+              <e p="GenericMenu.cs" t="Include" />
               <e p="MainMenu.cs" t="Include" />
+              <e p="PauseMenu.cs" t="Include" />
               <e p="VersionText.cs" t="Include" />
             </e>
             <e p="Miscellaneous" t="Include">
@@ -1630,9 +1632,10 @@
               <e p="LineDot.cs" t="Include" />
               <e p="Load" t="Include">
                 <e p="ILoadDependent.cs" t="Include" />
-                <e p="Loading.cs" t="Include" />
+                <e p="Loader.cs" t="Include" />
                 <e p="LoadingBar.cs" t="Include" />
                 <e p="LoadingImageOpacity.cs" t="Include" />
+                <e p="SceneLoader.cs" t="Include" />
               </e>
               <e p="Logger.cs" t="Include" />
               <e p="MaintainGlobalScale.cs" t="Include" />

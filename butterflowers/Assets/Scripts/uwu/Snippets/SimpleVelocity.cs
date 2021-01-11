@@ -22,7 +22,10 @@ namespace uwu.Snippets
 			float dt = Time.deltaTime;
 
 			b = transform.position;
-			m_velocity = (b - a) / dt;
+			if (dt > 0f)
+				m_velocity = (b - a) / dt;
+			else
+				m_velocity = Vector3.zero;
 			a = b;
 		}
 	}

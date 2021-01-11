@@ -3,15 +3,15 @@ using UnityEngine.UI;
 
 namespace uwu.Snippets.Load
 {
-	[RequireComponent(typeof(Loading))]
+	[RequireComponent(typeof(Loader))]
 	public class LoadingBar : MonoBehaviour
 	{
 		[SerializeField] Image fill;
-		Loading loading;
+		Loader loading;
 
 		void Awake()
 		{
-			loading = GetComponent<Loading>();
+			loading = GetComponent<Loader>();
 		}
 
 		void OnEnable()
