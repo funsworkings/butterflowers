@@ -71,9 +71,7 @@ namespace uwu.Snippets.Load
 			LoadOp = SceneManager.LoadSceneAsync(buildIndex);
 			LoadOp.allowSceneActivation = false;
 			Loader.Load(min:min, max:max);
-			
-			yield return new WaitForEndOfFrame();
-			
+
 			while (!Completed || Loader.IsLoading) yield return null;
 			LoadOp.allowSceneActivation = true;
 		}
