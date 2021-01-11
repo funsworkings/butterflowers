@@ -112,14 +112,18 @@ namespace butterflowersOS.Core
 
 		void OnApplicationFocus(bool hasFocus)
 		{
-			if(hasFocus) StopListen();
-			else StartListen();
+			return;
+			
+			//if(hasFocus) StopListen();
+			//else StartListen();
 		}
 
 		void OnApplicationPause(bool pauseStatus)
 		{
-			if(pauseStatus) StartListen();
-			else StopListen();
+			return;
+			
+			//if(pauseStatus) StartListen();
+			//else StopListen();
 		}
 
 		#endregion
@@ -444,6 +448,7 @@ namespace butterflowersOS.Core
 
 		#endregion
 	
+		/*
 		#region Deprecation
 
 		void StartListen()
@@ -513,6 +518,7 @@ namespace butterflowersOS.Core
 		}
 	
 		#endregion
+		*/
 	
 		#region Discovery
 	
