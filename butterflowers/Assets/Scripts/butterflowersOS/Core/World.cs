@@ -177,8 +177,7 @@ namespace butterflowersOS.Core
 
         void Update()
         {
-            if (!dispose) return;
-            
+            if (dispose) return;
             UpdateTimeScale();
         }
 
