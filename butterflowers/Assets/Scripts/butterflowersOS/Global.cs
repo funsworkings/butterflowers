@@ -114,57 +114,84 @@ namespace butterflowersOS
 
             { AGENT.Unknown, "#BEFFD7" }
         };
+
+        public static string ACTION = "#E3FF00";
     }
 
 
     public static class Copy
     {
-        public static string FocusText = string.Format("Press {0} to FOCUS", Controls.Focus.ToString());
-        public static string LoseFocusText = string.Format("Press {0} to LOSE FOCUS", Controls.LoseFocus.ToString());
+        public static int ActionSize = 67;
+        
+        public static string FocusText = string.Format("Press {0} to focus", Controls.Focus.ToString());
+        public static string LoseFocusText = string.Format("Press {0} to lose focus", Controls.LoseFocus.ToString());
 
-        public static string AppendActionableInformation(this string info, Entity entity)
+        public static string AppendActionableInformation(this string info, Entity entity, string separator = null)
         {
             string actions = "";
         
-            if (entity is Nest) actions += "\nClick to KICK";
-            else if (entity is Beacon) actions += "\nDrag into objects";
-            else if (entity is Flower) actions += "\nClick to DUPLICATE";
+            if (entity is Nest) actions = "Click to kick";
+            else if (entity is Beacon) actions = "Drag into objects";
+            else if (entity is Flower) actions = "Click to duplicate";
+            
+            if (separator == null) separator = "\n\n";
+            
+            if (!string.IsNullOrEmpty(actions)) 
+            {
+                actions = FormatActionItem(actions);
+                if (separator != null) actions = actions.Insert(0, separator);
+            }
 
             if (entity is Focusable) 
             {
-                if (!(entity as Focusable).isFocused) actions += ("\n" + FocusText);
-                else actions += ("\n" + LoseFocusText);
+                actions = actions.AppendFocusInformation(entity, "\n");
             }
 
-            if (!string.IsNullOrEmpty(actions)) 
-            {
-                actions = actions.Insert(0, "\n");
-                return info += string.Format("<size=50%><i>{0}</i></size>", actions);
-            }
-
-            return info;
+            return (info + actions);
         }
 
-        public static string AppendContextualInformation(this string info, Entity entity, Wand.DragContext context)
+        public static string AppendFocusInformation(this string info, Entity entity, string separator = null)
+        {
+            string actions = "";
+
+            if (entity is Focusable) 
+            {
+                if (!(entity as Focusable).isFocused) actions = FocusText;
+                else actions = LoseFocusText;
+
+                actions = FormatActionItem(actions);
+                if (separator != null) actions = actions.Insert(0, separator);
+            }
+
+            return (info + actions);
+        }
+
+        public static string AppendContextualInformation(this string info, Entity entity, Wand.DragContext context, string separator = null)
         {
             string contextual = "";
 
             if (entity is Beacon) 
             {
-                if (context == Wand.DragContext.Addition) contextual = "ABSORB";
-                else if (context == Wand.DragContext.Destroy) contextual = "DESTROY";
-                else if (context == Wand.DragContext.Flower) contextual = "FLOWER";
-                else if (context == Wand.DragContext.Plant) contextual = "PLANT";
+                if (context == Wand.DragContext.Addition) contextual = "Absorb into terrain";
+                else if (context == Wand.DragContext.Destroy) contextual = "Destroy in terrain";
+                else if (context == Wand.DragContext.Flower) contextual = "Flower into terrain";
+                else if (context == Wand.DragContext.Plant) contextual = "Plant into terrain";
                 else if (context == Wand.DragContext.Release) contextual = "";
             }
 
             if (!string.IsNullOrEmpty(contextual)) 
             {
-                contextual = contextual.Insert(0, "\n\n");
-                info += string.Format("<size=50%><i>{0}</i></size>", contextual);
+                contextual = FormatActionItem(contextual);
+                if(separator != null) contextual = contextual.Insert(0, separator);
             }
 
-            return info;
+            return (info + contextual);
+        }
+
+        static string FormatActionItem(string action)
+        {
+            string format = "<size={0}%><color={1}>-  {2}  -</color></size>";
+            return string.Format(format, ActionSize, COLOR_LOOKUP.ACTION, action);
         }
     }
 

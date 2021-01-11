@@ -571,7 +571,7 @@ namespace butterflowersOS.Core
                 {
                     if (beacon != null) 
                     {
-                        message = beacon.File.AppendContextualInformation(beacon, context);
+                        message = beacon.File.AppendContextualInformation(beacon, context, "\n\n");
                     }
                 }
 
