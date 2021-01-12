@@ -157,6 +157,16 @@ namespace uwu.Extensions
 			t.localEulerAngles = Vector3.zero;
 			t.localPosition = Vector3.zero;
 		}
+		
+		public static float3 WorldToLocal(this float4x4 transform, float3 point)
+		{
+			return math.transform(math.inverse(transform), point);
+		}
+ 
+		public static float3 LocalToWorld(this float4x4 transform, float3 point)
+		{
+			return math.transform(transform, point);
+		}
 
 		#endregion
 
@@ -792,20 +802,21 @@ namespace uwu.Extensions
 		
 		#region Camera
 
-		/*public static Bounds GetBoundsFromCamera(this UnityEngine.Camera camera, float depth)
+		public static void FitToCamera(this Transform transform, UnityEngine.Camera camera, float thickness)
 		{
-			Bounds bounds = new Bounds();
-				
-			var depth = ncp + (0.01f + thickness / 2f);
+			var depth = camera.nearClipPlane + (0.01f + thickness / 2f);
 
+			Transform cacheParent = transform.parent;
 			transform.parent = camera.transform;
 
 			transform.localEulerAngles = Vector3.zero;
-			transform.localPosition = new Vector3(0f, 0f, depth);
+			transform.localPosition = new Vector3(0f, 0f, depth + thickness/2f);
 
-			var height = Mathf.Tan(fov * Mathf.Deg2Rad * 0.5f) * depth * 2f;
-			transform.localScale = new Vector3(height * asp, height, thickness);
-		}*/
+			var height = Mathf.Tan(camera.fieldOfView * Mathf.Deg2Rad * 0.5f) * depth * 2f;
+			transform.localScale = new Vector3(height * camera.aspect, height, thickness);
+
+			transform.parent = cacheParent;
+		}
 		
 		/// <summary>
 		/// Convert point from world space to screen space

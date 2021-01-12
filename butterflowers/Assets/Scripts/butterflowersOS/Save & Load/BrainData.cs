@@ -1,4 +1,7 @@
-﻿using Neue.Agent.Brain.Data;
+﻿using System;
+using System.Globalization;
+using Neue.Agent.Brain.Data;
+using UnityEngine;
 using uwu;
 
 namespace butterflowersOS
@@ -7,6 +10,7 @@ namespace butterflowersOS
 	public class BrainData
 	{
 		public string username = null;
+		public string created_at = null;
 
 		public string[] directories = new string[]{};
 		public string[] files = new string[] { };
@@ -15,8 +19,6 @@ namespace butterflowersOS
 		public int[] shared_files = new int[] { };
 		public int[] world_files = new int[] { };
 
-		public Knowledge[] file_knowledge = new Knowledge[] { };
-		
 		public Profile profile = new Profile();
 
 		public BrainData(){}
@@ -24,6 +26,7 @@ namespace butterflowersOS
 		public BrainData(GameData dat)
 		{
 			this.username = dat.username;
+			this.created_at = System.DateTime.UtcNow.ToString(); // Write timestamp
 			
 			this.directories = dat.directories;
 			this.files = dat.files;
@@ -31,8 +34,29 @@ namespace butterflowersOS
 			this.shared_files = dat.shared_files;
 			this.world_files = dat.world_files;
 
-			this.file_knowledge = dat.file_knowledge;
 			this.profile = dat.profile;
+		}
+	}
+
+	public static class BrainDataExtensions
+	{
+		public static bool IsProfileValid(this BrainData data)
+		{
+			if (data == null) return false;
+			
+			var timestamp = data.created_at;
+			try 
+			{
+				DateTime created_at = DateTime.Parse(timestamp, CultureInfo.CurrentCulture, DateTimeStyles.AssumeUniversal);
+				
+				Debug.LogWarningFormat("Profile in save file was valid => created at: {0}", created_at);
+				return true;
+			}
+			catch (System.Exception err) 
+			{
+				Debug.LogWarning("Profile in save file was invalid!");
+				return false;	
+			}
 		}
 	}
 }

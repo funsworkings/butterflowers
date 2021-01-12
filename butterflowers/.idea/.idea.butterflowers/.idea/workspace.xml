@@ -34,17 +34,10 @@
   </component>
   <component name="ChangeListManager">
     <list default="true" id="6ebb3891-c912-403e-9e42-400f227dea0b" name="Default Changelist" comment="">
-      <change beforePath="$PROJECT_DIR$/.idea/.idea.butterflowers/.idea/workspace.xml" beforeDir="false" afterPath="$PROJECT_DIR$/.idea/.idea.butterflowers/.idea/workspace.xml" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/Assets/Prefabs/Objects/avi.prefab" beforeDir="false" afterPath="$PROJECT_DIR$/Assets/Prefabs/Objects/avi.prefab" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/Assets/Prefabs/Objects/flower.prefab" beforeDir="false" afterPath="$PROJECT_DIR$/Assets/Prefabs/Objects/flower.prefab" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/Assets/Prefabs/Objects/nest.prefab" beforeDir="false" afterPath="$PROJECT_DIR$/Assets/Prefabs/Objects/nest.prefab" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/Assets/Prefabs/Objects/tiny flower.prefab" beforeDir="false" afterPath="$PROJECT_DIR$/Assets/Prefabs/Objects/tiny flower.prefab" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/Assets/Prefabs/Objects/tree Variant.prefab" beforeDir="false" afterPath="$PROJECT_DIR$/Assets/Prefabs/Objects/tree Variant.prefab" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/Assets/Scenes/420_Terrain.unity" beforeDir="false" afterPath="$PROJECT_DIR$/Assets/Scenes/420_Terrain.unity" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/Assets/Materials/Canvas.mat" beforeDir="false" afterPath="$PROJECT_DIR$/Assets/Materials/Canvas.mat" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/Assets/Scenes/Main Menu.unity" beforeDir="false" afterPath="$PROJECT_DIR$/Assets/Scenes/Main Menu.unity" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/Assets/Scripts/butterflowersOS/Core/Wand.cs" beforeDir="false" afterPath="$PROJECT_DIR$/Assets/Scripts/butterflowersOS/Core/Wand.cs" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/Assets/Scripts/butterflowersOS/Objects/Managers/ButterflowerManager.cs" beforeDir="false" afterPath="$PROJECT_DIR$/Assets/Scripts/butterflowersOS/Objects/Managers/ButterflowerManager.cs" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/Library/EditorUserBuildSettings.asset" beforeDir="false" afterPath="$PROJECT_DIR$/Library/EditorUserBuildSettings.asset" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/Assets/Scripts/butterflowersOS/Menu/MainMenu.cs" beforeDir="false" afterPath="$PROJECT_DIR$/Assets/Scripts/butterflowersOS/Menu/MainMenu.cs" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/Library/SpriteAtlasDatabase.asset" beforeDir="false" afterPath="$PROJECT_DIR$/Library/SpriteAtlasDatabase.asset" afterDir="false" />
     </list>
     <option name="SHOW_DIALOG" value="false" />
     <option name="HIGHLIGHT_CONFLICTS" value="true" />
@@ -65,38 +58,11 @@
     <setting file="file://$PROJECT_DIR$/Library/PackageCache/com.unity.entities@0.11.2-preview.1/Unity.Transforms/Translation.cs" root0="SKIP_HIGHLIGHTING" />
     <setting file="file://$PROJECT_DIR$/Assets/Scripts/butterflowersOS/Snippets/FitViaScale.cs" root0="FORCE_HIGHLIGHTING" />
     <setting file="file://$PROJECT_DIR$/Assets/Scripts/butterflowersOS/UI/MenuCursor.cs" root0="FORCE_HIGHLIGHTING" />
+    <setting file="file://$PROJECT_DIR$/Assets/Scripts/butterflowersOS/Objects/Entities/Interactables/Poem.cs" root0="FORCE_HIGHLIGHTING" />
   </component>
   <component name="IdeDocumentHistory">
     <option name="CHANGED_PATHS">
       <list>
-        <option value="$PROJECT_DIR$/Assets/Scripts/___Deprecated/Misc/CollisionPlane.cs" />
-        <option value="$PROJECT_DIR$/Assets/Scripts/uwu/Extensions/Extensions.cs" />
-        <option value="$PROJECT_DIR$/Assets/Scripts/Presets/ButterflyPreset.cs" />
-        <option value="$PROJECT_DIR$/Assets/Scripts/Objects/Entities/Cage.cs" />
-        <option value="$PROJECT_DIR$/Assets/Scripts/Data/BeaconSceneData.cs" />
-        <option value="$PROJECT_DIR$/Assets/Scripts/Save &amp; Load/GameData.cs" />
-        <option value="$PROJECT_DIR$/Assets/Scripts/Objects/Entities/Sector.cs" />
-        <option value="$PROJECT_DIR$/Assets/Scripts/Snippets/FitViaScale.cs" />
-        <option value="$PROJECT_DIR$/Assets/Packages/UnityWindowsFileDrag-Drop-master/FileDragAndDrop.cs" />
-        <option value="$PROJECT_DIR$/Assets/Scripts/uwu/Gameplay/Spawner.cs" />
-        <option value="$PROJECT_DIR$/Assets/Scripts/Core/Focusing.cs" />
-        <option value="$PROJECT_DIR$/Assets/Scripts/Objects/Base/Entity.cs" />
-        <option value="$PROJECT_DIR$/Assets/Scripts/Objects/Entities/Interactables/Empty/Flower.cs" />
-        <option value="$PROJECT_DIR$/Assets/Scripts/Objects/Entities/Interactables/Empty/Star.cs" />
-        <option value="$PROJECT_DIR$/Assets/Scripts/Objects/Entities/Interactables/Empty/Tree.cs" />
-        <option value="$PROJECT_DIR$/Assets/Scripts/Objects/Entities/Interactables/Vine.cs" />
-        <option value="$PROJECT_DIR$/Assets/Scripts/Objects/Managers/TutorialManager.cs" />
-        <option value="$PROJECT_DIR$/Assets/Scripts/Objects/Entities/Sun.cs" />
-        <option value="$PROJECT_DIR$/Assets/Scripts/Objects/Managers/SequenceManager.cs" />
-        <option value="$PROJECT_DIR$/Assets/Scripts/Objects/Managers/VineManager.cs" />
-        <option value="$PROJECT_DIR$/Assets/Scripts/Core/World.cs" />
-        <option value="$PROJECT_DIR$/Assets/Scripts/Save &amp; Load/GameDataSaveSystem.cs" />
-        <option value="$PROJECT_DIR$/Assets/Scripts/Objects/Managers/ButterflowerManager.cs" />
-        <option value="$PROJECT_DIR$/Assets/Scripts/Objects/Entities/Butterfly.cs" />
-        <option value="$PROJECT_DIR$/Assets/Scripts/___Deprecated/GradingManager.cs" />
-        <option value="$PROJECT_DIR$/Assets/Scripts/___Deprecated/SummaryManager.cs" />
-        <option value="$PROJECT_DIR$/Assets/Scripts/UI/ScoreCard.cs" />
-        <option value="$PROJECT_DIR$/Assets/Scripts/Objects/Managers/BeaconManager.cs" />
         <option value="$PROJECT_DIR$/Assets/Scripts/Core/Surveillance.cs" />
         <option value="$PROJECT_DIR$/Assets/Scripts/uwu/Gameplay/IInteractable.cs" />
         <option value="$PROJECT_DIR$/Assets/Scripts/Objects/Base/Focusable.cs" />
@@ -108,18 +74,46 @@
         <option value="$PROJECT_DIR$/Assets/Scripts/Objects/Entities/Terrain.cs" />
         <option value="$PROJECT_DIR$/Assets/Scripts/Global.cs" />
         <option value="$PROJECT_DIR$/Assets/Scripts/Core/Wand.cs" />
-        <option value="$PROJECT_DIR$/Assets/Scripts/butterflowersOS/Save &amp; Load/GameDataSaveSystem.cs" />
         <option value="$PROJECT_DIR$/Assets/Scripts/uwu/Save &amp; Load/GameDataSaveSystem.cs" />
-        <option value="$PROJECT_DIR$/Assets/Scripts/butterflowersOS/Save &amp; Load/GameData.cs" />
-        <option value="$PROJECT_DIR$/Assets/Scripts/butterflowersOS/Data/SurveillanceData.cs" />
         <option value="$PROJECT_DIR$/Assets/Scripts/butterflowersOS/Data/CompositeSurveillanceData.cs" />
-        <option value="$PROJECT_DIR$/Assets/Scripts/butterflowersOS/Core/Surveillance.cs" />
         <option value="$PROJECT_DIR$/Assets/Scripts/butterflowersOS/UI/Summary Cards/BeaconsFlowered.cs" />
         <option value="$PROJECT_DIR$/Assets/Scripts/uwu/IO/FileNavigator.cs" />
-        <option value="$PROJECT_DIR$/Assets/Scripts/butterflowersOS/Core/World.cs" />
-        <option value="$PROJECT_DIR$/Assets/Scripts/butterflowersOS/Objects/Managers/BeaconManager.cs" />
+        <option value="$PROJECT_DIR$/Assets/Scripts/___Deprecated/SummaryManager.cs" />
+        <option value="$PROJECT_DIR$/Assets/Scripts/uwu/Extensions/Extensions.cs" />
+        <option value="$PROJECT_DIR$/Assets/Scripts/uwu/Gameplay/Spawner.cs" />
         <option value="$PROJECT_DIR$/Assets/Scripts/butterflowersOS/Objects/Managers/ButterflowerManager.cs" />
+        <option value="$PROJECT_DIR$/Assets/Scripts/butterflowersOS/Core/Focusing.cs" />
+        <option value="$PROJECT_DIR$/Assets/Scripts/butterflowersOS/Objects/Entities/Interactables/Poem.cs" />
+        <option value="$PROJECT_DIR$/Assets/Scripts/butterflowersOS/Objects/Entities/Interactables/Nest.cs" />
+        <option value="$PROJECT_DIR$/Assets/Scripts/butterflowersOS/Data/SurveillanceData.cs" />
+        <option value="$PROJECT_DIR$/Assets/Scripts/butterflowersOS/Interfaces/IReactToSunCycleReliable.cs" />
+        <option value="$PROJECT_DIR$/Assets/Scripts/butterflowersOS/Save &amp; Load/GameData.cs" />
+        <option value="$PROJECT_DIR$/Assets/Scripts/butterflowersOS/Save &amp; Load/BrainData.cs" />
+        <option value="$PROJECT_DIR$/Assets/Scripts/butterflowersOS/Save &amp; Load/GameDataSaveSystem.cs" />
+        <option value="$PROJECT_DIR$/Assets/Scripts/butterflowersOS/Core/Surveillance.cs" />
+        <option value="$PROJECT_DIR$/Assets/Scripts/butterflowersOS/Objects/Managers/SequenceManager.cs" />
+        <option value="$PROJECT_DIR$/Assets/Scripts/butterflowersOS/Objects/Managers/BeaconManager.cs" />
+        <option value="$PROJECT_DIR$/Assets/Packages/UnityWindowsFileDrag-Drop-master/FileDragAndDrop.cs" />
+        <option value="$PROJECT_DIR$/Assets/Scripts/butterflowersOS/Utils/PauseMenu.cs" />
+        <option value="$PROJECT_DIR$/Assets/Scripts/butterflowersOS/Menu/GenericMenu.cs" />
+        <option value="$PROJECT_DIR$/Assets/Scripts/uwu/Snippets/SimpleVelocity.cs" />
+        <option value="$PROJECT_DIR$/Assets/Scripts/uwu/Scenes/SceneUtils.cs" />
+        <option value="$PROJECT_DIR$/Assets/Scripts/butterflowersOS/Objects/Base/Element.cs" />
+        <option value="$PROJECT_DIR$/Assets/Scripts/butterflowersOS/Objects/Entities/Sun.cs" />
+        <option value="$PROJECT_DIR$/Assets/Scripts/uwu/Snippets/Load/Loader.cs" />
+        <option value="$PROJECT_DIR$/Assets/Scripts/butterflowersOS/Menu/PauseMenu.cs" />
+        <option value="$PROJECT_DIR$/Assets/Scripts/butterflowersOS/UI/SummaryDeck.cs" />
+        <option value="$PROJECT_DIR$/Assets/Scripts/butterflowersOS/Interfaces/IActionTooltip.cs" />
+        <option value="$PROJECT_DIR$/Assets/Scripts/butterflowersOS/Global.cs" />
+        <option value="$PROJECT_DIR$/Assets/Scripts/butterflowersOS/Core/World.cs" />
+        <option value="$PROJECT_DIR$/Assets/Scripts/uwu/Snippets/Load/SceneLoader.cs" />
+        <option value="$PROJECT_DIR$/Assets/Scripts/butterflowersOS/Core/Library.cs" />
+        <option value="$PROJECT_DIR$/Assets/Animations/Controllers/Entities/Wand.controller" />
+        <option value="$PROJECT_DIR$/Assets/Scripts/butterflowersOS/Menu/ChooseUsername.cs" />
+        <option value="$PROJECT_DIR$/Assets/Scripts/butterflowersOS/Objects/Entities/Interactables/Vine.cs" />
         <option value="$PROJECT_DIR$/Assets/Scripts/butterflowersOS/Core/Wand.cs" />
+        <option value="$PROJECT_DIR$/Assets/Scripts/butterflowersOS/Visuals/Types/WandAffectorMaterial.cs" />
+        <option value="$PROJECT_DIR$/Assets/Scripts/butterflowersOS/Menu/MainMenu.cs" />
       </list>
     </option>
   </component>
@@ -201,7 +195,8 @@
       <workItem from="1609265175990" duration="5940000" />
       <workItem from="1609283104196" duration="12641000" />
       <workItem from="1609457340484" duration="49411000" />
-      <workItem from="1610128221564" duration="25653000" />
+      <workItem from="1610128221564" duration="54291000" />
+      <workItem from="1610320681042" duration="23218000" />
     </task>
     <servers />
   </component>
@@ -299,10 +294,10 @@
       <screen x="0" y="0" width="1536" height="824" />
     </state>
     <state width="1493" height="288" key="GridCell.Tab.3.right/0.0.1536.824@0.0.1536.824" timestamp="1607212147886" />
-    <state x="-1558" y="-130" key="RiderGenerateDialog" timestamp="1610212924045">
+    <state x="-1558" y="-130" key="RiderGenerateDialog" timestamp="1610425707617">
       <screen x="-2560" y="-349" width="2560" height="1400" />
     </state>
-    <state x="-1558" y="-130" key="RiderGenerateDialog/0.0.1536.824/-2560.-349.2560.1400@-2560.-349.2560.1400" timestamp="1610212924045" />
+    <state x="-1558" y="-130" key="RiderGenerateDialog/0.0.1536.824/-2560.-349.2560.1400@-2560.-349.2560.1400" timestamp="1610425707617" />
     <state x="2922" y="-139" key="RiderGenerateDialog/0.0.1536.824/1920.-358.2560.1400@1920.-358.2560.1400" timestamp="1607481067179" />
     <state x="601" y="129" key="RiderGenerateDialog/0.0.1536.824@0.0.1536.824" timestamp="1609218534248" />
     <state x="80" y="57" width="1178" height="710" key="SettingsEditor" timestamp="1609302331072">
@@ -310,6 +305,10 @@
     </state>
     <state x="2053" y="-261" key="SettingsEditor/0.0.1536.824/1920.-358.2560.1400@1920.-358.2560.1400" timestamp="1607391680643" />
     <state x="80" y="57" width="1178" height="710" key="SettingsEditor/0.0.1536.824@0.0.1536.824" timestamp="1609302331072" />
+    <state width="498" height="446" key="SwitcherDM" timestamp="1610242353153">
+      <screen x="-2560" y="-349" width="2560" height="1400" />
+    </state>
+    <state width="498" height="446" key="SwitcherDM/0.0.1536.824/-2560.-349.2560.1400@-2560.-349.2560.1400" timestamp="1610242353153" />
     <state x="440" y="31" key="com.intellij.openapi.editor.actions.MultiplePasteAction$ClipboardContentChooser" timestamp="1607745865890">
       <screen x="0" y="0" width="1536" height="824" />
     </state>
@@ -318,20 +317,22 @@
       <screen x="0" y="0" width="1536" height="824" />
     </state>
     <state x="43" y="37" width="1507" height="810" key="dock-window-1/0.0.1536.824@0.0.1536.824" timestamp="1606582891568" />
-    <state x="415" y="11" width="705" height="801" key="find.popup" timestamp="1608524933137">
-      <screen x="0" y="0" width="1536" height="824" />
+    <state x="-1868" y="-330" width="1175" height="1361" key="find.popup" timestamp="1610318780277">
+      <screen x="-2560" y="-349" width="2560" height="1400" />
     </state>
+    <state x="-1868" y="-330" width="1175" height="1361" key="find.popup/0.0.1536.824/-2560.-349.2560.1400@-2560.-349.2560.1400" timestamp="1610318780277" />
     <state x="415" y="11" width="705" height="801" key="find.popup/0.0.1536.824@0.0.1536.824" timestamp="1608524933137" />
-    <state x="425" y="187" width="672" height="677" key="run.anything.popup" timestamp="1609791387421">
-      <screen x="0" y="0" width="1536" height="824" />
+    <state x="-1852" y="-31" width="1120" height="1151" key="run.anything.popup" timestamp="1610325095885">
+      <screen x="-2560" y="-349" width="2560" height="1400" />
     </state>
+    <state x="-1852" y="-31" width="1120" height="1151" key="run.anything.popup/0.0.1536.824/-2560.-349.2560.1400@-2560.-349.2560.1400" timestamp="1610325095885" />
     <state x="2628" y="-31" width="1120" height="1151" key="run.anything.popup/0.0.1536.824/1920.-349.2560.1400@1920.-349.2560.1400" timestamp="1609375011181" />
     <state x="2628" y="-40" width="1120" height="1151" key="run.anything.popup/0.0.1536.824/1920.-358.2560.1400@1920.-358.2560.1400" timestamp="1607910030966" />
     <state x="425" y="187" width="672" height="677" key="run.anything.popup/0.0.1536.824@0.0.1536.824" timestamp="1609791387421" />
-    <state x="-1843" y="-103" width="1120" height="1152" key="search.everywhere.popup" timestamp="1610241369404">
+    <state x="-1843" y="-103" width="1120" height="1152" key="search.everywhere.popup" timestamp="1610476721222">
       <screen x="-2560" y="-349" width="2560" height="1400" />
     </state>
-    <state x="-1843" y="-103" width="1120" height="1152" key="search.everywhere.popup/0.0.1536.824/-2560.-349.2560.1400@-2560.-349.2560.1400" timestamp="1610241369404" />
+    <state x="-1843" y="-103" width="1120" height="1152" key="search.everywhere.popup/0.0.1536.824/-2560.-349.2560.1400@-2560.-349.2560.1400" timestamp="1610476721222" />
     <state x="-1842" y="-112" width="1120" height="1152" key="search.everywhere.popup/0.0.1536.824/-2560.-358.2560.1400@-2560.-358.2560.1400" timestamp="1608687095751" />
     <state x="79" y="-1194" width="1120" height="1152" key="search.everywhere.popup/0.0.1536.824/-638.-1440.2560.1400@-638.-1440.2560.1400" timestamp="1609043539164" />
     <state x="2637" y="-103" width="1120" height="1152" key="search.everywhere.popup/0.0.1536.824/1920.-349.2560.1400@1920.-349.2560.1400" timestamp="1609698996642" />

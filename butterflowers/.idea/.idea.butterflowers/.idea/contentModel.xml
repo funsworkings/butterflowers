@@ -875,6 +875,7 @@
             <e p="_Read Me.txt" t="Include" />
           </e>
         </e>
+        <e p="GetMousePosition.cs" t="Include" />
         <e p="Packages" t="Include">
           <e p="noder" t="Include">
             <e p="Behaviors" t="Include">
@@ -1301,11 +1302,14 @@
               <e p="IPauseSun.cs" t="Include" />
               <e p="IReactToSun.cs" t="Include" />
               <e p="IReactToSunCycle.cs" t="Include" />
+              <e p="IReactToSunCycleReliable.cs" t="Include" />
               <e p="ITooltip.cs" t="Include" />
             </e>
             <e p="Menu" t="Include">
               <e p="ChooseUsername.cs" t="Include" />
+              <e p="GenericMenu.cs" t="Include" />
               <e p="MainMenu.cs" t="Include" />
+              <e p="PauseMenu.cs" t="Include" />
               <e p="VersionText.cs" t="Include" />
             </e>
             <e p="Miscellaneous" t="Include">
@@ -1330,6 +1334,7 @@
                     <e p="Tree.cs" t="Include" />
                   </e>
                   <e p="Nest.cs" t="Include" />
+                  <e p="Poem.cs" t="Include" />
                   <e p="Vine.cs" t="Include" />
                 </e>
                 <e p="Quilt.cs" t="Include" />
@@ -1386,6 +1391,11 @@
               <e p="SummaryCard.cs" t="Include" />
               <e p="SummaryCardTrigger.cs" t="Include" />
               <e p="SummaryDeck.cs" t="Include" />
+            </e>
+            <e p="Visuals" t="Include">
+              <e p="Types" t="Include">
+                <e p="WandAffectorMaterial.cs" t="Include" />
+              </e>
             </e>
           </e>
           <e p="Neue" t="Include">
@@ -1628,9 +1638,10 @@
               <e p="LineDot.cs" t="Include" />
               <e p="Load" t="Include">
                 <e p="ILoadDependent.cs" t="Include" />
-                <e p="Loading.cs" t="Include" />
+                <e p="Loader.cs" t="Include" />
                 <e p="LoadingBar.cs" t="Include" />
                 <e p="LoadingImageOpacity.cs" t="Include" />
+                <e p="SceneLoader.cs" t="Include" />
               </e>
               <e p="Logger.cs" t="Include" />
               <e p="MaintainGlobalScale.cs" t="Include" />
@@ -1716,6 +1727,7 @@
         </e>
         <e p="Shaders" t="Include">
           <e p="BlendNoMaterial.shader" t="Include" />
+          <e p="blurUI.shader" t="Include" />
           <e p="Butterfly.shader" t="Include" />
           <e p="Butterfly_Amplify.shader" t="Include" />
           <e p="Canvas.shader" t="Include" />
@@ -1724,6 +1736,7 @@
           <e p="DeferredFog.shader" t="Include" />
           <e p="DeferredShading.shader" t="Include" />
           <e p="EtherealBoy.shader" t="Include" />
+          <e p="FluffyLeaf.shader" t="Include" />
           <e p="Instancing.shader" t="Include" />
           <e p="My First Lighting Shader.shader" t="Include" />
           <e p="My First Shader.shader" t="Include" />
@@ -1731,6 +1744,8 @@
           <e p="My Lightmapping.cginc" t="Include" />
           <e p="My Shadows.cginc" t="Include" />
           <e p="MyDeferredShading.cginc" t="Include" />
+          <e p="NestVertexSnap.shader" t="Include" />
+          <e p="NestVertexSnapping.shader" t="Include" />
           <e p="NewUnlitShader.shader" t="Include" />
           <e p="NoZWrite.shader" t="Include" />
           <e p="RippleUI.shader" t="Include" />

@@ -23,9 +23,9 @@ namespace butterflowersOS.Objects.Entities
 
         World World;
     
-        IReactToSun[] Listeners;
-        IReactToSunCycle[] Observers;
-        IPauseSun[] Pausers;
+        IReactToSun[] Listeners = new IReactToSun[]{};
+        IReactToSunCycle[] Observers = new IReactToSunCycle[]{};
+        IPauseSun[] Pausers = new IPauseSun[]{};
 
         #region Internal
 
@@ -136,6 +136,7 @@ namespace butterflowersOS.Objects.Entities
         // Update is called once per frame
         void Update()
         {
+            if (World == null) return;
             if (!World.LOAD) return;
         
             float t_timeScale = 0f;
@@ -150,7 +151,7 @@ namespace butterflowersOS.Objects.Entities
             }
 
             timeScale = Mathf.Lerp(timeScale, t_timeScale, Time.unscaledDeltaTime * timeScaleLerpSpeed);
-            Time.timeScale = timeScale;
+            Time.timeScale = World.TimeScale * timeScale;
 
             if (active) {
                 if (Input.GetKeyDown(KeyCode.RightBracket)) time += Preset.secondsPerDay;
@@ -327,8 +328,15 @@ namespace butterflowersOS.Objects.Entities
         void CycleObservers(bool refresh)
         {
             Observers = FindObjectsOfType<MonoBehaviour>().OfType<IReactToSunCycle>().ToArray();
-            foreach(IReactToSunCycle o in Observers)
-                o.Cycle(refresh);
+
+            bool includeAll = (World.type == World.AdvanceType.Broken);
+            bool success = false;
+            
+            foreach (IReactToSunCycle o in Observers) 
+            {
+                success = (includeAll || (o is IReactToSunCycleReliable));
+                if(success) o.Cycle(refresh);
+            }
         }
 
         void WaitForPausers()
@@ -337,7 +345,7 @@ namespace butterflowersOS.Objects.Entities
         
             foreach (IPauseSun pauser in Pausers) 
             {
-                if (pauser.Pause) 
+                if (pauser != null && pauser.Pause) 
                 {
                     active = false;
                     break;
