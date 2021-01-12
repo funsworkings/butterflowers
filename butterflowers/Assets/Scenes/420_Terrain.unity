@@ -3203,7 +3203,7 @@ Transform:
   m_PrefabInstance: {fileID: 0}
   m_PrefabAsset: {fileID: 0}
   m_GameObject: {fileID: 201810246}
-  m_LocalRotation: {x: 0.12156508, y: -0.000000020864588, z: 0.0000000025043372, w: 0.9925835}
+  m_LocalRotation: {x: 0.12156505, y: -0.000000013581906, z: 0.0000000016392674, w: 0.9925835}
   m_LocalPosition: {x: 0, y: 9.595102, z: -21.852465}
   m_LocalScale: {x: 1, y: 1.3577, z: 1}
   m_Children:
@@ -42374,6 +42374,11 @@ PrefabInstance:
       propertyPath: m_LocalEulerAnglesHint.z
       value: 0
       objectReference: {fileID: 0}
+    - target: {fileID: 3447281704321886859, guid: e4ffaf7dd570b28469327a4909aedfd2,
+        type: 3}
+      propertyPath: m_Materials.Array.data[0]
+      value: 
+      objectReference: {fileID: 2100000, guid: 7516cf9499c0d43a29743e35b80e143d, type: 2}
     - target: {fileID: 3447281704321886860, guid: e4ffaf7dd570b28469327a4909aedfd2,
         type: 3}
       propertyPath: Quilt
