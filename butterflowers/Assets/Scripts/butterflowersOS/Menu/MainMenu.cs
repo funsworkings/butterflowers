@@ -5,12 +5,17 @@ using UnityEngine.SceneManagement;
 using uwu;
 using uwu.Snippets.Load;
 using uwu.UI.Behaviors.Visibility;
+using UnityEngine.Events;
 
 namespace butterflowersOS.Menu
 {
     public class MainMenu : GenericMenu
     {
         GameDataSaveSystem Save;
+        
+        // Events
+
+        public UnityEvent onMainMenu, onUserMenu;
     
         // Properties
 
@@ -76,6 +81,7 @@ namespace butterflowersOS.Menu
 
             Close();
             usernamePanel.Open();
+            onUserMenu.Invoke();
         }
 
         public void ContinueNewGame(string input)
@@ -105,6 +111,7 @@ namespace butterflowersOS.Menu
 
             route = Route.NULL;
             Open();
+            onMainMenu.Invoke();
         }
 
         void DisplayOptions(bool previousSave)
