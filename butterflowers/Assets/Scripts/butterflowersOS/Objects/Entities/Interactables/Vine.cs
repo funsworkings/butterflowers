@@ -12,7 +12,7 @@ using uwu.Extensions;
 
 namespace butterflowersOS.Objects.Entities.Interactables
 {
-    public class Vine : Interactable, ITooltip, IFileContainer
+    public class Vine : Entity, ITooltip, IFileContainer
     {
         #region Internal
 
@@ -119,10 +119,8 @@ namespace butterflowersOS.Objects.Entities.Interactables
 
         #region Monobehaviour callbacks
 
-        protected override void Awake()
+        protected void Awake()
         {
-            base.Awake();
-
             line = GetComponent<LineRenderer>();
             line.positionCount = 0;
             

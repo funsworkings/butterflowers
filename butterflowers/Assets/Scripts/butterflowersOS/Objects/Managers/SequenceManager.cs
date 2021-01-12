@@ -2,6 +2,7 @@
 using butterflowersOS.Core;
 using butterflowersOS.Data;
 using butterflowersOS.Interfaces;
+using butterflowersOS.Objects.Base;
 using butterflowersOS.Objects.Entities;
 using butterflowersOS.Objects.Miscellaneous;
 using butterflowersOS.Presets;
@@ -11,17 +12,35 @@ using TMPro;
 using UnityEngine;
 using uwu;
 using uwu.Dialogue;
+using uwu.Extensions;
 using uwu.UI.Behaviors.Visibility;
 
 namespace butterflowersOS.Objects.Managers
 {
 	public class SequenceManager : MonoBehaviour, ISaveable, IPauseSun
 	{
+		#region Internal
+
+		public enum TriggerReason
+		{
+			Nothing,
+			Block,
+			
+			CageNotCompleted,
+			SequenceHasCompleted
+		}
+		
+		#endregion
+		
+		
 		// External
 
 		Sun Sun;
 		GameDataSaveSystem _Save;
+		
 		[SerializeField] Cage Cage;
+		[SerializeField] Focusing Focus;
+		[SerializeField] ButterflowerManager Butterflowers;
 		
 		// Properties
 
@@ -35,7 +54,7 @@ namespace butterflowersOS.Objects.Managers
 
 		[SerializeField] int index = -1;
 		[SerializeField] Frame[] frames = new Frame[]{};
-		[SerializeField] bool inprogress = false;
+		[SerializeField] bool inprogress = false, read = false;
 		
 		// Attributes
 
@@ -45,12 +64,15 @@ namespace butterflowersOS.Objects.Managers
 		[SerializeField] AnimationCurve meshScaleCurve;
 		[SerializeField] float meshScaleTime = 1f;
 
-		[SerializeField] float startDelay = 1f, endDelay = 1f;
+		[SerializeField] float startDelay = 1f, endDelay = 1f, closeDelay = 1f;
 		[SerializeField] float frameDelay = 3f;
 
 		#region Accessors
 
 		public bool Pause => inprogress;
+		public bool Read => read;
+		
+		public bool Complete => (Cage.Completed && (index + 1) < frames.Length);
 		
 		#endregion
 		
@@ -103,41 +125,45 @@ namespace butterflowersOS.Objects.Managers
 		
 		#endregion
 
-		public void Cycle()
+		public TriggerReason Cycle()
 		{
 			int t_index = (index + 1);
-			
-			if (NeedsToTriggerScene(t_index)) // Trigger cutscene
+
+			var reason = NeedsToTriggerScene(t_index);
+			if (reason == TriggerReason.Nothing) // Trigger cutscene
 			{
 				inprogress = true;
 				StartCoroutine(PlayScene(t_index)); // Play scene
+
+				return reason;
 			}
+
+			inprogress = read = false;
+			return reason;
 		}
 		
 		#region Scenes
 
-		bool NeedsToTriggerScene(int t_index)
+		TriggerReason NeedsToTriggerScene(int t_index)
 		{
-			if (Cage.Completed && t_index < frames.Length) 
+			if (!Cage.Completed) return TriggerReason.CageNotCompleted;
+			if (t_index >= frames.Length) return TriggerReason.SequenceHasCompleted;
+		
+			var _frames = World.Instance.Profile.weights.behaviours;
+			var _frame = Frame.Destruction;
+			var _maxFrame = Mathf.NegativeInfinity;
+				
+			foreach (FrameFloat frame in _frames) 
 			{
-				var _frames = World.Instance.Profile.weights.behaviours;
-				var _frame = Frame.Destruction;
-				var _maxFrame = Mathf.NegativeInfinity;
-				
-				foreach (FrameFloat frame in _frames) 
+				if (frame.value > _maxFrame) 
 				{
-					if (frame.value > _maxFrame) 
-					{
-						_maxFrame = frame.value;
-						_frame = frame.frame;
-					}
+					_maxFrame = frame.value;
+					_frame = frame.frame;
 				}
-				
-				frames[t_index] = _frame; // Assign random framing
-				return true;
 			}
-			
-			return false; 
+				
+			frames[t_index] = _frame; // Assign random framing
+			return TriggerReason.Nothing;
 		}
 
 		Sequence FetchSequence(Frame frame)
@@ -181,6 +207,14 @@ namespace butterflowersOS.Objects.Managers
 			
 			yield return new WaitForSecondsRealtime(endDelay);
 
+			bool didFocusOnMesh = false;
+
+			var focusable = _scene.mesh.GetComponent<Focusable>();
+			if (focusable != null) 
+			{
+				didFocusOnMesh = focusable.Focus(); // Set focus to mesh focus!
+			}
+
 			lt = 0f;
 			while (!SmoothLight(ref lt, true)) 
 				yield return null;
@@ -197,14 +231,25 @@ namespace butterflowersOS.Objects.Managers
 			frameOpacity.Hide();
 
 			sceneCaption.Push(_scene.message);
-			while (sceneCaption.inprogress) 
-				yield return null;
+			if (_scene.audio != null) // Play scene audio!
+			{
+				sceneAudio.clip = _scene.audio;
+				sceneAudio.Play();
+			}
 			
-			inprogress = false;
+			while (sceneCaption.inprogress || sceneAudio.isPlaying) 
+			{
+				read = true;
+				inprogress = false;
+				
+				yield return null;
+			}
+
+			inprogress = read = false;
 			opacity.Hide();
 			++index;
 		}
-		
+
 		#region Ops
 
 		bool SmoothLight(ref float lt, bool _in)

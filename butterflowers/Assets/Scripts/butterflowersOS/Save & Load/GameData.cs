@@ -1,4 +1,5 @@
-﻿using butterflowersOS.Data;
+﻿using butterflowersOS;
+using butterflowersOS.Data;
 using Neue.Agent.Brain.Data;
 using UnityEngine;
 
@@ -32,6 +33,9 @@ namespace uwu
 	    public Knowledge[] file_knowledge = new Knowledge[] { };
 		
 	    public Profile profile = new Profile();
+	    public BrainData brain = new BrainData();
+	    
+	    public bool profileGenerated = false;
     }
 
 }

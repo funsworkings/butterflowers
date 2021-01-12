@@ -8,6 +8,7 @@ using butterflowersOS.Objects.Entities;
 using butterflowersOS.Objects.Entities.Interactables;
 using butterflowersOS.Objects.Managers;
 using butterflowersOS.Presets;
+using butterflowersOS.Visuals.Types;
 using TMPro;
 using UnityEngine;
 using UnityEngine.EventSystems;
@@ -90,6 +91,10 @@ namespace butterflowersOS.Core
             [SerializeField] LayerMask plantMask;
             [SerializeField] LayerMask destroyMask;
 
+        [Header("Effects")] 
+            [SerializeField] Vector4 m_wandShaderParam;
+            [SerializeField] WandAffectorMaterial[] _affectorMaterials;
+
         [Header("UI")] 
             [SerializeField] Tooltip info;
             [SerializeField] ToggleOpacity infoOpacity;
@@ -97,11 +102,23 @@ namespace butterflowersOS.Core
 
         #region Accessors
 
+        [SerializeField] Vector3 m_position3d;
         public Vector3 position3d {
-            get{
-                return camera.ScreenToWorldPoint(new Vector3(cursor.position.x, cursor.position.y, 1f));
+            get
+            {
+                return m_position3d;
             }
-        } 
+        }
+
+        [SerializeField] Vector3 m_interaction3d;
+        public Vector4 wandShaderParam
+        {
+            get
+            {
+                float strength = (_interaction == Interaction.Drag) ? 1f : 0f;
+                return new Vector4(m_interaction3d.x, m_interaction3d.y, m_interaction3d.z, strength);
+            }
+        }
 
         public Vector3 position2d
         {
@@ -209,6 +226,7 @@ namespace butterflowersOS.Core
             base.Start();
             
             sun = Sun.Instance;
+            m_wandShaderParam = new Vector4(Mathf.Infinity, Mathf.Infinity, Mathf.Infinity, 0f);
         }
 
         protected override void Update()
@@ -217,11 +235,14 @@ namespace butterflowersOS.Core
             
             base.Update();
 
+            HandlePosition();
             HandleDrag();
 
             UpdateTrajectory();
             UpdateCursorState();
             UpdateTooltip();
+            
+            AffectMaterials();
         }
     
         void OnApplicationFocus(bool hasFocus)
@@ -288,6 +309,31 @@ namespace butterflowersOS.Core
             GrabBeacon(interactable, hit);
         }
 
+        void HandlePosition()
+        {
+            var ray = camera.ScreenPointToRay(new Vector3(position2d.x, position2d.y, 999f));
+            var cameraPosition = camera.transform.position;
+            var rayDirection = ray.direction;
+            
+            m_position3d = cameraPosition + (ray.direction * 1f);
+            m_interaction3d = cameraPosition + (rayDirection * pointDistance);
+        }
+
+        #endregion
+        
+        #region Visuals
+
+        void AffectMaterials()
+        {
+            foreach (WandAffectorMaterial _material in _affectorMaterials) 
+            {
+                string @param = _material.param;
+                Material material = _material.material;
+                
+                material.SetVector(@param, wandShaderParam);
+            }
+        }
+        
         #endregion
         
         #region Beacons
@@ -295,7 +341,7 @@ namespace butterflowersOS.Core
         void HandleDrag()
         {
             context = GetContextFromTarget(); // Get drag context
-            
+
             if (_interaction == Interaction.Drag) 
             {
                 if (cont) 
@@ -309,7 +355,7 @@ namespace butterflowersOS.Core
                     }
                     else 
                     {
-                        point = camera.ScreenToWorldPoint(new Vector3(origin.x, origin.y, pointDistance));
+                        point = m_interaction3d;
                     }
                     
                     beacon.transform.position = point;
@@ -317,7 +363,6 @@ namespace butterflowersOS.Core
                 else 
                 {
                     pointDistance = defaultPointDistance;
-                    
                     if(up) DropBeacon(); // Release beacon
                 }
             }
@@ -571,7 +616,7 @@ namespace butterflowersOS.Core
                 {
                     if (beacon != null) 
                     {
-                        message = beacon.File.AppendContextualInformation(beacon, context);
+                        message = beacon.File.AppendContextualInformation(beacon, context, "\n\n");
                     }
                 }
 
