@@ -1,18 +1,24 @@
-﻿using UnityEngine;
+﻿using System;
+using System.Collections;
+using UnityEngine;
 using UnityEngine.SceneManagement;
 using uwu;
 using uwu.Snippets.Load;
+using uwu.UI.Behaviors.Visibility;
 
 namespace butterflowersOS.Menu
 {
-    public class MainMenu : MonoBehaviour
+    public class MainMenu : GenericMenu
     {
         GameDataSaveSystem Save;
     
         // Properties
 
-        [SerializeField] GameObject continuePanel;
-        [SerializeField] Animator animation;
+        ToggleOpacity opacity;
+        
+        [SerializeField] GameObject continueButton;
+        [SerializeField] ToggleOpacity continuePanel;
+        [SerializeField] ChooseUsername usernamePanel;
 
         public enum Route
         {
@@ -26,7 +32,12 @@ namespace butterflowersOS.Menu
 
         bool previousSaveExists = false;
 
-        void Start()
+        void Awake()
+        {
+            opacity = GetComponent<ToggleOpacity>();
+        }
+
+        protected override void Start()
         {
             Save = GameDataSaveSystem.Instance;
             
@@ -35,37 +46,81 @@ namespace butterflowersOS.Menu
 
             previousSaveExists = Save.LoadGameData<GameData>();
             
-            DisplayOptions(previousSaveExists);
-            animation.SetTrigger("reset");
+            base.Start();
+            
+            Reset();
         }
 
-        void DisplayOptions(bool previousSave) 
+        #region Menu
+        
+        protected override void DidOpen()
         {
-            continuePanel.SetActive(previousSave);
-            animation.SetInteger("options", (previousSave)? 2:1);
+            route = Route.NULL;
+            DisplayOptions(previousSaveExists);
+            
+            opacity.Show();   
         }
+
+        protected override void DidClose()
+        {
+            opacity.Hide();
+        }
+        
+        #endregion
     
         #region Routes
 
         public void NewGame()
         {
-            RecoverGameData();
-            WipeGameData();
-        
             route = Route.NewGame;
-            animation.SetTrigger("new_game");
+
+            Close();
+            usernamePanel.Open();
         }
 
-        public void ContinueNewGame()
+        public void ContinueNewGame(string input)
         {
             if (route != Route.NewGame) return;
-            animation.SetTrigger("trigger_game");
+            
+            RecoverGameData();
+            WipeGameData();
+
+            Save.username = input;
+
+            usernamePanel.Close();
+            MoveToTheGame();
         }
 
         public void ContinueGame()
         {
             route = Route.ContinueGame;
-            animation.SetTrigger("trigger_game");
+
+            Close();
+            MoveToTheGame();
+        }
+
+        public void Reset()
+        {
+            if(usernamePanel.IsVisible) usernamePanel.Close();
+
+            route = Route.NULL;
+            Open();
+        }
+
+        void DisplayOptions(bool previousSave)
+        {
+            continueButton.SetActive(previousSave);
+        }
+
+        IEnumerator MovingToGame()
+        {
+            var opacity = (route == Route.ContinueGame) ? this.opacity : continuePanel;
+            while (opacity.Visible) 
+            {
+                yield return null;
+            }
+            
+            SceneLoader.Instance.GoToScene(1, 0f, .33f);
         }
     
         #endregion
@@ -87,8 +142,8 @@ namespace butterflowersOS.Menu
                 Debug.LogWarning("Ignore request to load scene when route is NULL!");
                 return;
             }
-            Debug.LogWarning("Move!");
-            SceneLoader.Instance.GoToScene(1, 0f, .33f);
+           
+            StartCoroutine("MovingToGame");
         }
     }
 }
