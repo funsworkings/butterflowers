@@ -1,4 +1,5 @@
-﻿using UnityEngine;
+﻿using System;
+using UnityEngine;
 using UnityEngine.Events;
 using uwu;
 using uwu.Extensions;
@@ -6,20 +7,20 @@ using uwu.UI.Behaviors.Visibility;
 
 namespace butterflowersOS.Menu
 {
-	public class ChooseUsername : MonoBehaviour
+	public class ChooseUsername : GenericMenu
 	{
 		Camera camera;
 		
 		// Events
 
-		public UnityEvent onValidateInput;
-		
-		// External
+		[System.Serializable] public class UsernameEvent : UnityEvent<string>{}
+		public UsernameEvent onValidateInput;
 
-		GameDataSaveSystem Save;
-		
 		// Properties
 
+		ToggleOpacity opacity;
+
+		[SerializeField] MainMenu _mainMenu;
 		[SerializeField] CanvasGroup usernameContainer;
 		[SerializeField] TMPro.TMP_InputField inputfield;
 		[SerializeField] RectTransform inputrect;
@@ -27,8 +28,9 @@ namespace butterflowersOS.Menu
 		[SerializeField] ToggleOpacity submitButtonOpacity;
 		[SerializeField] GameObject pr_burst;
 
-		[SerializeField] RectTransform debug;
-		
+		bool isInputValid = false;
+		string validInput = null;
+
 		// Attributes
 
 		[SerializeField] string input;
@@ -37,32 +39,61 @@ namespace butterflowersOS.Menu
 		
 		#region Monobehaviour callbacks
 
-		void OnEnable()
+		void Awake()
 		{
-			Save = GameDataSaveSystem.Instance;
-			
-			inputfield.onValueChanged.AddListener(onEditInput);
+			opacity = GetComponent<ToggleOpacity>();
 		}
 
-		void OnDisable()
-		{
-			inputfield.onValueChanged.RemoveListener(onEditInput);
-		}
-
-		void Start()
+		protected override void Start()
 		{
 			camera = Camera.main;
+			base.Start();
 		}
 
 		void Update()
 		{
-			isActive = usernameContainer.interactable;
-			if(isActive && !inputfield.isFocused)
-				onFocusInput();
+			if (!IsVisible) return;
 			
-			ConfigureInputField();
+			if(!Input.GetKeyUp(KeyCode.Escape))
+			{
+				isActive = usernameContainer.interactable;
+				if (isActive && !inputfield.isFocused)
+					onFocusInput();
+
+				ConfigureInputField();
+				
+				if (Input.GetKeyUp(KeyCode.Return) && isInputValid) 
+				{
+					SubmitInput();
+				}
+
+				return;
+			}
+			
+			_mainMenu.Reset();
 		}
 
+		#endregion
+		
+		#region Menu
+		
+		protected override void DidOpen()
+		{
+			opacity.Show();
+			isInputValid = false;
+			
+			inputfield.onValueChanged.AddListener(onEditInput);
+		}
+
+		protected override void DidClose()
+		{
+			inputfield.onValueChanged.RemoveListener(onEditInput);
+			
+			inputfield.text = ""; // Wipe input
+			opacity.Hide();
+			isInputValid = false;
+		}
+		
 		#endregion
 		
 		#region Input
@@ -96,7 +127,8 @@ namespace butterflowersOS.Menu
 			
 			Burst(screen);
 
-			if (string.IsNullOrEmpty(value))
+			isInputValid = !string.IsNullOrEmpty(value);
+			if (!isInputValid)
 				submitButtonOpacity.Hide();
 			else
 				submitButtonOpacity.Show();
@@ -104,8 +136,7 @@ namespace butterflowersOS.Menu
 
 		public void SubmitInput()
 		{
-			Save.username = input;
-			onValidateInput.Invoke();
+			onValidateInput.Invoke(input);
 		}
 		
 		#endregion
