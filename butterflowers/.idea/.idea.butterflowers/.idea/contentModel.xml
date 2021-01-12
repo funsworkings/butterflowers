@@ -1310,6 +1310,7 @@
               <e p="GenericMenu.cs" t="Include" />
               <e p="MainMenu.cs" t="Include" />
               <e p="PauseMenu.cs" t="Include" />
+              <e p="PreviewButterflowers.cs" t="Include" />
               <e p="VersionText.cs" t="Include" />
             </e>
             <e p="Miscellaneous" t="Include">
@@ -1749,6 +1750,7 @@
           <e p="NewUnlitShader.shader" t="Include" />
           <e p="NoZWrite.shader" t="Include" />
           <e p="RippleUI.shader" t="Include" />
+          <e p="TerrainDistort.shader" t="Include" />
           <e p="Texture Splatting.shader" t="Include" />
           <e p="Textured With Detail.shader" t="Include" />
           <e p="TransparentShadowCollector.shader" t="Include" />
@@ -1993,6 +1995,7 @@
             </e>
           </e>
         </e>
+        <e p="TerrainDeformation.cs" t="Include" />
         <e p="TextMesh Pro" t="Include">
           <e p="Examples &amp; Extras" t="Include">
             <e p="Fonts" t="Include">

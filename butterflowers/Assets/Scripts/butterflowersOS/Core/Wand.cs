@@ -342,33 +342,30 @@ namespace butterflowersOS.Core
         {
             context = GetContextFromTarget(); // Get drag context
 
+            
+            Vector3 point = Vector3.zero;
+                    
+            if (_interactableCollider != null) 
+            {
+                point = _interactableHit.point;
+                pointDistance = _interactableHit.distance;
+            }
+            else 
+            {
+                point = m_interaction3d;
+                pointDistance = defaultPointDistance;
+            }
+
             if (_interaction == Interaction.Drag) 
             {
                 if (cont) 
                 {
-                    Vector3 point = Vector3.zero;
-                    
-                    if (_interactableCollider != null) 
-                    {
-                        point = _interactableHit.point;
-                        pointDistance = _interactableHit.distance;
-                    }
-                    else 
-                    {
-                        point = m_interaction3d;
-                    }
-                    
                     beacon.transform.position = point;
                 }
                 else 
                 {
-                    pointDistance = defaultPointDistance;
                     if(up) DropBeacon(); // Release beacon
                 }
-            }
-            else 
-            {
-                pointDistance = defaultPointDistance;
             }
         }
 
