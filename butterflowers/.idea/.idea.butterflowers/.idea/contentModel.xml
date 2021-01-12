@@ -1392,6 +1392,11 @@
               <e p="SummaryCardTrigger.cs" t="Include" />
               <e p="SummaryDeck.cs" t="Include" />
             </e>
+            <e p="Visuals" t="Include">
+              <e p="Types" t="Include">
+                <e p="WandAffectorMaterial.cs" t="Include" />
+              </e>
+            </e>
           </e>
           <e p="Neue" t="Include">
             <e p="Agent" t="Include">
@@ -1722,6 +1727,7 @@
         </e>
         <e p="Shaders" t="Include">
           <e p="BlendNoMaterial.shader" t="Include" />
+          <e p="blurUI.shader" t="Include" />
           <e p="Butterfly.shader" t="Include" />
           <e p="Butterfly_Amplify.shader" t="Include" />
           <e p="Canvas.shader" t="Include" />

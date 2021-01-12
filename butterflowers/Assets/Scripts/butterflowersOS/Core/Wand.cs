@@ -8,6 +8,7 @@ using butterflowersOS.Objects.Entities;
 using butterflowersOS.Objects.Entities.Interactables;
 using butterflowersOS.Objects.Managers;
 using butterflowersOS.Presets;
+using butterflowersOS.Visuals.Types;
 using TMPro;
 using UnityEngine;
 using UnityEngine.EventSystems;
@@ -92,6 +93,7 @@ namespace butterflowersOS.Core
 
         [Header("Effects")] 
             [SerializeField] Vector4 m_wandShaderParam;
+            [SerializeField] WandAffectorMaterial[] _affectorMaterials;
 
         [Header("UI")] 
             [SerializeField] Tooltip info;
@@ -239,6 +241,8 @@ namespace butterflowersOS.Core
             UpdateTrajectory();
             UpdateCursorState();
             UpdateTooltip();
+            
+            AffectMaterials();
         }
     
         void OnApplicationFocus(bool hasFocus)
@@ -315,6 +319,21 @@ namespace butterflowersOS.Core
             m_interaction3d = cameraPosition + (rayDirection * pointDistance);
         }
 
+        #endregion
+        
+        #region Visuals
+
+        void AffectMaterials()
+        {
+            foreach (WandAffectorMaterial _material in _affectorMaterials) 
+            {
+                string @param = _material.param;
+                Material material = _material.material;
+                
+                material.SetVector(@param, wandShaderParam);
+            }
+        }
+        
         #endregion
         
         #region Beacons
