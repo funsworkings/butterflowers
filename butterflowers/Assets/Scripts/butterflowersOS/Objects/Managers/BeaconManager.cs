@@ -1,4 +1,5 @@
-﻿using System.Collections;
+﻿using System;
+using System.Collections;
 using System.Collections.Generic;
 using System.IO;
 using System.Linq;
@@ -16,6 +17,7 @@ using uwu.IO.SimpleFileBrowser.Scripts;
 using Type = butterflowersOS.Objects.Entities.Interactables.Beacon.Type;
 using Locale = butterflowersOS.Objects.Entities.Interactables.Beacon.Locale;
 using Object = System.Object;
+using Random = UnityEngine.Random;
 using Transition = butterflowersOS.Objects.Entities.Interactables.Beacon.Transition;
 
 namespace butterflowersOS.Objects.Managers
@@ -146,7 +148,7 @@ namespace butterflowersOS.Objects.Managers
 
 		void Update()
 		{
-			if(Input.GetKeyDown(KeyCode.LeftBracket)) DebugBeaconFromPreset();
+			if(Input.GetKeyDown(KeyCode.LeftBracket)) DebugBeaconFromDesktop();
 		}
 
 		#endregion
@@ -629,17 +631,17 @@ namespace butterflowersOS.Objects.Managers
 	
 		#region Debug
 
-		void DebugBeaconFromPreset()
+		void DebugBeaconFromDesktop()
 		{
-			var textures = preset.defaultTextures;
+			var files = Files.GetFiles(Environment.GetFolderPath(Environment.SpecialFolder.Desktop));	
+			
+			var index = Random.Range(0, files.Length);
+			var file = files[index].Path;
 
-			var index = Random.Range(0, textures.Length);
-			var texture = textures[index];
-
-			bool success = Library.RegisterFile(texture.name, Library.FileType.World, load:true);
+			bool success = Library.RegisterFile(file, Library.FileType.User, load:true);
 			if (success) 
 			{
-				CreateBeacon(texture.name, Beacon.Type.Wizard, Beacon.Locale.Terrain, fromSave: false, transition: TransitionType.Spawn);
+				CreateBeacon(file, Beacon.Type.Desktop, Beacon.Locale.Terrain, fromSave: false, transition: TransitionType.Spawn);
 			}
 		}
 	
