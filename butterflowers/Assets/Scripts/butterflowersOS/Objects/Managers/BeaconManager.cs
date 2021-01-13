@@ -146,7 +146,7 @@ namespace butterflowersOS.Objects.Managers
 
 		void Update()
 		{
-			if(Input.GetKeyDown(KeyCode.B)) DebugBeaconFromPreset();
+			if(Input.GetKeyDown(KeyCode.LeftBracket)) DebugBeaconFromPreset();
 		}
 
 		#endregion
