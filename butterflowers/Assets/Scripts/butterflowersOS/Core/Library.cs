@@ -48,7 +48,8 @@ namespace butterflowersOS.Core
 	
 		public List<string> ALL_FILES = new List<string>();
 		public List<string> ALL_DIRECTORIES = new List<string>();
-		public Dictionary<string, bool> TEMP_FILES = new Dictionary<string, bool>();
+		
+		public Dictionary<string, string> TEMP_FILES = new Dictionary<string, string>();
 	
 		public List<int> USER_FILES = new List<int>();
 		public List<int> SHARED_FILES = new List<int>();
