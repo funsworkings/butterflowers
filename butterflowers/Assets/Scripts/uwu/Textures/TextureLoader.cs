@@ -20,7 +20,7 @@ namespace uwu.Textures
 		// Properties
 
 		private bool read = false;
-		private bool copy = true;
+		private bool copy = false;
 
 		void Start()
 		{
@@ -66,11 +66,14 @@ namespace uwu.Textures
 				
 				result = www.texture;
 				result.name = file;
-				
-				var _filename = Path.GetFileName(file);
-				var _ext = Path.GetExtension(_filename);
 
-				DegradeBytes(_filename, result, (_ext == ".png" || _ext == ".PNG"));
+				if (copy) 
+				{
+					var _filename = Path.GetFileName(file);
+					var _ext = Path.GetExtension(_filename);
+
+					DegradeBytes(_filename, result, (_ext == ".png" || _ext == ".PNG"));
+				}
 			}
 			
 			Pop(file, result);
