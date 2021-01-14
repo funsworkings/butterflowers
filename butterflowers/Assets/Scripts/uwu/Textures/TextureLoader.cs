@@ -5,6 +5,8 @@ using System.IO;
 using System.Linq;
 using System.Threading.Tasks;
 using UnityEngine;
+using UnityEngine.Experimental.Rendering;
+using UnityEngine.UI;
 using uwu.Extensions;
 using uwu.IO;
 
@@ -20,7 +22,7 @@ namespace uwu.Textures
 		// Properties
 
 		private bool read = false;
-		private bool copy = false;
+		private bool copy = true;
 
 		void Start()
 		{
@@ -122,6 +124,14 @@ namespace uwu.Textures
 		
 		const int _WIDTH = 64;
 		const int _HEIGHT = 64;
+
+		string ThumbnailPath(string filename)
+		{
+			var _directory = Path.Combine(Application.persistentDataPath, "_thumbnails");
+			FileUtils.EnsureDirectory(_directory);
+
+			return Path.Combine(_directory, filename);
+		}
 		
 		void DegradeBytes(string file, Texture2D texture, bool transparency)
 		{
@@ -132,19 +142,23 @@ namespace uwu.Textures
 			bool flag = (width > _WIDTH || height > _HEIGHT);
 			if (flag) 
 			{
-				TextureScale.Bilinear(texture, _WIDTH, _HEIGHT);
-				
-				texture.Apply();
+				string path = ThumbnailPath(file);
+				if (!File.Exists(path)) {
+					var _texture = new Texture2D(texture.width, texture.height);
+						_texture.SetPixels(texture.GetPixels());
+						_texture.Apply();
 
-				var bytes = new byte[] { };
-					
-				if (transparency) bytes = texture.EncodeToPNG();
-				else bytes = texture.EncodeToJPG();
+					TextureScale.Bilinear(_texture, _WIDTH, _HEIGHT);
+					_texture.Apply();
 
-				var _directory = Path.Combine(Application.persistentDataPath, "_thumbnails");
-				FileUtils.EnsureDirectory(_directory);
-					
-				File.WriteAllBytes(Path.Combine(_directory, file), bytes);
+					var bytes = new byte[] { };
+					if (transparency) bytes = _texture.EncodeToPNG();
+					else bytes = _texture.EncodeToJPG();
+
+
+					File.WriteAllBytes(path, bytes);
+					Destroy(_texture);
+				}
 			}
 		}
 		
