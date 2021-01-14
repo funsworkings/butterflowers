@@ -2,6 +2,7 @@
 using System.Collections;
 using System.Collections.Generic;
 using System.IO;
+using System.Text.RegularExpressions;
 using butterflowersOS.Data;
 using butterflowersOS.Interfaces;
 using butterflowersOS.Menu;
@@ -473,9 +474,14 @@ namespace butterflowersOS.Core
         {
             var desktop = Environment.GetFolderPath(Environment.SpecialFolder.Desktop);
             desktop = Application.persistentDataPath; // Use local data path
+
+
+            var username = _Save.data.username;
             
-            var path = Path.Combine(desktop, _Save.data.username + ".fns");
+            Regex reg = new Regex("[*'\",_&#^@]");
+            username = reg.Replace(username, "_"); // Replace all special characters in exported neue
             
+            var path = Path.Combine(desktop, username + ".fns");
             return path;
         }
         
