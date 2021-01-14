@@ -112,7 +112,7 @@ namespace butterflowersOS.Objects.Entities.Interactables
             rigidbody = GetComponent<Rigidbody>();
             damage = GetComponent<Damage>();
 
-            mat = GetComponent<Renderer>().material;
+            mat = GetComponent<Renderer>().sharedMaterial;
         }
 
         protected override void OnStart()
