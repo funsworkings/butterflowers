@@ -13,8 +13,11 @@ using uwu.Textures;
 
 namespace butterflowersOS.Core
 {
-	public class Library : Singleton<Library>, ITextureReceiver, ILoadDependent
+	public class Library : MonoBehaviour, ITextureReceiver, ILoadDependent
 	{
+		public static Library Instance = null;
+		
+		
 		public bool READ_IN_EDITOR_MODE = true;
 		public bool CREATE_THUMBNAILS = true;
 		
@@ -114,6 +117,18 @@ namespace butterflowersOS.Core
 
 		#region Monobehaviour callbacks
 
+		void Awake()
+		{
+			if (Instance == null) 
+			{
+				Instance = this;
+			}
+			else 
+			{
+				Destroy(gameObject);	
+			}
+		}
+
 		void Start()
 		{
 			TextureLoader = TextureLoader.Instance;
@@ -122,6 +137,11 @@ namespace butterflowersOS.Core
 		void OnDestroy()
 		{
 			Dispose();
+
+			if (Instance == this) 
+			{
+				Instance = null;
+			}
 		}
 
 		void OnApplicationFocus(bool hasFocus)

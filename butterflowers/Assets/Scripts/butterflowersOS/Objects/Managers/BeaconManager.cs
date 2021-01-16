@@ -115,8 +115,10 @@ namespace butterflowersOS.Objects.Managers
 			Instance = this;
 		}
 
-		void OnEnable()
+		protected override void Start()
 		{
+			base.Start();
+			
 			Beacon.OnRegister += onRegisterBeacon;
 			Beacon.OnUnregister += onUnregisterBeacon;
 
@@ -130,9 +132,11 @@ namespace butterflowersOS.Objects.Managers
 			Library.onDeletedFiles += UserDeletedFiles;
 			Library.onRecoverFiles += UserRecoveredFiles;
 		}
-
-		void OnDisable()
+		
+		protected override void OnDestroy()
 		{
+			base.OnDestroy();
+			
 			Beacon.OnRegister -= onRegisterBeacon;
 			Beacon.OnUnregister -= onUnregisterBeacon;
 
