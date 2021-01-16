@@ -3379,7 +3379,7 @@ Transform:
   m_PrefabInstance: {fileID: 0}
   m_PrefabAsset: {fileID: 0}
   m_GameObject: {fileID: 201810246}
-  m_LocalRotation: {x: 0.12156506, y: 0.00000001055755, z: -0.0000000012281239, w: 0.9925835}
+  m_LocalRotation: {x: 0.12156507, y: 0.0000000012698953, z: -1.2489523e-10, w: 0.9925835}
   m_LocalPosition: {x: 0, y: 9.595102, z: -21.852465}
   m_LocalScale: {x: 1, y: 1.3577, z: 1}
   m_Children:
@@ -13549,7 +13549,7 @@ Canvas:
   m_SortingBucketNormalizedSize: 0
   m_AdditionalShaderChannelsFlag: 0
   m_SortingLayerID: 0
-  m_SortingOrder: 0
+  m_SortingOrder: 99
   m_TargetDisplay: 0
 --- !u!1 &857452066
 GameObject:
@@ -29599,6 +29599,7 @@ MonoBehaviour:
   SHARED_FILES: 
   WORLD_FILES: 
   thumbnailQueue: []
+  generateThumbnailQueue: []
   fileQueue: []
   queue: []
   textureLoadCompleted: []
@@ -32074,8 +32075,8 @@ MonoBehaviour:
   lerps: 1
   lerping: 0
   value: 0
-  transitionInSpeed: 4
-  transitionOutSpeed: 4
+  transitionInSpeed: 2
+  transitionOutSpeed: 2
   useTimeScale: 0
   OnShow:
     m_PersistentCalls:
