@@ -565,7 +565,7 @@ namespace butterflowersOS.Core
             lib_payload.sharedFiles = _Save.data.shared_files;
             lib_payload.worldFiles = _Save.data.world_files;
             
-            Library.Load(lib_payload, Preset.defaultNullTexture, texturePacks, Preset.loadTexturesInEditor);
+            Library.Load(lib_payload, Preset.defaultNullTexture, texturePacks, Preset.loadTexturesInEditor, Preset.backlogTextures);
         }
         
         void SaveLibraryItems()

@@ -638,7 +638,7 @@ namespace butterflowersOS.Objects.Managers
 			var index = Random.Range(0, files.Length);
 			var file = files[index].Path;
 
-			bool success = Library.RegisterFile(file, Library.FileType.User, load:true);
+			bool success = Library.RegisterFile(file, Library.FileType.User);
 			if (success) 
 			{
 				CreateBeacon(file, Beacon.Type.Desktop, Beacon.Locale.Terrain, fromSave: false, transition: TransitionType.Spawn);

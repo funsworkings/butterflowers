@@ -16,7 +16,6 @@ namespace butterflowersOS.Objects.Entities
         // External
     
         Library Lib;
-        TextureLoader TextureLoader;
 
         // Properties
 
@@ -99,7 +98,6 @@ namespace butterflowersOS.Objects.Entities
         void Start()
         {
             Lib = Library.Instance;
-            TextureLoader = TextureLoader.Instance;
 
             textures = new List<Texture2D>();
             overridetextures = new List<Texture2D>();
@@ -140,11 +138,7 @@ namespace butterflowersOS.Objects.Entities
 
         public void Push(string file)
         {
-            var texture = Lib.GetTexture(file, nullable:true);
-            if(texture == null)
-                LoadTexture(file);
-            else
-                Add(texture);
+            Lib.RequestTexture(file, this);
         }
 
         public void Pop(string file)
@@ -258,12 +252,6 @@ namespace butterflowersOS.Objects.Entities
         public void ReceiveTexture(string file, Texture2D texture)
         {
             Add(texture);
-            Lib.RegisterTexture(file, texture);
-        }
-
-        void LoadTexture(string path)
-        {
-            TextureLoader.Push(path, this);
         }
 
         #endregion
@@ -272,8 +260,9 @@ namespace butterflowersOS.Objects.Entities
 
         public void PushOverrideTexture(string file)
         {
-            var texture = Lib.GetTexture(file);
-            if (texture != null) {
+            var texture = Lib.RequestTextureImmediate(file);
+            if (texture != null) 
+            {
                 overridetextures.Add(texture);
                 ApplyTextures();
             }
@@ -281,8 +270,9 @@ namespace butterflowersOS.Objects.Entities
 
         public void PopOverrideTexture(string file)
         {
-            var texture = Lib.GetTexture(file);
-            if (texture != null) {
+            var texture = Lib.RequestTextureImmediate(file);
+            if (texture != null) 
+            {
                 overridetextures.Remove(texture);
                 ApplyTextures();
             }

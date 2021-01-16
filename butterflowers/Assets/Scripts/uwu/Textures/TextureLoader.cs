@@ -22,7 +22,6 @@ namespace uwu.Textures
 		// Properties
 
 		private bool read = false;
-		private bool copy = true;
 
 		void Start()
 		{
@@ -68,14 +67,6 @@ namespace uwu.Textures
 				
 				result = www.texture;
 				result.name = file;
-
-				if (copy) 
-				{
-					var _filename = Path.GetFileName(file);
-					var _ext = Path.GetExtension(_filename);
-
-					DegradeBytes(_filename, result, (_ext == ".png" || _ext == ".PNG"));
-				}
 			}
 			
 			Pop(file, result);
@@ -119,50 +110,6 @@ namespace uwu.Textures
 		}
 		
 		#endregion
-		
-		#region Degradation
-		
-		const int _WIDTH = 64;
-		const int _HEIGHT = 64;
 
-		string ThumbnailPath(string filename)
-		{
-			var _directory = Path.Combine(Application.persistentDataPath, "_thumbnails");
-			FileUtils.EnsureDirectory(_directory);
-
-			return Path.Combine(_directory, filename);
-		}
-		
-		void DegradeBytes(string file, Texture2D texture, bool transparency)
-		{
-			var width = texture.width;
-			var height = texture.height;
-			var aspect = (width * 1f) / height;
-
-			bool flag = (width > _WIDTH || height > _HEIGHT);
-			if (flag) 
-			{
-				string path = ThumbnailPath(file);
-				if (!File.Exists(path)) {
-					var _texture = new Texture2D(texture.width, texture.height);
-						_texture.SetPixels(texture.GetPixels());
-						_texture.Apply();
-
-					TextureScale.Bilinear(_texture, _WIDTH, _HEIGHT);
-					_texture.Apply();
-
-					var bytes = new byte[] { };
-					if (transparency) bytes = _texture.EncodeToPNG();
-					else bytes = _texture.EncodeToJPG();
-
-
-					File.WriteAllBytes(path, bytes);
-					Destroy(_texture);
-				}
-			}
-		}
-		
-		#endregion
-		
 	}
 }
