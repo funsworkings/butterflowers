@@ -200,9 +200,7 @@ namespace butterflowersOS.Core
             
             Dictionary<string, Texture2D[]> texturePacks = new Dictionary<string, Texture2D[]>() 
             {
-                //{"WIZARD", Preset.wizardFiles.items.Select(mem => mem.image).ToArray()},
-                //{"ENVIRONMENT", Preset.starterFiles.elements}
-                { "WIZARD", Preset.defaultTextures }
+                { "DEFAULT", Preset.defaultTextures }
             };
             LoadLibraryItems(texturePacks);
             

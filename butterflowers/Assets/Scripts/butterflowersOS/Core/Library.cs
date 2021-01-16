@@ -39,7 +39,8 @@ namespace butterflowersOS.Core
 			NULL,
 			
 			Thumbnails,
-			Files
+			Files,
+			Generate
 		}
 
 		#endregion
@@ -74,6 +75,7 @@ namespace butterflowersOS.Core
 		Dictionary<string, ITextureReceiver> TEXTURE_RECEIVERS = new Dictionary<string, ITextureReceiver>();
 
 		[SerializeField] List<string> thumbnailQueue = new List<string>();
+		[SerializeField] List<string> generateThumbnailQueue = new List<string>();
 		[SerializeField] List<string> fileQueue = new List<string>();
 		
 		[SerializeField] List<string> queue = new List<string>();
@@ -203,12 +205,16 @@ namespace butterflowersOS.Core
 			Restore();
 			
 			LoadThumbnails();
+			GenerateThumbnails();
 			LoadFiles();
 
-			textureLoadTarget = thumbnailQueue.Union(fileQueue).ToList();
+			textureLoadTarget = generateThumbnailQueue.Union(thumbnailQueue).Union(fileQueue).ToList();
 			if (textureLoadTarget.Count > 0) 
 			{
-				loadMode = (thumbnailQueue.Count > 0)? LoadMode.Thumbnails : LoadMode.Files;
+				if (generateThumbnailQueue.Count > 0) loadMode = LoadMode.Generate;
+				else if (thumbnailQueue.Count > 0) loadMode = LoadMode.Thumbnails;
+				else if (fileQueue.Count > 0) loadMode = LoadMode.Files;
+				
 				StartCoroutine("LoadingAllFiles");
 			}
 			else 
@@ -320,8 +326,27 @@ namespace butterflowersOS.Core
 			}
 		}
 
+		void GenerateThumbnails()
+		{
+			foreach (KeyValuePair<string, Texture2D[]> texturePack in TEXTURE_PACKS) 
+			{
+				string collection = texturePack.Key;
+				Texture2D[] pack = texturePack.Value;
+
+				foreach (Texture2D texture in pack) 
+				{
+					string path = DefaultThumbnailPathFromFile(texture.name+".jpg");
+					if (!thumbnailQueue.Contains(path)) 
+					{
+						generateThumbnailQueue.Add(path);
+					}
+				}
+			}
+		}
+
 		IEnumerator LoadingAllFiles()
 		{
+			queue.AddRange(generateThumbnailQueue);
 			queue.AddRange(thumbnailQueue);
 			queue.AddRange(fileQueue);
 
@@ -329,6 +354,11 @@ namespace butterflowersOS.Core
 			{
 				if (!read) 
 				{
+					if (loadMode == LoadMode.Generate) 
+					{
+						if (generateThumbnailQueue.Count <= 0) loadMode = LoadMode.Thumbnails;
+					}
+					
 					if (loadMode == LoadMode.Thumbnails) 
 					{
 						if (thumbnailQueue.Count <= 0) loadMode = LoadMode.Files;
@@ -342,9 +372,29 @@ namespace butterflowersOS.Core
 					if (queue.Count > 0) 
 					{
 						string file = queue[0];
-						TextureLoader.Push(file, this);
 
-						read = true;
+						if (loadMode != LoadMode.Generate) 
+						{
+							TextureLoader.Push(file, this);
+							read = true;
+						}
+						else 
+						{
+							var _filename = Path.GetFileName(file);
+							Texture2D texture = GetWorldTexture(_filename);
+							
+							if (texture != null) 
+							{
+								Debug.Log("Degrade " + _filename);
+								
+								Texture2D thumbnail = DegradeBytes(_filename, texture, false);
+								RegisterThumbnail(file, thumbnail);
+							}
+							
+							generateThumbnailQueue.RemoveAt(0);
+							queue.RemoveAt(0);
+							textureLoadCompleted.Add(file);
+						}
 					}
 				}
 
@@ -399,25 +449,24 @@ namespace butterflowersOS.Core
 	
 		#region Register
 	
-		public string CreateFile(string name, Texture2D image)
+		public string CreateFile(string filename, string directory, Texture2D image, FileType type)
 		{
-			var root = Files.Path;
-			var path = Path.Combine(root, string.Format("{0}.jpg", name));
+			var fullpath = Path.Combine(directory, string.Format("{0}.jpg", filename));
 		
 			try 
 			{
 				var bytes = image.EncodeToJPG();
-				File.WriteAllBytes(path, bytes);
+				File.WriteAllBytes(fullpath, bytes);
 			
-				RegisterFile(name, FileType.Shared);
-				RegisterTexture(path, image);
+				RegisterFile(filename, type);
+				RegisterTexture(fullpath, image);
 			}
 			catch (System.Exception e) 
 			{
 				Debug.LogWarning("Unable to create file! " + e.Message);
 			}
 
-			return path;
+			return fullpath;
 		}
 
 		public bool RegisterFileInstance(string file, POINT screenPoint)
@@ -475,19 +524,16 @@ namespace butterflowersOS.Core
 		void RegisterTexture(string file, Texture tex)
 		{
 			var texture = (tex as Texture2D);
-
 			bool success = (texture != null);
-			if (success) 
-			{
-				if (TEXTURE_LOOKUP.ContainsKey(file)) TEXTURE_LOOKUP[file] = texture;
-				else TEXTURE_LOOKUP.Add(file, texture);
+			
+			if (TEXTURE_LOOKUP.ContainsKey(file)) TEXTURE_LOOKUP[file] = texture;
+			else TEXTURE_LOOKUP.Add(file, texture);
 
-				Debug.LogFormat("Added {0} to library", file);
-				
-				if (CREATE_THUMBNAILS) 
-				{
-					CreateThumbnail(file, texture);	// Generate new thumbnail from image
-				}
+			Debug.LogFormat("Added {0} to library", file);
+			
+			if (success && CREATE_THUMBNAILS) 
+			{
+				CreateThumbnail(file, texture);	// Generate new thumbnail from image
 			}
 		}
 
@@ -572,26 +618,26 @@ namespace butterflowersOS.Core
 			return DEFAULT_NULL_TEXTURE;
 		}
 
-		public Texture2D GetWorldTexture(string id)
+		Texture2D GetWorldTexture(string path)
 		{
 			foreach (KeyValuePair<string, Texture2D[]> pack in TEXTURE_PACKS) 
 			{
 				foreach (Texture2D tex in pack.Value) 
 				{
-					var textureID = tex.name;
-					if (textureID == id) 
+					var textureID = tex.name + ".jpg";
+					if (textureID == path) 
 						return tex;
 				}
 			}
 
-			return DEFAULT_NULL_TEXTURE;
+			return null;
 		}
 
 		#endregion
 		
 		#region Thumbnails
 		
-		string ThumbnailDirectory => Path.Combine(Application.persistentDataPath, "_thumbnails");
+		string ThumbnailDirectory => Path.Combine(Path.GetFullPath(Application.persistentDataPath), "_thumbnails");
 
 		string DefaultThumbnailPathFromFile(string filename)
 		{
