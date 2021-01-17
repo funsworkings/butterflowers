@@ -25,7 +25,7 @@ namespace butterflowersOS.Objects.Entities.Interactables.Empty
 
 		[SerializeField] WorldPreset preset;
 		
-		Animator animator;
+		public Animator animator;
 		[SerializeField] ParticleSystem firePS;
 
 		string file;
@@ -36,7 +36,7 @@ namespace butterflowersOS.Objects.Entities.Interactables.Empty
 		{
 			base.Awake();
 			
-			animator = GetComponent<Animator>();
+			//animator = GetComponent<Animator>();
 			animator.SetBool("visible", false);
 		}
 		
