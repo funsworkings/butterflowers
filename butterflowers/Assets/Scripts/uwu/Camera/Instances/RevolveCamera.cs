@@ -31,15 +31,6 @@ namespace uwu.Camera.Instances
 		{
 			if (orbitTransposer == null) return;
 
-			/*
-		float dt = Time.deltaTime;
-		
-		if (controls) {
-		    if (Input.GetKey(KeyCode.LeftArrow)) angle += 90f * dt;
-		    if (Input.GetKey(KeyCode.RightArrow)) angle -= 90f * dt;
-		}
-		*/
-
 			var angToRad = angle * Mathf.Deg2Rad;
 			var offset = new Vector3(Mathf.Cos(angToRad) * radius, height, Mathf.Sin(angToRad) * radius);
 

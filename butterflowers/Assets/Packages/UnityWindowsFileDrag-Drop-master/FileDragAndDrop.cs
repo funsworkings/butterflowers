@@ -45,7 +45,7 @@ public class FileDragAndDrop : MonoBehaviour
             var info = new FileInfo(image);
             var path = info.FullName;
             
-            bool exists = Lib.RegisterFileInstance(path, aPos);
+            bool exists = Lib.RegisterFileInstance(path, Library.FileType.User);
             if (exists)
                 wand.AddBeacon(path, aPos, random:multipleImages); // Add beacon to scene via wand
             else

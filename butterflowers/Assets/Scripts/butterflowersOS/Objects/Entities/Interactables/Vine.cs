@@ -92,6 +92,8 @@ namespace butterflowersOS.Objects.Entities.Interactables
 
         public Vector3 end => line.GetPosition(line.positionCount - 1);
 
+        public Cage.Vertex Vertex => vertex;
+
         public string File
         {
             get { return m_file; }

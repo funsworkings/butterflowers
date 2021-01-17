@@ -23,6 +23,7 @@ namespace butterflowersOS.Objects.Managers
         // Events
 
         public System.Action onUpdateVines;
+        public System.Action<Vertex> onCompleteCorner;
     
         // Collections
 
@@ -180,6 +181,9 @@ namespace butterflowersOS.Objects.Managers
         void onVineCompleteGateGrowth(Vine vine)
         {
             vine.GrowFlower();
+
+            if (onCompleteCorner != null)
+                onCompleteCorner(vine.Vertex);
         }
     
         #endregion

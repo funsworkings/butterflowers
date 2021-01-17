@@ -64,6 +64,7 @@ namespace butterflowersOS.Presets
             
         [Header("Surveillance Attributes")] 
             public float surveillanceLogRate = 1f;
+            public bool backlogTextures = true;
             
         [Header("Scoring Attributes")]
             public CompositeSurveillanceData baselineSurveillanceData;

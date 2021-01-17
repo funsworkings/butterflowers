@@ -515,10 +515,10 @@ public class TimelinePlayableWizard : EditorWindow
         "name",
     };
 
-    [MenuItem("Window/Timeline Playable Wizard...")]
+    [MenuItem("Window/Timeline Playable World...")]
     static void CreateWindow ()
     {
-        TimelinePlayableWizard wizard = GetWindow<TimelinePlayableWizard>(true, "Timeline Playable Wizard", true);
+        TimelinePlayableWizard wizard = GetWindow<TimelinePlayableWizard>(true, "Timeline Playable World", true);
         
         Vector2 position = Vector2.zero;
         SceneView sceneView = SceneView.lastActiveSceneView;

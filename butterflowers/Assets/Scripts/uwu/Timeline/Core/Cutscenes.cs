@@ -1,4 +1,5 @@
-﻿using UnityEngine;
+﻿using System;
+using UnityEngine;
 using UnityEngine.Playables;
 
 namespace uwu.Timeline.Core
@@ -6,6 +7,11 @@ namespace uwu.Timeline.Core
 	[RequireComponent(typeof(PlayableDirector))]
 	public class Cutscenes : MonoBehaviour
 	{
+		// Events
+
+		System.Action<PlayableAsset> Completed;
+		
+		
 		#region Internal
 
 		public enum State
@@ -28,6 +34,9 @@ namespace uwu.Timeline.Core
 		State state = State.Stopped;
 
 		[SerializeField] PlayableAsset m_cutscene;
+
+		[Header("Debug")] 
+			[SerializeField] bool debugTriggerPlay = false;
 
 		#endregion
 
@@ -73,17 +82,18 @@ namespace uwu.Timeline.Core
 			playableDirector.stopped -= onStop;
 		}
 
+		void Start()
+		{
+			if(cutscene != null) Play(cutscene);
+		}
+
 		void Update()
 		{
-			/*
-		if (Input.GetKeyDown(KeyCode.LeftControl)) 
-		{
-			if (!playing)
-				Play();
-			else
-				Pause();
-		}
-		*/
+			if (debugTriggerPlay) 
+			{
+				Play(cutscene);
+				debugTriggerPlay = false;
+			}
 		}
 
 		#endregion
@@ -98,6 +108,12 @@ namespace uwu.Timeline.Core
 		void onStop(PlayableDirector director)
 		{
 			state = State.Stopped;
+
+			if (director.time >= director.duration) // Detect completion
+			{
+				if (Completed != null)
+					Completed(director.playableAsset);
+			}
 		}
 
 		#endregion
@@ -106,20 +122,29 @@ namespace uwu.Timeline.Core
 
 		public void Play()
 		{
-			if (!playing) {
-				if (paused) {
+			if (!playing) 
+			{
+				if (paused) 
+				{
 					playableDirector.playableGraph.GetRootPlayable(0).SetSpeed(1);
 					state = State.Playing;
 				}
-				else {
+				else 
+				{
 					playableDirector.Play();
 				}
+			}
+			else 
+			{
+				Restart();
 			}
 		}
 
 		public void Play(PlayableAsset cutscene)
 		{
-			this.cutscene = cutscene;
+			if (cutscene == null) return;
+			
+			this.cutscene = playableDirector.playableAsset = cutscene;
 			Play();
 		}
 
@@ -128,9 +153,16 @@ namespace uwu.Timeline.Core
 			if (!stopped) playableDirector.Stop();
 		}
 
+		public void Restart()
+		{
+			playableDirector.time = 0.0;
+			playableDirector.Play();
+		}
+
 		public void Pause()
 		{
-			if (playing) {
+			if (playing) 
+			{
 				playableDirector.playableGraph.GetRootPlayable(0).SetSpeed(0);
 				state = State.Paused;
 			}

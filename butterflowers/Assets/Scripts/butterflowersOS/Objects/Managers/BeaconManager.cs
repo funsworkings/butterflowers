@@ -1,4 +1,5 @@
-﻿using System.Collections;
+﻿using System;
+using System.Collections;
 using System.Collections.Generic;
 using System.IO;
 using System.Linq;
@@ -16,6 +17,7 @@ using uwu.IO.SimpleFileBrowser.Scripts;
 using Type = butterflowersOS.Objects.Entities.Interactables.Beacon.Type;
 using Locale = butterflowersOS.Objects.Entities.Interactables.Beacon.Locale;
 using Object = System.Object;
+using Random = UnityEngine.Random;
 using Transition = butterflowersOS.Objects.Entities.Interactables.Beacon.Transition;
 
 namespace butterflowersOS.Objects.Managers
@@ -113,8 +115,10 @@ namespace butterflowersOS.Objects.Managers
 			Instance = this;
 		}
 
-		void OnEnable()
+		protected override void Start()
 		{
+			base.Start();
+			
 			Beacon.OnRegister += onRegisterBeacon;
 			Beacon.OnUnregister += onUnregisterBeacon;
 
@@ -128,9 +132,11 @@ namespace butterflowersOS.Objects.Managers
 			Library.onDeletedFiles += UserDeletedFiles;
 			Library.onRecoverFiles += UserRecoveredFiles;
 		}
-
-		void OnDisable()
+		
+		protected override void OnDestroy()
 		{
+			base.OnDestroy();
+			
 			Beacon.OnRegister -= onRegisterBeacon;
 			Beacon.OnUnregister -= onUnregisterBeacon;
 
@@ -146,7 +152,7 @@ namespace butterflowersOS.Objects.Managers
 
 		void Update()
 		{
-			if(Input.GetKeyDown(KeyCode.B)) DebugBeaconFromPreset();
+			if(Input.GetKeyDown(KeyCode.LeftBracket)) DebugBeaconFromDesktop();
 		}
 
 		#endregion
@@ -242,6 +248,11 @@ namespace butterflowersOS.Objects.Managers
 			}
 
 			beacon.Register(type, state, origin, _transition, load);
+			
+			var filetype = Library.FileType.World;
+			if (beacon.type == Type.Desktop) filetype = Library.FileType.User;
+
+			Library.RegisterFileInstance(path, filetype); // Register file with library
 			Events.ReceiveEvent(EVENTCODE.BEACONADD, AGENT.World, AGENT.Beacon, details: beacon.File);
 
 			Debug.LogWarning("Beacon was added = " + beacon.File);
@@ -629,18 +640,25 @@ namespace butterflowersOS.Objects.Managers
 	
 		#region Debug
 
-		void DebugBeaconFromPreset()
+		void DebugBeaconFromDesktop()
 		{
-			var textures = preset.defaultTextures;
+			var _files = preset.defaultTextures;
+			var _file  = _files[Random.Range(0, _files.Length)];
 
-			var index = Random.Range(0, textures.Length);
-			var texture = textures[index];
+			CreateBeacon(_file.name + ".jpg", Type.World, Locale.Terrain, transition: TransitionType.Spawn, fromSave: false);
 
-			bool success = Library.RegisterFile(texture.name, Library.FileType.World, load:true);
+			/*
+			var files = Files.GetFiles(Environment.GetFolderPath(Environment.SpecialFolder.Desktop));	
+			
+			var index = Random.Range(0, files.Length);
+			var file = files[index].Path;
+
+			bool success = Library.RegisterFile(file, Library.FileType.User);
 			if (success) 
 			{
-				CreateBeacon(texture.name, Beacon.Type.Wizard, Beacon.Locale.Terrain, fromSave: false, transition: TransitionType.Spawn);
+				CreateBeacon(file, Beacon.Type.Desktop, Beacon.Locale.Terrain, fromSave: false, transition: TransitionType.Spawn);
 			}
+			*/
 		}
 	
 		#endregion

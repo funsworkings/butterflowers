@@ -121,7 +121,7 @@ namespace Neue.Agent.Brain
 
 		public override void Continue()
 		{
-			if(Input.GetKeyDown(KeyCode.C)) CreateImage();
+			//if(Input.GetKeyDown(KeyCode.C)) CreateImage();
 		}
 
 		public override void Pause()
