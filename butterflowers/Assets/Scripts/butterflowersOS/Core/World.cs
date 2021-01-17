@@ -188,7 +188,7 @@ namespace butterflowersOS.Core
         
         void HandleReady()
         {
-            ready = !pauseMenu.IsVisible;
+            ready = (!pauseMenu.IsVisible && !Cutscenes.playing); // Wait for pause menu and cutscenes!
         }
 
         void OnDestroy()
