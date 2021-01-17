@@ -112,7 +112,7 @@ namespace butterflowersOS.Objects.Entities.Interactables
             rigidbody = GetComponent<Rigidbody>();
             damage = GetComponent<Damage>();
 
-            mat = GetComponent<Renderer>().material;
+            mat = GetComponent<Renderer>().sharedMaterial;
         }
 
         protected override void OnStart()
@@ -495,7 +495,7 @@ namespace butterflowersOS.Objects.Entities.Interactables
         {
             if (!m_beacons.Contains(beacon)) return;
 
-            if(beacon.type != Beacon.Type.None) Quilt.Pop(beacon.File);
+            Quilt.Pop(beacon.File);
 
             m_beacons.Remove(beacon);
             cometPS.Play();

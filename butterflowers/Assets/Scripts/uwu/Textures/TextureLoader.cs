@@ -1,9 +1,14 @@
-﻿using System.Collections;
+﻿using System;
+using System.Collections;
 using System.Collections.Generic;
+using System.IO;
 using System.Linq;
 using System.Threading.Tasks;
 using UnityEngine;
+using UnityEngine.Experimental.Rendering;
+using UnityEngine.UI;
 using uwu.Extensions;
+using uwu.IO;
 
 namespace uwu.Textures
 {
@@ -16,8 +21,7 @@ namespace uwu.Textures
 
 		// Properties
 
-		bool read = false;
-		
+		private bool read = false;
 
 		void Start()
 		{
@@ -106,6 +110,6 @@ namespace uwu.Textures
 		}
 		
 		#endregion
-		
+
 	}
 }

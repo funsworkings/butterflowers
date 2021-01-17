@@ -23,7 +23,7 @@ MonoBehaviour:
   alwaysIntro: 0
   alwaysAbsorb: 0
   useWizard: 0
-  takePhotos: 0
+  takePhotos: 1
   logEvents: 0
   loadTexturesInEditor: 0
   hoursPerDay: 0.05
@@ -116,6 +116,7 @@ MonoBehaviour:
   leafFlutterAngle: 45
   leafFlutterTime: 1
   surveillanceLogRate: 3.33
+  backlogTextures: 1
   baselineSurveillanceData:
     timestamp: 0
     filesAdded: 1

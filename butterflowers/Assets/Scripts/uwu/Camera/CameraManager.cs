@@ -93,7 +93,7 @@ namespace uwu.Camera
 
 		void Update()
 		{
-			if (Input.GetKeyDown(KeyCode.C)) CycleCameras();
+			//if (Input.GetKeyDown(KeyCode.C)) CycleCameras();
 		}
 
 		#endregion

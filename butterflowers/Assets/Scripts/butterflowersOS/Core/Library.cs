@@ -7,14 +7,20 @@ using butterflowersOS.Data;
 using UnityEngine;
 using uwu.Extensions;
 using uwu.IO;
+using uwu.IO.SimpleFileBrowser.Scripts;
 using uwu.Snippets.Load;
 using uwu.Textures;
 
 namespace butterflowersOS.Core
 {
-	public class Library : Singleton<Library>, ITextureReceiver, ILoadDependent
+	public class Library : MonoBehaviour, ITextureReceiver, ILoadDependent
 	{
+		public static Library Instance = null;
+		
+		
 		public bool READ_IN_EDITOR_MODE = true;
+		public bool CREATE_THUMBNAILS = true;
+		
 		public Texture2D DEFAULT_NULL_TEXTURE;
 		public Dictionary<string, Texture2D[]> TEXTURE_PACKS = new Dictionary<string, Texture2D[]>();
 	
@@ -27,7 +33,16 @@ namespace butterflowersOS.Core
 			User,
 			Shared
 		}
-	
+
+		public enum LoadMode
+		{
+			NULL,
+			
+			Thumbnails,
+			Files,
+			Generate
+		}
+
 		#endregion
 
 		// Events
@@ -48,26 +63,31 @@ namespace butterflowersOS.Core
 	
 		public List<string> ALL_FILES = new List<string>();
 		public List<string> ALL_DIRECTORIES = new List<string>();
-		public Dictionary<string, bool> TEMP_FILES = new Dictionary<string, bool>();
-	
+
 		public List<int> USER_FILES = new List<int>();
 		public List<int> SHARED_FILES = new List<int>();
 		public List<int> WORLD_FILES = new List<int>();
 
 		Dictionary<FileType, List<string>> FILE_LOOKUP = new Dictionary<FileType, List<string>>();
+		
 		Dictionary<string, Texture2D> TEXTURE_LOOKUP = new Dictionary<string, Texture2D>();
+		Dictionary<string, Texture2D> FALLBACK_TEXTURE_LOOKUP = new Dictionary<string, Texture2D>();
+		Dictionary<string, ITextureReceiver> TEXTURE_RECEIVERS = new Dictionary<string, ITextureReceiver>();
 
-		[SerializeField] List<string> textureQueue = new List<string>();
+		[SerializeField] List<string> thumbnailQueue = new List<string>();
+		[SerializeField] List<string> generateThumbnailQueue = new List<string>();
+		[SerializeField] List<string> fileQueue = new List<string>();
+		
+		[SerializeField] List<string> queue = new List<string>();
+		[SerializeField] List<string> textureLoadCompleted = new List<string>();
 		[SerializeField] List<string> textureLoadTarget = new List<string>();
-
-		// Properties
-
-		WWW textureWWW;
 
 		// Attributes
 
 		[SerializeField] bool read = false, load = false, initialized = false;
 		[SerializeField] bool listenForEvents = false;
+
+		[SerializeField] LoadMode loadMode;
 
 		#region Accessors
 
@@ -78,10 +98,9 @@ namespace butterflowersOS.Core
 				if (initialized) 
 				{
 					int files = textureLoadTarget.Count();
-					if (files == 0)
-						return 1f;
-				
-					int textures = (files - textureQueue.Count);
+					if (files == 0) return 1f;
+
+					int textures = textureLoadCompleted.Count;
 					return (float)textures / files;
 				}
 
@@ -100,6 +119,18 @@ namespace butterflowersOS.Core
 
 		#region Monobehaviour callbacks
 
+		void Awake()
+		{
+			if (Instance == null) 
+			{
+				Instance = this;
+			}
+			else 
+			{
+				Destroy(gameObject);	
+			}
+		}
+
 		void Start()
 		{
 			TextureLoader = TextureLoader.Instance;
@@ -108,6 +139,11 @@ namespace butterflowersOS.Core
 		void OnDestroy()
 		{
 			Dispose();
+
+			if (Instance == this) 
+			{
+				Instance = null;
+			}
 		}
 
 		void OnApplicationFocus(bool hasFocus)
@@ -142,11 +178,13 @@ namespace butterflowersOS.Core
 			return payload;
 		}
 
-		public void Load(LibraryPayload payload, Texture2D NULL_TEXTURE, Dictionary<string, Texture2D[]> TEXTURE_PACKS, bool loadTexturesImmediate)
+		public void Load(LibraryPayload payload, Texture2D NULL_TEXTURE, Dictionary<string, Texture2D[]> TEXTURE_PACKS, bool loadTexturesImmediate, bool createThumbnails)
 		{
 			Files = FileNavigator.Instance;
 
 			READ_IN_EDITOR_MODE = loadTexturesImmediate;
+			CREATE_THUMBNAILS = createThumbnails;
+			
 			DEFAULT_NULL_TEXTURE = NULL_TEXTURE;
 			this.TEXTURE_PACKS = TEXTURE_PACKS;
 			
@@ -165,20 +203,28 @@ namespace butterflowersOS.Core
 			};
 
 			Restore();
+			
+			LoadThumbnails();
+			GenerateThumbnails();
+			LoadFiles();
 
-			if (textureLoadTarget.Count > 0) // Load all necessary textures
+			textureLoadTarget = generateThumbnailQueue.Union(thumbnailQueue).Union(fileQueue).ToList();
+			if (textureLoadTarget.Count > 0) 
 			{
-				// Load all textures from restore
-				#if !UNITY_EDITOR
-					LoadTextures(textureLoadTarget.ToArray());
-				#else
+				if (generateThumbnailQueue.Count > 0) loadMode = LoadMode.Generate;
+				else if (thumbnailQueue.Count > 0) loadMode = LoadMode.Thumbnails;
+				else if (fileQueue.Count > 0) loadMode = LoadMode.Files;
 				
-				if (READ_IN_EDITOR_MODE) LoadTextures(textureLoadTarget.ToArray());
-				
-				#endif
+				StartCoroutine("LoadingAllFiles");
 			}
-
+			else 
+			{
+				loadMode = LoadMode.NULL;
+			}
+			
+			
 			initialized = true;
+			load = (loadMode != LoadMode.NULL);
 		}
 
 		public void Aggregate(LibraryPayload payload)
@@ -201,87 +247,164 @@ namespace butterflowersOS.Core
 				var filetype = file.Key;
 			
 				var lookup = new List<int>();
+				
 				if (filetype == FileType.User) lookup = USER_FILES;
 				if (filetype == FileType.Shared) lookup = SHARED_FILES;
 				if (filetype == FileType.World) lookup = WORLD_FILES;
 
-				var files = ALL_FILES.TakeWhile((_file, index) => lookup.Contains(index)).ToArray();
-				foreach (string f in files) 
+				foreach (int index in lookup) 
 				{
-					RegisterFile(f, filetype, load:true);
+					var _file = ALL_FILES[index];
+					RegisterFile(_file, filetype);
 				}
 			}
 		}
 
 		void Dispose()
 		{
-			if (load) {
-				StopCoroutine("LoadFromQueue");
+			if (load) 
+			{
+				StopCoroutine("LoadingAllFiles");
 				load = false;
 			}
 
 			Texture2D[] textures = this.TEXTURE_LOOKUP.Values.ToArray();
-			for (int i = 0; i < textures.Length; i++) {
+			for (int i = 0; i < textures.Length; i++) 
+			{
 				var tex = textures[i];
 				var name = tex.name;
 
 				if(UserFiles.Contains(name)) // Destroy texture if loaded from desktop
 					Destroy(textures[i]);
 			}
-			this.TEXTURE_LOOKUP.Clear();
-			textureQueue.Clear();
+
+			Texture2D[] thumbnails = FALLBACK_TEXTURE_LOOKUP.Values.ToArray();
+			for(int i = 0; i < thumbnails.Length; i++)
+			{
+				Destroy(thumbnails[i]);
+			}
+			
+			TEXTURE_LOOKUP.Clear();
+			FALLBACK_TEXTURE_LOOKUP.Clear();
+			thumbnailQueue.Clear();
 
 			FILE_LOOKUP.Clear();
-			ALL_FILES.Clear();
-
-			if (textureWWW != null) {
-				textureWWW.Dispose();
-				textureWWW = null;
-			}
+			ALL_FILES.Clear(); 
 		}
 	
 		#endregion
 
 		#region Textures
 
-		void LoadTextures(string[] paths)
+		void LoadFiles()
 		{
-			textureQueue = new List<string>(paths);
+			var userFiles = FILE_LOOKUP[FileType.User];
+			var sharedFiles = FILE_LOOKUP[FileType.Shared];
 
-			if (!load) 
+			fileQueue.AddRange(userFiles);
+			fileQueue.AddRange(sharedFiles);
+		}
+
+		void LoadThumbnails()
+		{
+			var _directory = ThumbnailDirectory;
+			if (Directory.Exists(_directory)) 
 			{
-				load = true;
-				StartCoroutine("LoadFromQueue");
+				List<string> thumbnails = new List<string>();
+				var files = Files.GetFiles(_directory);
+				
+				foreach(FileSystemEntry entry in files) 
+				{
+					var file = entry.Path;
+					thumbnails.Add(file);
+				}
+
+				if (thumbnails.Count > 0) 
+				{
+					thumbnailQueue.AddRange(thumbnails);
+				}
 			}
 		}
 
-		IEnumerator LoadFromQueue()
+		void GenerateThumbnails()
 		{
-			while (textureQueue.Count > 0) 
+			foreach (KeyValuePair<string, Texture2D[]> texturePack in TEXTURE_PACKS) 
+			{
+				string collection = texturePack.Key;
+				Texture2D[] pack = texturePack.Value;
+
+				foreach (Texture2D texture in pack) 
+				{
+					string path = DefaultThumbnailPathFromFile(texture.name+".jpg");
+					if (!thumbnailQueue.Contains(path)) 
+					{
+						generateThumbnailQueue.Add(path);
+					}
+				}
+			}
+		}
+
+		IEnumerator LoadingAllFiles()
+		{
+			queue.AddRange(generateThumbnailQueue);
+			queue.AddRange(thumbnailQueue);
+			queue.AddRange(fileQueue);
+
+			do 
 			{
 				if (!read) 
 				{
-					string file = textureQueue[0];
-					TextureLoader.Push(file, this);
-				
-					read = true;
+					if (loadMode == LoadMode.Generate) 
+					{
+						if (generateThumbnailQueue.Count <= 0) loadMode = LoadMode.Thumbnails;
+					}
+					
+					if (loadMode == LoadMode.Thumbnails) 
+					{
+						if (thumbnailQueue.Count <= 0) loadMode = LoadMode.Files;
+					}
+
+					if (loadMode == LoadMode.Files) 
+					{
+						if (fileQueue.Count <= 0) loadMode = LoadMode.NULL;
+					}
+
+					if (queue.Count > 0) 
+					{
+						string file = queue[0];
+
+						if (loadMode != LoadMode.Generate) 
+						{
+							TextureLoader.Push(file, this);
+							read = true;
+						}
+						else 
+						{
+							var _filename = Path.GetFileName(file);
+							Texture2D texture = GetWorldTexture(_filename);
+							
+							if (texture != null) 
+							{
+								Debug.Log("Degrade " + _filename);
+								
+								Texture2D thumbnail = DegradeBytes(_filename, texture, false);
+								
+								RegisterTexture(_filename, null);
+								RegisterThumbnail(file, thumbnail);
+							}
+							
+							generateThumbnailQueue.RemoveAt(0);
+							queue.RemoveAt(0);
+							textureLoadCompleted.Add(file);
+						}
+					}
 				}
 
 				yield return null;
-			}
+				
+			} while (queue.Count > 0);
 
 			load = false;
-		}
-
-		public void ReceiveTexture(string file, Texture2D texture)
-		{
-			RegisterTexture(file, texture);
-
-			if (load) 
-			{
-				textureQueue.Remove(file);
-				read = false;
-			}
 		}
 
 		#endregion
@@ -323,65 +446,38 @@ namespace butterflowersOS.Core
 				FILE_LOOKUP[type] = new List<string>(new string[]{ file });
 			}
 		}
-	
-		public Texture2D GetTexture(string path, bool nullable = false)
-		{
-			if (!TEXTURE_LOOKUP.ContainsKey(path)) 
-				return (nullable)? null:DEFAULT_NULL_TEXTURE;
-		
-			return TEXTURE_LOOKUP[path];
-		}
 
-		public Texture2D GetWorldTexture(string id)
-		{
-			foreach (KeyValuePair<string, Texture2D[]> pack in TEXTURE_PACKS) 
-			{
-				foreach (Texture2D tex in pack.Value) 
-				{
-					var textureID = tex.name;
-					if (textureID == id) return tex;
-				}
-			}
-
-			return DEFAULT_NULL_TEXTURE;
-		}
-	
 		#endregion
 	
 		#region Register
 	
-		public string CreateFile(string name, Texture2D image)
+		public string CreateFile(string filename, string directory, Texture2D image, FileType type)
 		{
-			var root = Files.Path;
-			var path = Path.Combine(root, string.Format("{0}.jpg", name));
+			var fullpath = Path.Combine(directory, string.Format("{0}.jpg", filename));
 		
 			try 
 			{
 				var bytes = image.EncodeToJPG();
-				File.WriteAllBytes(path, bytes);
-			
-				RegisterFile(name, FileType.Shared);
-				RegisterTexture(path, image);
+				File.WriteAllBytes(fullpath, bytes);
+				
+				RegisterTexture(fullpath, image);
 			}
 			catch (System.Exception e) 
 			{
 				Debug.LogWarning("Unable to create file! " + e.Message);
+				return null;
 			}
 
-			return path;
+			return fullpath;
 		}
 
-		public bool RegisterFileInstance(string file, POINT screenPoint)
+		public bool RegisterFileInstance(string file, FileType type)
 		{
-			bool success = RegisterFile(file, FileType.User);
-
-			if (success && onAddFileInstance != null) 
-				onAddFileInstance(file, screenPoint);
-
+			bool success = RegisterFile(file, type);
 			return success;
 		}
 
-		public bool RegisterFile(string file, FileType type, string directory = null, bool load = false)
+		bool RegisterFile(string file, FileType type, string directory = null)
 		{
 			bool success = true;
 			bool @new = !ALL_FILES.Contains(file); // New entry to files
@@ -391,8 +487,7 @@ namespace butterflowersOS.Core
 				var fileInfo = new FileInfo(file);
 				success = fileInfo.Exists;
 
-				if (success)
-					directory = fileInfo.Directory.FullName;
+				if (success) directory = fileInfo.Directory.FullName;
 			}
 
 			if (@new) 
@@ -415,18 +510,6 @@ namespace butterflowersOS.Core
 		
 			AddToFileLookup(type, file);
 
-			// Add to textures
-			if (load) 
-			{
-				if (success) 
-				{
-					if (type == FileType.World) RegisterTexture(file, GetWorldTexture(file));
-					else textureLoadTarget.Add(file);
-				}
-				else 
-					RegisterTexture(file, DEFAULT_NULL_TEXTURE); // Fallback to NULL texture
-			}
-
 			return success;
 		}
 
@@ -435,91 +518,207 @@ namespace butterflowersOS.Core
 			return false;
 		}
 
-		public void RegisterTexture(string file, Texture tex)
+		void RegisterTexture(string file, Texture tex)
 		{
 			var texture = (tex as Texture2D);
-			if (texture == null) texture = DEFAULT_NULL_TEXTURE;
-
+			bool success = (texture != null);
+			
 			if (TEXTURE_LOOKUP.ContainsKey(file)) TEXTURE_LOOKUP[file] = texture;
 			else TEXTURE_LOOKUP.Add(file, texture);
 
 			Debug.LogFormat("Added {0} to library", file);
+			
+			if (success && CREATE_THUMBNAILS) 
+			{
+				CreateThumbnail(file, texture);	// Generate new thumbnail from image
+			}
 		}
 
 		#endregion
-	
-		/*
-		#region Deprecation
 
-		void StartListen()
+		#region Textures
+		
+		public void RequestTexture(string path, ITextureReceiver receiver = null)
 		{
-			if (!listenForEvents) 
-			{
-				TEMP_FILES.Clear();
-				foreach (string file in ALL_FILES) 
-				{
-					var fileInfo = new FileInfo(file);
-					var exists = fileInfo.Exists;
-
-					if (exists) TEMP_FILES.Add(file, true);
-					else TEMP_FILES.Add(file, false);
-				}
+			if (TEXTURE_RECEIVERS.ContainsKey(path)) return;
+			TEXTURE_RECEIVERS.Add(path, receiver);
 			
-				StartCoroutine(ListenForFileEvents()); 
-				listenForEvents = true;
-			}
-		}
-		void StopListen(){ if(listenForEvents){ StopCoroutine(ListenForFileEvents()); listenForEvents = false; } }
-
-		IEnumerator ListenForFileEvents()
-		{
-			List<string> deprecate = new List<string>();
-			List<string> recover = new List<string>();
-
-			while (true) 
+			if (TEXTURE_LOOKUP.ContainsKey(path)) 
 			{
-				foreach (string file in ALL_FILES) 
+				ReceiveTexture(path, TEXTURE_LOOKUP[path]);
+				return;
+			}
+
+			TextureLoader.Push(path, this); // Push to texture loader
+		}
+		
+		public Texture2D RequestTextureImmediate(string path)
+		{
+			if (TEXTURE_LOOKUP.TryGetValue(path, out Texture2D req)) 
+			{
+				return req;
+			}
+
+			return GetFallbackTexture(path, nullable: false);
+		}
+
+		public void ReceiveTexture(string file, Texture2D texture)
+		{
+			if (load) // Completing loading during intiialization
+			{
+				if (loadMode == LoadMode.Thumbnails) 
 				{
-					var fileInfo = new FileInfo(file);
-					var exists = fileInfo.Exists;
-				
-					var cacheExists = false;
-					if (!TEMP_FILES.TryGetValue(file, out cacheExists)) 
+					if (texture != null) 
 					{
-						TEMP_FILES.Add(file, exists);
-						cacheExists = exists;
+						var _filename = Path.GetFileNameWithoutExtension(file);
+						RegisterThumbnail(_filename, texture);
 					}
-
-					if (cacheExists != exists) {
-						if (exists) recover.Add(file);
-						else deprecate.Add(file);
-
-						TEMP_FILES[file] = exists;
-					}
+					
+					thumbnailQueue.RemoveAt(0);
 				}
-			
-#if !UNITY_EDITOR
-			Debug.LogErrorFormat("User deleted {0} files\nUser recovered {1} files", deprecate.Count, recover.Count);
-#else
-				Debug.LogWarningFormat("User deleted {0} files\nUser recovered {1} files", deprecate.Count, recover.Count);
-#endif
+				else if(loadMode == LoadMode.Files)
+				{
+					RegisterTexture(file, texture);
+					fileQueue.RemoveAt(0);
+				}
 
-				if (deprecate.Count > 0 && onDeletedFiles != null)
-					onDeletedFiles(deprecate.ToArray());
+				queue.RemoveAt(0);
+				textureLoadCompleted.Add(file);
+				
+				read = false;
+			}
+			else 
+			{
+				
+				RegisterTexture(file, texture);
 
-				if (recover.Count > 0 && onRecoverFiles != null)
-					onRecoverFiles(recover.ToArray());
-			
-				deprecate.Clear();
-				recover.Clear();
+				ITextureReceiver receiver = TEXTURE_RECEIVERS[file];
+				if (receiver != null) 
+				{
+					if (texture == null) texture = GetFallbackTexture(file, nullable: false);
+					receiver.ReceiveTexture(file, texture);
+				}
 
-				yield return new WaitForSecondsRealtime(1f);
+				TEXTURE_RECEIVERS.Remove(file); // Pop from receivers queue
+				
 			}
 		}
-	
+		
+
+		Texture2D GetFallbackTexture(string path, bool nullable)
+		{
+			var _filename = Path.GetFileNameWithoutExtension(path);
+			if (FALLBACK_TEXTURE_LOOKUP.ContainsKey(_filename))
+				return FALLBACK_TEXTURE_LOOKUP[_filename];
+			
+			if (nullable) return null;
+			return DEFAULT_NULL_TEXTURE;
+		}
+
+		Texture2D GetWorldTexture(string path)
+		{
+			foreach (KeyValuePair<string, Texture2D[]> pack in TEXTURE_PACKS) 
+			{
+				foreach (Texture2D tex in pack.Value) 
+				{
+					var textureID = tex.name + ".jpg";
+					if (textureID == path) 
+						return tex;
+				}
+			}
+
+			return null;
+		}
+
 		#endregion
-		*/
-	
+		
+		#region Thumbnails
+		
+		string ThumbnailDirectory => Path.Combine(Path.GetFullPath(Application.persistentDataPath), "_thumbnails");
+
+		string DefaultThumbnailPathFromFile(string filename)
+		{
+			var _directory = ThumbnailDirectory;
+			FileUtils.EnsureDirectory(_directory);
+
+			return Path.Combine(_directory, filename);
+		}
+
+		void CreateThumbnail(string path, Texture2D texture)
+		{
+			var _filename = Path.GetFileNameWithoutExtension(path);
+			var _ext = Path.GetExtension(path);
+
+			if (texture == null) return; // Ignore request to create thumbnail, texture is NULL!
+			if (FALLBACK_TEXTURE_LOOKUP.ContainsKey(path)) return; // Ignore request to create thumbnail, already exists!
+
+			try 
+			{
+				var _thumbnail = DegradeBytes((_filename + _ext), texture, (_ext == ".png" || _ext == ".PNG"));
+				RegisterThumbnail(path, _thumbnail);
+			}
+			catch (System.Exception err) 
+			{
+				Debug.LogWarningFormat("Unable to create thumbnail => {0}", err.Message);
+			}
+		}
+
+		void RegisterThumbnail(string file, Texture texture)
+		{
+			var _texture = (texture as Texture2D);
+			
+			if (FALLBACK_TEXTURE_LOOKUP.ContainsKey(file)) FALLBACK_TEXTURE_LOOKUP[file] = _texture;
+			else FALLBACK_TEXTURE_LOOKUP.Add(file, _texture);
+			
+			Debug.LogFormat("Added {0} to thumbnails", file);
+		}
+		
+		#endregion
+		
+		#region Degradation
+		
+		const int _WIDTH = 32;
+		const int _HEIGHT = 32;
+
+		Texture2D DegradeBytes(string file, Texture2D texture, bool transparency)
+		{
+			var width = texture.width;
+			var height = texture.height;
+
+			string path = DefaultThumbnailPathFromFile(file);
+			byte[] _data = new byte[] { };
+			
+			if (!File.Exists(path)) 
+			{
+				try 
+				{
+					var _texture = new Texture2D(texture.width, texture.height);
+					_texture.SetPixels(texture.GetPixels());
+					_texture.Apply();
+
+					bool resize = (width > _WIDTH || height > _HEIGHT);
+					if (resize) {
+						TextureScale.Bilinear(_texture, _WIDTH, _HEIGHT);
+						_texture.Apply();
+					}
+
+					if (transparency) _data = _texture.EncodeToPNG();
+					else _data = _texture.EncodeToJPG();
+
+					File.WriteAllBytes(path, _data);
+					return _texture;
+				}
+				catch (System.Exception e) 
+				{
+					throw e;
+				}
+			}
+
+			throw new System.Exception("File already exists, no need to create thumbnail!");
+		}
+		
+		#endregion
+
 		#region Discovery
 	
 		public bool HasDiscoveredFile(string path)

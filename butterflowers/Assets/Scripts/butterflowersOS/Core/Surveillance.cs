@@ -292,10 +292,14 @@ namespace butterflowersOS.Core
 			var name = Extensions.RandomString(12);
 			var camera = snapshotCamera.camera;
 
-			if (Preset.takePhotos)
-				lastPhotoPath = Lib.CreateFile(name, image);
+			if (Preset.takePhotos) 
+			{
+				lastPhotoPath = Lib.CreateFile(name,
+					System.Environment.GetFolderPath(Environment.SpecialFolder.Desktop), image,
+					Library.FileType.Shared);
+			}
 			else
-				lastPhotoPath = "NULL";
+				lastPhotoPath = null;
 
 			lastPhotoCaption = name;
 			lastPhotoTaken = image;

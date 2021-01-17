@@ -513,7 +513,7 @@ namespace Wizard {
 
         void onUpdateBrainState(Mood mood, Stance stance)
         {
-            Debug.LogFormat("Wizard became {0} and {1}", mood, stance);
+            Debug.LogFormat("World became {0} and {1}", mood, stance);
             Comment(mood, stance);
         }
 
@@ -568,7 +568,7 @@ namespace Wizard {
 
         void onFireEvent(EVENTCODE @event, AGENT a, AGENT b, string detail) 
         {
-            if (a == AGENT.Wizard)
+            if (a == AGENT.World)
                 React(); // React to last event
 
             if (a != AGENT.User) return; // Ignore all non-player events

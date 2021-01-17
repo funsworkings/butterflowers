@@ -1346,7 +1346,9 @@
               <e p="Managers" t="Include">
                 <e p="BeaconManager.cs" t="Include" />
                 <e p="ButterflowerManager.cs" t="Include" />
+                <e p="CutsceneManager.cs" t="Include" />
                 <e p="EventManager.cs" t="Include" />
+                <e p="NotificationCenter.cs" t="Include" />
                 <e p="SequenceManager.cs" t="Include" />
                 <e p="TutorialManager.cs" t="Include" />
                 <e p="VineManager.cs" t="Include" />
@@ -1368,12 +1370,17 @@
             </e>
             <e p="Snippets" t="Include">
               <e p="BindDistortionWithOpacity.cs" t="Include" />
+              <e p="Burster.cs" t="Include" />
               <e p="FitViaScale.cs" t="Include" />
             </e>
             <e p="UI" t="Include">
               <e p="DayTracker.cs" t="Include" />
               <e p="EventLog.cs" t="Include" />
               <e p="MenuCursor.cs" t="Include" />
+              <e p="Notifications" t="Include">
+                <e p="DiscoveryNotification.cs" t="Include" />
+                <e p="GenericNotification.cs" t="Include" />
+              </e>
               <e p="Summary Cards" t="Include">
                 <e p="BeaconsAdded.cs" t="Include" />
                 <e p="BeaconsDestroyed.cs" t="Include" />
@@ -1392,6 +1399,7 @@
               <e p="SummaryCard.cs" t="Include" />
               <e p="SummaryCardTrigger.cs" t="Include" />
               <e p="SummaryDeck.cs" t="Include" />
+              <e p="WelcomeMessage.cs" t="Include" />
             </e>
             <e p="Visuals" t="Include">
               <e p="Types" t="Include">
@@ -1676,6 +1684,7 @@
             <e p="Textures" t="Include">
               <e p="ITextureReceiver.cs" t="Include" />
               <e p="TextureLoader.cs" t="Include" />
+              <e p="TextureScale.cs" t="Include" />
             </e>
             <e p="Timeline" t="Include">
               <e p="Core" t="Include">
@@ -1685,6 +1694,7 @@
             <e p="UI" t="Include">
               <e p="Behaviors" t="Include">
                 <e p="FitInCanvas.cs" t="Include" />
+                <e p="InfiniteScroller.cs" t="Include" />
                 <e p="ToggleVisibility.cs" t="Include" />
                 <e p="UpdateMinimumLayoutSizeFromChildren.cs" t="Include" />
                 <e p="Visibility" t="Include">

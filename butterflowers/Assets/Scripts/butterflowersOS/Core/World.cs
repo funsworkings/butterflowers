@@ -2,6 +2,7 @@
 using System.Collections;
 using System.Collections.Generic;
 using System.IO;
+using System.Text.RegularExpressions;
 using butterflowersOS.Data;
 using butterflowersOS.Interfaces;
 using butterflowersOS.Menu;
@@ -108,6 +109,8 @@ namespace butterflowersOS.Core
             private set { m_TimeScale = value; }
         }
 
+        public bool ready = true;
+
         // Collections
     
         [Header("Entities")] 
@@ -178,7 +181,14 @@ namespace butterflowersOS.Core
         void Update()
         {
             if (dispose) return;
+            
+            HandleReady();
             UpdateTimeScale();
+        }
+        
+        void HandleReady()
+        {
+            ready = (!pauseMenu.IsVisible && !Cutscenes.playing); // Wait for pause menu and cutscenes!
         }
 
         void OnDestroy()
@@ -199,9 +209,7 @@ namespace butterflowersOS.Core
             
             Dictionary<string, Texture2D[]> texturePacks = new Dictionary<string, Texture2D[]>() 
             {
-                //{"WIZARD", Preset.wizardFiles.items.Select(mem => mem.image).ToArray()},
-                //{"ENVIRONMENT", Preset.starterFiles.elements}
-                { "WIZARD", Preset.defaultTextures }
+                { "DEFAULT", Preset.defaultTextures }
             };
             LoadLibraryItems(texturePacks);
             
@@ -292,7 +300,13 @@ namespace butterflowersOS.Core
             }
             
             Surveillance.New(); // Trigger
+            
             Beacons.RefreshBeacons(); // Refresh all beacons
+            if (!string.IsNullOrEmpty(Surveillance.lastPhotoPath)) 
+            {
+                Beacons.CreateBeacon(Surveillance.lastPhotoPath, Beacon.Type.Desktop, Beacon.Locale.Terrain,
+                    transition: BeaconManager.TransitionType.Spawn);
+            }
 
             wait = false; // Disable pause!
             type = _type;
@@ -382,7 +396,7 @@ namespace butterflowersOS.Core
             /*
         if (Preset.useWizard) 
         {
-            var brain = Wizard.Brain;
+            var brain = World.Brain;
 
             if (brain.isUnknown(beacon))
                 return Beacon.Status.UNKNOWN;
@@ -473,9 +487,14 @@ namespace butterflowersOS.Core
         {
             var desktop = Environment.GetFolderPath(Environment.SpecialFolder.Desktop);
             desktop = Application.persistentDataPath; // Use local data path
+
+
+            var username = _Save.data.username;
             
-            var path = Path.Combine(desktop, _Save.data.username + ".fns");
+            Regex reg = new Regex("[*'\",_&#^@]");
+            username = reg.Replace(username, "_"); // Replace all special characters in exported neue
             
+            var path = Path.Combine(desktop, username + ".fns");
             return path;
         }
         
@@ -559,7 +578,7 @@ namespace butterflowersOS.Core
             lib_payload.sharedFiles = _Save.data.shared_files;
             lib_payload.worldFiles = _Save.data.world_files;
             
-            Library.Load(lib_payload, Preset.defaultNullTexture, texturePacks, Preset.loadTexturesInEditor);
+            Library.Load(lib_payload, Preset.defaultNullTexture, texturePacks, Preset.loadTexturesInEditor, Preset.backlogTextures);
         }
         
         void SaveLibraryItems()
