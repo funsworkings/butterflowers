@@ -16,7 +16,7 @@ namespace butterflowersOS.Objects.Base
 
 		protected override bool EvaluateActiveState()
 		{
-			return Sun.active;
+			return Sun.active && World.ready;
 		}
 
 		#endregion

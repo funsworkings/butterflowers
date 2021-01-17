@@ -134,16 +134,6 @@ namespace butterflowersOS.Core
             }
         }
 
-        public Vector3 worldPosition {
-            get
-            {
-                if (camera == null)
-                    return Vector3.zero;
-
-                return camera.ScreenToWorldPoint(new Vector3(position3d.x, position3d.y, 10f));
-            }
-        }
-
         public bool spells
         {
             get {
@@ -231,7 +221,7 @@ namespace butterflowersOS.Core
 
         protected override void Update()
         {
-            m_spells = infocus && sun.active;
+            m_spells = infocus && sun.active && World.ready;
             
             base.Update();
 
@@ -316,7 +306,7 @@ namespace butterflowersOS.Core
             var rayDirection = ray.direction;
             
             m_position3d = cameraPosition + (ray.direction * 1f);
-            m_interaction3d = cameraPosition + (rayDirection * pointDistance);
+            m_interaction3d = (spells)? cameraPosition + (rayDirection * pointDistance) : Vector3.one * Mathf.Infinity;
         }
 
         #endregion
