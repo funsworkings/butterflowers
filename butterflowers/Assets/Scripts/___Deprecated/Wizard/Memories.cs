@@ -8,7 +8,7 @@ using uwu.Generic;
 namespace Wizard {
 
     [Obsolete("Obsolete API!", true)]
-    [CreateAssetMenu(fileName = "New Wizard Memory BANK", menuName = "Internal/Wizard/Bank", order = 52)]
+    [CreateAssetMenu(fileName = "New World Memory BANK", menuName = "Internal/World/Bank", order = 52)]
     public class Memories: ScriptableDatabase<Memory> {
  
         public Memory GetMemoryByName(string name)

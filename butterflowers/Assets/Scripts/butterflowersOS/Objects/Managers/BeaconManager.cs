@@ -248,6 +248,11 @@ namespace butterflowersOS.Objects.Managers
 			}
 
 			beacon.Register(type, state, origin, _transition, load);
+			
+			var filetype = Library.FileType.World;
+			if (beacon.type == Type.Desktop) filetype = Library.FileType.User;
+
+			Library.RegisterFileInstance(path, filetype); // Register file with library
 			Events.ReceiveEvent(EVENTCODE.BEACONADD, AGENT.World, AGENT.Beacon, details: beacon.File);
 
 			Debug.LogWarning("Beacon was added = " + beacon.File);
@@ -637,6 +642,12 @@ namespace butterflowersOS.Objects.Managers
 
 		void DebugBeaconFromDesktop()
 		{
+			var _files = preset.defaultTextures;
+			var _file  = _files[Random.Range(0, _files.Length)];
+
+			CreateBeacon(_file.name + ".jpg", Type.World, Locale.Terrain, transition: TransitionType.Spawn, fromSave: false);
+
+			/*
 			var files = Files.GetFiles(Environment.GetFolderPath(Environment.SpecialFolder.Desktop));	
 			
 			var index = Random.Range(0, files.Length);
@@ -647,6 +658,7 @@ namespace butterflowersOS.Objects.Managers
 			{
 				CreateBeacon(file, Beacon.Type.Desktop, Beacon.Locale.Terrain, fromSave: false, transition: TransitionType.Spawn);
 			}
+			*/
 		}
 	
 		#endregion
