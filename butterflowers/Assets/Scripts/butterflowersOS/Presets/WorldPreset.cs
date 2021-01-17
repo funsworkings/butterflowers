@@ -21,6 +21,7 @@ namespace butterflowersOS.Presets
             public bool takePhotos = false;
             public bool logEvents = false;
             public bool loadTexturesInEditor = true;
+            public bool useDesktopFilesForDebugBeacons = true;
 
         [Header("Time Attributes")]
             public float hoursPerDay = 24f;
