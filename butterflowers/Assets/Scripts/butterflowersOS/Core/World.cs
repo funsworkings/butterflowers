@@ -109,6 +109,8 @@ namespace butterflowersOS.Core
             private set { m_TimeScale = value; }
         }
 
+        public bool ready = true;
+
         // Collections
     
         [Header("Entities")] 
