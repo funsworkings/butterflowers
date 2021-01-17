@@ -642,23 +642,22 @@ namespace butterflowersOS.Objects.Managers
 
 		void DebugBeaconFromDesktop()
 		{
-			var _files = preset.defaultTextures;
-			var _file  = _files[Random.Range(0, _files.Length)];
-
-			CreateBeacon(_file.name + ".jpg", Type.World, Locale.Terrain, transition: TransitionType.Spawn, fromSave: false);
-
-			/*
-			var files = Files.GetFiles(Environment.GetFolderPath(Environment.SpecialFolder.Desktop));	
-			
-			var index = Random.Range(0, files.Length);
-			var file = files[index].Path;
-
-			bool success = Library.RegisterFile(file, Library.FileType.User);
-			if (success) 
+			if (!preset.useDesktopFilesForDebugBeacons) 
 			{
+				var _files = preset.defaultTextures;
+				var _file = _files[Random.Range(0, _files.Length)];
+
+				CreateBeacon(_file.name + ".jpg", Type.World, Locale.Terrain, transition: TransitionType.Spawn,
+					fromSave: false);
+			}
+			else {
+				var files = Files.GetFiles(Environment.GetFolderPath(Environment.SpecialFolder.Desktop));	
+			
+				var index = Random.Range(0, files.Length);
+				var file = files[index].Path;
+
 				CreateBeacon(file, Beacon.Type.Desktop, Beacon.Locale.Terrain, fromSave: false, transition: TransitionType.Spawn);
 			}
-			*/
 		}
 	
 		#endregion
