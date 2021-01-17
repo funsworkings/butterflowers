@@ -234,7 +234,7 @@ namespace butterflowersOS.Core
             
             AffectMaterials();
         }
-    
+
         void OnApplicationFocus(bool hasFocus)
         {
             infocus = hasFocus;

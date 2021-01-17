@@ -181,7 +181,14 @@ namespace butterflowersOS.Core
         void Update()
         {
             if (dispose) return;
+            
+            HandleReady();
             UpdateTimeScale();
+        }
+        
+        void HandleReady()
+        {
+            ready = !pauseMenu.IsVisible;
         }
 
         void OnDestroy()
