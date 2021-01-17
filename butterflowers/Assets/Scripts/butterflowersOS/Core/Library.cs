@@ -459,8 +459,7 @@ namespace butterflowersOS.Core
 			{
 				var bytes = image.EncodeToJPG();
 				File.WriteAllBytes(fullpath, bytes);
-			
-				RegisterFile(filename, type);
+				
 				RegisterTexture(fullpath, image);
 			}
 			catch (System.Exception e) 
