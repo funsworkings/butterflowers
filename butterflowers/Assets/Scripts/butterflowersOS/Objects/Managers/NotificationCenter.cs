@@ -1,6 +1,7 @@
 ﻿using System;
 using butterflowersOS.Core;
 using butterflowersOS.Presets;
+using butterflowersOS.Snippets;
 using butterflowersOS.UI.Notifications;
 using UnityEngine;
 using Random = UnityEngine.Random;
@@ -20,6 +21,9 @@ namespace butterflowersOS.Objects.Managers
 
 		[Header("Types")]
 			[SerializeField] GameObject discoveryNotif;
+
+		[Header("Miscellaneous")] 
+			[SerializeField] Burster burster;
 
 
 		void Start()
@@ -64,11 +68,15 @@ namespace butterflowersOS.Objects.Managers
 		
 		public void TriggerDiscoveryNotif(string filename)
 		{
-			var containerSize = container.rect.size / 2f;
+			var containerSize = container.rect.size / 3f;
 			var randomPosition = new Vector2(Random.Range(-containerSize.x, containerSize.x), Random.Range(-containerSize.y, containerSize.y));
 			var randomLifetime = Random.Range(2f, 4f);
 
-			CreateNotification(discoveryNotif, filename, randomPosition, lifetime: randomLifetime);
+			var notif = CreateNotification(discoveryNotif, filename, randomPosition, lifetime: randomLifetime);
+			if (notif != null) 
+			{
+				burster.Burst(notif.Rect.position);
+			}
 		}
 		
 		#endregion
