@@ -680,8 +680,8 @@ namespace butterflowersOS.Core
 		
 		#region Degradation
 		
-		const int _WIDTH = 64;
-		const int _HEIGHT = 64;
+		const int _WIDTH = 32;
+		const int _HEIGHT = 32;
 
 		Texture2D DegradeBytes(string file, Texture2D texture, bool transparency)
 		{
