@@ -1,51 +1,131 @@
 fileFormatVersion: 2
 guid: 51a8dd2edf79b404284fd0f3e558ad9f
 ModelImporter:
-  serializedVersion: 23
-  fileIDToRecycleName:
-    100000: joint10
-    100002: joint10 1
-    100004: joint11
-    100006: joint11 1
-    100008: joint12
-    100010: joint13
-    100012: joint14
-    100014: joint15
-    100016: joint16
-    100018: joint5
-    100020: joint6
-    100022: joint6 1
-    100024: joint7
-    100026: joint7 1
-    100028: joint8
-    100030: joint9
-    100032: //RootNode
-    100034: wizard_combine2
-    400000: joint10
-    400002: joint10 1
-    400004: joint11
-    400006: joint11 1
-    400008: joint12
-    400010: joint13
-    400012: joint14
-    400014: joint15
-    400016: joint16
-    400018: joint5
-    400020: joint6
-    400022: joint6 1
-    400024: joint7
-    400026: joint7 1
-    400028: joint8
-    400030: joint9
-    400032: //RootNode
-    400034: wizard_combine2
-    2100000: lambert1
-    4300000: wizard_combine2
-    9500000: //RootNode
-    13700000: wizard_combine2
+  serializedVersion: 19301
+  internalIDToNameTable:
+  - first:
+      1: 100000
+    second: joint10
+  - first:
+      1: 100002
+    second: joint10 1
+  - first:
+      1: 100004
+    second: joint11
+  - first:
+      1: 100006
+    second: joint11 1
+  - first:
+      1: 100008
+    second: joint12
+  - first:
+      1: 100010
+    second: joint13
+  - first:
+      1: 100012
+    second: joint14
+  - first:
+      1: 100014
+    second: joint15
+  - first:
+      1: 100016
+    second: joint16
+  - first:
+      1: 100018
+    second: joint5
+  - first:
+      1: 100020
+    second: joint6
+  - first:
+      1: 100022
+    second: joint6 1
+  - first:
+      1: 100024
+    second: joint7
+  - first:
+      1: 100026
+    second: joint7 1
+  - first:
+      1: 100028
+    second: joint8
+  - first:
+      1: 100030
+    second: joint9
+  - first:
+      1: 100032
+    second: //RootNode
+  - first:
+      1: 100034
+    second: wizard_combine2
+  - first:
+      4: 400000
+    second: joint10
+  - first:
+      4: 400002
+    second: joint10 1
+  - first:
+      4: 400004
+    second: joint11
+  - first:
+      4: 400006
+    second: joint11 1
+  - first:
+      4: 400008
+    second: joint12
+  - first:
+      4: 400010
+    second: joint13
+  - first:
+      4: 400012
+    second: joint14
+  - first:
+      4: 400014
+    second: joint15
+  - first:
+      4: 400016
+    second: joint16
+  - first:
+      4: 400018
+    second: joint5
+  - first:
+      4: 400020
+    second: joint6
+  - first:
+      4: 400022
+    second: joint6 1
+  - first:
+      4: 400024
+    second: joint7
+  - first:
+      4: 400026
+    second: joint7 1
+  - first:
+      4: 400028
+    second: joint8
+  - first:
+      4: 400030
+    second: joint9
+  - first:
+      4: 400032
+    second: //RootNode
+  - first:
+      4: 400034
+    second: wizard_combine2
+  - first:
+      21: 2100000
+    second: lambert1
+  - first:
+      43: 4300000
+    second: wizard_combine2
+  - first:
+      95: 9500000
+    second: //RootNode
+  - first:
+      137: 13700000
+    second: wizard_combine2
   externalObjects: {}
   materials:
-    importMaterials: 1
+    materialImportMode: 1
     materialName: 0
     materialSearch: 1
     materialLocation: 1
@@ -74,29 +154,32 @@ ModelImporter:
     isReadable: 1
   meshes:
     lODScreenPercentages: []
-    globalScale: 0.67
+    globalScale: 25
     meshCompression: 0
     addColliders: 0
     useSRGBMaterialColor: 1
+    sortHierarchyByName: 1
     importVisibility: 1
     importBlendShapes: 1
     importCameras: 1
     importLights: 1
+    fileIdsGeneration: 1
     swapUVChannels: 0
     generateSecondaryUV: 0
     useFileUnits: 1
-    optimizeMeshForGPU: 1
     keepQuads: 0
     weldVertices: 1
     preserveHierarchy: 0
+    skinWeightsMode: 0
+    maxBonesPerVertex: 4
+    minBoneWeight: 0.001
+    meshOptimizationFlags: -1
     indexFormat: 0
     secondaryUVAngleDistortion: 8
     secondaryUVAreaDistortion: 15.000001
     secondaryUVHardAngle: 88
     secondaryUVPackMargin: 4
     useFileScale: 1
-    previousCalculatedGlobalScale: 0.01
-    hasPreviousCalculatedGlobalScale: 1
   tangentSpace:
     normalSmoothAngle: 60
     normalImportMode: 0
@@ -105,10 +188,10 @@ ModelImporter:
     legacyComputeAllNormalsFromSmoothingGroupsWhenMeshHasBlendShapes: 0
     blendShapeNormalImportMode: 1
     normalSmoothingSource: 0
+  referencedClips: []
   importAnimation: 1
-  copyAvatar: 0
   humanDescription:
-    serializedVersion: 2
+    serializedVersion: 3
     human: []
     skeleton: []
     armTwist: 0.5
@@ -118,13 +201,16 @@ ModelImporter:
     armStretch: 0.05
     legStretch: 0.05
     feetSpacing: 0
+    globalScale: 0.25
     rootMotionBoneName: 
     hasTranslationDoF: 0
     hasExtraRoot: 0
     skeletonHasParents: 1
   lastHumanDescriptionAvatarSource: {instanceID: 0}
+  autoGenerateAvatarMappingIfUnspecified: 1
   animationType: 2
   humanoidOversampling: 1
+  avatarSetup: 1
   additionalBone: 0
   userData: 
   assetBundleName: 

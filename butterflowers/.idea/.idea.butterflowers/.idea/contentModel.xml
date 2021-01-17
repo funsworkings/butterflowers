@@ -1402,6 +1402,7 @@
               <e p="WelcomeMessage.cs" t="Include" />
             </e>
             <e p="Visuals" t="Include">
+              <e p="ParticleMesh.cs" t="Include" />
               <e p="Types" t="Include">
                 <e p="WandAffectorMaterial.cs" t="Include" />
               </e>
@@ -1747,7 +1748,6 @@
           <e p="DeferredFog.shader" t="Include" />
           <e p="DeferredShading.shader" t="Include" />
           <e p="EtherealBoy.shader" t="Include" />
-          <e p="FluffyLeaf.shader" t="Include" />
           <e p="Instancing.shader" t="Include" />
           <e p="My First Lighting Shader.shader" t="Include" />
           <e p="My First Shader.shader" t="Include" />
@@ -1758,12 +1758,14 @@
           <e p="NestVertexSnap.shader" t="Include" />
           <e p="NestVertexSnapping.shader" t="Include" />
           <e p="NewUnlitShader.shader" t="Include" />
+          <e p="NorthStar.shader" t="Include" />
           <e p="NoZWrite.shader" t="Include" />
           <e p="RippleUI.shader" t="Include" />
           <e p="TerrainDistort.shader" t="Include" />
           <e p="Texture Splatting.shader" t="Include" />
           <e p="Textured With Detail.shader" t="Include" />
           <e p="TransparentShadowCollector.shader" t="Include" />
+          <e p="UVVertexOffset.shader" t="Include" />
           <e p="WaveTransTexture.shader" t="Include" />
         </e>
         <e p="Standard Assets" t="Include">
