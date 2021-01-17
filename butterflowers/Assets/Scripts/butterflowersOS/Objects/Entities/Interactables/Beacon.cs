@@ -14,10 +14,8 @@ namespace butterflowersOS.Objects.Entities.Interactables
 
         public enum Type 
         {
-            None,
             Desktop,
-            Wizard,
-            External
+            World
         }
 
         public enum Status 
@@ -108,7 +106,7 @@ namespace butterflowersOS.Objects.Entities.Interactables
         [SerializeField] GameObject pr_impactPS;
         [SerializeField] GameObject pr_flower;
     
-        public Type type = Type.None;
+        public Type type;
         public Locale state = Locale.Terrain;
         public AGENT parent = AGENT.NULL;
         public Flower flower = null;

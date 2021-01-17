@@ -300,7 +300,13 @@ namespace butterflowersOS.Core
             }
             
             Surveillance.New(); // Trigger
+            
             Beacons.RefreshBeacons(); // Refresh all beacons
+            if (!string.IsNullOrEmpty(Surveillance.lastPhotoPath)) 
+            {
+                Beacons.CreateBeacon(Surveillance.lastPhotoPath, Beacon.Type.Desktop, Beacon.Locale.Terrain,
+                    transition: BeaconManager.TransitionType.Spawn);
+            }
 
             wait = false; // Disable pause!
             type = _type;
@@ -390,7 +396,7 @@ namespace butterflowersOS.Core
             /*
         if (Preset.useWizard) 
         {
-            var brain = Wizard.Brain;
+            var brain = World.Brain;
 
             if (brain.isUnknown(beacon))
                 return Beacon.Status.UNKNOWN;

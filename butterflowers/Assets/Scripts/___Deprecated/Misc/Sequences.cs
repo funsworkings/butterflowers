@@ -129,7 +129,7 @@ public class Sequences : MonoBehaviour
 		//wizard.Appearance.LevelUp();
 		yield return new WaitForEndOfFrame();
 
-		/*while (wizard.Appearance.state == Wizard.Appearance.State.Leveling) 
+		/*while (wizard.Appearance.state == World.Appearance.State.Leveling) 
 		{
 			revolveFeedCamera.Speed += (Time.deltaTime * camerSpeedAcceleration);
 			yield return null;

@@ -388,6 +388,8 @@ namespace butterflowersOS.Core
 								Debug.Log("Degrade " + _filename);
 								
 								Texture2D thumbnail = DegradeBytes(_filename, texture, false);
+								
+								RegisterTexture(_filename, null);
 								RegisterThumbnail(file, thumbnail);
 							}
 							
@@ -464,22 +466,19 @@ namespace butterflowersOS.Core
 			catch (System.Exception e) 
 			{
 				Debug.LogWarning("Unable to create file! " + e.Message);
+				return null;
 			}
 
 			return fullpath;
 		}
 
-		public bool RegisterFileInstance(string file, POINT screenPoint)
+		public bool RegisterFileInstance(string file, FileType type)
 		{
-			bool success = RegisterFile(file, FileType.User);
-
-			if (success && onAddFileInstance != null) 
-				onAddFileInstance(file, screenPoint);
-
+			bool success = RegisterFile(file, type);
 			return success;
 		}
 
-		public bool RegisterFile(string file, FileType type, string directory = null)
+		bool RegisterFile(string file, FileType type, string directory = null)
 		{
 			bool success = true;
 			bool @new = !ALL_FILES.Contains(file); // New entry to files
@@ -489,8 +488,7 @@ namespace butterflowersOS.Core
 				var fileInfo = new FileInfo(file);
 				success = fileInfo.Exists;
 
-				if (success)
-					directory = fileInfo.Directory.FullName;
+				if (success) directory = fileInfo.Directory.FullName;
 			}
 
 			if (@new) 
