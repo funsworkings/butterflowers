@@ -217,14 +217,16 @@ namespace butterflowersOS.Core
 			
 			LoadThumbnails();
 			GenerateThumbnails();
-			LoadFiles();
+			//LoadFiles();
 
-			textureLoadTarget = generateThumbnailQueue.Union(thumbnailQueue).Union(fileQueue).ToList();
+			textureLoadTarget = generateThumbnailQueue.Union(thumbnailQueue).ToList();
+			//textureLoadTarget = textureLoadTarget.Union(fileQueue).ToList();
+			
 			if (textureLoadTarget.Count > 0) 
 			{
 				if (generateThumbnailQueue.Count > 0) loadMode = LoadMode.Generate;
 				else if (thumbnailQueue.Count > 0) loadMode = LoadMode.Thumbnails;
-				else if (fileQueue.Count > 0) loadMode = LoadMode.Files;
+				//else if (fileQueue.Count > 0) loadMode = LoadMode.Files;
 				
 				StartCoroutine("LoadingAllFiles");
 			}
@@ -359,7 +361,7 @@ namespace butterflowersOS.Core
 		{
 			queue.AddRange(generateThumbnailQueue);
 			queue.AddRange(thumbnailQueue);
-			queue.AddRange(fileQueue);
+			//queue.AddRange(fileQueue);
 
 			do 
 			{
@@ -372,7 +374,7 @@ namespace butterflowersOS.Core
 					
 					if (loadMode == LoadMode.Thumbnails) 
 					{
-						if (thumbnailQueue.Count <= 0) loadMode = LoadMode.Files;
+						if (thumbnailQueue.Count <= 0) loadMode = LoadMode.NULL;
 					}
 
 					if (loadMode == LoadMode.Files) 
