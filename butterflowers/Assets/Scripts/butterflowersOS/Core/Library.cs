@@ -639,7 +639,7 @@ namespace butterflowersOS.Core
 		string DefaultThumbnailPathFromFile(string filename)
 		{
 			var _directory = ThumbnailDirectory;
-			FileUtils.EnsureDirectory(_directory);
+			FileUtils.EnsureDirectory(_directory, hidden:true);
 
 			return Path.Combine(_directory, filename);
 		}

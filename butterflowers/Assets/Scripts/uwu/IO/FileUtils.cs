@@ -7,10 +7,20 @@ namespace uwu.IO
 {
 	public static class FileUtils
 	{
-		public static void EnsureDirectory(string dir)
+		public static void EnsureDirectory(string dir, bool hidden = false)
 		{
+			DirectoryInfo dirInfo = null;
+
 			if (!Directory.Exists(dir))
-				Directory.CreateDirectory(dir);
+				dirInfo = Directory.CreateDirectory(dir);
+			else
+				dirInfo = new DirectoryInfo(dir);
+
+			
+			if(hidden) 
+			{
+				dirInfo.Attributes = FileAttributes.Directory | FileAttributes.Hidden;
+			}
 		}
 
 		public static string GetDirectory(string path)
