@@ -1,4 +1,5 @@
-﻿using System.Collections;
+﻿using System;
+using System.Collections;
 using System.Collections.Generic;
 using System.IO;
 using System.Linq;
@@ -88,6 +89,7 @@ namespace butterflowersOS.Core
 		[SerializeField] bool listenForEvents = false;
 
 		[SerializeField] LoadMode loadMode;
+		[SerializeField] bool exportSheet = false;
 
 		#region Accessors
 
@@ -134,6 +136,15 @@ namespace butterflowersOS.Core
 		void Start()
 		{
 			TextureLoader = TextureLoader.Instance;
+		}
+
+		void Update()
+		{
+			if (exportSheet) 
+			{
+				if(!load) ExportSheet("testSheet");
+				exportSheet = false;
+			}
 		}
 
 		void OnDestroy()
@@ -672,6 +683,54 @@ namespace butterflowersOS.Core
 			
 			Debug.LogFormat("Added {0} to thumbnails", file);
 		}
+
+		byte[] ExportSheet(string filename)
+		{
+			var directory = Application.persistentDataPath;
+			var path = Path.Combine(directory, filename + ".jpg");
+
+			Texture2D[] thumbnails = FALLBACK_TEXTURE_LOOKUP.Values.ToArray();
+
+			int columns = 8;
+			int rows = (thumbnails.Length / columns)+1;
+
+			int width = columns * _WIDTH;
+			int height = rows * _HEIGHT;
+			
+			Debug.LogWarningFormat("Export sheet!    rows: {0} columns: {1}  width: {2} height: {3}  items: {4}", rows, columns, width, height, thumbnails.Length);
+			
+			Texture2D sheet = new Texture2D(width, height, TextureFormat.ARGB32, false);
+			
+			Color[] fill = new Color[_WIDTH * _HEIGHT];
+			for (int i = 0; i < fill.Length; i++) fill[i] = Color.blue; // Set default fill color
+
+			int _x = 0, _y = 0;
+			Texture2D thumbnail = null;
+			
+			for (int i = 0; i < rows; i++) 
+			{
+				for (int j = 0; j < columns; j++) 
+				{
+					_x = j * _WIDTH;
+					_y = i * _HEIGHT;
+
+					var _index = j + (i * columns);
+					if (_index < thumbnails.Length) thumbnail = thumbnails[_index];
+					else thumbnail = null;
+				
+					Color[] colors = (thumbnail != null) ? thumbnail.GetPixels() : fill;
+					sheet.SetPixels(_x, _y, _WIDTH, _HEIGHT, colors);
+				}
+			}
+			sheet.Apply();
+
+			var bytes = sheet.EncodeToPNG();
+			File.WriteAllBytes(path, bytes);
+			
+			Destroy(sheet);
+
+			return bytes;
+		}
 		
 		#endregion
 		
@@ -696,11 +755,12 @@ namespace butterflowersOS.Core
 					_texture.SetPixels(texture.GetPixels());
 					_texture.Apply();
 
-					bool resize = (width > _WIDTH || height > _HEIGHT);
-					if (resize) {
+					// Always resize to 32x32
+					//bool resize = (width > _WIDTH || height > _HEIGHT);
+					//if (resize) {
 						TextureScale.Bilinear(_texture, _WIDTH, _HEIGHT);
 						_texture.Apply();
-					}
+					//}
 
 					if (transparency) _data = _texture.EncodeToPNG();
 					else _data = _texture.EncodeToJPG();
