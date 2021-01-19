@@ -25,6 +25,7 @@ namespace butterflowersOS.Objects.Miscellaneous
 		
 		public Frame frame;
 		public Scene[] scenes;
+		public Texture2D[] memories;
 
 
 		void Awake()
