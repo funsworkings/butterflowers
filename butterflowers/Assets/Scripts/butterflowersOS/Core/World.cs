@@ -424,7 +424,9 @@ namespace butterflowersOS.Core
             if (Pause) return; // Ignore request to export if paused
             
             string path = GetExportPath();
-            BrainData data = new BrainData(_Save.data);
+            byte[] images = Library.ExportSheet("test");
+            
+            BrainData data = new BrainData(_Save.data, images);
             
             bool success = ExportProfile(path, data);
             Debug.LogWarningFormat("{0} generating profile => {1}", (success)? "Success":"Fail", path);

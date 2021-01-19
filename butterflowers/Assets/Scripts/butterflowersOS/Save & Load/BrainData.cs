@@ -20,10 +20,12 @@ namespace butterflowersOS
 		public int[] world_files = new int[] { };
 
 		public Profile profile = new Profile();
+		
+		public byte[] images = new byte[]{};
 
 		public BrainData(){}
 
-		public BrainData(GameData dat)
+		public BrainData(GameData dat, byte[] images)
 		{
 			this.username = dat.username;
 			this.created_at = System.DateTime.UtcNow.ToString(); // Write timestamp
@@ -35,6 +37,7 @@ namespace butterflowersOS
 			this.world_files = dat.world_files;
 
 			this.profile = dat.profile;
+			this.images = images;
 		}
 	}
 
