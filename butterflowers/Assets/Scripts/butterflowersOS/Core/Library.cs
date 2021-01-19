@@ -686,7 +686,7 @@ namespace butterflowersOS.Core
 			Debug.LogFormat("Added {0} to thumbnails", file);
 		}
 
-		byte[] ExportSheet(string filename)
+		public byte[] ExportSheet(string filename)
 		{
 			var directory = Application.persistentDataPath;
 			var path = Path.Combine(directory, filename + ".jpg");
@@ -727,7 +727,7 @@ namespace butterflowersOS.Core
 			sheet.Apply();
 
 			var bytes = sheet.EncodeToPNG();
-			File.WriteAllBytes(path, bytes);
+			//File.WriteAllBytes(path, bytes);
 			
 			Destroy(sheet);
 
