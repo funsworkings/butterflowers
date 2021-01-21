@@ -21,6 +21,7 @@ namespace butterflowersOS.Objects.Managers
 
 		[Header("Types")]
 			[SerializeField] GameObject discoveryNotif;
+			[SerializeField] GameObject exportNotif;
 
 		[Header("Miscellaneous")] 
 			[SerializeField] Burster burster;
@@ -73,6 +74,19 @@ namespace butterflowersOS.Objects.Managers
 			var randomLifetime = Random.Range(2f, 4f);
 
 			var notif = CreateNotification(discoveryNotif, filename, randomPosition, lifetime: randomLifetime);
+			if (notif != null) 
+			{
+				burster.Burst(notif.Rect.position);
+			}
+		}
+
+		public void TriggerExportNotif(string filename)
+		{
+			var containerSize = container.rect.size / 3f;
+			var randomPosition = new Vector2(Random.Range(-containerSize.x, containerSize.x), Random.Range(-containerSize.y, containerSize.y));
+			var lifetime = 6f;
+
+			var notif = CreateNotification(exportNotif, filename, randomPosition, lifetime: lifetime);
 			if (notif != null) 
 			{
 				burster.Burst(notif.Rect.position);
