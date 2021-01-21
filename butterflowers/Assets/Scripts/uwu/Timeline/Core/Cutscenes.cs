@@ -9,7 +9,7 @@ namespace uwu.Timeline.Core
 	{
 		// Events
 
-		System.Action<PlayableAsset> Completed;
+		public System.Action<PlayableAsset> Completed;
 		
 		
 		#region Internal
@@ -32,11 +32,13 @@ namespace uwu.Timeline.Core
 		#region Attributes
 
 		State state = State.Stopped;
+		double lastTimestamp = 0.0;
 
 		[SerializeField] PlayableAsset m_cutscene;
 
 		[Header("Debug")] 
 			[SerializeField] bool debugTriggerPlay = false;
+			[SerializeField] bool debugTriggerCancel = false;
 
 		#endregion
 
@@ -89,10 +91,21 @@ namespace uwu.Timeline.Core
 
 		void Update()
 		{
+			if (playing) 
+			{
+				lastTimestamp = playableDirector.time; // Record last valid timestamp
+			}
+
 			if (debugTriggerPlay) 
 			{
 				Play(cutscene);
 				debugTriggerPlay = false;
+			}
+
+			if (debugTriggerCancel) 
+			{
+				Cancel();	
+				debugTriggerCancel = false;
 			}
 		}
 
@@ -103,17 +116,19 @@ namespace uwu.Timeline.Core
 		void onPlay(PlayableDirector director)
 		{
 			state = State.Playing;
+			lastTimestamp = director.time;
 		}
 
 		void onStop(PlayableDirector director)
 		{
 			state = State.Stopped;
 
-			if (director.time >= director.duration) // Detect completion
-			{
+			Debug.LogFormat("{0} completed at time=> {1}  duration=> {2}", director.playableAsset.name, lastTimestamp, director.duration);
+			//if (lastTimestamp >= director.duration) // Detect completion
+			//{
 				if (Completed != null)
 					Completed(director.playableAsset);
-			}
+			//}
 		}
 
 		#endregion
@@ -151,6 +166,13 @@ namespace uwu.Timeline.Core
 		public void Stop()
 		{
 			if (!stopped) playableDirector.Stop();
+		}
+
+		public void Cancel()
+		{
+			if (!playing) return;
+			
+			playableDirector.time = playableDirector.duration - .001f; // Move to the very end of cutscene
 		}
 
 		public void Restart()
