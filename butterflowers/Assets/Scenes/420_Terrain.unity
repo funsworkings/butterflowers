@@ -762,7 +762,7 @@ MonoBehaviour:
   EventsM: {fileID: 1190223769}
   Summary: {fileID: 1657525264}
   Sequence: {fileID: 1271150532}
-  Cutscenes: {fileID: 214334918}
+  Cutscenes: {fileID: 1711168810}
   Cage: {fileID: 131292716}
   wand: {fileID: 900886785}
   username: 
@@ -781,6 +781,8 @@ MonoBehaviour:
   entities: []
   interactables: []
   focusables: []
+  introductionCutscene: {fileID: 0}
+  separationCutscene: {fileID: 0}
   type: 1
 --- !u!1 &62689476
 GameObject:
@@ -2079,6 +2081,7 @@ MonoBehaviour:
       waited for someone to enter our bedroom. (7)
     audio: {fileID: 0}
     mesh: {fileID: 2029369774}
+  memories: []
 --- !u!1 &135333981 stripped
 GameObject:
   m_CorrespondingSourceObject: {fileID: 2909332177878926027, guid: bbe889dad4ed0dd48a0243ced6070a70,
@@ -3414,8 +3417,7 @@ Transform:
   m_PrefabInstance: {fileID: 0}
   m_PrefabAsset: {fileID: 0}
   m_GameObject: {fileID: 201810246}
-  m_LocalRotation: {x: 0.121565074, y: 0.000000018978835, z: -0.0000000022284417,
-    w: 0.9925835}
+  m_LocalRotation: {x: 0.12156507, y: -0.0000000050892752, z: 6.304753e-10, w: 0.9925835}
   m_LocalPosition: {x: 0, y: 9.595102, z: -21.852465}
   m_LocalScale: {x: 1, y: 1.3577, z: 1}
   m_Children:
@@ -3804,7 +3806,7 @@ PlayableDirector:
   serializedVersion: 3
   m_PlayableAsset: {fileID: 0}
   m_InitialState: 0
-  m_WrapMode: 0
+  m_WrapMode: 2
   m_DirectorUpdateMode: 2
   m_InitialTime: 0
   m_SceneBindings:
@@ -3852,6 +3854,7 @@ MonoBehaviour:
   m_EditorClassIdentifier: 
   m_cutscene: {fileID: 0}
   debugTriggerPlay: 0
+  debugTriggerCancel: 0
 --- !u!95 &214334919
 Animator:
   serializedVersion: 3
@@ -5538,6 +5541,7 @@ MonoBehaviour:
       one. (7)
     audio: {fileID: 0}
     mesh: {fileID: 466665731}
+  memories: []
 --- !u!1 &373998823 stripped
 GameObject:
   m_CorrespondingSourceObject: {fileID: 9143658633952325509, guid: b201a0ba730e70a4ea50f8a5f4f2e4f2,
@@ -9029,6 +9033,7 @@ MonoBehaviour:
       each other or lie down beside one another. (6)
     audio: {fileID: 0}
     mesh: {fileID: 1855379861}
+  memories: []
 --- !u!1 &559227687
 GameObject:
   m_ObjectHideFlags: 0
@@ -18745,6 +18750,7 @@ MonoBehaviour:
       weights:
         behaviours: []
         defaultValue: 0
+    images: 
   comp:
     timestamp: 0
     filesAdded: 0
@@ -19314,6 +19320,7 @@ MonoBehaviour:
       me that I didn't have a reason to think that way. (6)
     audio: {fileID: 0}
     mesh: {fileID: 647757983}
+  memories: []
 --- !u!1 &885716740
 GameObject:
   m_ObjectHideFlags: 0
@@ -39939,9 +39946,14 @@ MonoBehaviour:
   cutscenes: {fileID: 214334918}
   vines: {fileID: 1272537101}
   cage: {fileID: 131292716}
+  introCutscene: {fileID: 11400000, guid: 060e0d582dc20ad4e87421604e1f1df7, type: 2}
+  outroCutscene: {fileID: 11400000, guid: 48a4a8e5791e01b4aa7498d6cfaa0cdf, type: 2}
   vineCornerCameraPivot: {fileID: 9626193}
   vineCornerCutscene: {fileID: 11400000, guid: f849647cf8146ae4787f435e8f3505de, type: 2}
   vineCageCutscene: {fileID: 0}
+  intro: 0
+  outro: 0
+  inprogress: 0
 --- !u!1 &1722344975
 GameObject:
   m_ObjectHideFlags: 0

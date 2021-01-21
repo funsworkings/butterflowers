@@ -23,7 +23,7 @@ namespace butterflowersOS.Objects.Managers
 
 		public enum TriggerReason
 		{
-			Nothing,
+			Success,
 			Block,
 			
 			CageNotCompleted,
@@ -130,7 +130,7 @@ namespace butterflowersOS.Objects.Managers
 			int t_index = (index + 1);
 
 			var reason = NeedsToTriggerScene(t_index);
-			if (reason == TriggerReason.Nothing) // Trigger cutscene
+			if (reason == TriggerReason.Success) // Trigger cutscene
 			{
 				inprogress = true;
 				StartCoroutine(PlayScene(t_index)); // Play scene
@@ -163,7 +163,7 @@ namespace butterflowersOS.Objects.Managers
 			}
 				
 			frames[t_index] = _frame; // Assign random framing
-			return TriggerReason.Nothing;
+			return TriggerReason.Success;
 		}
 
 		Sequence FetchSequence(Frame frame)

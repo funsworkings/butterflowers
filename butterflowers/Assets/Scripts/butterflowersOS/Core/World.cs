@@ -15,6 +15,7 @@ using Neue.Agent.Brain.Data;
 using Objects.Managers;
 using UnityEngine;
 using UnityEngine.Events;
+using UnityEngine.Playables;
 using uwu;
 using uwu.Camera;
 using uwu.Data;
@@ -76,7 +77,7 @@ namespace butterflowersOS.Core
         [SerializeField] EventManager EventsM = null;
         [SerializeField] SummaryManager Summary = null;
         [SerializeField] SequenceManager Sequence = null;
-        [SerializeField] Cutscenes Cutscenes = null;
+        [SerializeField] CutsceneManager Cutscenes = null;
 
         [Header("Objects")]
         Sun Sun = null;
@@ -114,10 +115,14 @@ namespace butterflowersOS.Core
         // Collections
     
         [Header("Entities")] 
-        [SerializeField] List<Manager> managers = new List<Manager>();
-        [SerializeField] List<Entity> entities = new List<Entity>();
-        [SerializeField] List<Interactable> interactables = new List<Interactable>();
-        [SerializeField] List<Focusable> focusables = new List<Focusable>();
+            [SerializeField] List<Manager> managers = new List<Manager>();
+            [SerializeField] List<Entity> entities = new List<Entity>();
+            [SerializeField] List<Interactable> interactables = new List<Interactable>();
+            [SerializeField] List<Focusable> focusables = new List<Focusable>();
+
+        [Header("Cutscenes")] 
+            [SerializeField] PlayableAsset introductionCutscene;
+            [SerializeField] PlayableAsset separationCutscene;
 
         #region Accessors
 
@@ -175,6 +180,7 @@ namespace butterflowersOS.Core
 
             SubscribeToEvents(); // Add all event listeners
 
+            gamePanel.Hide();
             StartCoroutine("Initialize");
         }
 
@@ -188,7 +194,7 @@ namespace butterflowersOS.Core
         
         void HandleReady()
         {
-            ready = (!pauseMenu.IsVisible && !Cutscenes.playing); // Wait for pause menu and cutscenes!
+            ready = (!pauseMenu.IsVisible && !Cutscenes.inprogress); // Wait for pause menu and cutscenes!
         }
 
         void OnDestroy()
@@ -219,9 +225,9 @@ namespace butterflowersOS.Core
             
             Loader.Load(.33f, 1f);
             while (Loader.IsLoading) yield return null;
-            Loader.Dispose();
 
             EventsM.Load(null);
+            Cutscenes.Load(_Save.data.cutscenes);
             Sequence.Load(_Save.data.sequence);
             Nest.Load(_Save.data.nestopen);
             Beacons.Load((Preset.persistBeacons) ? _Save.data.beacons : null);
@@ -229,10 +235,19 @@ namespace butterflowersOS.Core
             Sun.Load(_Save.data.sun);
 
             yield return new WaitForEndOfFrame();
+                Surveillance.New(onload: true); // Trigger surveillance (if profile not generated!)
 
-            Surveillance.New(onload: true); // Trigger surveillance (if profile not generated!)
+            if (!Cutscenes.intro) 
+            {
+                Cutscenes.TriggerIntro(); // Trigger intro cutscene    
+                yield return new WaitForEndOfFrame();
+            }
            
             LOAD = true;
+            Loader.Dispose();
+            
+            while(Cutscenes.inprogress) yield return null; // Wait for cutscenes to wrap on open before showing game panel
+            gamePanel.Show();
         }
 
         public void Cycle(bool refresh)
@@ -256,6 +271,8 @@ namespace butterflowersOS.Core
             Surveillance.Stop();
             Surveillance.Dispose();
             while (Surveillance.recording) yield return null;
+            
+            while(Cutscenes.inprogress) yield return null; // Wait for all cutscenes to dispose before continuing
 
             SaveLibraryItems();
             _Save.data.sun = (SunData) Sun.Save();
@@ -291,7 +308,7 @@ namespace butterflowersOS.Core
 
                 sequenceReason = Sequence.Cycle();
 
-                didLoadSequence = (sequenceReason == SequenceManager.TriggerReason.Nothing);
+                didLoadSequence = (sequenceReason == SequenceManager.TriggerReason.Success);
                 if (didLoadSequence) 
                 {
                     while (Sequence.Pause) yield return null;
@@ -316,7 +333,16 @@ namespace butterflowersOS.Core
                 while (Sequence.Read)
                     yield return null; // Wait for sequence captions to finish before showing game UI panel
             }
+            else 
+            {
+                if (sequenceReason == SequenceManager.TriggerReason.SequenceHasCompleted && !Cutscenes.outro) // Has passed all sequence frames, begin export!
+                {
+                    Cutscenes.TriggerOutro();
+                    yield return new WaitForEndOfFrame();
+                }
+            }
 
+            while(Cutscenes.inprogress) yield return null;
             gamePanel.Show();
         }
 
@@ -421,8 +447,6 @@ namespace butterflowersOS.Core
         [ContextMenu("Generate neue agent")]
         public void ExportNeueAgent()
         {
-            if (Pause) return; // Ignore request to export if paused
-            
             string path = GetExportPath();
             byte[] images = Library.ExportSheet("test");
             
@@ -536,7 +560,7 @@ namespace butterflowersOS.Core
         }
 
         #endregion
-    
+
         #region Entity callbacks
 
         void DidDiscoverFile(string file)

@@ -339,7 +339,7 @@ namespace butterflowersOS.Objects.Entities
             }
         }
 
-        void WaitForPausers()
+        public void WaitForPausers() // Trigger pause cycle if required!
         {
             bool active = true;
         
