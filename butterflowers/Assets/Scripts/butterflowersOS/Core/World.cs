@@ -78,6 +78,7 @@ namespace butterflowersOS.Core
         [SerializeField] SummaryManager Summary = null;
         [SerializeField] SequenceManager Sequence = null;
         [SerializeField] CutsceneManager Cutscenes = null;
+        [SerializeField] NotificationCenter NotificationCenter = null;
 
         [Header("Objects")]
         Sun Sun = null;
@@ -460,6 +461,8 @@ namespace butterflowersOS.Core
                 _Save.data.brain = data;
                 _Save.data.profileGenerated = _Save.IsProfileValid();
                 _Save.data.profile = profile = data.profile;
+                
+                NotificationCenter.TriggerExportNotif(path);
             }
             else 
             {
