@@ -1,10 +1,8 @@
 ﻿using System;
 using System.Globalization;
-using Neue.Agent.Brain.Data;
-using UnityEngine;
 using uwu;
 
-namespace butterflowersOS
+namespace Neue.Agent.Brain.Data
 {
 	[System.Serializable]
 	public class BrainData
@@ -52,12 +50,12 @@ namespace butterflowersOS
 			{
 				DateTime created_at = DateTime.Parse(timestamp, CultureInfo.CurrentCulture, DateTimeStyles.AssumeUniversal);
 				
-				Debug.LogWarningFormat("Profile in save file was valid => created at: {0}", created_at);
+				UnityEngine.Debug.LogWarningFormat("Profile in save file was valid => created at: {0}", created_at);
 				return true;
 			}
 			catch (System.Exception err) 
 			{
-				Debug.LogWarning("Profile in save file was invalid!");
+				UnityEngine.Debug.LogWarning("Profile in save file was invalid!");
 				return false;	
 			}
 		}

@@ -1364,7 +1364,6 @@
               <e p="WorldPreset.cs" t="Include" />
             </e>
             <e p="Save &amp; Load" t="Include">
-              <e p="BrainData.cs" t="Include" />
               <e p="GameData.cs" t="Include" />
               <e p="GameDataSaveSystem.cs" t="Include" />
             </e>
@@ -1426,6 +1425,7 @@
                 <e p="Base.cs" t="Include" />
                 <e p="Capture.cs" t="Include" />
                 <e p="Data" t="Include">
+                  <e p="BrainData.cs" t="Include" />
                   <e p="Knowledge.cs" t="Include" />
                   <e p="Profile.cs" t="Include" />
                 </e>
