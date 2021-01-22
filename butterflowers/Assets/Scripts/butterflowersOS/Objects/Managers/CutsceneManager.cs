@@ -32,6 +32,10 @@ namespace butterflowersOS.Objects.Managers
 			[SerializeField] PlayableAsset vineCornerCutscene;
 			[SerializeField] PlayableAsset vineCageCutscene;
 
+		[Header("Export")] 
+			[SerializeField] ParticleSystem exportPS;
+			[SerializeField] Material exportMaterial;
+
 		[Header("Status")] 
 			public bool intro = false;
 			public bool outro = false;
@@ -74,8 +78,14 @@ namespace butterflowersOS.Objects.Managers
 			cutscenes.Play(introCutscene);
 		}
 
-		public void TriggerOutro()
+		public void TriggerOutro(int rows, int columns, Texture2D texture)
 		{
+			var textureSheetAnimation = exportPS.textureSheetAnimation;
+				textureSheetAnimation.numTilesX = columns;
+				textureSheetAnimation.numTilesY = rows;
+
+			exportMaterial.mainTexture = texture;
+		
 			cutscenes.Play(outroCutscene);
 		}
 		

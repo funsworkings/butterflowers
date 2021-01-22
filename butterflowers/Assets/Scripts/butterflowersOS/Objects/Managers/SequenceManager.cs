@@ -41,6 +41,8 @@ namespace butterflowersOS.Objects.Managers
 		[SerializeField] Cage Cage;
 		[SerializeField] Focusing Focus;
 		[SerializeField] ButterflowerManager Butterflowers;
+
+		[SerializeField] Transform root;
 		
 		// Properties
 
@@ -83,7 +85,7 @@ namespace butterflowersOS.Objects.Managers
 			_Save = GameDataSaveSystem.Instance;
 
 			frames = new Frame[7];
-			sequences = GetComponentsInChildren<Sequence>();
+			sequences = root.GetComponentsInChildren<Sequence>();
 			
 			sceneCaption.Dispose(); // Clear text in caption
 		}

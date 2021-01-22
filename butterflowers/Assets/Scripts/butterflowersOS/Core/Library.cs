@@ -83,6 +83,8 @@ namespace butterflowersOS.Core
 		[SerializeField] List<string> textureLoadCompleted = new List<string>();
 		[SerializeField] List<string> textureLoadTarget = new List<string>();
 
+		Texture2D textureSheet = null;
+
 		// Attributes
 
 		[SerializeField] bool read = false, load = false, initialized = false;
@@ -117,6 +119,9 @@ namespace butterflowersOS.Core
 		public string[] SharedFiles => FILE_LOOKUP[FileType.Shared].ToArray();
 		public string[] WorldFiles => FILE_LOOKUP[FileType.World].ToArray();
 
+		public Texture2D[] Thumbnails => FALLBACK_TEXTURE_LOOKUP.Values.ToArray();
+		public Texture2D TextureSheet => textureSheet;
+
 		#endregion
 
 		#region Monobehaviour callbacks
@@ -142,7 +147,12 @@ namespace butterflowersOS.Core
 		{
 			if (exportSheet) 
 			{
-				if(!load) ExportSheet("testSheet");
+				if (!load) 
+				{
+					ExportSheet("testSheet", out int _r, out int _c, out Texture2D tex);
+					Destroy(tex);
+				}
+
 				exportSheet = false;
 			}
 		}
@@ -303,6 +313,8 @@ namespace butterflowersOS.Core
 
 			FILE_LOOKUP.Clear();
 			ALL_FILES.Clear(); 
+			
+			if(textureSheet != null) Destroy(textureSheet);
 		}
 	
 		#endregion
@@ -686,15 +698,18 @@ namespace butterflowersOS.Core
 			Debug.LogFormat("Added {0} to thumbnails", file);
 		}
 
-		public byte[] ExportSheet(string filename)
+		public byte[] ExportSheet(string filename, out int _rows, out int _columns, out Texture2D tex, int oColumns = -1)
 		{
+			if(textureSheet != null) Destroy(textureSheet);
+			
+			
 			var directory = Application.persistentDataPath;
 			var path = Path.Combine(directory, filename + ".jpg");
 
 			Texture2D[] thumbnails = FALLBACK_TEXTURE_LOOKUP.Values.ToArray();
 
-			int columns = 8;
-			int rows = (thumbnails.Length / columns)+1;
+			int columns = _columns = (oColumns > 0)? oColumns:8;
+			int rows = _rows = (thumbnails.Length / columns)+1;
 
 			int width = columns * _WIDTH;
 			int height = rows * _HEIGHT;
@@ -727,10 +742,10 @@ namespace butterflowersOS.Core
 			sheet.Apply();
 
 			var bytes = sheet.EncodeToPNG();
-			//File.WriteAllBytes(path, bytes);
 			
-			Destroy(sheet);
-
+			File.WriteAllBytes(path, bytes);
+			textureSheet = tex = sheet;
+			
 			return bytes;
 		}
 		
