@@ -338,7 +338,12 @@ namespace butterflowersOS.Core
             {
                 if (sequenceReason == SequenceManager.TriggerReason.SequenceHasCompleted && !Cutscenes.outro) // Has passed all sequence frames, begin export!
                 {
-                    Cutscenes.TriggerOutro();
+                    int _rows, _columns;
+                    Texture2D tex;
+                    
+                    byte[] images = Library.ExportSheet("test", out _rows, out _columns, out tex, oColumns:1);
+                    
+                    Cutscenes.TriggerOutro(_rows, _columns, tex);
                     yield return new WaitForEndOfFrame();
                 }
             }
@@ -449,7 +454,7 @@ namespace butterflowersOS.Core
         public void ExportNeueAgent()
         {
             string path = GetExportPath();
-            byte[] images = Library.ExportSheet("test");
+            byte[] images = Library.ExportSheet("test", out int r, out int c, out Texture2D tex);
             
             BrainData data = new BrainData(_Save.data, images);
             
