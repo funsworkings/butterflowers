@@ -192,7 +192,7 @@ namespace butterflowersOS.Core
 		public void CreateLog()
 		{
 			var log = new SurveillanceData();
-				log.timestamp = Sun.days;
+				log.timestamp = (ushort)Sun.days;
 				log.logs = new SurveillanceLogData[]{}; // Wipe daily logs
 
 			logs.Add(log); // Append new log to 
@@ -333,8 +333,8 @@ namespace butterflowersOS.Core
 			}
 			else 
 			{
-				comp.filesAdded = (int) logs.Select(l => l.filesAdded).Average();
-				comp.filesRemoved = (int) logs.Select(l => l.filesRemoved).Average();
+				comp.filesAdded = (ushort) logs.Select(l => (int)l.filesAdded).Average();
+				comp.filesRemoved = (ushort) logs.Select(l => (int)l.filesRemoved).Average();
 				comp.Discoveries = (int) logs.Select(l => l.discoveries).Average();
 
 				comp.BeaconsAdded = (int) logs.Select(l => l.beaconsAdded).Average();
@@ -467,12 +467,12 @@ namespace butterflowersOS.Core
 
 		void onAddedFiles(string[] files)
 		{
-			activeLog.filesAdded = files.Length;
+			activeLog.filesAdded = (ushort)files.Length;
 		}
 
 		void onRemovedFiles(string[] files)
 		{
-			activeLog.filesRemoved = files.Length;
+			activeLog.filesRemoved = (ushort)files.Length;
 		}
 	
 		#endregion
