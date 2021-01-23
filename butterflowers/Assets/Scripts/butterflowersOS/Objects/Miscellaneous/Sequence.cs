@@ -11,7 +11,8 @@ namespace butterflowersOS.Objects.Miscellaneous
 		// Properties
 		
 		[SerializeField] Frame _frame;
-		[SerializeField] Scene[] _scenes;
+		
+		Scene[] _scenes;
 
 		
 		#region Accessors
@@ -19,7 +20,12 @@ namespace butterflowersOS.Objects.Miscellaneous
 		public Frame frame => _frame;
 		
 		#endregion
-		
+
+		void Start()
+		{
+			_scenes = GetComponentsInChildren<Scene>();
+		}
+
 		#region Ops
 
 		public Scene Trigger(int index, bool load = false)
