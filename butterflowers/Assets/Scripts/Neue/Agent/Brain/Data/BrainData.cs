@@ -1,5 +1,6 @@
 ﻿using System;
 using System.Globalization;
+using butterflowersOS.Data;
 using uwu;
 
 namespace Neue.Agent.Brain.Data
@@ -9,16 +10,17 @@ namespace Neue.Agent.Brain.Data
 	{
 		public string username = null;
 		public string created_at = null;
+		
+		public SurveillanceData[] surveillanceData = new SurveillanceData[]{};
 
 		public string[] directories = new string[]{};
 		public string[] files = new string[] { };
 		
-		public int[] user_files = new int[] { };
-		public int[] shared_files = new int[] { };
-		public int[] world_files = new int[] { };
+		public ushort[] user_files = new ushort[] { };
+		public ushort[] shared_files = new ushort[] { };
+		public ushort[] world_files = new ushort[] { };
 
 		public Profile profile = new Profile();
-		
 		public byte[] images = new byte[]{};
 
 		public BrainData(){}
@@ -27,6 +29,8 @@ namespace Neue.Agent.Brain.Data
 		{
 			this.username = dat.username;
 			this.created_at = System.DateTime.UtcNow.ToString(); // Write timestamp
+
+			this.surveillanceData = dat.surveillanceData;
 			
 			this.directories = dat.directories;
 			this.files = dat.files;

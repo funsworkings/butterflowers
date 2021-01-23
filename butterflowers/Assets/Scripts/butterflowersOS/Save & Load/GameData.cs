@@ -13,30 +13,37 @@ namespace uwu
 
         public BeaconSceneData beacons = new BeaconSceneData();
         public VineSceneData vines = new VineSceneData();
-        public SurveillanceData[] surveillanceData = new SurveillanceData[]{};
         public SequenceData sequence = new SequenceData();
-		
-        public bool nestopen = false;
-		
-        public float enviro_knowledge = 0f;
 
         [Header("Neue")]
 	    public string username = null;
+	    
+	    public SurveillanceData[] surveillanceData = new SurveillanceData[]{};
 
 	    public string[] directories = new string[]{};
 	    public string[] files = new string[] { };
 		
-	    public int[] user_files = new int[] { };
-	    public int[] shared_files = new int[] { };
-	    public int[] world_files = new int[] { };
+	    public ushort[] user_files = new ushort[] { };
+	    public ushort[] shared_files = new ushort[] { };
+	    public ushort[] world_files = new ushort[] { };
 
 	    public Profile profile = new Profile();
 	    public BrainData brain = new BrainData();
-	    
-	    public bool profileGenerated = false;
 
 	    [Header("Miscellaneous")] 
 	    public bool[] cutscenes = new bool[] { false, false };
+    }
+
+    public static class GameDataExtensions
+    {
+	    public static void ReadFromBrainData(this GameData data, BrainData brain)
+	    {
+		    data.username = brain.username;
+
+		    data.surveillanceData = brain.surveillanceData;
+		    
+		    //data.directories = 
+	    }
     }
 
 }

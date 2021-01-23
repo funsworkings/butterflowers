@@ -363,7 +363,8 @@ namespace Neue.Agent1
 			fileKnowledge = ScrapeKnowledgeLookup();
 
 			// Update save file
-			Save.enviro_knowledge = environmentKnowledge;
+			
+			//Save.enviro_knowledge = environmentKnowledge;
 			//Save.file_knowledge = fileKnowledge;
 		}
 

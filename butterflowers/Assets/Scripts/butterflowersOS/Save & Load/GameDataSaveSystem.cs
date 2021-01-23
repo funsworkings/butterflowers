@@ -33,12 +33,6 @@ namespace uwu
 			set => data.username = value;
 		}
 
-		public float enviro_knowledge
-		{
-			get => data == null ? 0f : data.enviro_knowledge;
-			set => data.enviro_knowledge = value;
-		}
-
 		public bool IsProfileValid()
 		{
 			if (data == null) return false;

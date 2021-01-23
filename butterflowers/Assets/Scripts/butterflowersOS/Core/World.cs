@@ -2,6 +2,7 @@
 using System.Collections;
 using System.Collections.Generic;
 using System.IO;
+using System.Linq;
 using System.Text.RegularExpressions;
 using butterflowersOS.Data;
 using butterflowersOS.Interfaces;
@@ -170,7 +171,7 @@ namespace butterflowersOS.Core
             /* * * * * * * * * * * * * * * * */
 
             username = _Save.username;
-            type = (_Save.data.profileGenerated && _Save.IsProfileValid()) ? AdvanceType.Continuous : AdvanceType.Broken; // Adjust type from loaded profile!
+            type = (_Save.IsProfileValid()) ? AdvanceType.Continuous : AdvanceType.Broken; // Adjust type from loaded profile!
             
             if(type == AdvanceType.Continuous)
                 profile = _Save.data.brain.profile;
@@ -230,7 +231,7 @@ namespace butterflowersOS.Core
             EventsM.Load(null);
             Cutscenes.Load(_Save.data.cutscenes);
             Sequence.Load(_Save.data.sequence);
-            Nest.Load(_Save.data.nestopen);
+            Nest.Load(false);
             Beacons.Load((Preset.persistBeacons) ? _Save.data.beacons : null);
             Vines.Load((Preset.persistVines) ? _Save.data.vines : null);
             Sun.Load(_Save.data.sun);
@@ -261,7 +262,7 @@ namespace butterflowersOS.Core
         
         IEnumerator Advance()
         {
-            AdvanceType _type = (_Save.data.profileGenerated && _Save.IsProfileValid()) ? AdvanceType.Continuous : AdvanceType.Broken; // Adjust type from loaded profile!
+            AdvanceType _type = (_Save.IsProfileValid()) ? AdvanceType.Continuous : AdvanceType.Broken; // Adjust type from loaded profile!
             
             if (_type == AdvanceType.Broken)  // Deactivate sun
             {
@@ -278,7 +279,6 @@ namespace butterflowersOS.Core
             SaveLibraryItems();
             _Save.data.sun = (SunData) Sun.Save();
             _Save.data.sequence = (SequenceData) Sequence.Save();
-            _Save.data.nestopen = (bool) Nest.Save();
             _Save.data.beacons = (BeaconSceneData) Beacons.Save();
             _Save.data.vines = (VineSceneData) Vines.Save();
 
@@ -459,7 +459,6 @@ namespace butterflowersOS.Core
             if (success) 
             {
                 _Save.data.brain = data;
-                _Save.data.profileGenerated = _Save.IsProfileValid();
                 _Save.data.profile = profile = data.profile;
                 
                 NotificationCenter.TriggerExportNotif(path);
@@ -467,11 +466,10 @@ namespace butterflowersOS.Core
             else 
             {
                 _Save.data.brain = default(BrainData);
-                _Save.data.profileGenerated = false;
                 _Save.data.profile = profile = Surveillance.ConstructBehaviourProfile();
             }
 
-            type = (_Save.data.profileGenerated) ? AdvanceType.Continuous : AdvanceType.Broken; // Adjust type from generated profile
+            type = (_Save.IsProfileValid()) ? AdvanceType.Continuous : AdvanceType.Broken; // Adjust type from generated profile
             _Save.SaveGameData(); // Save all data
         }
 
@@ -480,10 +478,9 @@ namespace butterflowersOS.Core
             if (Pause) return; // Ignore request to import if paused
         
             _Save.data.brain = brainData;
-            _Save.data.profileGenerated = true;
             _Save.data.profile = profile = brainData.profile;
             
-            type = AdvanceType.Continuous;
+            type = (_Save.IsProfileValid()) ? AdvanceType.Continuous : AdvanceType.Broken;
             
             //AggregateBrainFiles(brainData);
             
@@ -499,8 +496,7 @@ namespace butterflowersOS.Core
         
             string username = (_Save.data.brain.username);
             
-            _Save.data.brain = null;
-            _Save.data.profileGenerated = false;
+            _Save.data.brain = default(BrainData);
             _Save.data.profile = profile = Surveillance.ConstructBehaviourProfile();
             
             type = AdvanceType.Broken;
@@ -590,9 +586,9 @@ namespace butterflowersOS.Core
                 var lib_payload = new LibraryPayload();
                 lib_payload.directories = data.directories;
                 lib_payload.files = data.files;
-                lib_payload.userFiles = data.user_files;
-                lib_payload.sharedFiles = data.shared_files;
-                lib_payload.worldFiles = data.world_files;
+                //lib_payload.userFiles = data.user_files;
+                //lib_payload.sharedFiles = data.shared_files;
+                //lib_payload.worldFiles = data.world_files;
                 
                 Library.Aggregate(lib_payload);
             }
@@ -603,9 +599,9 @@ namespace butterflowersOS.Core
             var lib_payload = new LibraryPayload();
             lib_payload.directories = _Save.data.directories;
             lib_payload.files = _Save.data.files;
-            lib_payload.userFiles = _Save.data.user_files;
-            lib_payload.sharedFiles = _Save.data.shared_files;
-            lib_payload.worldFiles = _Save.data.world_files;
+            //lib_payload.userFiles = _Save.data.user_files;
+            //lib_payload.sharedFiles = _Save.data.shared_files;
+            //lib_payload.worldFiles = _Save.data.world_files;
             
             Library.Load(lib_payload, Preset.defaultNullTexture, texturePacks, Preset.loadTexturesInEditor, Preset.backlogTextures);
         }
@@ -615,9 +611,9 @@ namespace butterflowersOS.Core
             var payload = (LibraryPayload) Library.Save();
                 _Save.data.directories = payload.directories;
                 _Save.data.files = payload.files;
-                _Save.data.user_files = payload.userFiles;
-                _Save.data.shared_files = payload.sharedFiles;
-                _Save.data.world_files = payload.worldFiles;
+                _Save.data.user_files = payload.userFiles.Select(uf => (ushort)uf).ToArray();
+                _Save.data.shared_files = payload.sharedFiles.Select(sf => (ushort)sf).ToArray();;
+                _Save.data.world_files = payload.worldFiles.Select(wf => (ushort)wf).ToArray();;
         }
 
         public void Load(object data)
