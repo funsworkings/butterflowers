@@ -58,6 +58,19 @@ namespace butterflowersOS
         CYCLE = 43
     }
 
+    public static class EventCodeExtensions
+    {
+        public static byte ToByte(this EVENTCODE @event)
+        {
+            return (byte) @event;
+        }
+
+        public static EVENTCODE FromByte(this byte @byte)
+        {
+            return (EVENTCODE) @byte;
+        }
+    }
+
     public enum SUGGESTION {
         NULL,
 

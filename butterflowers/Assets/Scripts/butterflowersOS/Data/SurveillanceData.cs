@@ -12,11 +12,11 @@ namespace butterflowersOS.Data
 		/// <summary>
 		/// Day of the surveillance data log
 		/// </summary>
-		public int timestamp = 0;
+		public ushort timestamp = 0;
 	
 		[Header("File stats")]
-			public int filesAdded = 0; // Gluttony, nurture
-			public int filesRemoved = 0; // Destruction, spontaneity
+			public ushort filesAdded = 0; // Gluttony, nurture
+			public ushort filesRemoved = 0; // Destruction, spontaneity
 			
 
 		[Header("Log stats")] 
