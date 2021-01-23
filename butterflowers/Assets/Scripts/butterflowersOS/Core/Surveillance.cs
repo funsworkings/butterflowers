@@ -247,17 +247,22 @@ namespace butterflowersOS.Core
 		SurveillanceLogData CaptureFrameLog()
 		{
 			var log = new SurveillanceLogData();
-			log.timestamp = Sun.time;
 
-			log.butterflyHealth = ButterflyManager.GetHealth();
-			log.cursorSpeed = Wand.speed2d;
-			log.nestFill = Nest.fill;
+			log.butterflyHealth = (byte)( ButterflyManager.GetHealth() * 255f);
+
+			var cursorX = Wand.velocity2d.x;
+			var cursorY = Wand.velocity2d.y;
+
+			log.cursorX = (sbyte) (cursorX / Constants.BaseCursorVelocityVector);
+			log.cursorY = (sbyte) (cursorY / Constants.BaseCursorVelocityVector);
+				
+			log.nestFill = (byte)(Nest.fill * 255f);
 
 			var focus = Focus.focus;
 			if (focus != null)
-				log.agentInFocus = focus.Agent;
+				log.agentInFocus = focus.Agent.ToByte();
 			else
-				log.agentInFocus = AGENT.NULL; // No agent currently in focus
+				log.agentInFocus = AGENT.NULL.ToByte(); // No agent currently in focus
 			
 			AttachEventsToLog(ref log);
 			return log;

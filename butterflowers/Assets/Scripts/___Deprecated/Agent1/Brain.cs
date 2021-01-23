@@ -364,7 +364,7 @@ namespace Neue.Agent1
 
 			// Update save file
 			Save.enviro_knowledge = environmentKnowledge;
-			Save.file_knowledge = fileKnowledge;
+			//Save.file_knowledge = fileKnowledge;
 		}
 
 		void ActionUpdate()

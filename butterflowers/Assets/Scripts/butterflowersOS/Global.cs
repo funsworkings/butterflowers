@@ -7,6 +7,12 @@ using UnityEngine;
 
 namespace butterflowersOS
 {
+    public static class Constants
+    {
+        public const float BaseCursorVelocityVector = 5f;
+        public const float SurveillanceRefreshRate = 1f;
+    }
+
     public enum GAMESTATE {
         INTRO = 0,
         GAME = 1,
@@ -28,8 +34,22 @@ namespace butterflowersOS
 
         Unknown = 255
     }
+    
+    public static class AgentExtensions
+    {
+        public static sbyte ToByte(this AGENT @agent)
+        {
+            return (sbyte) @agent;
+        }
 
-    public enum EVENTCODE {
+        public static AGENT FromByte(sbyte @byte)
+        {
+            return (AGENT) @byte;
+        }
+    }
+
+    public enum EVENTCODE 
+    {
         NULL = -1,
         UNKNOWN = 255,
 
@@ -60,12 +80,12 @@ namespace butterflowersOS
 
     public static class EventCodeExtensions
     {
-        public static byte ToByte(this EVENTCODE @event)
+        public static sbyte ToByte(this EVENTCODE @event)
         {
-            return (byte) @event;
+            return (sbyte) @event;
         }
 
-        public static EVENTCODE FromByte(this byte @byte)
+        public static EVENTCODE FromByte(sbyte @byte)
         {
             return (EVENTCODE) @byte;
         }

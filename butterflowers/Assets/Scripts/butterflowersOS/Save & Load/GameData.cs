@@ -30,15 +30,13 @@ namespace uwu
 	    public int[] shared_files = new int[] { };
 	    public int[] world_files = new int[] { };
 
-	    public Knowledge[] file_knowledge = new Knowledge[] { };
-		
 	    public Profile profile = new Profile();
 	    public BrainData brain = new BrainData();
 	    
 	    public bool profileGenerated = false;
 
 	    [Header("Miscellaneous")] 
-	    public bool[] cutscenes = new bool[] {false, false};
+	    public bool[] cutscenes = new bool[] { false, false };
     }
 
 }

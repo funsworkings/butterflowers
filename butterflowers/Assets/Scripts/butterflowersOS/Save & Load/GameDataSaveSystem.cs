@@ -39,12 +39,6 @@ namespace uwu
 			set => data.enviro_knowledge = value;
 		}
 
-		public Knowledge[] file_knowledge
-		{
-			get { return data == null ? new Knowledge[] { } : data.file_knowledge; }
-			set => data.file_knowledge = value;
-		}
-
 		public bool IsProfileValid()
 		{
 			if (data == null) return false;
