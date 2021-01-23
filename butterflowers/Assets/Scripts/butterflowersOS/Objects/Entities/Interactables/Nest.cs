@@ -333,13 +333,13 @@ namespace butterflowersOS.Objects.Entities.Interactables
             if (open) 
             {
                 float fill = (float)beacons.Length / capacity;
-                t_color = new Color(1f, (1f - fill), 1f);
-                mat.SetFloat("_Fill", fill);
+                //t_color = new Color(1f, (1f - fill), 1f);
+                Shader.SetGlobalFloat("_Fill", fill);
             }
-            else
-                t_color = inactiveColor;
+            //else
+                //t_color = inactiveColor;
 
-            mat.color = Color.Lerp(mat.color, t_color, Time.unscaledDeltaTime * colorSmoothSpeed);
+            //mat.color = Color.Lerp(mat.color, t_color, Time.unscaledDeltaTime * colorSmoothSpeed);
         }
 
         #endregion
