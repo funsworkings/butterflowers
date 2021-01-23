@@ -191,7 +191,11 @@ namespace butterflowersOS.Objects.Managers
 						var si = Mathf.Clamp01((t - _t) / _duration);
 						var sc = sequenceMeshScaleCurve.Evaluate(si);
 
-						mesh.transform.localScale = Vector3.Lerp(mesh.hidden, mesh.shown, sc);
+						Vector3 a = mesh.hidden;
+						Vector3 b = mesh.shown;
+							b.y = Mathf.Lerp(a.y, b.y, sc);
+
+						mesh.transform.localScale = b;
 					}
 				}
 
