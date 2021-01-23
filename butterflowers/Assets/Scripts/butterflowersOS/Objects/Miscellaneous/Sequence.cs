@@ -1,45 +1,47 @@
 ﻿using System;
+using System.Collections;
 using Neue.Reference.Types;
 using UnityEngine;
+using UnityEngine.Playables;
 
 namespace butterflowersOS.Objects.Miscellaneous
 {
 	public class Sequence : MonoBehaviour
 	{
-		#region Internal
-
-		[Serializable]
-		public struct Scene
-		{
-			[TextArea(2, 32)]
-			public string message;
-
-			public AudioClip audio;
-			public GameObject mesh;
-		}
-		
-		#endregion
-		
-		
 		// Properties
 		
-		public Frame frame;
-		public Scene[] scenes;
+		[SerializeField] Frame _frame;
+		
+		Scene[] _scenes;
 
+		
+		#region Accessors
 
-		void Awake()
+		public Frame frame => _frame;
+		
+		#endregion
+
+		void Start()
 		{
-			foreach(Scene scene in scenes) DeactivateScene(scene);
+			_scenes = GetComponentsInChildren<Scene>();
 		}
 
 		#region Ops
 
-		public Scene Trigger(int index)
+		public Scene Trigger(int index, bool load = false)
 		{
-			var scene = scenes[index];
+			var scene = _scenes[index];
 			
 			ActivateScene(scene); // Activate scene by index
+			if(load) scene.Show(true);
+			
 			return scene;
+		}
+
+		public void Dispose()
+		{
+			foreach(Scene scene in _scenes) 
+				DeactivateScene(scene); // Deactivate all scenes
 		}
 		
 		#endregion
@@ -48,12 +50,12 @@ namespace butterflowersOS.Objects.Miscellaneous
 
 		void ActivateScene(Scene scene)
 		{
-			if(scene.mesh != null) scene.mesh.SetActive(true);
+			scene.gameObject.SetActive(true);
 		}
 
 		void DeactivateScene(Scene scene)
 		{
-			if(scene.mesh != null) scene.mesh.SetActive(false);
+			scene.gameObject.SetActive(false);
 		}
 		
 		#endregion

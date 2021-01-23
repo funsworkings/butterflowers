@@ -1,4 +1,5 @@
 ﻿using butterflowersOS.Data;
+using Neue.Reference.Types;
 using UnityEngine;
 
 namespace butterflowersOS.Presets
@@ -15,6 +16,8 @@ namespace butterflowersOS.Presets
             public bool persistBeacons = false;
             public bool persistVines = false;
             public bool persistSequence = false;
+            public bool overrideSequence = false;
+            public Frame overrideSequenceFrame;
             public bool alwaysIntro = false;
             public bool alwaysAbsorb = false;
             public bool useWizard = false;

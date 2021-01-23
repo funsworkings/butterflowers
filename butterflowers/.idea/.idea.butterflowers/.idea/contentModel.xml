@@ -787,6 +787,12 @@
               <e p="PushDialogueClip.cs" t="Include" />
               <e p="PushDialogueTrack.cs" t="Include" />
             </e>
+            <e p="Scaler" t="Include">
+              <e p="ScalerBehaviour.cs" t="Include" />
+              <e p="ScalerClip.cs" t="Include" />
+              <e p="ScalerMixerBehaviour.cs" t="Include" />
+              <e p="ScalerTrack.cs" t="Include" />
+            </e>
             <e p="ToggleVisibility" t="Include">
               <e p="Editor" t="Include">
                 <e p="ToggleVisibilityTrackDrawer.cs" t="Include" />
@@ -862,6 +868,16 @@
           <e p="FontFormat.cs" t="Include" />
         </e>
         <e p="Fonts" t="Include">
+          <e p="cantique-master" t="Include">
+            <e p="cantique-master" t="Include">
+              <e p="Fonts" t="Include">
+                <e p="web" t="Include">
+                  <e p="generator_config.txt" t="Include" />
+                </e>
+              </e>
+              <e p="LICENSE.txt" t="Include" />
+            </e>
+          </e>
           <e p="linux_libertine" t="Include">
             <e p="Bugs.txt" t="Include" />
             <e p="ChangeLog.txt" t="Include" />
@@ -1356,6 +1372,8 @@
               <e p="Miscellaneous" t="Include">
                 <e p="Flares.cs" t="Include" />
                 <e p="Leaf.cs" t="Include" />
+                <e p="Scene.cs" t="Include" />
+                <e p="SceneMesh.cs" t="Include" />
                 <e p="Sequence.cs" t="Include" />
               </e>
             </e>
@@ -1364,7 +1382,6 @@
               <e p="WorldPreset.cs" t="Include" />
             </e>
             <e p="Save &amp; Load" t="Include">
-              <e p="BrainData.cs" t="Include" />
               <e p="GameData.cs" t="Include" />
               <e p="GameDataSaveSystem.cs" t="Include" />
             </e>
@@ -1402,6 +1419,8 @@
               <e p="WelcomeMessage.cs" t="Include" />
             </e>
             <e p="Visuals" t="Include">
+              <e p="ParticleMesh.cs" t="Include" />
+              <e p="ThumbnailField.cs" t="Include" />
               <e p="Types" t="Include">
                 <e p="WandAffectorMaterial.cs" t="Include" />
               </e>
@@ -1425,6 +1444,7 @@
                 <e p="Base.cs" t="Include" />
                 <e p="Capture.cs" t="Include" />
                 <e p="Data" t="Include">
+                  <e p="BrainData.cs" t="Include" />
                   <e p="Knowledge.cs" t="Include" />
                   <e p="Profile.cs" t="Include" />
                 </e>
@@ -1689,6 +1709,7 @@
             <e p="Timeline" t="Include">
               <e p="Core" t="Include">
                 <e p="Cutscenes.cs" t="Include" />
+                <e p="SimpleMarker.cs" t="Include" />
               </e>
             </e>
             <e p="UI" t="Include">
@@ -1747,7 +1768,6 @@
           <e p="DeferredFog.shader" t="Include" />
           <e p="DeferredShading.shader" t="Include" />
           <e p="EtherealBoy.shader" t="Include" />
-          <e p="FluffyLeaf.shader" t="Include" />
           <e p="Instancing.shader" t="Include" />
           <e p="My First Lighting Shader.shader" t="Include" />
           <e p="My First Shader.shader" t="Include" />
@@ -1758,12 +1778,14 @@
           <e p="NestVertexSnap.shader" t="Include" />
           <e p="NestVertexSnapping.shader" t="Include" />
           <e p="NewUnlitShader.shader" t="Include" />
+          <e p="NorthStar.shader" t="Include" />
           <e p="NoZWrite.shader" t="Include" />
           <e p="RippleUI.shader" t="Include" />
           <e p="TerrainDistort.shader" t="Include" />
           <e p="Texture Splatting.shader" t="Include" />
           <e p="Textured With Detail.shader" t="Include" />
           <e p="TransparentShadowCollector.shader" t="Include" />
+          <e p="UVVertexOffset.shader" t="Include" />
           <e p="WaveTransTexture.shader" t="Include" />
         </e>
         <e p="Standard Assets" t="Include">
@@ -2004,6 +2026,11 @@
               </e>
             </e>
           </e>
+        </e>
+        <e p="SubtitleTrackExample" t="Include">
+          <e p="SubtitleData.cs" t="Include" />
+          <e p="SubtitleMixer.cs" t="Include" />
+          <e p="SubtitleTrack.cs" t="Include" />
         </e>
         <e p="TerrainDeformation.cs" t="Include" />
         <e p="TextMesh Pro" t="Include">
