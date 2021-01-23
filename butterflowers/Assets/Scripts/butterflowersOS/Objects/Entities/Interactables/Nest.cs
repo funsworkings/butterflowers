@@ -526,7 +526,9 @@ namespace butterflowersOS.Objects.Entities.Interactables
 
             if (entity is Vine) 
             {
-                var vine = (entity as Vine);
+                Pulse();
+                
+                /*var vine = (entity as Vine);
             
                 var file = vine.File;
                 if(!string.IsNullOrEmpty(file)) 
@@ -535,12 +537,14 @@ namespace butterflowersOS.Objects.Entities.Interactables
                     Quilt.PushOverrideTexture(file);
                 
                     Pulse();
-                }
+                }*/
             }
         }
 
+        /*
         void OnTriggerExit(Collider other)
         {
+            
             Entity entity = other.GetComponent<Entity>();
             if (entity == null) return;
         
@@ -556,6 +560,7 @@ namespace butterflowersOS.Objects.Entities.Interactables
                 }
             }
         }
+        */
 
         #endregion
     

@@ -23,7 +23,7 @@ namespace butterflowersOS.Objects.Managers
 
 		public enum TriggerReason
 		{
-			Nothing,
+			Success,
 			Block,
 			
 			CageNotCompleted,
@@ -41,6 +41,9 @@ namespace butterflowersOS.Objects.Managers
 		[SerializeField] Cage Cage;
 		[SerializeField] Focusing Focus;
 		[SerializeField] ButterflowerManager Butterflowers;
+		[SerializeField] CutsceneManager Cutscenes;
+
+		[SerializeField] Transform root;
 		
 		// Properties
 
@@ -54,7 +57,7 @@ namespace butterflowersOS.Objects.Managers
 
 		[SerializeField] int index = -1;
 		[SerializeField] Frame[] frames = new Frame[]{};
-		[SerializeField] bool inprogress = false, read = false;
+		[SerializeField] bool inprogress = false;
 		
 		// Attributes
 
@@ -70,8 +73,6 @@ namespace butterflowersOS.Objects.Managers
 		#region Accessors
 
 		public bool Pause => inprogress;
-		public bool Read => read;
-		
 		public bool Complete => (Cage.Completed && (index + 1) < frames.Length);
 		
 		#endregion
@@ -83,7 +84,7 @@ namespace butterflowersOS.Objects.Managers
 			_Save = GameDataSaveSystem.Instance;
 
 			frames = new Frame[7];
-			sequences = GetComponentsInChildren<Sequence>();
+			sequences = root.GetComponentsInChildren<Sequence>();
 			
 			sceneCaption.Dispose(); // Clear text in caption
 		}
@@ -109,15 +110,21 @@ namespace butterflowersOS.Objects.Managers
 			index = seq.index;
 			frames = seq.frames;
 
+			foreach (Sequence sequence in sequences) 
+			{
+				sequence.Dispose();
+			}
+
 			if (index >= 0) 
 			{
 				for (int i = 0; i < index; i++) // Reload all previous scenes
 				{
 					Frame frame = frames[index];
 					Sequence sequence = FetchSequence(frame);
+					
 					if (sequence != null) 
 					{
-						sequence.Trigger(i);
+						sequence.Trigger(i, load:true);
 					}
 				}
 			}
@@ -130,7 +137,7 @@ namespace butterflowersOS.Objects.Managers
 			int t_index = (index + 1);
 
 			var reason = NeedsToTriggerScene(t_index);
-			if (reason == TriggerReason.Nothing) // Trigger cutscene
+			if (reason == TriggerReason.Success) // Trigger cutscene
 			{
 				inprogress = true;
 				StartCoroutine(PlayScene(t_index)); // Play scene
@@ -138,7 +145,7 @@ namespace butterflowersOS.Objects.Managers
 				return reason;
 			}
 
-			inprogress = read = false;
+			inprogress = false;
 			return reason;
 		}
 		
@@ -161,9 +168,11 @@ namespace butterflowersOS.Objects.Managers
 					_frame = frame.frame;
 				}
 			}
+
+			if (preset.overrideSequence) _frame = preset.overrideSequenceFrame; // Override sequence frame (Debug)
 				
 			frames[t_index] = _frame; // Assign random framing
-			return TriggerReason.Nothing;
+			return TriggerReason.Success;
 		}
 
 		Sequence FetchSequence(Frame frame)
@@ -177,7 +186,7 @@ namespace butterflowersOS.Objects.Managers
 			return null;
 		}
 
-		Sequence.Scene FetchScene(int index)
+		Scene FetchScene(int index)
 		{
 			Frame frame = frames[index];
 			Sequence sequence = FetchSequence(frame);
@@ -188,97 +197,18 @@ namespace butterflowersOS.Objects.Managers
 		IEnumerator PlayScene(int _index)
 		{
 			Frame frame = frames[_index];
-			Sequence.Scene _scene = FetchScene(_index);
+			Scene _scene = FetchScene(_index);
 			
-			Vector3 baseMeshScale = _scene.mesh.transform.localScale;
-			_scene.mesh.transform.localScale = Vector3.zero;
-			
-			opacity.Show();
-			
-			float lt = 0f;
-			while (!SmoothLight(ref lt, false))
-				yield return null;
-			
-			yield return new WaitForSecondsRealtime(startDelay);
-			
-			float st = 0f;
-			while (!ScaleMesh(ref st, _scene.mesh, baseMeshScale))
-				yield return null;
-			
-			yield return new WaitForSecondsRealtime(endDelay);
+			bool didCutscene = Cutscenes.TriggerSequence(_scene);
+			if(didCutscene) yield return new WaitForSecondsRealtime(1.3f);
 
-			bool didFocusOnMesh = false;
-
-			var focusable = _scene.mesh.GetComponent<Focusable>();
-			if (focusable != null) 
-			{
-				didFocusOnMesh = focusable.Focus(); // Set focus to mesh focus!
-			}
-
-			lt = 0f;
-			while (!SmoothLight(ref lt, true)) 
+			while (Cutscenes.inprogress) 
 				yield return null;
 
-			//string debugMessage = "It is {0} on the {1}th day in the year of our Lord, 2020";
-			//sceneCaption.Push(string.Format(debugMessage, Enum.GetName(typeof(Frame), frames[_index]).ToUpper(), _index));
-
-			var framing = System.Enum.GetName(typeof(Frame), frame).ToUpper();
-			frameText.text = framing;
-			
-			frameOpacity.Show();
-			while (!frameOpacity.Visible) yield return null;
-			yield return new WaitForSecondsRealtime(frameDelay);
-			frameOpacity.Hide();
-
-			sceneCaption.Push(_scene.message);
-			if (_scene.audio != null) // Play scene audio!
-			{
-				sceneAudio.clip = _scene.audio;
-				sceneAudio.Play();
-			}
-			
-			while (sceneCaption.inprogress || sceneAudio.isPlaying) 
-			{
-				read = true;
-				inprogress = false;
-				
-				yield return null;
-			}
-
-			inprogress = read = false;
-			opacity.Hide();
+			inprogress = false;
 			++index;
 		}
 
-		#region Ops
-
-		bool SmoothLight(ref float lt, bool _in)
-		{
-			float duration = (_in) ? lightInTime : lightOutTime;
-			AnimationCurve curve = (_in) ? lightTransitionInCurve : lightTransitionOutCurve;
-			
-			lt += Time.unscaledDeltaTime;
-			
-			var li = Mathf.Clamp01(lt / duration);
-			Sun.intensity = curve.Evaluate(li);
-
-			return li >= 1f;
-		}
-
-		bool ScaleMesh(ref float st, GameObject mesh, Vector3 scale)
-		{
-			st += Time.unscaledDeltaTime;
-			
-			var si = Mathf.Clamp01(st / meshScaleTime);
-			var sc = scale * meshScaleCurve.Evaluate(si);
-
-			mesh.transform.localScale = sc;
-
-			return si >= 1f;
-		}
-		
-		#endregion
-		
 		#endregion
 	}
 }

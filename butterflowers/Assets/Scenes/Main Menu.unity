@@ -1287,7 +1287,7 @@ RectTransform:
   m_AnchorMin: {x: 1, y: 0}
   m_AnchorMax: {x: 1, y: 0}
   m_AnchoredPosition: {x: -24, y: 24}
-  m_SizeDelta: {x: 76.766556, y: 26.938545}
+  m_SizeDelta: {x: 95.51935, y: 44.94233}
   m_Pivot: {x: 0.99999994, y: 0.000000059604645}
 --- !u!225 &209468402
 CanvasGroup:
@@ -5255,7 +5255,7 @@ RectTransform:
   m_AnchorMin: {x: 0, y: 0}
   m_AnchorMax: {x: 0, y: 0}
   m_AnchoredPosition: {x: 0, y: 0}
-  m_SizeDelta: {x: 0, y: 54.729782}
+  m_SizeDelta: {x: 0, y: 67.348114}
   m_Pivot: {x: 0.5, y: 1.0000001}
 --- !u!114 &345814414
 MonoBehaviour:
@@ -5305,7 +5305,7 @@ MonoBehaviour:
   m_outlineColor:
     serializedVersion: 2
     rgba: 4278190080
-  m_fontSize: 24.75
+  m_fontSize: 30.45
   m_fontSizeBase: 36
   m_fontWeight: 400
   m_enableAutoSizing: 1
@@ -5919,7 +5919,7 @@ MonoBehaviour:
   m_outlineColor:
     serializedVersion: 2
     rgba: 4278190080
-  m_fontSize: 43.5
+  m_fontSize: 43.55
   m_fontSizeBase: 36
   m_fontWeight: 400
   m_enableAutoSizing: 1
@@ -7868,6 +7868,7 @@ MonoBehaviour:
   m_EditorClassIdentifier: 
   m_cutscene: {fileID: 11400000, guid: ef907faafe737f2408d0e171458e9ff3, type: 2}
   debugTriggerPlay: 0
+  debugTriggerCancel: 0
 --- !u!320 &805070968
 PlayableDirector:
   m_ObjectHideFlags: 0
@@ -13379,7 +13380,7 @@ MonoBehaviour:
     m_PersistentCalls:
       m_Calls: []
   m_FontData:
-    m_Font: {fileID: 12800000, guid: 6c174d0ed1a4d4b489f152dc96d109a1, type: 3}
+    m_Font: {fileID: 12800000, guid: 5fd17c9d65d4b0f42b81aefd4ae0c092, type: 3}
     m_FontSize: 14
     m_FontStyle: 0
     m_BestFit: 1

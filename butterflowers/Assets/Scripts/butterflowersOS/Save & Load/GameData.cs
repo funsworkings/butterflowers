@@ -36,6 +36,9 @@ namespace uwu
 	    public BrainData brain = new BrainData();
 	    
 	    public bool profileGenerated = false;
+
+	    [Header("Miscellaneous")] 
+	    public bool[] cutscenes = new bool[] {false, false};
     }
 
 }

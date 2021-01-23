@@ -1,4 +1,5 @@
-﻿using System.Collections;
+﻿using System;
+using System.Collections;
 using System.Collections.Generic;
 using System.IO;
 using System.Linq;
@@ -82,12 +83,15 @@ namespace butterflowersOS.Core
 		[SerializeField] List<string> textureLoadCompleted = new List<string>();
 		[SerializeField] List<string> textureLoadTarget = new List<string>();
 
+		Texture2D textureSheet = null;
+
 		// Attributes
 
 		[SerializeField] bool read = false, load = false, initialized = false;
 		[SerializeField] bool listenForEvents = false;
 
 		[SerializeField] LoadMode loadMode;
+		[SerializeField] bool exportSheet = false;
 
 		#region Accessors
 
@@ -115,6 +119,9 @@ namespace butterflowersOS.Core
 		public string[] SharedFiles => FILE_LOOKUP[FileType.Shared].ToArray();
 		public string[] WorldFiles => FILE_LOOKUP[FileType.World].ToArray();
 
+		public Texture2D[] Thumbnails => FALLBACK_TEXTURE_LOOKUP.Values.ToArray();
+		public Texture2D TextureSheet => textureSheet;
+
 		#endregion
 
 		#region Monobehaviour callbacks
@@ -134,6 +141,20 @@ namespace butterflowersOS.Core
 		void Start()
 		{
 			TextureLoader = TextureLoader.Instance;
+		}
+
+		void Update()
+		{
+			if (exportSheet) 
+			{
+				if (!load) 
+				{
+					ExportSheet("testSheet", out int _r, out int _c, out Texture2D tex);
+					Destroy(tex);
+				}
+
+				exportSheet = false;
+			}
 		}
 
 		void OnDestroy()
@@ -206,14 +227,16 @@ namespace butterflowersOS.Core
 			
 			LoadThumbnails();
 			GenerateThumbnails();
-			LoadFiles();
+			//LoadFiles();
 
-			textureLoadTarget = generateThumbnailQueue.Union(thumbnailQueue).Union(fileQueue).ToList();
+			textureLoadTarget = generateThumbnailQueue.Union(thumbnailQueue).ToList();
+			//textureLoadTarget = textureLoadTarget.Union(fileQueue).ToList();
+			
 			if (textureLoadTarget.Count > 0) 
 			{
 				if (generateThumbnailQueue.Count > 0) loadMode = LoadMode.Generate;
 				else if (thumbnailQueue.Count > 0) loadMode = LoadMode.Thumbnails;
-				else if (fileQueue.Count > 0) loadMode = LoadMode.Files;
+				//else if (fileQueue.Count > 0) loadMode = LoadMode.Files;
 				
 				StartCoroutine("LoadingAllFiles");
 			}
@@ -290,6 +313,8 @@ namespace butterflowersOS.Core
 
 			FILE_LOOKUP.Clear();
 			ALL_FILES.Clear(); 
+			
+			if(textureSheet != null) Destroy(textureSheet);
 		}
 	
 		#endregion
@@ -348,7 +373,7 @@ namespace butterflowersOS.Core
 		{
 			queue.AddRange(generateThumbnailQueue);
 			queue.AddRange(thumbnailQueue);
-			queue.AddRange(fileQueue);
+			//queue.AddRange(fileQueue);
 
 			do 
 			{
@@ -361,7 +386,7 @@ namespace butterflowersOS.Core
 					
 					if (loadMode == LoadMode.Thumbnails) 
 					{
-						if (thumbnailQueue.Count <= 0) loadMode = LoadMode.Files;
+						if (thumbnailQueue.Count <= 0) loadMode = LoadMode.NULL;
 					}
 
 					if (loadMode == LoadMode.Files) 
@@ -639,7 +664,7 @@ namespace butterflowersOS.Core
 		string DefaultThumbnailPathFromFile(string filename)
 		{
 			var _directory = ThumbnailDirectory;
-			FileUtils.EnsureDirectory(_directory);
+			FileUtils.EnsureDirectory(_directory, hidden:true);
 
 			return Path.Combine(_directory, filename);
 		}
@@ -672,6 +697,57 @@ namespace butterflowersOS.Core
 			
 			Debug.LogFormat("Added {0} to thumbnails", file);
 		}
+
+		public byte[] ExportSheet(string filename, out int _rows, out int _columns, out Texture2D tex, int oColumns = -1)
+		{
+			if(textureSheet != null) Destroy(textureSheet);
+			
+			
+			var directory = Application.persistentDataPath;
+			var path = Path.Combine(directory, filename + ".jpg");
+
+			Texture2D[] thumbnails = FALLBACK_TEXTURE_LOOKUP.Values.ToArray();
+
+			int columns = _columns = (oColumns > 0)? oColumns:8;
+			int rows = _rows = (thumbnails.Length / columns)+1;
+
+			int width = columns * _WIDTH;
+			int height = rows * _HEIGHT;
+			
+			Debug.LogWarningFormat("Export sheet!    rows: {0} columns: {1}  width: {2} height: {3}  items: {4}", rows, columns, width, height, thumbnails.Length);
+			
+			Texture2D sheet = new Texture2D(width, height, TextureFormat.ARGB32, false);
+			
+			Color[] fill = new Color[_WIDTH * _HEIGHT];
+			for (int i = 0; i < fill.Length; i++) fill[i] = Color.blue; // Set default fill color
+
+			int _x = 0, _y = 0;
+			Texture2D thumbnail = null;
+			
+			for (int i = 0; i < rows; i++) 
+			{
+				for (int j = 0; j < columns; j++) 
+				{
+					_x = j * _WIDTH;
+					_y = i * _HEIGHT;
+
+					var _index = j + (i * columns);
+					if (_index < thumbnails.Length) thumbnail = thumbnails[_index];
+					else thumbnail = null;
+				
+					Color[] colors = (thumbnail != null) ? thumbnail.GetPixels() : fill;
+					sheet.SetPixels(_x, _y, _WIDTH, _HEIGHT, colors);
+				}
+			}
+			sheet.Apply();
+
+			var bytes = sheet.EncodeToPNG();
+			
+			File.WriteAllBytes(path, bytes);
+			textureSheet = tex = sheet;
+			
+			return bytes;
+		}
 		
 		#endregion
 		
@@ -696,11 +772,12 @@ namespace butterflowersOS.Core
 					_texture.SetPixels(texture.GetPixels());
 					_texture.Apply();
 
-					bool resize = (width > _WIDTH || height > _HEIGHT);
-					if (resize) {
+					// Always resize to 32x32
+					//bool resize = (width > _WIDTH || height > _HEIGHT);
+					//if (resize) {
 						TextureScale.Bilinear(_texture, _WIDTH, _HEIGHT);
 						_texture.Apply();
-					}
+					//}
 
 					if (transparency) _data = _texture.EncodeToPNG();
 					else _data = _texture.EncodeToJPG();
