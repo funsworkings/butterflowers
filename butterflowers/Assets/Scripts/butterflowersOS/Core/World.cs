@@ -313,7 +313,6 @@ namespace butterflowersOS.Core
                 if (didLoadSequence) 
                 {
                     while (Sequence.Pause) yield return null;
-                    Nest.RandomKick(); // Re-activate nest after sequence pause
                 }
             }
             
@@ -329,12 +328,8 @@ namespace butterflowersOS.Core
             wait = false; // Disable pause!
             type = _type;
             
-            if (didLoadSequence) 
-            {
-                while (Sequence.Read)
-                    yield return null; // Wait for sequence captions to finish before showing game UI panel
-            }
-            else 
+            
+            if (!didLoadSequence) 
             {
                 if (sequenceReason == SequenceManager.TriggerReason.SequenceHasCompleted && !Cutscenes.outro) // Has passed all sequence frames, begin export!
                 {
