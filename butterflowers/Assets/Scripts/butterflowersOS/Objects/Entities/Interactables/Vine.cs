@@ -488,7 +488,8 @@ namespace butterflowersOS.Objects.Entities.Interactables
 
         Vector3 NextWaypoint(Vector3 origin, Vector3 previous, float height)
         {
-            Vector2 pointRadius = Random.insideUnitCircle * growRadius;
+            //Vector2 pointRadius = Random.insideUnitCircle * growRadius;
+            Vector2 pointRadius = Vector2.one * Mathf.PerlinNoise(previous.x, previous.y).RemapNRB(0f, 1f, -1f, 1f) * growRadius;
             Vector3 waypoint = transform.position + new Vector3(pointRadius.x, height, pointRadius.y);
 
             return waypoint;
