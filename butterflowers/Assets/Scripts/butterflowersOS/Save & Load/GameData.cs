@@ -15,10 +15,18 @@ namespace uwu
         public VineSceneData vines = new VineSceneData();
         public SequenceData sequence = new SequenceData();
 
-        [Header("Neue")]
-	    public string username = null;
-	    
-	    public SurveillanceData[] surveillanceData = new SurveillanceData[]{};
+        public string export_agent_created_at = "";
+        public bool export = false;
+        
+        [Header("Miscellaneous")] 
+        public bool[] cutscenes = new bool[] { false, false };
+
+        [Header("Neue")] 
+        
+        public string username = "";
+        public string agent_created_at = "";
+
+        public SurveillanceData[] surveillanceData = new SurveillanceData[]{};
 
 	    public string[] directories = new string[]{};
 	    public string[] files = new string[] { };
@@ -28,10 +36,6 @@ namespace uwu
 	    public ushort[] world_files = new ushort[] { };
 
 	    public Profile profile = new Profile();
-	    public BrainData brain = new BrainData();
-
-	    [Header("Miscellaneous")] 
-	    public bool[] cutscenes = new bool[] { false, false };
     }
 
 }

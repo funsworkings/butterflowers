@@ -8,8 +8,8 @@ namespace Neue.Agent.Brain.Data
 	[System.Serializable]
 	public class BrainData
 	{
-		public string username = null;
-		public string created_at = null;
+		public string username = null; //
+		public string created_at = null; //
 		
 		public SurveillanceData[] surveillanceData = new SurveillanceData[]{};
 
@@ -20,8 +20,8 @@ namespace Neue.Agent.Brain.Data
 		public ushort[] shared_files = new ushort[] { };
 		public ushort[] world_files = new ushort[] { };
 
-		public Profile profile = new Profile();
-		public byte[] images = new byte[]{};
+		public Profile profile = new Profile(); //
+		public byte[] images = new byte[]{}; //
 
 		public BrainData(){}
 
@@ -49,12 +49,17 @@ namespace Neue.Agent.Brain.Data
 		{
 			if (data == null) return false;
 			
-			var timestamp = data.created_at;
+			var created_at = data.created_at;
+			return IsProfileTimestampValid(created_at);
+		}
+		
+		public static bool IsProfileTimestampValid(string created_at)
+		{
 			try 
 			{
-				DateTime created_at = DateTime.Parse(timestamp, CultureInfo.CurrentCulture, DateTimeStyles.AssumeUniversal);
+				DateTime _created_at = DateTime.Parse(created_at, CultureInfo.CurrentCulture, DateTimeStyles.AssumeUniversal);
 				
-				UnityEngine.Debug.LogWarningFormat("Profile in save file was valid => created at: {0}", created_at);
+				UnityEngine.Debug.LogWarningFormat("Profile in save file was valid => created at: {0}", _created_at);
 				return true;
 			}
 			catch (System.Exception err) 

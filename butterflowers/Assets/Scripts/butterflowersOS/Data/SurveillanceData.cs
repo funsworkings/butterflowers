@@ -1,4 +1,5 @@
-﻿using System.Linq;
+﻿using System.Collections.Generic;
+using System.Linq;
 using UnityEngine;
 
 namespace butterflowersOS.Data
@@ -44,5 +45,23 @@ namespace butterflowersOS.Data
 		public int beaconsFlowered => logs.Select(log => log.SortEventsByType(EVENTCODE.BEACONFLOWER).Count()).Sum(); // Nurture, rest
 		public int nestKicks => logs.Select(log => log.SortEventsByType(EVENTCODE.NESTKICK).Count()).Sum(); // Play, rest
 		public int nestSpills => logs.Select(log => log.SortEventsByType(EVENTCODE.NESTSPILL).Count()).Sum(); // Destruction, gluttony
+	}
+
+	public static class SurveillanceDataExtensions
+	{
+		public static bool AggregateSurveillanceData(this SurveillanceData current, SurveillanceData @new)
+		{
+			bool isValid = (current.timestamp == 0 || current.timestamp == @new.timestamp);
+			if (isValid) 
+			{
+				current.timestamp = @new.timestamp;
+				
+				current.filesAdded = @new.filesAdded;
+				current.filesRemoved = @new.filesRemoved;
+				current.logs = @new.logs;
+			}
+
+			return isValid;
+		}
 	}
 }

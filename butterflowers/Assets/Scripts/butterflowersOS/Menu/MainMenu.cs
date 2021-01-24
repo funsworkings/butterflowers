@@ -92,6 +92,8 @@ namespace butterflowersOS.Menu
             WipeGameData();
 
             Save.username = input;
+            PlayerPrefs.SetString("_Username", input);
+            
             Save.SaveGameData(); // Save game data with username
 
             usernamePanel.Close();

@@ -250,19 +250,6 @@ namespace butterflowersOS.Core
 			load = (loadMode != LoadMode.NULL);
 		}
 
-		public void Aggregate(LibraryPayload payload)
-		{
-			var files = payload.files;
-
-			var user_files = payload.userFiles;
-			var shared_files = payload.sharedFiles;
-			var world_files = payload.worldFiles;
-
-			foreach (int uf in user_files) RegisterFile(files[uf], FileType.User);
-			foreach (int sf in shared_files) RegisterFile(files[sf], FileType.Shared);
-			foreach (int wf in world_files) RegisterFile(files[wf], FileType.World);
-		}
-
 		void Restore()
 		{
 			foreach (KeyValuePair<FileType, List<string>> file in FILE_LOOKUP) 
@@ -317,6 +304,29 @@ namespace butterflowersOS.Core
 			if(textureSheet != null) Destroy(textureSheet);
 		}
 	
+		#endregion
+		
+		#region Neueagent
+
+		public bool AggregateNeueAgentData(LibraryPayload payload)
+		{
+			return true;
+			
+			/*
+			var files = payload.files;
+
+			var user_files = payload.userFiles;
+			var shared_files = payload.sharedFiles;
+			var world_files = payload.worldFiles;
+
+			foreach (int uf in user_files) RegisterFile(files[uf], FileType.User);
+			foreach (int sf in shared_files) RegisterFile(files[sf], FileType.Shared);
+			foreach (int wf in world_files) RegisterFile(files[wf], FileType.World);
+			
+			return true;
+			*/
+		}
+		
 		#endregion
 
 		#region Textures

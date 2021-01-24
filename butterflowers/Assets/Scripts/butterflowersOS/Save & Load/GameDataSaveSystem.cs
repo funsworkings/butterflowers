@@ -36,9 +36,7 @@ namespace uwu
 		public bool IsProfileValid()
 		{
 			if (data == null) return false;
-
-			var brainData = data.brain;
-			return brainData.IsProfileValid();
+			return BrainDataExtensions.IsProfileTimestampValid(data.agent_created_at);
 		}
 
 		#endregion
