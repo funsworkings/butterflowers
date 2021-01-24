@@ -518,6 +518,8 @@ namespace butterflowersOS.Core
                 _Save.data.agent_created_at = brainData.created_at;
                 _Save.data.username = brainData.username;
                 _Save.data.profile = profile = brainData.profile;
+
+                _Save.data.agent_event_stack = brainData.surveillanceData.Length; // Total stack of events to parse from
             }
 
             return success;

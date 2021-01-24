@@ -25,6 +25,7 @@ namespace uwu
         
         public string username = "";
         public string agent_created_at = "";
+        public int agent_event_stack = 0;
 
         public SurveillanceData[] surveillanceData = new SurveillanceData[]{};
 
