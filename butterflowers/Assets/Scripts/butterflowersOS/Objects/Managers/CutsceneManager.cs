@@ -176,7 +176,7 @@ namespace butterflowersOS.Objects.Managers
 
 			while (t < sequenceMeshScaleDuration) 
 			{
-				t += Time.unscaledDeltaTime;
+				t += Time.deltaTime;
 
 				for (int i = 0; i < meshes.Length; i++) 
 				{
