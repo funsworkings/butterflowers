@@ -6,6 +6,6 @@ namespace butterflowersOS.Data
 	public class SequenceData
 	{
 		public sbyte index = -1;
-		public Frame[] frames = new Frame[7];
+		public byte[] frames = new byte[7];
 	}
 }
