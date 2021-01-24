@@ -1,21 +1,22 @@
 ﻿using butterflowersOS.Objects.Miscellaneous;
+using UnityEngine;
+using uwu.Extensions;
 
 namespace butterflowersOS.Data
 {
 	[System.Serializable]
 	public class LeafData
 	{
-		public int index = -1;
-		public float interval = 0f;
-		public float scale = 1f;
-		public float rotation = 0f;
+		public byte index = 0;
+		
+		public byte interval = 0;
+		public byte rotation = 0;
 
 		public LeafData(Leaf leaf)
 		{
-			this.index = leaf.index;
-			this.interval = leaf.progress;
-			this.scale = leaf.Scale;
-			this.rotation = leaf.offset;
+			this.index = (byte)leaf.index;
+			this.interval = (byte)Mathf.RoundToInt(leaf.progress * 255f);
+			this.rotation = (byte)Mathf.FloorToInt((leaf.offset / 360f) * 255f);
 		}
 	}
 }

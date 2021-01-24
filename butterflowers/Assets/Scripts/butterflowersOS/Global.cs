@@ -10,8 +10,8 @@ namespace butterflowersOS
     public static class Constants
     {
         public const float BaseCursorVelocityVector = 5f;
-        public const float SurveillanceRefreshRate = 1f;
         public const float BeaconSnapDistance = .033f;
+        public const float VineWaypointSnapDistance = .033f;
     }
 
     public enum GAMESTATE {

@@ -38,7 +38,7 @@ namespace butterflowersOS.Objects.Entities
 
         #region Initialization
 
-        public void Initialize(int[] statuses)
+        public void Initialize(sbyte[] statuses)
         {
             int index = 0;
             foreach (Sector sector in sectors)
