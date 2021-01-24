@@ -59,15 +59,28 @@ namespace butterflowersOS.Core
 
 		#region Accessors
 
-		public SurveillanceData activeLog => (logs.Count > 0) ? logs.Last() : null;
+		int activeLogIndex => Sun.days;
 
-		public SurveillanceData[] previousLogs
+		public SurveillanceData activeLog
 		{
 			get
 			{
-				if (logs.Count > 1) 
+				if(logs.Count > activeLogIndex) 
 				{
-					var cache = new SurveillanceData[logs.Count - 1];
+					return logs[activeLogIndex];
+				}
+
+				return null;
+			}
+		}
+
+		SurveillanceData[] previousLogs
+		{
+			get
+			{
+				if (activeLogIndex > 0) 
+				{
+					var cache = new SurveillanceData[activeLogIndex - 1];
 					Array.Copy(logs.ToArray(), cache, cache.Length);
 
 					return cache;
@@ -200,21 +213,8 @@ namespace butterflowersOS.Core
 
 		void EnsureLog()
 		{
-			bool flagCreate = false;
-		
-			var timestamp = Sun.days;
-		
-			SurveillanceData lastLog = (logs != null && logs.Count > 0)? logs.Last():null;
-			if (lastLog != null) 
-			{
-				var lastTimestamp = lastLog.timestamp;
-				if (lastTimestamp != timestamp)
-					flagCreate = true;
-			}
-			else
-				flagCreate = true;
-		
-			if(flagCreate) CreateLog();
+			if(activeLog == null)
+				CreateLog();
 		}
 		
 		#endregion
