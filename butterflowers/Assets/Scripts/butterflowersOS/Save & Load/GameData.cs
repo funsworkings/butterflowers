@@ -34,16 +34,4 @@ namespace uwu
 	    public bool[] cutscenes = new bool[] { false, false };
     }
 
-    public static class GameDataExtensions
-    {
-	    public static void ReadFromBrainData(this GameData data, BrainData brain)
-	    {
-		    data.username = brain.username;
-
-		    data.surveillanceData = brain.surveillanceData;
-		    
-		    //data.directories = 
-	    }
-    }
-
 }
