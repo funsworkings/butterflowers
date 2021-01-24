@@ -2237,6 +2237,12 @@ PrefabInstance:
   m_Modification:
     m_TransformParent: {fileID: 1923385169}
     m_Modifications:
+    - target: {fileID: 9060689402422336632, guid: 124e398a16593304d85e9b4bf7897132,
+        type: 3}
+      propertyPath: m_Sprite
+      value: 
+      objectReference: {fileID: 21300000, guid: 47cb3b0f0f423c54c85581230b49d084,
+        type: 3}
     - target: {fileID: 9060689402422336633, guid: 124e398a16593304d85e9b4bf7897132,
         type: 3}
       propertyPath: m_AnchorMax.y
@@ -2500,12 +2506,12 @@ PrefabInstance:
     - target: {fileID: 9060689404216562690, guid: 124e398a16593304d85e9b4bf7897132,
         type: 3}
       propertyPath: m_AnchoredPosition.x
-      value: 0
+      value: -50
       objectReference: {fileID: 0}
     - target: {fileID: 9060689404216562690, guid: 124e398a16593304d85e9b4bf7897132,
         type: 3}
       propertyPath: m_AnchoredPosition.y
-      value: -340.4757
+      value: 570
       objectReference: {fileID: 0}
     - target: {fileID: 9060689404216562690, guid: 124e398a16593304d85e9b4bf7897132,
         type: 3}
@@ -2525,7 +2531,7 @@ PrefabInstance:
     - target: {fileID: 9060689404216562691, guid: 124e398a16593304d85e9b4bf7897132,
         type: 3}
       propertyPath: m_Name
-      value: '# of nest kicks'
+      value: '# of nest kicks*'
       objectReference: {fileID: 0}
     - target: {fileID: 9060689404216562700, guid: 124e398a16593304d85e9b4bf7897132,
         type: 3}
@@ -3642,7 +3648,7 @@ Transform:
   m_PrefabInstance: {fileID: 0}
   m_PrefabAsset: {fileID: 0}
   m_GameObject: {fileID: 201810246}
-  m_LocalRotation: {x: 0.12156508, y: -0.000000020864588, z: 0.0000000025043372, w: 0.9925835}
+  m_LocalRotation: {x: 0.12156505, y: -0.000000013581906, z: 0.0000000016392674, w: 0.9925835}
   m_LocalPosition: {x: 0, y: 9.595102, z: -21.852465}
   m_LocalScale: {x: 1, y: 1.3577, z: 1}
   m_Children:
@@ -4186,52 +4192,6 @@ Animator:
   m_HasTransformHierarchy: 1
   m_AllowConstantClipSamplingOptimization: 1
   m_KeepAnimatorControllerStateOnDisable: 0
---- !u!1 &215787116
-GameObject:
-  m_ObjectHideFlags: 0
-  m_CorrespondingSourceObject: {fileID: 0}
-  m_PrefabInstance: {fileID: 0}
-  m_PrefabAsset: {fileID: 0}
-  serializedVersion: 6
-  m_Component:
-  - component: {fileID: 215787118}
-  - component: {fileID: 215787117}
-  m_Layer: 0
-  m_Name: vorttex
-  m_TagString: Untagged
-  m_Icon: {fileID: 0}
-  m_NavMeshLayer: 0
-  m_StaticEditorFlags: 0
-  m_IsActive: 1
---- !u!114 &215787117
-MonoBehaviour:
-  m_ObjectHideFlags: 0
-  m_CorrespondingSourceObject: {fileID: 0}
-  m_PrefabInstance: {fileID: 0}
-  m_PrefabAsset: {fileID: 0}
-  m_GameObject: {fileID: 215787116}
-  m_Enabled: 1
-  m_EditorHideFlags: 0
-  m_Script: {fileID: 11500000, guid: 6b83c5d124b448fdbf50b726919faf9e, type: 3}
-  m_Name: 
-  m_EditorClassIdentifier: 
-  panelMaterial: {fileID: 2100000, guid: 9503d6d75b86d9e498808abfb925b710, type: 2}
-  panelLayer: 0
-  panelScale: {x: 1, y: 1, z: 1}
---- !u!4 &215787118
-Transform:
-  m_ObjectHideFlags: 0
-  m_CorrespondingSourceObject: {fileID: 0}
-  m_PrefabInstance: {fileID: 0}
-  m_PrefabAsset: {fileID: 0}
-  m_GameObject: {fileID: 215787116}
-  m_LocalRotation: {x: 0, y: 0, z: 0, w: 1}
-  m_LocalPosition: {x: 0, y: 0, z: 0}
-  m_LocalScale: {x: 1, y: 1, z: 1}
-  m_Children: []
-  m_Father: {fileID: 0}
-  m_RootOrder: 7
-  m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
 --- !u!1 &234570726
 GameObject:
   m_ObjectHideFlags: 0
@@ -8121,6 +8081,12 @@ PrefabInstance:
   m_Modification:
     m_TransformParent: {fileID: 1923385169}
     m_Modifications:
+    - target: {fileID: 9060689402422336632, guid: 124e398a16593304d85e9b4bf7897132,
+        type: 3}
+      propertyPath: m_Sprite
+      value: 
+      objectReference: {fileID: 21300000, guid: 9503c95133d3bf74bbd9c7d594c4f13f,
+        type: 3}
     - target: {fileID: 9060689402422336633, guid: 124e398a16593304d85e9b4bf7897132,
         type: 3}
       propertyPath: m_AnchorMax.y
@@ -8434,12 +8400,12 @@ PrefabInstance:
     - target: {fileID: 9060689404216562690, guid: 124e398a16593304d85e9b4bf7897132,
         type: 3}
       propertyPath: m_AnchoredPosition.x
-      value: 0
+      value: -63
       objectReference: {fileID: 0}
     - target: {fileID: 9060689404216562690, guid: 124e398a16593304d85e9b4bf7897132,
         type: 3}
       propertyPath: m_AnchoredPosition.y
-      value: -340.4757
+      value: 34
       objectReference: {fileID: 0}
     - target: {fileID: 9060689404216562690, guid: 124e398a16593304d85e9b4bf7897132,
         type: 3}
@@ -8459,7 +8425,7 @@ PrefabInstance:
     - target: {fileID: 9060689404216562691, guid: 124e398a16593304d85e9b4bf7897132,
         type: 3}
       propertyPath: m_Name
-      value: '# of beacons flowered'
+      value: '# of beacons flowered*'
       objectReference: {fileID: 0}
     - target: {fileID: 9060689404216562700, guid: 124e398a16593304d85e9b4bf7897132,
         type: 3}
@@ -10234,6 +10200,12 @@ PrefabInstance:
   m_Modification:
     m_TransformParent: {fileID: 1923385169}
     m_Modifications:
+    - target: {fileID: 9060689402422336632, guid: 124e398a16593304d85e9b4bf7897132,
+        type: 3}
+      propertyPath: m_Sprite
+      value: 
+      objectReference: {fileID: 21300000, guid: 3344d1a35f37f664597c7cf1712bea75,
+        type: 3}
     - target: {fileID: 9060689402422336633, guid: 124e398a16593304d85e9b4bf7897132,
         type: 3}
       propertyPath: m_AnchorMax.y
@@ -10497,12 +10469,12 @@ PrefabInstance:
     - target: {fileID: 9060689404216562690, guid: 124e398a16593304d85e9b4bf7897132,
         type: 3}
       propertyPath: m_AnchoredPosition.x
-      value: 0
+      value: 322
       objectReference: {fileID: 0}
     - target: {fileID: 9060689404216562690, guid: 124e398a16593304d85e9b4bf7897132,
         type: 3}
       propertyPath: m_AnchoredPosition.y
-      value: -340.4757
+      value: 569.99994
       objectReference: {fileID: 0}
     - target: {fileID: 9060689404216562690, guid: 124e398a16593304d85e9b4bf7897132,
         type: 3}
@@ -10522,7 +10494,7 @@ PrefabInstance:
     - target: {fileID: 9060689404216562691, guid: 124e398a16593304d85e9b4bf7897132,
         type: 3}
       propertyPath: m_Name
-      value: nest full
+      value: nest full*
       objectReference: {fileID: 0}
     - target: {fileID: 9060689404216562700, guid: 124e398a16593304d85e9b4bf7897132,
         type: 3}
@@ -11356,7 +11328,7 @@ RectTransform:
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
   m_AnchorMin: {x: 0, y: 0}
   m_AnchorMax: {x: 1, y: 0}
-  m_AnchoredPosition: {x: 0, y: -340.4757}
+  m_AnchoredPosition: {x: -10, y: -520}
   m_SizeDelta: {x: -999.817, y: 498.66595}
   m_Pivot: {x: 0.5, y: 0}
 --- !u!114 &698546076
@@ -17855,6 +17827,12 @@ PrefabInstance:
   m_Modification:
     m_TransformParent: {fileID: 1923385169}
     m_Modifications:
+    - target: {fileID: 9060689402422336632, guid: 124e398a16593304d85e9b4bf7897132,
+        type: 3}
+      propertyPath: m_Sprite
+      value: 
+      objectReference: {fileID: 21300000, guid: 835aa8e452045424a9149f75415c850d,
+        type: 3}
     - target: {fileID: 9060689402422336633, guid: 124e398a16593304d85e9b4bf7897132,
         type: 3}
       propertyPath: m_AnchorMax.y
@@ -18118,12 +18096,12 @@ PrefabInstance:
     - target: {fileID: 9060689404216562690, guid: 124e398a16593304d85e9b4bf7897132,
         type: 3}
       propertyPath: m_AnchoredPosition.x
-      value: 0
+      value: -438
       objectReference: {fileID: 0}
     - target: {fileID: 9060689404216562690, guid: 124e398a16593304d85e9b4bf7897132,
         type: 3}
       propertyPath: m_AnchoredPosition.y
-      value: -340.4757
+      value: 36.00002
       objectReference: {fileID: 0}
     - target: {fileID: 9060689404216562690, guid: 124e398a16593304d85e9b4bf7897132,
         type: 3}
@@ -18143,7 +18121,7 @@ PrefabInstance:
     - target: {fileID: 9060689404216562691, guid: 124e398a16593304d85e9b4bf7897132,
         type: 3}
       propertyPath: m_Name
-      value: '# of beacons planted'
+      value: '# of beacons planted*'
       objectReference: {fileID: 0}
     - target: {fileID: 9060689404216562700, guid: 124e398a16593304d85e9b4bf7897132,
         type: 3}
@@ -23618,6 +23596,12 @@ PrefabInstance:
   m_Modification:
     m_TransformParent: {fileID: 1923385169}
     m_Modifications:
+    - target: {fileID: 9060689402422336632, guid: 124e398a16593304d85e9b4bf7897132,
+        type: 3}
+      propertyPath: m_Sprite
+      value: 
+      objectReference: {fileID: 21300000, guid: db930108deaeac8468f3a049b78a7683,
+        type: 3}
     - target: {fileID: 9060689402422336633, guid: 124e398a16593304d85e9b4bf7897132,
         type: 3}
       propertyPath: m_AnchorMax.y
@@ -23881,12 +23865,12 @@ PrefabInstance:
     - target: {fileID: 9060689404216562690, guid: 124e398a16593304d85e9b4bf7897132,
         type: 3}
       propertyPath: m_AnchoredPosition.x
-      value: 0
+      value: 310
       objectReference: {fileID: 0}
     - target: {fileID: 9060689404216562690, guid: 124e398a16593304d85e9b4bf7897132,
         type: 3}
       propertyPath: m_AnchoredPosition.y
-      value: -340.4757
+      value: 35.00002
       objectReference: {fileID: 0}
     - target: {fileID: 9060689404216562690, guid: 124e398a16593304d85e9b4bf7897132,
         type: 3}
@@ -23906,7 +23890,7 @@ PrefabInstance:
     - target: {fileID: 9060689404216562691, guid: 124e398a16593304d85e9b4bf7897132,
         type: 3}
       propertyPath: m_Name
-      value: butterflowers
+      value: butterflowers*
       objectReference: {fileID: 0}
     - target: {fileID: 9060689404216562700, guid: 124e398a16593304d85e9b4bf7897132,
         type: 3}
@@ -33353,12 +33337,12 @@ PrefabInstance:
     - target: {fileID: 9060689404216562690, guid: 124e398a16593304d85e9b4bf7897132,
         type: 3}
       propertyPath: m_AnchoredPosition.x
-      value: 3
+      value: -797
       objectReference: {fileID: 0}
     - target: {fileID: 9060689404216562690, guid: 124e398a16593304d85e9b4bf7897132,
         type: 3}
       propertyPath: m_AnchoredPosition.y
-      value: 220
+      value: 574.99994
       objectReference: {fileID: 0}
     - target: {fileID: 9060689404216562690, guid: 124e398a16593304d85e9b4bf7897132,
         type: 3}
@@ -33378,7 +33362,7 @@ PrefabInstance:
     - target: {fileID: 9060689404216562691, guid: 124e398a16593304d85e9b4bf7897132,
         type: 3}
       propertyPath: m_Name
-      value: wand speed
+      value: wand speed*
       objectReference: {fileID: 0}
     m_RemovedComponents: []
   m_SourcePrefab: {fileID: 100100000, guid: 124e398a16593304d85e9b4bf7897132, type: 3}
@@ -46820,6 +46804,12 @@ PrefabInstance:
   m_Modification:
     m_TransformParent: {fileID: 1923385169}
     m_Modifications:
+    - target: {fileID: 9060689402422336632, guid: 124e398a16593304d85e9b4bf7897132,
+        type: 3}
+      propertyPath: m_Sprite
+      value: 
+      objectReference: {fileID: 21300000, guid: d9d1d54697bf4e9499605a2c792210e4,
+        type: 3}
     - target: {fileID: 9060689402422336633, guid: 124e398a16593304d85e9b4bf7897132,
         type: 3}
       propertyPath: m_AnchorMax.y
@@ -47083,12 +47073,12 @@ PrefabInstance:
     - target: {fileID: 9060689404216562690, guid: 124e398a16593304d85e9b4bf7897132,
         type: 3}
       propertyPath: m_AnchoredPosition.x
-      value: 0
+      value: -419
       objectReference: {fileID: 0}
     - target: {fileID: 9060689404216562690, guid: 124e398a16593304d85e9b4bf7897132,
         type: 3}
       propertyPath: m_AnchoredPosition.y
-      value: -340.4757
+      value: 569.99994
       objectReference: {fileID: 0}
     - target: {fileID: 9060689404216562690, guid: 124e398a16593304d85e9b4bf7897132,
         type: 3}
@@ -47108,7 +47098,7 @@ PrefabInstance:
     - target: {fileID: 9060689404216562691, guid: 124e398a16593304d85e9b4bf7897132,
         type: 3}
       propertyPath: m_Name
-      value: '# of nest spills'
+      value: '# of nest spills*'
       objectReference: {fileID: 0}
     - target: {fileID: 9060689404216562700, guid: 124e398a16593304d85e9b4bf7897132,
         type: 3}
@@ -48351,7 +48341,7 @@ MonoBehaviour:
   m_outlineColor:
     serializedVersion: 2
     rgba: 4278190080
-  m_fontSize: 25.15
+  m_fontSize: 25.2
   m_fontSizeBase: 36
   m_fontWeight: 400
   m_enableAutoSizing: 1
@@ -49190,12 +49180,12 @@ PrefabInstance:
     - target: {fileID: 9060689404216562690, guid: 124e398a16593304d85e9b4bf7897132,
         type: 3}
       propertyPath: m_AnchoredPosition.x
-      value: -3
+      value: 697
       objectReference: {fileID: 0}
     - target: {fileID: 9060689404216562690, guid: 124e398a16593304d85e9b4bf7897132,
         type: 3}
       propertyPath: m_AnchoredPosition.y
-      value: -340.4757
+      value: 572.99994
       objectReference: {fileID: 0}
     - target: {fileID: 9060689404216562690, guid: 124e398a16593304d85e9b4bf7897132,
         type: 3}
@@ -49215,7 +49205,7 @@ PrefabInstance:
     - target: {fileID: 9060689404216562691, guid: 124e398a16593304d85e9b4bf7897132,
         type: 3}
       propertyPath: m_Name
-      value: '# of beacons added'
+      value: '# of beacons added*'
       objectReference: {fileID: 0}
     - target: {fileID: 9060689404216562700, guid: 124e398a16593304d85e9b4bf7897132,
         type: 3}
@@ -55507,6 +55497,12 @@ PrefabInstance:
   m_Modification:
     m_TransformParent: {fileID: 1923385169}
     m_Modifications:
+    - target: {fileID: 9060689402422336632, guid: 124e398a16593304d85e9b4bf7897132,
+        type: 3}
+      propertyPath: m_Sprite
+      value: 
+      objectReference: {fileID: 21300000, guid: c9212ce4017f2524f8dc2ddda9899c00,
+        type: 3}
     - target: {fileID: 9060689402422336633, guid: 124e398a16593304d85e9b4bf7897132,
         type: 3}
       propertyPath: m_AnchorMax.y
@@ -55820,12 +55816,12 @@ PrefabInstance:
     - target: {fileID: 9060689404216562690, guid: 124e398a16593304d85e9b4bf7897132,
         type: 3}
       propertyPath: m_AnchoredPosition.x
-      value: 0
+      value: -808
       objectReference: {fileID: 0}
     - target: {fileID: 9060689404216562690, guid: 124e398a16593304d85e9b4bf7897132,
         type: 3}
       propertyPath: m_AnchoredPosition.y
-      value: -340.4757
+      value: 33.00002
       objectReference: {fileID: 0}
     - target: {fileID: 9060689404216562690, guid: 124e398a16593304d85e9b4bf7897132,
         type: 3}
@@ -55845,7 +55841,7 @@ PrefabInstance:
     - target: {fileID: 9060689404216562691, guid: 124e398a16593304d85e9b4bf7897132,
         type: 3}
       propertyPath: m_Name
-      value: '# of beacons destroyed'
+      value: '# of beacons destroyed*'
       objectReference: {fileID: 0}
     - target: {fileID: 9060689404216562700, guid: 124e398a16593304d85e9b4bf7897132,
         type: 3}
@@ -56009,6 +56005,12 @@ PrefabInstance:
   m_Modification:
     m_TransformParent: {fileID: 1923385169}
     m_Modifications:
+    - target: {fileID: 9060689402422336632, guid: 124e398a16593304d85e9b4bf7897132,
+        type: 3}
+      propertyPath: m_Sprite
+      value: 
+      objectReference: {fileID: 21300000, guid: 1d8f69837ee432043abd8f11069ff290,
+        type: 3}
     - target: {fileID: 9060689402422336633, guid: 124e398a16593304d85e9b4bf7897132,
         type: 3}
       propertyPath: m_AnchorMax.y
@@ -56272,12 +56274,12 @@ PrefabInstance:
     - target: {fileID: 9060689404216562690, guid: 124e398a16593304d85e9b4bf7897132,
         type: 3}
       propertyPath: m_AnchoredPosition.x
-      value: 0
+      value: 687
       objectReference: {fileID: 0}
     - target: {fileID: 9060689404216562690, guid: 124e398a16593304d85e9b4bf7897132,
         type: 3}
       propertyPath: m_AnchoredPosition.y
-      value: -340.4757
+      value: 39.00002
       objectReference: {fileID: 0}
     - target: {fileID: 9060689404216562690, guid: 124e398a16593304d85e9b4bf7897132,
         type: 3}
@@ -56297,7 +56299,7 @@ PrefabInstance:
     - target: {fileID: 9060689404216562691, guid: 124e398a16593304d85e9b4bf7897132,
         type: 3}
       propertyPath: m_Name
-      value: '# of discoveries'
+      value: '# of discoveries*'
       objectReference: {fileID: 0}
     - target: {fileID: 9060689404216562700, guid: 124e398a16593304d85e9b4bf7897132,
         type: 3}
