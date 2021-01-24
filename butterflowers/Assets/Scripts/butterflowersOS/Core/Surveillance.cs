@@ -59,7 +59,9 @@ namespace butterflowersOS.Core
 
 		#region Accessors
 
-		int activeLogIndex => Sun.days;
+		int cacheSunDays = -1;
+		
+		int activeLogIndex => cacheSunDays;
 
 		public SurveillanceData activeLog
 		{
@@ -80,7 +82,7 @@ namespace butterflowersOS.Core
 			{
 				if (activeLogIndex > 0) 
 				{
-					var cache = new SurveillanceData[activeLogIndex - 1];
+					var cache = new SurveillanceData[activeLogIndex];
 					Array.Copy(logs.ToArray(), cache, cache.Length);
 
 					return cache;
@@ -113,14 +115,8 @@ namespace butterflowersOS.Core
 
 		public void New(bool onload = false)
 		{
-			if (onload) 
-			{
-				EnsureLog();
-			}
-			else 
-			{
-				CreateLog();
-			}
+			cacheSunDays = Sun.days;
+			EnsureLog();
 
 			StartCoroutine("Capturing");
 			recording = true;
@@ -149,8 +145,8 @@ namespace butterflowersOS.Core
 			if (recording) 
 			{
 				var log = CaptureFrameLog();
+				
 				activeLog.logs = activeLog.logs.Append(log).ToArray();
-
 				recording = false;
 			}
 		}
@@ -205,7 +201,7 @@ namespace butterflowersOS.Core
 		public void CreateLog()
 		{
 			var log = new SurveillanceData();
-				log.timestamp = (ushort)Sun.days;
+				log.timestamp = (ushort)cacheSunDays;
 				log.logs = new SurveillanceLogData[]{}; // Wipe daily logs
 
 			logs.Add(log); // Append new log to 
