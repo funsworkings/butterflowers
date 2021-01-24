@@ -449,6 +449,42 @@ namespace butterflowersOS.Core
 		}
 	
 		#endregion
+		
+		#region Neueagent
+
+		public bool AggregateNeueAgentData(SurveillanceData[] data)
+		{
+			SurveillanceData[] _cacheLogs = logs.ToArray();
+			
+			ushort diff = (ushort)(data.Length - logs.Count);
+			if (diff > 0) 
+			{
+				for (int i = 0; i < diff; i++) 
+				{
+					logs.Add(new SurveillanceData());	// Pad current logs with extended
+				}	
+			}
+
+			bool success = true;
+			
+			for (int i = 0; i < data.Length; i++) 
+			{
+				var log = logs[i]; // Grab overlapped log
+				var newLog = data[i];
+				
+				success = log.AggregateSurveillanceData(newLog);
+				if (!success) break;
+			}
+
+			if (!success) 
+			{
+				logs = new List<SurveillanceData>(_cacheLogs); // Reset back to stable logs
+			}
+
+			return success;
+		}
+		
+		#endregion
 	
 		#region Events
 
