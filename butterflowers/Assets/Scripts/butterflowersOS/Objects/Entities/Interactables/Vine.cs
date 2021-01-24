@@ -226,7 +226,7 @@ namespace butterflowersOS.Objects.Entities.Interactables
 
                 foreach (LeafData ld in data.leaves.leaves) 
                 {
-                    var leaf = ConstructLeaf(ld.index, ld.interval, (ld.rotation / 255f) * 360f);
+                    var leaf = ConstructLeaf(ld.index, ld.interval, offset:(ld.rotation / 255f) * 360f);
                     leaves.Add(leaf);
                 }
                 ParseAllLeaves(index, interval, true);
