@@ -4,6 +4,6 @@
 	public class VineSceneData
 	{
 		public VineData[] vines = new VineData[] { };
-		public int[] corners = {-1, -1, -1, -1};
+		public sbyte[] corners = { -1, -1, -1, -1 };
 	}
 }

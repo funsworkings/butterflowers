@@ -1,6 +1,7 @@
 ﻿using System.Collections;
 using System.Collections.Generic;
 using System.Linq;
+using butterflowersOS.Core;
 using butterflowersOS.Data;
 using butterflowersOS.Objects.Entities;
 using butterflowersOS.Objects.Entities.Interactables;
@@ -74,13 +75,15 @@ namespace butterflowersOS.Objects.Managers
             for (var i = 0; i < vines.Count; i++) 
             {
                 var vine = vines[i];
-                var parsed = new VineData(vine.state, vine.index, vine.interval, vine.height, vine.Waypoints, vine.File, vine.Leaves);
+                var file = Library.Instance.FetchFileIndex(vine.File);
+                
+                var parsed = new VineData(vine.state, (byte)vine.index, (byte)Mathf.FloorToInt(vine.interval * 255f), vine.Waypoints, (ushort)file, vine.Leaves);
 
                 vineDatas.Add(parsed);
             }
 
             dat.vines = vineDatas.ToArray();
-            dat.corners = cage.Sectors.Select(corner => (int)corner._Status).ToArray();
+            dat.corners = cage.Sectors.Select(corner => (sbyte)corner._Status).ToArray();
         
             return dat;
         }
@@ -100,10 +103,16 @@ namespace butterflowersOS.Objects.Managers
         
             foreach (VineData v in data.vines) 
             {
-                var vine = DropVine(transform.position, vineRoot.up);
-                vine.Initialize(this, cage, v);
-                
-                vines.Add(vine);
+                string file = null;
+                bool success = Library.Instance.FetchFile(v.file, out file);
+
+                if (success) 
+                {
+                    var vine = DropVine(transform.position, vineRoot.up);
+                    vine.Initialize(this, cage, file, v);
+
+                    vines.Add(vine);
+                }
             }
 
             _Save = GameDataSaveSystem.Instance;

@@ -8,30 +8,29 @@ namespace butterflowersOS.Data
     [System.Serializable]
     public class VineData
     {
-        public int status;
+        public sbyte status;
 
-        public int index = 0;
-        public float interval = 0f;
-        public float height = 0f;
+        public byte index = 0;
+        public byte interval = 0;
 
-        public string file = "";
+        public ushort file = 0;
 
-        public float[] waypoints_x;
-        public float[] waypoints_y;
-        public float[] waypoints_z;
+        public short[] waypoints_x;
+        public short[] waypoints_y;
+        public short[] waypoints_z;
 
         public LeafBundleData leaves;
 
-        public VineData(Vine.Status status, int index, float interval, float height, Vector3[] waypoints, string file, Leaf[] leaves)
+        public VineData(Vine.Status status, byte index, byte interval, Vector3[] waypoints, ushort file, Leaf[] leaves)
         {
-            this.status = (int)status;
+            this.status = (sbyte)status;
             this.index = index;
+            
             this.interval = interval;
-            this.height = height;
 
-            waypoints_x = waypoints.Select(w => w.x).ToArray();
-            waypoints_y = waypoints.Select(w => w.y).ToArray();
-            waypoints_z = waypoints.Select(w => w.z).ToArray();
+            waypoints_x = waypoints.Select(w => (short)Mathf.RoundToInt(w.x / Constants.VineWaypointSnapDistance)).ToArray();
+            waypoints_y = waypoints.Select(w => (short)Mathf.RoundToInt(w.y / Constants.VineWaypointSnapDistance)).ToArray();
+            waypoints_z = waypoints.Select(w => (short)Mathf.RoundToInt(w.z / Constants.VineWaypointSnapDistance)).ToArray();
 
             this.file = file;
 
