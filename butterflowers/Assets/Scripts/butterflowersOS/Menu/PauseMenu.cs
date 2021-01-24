@@ -1,7 +1,9 @@
 ﻿using System;
+using System.Collections;
 using butterflowersOS.Core;
 using UnityEngine;
 using uwu.Snippets.Load;
+using uwu.Timeline.Core;
 using uwu.UI.Behaviors.Visibility;
 
 namespace butterflowersOS.Menu
@@ -11,11 +13,16 @@ namespace butterflowersOS.Menu
 		// External
 
 		World World;
+
+		[SerializeField] Cutscenes cutscenes;
 		
 		// Properties
 
 		ToggleOpacity opacity;
 
+		bool disposeInProgress = false;
+		public bool Dispose => disposeInProgress;
+		
 		
 		void Awake()
 		{
@@ -24,12 +31,14 @@ namespace butterflowersOS.Menu
 
 		protected override void Start()
 		{
+			disposeInProgress = false;
+			
 			Close();
 		}
 
 		void Update()
 		{
-			if (Input.GetKeyUp(KeyCode.Escape)) 
+			if (Input.GetKeyUp(KeyCode.Escape) && World.LOAD && !disposeInProgress) 
 				Toggle();
 		}
 
@@ -51,16 +60,38 @@ namespace butterflowersOS.Menu
 
 		public void ReturnToMainMenu()
 		{
+			StartCoroutine("ReturningToMainMenu");
+			disposeInProgress = true;
+		}
+// Pebble63
+		IEnumerator ReturningToMainMenu()
+		{
+			opacity.Hide();
+			while (opacity.Visible) 
+				yield return null;
+			
 			SceneLoader.Instance.GoToScene(0);
 		}
 
 		public void Escape()
 		{
+			StartCoroutine("Exiting");
+			disposeInProgress = true;
+		}
+		
+		IEnumerator Exiting()
+		{
+			opacity.Hide();
+			while (opacity.Visible) 
+				yield return null;
+		
 			Application.Quit();
 		}
 
 		public void Cancel()
 		{
+			if (disposeInProgress) return;
+			
 			Close();
 		}
 		

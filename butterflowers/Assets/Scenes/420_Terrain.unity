@@ -3648,7 +3648,7 @@ Transform:
   m_PrefabInstance: {fileID: 0}
   m_PrefabAsset: {fileID: 0}
   m_GameObject: {fileID: 201810246}
-  m_LocalRotation: {x: 0.12156505, y: -0.000000013581906, z: 0.0000000016392674, w: 0.9925835}
+  m_LocalRotation: {x: 0.12156507, y: -0.0000000050892752, z: 6.304753e-10, w: 0.9925835}
   m_LocalPosition: {x: 0, y: 9.595102, z: -21.852465}
   m_LocalScale: {x: 1, y: 1.3577, z: 1}
   m_Children:
@@ -4085,7 +4085,7 @@ PlayableDirector:
   m_PlayableAsset: {fileID: 0}
   m_InitialState: 0
   m_WrapMode: 2
-  m_DirectorUpdateMode: 2
+  m_DirectorUpdateMode: 1
   m_InitialTime: 0
   m_SceneBindings:
   - key: {fileID: 114266396737268302, guid: a260de5ea6b73d44f90fb70402bf599f, type: 2}
@@ -9791,6 +9791,7 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: 
   Preset: {fileID: 11400000, guid: 45ffdf5e02efb4848942aaeb5d029f6e, type: 2}
+  Cutscenes: {fileID: 214334918}
   dayTracker: {fileID: 722124471}
   previousDayText: {fileID: 1207636789}
   currentDayText: {fileID: 1493702405}
@@ -25534,6 +25535,7 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: 
   visible: 0
+  cutscenes: {fileID: 0}
 --- !u!225 &1308009145
 CanvasGroup:
   m_ObjectHideFlags: 0

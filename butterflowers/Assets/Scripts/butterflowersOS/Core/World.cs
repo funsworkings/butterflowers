@@ -410,7 +410,7 @@ namespace butterflowersOS.Core
 
         void UpdateTimeScale()
         {
-            if (pauseMenu.IsVisible) TimeScale = 0f;
+            if (pauseMenu.IsVisible || pauseMenu.Dispose) TimeScale = 0f;
             else TimeScale = 1f;
         }
         
