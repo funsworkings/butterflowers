@@ -38,7 +38,7 @@ RenderSettings:
   m_ReflectionIntensity: 1
   m_CustomReflection: {fileID: 0}
   m_Sun: {fileID: 0}
-  m_IndirectSpecularColor: {r: 0.18028352, g: 0.22571376, b: 0.30692244, a: 1}
+  m_IndirectSpecularColor: {r: 0.18028378, g: 0.22571412, b: 0.30692285, a: 1}
   m_UseRadianceAmbientProbe: 0
 --- !u!157 &3
 LightmapSettings:
@@ -11453,7 +11453,17 @@ PrefabInstance:
     - target: {fileID: 5982207057915407768, guid: 10c96349fbb51ed4289e4f4067ced506,
         type: 3}
       propertyPath: m_text
-      value: '- continue -'
+      value: continue
+      objectReference: {fileID: 0}
+    - target: {fileID: 5982207057915407768, guid: 10c96349fbb51ed4289e4f4067ced506,
+        type: 3}
+      propertyPath: m_fontSize
+      value: 17.5
+      objectReference: {fileID: 0}
+    - target: {fileID: 5982207057915407768, guid: 10c96349fbb51ed4289e4f4067ced506,
+        type: 3}
+      propertyPath: m_textAlignment
+      value: 258
       objectReference: {fileID: 0}
     - target: {fileID: 5982207057915407768, guid: 10c96349fbb51ed4289e4f4067ced506,
         type: 3}
@@ -11468,17 +11478,17 @@ PrefabInstance:
     - target: {fileID: 5982207057915407768, guid: 10c96349fbb51ed4289e4f4067ced506,
         type: 3}
       propertyPath: m_textInfo.wordCount
-      value: 3
+      value: 1
       objectReference: {fileID: 0}
     - target: {fileID: 5982207057915407768, guid: 10c96349fbb51ed4289e4f4067ced506,
         type: 3}
       propertyPath: m_textInfo.spaceCount
-      value: 2
+      value: 0
       objectReference: {fileID: 0}
     - target: {fileID: 5982207057915407768, guid: 10c96349fbb51ed4289e4f4067ced506,
         type: 3}
       propertyPath: m_textInfo.characterCount
-      value: 12
+      value: 8
       objectReference: {fileID: 0}
     - target: {fileID: 5982207058529763757, guid: 10c96349fbb51ed4289e4f4067ced506,
         type: 3}
@@ -15272,6 +15282,36 @@ PrefabInstance:
   m_Modification:
     m_TransformParent: {fileID: 1304707139}
     m_Modifications:
+    - target: {fileID: 5982207057915407768, guid: 10c96349fbb51ed4289e4f4067ced506,
+        type: 3}
+      propertyPath: m_text
+      value: new
+      objectReference: {fileID: 0}
+    - target: {fileID: 5982207057915407768, guid: 10c96349fbb51ed4289e4f4067ced506,
+        type: 3}
+      propertyPath: m_fontSize
+      value: 17.5
+      objectReference: {fileID: 0}
+    - target: {fileID: 5982207057915407768, guid: 10c96349fbb51ed4289e4f4067ced506,
+        type: 3}
+      propertyPath: m_textAlignment
+      value: 258
+      objectReference: {fileID: 0}
+    - target: {fileID: 5982207057915407768, guid: 10c96349fbb51ed4289e4f4067ced506,
+        type: 3}
+      propertyPath: m_textInfo.wordCount
+      value: 1
+      objectReference: {fileID: 0}
+    - target: {fileID: 5982207057915407768, guid: 10c96349fbb51ed4289e4f4067ced506,
+        type: 3}
+      propertyPath: m_textInfo.spaceCount
+      value: 0
+      objectReference: {fileID: 0}
+    - target: {fileID: 5982207057915407768, guid: 10c96349fbb51ed4289e4f4067ced506,
+        type: 3}
+      propertyPath: m_textInfo.characterCount
+      value: 3
+      objectReference: {fileID: 0}
     - target: {fileID: 5982207058529763757, guid: 10c96349fbb51ed4289e4f4067ced506,
         type: 3}
       propertyPath: m_Name
