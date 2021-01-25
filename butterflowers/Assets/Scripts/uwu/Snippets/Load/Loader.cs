@@ -91,12 +91,16 @@ namespace uwu.Snippets.Load
 						progress += _progress / dependents;
 					}
 				}
-				else progress = 1f;
+				else 
+					progress = 1f;
+				
+				Debug.Log("progress= " + progress);
 
 				loadTime += Time.unscaledDeltaTime;
 				progress = Mathf.Min(loadTime / minimumLoadTime, progress);
 
-				UpdateFill(progress.RemapNRB(0f, 1f, min, max));
+				UpdateFill(Mathf.Pow(progress, 4f));
+				
 				if (onProgress != null)
 					onProgress(progress);
 
