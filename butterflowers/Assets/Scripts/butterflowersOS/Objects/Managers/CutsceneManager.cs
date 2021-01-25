@@ -44,6 +44,7 @@ namespace butterflowersOS.Objects.Managers
 		[Header("Sequences")]
 			[SerializeField] Scene currentScene;
 			[SerializeField] float sequenceMeshScaleDuration = 1f;
+			[SerializeField] float sequenceMeshScaleTime = 1f;
 			[SerializeField] AnimationCurve sequenceMeshScaleCurve;
 			[SerializeField] PlayableAsset sequenceCutscene;
 			[SerializeField] Nest Nest;
@@ -167,7 +168,7 @@ namespace butterflowersOS.Objects.Managers
 			List<float> timestamps = new List<float>();
 			foreach (SceneMesh mesh in meshes) 
 			{
-				float __t = Random.Range(0f, sequenceMeshScaleDuration);
+				float __t = Random.Range(0f, sequenceMeshScaleDuration - sequenceMeshScaleTime);
 				timestamps.Add(__t);
 			}
 			
@@ -188,7 +189,7 @@ namespace butterflowersOS.Objects.Managers
 					{
 						_duration = (sequenceMeshScaleDuration - _t);
 
-						var si = Mathf.Clamp01((t - _t) / _duration);
+						var si = Mathf.Clamp01((t - _t) / sequenceMeshScaleTime);
 						var sc = sequenceMeshScaleCurve.Evaluate(si);
 
 						Vector3 a = mesh.hidden;
