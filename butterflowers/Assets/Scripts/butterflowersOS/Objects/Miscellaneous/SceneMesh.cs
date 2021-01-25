@@ -1,14 +1,16 @@
-﻿using UnityEngine;
+﻿using butterflowersOS.Interfaces;
+using UnityEngine;
+using uwu.Gameplay;
 
 namespace butterflowersOS.Objects.Miscellaneous
 {
 	[RequireComponent(typeof(Renderer))]
-	public class SceneMesh : MonoBehaviour
+	public class SceneMesh : MonoBehaviour, IInteractable, ITooltip
 	{
 		// Properties
 
 		new Renderer _renderer;
-		
+
 		[SerializeField] Vector3 _hiddenScale, _shownScale;
 		
 		
@@ -41,5 +43,39 @@ namespace butterflowersOS.Objects.Miscellaneous
 		public void Hide(){ transform.localScale = hidden; }
 		
 		#endregion
+		
+		#region Interactable
+
+		public void Hover(RaycastHit hit)
+		{
+			
+		}
+
+		public void Unhover()
+		{
+			
+		}
+
+		public void Grab(RaycastHit hit)
+		{
+			
+		}
+
+		public void Continue(RaycastHit hit)
+		{
+			
+		}
+
+		public void Release(RaycastHit hit)
+		{
+			
+		}
+		
+		#endregion
+
+		public string GetInfo()
+		{
+			return gameObject.name;
+		}
 	}
 }

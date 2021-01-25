@@ -1,5 +1,6 @@
 ﻿using System.Collections.Generic;
 using System.Linq;
+using UnityEngine;
 
 namespace butterflowersOS.Data
 {
@@ -9,19 +10,28 @@ namespace butterflowersOS.Data
 	[System.Serializable]
 	public class SurveillanceLogData
 	{
-		/// <summary>
-		/// Time of day in relative units
-		/// </summary>
-		public float timestamp = 0f;
+		public sbyte agentInFocus = -1;
 		
-		public AGENT agentInFocus = AGENT.NULL;
-		public float nestFill = 0f;
-		public float butterflyHealth = 0f;
-		public float cursorSpeed = 0f;
+		public byte nestFill = 0;
+		public byte butterflyHealth = 0;
 
-		public List<EVENTCODE> events = new List<EVENTCODE>();
+		public sbyte cursorX = 0;
+		public sbyte cursorY = 0;
+		
+		public Vector2 cursorVelociy => new Vector2(cursorX, cursorY) * Constants.BaseCursorVelocityVector;
+		public float cursorSpeed => cursorVelociy.magnitude;
 
-		public void AppendEvents(EVENTCODE[] events){ this.events.AddRange(events); }
-		public IEnumerable<EVENTCODE> SortEventsByType(EVENTCODE @eventcode){ return events.Where(e => e == @eventcode); }
+		public List<sbyte> events = new List<sbyte>();
+
+		public void AppendEvents(EVENTCODE[] events)
+		{
+			this.events.AddRange(events.Select(e => e.ToByte()));
+		}
+		
+		public IEnumerable<EVENTCODE> SortEventsByType(EVENTCODE @eventcode)
+		{
+			var _events = events.Where(e => e == @eventcode.ToByte());
+			return _events.Select(_e => EventCodeExtensions.FromByte(_e));
+		}
 	}
 }
