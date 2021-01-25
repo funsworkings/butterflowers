@@ -23,7 +23,7 @@ namespace butterflowersOS.Core
 		public static Surveillance Instance = null;
 	
 		// Events
-
+		
 		public System.Action onCaptureLog;
 	
 		// External
@@ -60,8 +60,8 @@ namespace butterflowersOS.Core
 		#region Accessors
 
 		int cacheSunDays = -1;
-		
-		int activeLogIndex => cacheSunDays;
+
+		public int activeLogIndex => cacheSunDays;
 
 		public SurveillanceData activeLog
 		{
@@ -93,6 +93,12 @@ namespace butterflowersOS.Core
 		}
 
 		public SurveillanceData[] allLogs => logs.ToArray();
+
+		public SurveillanceData FetchLog(int index)
+		{
+			if (logs.Count > index+1) return null;
+			return logs[index];
+		}
 
 		#endregion
 	
