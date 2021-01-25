@@ -227,7 +227,7 @@ namespace butterflowersOS.Core
             
             yield return new WaitForEndOfFrame();
             
-            Loader.Load(.33f, 1f);
+            Loader.Load();
             while (Loader.IsLoading) yield return null;
 
 
