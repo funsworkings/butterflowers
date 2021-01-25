@@ -366,25 +366,30 @@ namespace butterflowersOS.Objects.Managers
 			{
 				var beacon = data[i];
 
-				string p = beacon.path;
-				Vector3 loc = new Vector3(beacon.x, beacon.y, beacon.z);
-				Type t = (Type)beacon.type;
-				Locale s = (Locale)beacon.state;
-            
-				Debug.LogFormat("Success restore beacon!  file= {0}  locale={1}", p, s);
+				string path = "";
+				bool success = Library.Instance.FetchFile(beacon.path, out path);
 
-				var @params = new Hashtable() 
+				if (success) 
 				{
-					{ "position" , loc },
-					{ "origin" , loc }
-				};
+					string p = path;
+					Vector3 loc = new Vector3(beacon.x, beacon.y, beacon.z) * Constants.BeaconSnapDistance;
+					Type t = (Type) beacon.type;
+					Locale s = (Locale) beacon.state;
 
-				var instance = CreateBeacon(p, t, s, @params, fromSave:true);
-				if (instance == null)
-					continue; // Bypass null beacon
+					Debug.LogFormat("Success restore beacon!  file= {0}  locale={1}", p, s);
 
-				if (s == Locale.Nest)
-					onActivatedBeacon(instance); // Send to nest if immediately found
+					var @params = new Hashtable() {
+						{"position", loc},
+						{"origin", loc}
+					};
+
+					var instance = CreateBeacon(p, t, s, @params, fromSave: true);
+					if (instance == null)
+						continue; // Bypass null beacon
+
+					if (s == Locale.Nest)
+						onActivatedBeacon(instance); // Send to nest if immediately found
+				}
 			}
 
 			if (deprecate) 
@@ -594,7 +599,8 @@ namespace butterflowersOS.Objects.Managers
 			for (var i = 0; i < allBeacons.Count; i++) 
 			{
 				var beacon = allBeacons[i];
-				var parsed = new BeaconData(beacon.File, beacon.Origin, beacon.type, beacon.state);
+				var index = Library.Instance.FetchFileIndex(beacon.File);
+				var parsed = new BeaconData((ushort)index, beacon.Origin, beacon.type, beacon.state);
 
 				dat.Add(parsed);
 			}

@@ -53,9 +53,9 @@ namespace butterflowersOS.UI
 
 		#region Accessors
 		
-		Transform scoreItem => transform.GetChild(2);
-		Transform averageItem => transform.GetChild(3);
-		Transform descriptionItem => transform.GetChild(4);
+		Transform scoreItem => transform.GetChild(3);
+		Transform averageItem => transform.GetChild(4);
+		Transform descriptionItem => transform.GetChild(1);
 
 		public bool focus
 		{
@@ -128,7 +128,7 @@ namespace butterflowersOS.UI
 
 		void UpdateScores(int average, int current)
 		{
-			averageField.text = average + "  [ avg ]";
+			if(averageField != null) averageField.text = average + ",  avg";
 			scoreField.text = current + "  " + unitMeasurement;
 		}
 
@@ -140,12 +140,12 @@ namespace butterflowersOS.UI
 			if (direction > 0) 
 			{
 				deltaField.transform.localScale = Vector3.one;
-				deltaField.color = Color.green;
+				//deltaField.color = Color.green;
 			}
 			else if (direction < 0) 
 			{
 				deltaField.transform.localScale = new Vector3(1f, -1f, 1f);
-				deltaField.color = Color.red;
+				//deltaField.color = Color.red;
 			}
 		}
 		

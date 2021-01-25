@@ -2,6 +2,7 @@
 using System.Collections;
 using System.Collections.Generic;
 using System.IO;
+using System.Linq;
 using System.Text.RegularExpressions;
 using butterflowersOS.Data;
 using butterflowersOS.Interfaces;
@@ -79,6 +80,7 @@ namespace butterflowersOS.Core
         [SerializeField] SequenceManager Sequence = null;
         [SerializeField] CutsceneManager Cutscenes = null;
         [SerializeField] NotificationCenter NotificationCenter = null;
+        [SerializeField] TutorialManager Tutorial = null;
 
         [Header("Objects")]
         Sun Sun = null;
@@ -103,6 +105,10 @@ namespace butterflowersOS.Core
 
         [SerializeField] bool wait = false;
         [SerializeField] bool dispose = false;
+
+
+        byte[] IMAGES = new byte[] { };
+        
 
         private float m_TimeScale = 1f;
         public float TimeScale
@@ -170,12 +176,9 @@ namespace butterflowersOS.Core
             /* * * * * * * * * * * * * * * * */
 
             username = _Save.username;
-            type = (_Save.data.profileGenerated && _Save.IsProfileValid()) ? AdvanceType.Continuous : AdvanceType.Broken; // Adjust type from loaded profile!
+            type = (_Save.IsProfileValid()) ? AdvanceType.Continuous : AdvanceType.Broken; // Adjust type from loaded profile!
             
-            if(type == AdvanceType.Continuous)
-                profile = _Save.data.brain.profile;
-            else
-                profile = _Save.data.profile;
+            profile = _Save.data.profile;
 
             /* * * * * * * * * * * * * * * * */
 
@@ -227,10 +230,23 @@ namespace butterflowersOS.Core
             Loader.Load(.33f, 1f);
             while (Loader.IsLoading) yield return null;
 
+
+            bool requireTutorial = !_Save.data.tutorial;
+            if (requireTutorial && Tutorial.IsValid) {
+                
+                Tutorial.Begin();
+                while (Tutorial.inprogress || Tutorial.dispose) yield return null;
+                
+                _Save.data.tutorial = true;
+                _Save.SaveGameData(); // Save immediately when tutorial completed!
+                
+            }
+
+
             EventsM.Load(null);
             Cutscenes.Load(_Save.data.cutscenes);
             Sequence.Load(_Save.data.sequence);
-            Nest.Load(_Save.data.nestopen);
+            Nest.Load(false);
             Beacons.Load((Preset.persistBeacons) ? _Save.data.beacons : null);
             Vines.Load((Preset.persistVines) ? _Save.data.vines : null);
             Sun.Load(_Save.data.sun);
@@ -261,7 +277,7 @@ namespace butterflowersOS.Core
         
         IEnumerator Advance()
         {
-            AdvanceType _type = (_Save.data.profileGenerated && _Save.IsProfileValid()) ? AdvanceType.Continuous : AdvanceType.Broken; // Adjust type from loaded profile!
+            AdvanceType _type = (_Save.IsProfileValid()) ? AdvanceType.Continuous : AdvanceType.Broken; // Adjust type from loaded profile!
             
             if (_type == AdvanceType.Broken)  // Deactivate sun
             {
@@ -272,26 +288,24 @@ namespace butterflowersOS.Core
             Surveillance.Stop();
             Surveillance.Dispose();
             while (Surveillance.recording) yield return null;
+                _Save.data.surveillanceData = (SurveillanceData[])Surveillance.Save(); // Continue saving surveillance data if profile has not been generated
             
             while(Cutscenes.inprogress) yield return null; // Wait for all cutscenes to dispose before continuing
 
             SaveLibraryItems();
             _Save.data.sun = (SunData) Sun.Save();
             _Save.data.sequence = (SequenceData) Sequence.Save();
-            _Save.data.nestopen = (bool) Nest.Save();
             _Save.data.beacons = (BeaconSceneData) Beacons.Save();
             _Save.data.vines = (VineSceneData) Vines.Save();
 
             if (_type == AdvanceType.Broken) 
             {
                 profile = Surveillance.ConstructBehaviourProfile(); // Generate profile cached
-                
                 _Save.data.profile = profile; // Assign generated profile
-                _Save.data.surveillanceData = (SurveillanceData[])Surveillance.Save(); // Continue saving surveillance data if profile has not been generated
             }
             else 
             {
-                profile = _Save.data.brain.profile; // Load existing profile
+                profile = _Save.data.profile; // Load existing profile
             }
 
             _Save.SaveGameData(); // Save all game data
@@ -331,14 +345,22 @@ namespace butterflowersOS.Core
             
             if (!didLoadSequence) 
             {
-                if (sequenceReason == SequenceManager.TriggerReason.SequenceHasCompleted && !Cutscenes.outro) // Has passed all sequence frames, begin export!
+                if (sequenceReason == SequenceManager.TriggerReason.SequenceHasCompleted && !_Save.data.export) // Has passed all sequence frames, begin export!
                 {
                     int _rows, _columns;
                     Texture2D tex;
                     
-                    byte[] images = Library.ExportSheet("test", out _rows, out _columns, out tex, oColumns:1);
-                    
-                    Cutscenes.TriggerOutro(_rows, _columns, tex);
+                    IMAGES = Library.ExportSheet("test", out _rows, out _columns, out tex, oColumns:1);
+
+                    if (!Cutscenes.outro) 
+                    {
+                        Cutscenes.TriggerOutro(_rows, _columns, tex);
+                    }
+                    else 
+                    {
+                        ExportNeueAgent();
+                    }
+
                     yield return new WaitForEndOfFrame();
                 }
             }
@@ -410,7 +432,7 @@ namespace butterflowersOS.Core
 
         void UpdateTimeScale()
         {
-            if (pauseMenu.IsVisible) TimeScale = 0f;
+            if (pauseMenu.IsVisible || pauseMenu.Dispose) TimeScale = 0f;
             else TimeScale = 1f;
         }
         
@@ -445,11 +467,14 @@ namespace butterflowersOS.Core
         
         #region Neueagent
 
-        [ContextMenu("Generate neue agent")]
         public void ExportNeueAgent()
         {
+            ExportNeueAgent(IMAGES);
+        }
+        
+        public void ExportNeueAgent(byte[] images)
+        {
             string path = GetExportPath();
-            byte[] images = Library.ExportSheet("test", out int r, out int c, out Texture2D tex);
             
             BrainData data = new BrainData(_Save.data, images);
             
@@ -458,66 +483,84 @@ namespace butterflowersOS.Core
             
             if (success) 
             {
-                _Save.data.brain = data;
-                _Save.data.profileGenerated = _Save.IsProfileValid();
-                _Save.data.profile = profile = data.profile;
+                _Save.data.export = true;
+                _Save.data.export_agent_created_at = data.created_at;
                 
                 NotificationCenter.TriggerExportNotif(path);
             }
             else 
             {
-                _Save.data.brain = default(BrainData);
-                _Save.data.profileGenerated = false;
-                _Save.data.profile = profile = Surveillance.ConstructBehaviourProfile();
+                _Save.data.export = false;
+                _Save.data.export_agent_created_at = "";
             }
-
-            type = (_Save.data.profileGenerated) ? AdvanceType.Continuous : AdvanceType.Broken; // Adjust type from generated profile
-            _Save.SaveGameData(); // Save all data
         }
 
         public void ImportNeueAgent(BrainData brainData)
         {
             if (Pause) return; // Ignore request to import if paused
+
+            string @self = _Save.data.export_agent_created_at;
+            string @agent = _Save.data.agent_created_at;
+            string @other = brainData.created_at;
+            
+            if (@agent == @other) return; // Ignore request to import duplicate neueagent
         
-            _Save.data.brain = brainData;
-            _Save.data.profileGenerated = true;
-            _Save.data.profile = profile = brainData.profile;
-            
-            type = AdvanceType.Continuous;
-            
-            //AggregateBrainFiles(brainData);
+            bool success = AggregateBrainData(brainData);
+            type = (success && _Save.IsProfileValid()) ? AdvanceType.Continuous : AdvanceType.Broken;
             
             Debug.LogWarning("Successfully imported brain profile for user => " + brainData.username);
-            
-            _Save.SaveGameData();
         }
 
-        [ContextMenu("Wipe neue agent")]
+        bool AggregateBrainData(BrainData brainData)
+        {
+            bool success = false;
+            
+            var lib_payload = new LibraryPayload();
+                lib_payload.directories = brainData.directories;
+                lib_payload.files = brainData.files;
+                lib_payload.userFiles = brainData.user_files.Select(uf => (int)uf).ToArray();
+                lib_payload.sharedFiles = brainData.shared_files.Select(sf => (int)sf).ToArray();
+                lib_payload.worldFiles = brainData.world_files.Select(wf => (int)wf).ToArray();
+
+            if (Library.AggregateNeueAgentData(lib_payload)) 
+            {
+                success = Surveillance.AggregateNeueAgentData(brainData.surveillanceData);
+            }
+
+            if (success) 
+            {
+                _Save.data.agent_created_at = brainData.created_at;
+                _Save.data.username = brainData.username;
+                _Save.data.profile = profile = brainData.profile;
+
+                _Save.data.agent_event_stack = brainData.surveillanceData.Length; // Total stack of events to parse from
+            }
+
+            return success;
+        }
+
+        [ContextMenu("Wipe neueagent")]
         public void WipeNeueAgent()
         {
             if (Pause) return; // Ignore request to wipe if paused
+            if (!_Save.IsProfileValid()) return;
         
-            string username = (_Save.data.brain.username);
+            string username = (_Save.data.username);
             
-            _Save.data.brain = null;
-            _Save.data.profileGenerated = false;
+            _Save.data.agent_created_at = "";
+            _Save.data.username = PlayerPrefs.GetString("_Username"); // Get previous username
             _Save.data.profile = profile = Surveillance.ConstructBehaviourProfile();
             
             type = AdvanceType.Broken;
-
             Debug.LogWarning("Successfully wiped brain profile for user => " + (string.IsNullOrEmpty(username)? "NULL":username));
-
-            _Save.SaveGameData();
         }
 
-        
-        
+
         string GetExportPath()
         {
             var desktop = Environment.GetFolderPath(Environment.SpecialFolder.Desktop);
             desktop = Application.persistentDataPath; // Use local data path
-
-
+            
             var username = _Save.data.username;
             
             Regex reg = new Regex("[*'\",_&#^@]");
@@ -583,29 +626,14 @@ namespace butterflowersOS.Core
             return -1;
         }
 
-        void AggregateBrainFiles(BrainData data)
-        {
-            if (data.IsProfileValid()) 
-            {
-                var lib_payload = new LibraryPayload();
-                lib_payload.directories = data.directories;
-                lib_payload.files = data.files;
-                lib_payload.userFiles = data.user_files;
-                lib_payload.sharedFiles = data.shared_files;
-                lib_payload.worldFiles = data.world_files;
-                
-                Library.Aggregate(lib_payload);
-            }
-        }
-
         void LoadLibraryItems(Dictionary<string, Texture2D[]> texturePacks)
         {
             var lib_payload = new LibraryPayload();
             lib_payload.directories = _Save.data.directories;
             lib_payload.files = _Save.data.files;
-            lib_payload.userFiles = _Save.data.user_files;
-            lib_payload.sharedFiles = _Save.data.shared_files;
-            lib_payload.worldFiles = _Save.data.world_files;
+            //lib_payload.userFiles = _Save.data.user_files;
+            //lib_payload.sharedFiles = _Save.data.shared_files;
+            //lib_payload.worldFiles = _Save.data.world_files;
             
             Library.Load(lib_payload, Preset.defaultNullTexture, texturePacks, Preset.loadTexturesInEditor, Preset.backlogTextures);
         }
@@ -615,9 +643,9 @@ namespace butterflowersOS.Core
             var payload = (LibraryPayload) Library.Save();
                 _Save.data.directories = payload.directories;
                 _Save.data.files = payload.files;
-                _Save.data.user_files = payload.userFiles;
-                _Save.data.shared_files = payload.sharedFiles;
-                _Save.data.world_files = payload.worldFiles;
+                _Save.data.user_files = payload.userFiles.Select(uf => (ushort)uf).ToArray();
+                _Save.data.shared_files = payload.sharedFiles.Select(sf => (ushort)sf).ToArray();;
+                _Save.data.world_files = payload.worldFiles.Select(wf => (ushort)wf).ToArray();;
         }
 
         public void Load(object data)

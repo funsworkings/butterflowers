@@ -7,24 +7,24 @@ namespace butterflowersOS.Data
     [System.Serializable]
     public class BeaconData 
     {
-        public int type = 0;
-        public int state = -1;
+        public sbyte type = 0;
+        public sbyte state = -1;
 
-        public string path = "";
+        public ushort path = 0;
 
-        public float x;
-        public float y;
-        public float z;
+        public short x;
+        public short y;
+        public short z;
 
-        public BeaconData(string path, Vector3 origin, Type type, Locale state)
+        public BeaconData(ushort path, Vector3 origin, Type type, Locale state)
         {
             this.path = path;
-            this.type = (int)type;
-            this.state = (int)state;
+            this.type = (sbyte)type;
+            this.state = (sbyte)state;
 
-            this.x = origin.x;
-            this.y = origin.y;
-            this.z = origin.z;
+            this.x = (short)Mathf.RoundToInt(origin.x / Constants.BeaconSnapDistance);
+            this.y = (short)Mathf.RoundToInt(origin.y / Constants.BeaconSnapDistance);
+            this.z = (short)Mathf.RoundToInt(origin.z / Constants.BeaconSnapDistance);
         }
     }
 }

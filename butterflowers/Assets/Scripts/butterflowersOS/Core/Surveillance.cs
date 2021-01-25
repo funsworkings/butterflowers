@@ -59,15 +59,30 @@ namespace butterflowersOS.Core
 
 		#region Accessors
 
-		public SurveillanceData activeLog => (logs.Count > 0) ? logs.Last() : null;
+		int cacheSunDays = -1;
+		
+		int activeLogIndex => cacheSunDays;
 
-		public SurveillanceData[] previousLogs
+		public SurveillanceData activeLog
 		{
 			get
 			{
-				if (logs.Count > 1) 
+				if(logs.Count > activeLogIndex) 
 				{
-					var cache = new SurveillanceData[logs.Count - 1];
+					return logs[activeLogIndex];
+				}
+
+				return null;
+			}
+		}
+
+		SurveillanceData[] previousLogs
+		{
+			get
+			{
+				if (activeLogIndex > 0) 
+				{
+					var cache = new SurveillanceData[activeLogIndex];
 					Array.Copy(logs.ToArray(), cache, cache.Length);
 
 					return cache;
@@ -100,14 +115,8 @@ namespace butterflowersOS.Core
 
 		public void New(bool onload = false)
 		{
-			if (onload) 
-			{
-				EnsureLog();
-			}
-			else 
-			{
-				CreateLog();
-			}
+			cacheSunDays = Sun.days;
+			EnsureLog();
 
 			StartCoroutine("Capturing");
 			recording = true;
@@ -136,8 +145,8 @@ namespace butterflowersOS.Core
 			if (recording) 
 			{
 				var log = CaptureFrameLog();
+				
 				activeLog.logs = activeLog.logs.Append(log).ToArray();
-
 				recording = false;
 			}
 		}
@@ -192,7 +201,7 @@ namespace butterflowersOS.Core
 		public void CreateLog()
 		{
 			var log = new SurveillanceData();
-				log.timestamp = Sun.days;
+				log.timestamp = (ushort)cacheSunDays;
 				log.logs = new SurveillanceLogData[]{}; // Wipe daily logs
 
 			logs.Add(log); // Append new log to 
@@ -200,21 +209,8 @@ namespace butterflowersOS.Core
 
 		void EnsureLog()
 		{
-			bool flagCreate = false;
-		
-			var timestamp = Sun.days;
-		
-			SurveillanceData lastLog = (logs != null && logs.Count > 0)? logs.Last():null;
-			if (lastLog != null) 
-			{
-				var lastTimestamp = lastLog.timestamp;
-				if (lastTimestamp != timestamp)
-					flagCreate = true;
-			}
-			else
-				flagCreate = true;
-		
-			if(flagCreate) CreateLog();
+			if(activeLog == null)
+				CreateLog();
 		}
 		
 		#endregion
@@ -247,17 +243,22 @@ namespace butterflowersOS.Core
 		SurveillanceLogData CaptureFrameLog()
 		{
 			var log = new SurveillanceLogData();
-			log.timestamp = Sun.time;
 
-			log.butterflyHealth = ButterflyManager.GetHealth();
-			log.cursorSpeed = Wand.speed2d;
-			log.nestFill = Nest.fill;
+			log.butterflyHealth = (byte)( ButterflyManager.GetHealth() * 255f);
+
+			var cursorX = Wand.velocity2d.x;
+			var cursorY = Wand.velocity2d.y;
+
+			log.cursorX = (sbyte) (cursorX / Constants.BaseCursorVelocityVector);
+			log.cursorY = (sbyte) (cursorY / Constants.BaseCursorVelocityVector);
+				
+			log.nestFill = (byte)(Nest.fill * 255f);
 
 			var focus = Focus.focus;
 			if (focus != null)
-				log.agentInFocus = focus.Agent;
+				log.agentInFocus = focus.Agent.ToByte();
 			else
-				log.agentInFocus = AGENT.NULL; // No agent currently in focus
+				log.agentInFocus = AGENT.NULL.ToByte(); // No agent currently in focus
 			
 			AttachEventsToLog(ref log);
 			return log;
@@ -333,8 +334,8 @@ namespace butterflowersOS.Core
 			}
 			else 
 			{
-				comp.filesAdded = (int) logs.Select(l => l.filesAdded).Average();
-				comp.filesRemoved = (int) logs.Select(l => l.filesRemoved).Average();
+				comp.filesAdded = (ushort) logs.Select(l => (int)l.filesAdded).Average();
+				comp.filesRemoved = (ushort) logs.Select(l => (int)l.filesRemoved).Average();
 				comp.Discoveries = (int) logs.Select(l => l.discoveries).Average();
 
 				comp.BeaconsAdded = (int) logs.Select(l => l.beaconsAdded).Average();
@@ -444,6 +445,42 @@ namespace butterflowersOS.Core
 		}
 	
 		#endregion
+		
+		#region Neueagent
+
+		public bool AggregateNeueAgentData(SurveillanceData[] data)
+		{
+			SurveillanceData[] _cacheLogs = logs.ToArray();
+			
+			ushort diff = (ushort)(data.Length - logs.Count);
+			if (diff > 0) 
+			{
+				for (int i = 0; i < diff; i++) 
+				{
+					logs.Add(new SurveillanceData());	// Pad current logs with extended
+				}	
+			}
+
+			bool success = true;
+			
+			for (int i = 0; i < data.Length; i++) 
+			{
+				var log = logs[i]; // Grab overlapped log
+				var newLog = data[i];
+				
+				success = log.AggregateSurveillanceData(newLog);
+				if (!success) break;
+			}
+
+			if (!success) 
+			{
+				logs = new List<SurveillanceData>(_cacheLogs); // Reset back to stable logs
+			}
+
+			return success;
+		}
+		
+		#endregion
 	
 		#region Events
 
@@ -467,12 +504,12 @@ namespace butterflowersOS.Core
 
 		void onAddedFiles(string[] files)
 		{
-			activeLog.filesAdded = files.Length;
+			activeLog.filesAdded = (ushort)files.Length;
 		}
 
 		void onRemovedFiles(string[] files)
 		{
-			activeLog.filesRemoved = files.Length;
+			activeLog.filesRemoved = (ushort)files.Length;
 		}
 	
 		#endregion
