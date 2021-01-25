@@ -80,6 +80,7 @@ namespace butterflowersOS.Core
         [SerializeField] SequenceManager Sequence = null;
         [SerializeField] CutsceneManager Cutscenes = null;
         [SerializeField] NotificationCenter NotificationCenter = null;
+        [SerializeField] TutorialManager Tutorial = null;
 
         [Header("Objects")]
         Sun Sun = null;
@@ -228,6 +229,19 @@ namespace butterflowersOS.Core
             
             Loader.Load(.33f, 1f);
             while (Loader.IsLoading) yield return null;
+
+
+            bool requireTutorial = !_Save.data.tutorial;
+            if (requireTutorial && Tutorial.IsValid) {
+                
+                Tutorial.Begin();
+                while (Tutorial.inprogress || Tutorial.dispose) yield return null;
+                
+                _Save.data.tutorial = true;
+                _Save.SaveGameData(); // Save immediately when tutorial completed!
+                
+            }
+
 
             EventsM.Load(null);
             Cutscenes.Load(_Save.data.cutscenes);

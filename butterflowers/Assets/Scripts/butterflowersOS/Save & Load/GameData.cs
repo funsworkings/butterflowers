@@ -19,6 +19,8 @@ namespace uwu
         public bool export = false;
         
         [Header("Miscellaneous")] 
+        
+        public bool tutorial = false;
         public bool[] cutscenes = new bool[] { false, false };
 
         [Header("Neue")] 
