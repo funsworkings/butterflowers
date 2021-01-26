@@ -703,7 +703,7 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: 
   _meshes: []
-  _cutscene: {fileID: 11400000, guid: 30bf8c6c7c5900943bd058b62635ac70, type: 2}
+  _cutscene: {fileID: 11400000, guid: 837ceb5901cdee54fb23b5ce7ab270b8, type: 2}
   _camera: {fileID: 173344878}
 --- !u!1 &58810645
 GameObject:
@@ -4009,7 +4009,7 @@ Transform:
   m_PrefabInstance: {fileID: 0}
   m_PrefabAsset: {fileID: 0}
   m_GameObject: {fileID: 201810246}
-  m_LocalRotation: {x: 0.119760305, y: -0.000000025758366, z: 0.000000003114366, w: 0.99280286}
+  m_LocalRotation: {x: 0.119760334, y: -0.000000016846684, z: 0.000000002039364, w: 0.99280286}
   m_LocalPosition: {x: 0, y: 9.518084, z: -21.87147}
   m_LocalScale: {x: 1, y: 1.3577, z: 1}
   m_Children:
@@ -4515,6 +4515,118 @@ PlayableDirector:
     value: {fileID: 1849142188}
   - key: {fileID: -1734866010943168390, guid: 48a4a8e5791e01b4aa7498d6cfaa0cdf, type: 2}
     value: {fileID: 1399986179}
+  - key: {fileID: 7790934713934847585, guid: a29fbb9277d50f442bb7a7ff15906be9, type: 2}
+    value: {fileID: 619690090}
+  - key: {fileID: 5093019321023502043, guid: a29fbb9277d50f442bb7a7ff15906be9, type: 2}
+    value: {fileID: 594522591}
+  - key: {fileID: -2736218771059355168, guid: a29fbb9277d50f442bb7a7ff15906be9, type: 2}
+    value: {fileID: 361850563}
+  - key: {fileID: -1502078509557316345, guid: a29fbb9277d50f442bb7a7ff15906be9, type: 2}
+    value: {fileID: 1711168811}
+  - key: {fileID: -1514575018840599503, guid: a29fbb9277d50f442bb7a7ff15906be9, type: 2}
+    value: {fileID: 1711168811}
+  - key: {fileID: -6382372190095241622, guid: a29fbb9277d50f442bb7a7ff15906be9, type: 2}
+    value: {fileID: 1711168811}
+  - key: {fileID: 3612206845423783699, guid: a29fbb9277d50f442bb7a7ff15906be9, type: 2}
+    value: {fileID: 840365637}
+  - key: {fileID: 4101078585522969240, guid: a29fbb9277d50f442bb7a7ff15906be9, type: 2}
+    value: {fileID: 1668785723}
+  - key: {fileID: 7790934713934847585, guid: 3df316c45797a364789cc6aa55ebc350, type: 2}
+    value: {fileID: 619690090}
+  - key: {fileID: 5093019321023502043, guid: 3df316c45797a364789cc6aa55ebc350, type: 2}
+    value: {fileID: 594522591}
+  - key: {fileID: -2736218771059355168, guid: 3df316c45797a364789cc6aa55ebc350, type: 2}
+    value: {fileID: 361850563}
+  - key: {fileID: -1502078509557316345, guid: 3df316c45797a364789cc6aa55ebc350, type: 2}
+    value: {fileID: 1711168811}
+  - key: {fileID: -1514575018840599503, guid: 3df316c45797a364789cc6aa55ebc350, type: 2}
+    value: {fileID: 1711168811}
+  - key: {fileID: -6382372190095241622, guid: 3df316c45797a364789cc6aa55ebc350, type: 2}
+    value: {fileID: 1711168811}
+  - key: {fileID: 3612206845423783699, guid: 3df316c45797a364789cc6aa55ebc350, type: 2}
+    value: {fileID: 840365637}
+  - key: {fileID: 4101078585522969240, guid: 3df316c45797a364789cc6aa55ebc350, type: 2}
+    value: {fileID: 1668785723}
+  - key: {fileID: 7790934713934847585, guid: 3ea8af131b019904fb59b53a41340dc7, type: 2}
+    value: {fileID: 619690090}
+  - key: {fileID: 5093019321023502043, guid: 3ea8af131b019904fb59b53a41340dc7, type: 2}
+    value: {fileID: 594522591}
+  - key: {fileID: -2736218771059355168, guid: 3ea8af131b019904fb59b53a41340dc7, type: 2}
+    value: {fileID: 361850563}
+  - key: {fileID: -1502078509557316345, guid: 3ea8af131b019904fb59b53a41340dc7, type: 2}
+    value: {fileID: 1711168811}
+  - key: {fileID: -1514575018840599503, guid: 3ea8af131b019904fb59b53a41340dc7, type: 2}
+    value: {fileID: 1711168811}
+  - key: {fileID: -6382372190095241622, guid: 3ea8af131b019904fb59b53a41340dc7, type: 2}
+    value: {fileID: 1711168811}
+  - key: {fileID: 3612206845423783699, guid: 3ea8af131b019904fb59b53a41340dc7, type: 2}
+    value: {fileID: 840365637}
+  - key: {fileID: 4101078585522969240, guid: 3ea8af131b019904fb59b53a41340dc7, type: 2}
+    value: {fileID: 1668785723}
+  - key: {fileID: 7790934713934847585, guid: 113d5b970ec2a2f46940f4199f610515, type: 2}
+    value: {fileID: 619690090}
+  - key: {fileID: 5093019321023502043, guid: 113d5b970ec2a2f46940f4199f610515, type: 2}
+    value: {fileID: 594522591}
+  - key: {fileID: -2736218771059355168, guid: 113d5b970ec2a2f46940f4199f610515, type: 2}
+    value: {fileID: 361850563}
+  - key: {fileID: -1502078509557316345, guid: 113d5b970ec2a2f46940f4199f610515, type: 2}
+    value: {fileID: 1711168811}
+  - key: {fileID: -1514575018840599503, guid: 113d5b970ec2a2f46940f4199f610515, type: 2}
+    value: {fileID: 1711168811}
+  - key: {fileID: -6382372190095241622, guid: 113d5b970ec2a2f46940f4199f610515, type: 2}
+    value: {fileID: 1711168811}
+  - key: {fileID: 3612206845423783699, guid: 113d5b970ec2a2f46940f4199f610515, type: 2}
+    value: {fileID: 840365637}
+  - key: {fileID: 4101078585522969240, guid: 113d5b970ec2a2f46940f4199f610515, type: 2}
+    value: {fileID: 1668785723}
+  - key: {fileID: 7790934713934847585, guid: 81ec82e5267c8e847a791f183698e725, type: 2}
+    value: {fileID: 619690090}
+  - key: {fileID: 5093019321023502043, guid: 81ec82e5267c8e847a791f183698e725, type: 2}
+    value: {fileID: 594522591}
+  - key: {fileID: -2736218771059355168, guid: 81ec82e5267c8e847a791f183698e725, type: 2}
+    value: {fileID: 361850563}
+  - key: {fileID: -1502078509557316345, guid: 81ec82e5267c8e847a791f183698e725, type: 2}
+    value: {fileID: 1711168811}
+  - key: {fileID: -1514575018840599503, guid: 81ec82e5267c8e847a791f183698e725, type: 2}
+    value: {fileID: 1711168811}
+  - key: {fileID: -6382372190095241622, guid: 81ec82e5267c8e847a791f183698e725, type: 2}
+    value: {fileID: 1711168811}
+  - key: {fileID: 3612206845423783699, guid: 81ec82e5267c8e847a791f183698e725, type: 2}
+    value: {fileID: 840365637}
+  - key: {fileID: 4101078585522969240, guid: 81ec82e5267c8e847a791f183698e725, type: 2}
+    value: {fileID: 1668785723}
+  - key: {fileID: 7790934713934847585, guid: 837ceb5901cdee54fb23b5ce7ab270b8, type: 2}
+    value: {fileID: 619690090}
+  - key: {fileID: 5093019321023502043, guid: 837ceb5901cdee54fb23b5ce7ab270b8, type: 2}
+    value: {fileID: 594522591}
+  - key: {fileID: -2736218771059355168, guid: 837ceb5901cdee54fb23b5ce7ab270b8, type: 2}
+    value: {fileID: 361850563}
+  - key: {fileID: -1502078509557316345, guid: 837ceb5901cdee54fb23b5ce7ab270b8, type: 2}
+    value: {fileID: 1711168811}
+  - key: {fileID: -1514575018840599503, guid: 837ceb5901cdee54fb23b5ce7ab270b8, type: 2}
+    value: {fileID: 1711168811}
+  - key: {fileID: -6382372190095241622, guid: 837ceb5901cdee54fb23b5ce7ab270b8, type: 2}
+    value: {fileID: 1711168811}
+  - key: {fileID: 3612206845423783699, guid: 837ceb5901cdee54fb23b5ce7ab270b8, type: 2}
+    value: {fileID: 840365637}
+  - key: {fileID: 4101078585522969240, guid: 837ceb5901cdee54fb23b5ce7ab270b8, type: 2}
+    value: {fileID: 1668785723}
+  - key: {fileID: 7790934713934847585, guid: dd00db6b9891d0d42a707c0125a25748, type: 2}
+    value: {fileID: 619690090}
+  - key: {fileID: 5093019321023502043, guid: dd00db6b9891d0d42a707c0125a25748, type: 2}
+    value: {fileID: 594522591}
+  - key: {fileID: -2736218771059355168, guid: dd00db6b9891d0d42a707c0125a25748, type: 2}
+    value: {fileID: 361850563}
+  - key: {fileID: -1502078509557316345, guid: dd00db6b9891d0d42a707c0125a25748, type: 2}
+    value: {fileID: 1711168811}
+  - key: {fileID: -1514575018840599503, guid: dd00db6b9891d0d42a707c0125a25748, type: 2}
+    value: {fileID: 1711168811}
+  - key: {fileID: -6382372190095241622, guid: dd00db6b9891d0d42a707c0125a25748, type: 2}
+    value: {fileID: 1711168811}
+  - key: {fileID: 3612206845423783699, guid: dd00db6b9891d0d42a707c0125a25748, type: 2}
+    value: {fileID: 840365637}
+  - key: {fileID: 4101078585522969240, guid: dd00db6b9891d0d42a707c0125a25748, type: 2}
+    value: {fileID: 1668785723}
   m_ExposedReferences:
     m_References:
     - c5489b16d27df3d45a91ecb462b799f6: {fileID: 0}
@@ -9795,7 +9907,7 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: 
   _meshes: []
-  _cutscene: {fileID: 11400000, guid: 30bf8c6c7c5900943bd058b62635ac70, type: 2}
+  _cutscene: {fileID: 11400000, guid: a29fbb9277d50f442bb7a7ff15906be9, type: 2}
   _camera: {fileID: 173344878}
 --- !u!1 &559227687
 GameObject:
@@ -10821,7 +10933,7 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: 
   _meshes: []
-  _cutscene: {fileID: 11400000, guid: 30bf8c6c7c5900943bd058b62635ac70, type: 2}
+  _cutscene: {fileID: 11400000, guid: 3ea8af131b019904fb59b53a41340dc7, type: 2}
   _camera: {fileID: 173344878}
 --- !u!1001 &638753077
 PrefabInstance:
@@ -11489,7 +11601,7 @@ RectTransform:
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
   m_AnchorMin: {x: 0, y: 1}
   m_AnchorMax: {x: 1, y: 1}
-  m_AnchoredPosition: {x: -34.25, y: -34.450195}
+  m_AnchoredPosition: {x: -34.250244, y: -34.450195}
   m_SizeDelta: {x: -1538.2, y: 67.1}
   m_Pivot: {x: 0.9999995, y: 0.9999996}
 --- !u!114 &655187684
@@ -18983,6 +19095,11 @@ GameObject:
   - component: {fileID: 840365636}
   - component: {fileID: 840365638}
   - component: {fileID: 840365637}
+  - component: {fileID: 840365639}
+  - component: {fileID: 840365640}
+  - component: {fileID: 840365641}
+  - component: {fileID: 840365642}
+  - component: {fileID: 840365643}
   m_Layer: 5
   m_Name: Subtitles (VO)
   m_TagString: Untagged
@@ -19006,8 +19123,8 @@ RectTransform:
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
   m_AnchorMin: {x: 0.5, y: 0}
   m_AnchorMax: {x: 0.5, y: 0}
-  m_AnchoredPosition: {x: 19.2, y: 36.859375}
-  m_SizeDelta: {x: 1807.7091, y: 223.01245}
+  m_AnchoredPosition: {x: 0, y: 36.859375}
+  m_SizeDelta: {x: 1184.0878, y: 0}
   m_Pivot: {x: 0.5, y: 0.000000044703484}
 --- !u!114 &840365637
 MonoBehaviour:
@@ -19022,26 +19139,28 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: 
   m_Material: {fileID: 0}
-  m_Color: {r: 0, g: 0, b: 0, a: 0}
+  m_Color: {r: 0, g: 0, b: 0, a: 1}
   m_RaycastTarget: 0
   m_Maskable: 1
   m_OnCullStateChanged:
     m_PersistentCalls:
       m_Calls: []
   m_FontData:
-    m_Font: {fileID: 12800000, guid: 41fd9e346ed44304a9d3901c83d70aaa, type: 3}
-    m_FontSize: 66
+    m_Font: {fileID: 12800000, guid: 5fd17c9d65d4b0f42b81aefd4ae0c092, type: 3}
+    m_FontSize: 36
     m_FontStyle: 0
     m_BestFit: 0
     m_MinSize: 2
-    m_MaxSize: 109
+    m_MaxSize: 233
     m_Alignment: 7
     m_AlignByGeometry: 0
     m_RichText: 1
     m_HorizontalOverflow: 0
     m_VerticalOverflow: 0
-    m_LineSpacing: 1
-  m_Text: 
+    m_LineSpacing: 0.56
+  m_Text: Eased into its final rest           the backing materials have flowed downward,
+    Blackened and shifted my feet back           They form an impossible mirror and
+    reveal the most Prominent,  ugly figure bent over the cold many yards On
 --- !u!222 &840365638
 CanvasRenderer:
   m_ObjectHideFlags: 0
@@ -19050,6 +19169,112 @@ CanvasRenderer:
   m_PrefabAsset: {fileID: 0}
   m_GameObject: {fileID: 840365635}
   m_CullTransparentMesh: 0
+--- !u!114 &840365639
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 840365635}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: e19747de3f5aca642ab2be37e372fb86, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
+  m_EffectColor: {r: 1, g: 1, b: 1, a: 0.4117647}
+  m_EffectDistance: {x: 1, y: 1}
+  m_UseGraphicAlpha: 1
+--- !u!114 &840365640
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 840365635}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 3245ec927659c4140ac4f8d17403cc18, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
+  m_HorizontalFit: 0
+  m_VerticalFit: 2
+--- !u!114 &840365641
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 840365635}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 59f8146938fff824cb5fd77236b75775, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
+  m_Padding:
+    m_Left: 0
+    m_Right: 0
+    m_Top: 0
+    m_Bottom: 0
+  m_ChildAlignment: 7
+  m_Spacing: 0
+  m_ChildForceExpandWidth: 1
+  m_ChildForceExpandHeight: 0
+  m_ChildControlWidth: 1
+  m_ChildControlHeight: 0
+  m_ChildScaleWidth: 0
+  m_ChildScaleHeight: 0
+--- !u!225 &840365642
+CanvasGroup:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 840365635}
+  m_Enabled: 1
+  m_Alpha: 1
+  m_Interactable: 0
+  m_BlocksRaycasts: 0
+  m_IgnoreParentGroups: 0
+--- !u!114 &840365643
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 840365635}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 85170ebb2b8ca794b90b39d71f6573e5, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
+  shown: 0
+  lerps: 1
+  lerping: 0
+  value: 0
+  transitionInSpeed: 3
+  transitionOutSpeed: 3
+  useTimeScale: 1
+  OnShow:
+    m_PersistentCalls:
+      m_Calls: []
+  OnHide:
+    m_PersistentCalls:
+      m_Calls: []
+  OnToggle:
+    m_PersistentCalls:
+      m_Calls: []
+  onShown:
+    m_PersistentCalls:
+      m_Calls: []
+  onHidden:
+    m_PersistentCalls:
+      m_Calls: []
+  type: 0
+  canvasGroup: {fileID: 0}
+  image: {fileID: 0}
+  text: {fileID: 0}
+  visible: 1
+  hidden: 0
 --- !u!1 &862895997
 GameObject:
   m_ObjectHideFlags: 0
@@ -20769,7 +20994,7 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: 
   _meshes: []
-  _cutscene: {fileID: 11400000, guid: 30bf8c6c7c5900943bd058b62635ac70, type: 2}
+  _cutscene: {fileID: 11400000, guid: dd00db6b9891d0d42a707c0125a25748, type: 2}
   _camera: {fileID: 173344878}
 --- !u!4 &937351914 stripped
 Transform:
@@ -34059,7 +34284,7 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: 
   _meshes: []
-  _cutscene: {fileID: 11400000, guid: 30bf8c6c7c5900943bd058b62635ac70, type: 2}
+  _cutscene: {fileID: 11400000, guid: 113d5b970ec2a2f46940f4199f610515, type: 2}
   _camera: {fileID: 173344878}
 --- !u!1 &1493702402
 GameObject:
@@ -34586,7 +34811,7 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: 
   _meshes: []
-  _cutscene: {fileID: 11400000, guid: 30bf8c6c7c5900943bd058b62635ac70, type: 2}
+  _cutscene: {fileID: 11400000, guid: 3df316c45797a364789cc6aa55ebc350, type: 2}
   _camera: {fileID: 173344878}
 --- !u!1 &1526540392
 GameObject:
@@ -45911,6 +46136,8 @@ MonoBehaviour:
     m_RotationOrder: 4
   sequenceCutscene: {fileID: 0}
   Nest: {fileID: 735639530}
+  sequenceSubtitles: {fileID: 840365643}
+  sequenceSubtitleText: {fileID: 840365637}
   exportPS: {fileID: 714395704}
   exportMaterial: {fileID: 2100000, guid: 9503d6d75b86d9e498808abfb925b710, type: 2}
   intro: 0
@@ -48721,7 +48948,7 @@ MonoBehaviour:
   m_outlineColor:
     serializedVersion: 2
     rgba: 4278190080
-  m_fontSize: 25.15
+  m_fontSize: 25.1
   m_fontSizeBase: 36
   m_fontWeight: 400
   m_enableAutoSizing: 1
@@ -57057,7 +57284,7 @@ GameObject:
   m_Icon: {fileID: 0}
   m_NavMeshLayer: 0
   m_StaticEditorFlags: 0
-  m_IsActive: 1
+  m_IsActive: 0
 --- !u!114 &2085320095
 MonoBehaviour:
   m_ObjectHideFlags: 0
@@ -58477,7 +58704,7 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: 
   _meshes: []
-  _cutscene: {fileID: 11400000, guid: 30bf8c6c7c5900943bd058b62635ac70, type: 2}
+  _cutscene: {fileID: 11400000, guid: 81ec82e5267c8e847a791f183698e725, type: 2}
   _camera: {fileID: 173344878}
 --- !u!33 &4070483505375885
 MeshFilter:

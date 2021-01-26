@@ -10,9 +10,11 @@ using Cinemachine;
 using UnityEngine;
 using UnityEngine.Playables;
 using UnityEngine.Timeline;
+using UnityEngine.UI;
 using uwu;
 using uwu.Camera.Instances;
 using uwu.Timeline.Core;
+using uwu.UI.Behaviors.Visibility;
 using Random = UnityEngine.Random;
 
 namespace butterflowersOS.Objects.Managers
@@ -48,6 +50,8 @@ namespace butterflowersOS.Objects.Managers
 			[SerializeField] AnimationCurve sequenceMeshScaleCurve;
 			[SerializeField] PlayableAsset sequenceCutscene;
 			[SerializeField] Nest Nest;
+			[SerializeField] ToggleOpacity sequenceSubtitles;
+			[SerializeField] Text sequenceSubtitleText;
 
 		[Header("Export")] 
 			[SerializeField] ParticleSystem exportPS;
@@ -97,6 +101,7 @@ namespace butterflowersOS.Objects.Managers
 				currentScene = null; // Wipe current scene
 				sequenceCutscene = null; // Wipe current cutscene
 			}
+			sequenceSubtitles.Hide();
 
 			if (flag_save) 
 			{
@@ -136,6 +141,9 @@ namespace butterflowersOS.Objects.Managers
 			{
 				currentScene = seq;
 				sequenceCutscene = _cutscene;
+
+				sequenceSubtitleText.text = ""; // Wipe subtitles
+				sequenceSubtitles.Show();
 				
 				cutscenes.Play(_cutscene);
 				return true;
