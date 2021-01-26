@@ -101,7 +101,8 @@ namespace butterflowersOS.Objects.Managers
 				currentScene = null; // Wipe current scene
 				sequenceCutscene = null; // Wipe current cutscene
 			}
-			sequenceSubtitles.Hide();
+			
+			ToggleSubtitle(false);
 
 			if (flag_save) 
 			{
@@ -114,6 +115,7 @@ namespace butterflowersOS.Objects.Managers
 
 		public void TriggerIntro()
 		{
+			ToggleSubtitle(true);
 			cutscenes.Play(introCutscene);
 		}
 
@@ -125,6 +127,7 @@ namespace butterflowersOS.Objects.Managers
 
 			exportMaterial.mainTexture = texture;
 		
+			ToggleSubtitle(true);
 			cutscenes.Play(outroCutscene);
 		}
 		
@@ -142,10 +145,9 @@ namespace butterflowersOS.Objects.Managers
 				currentScene = seq;
 				sequenceCutscene = _cutscene;
 
-				sequenceSubtitleText.text = ""; // Wipe subtitles
-				sequenceSubtitles.Show();
-				
+				ToggleSubtitle(true);
 				cutscenes.Play(_cutscene);
+				
 				return true;
 			}
 			else
@@ -227,6 +229,18 @@ namespace butterflowersOS.Objects.Managers
 		public void TriggerKick()
 		{
 			Nest.RandomKick(); // Re-activate nest after sequence pause
+		}
+		
+		#endregion
+		
+		#region Subtitles
+
+		void ToggleSubtitle(bool visible)
+		{
+			sequenceSubtitleText.text = "";
+			
+			if(visible) sequenceSubtitles.Show();
+			else sequenceSubtitles.Hide();
 		}
 		
 		#endregion
