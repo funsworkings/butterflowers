@@ -26,7 +26,7 @@ MonoBehaviour:
   m_EditorClassIdentifier: 
   template:
     color: {r: 1, g: 1, b: 1, a: 1}
-    intensity: 0
+    intensity: 1
     bounceIntensity: 1
     range: 10
 --- !u!114 &-8240174635511642676
@@ -57,7 +57,7 @@ MonoBehaviour:
   m_EditorClassIdentifier: 
   template:
     color: {r: 1, g: 1, b: 1, a: 1}
-    intensity: 1
+    intensity: 0
     bounceIntensity: 1
     range: 10
 --- !u!114 &-7219516323906641465
@@ -703,7 +703,7 @@ MonoBehaviour:
   m_EditorClassIdentifier: 
   template:
     color: {r: 1, g: 1, b: 1, a: 1}
-    intensity: 0
+    intensity: 30
     bounceIntensity: 1
     range: 10
 --- !u!114 &1639215767222554696
@@ -755,6 +755,22 @@ MonoBehaviour:
   m_Retroactive: 0
   m_EmitOnce: 1
   m_Asset: {fileID: 11400000, guid: ae9341c43bb341b409012ff8b8522836, type: 2}
+--- !u!114 &3272179387544058249
+MonoBehaviour:
+  m_ObjectHideFlags: 1
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 0}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 205d3b48bffc82a4ab8147414ba2ff88, type: 3}
+  m_Name: SubtitleData(Clone)(Clone)(Clone)
+  m_EditorClassIdentifier: 
+  subtitleData:
+    text: ugly figure bent over the cold many yards On
+    color: {r: 1, g: 1, b: 1, a: 1}
+    includeColor: 0
 --- !u!114 &3612206845423783699
 MonoBehaviour:
   m_ObjectHideFlags: 1
@@ -882,7 +898,58 @@ MonoBehaviour:
     m_Start: 16.4992085142682
     m_ClipIn: 0
     m_Asset: {fileID: 4625398625238121148}
-    m_Duration: 7.767458152398465
+    m_Duration: 3.284124819065134
+    m_TimeScale: 1
+    m_ParentTrack: {fileID: 3612206845423783699}
+    m_EaseInDuration: 0
+    m_EaseOutDuration: 0
+    m_BlendInDuration: -1
+    m_BlendOutDuration: -1
+    m_MixInCurve:
+      serializedVersion: 2
+      m_Curve:
+      - serializedVersion: 3
+        time: 0
+        value: 0
+        inSlope: 0
+        outSlope: 0
+        tangentMode: 0
+        weightedMode: 0
+        inWeight: 0
+        outWeight: 0
+      - serializedVersion: 3
+        time: 1
+        value: 1
+        inSlope: 0
+        outSlope: 0
+        tangentMode: 0
+        weightedMode: 0
+        inWeight: 0
+        outWeight: 0
+      m_PreInfinity: 2
+      m_PostInfinity: 2
+      m_RotationOrder: 4
+    m_MixOutCurve:
+      serializedVersion: 2
+      m_Curve: []
+      m_PreInfinity: 2
+      m_PostInfinity: 2
+      m_RotationOrder: 4
+    m_BlendInCurveMode: 0
+    m_BlendOutCurveMode: 0
+    m_ExposedParameterNames: []
+    m_AnimationCurves: {fileID: 0}
+    m_Recordable: 0
+    m_PostExtrapolationMode: 0
+    m_PreExtrapolationMode: 0
+    m_PostExtrapolationTime: 0
+    m_PreExtrapolationTime: 0
+    m_DisplayName: SubtitleData
+  - m_Version: 1
+    m_Start: 19.783333333333335
+    m_ClipIn: 0
+    m_Asset: {fileID: 3272179387544058249}
+    m_Duration: 5
     m_TimeScale: 1
     m_ParentTrack: {fileID: 3612206845423783699}
     m_EaseInDuration: 0
@@ -1040,8 +1107,7 @@ MonoBehaviour:
   m_Name: SubtitleData(Clone)(Clone)
   m_EditorClassIdentifier: 
   subtitleData:
-    text: They form an impossible mirror and reveal the most Prominent,  ugly figure
-      bent over the cold many yards On
+    text: They form an impossible mirror and reveal the most Prominent,
     color: {r: 1, g: 1, b: 1, a: 1}
     includeColor: 0
 --- !u!114 &4732205766622296128
@@ -1111,7 +1177,7 @@ MonoBehaviour:
     m_Start: 0
     m_ClipIn: 0
     m_Asset: {fileID: 8519428173104185857}
-    m_Duration: 12.083333333333336
+    m_Duration: 12.883333333333336
     m_TimeScale: 1
     m_ParentTrack: {fileID: 5093019321023502043}
     m_EaseInDuration: 0
@@ -1177,7 +1243,7 @@ MonoBehaviour:
     m_PreExtrapolationTime: 0
     m_DisplayName: FadeIn
   - m_Version: 1
-    m_Start: 12.083333333333336
+    m_Start: 12.883333333333336
     m_ClipIn: 0
     m_Asset: {fileID: 1445372806053583692}
     m_Duration: 11.899999999999999
@@ -1500,7 +1566,7 @@ MonoBehaviour:
     m_Start: 0
     m_ClipIn: 0
     m_Asset: {fileID: -8042675331102630281}
-    m_Duration: 12.083333333333336
+    m_Duration: 12.883333333333336
     m_TimeScale: 1
     m_ParentTrack: {fileID: 7790934713934847585}
     m_EaseInDuration: 0
@@ -1566,7 +1632,7 @@ MonoBehaviour:
     m_PreExtrapolationTime: 0
     m_DisplayName: FadeIn
   - m_Version: 1
-    m_Start: 12.083333333333336
+    m_Start: 12.883333333333336
     m_ClipIn: 0
     m_Asset: {fileID: -8524459668853439587}
     m_Duration: 11.899999999999999
@@ -1664,7 +1730,7 @@ MonoBehaviour:
   m_EditorClassIdentifier: 
   template:
     color: {r: 1, g: 1, b: 1, a: 1}
-    intensity: 30
+    intensity: 0
     bounceIntensity: 1
     range: 10
 --- !u!114 &8734295667447421124
