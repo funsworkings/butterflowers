@@ -183,7 +183,7 @@ namespace butterflowersOS.Objects.Entities.Interactables
 
         #region Growth
     
-        public void Initialize(VineManager manager, Cage cage, VineData data = null)
+        public void Initialize(VineManager manager, Cage cage, string file, VineData data = null)
         {
             Manager = manager;
 
@@ -214,20 +214,19 @@ namespace butterflowersOS.Objects.Entities.Interactables
             
                 waypoints = new List<Vector3>();
                 for (int i = 0; i < len; i++) 
-                    waypoints.Add(new Vector3(data.waypoints_x[i], data.waypoints_y[i], data.waypoints_z[i]));
+                    waypoints.Add(new Vector3(data.waypoints_x[i], data.waypoints_y[i], data.waypoints_z[i]) * Constants.VineWaypointSnapDistance);
             
                 state = (Status) data.status; // Assign status
                 index = data.index;
-                interval = data.interval;
-                File = data.file;
-                growHeight = data.height;
+                interval = data.interval / 255f;
+                File = file;
 
                 transform.position = waypoints[0];
                 transform.up = transform.parent.up;
 
                 foreach (LeafData ld in data.leaves.leaves) 
                 {
-                    var leaf = ConstructLeaf(ld.index, ld.interval, ld.scale, ld.rotation);
+                    var leaf = ConstructLeaf(ld.index, ld.interval, offset:(ld.rotation / 255f) * 360f);
                     leaves.Add(leaf);
                 }
                 ParseAllLeaves(index, interval, true);
@@ -488,7 +487,8 @@ namespace butterflowersOS.Objects.Entities.Interactables
 
         Vector3 NextWaypoint(Vector3 origin, Vector3 previous, float height)
         {
-            Vector2 pointRadius = Random.insideUnitCircle * growRadius;
+            //Vector2 pointRadius = Random.insideUnitCircle * growRadius;
+            Vector2 pointRadius = Vector2.one * Mathf.PerlinNoise(previous.x, previous.y).RemapNRB(0f, 1f, -1f, 1f) * growRadius;
             Vector3 waypoint = transform.position + new Vector3(pointRadius.x, height, pointRadius.y);
 
             return waypoint;

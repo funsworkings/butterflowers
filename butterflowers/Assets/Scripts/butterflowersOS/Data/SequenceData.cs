@@ -5,7 +5,7 @@ namespace butterflowersOS.Data
 	[System.Serializable]
 	public class SequenceData
 	{
-		public int index = -1;
-		public Frame[] frames = new Frame[7];
+		public sbyte index = -1;
+		public byte[] frames = new byte[7];
 	}
 }

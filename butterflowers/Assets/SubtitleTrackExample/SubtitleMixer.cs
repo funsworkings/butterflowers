@@ -39,6 +39,6 @@ public class SubtitleMixer : PlayableBehaviour {
         }
 
         textObject.text = text;
-        textObject.color = color;
+        //textObject.color = color;
     }
 }

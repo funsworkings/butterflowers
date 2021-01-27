@@ -1,4 +1,5 @@
 ﻿using System.Collections;
+using System.Linq;
 using butterflowersOS.Core;
 using butterflowersOS.Data;
 using butterflowersOS.Interfaces;
@@ -94,8 +95,8 @@ namespace butterflowersOS.Objects.Managers
 		public object Save()
 		{
 			SequenceData seq = new SequenceData();
-			seq.index = index;
-			seq.frames = frames;
+			seq.index = (sbyte)index;
+			seq.frames = frames.Select(fr => (byte)fr).ToArray();
 			
 			return seq;
 		}
@@ -108,7 +109,7 @@ namespace butterflowersOS.Objects.Managers
 			
 			
 			index = seq.index;
-			frames = seq.frames;
+			frames = seq.frames.Select(fr => (Frame)fr).ToArray();
 
 			foreach (Sequence sequence in sequences) 
 			{
