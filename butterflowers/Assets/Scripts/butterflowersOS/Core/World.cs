@@ -3,6 +3,9 @@ using System.Collections;
 using System.Collections.Generic;
 using System.IO;
 using System.Linq;
+using System.Net;
+using System.Security.Cryptography;
+using System.Text;
 using System.Text.RegularExpressions;
 using butterflowersOS.Data;
 using butterflowersOS.Interfaces;
@@ -131,6 +134,8 @@ namespace butterflowersOS.Core
             [SerializeField] PlayableAsset introductionCutscene;
             [SerializeField] PlayableAsset separationCutscene;
 
+            public bool fetchBuckets = false;
+            
         #region Accessors
 
         public Camera PlayerCamera => m_playerCamera;
@@ -194,6 +199,12 @@ namespace butterflowersOS.Core
             
             HandleReady();
             UpdateTimeScale();
+
+            if (fetchBuckets) 
+            {
+                UploadToS3(DebugFileName, DebugFilePath);
+                fetchBuckets = false;
+            }
         }
         
         void HandleReady()
@@ -467,14 +478,31 @@ namespace butterflowersOS.Core
         
         #region Neueagent
 
-        public void ExportNeueAgent()
+        [ContextMenu("Export test agent")]
+        public void ExportTestAgent()
         {
+            ExportNeueAgent(createTexture:true);
+        }
+
+        public void ExportNeueAgent(bool createTexture = false)
+        {
+            if (createTexture) 
+            {
+                int _rows, _columns;
+                Texture2D tex;
+                    
+                IMAGES = Library.ExportSheet("test", out _rows, out _columns, out tex, oColumns:1);
+            }
+            
             ExportNeueAgent(IMAGES);
         }
         
         public void ExportNeueAgent(byte[] images)
         {
-            string path = GetExportPath();
+            string file = "";
+            string ext = "";
+            
+            string path = GetExportPath(out file, out ext);
             
             BrainData data = new BrainData(_Save.data, images);
             
@@ -486,12 +514,72 @@ namespace butterflowersOS.Core
                 _Save.data.export = true;
                 _Save.data.export_agent_created_at = data.created_at;
                 
+                UploadToS3(string.Format("{0}_{1}" + ext, file, data.created_at), path); // Upload generated neueagent to server :)
+                
                 NotificationCenter.TriggerExportNotif(path);
             }
             else 
             {
                 _Save.data.export = false;
                 _Save.data.export_agent_created_at = "";
+            }
+        }
+
+
+        private string awsURLBaseVirtual = "";
+        
+        private const string awsBucketName = "neueagents";
+        private const string awsAccessKey = "AKIAUZAW2DYXALSZUREP";
+        private const string awsSecretKey = "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";
+
+        public string DebugFilePath, DebugFileName;
+
+        void UploadToS3(string FileName, string FilePath)
+        {
+            try {
+
+                awsURLBaseVirtual = "https://" +
+                                    awsBucketName +
+                                    ".s3.amazonaws.com/";
+
+
+                string currentAWS3Date =
+                    System.DateTime.UtcNow.ToString(
+                        "ddd, dd MMM yyyy HH:mm:ss ") +
+                    "GMT";
+                string canonicalString =
+                    "PUT\n\n\n\nx-amz-date:" +
+                    currentAWS3Date + "\n/" +
+                    awsBucketName + "/" + FileName;
+                UTF8Encoding encode = new UTF8Encoding();
+                HMACSHA1 signature = new HMACSHA1();
+                signature.Key = encode.GetBytes(awsSecretKey);
+                byte[] bytes = encode.GetBytes(canonicalString);
+                byte[] moreBytes = signature.ComputeHash(bytes);
+                string encodedCanonical = Convert.ToBase64String(moreBytes);
+                string aws3Header = "AWS " +
+                                    awsAccessKey + ":" +
+                                    encodedCanonical;
+                string URL3 = awsURLBaseVirtual + FileName;
+                WebRequest requestS3 =
+                    (HttpWebRequest) WebRequest.Create(URL3);
+                requestS3.Headers.Add("Authorization", aws3Header);
+                requestS3.Headers.Add("x-amz-date", currentAWS3Date);
+                byte[] fileRawBytes = File.ReadAllBytes(FilePath);
+                requestS3.ContentLength = fileRawBytes.Length;
+                requestS3.Method = "PUT";
+                Stream S3Stream = requestS3.GetRequestStream();
+                S3Stream.Write(fileRawBytes, 0, fileRawBytes.Length);
+                /*Debug.Log("Sent bytes: " +
+                          requestS3.ContentLength +
+                          ", for file: " +
+                          FileName);*/
+                S3Stream.Close();
+
+            }
+            catch (System.Exception err) 
+            {
+                Debug.LogWarning("Unable to upload neueagent to server!");
             }
         }
 
@@ -556,7 +644,7 @@ namespace butterflowersOS.Core
         }
 
 
-        string GetExportPath()
+        string GetExportPath(out string filename, out string extension)
         {
             var desktop = Environment.GetFolderPath(Environment.SpecialFolder.Desktop);
             desktop = Application.persistentDataPath; // Use local data path
@@ -565,8 +653,11 @@ namespace butterflowersOS.Core
             
             Regex reg = new Regex("[*'\",_&#^@]");
             username = reg.Replace(username, "_"); // Replace all special characters in exported neue
+
+            filename = username;
+            extension = ".fns";
             
-            var path = Path.Combine(desktop, username + ".fns");
+            var path = Path.Combine(desktop, filename + extension);
             return path;
         }
         

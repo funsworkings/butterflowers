@@ -28,7 +28,7 @@ namespace Neue.Agent.Brain.Data
 		public BrainData(GameData dat, byte[] images)
 		{
 			this.username = dat.username;
-			this.created_at = System.DateTime.UtcNow.ToString(); // Write timestamp
+			this.created_at = System.DateTime.UtcNow.ToString("yyyy-dd-M--HH-mm-ss"); // Write timestamp
 
 			this.surveillanceData = dat.surveillanceData;
 			
