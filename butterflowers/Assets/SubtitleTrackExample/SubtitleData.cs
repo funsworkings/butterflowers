@@ -7,6 +7,7 @@ using UnityEngine.Timeline;
 public class SubtitleDataPlayable : PlayableBehaviour {
     public string text = "A Subtitle";
     public Color color = Color.white;
+    public bool includeColor = false;
 }
 
 [Serializable]

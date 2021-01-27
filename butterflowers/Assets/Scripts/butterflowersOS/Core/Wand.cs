@@ -188,6 +188,9 @@ namespace butterflowersOS.Core
         AGENT Agent => (AGENT.User);
         World World => World.Instance;
 
+        public IInteractable CurrentInteractable => _interactable;
+        public Collider CurrentInteractableCollider => _interactableCollider;
+
         #endregion
 
         #region Internal

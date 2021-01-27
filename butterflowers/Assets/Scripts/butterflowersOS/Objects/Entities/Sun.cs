@@ -5,6 +5,7 @@ using butterflowersOS.Interfaces;
 using butterflowersOS.Presets;
 using TMPro;
 using UnityEngine;
+using uwu.Timeline.Core;
 
 namespace butterflowersOS.Objects.Entities
 {
@@ -20,6 +21,7 @@ namespace butterflowersOS.Objects.Entities
         // External
     
         [SerializeField] WorldPreset Preset;
+        [SerializeField] Cutscenes Cutscenes;
 
         World World;
     
@@ -150,10 +152,14 @@ namespace butterflowersOS.Objects.Entities
                 t_timeScale = maxTimeScale;
             }
 
+            if (Cutscenes.playing) t_timeScale = maxTimeScale; // Override time scale if cutscenes in progress!
+            
+
             timeScale = Mathf.Lerp(timeScale, t_timeScale, Time.unscaledDeltaTime * timeScaleLerpSpeed);
             Time.timeScale = World.TimeScale * timeScale;
 
-            if (active) {
+            if (active) 
+            {
                 if (Input.GetKeyDown(KeyCode.RightBracket)) time += Preset.secondsPerDay;
 
                 time += Time.deltaTime; // Add time to global clock

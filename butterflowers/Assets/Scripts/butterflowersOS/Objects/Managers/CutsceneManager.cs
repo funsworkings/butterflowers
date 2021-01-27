@@ -10,9 +10,11 @@ using Cinemachine;
 using UnityEngine;
 using UnityEngine.Playables;
 using UnityEngine.Timeline;
+using UnityEngine.UI;
 using uwu;
 using uwu.Camera.Instances;
 using uwu.Timeline.Core;
+using uwu.UI.Behaviors.Visibility;
 using Random = UnityEngine.Random;
 
 namespace butterflowersOS.Objects.Managers
@@ -44,9 +46,12 @@ namespace butterflowersOS.Objects.Managers
 		[Header("Sequences")]
 			[SerializeField] Scene currentScene;
 			[SerializeField] float sequenceMeshScaleDuration = 1f;
+			[SerializeField] float sequenceMeshScaleTime = 1f;
 			[SerializeField] AnimationCurve sequenceMeshScaleCurve;
 			[SerializeField] PlayableAsset sequenceCutscene;
 			[SerializeField] Nest Nest;
+			[SerializeField] ToggleOpacity sequenceSubtitles;
+			[SerializeField] Text sequenceSubtitleText;
 
 		[Header("Export")] 
 			[SerializeField] ParticleSystem exportPS;
@@ -96,6 +101,8 @@ namespace butterflowersOS.Objects.Managers
 				currentScene = null; // Wipe current scene
 				sequenceCutscene = null; // Wipe current cutscene
 			}
+			
+			ToggleSubtitle(false);
 
 			if (flag_save) 
 			{
@@ -108,6 +115,7 @@ namespace butterflowersOS.Objects.Managers
 
 		public void TriggerIntro()
 		{
+			ToggleSubtitle(true);
 			cutscenes.Play(introCutscene);
 		}
 
@@ -119,6 +127,7 @@ namespace butterflowersOS.Objects.Managers
 
 			exportMaterial.mainTexture = texture;
 		
+			ToggleSubtitle(true);
 			cutscenes.Play(outroCutscene);
 		}
 		
@@ -135,8 +144,10 @@ namespace butterflowersOS.Objects.Managers
 			{
 				currentScene = seq;
 				sequenceCutscene = _cutscene;
-				
+
+				ToggleSubtitle(true);
 				cutscenes.Play(_cutscene);
+				
 				return true;
 			}
 			else
@@ -151,6 +162,7 @@ namespace butterflowersOS.Objects.Managers
 
 		public void ScaleSequenceObject()
 		{
+			if(currentScene == null) return;
 			currentScene.Show(false);
 			
 			SceneMesh[] meshes = currentScene.meshes;
@@ -167,7 +179,7 @@ namespace butterflowersOS.Objects.Managers
 			List<float> timestamps = new List<float>();
 			foreach (SceneMesh mesh in meshes) 
 			{
-				float __t = Random.Range(0f, sequenceMeshScaleDuration);
+				float __t = Random.Range(0f, sequenceMeshScaleDuration - sequenceMeshScaleTime);
 				timestamps.Add(__t);
 			}
 			
@@ -176,7 +188,7 @@ namespace butterflowersOS.Objects.Managers
 
 			while (t < sequenceMeshScaleDuration) 
 			{
-				t += Time.unscaledDeltaTime;
+				t += Time.deltaTime;
 
 				for (int i = 0; i < meshes.Length; i++) 
 				{
@@ -188,7 +200,7 @@ namespace butterflowersOS.Objects.Managers
 					{
 						_duration = (sequenceMeshScaleDuration - _t);
 
-						var si = Mathf.Clamp01((t - _t) / _duration);
+						var si = Mathf.Clamp01((t - _t) / sequenceMeshScaleTime);
 						var sc = sequenceMeshScaleCurve.Evaluate(si);
 
 						Vector3 a = mesh.hidden;
@@ -205,12 +217,16 @@ namespace butterflowersOS.Objects.Managers
 		
 		public void FocusSequenceCamera() 
 		{
+			if(currentScene == null) return;
+			
 			CinemachineVirtualCamera camera = currentScene.camera;
 			if(camera != null) camera.gameObject.SetActive(true);
 		}
 
 		public void DisableFocusCamera()
 		{
+			if(currentScene == null) return;
+			
 			CinemachineVirtualCamera camera = currentScene.camera;
 			if(camera != null) camera.gameObject.SetActive(false);
 		}
@@ -218,6 +234,18 @@ namespace butterflowersOS.Objects.Managers
 		public void TriggerKick()
 		{
 			Nest.RandomKick(); // Re-activate nest after sequence pause
+		}
+		
+		#endregion
+		
+		#region Subtitles
+
+		void ToggleSubtitle(bool visible)
+		{
+			sequenceSubtitleText.text = "";
+			
+			if(visible) sequenceSubtitles.Show();
+			else sequenceSubtitles.Hide();
 		}
 		
 		#endregion

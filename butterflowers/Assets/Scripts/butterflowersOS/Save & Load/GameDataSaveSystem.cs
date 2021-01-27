@@ -33,24 +33,10 @@ namespace uwu
 			set => data.username = value;
 		}
 
-		public float enviro_knowledge
-		{
-			get => data == null ? 0f : data.enviro_knowledge;
-			set => data.enviro_knowledge = value;
-		}
-
-		public Knowledge[] file_knowledge
-		{
-			get { return data == null ? new Knowledge[] { } : data.file_knowledge; }
-			set => data.file_knowledge = value;
-		}
-
 		public bool IsProfileValid()
 		{
 			if (data == null) return false;
-
-			var brainData = data.brain;
-			return brainData.IsProfileValid();
+			return BrainDataExtensions.IsProfileTimestampValid(data.agent_created_at);
 		}
 
 		#endregion
