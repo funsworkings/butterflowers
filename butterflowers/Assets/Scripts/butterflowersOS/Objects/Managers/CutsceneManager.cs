@@ -162,6 +162,7 @@ namespace butterflowersOS.Objects.Managers
 
 		public void ScaleSequenceObject()
 		{
+			if(currentScene == null) return;
 			currentScene.Show(false);
 			
 			SceneMesh[] meshes = currentScene.meshes;
@@ -216,12 +217,16 @@ namespace butterflowersOS.Objects.Managers
 		
 		public void FocusSequenceCamera() 
 		{
+			if(currentScene == null) return;
+			
 			CinemachineVirtualCamera camera = currentScene.camera;
 			if(camera != null) camera.gameObject.SetActive(true);
 		}
 
 		public void DisableFocusCamera()
 		{
+			if(currentScene == null) return;
+			
 			CinemachineVirtualCamera camera = currentScene.camera;
 			if(camera != null) camera.gameObject.SetActive(false);
 		}
