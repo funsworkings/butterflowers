@@ -256,6 +256,23 @@ MonoBehaviour:
   m_EditorClassIdentifier: 
   m_Time: 7.916666666666667
   note: START VO CAMERA
+--- !u!114 &-5688086368075459492
+MonoBehaviour:
+  m_ObjectHideFlags: 1
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 0}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 205d3b48bffc82a4ab8147414ba2ff88, type: 3}
+  m_Name: SubtitleData(Clone)
+  m_EditorClassIdentifier: 
+  subtitleData:
+    text: Score deep VerticalXHorizontal lines into the Terrain from hollow bit 2
+      bit
+    color: {r: 1, g: 1, b: 1, a: 1}
+    includeColor: 0
 --- !u!114 &-5111114886754005107
 MonoBehaviour:
   m_ObjectHideFlags: 1
@@ -736,8 +753,7 @@ MonoBehaviour:
   m_Name: SubtitleData
   m_EditorClassIdentifier: 
   subtitleData:
-    text: the jagged end of a broken Fir branch            Score deep VerticalXHorizontal
-      lines into the Terrain from hollow bit 2 bit
+    text: the jagged end of a broken Fir branch
     color: {r: 1, g: 1, b: 1, a: 1}
     includeColor: 0
 --- !u!114 &3086239184611152736
@@ -781,7 +797,58 @@ MonoBehaviour:
     m_Start: 8.95
     m_ClipIn: 0
     m_Asset: {fileID: 1909855923135089396}
-    m_Duration: 11.666666666666668
+    m_Duration: 2.8833333333333346
+    m_TimeScale: 1
+    m_ParentTrack: {fileID: 3612206845423783699}
+    m_EaseInDuration: 0
+    m_EaseOutDuration: 0
+    m_BlendInDuration: -1
+    m_BlendOutDuration: -1
+    m_MixInCurve:
+      serializedVersion: 2
+      m_Curve:
+      - serializedVersion: 3
+        time: 0
+        value: 0
+        inSlope: 0
+        outSlope: 0
+        tangentMode: 0
+        weightedMode: 0
+        inWeight: 0
+        outWeight: 0
+      - serializedVersion: 3
+        time: 1
+        value: 1
+        inSlope: 0
+        outSlope: 0
+        tangentMode: 0
+        weightedMode: 0
+        inWeight: 0
+        outWeight: 0
+      m_PreInfinity: 2
+      m_PostInfinity: 2
+      m_RotationOrder: 4
+    m_MixOutCurve:
+      serializedVersion: 2
+      m_Curve: []
+      m_PreInfinity: 2
+      m_PostInfinity: 2
+      m_RotationOrder: 4
+    m_BlendInCurveMode: 0
+    m_BlendOutCurveMode: 0
+    m_ExposedParameterNames: []
+    m_AnimationCurves: {fileID: 0}
+    m_Recordable: 0
+    m_PostExtrapolationMode: 0
+    m_PreExtrapolationMode: 0
+    m_PostExtrapolationTime: 0
+    m_PreExtrapolationTime: 8.95
+    m_DisplayName: SubtitleData
+  - m_Version: 1
+    m_Start: 11.833333333333334
+    m_ClipIn: 0
+    m_Asset: {fileID: -5688086368075459492}
+    m_Duration: 2.8833333333333346
     m_TimeScale: 1
     m_ParentTrack: {fileID: 3612206845423783699}
     m_EaseInDuration: 0
@@ -826,7 +893,7 @@ MonoBehaviour:
     m_PostExtrapolationMode: 0
     m_PreExtrapolationMode: 0
     m_PostExtrapolationTime: Infinity
-    m_PreExtrapolationTime: 8.95
+    m_PreExtrapolationTime: 0
     m_DisplayName: SubtitleData
   m_Markers:
     m_Objects: []
