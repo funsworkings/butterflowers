@@ -102,6 +102,7 @@ namespace uwu.Gameplay
 
 		public void Dequeue(PoolObject @object)
 		{
+			if (active.Contains(@object)) active.Remove(@object);
 			if(!pool.Contains(@object)) pool.Add(@object);
 		}
 
