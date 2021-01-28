@@ -8816,7 +8816,7 @@ Transform:
   m_PrefabInstance: {fileID: 0}
   m_PrefabAsset: {fileID: 0}
   m_GameObject: {fileID: 201810246}
-  m_LocalRotation: {x: 0.11976034, y: -0.000000024535291, z: 0.0000000029668294, w: 0.99280286}
+  m_LocalRotation: {x: 0.119760305, y: -0.000000025758366, z: 0.000000003114366, w: 0.99280286}
   m_LocalPosition: {x: 0, y: 9.518084, z: -21.87147}
   m_LocalScale: {x: 1, y: 1.3577, z: 1}
   m_Children:
@@ -38923,7 +38923,7 @@ MonoBehaviour:
   active: []
   pool: []
   prefab: {fileID: 2790860782553342305, guid: f0319466a8c5b3a439cb240a6ef5a1ff, type: 3}
-  initialSpawnAmount: 0
+  initialSpawnAmount: 25
 --- !u!1 &1427391670 stripped
 GameObject:
   m_CorrespondingSourceObject: {fileID: 2240893488076964279, guid: cb5f8373690aa5e429aab5fb71c63e92,
@@ -54421,7 +54421,7 @@ MonoBehaviour:
   m_outlineColor:
     serializedVersion: 2
     rgba: 4278190080
-  m_fontSize: 25.15
+  m_fontSize: 25.2
   m_fontSizeBase: 36
   m_fontWeight: 400
   m_enableAutoSizing: 1

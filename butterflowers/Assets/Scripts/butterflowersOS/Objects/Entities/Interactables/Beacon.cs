@@ -328,7 +328,7 @@ namespace butterflowersOS.Objects.Entities.Interactables
             origin = point;
         
             ToggleCapabilities(false);
-            Extinguish();
+            if(IsOnFire)Extinguish();
             transform.localScale = Vector3.zero;
 
             if (Planted != null && events)
@@ -345,7 +345,7 @@ namespace butterflowersOS.Objects.Entities.Interactables
             origin = point;
         
             ToggleCapabilities(false);
-            Extinguish();
+            if(IsOnFire)Extinguish();
             transform.localScale = Vector3.zero;
 
             if (flower == null) 
