@@ -718,7 +718,7 @@ namespace butterflowersOS.Core
 
 			Texture2D[] thumbnails = FALLBACK_TEXTURE_LOOKUP.Values.ToArray();
 
-			int columns = _columns = (oColumns > 0)? oColumns:8;
+			int columns = _columns = (oColumns > 0)? oColumns:_COLUMNS;
 			int rows = _rows = (thumbnails.Length / columns)+1;
 
 			int width = columns * _WIDTH;
@@ -763,8 +763,10 @@ namespace butterflowersOS.Core
 		
 		#region Degradation
 		
-		const int _WIDTH = 32;
-		const int _HEIGHT = 32;
+		public const int _WIDTH = 32;
+		public const int _HEIGHT = 32;
+
+		public const int _COLUMNS = 8;
 
 		Texture2D DegradeBytes(string file, Texture2D texture, bool transparency)
 		{
@@ -782,12 +784,8 @@ namespace butterflowersOS.Core
 					_texture.SetPixels(texture.GetPixels());
 					_texture.Apply();
 
-					// Always resize to 32x32
-					//bool resize = (width > _WIDTH || height > _HEIGHT);
-					//if (resize) {
-						TextureScale.Bilinear(_texture, _WIDTH, _HEIGHT);
-						_texture.Apply();
-					//}
+					TextureScale.Bilinear(_texture, _WIDTH, _HEIGHT);
+					_texture.Apply();
 
 					if (transparency) _data = _texture.EncodeToPNG();
 					else _data = _texture.EncodeToJPG();

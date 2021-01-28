@@ -22,10 +22,11 @@ namespace Neue.Agent.Brain.Data
 
 		public Profile profile = new Profile(); //
 		public byte[] images = new byte[]{}; //
+		public ushort image_height = 0;
 
 		public BrainData(){}
 
-		public BrainData(GameData dat, byte[] images)
+		public BrainData(GameData dat, byte[] images, ushort image_height)
 		{
 			this.username = dat.username;
 			this.created_at = System.DateTime.UtcNow.ToString(); // Write timestamp
@@ -40,6 +41,7 @@ namespace Neue.Agent.Brain.Data
 
 			this.profile = dat.profile;
 			this.images = images;
+			this.image_height = image_height;
 		}
 	}
 
