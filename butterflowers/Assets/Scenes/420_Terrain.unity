@@ -980,11 +980,11 @@ PrefabInstance:
       objectReference: {fileID: 0}
     - target: {fileID: 400000, guid: 025f10692bbc17b4399faf94ff7fcc8b, type: 3}
       propertyPath: m_LocalScale.y
-      value: 10.5
+      value: 5.5
       objectReference: {fileID: 0}
     - target: {fileID: 400000, guid: 025f10692bbc17b4399faf94ff7fcc8b, type: 3}
       propertyPath: m_LocalScale.z
-      value: 5.5
+      value: 10.5
       objectReference: {fileID: 0}
     - target: {fileID: 400000, guid: 025f10692bbc17b4399faf94ff7fcc8b, type: 3}
       propertyPath: m_LocalPosition.x
@@ -1000,23 +1000,23 @@ PrefabInstance:
       objectReference: {fileID: 0}
     - target: {fileID: 400000, guid: 025f10692bbc17b4399faf94ff7fcc8b, type: 3}
       propertyPath: m_LocalRotation.w
-      value: 0.7132191
+      value: 1
       objectReference: {fileID: 0}
     - target: {fileID: 400000, guid: 025f10692bbc17b4399faf94ff7fcc8b, type: 3}
       propertyPath: m_LocalRotation.x
-      value: -0.70094115
+      value: 0
       objectReference: {fileID: 0}
     - target: {fileID: 400000, guid: 025f10692bbc17b4399faf94ff7fcc8b, type: 3}
       propertyPath: m_LocalRotation.y
-      value: -0.000000031064193
+      value: 0
       objectReference: {fileID: 0}
     - target: {fileID: 400000, guid: 025f10692bbc17b4399faf94ff7fcc8b, type: 3}
       propertyPath: m_LocalRotation.z
-      value: -0.000000030752275
+      value: 0
       objectReference: {fileID: 0}
     - target: {fileID: 400000, guid: 025f10692bbc17b4399faf94ff7fcc8b, type: 3}
       propertyPath: m_LocalEulerAnglesHint.x
-      value: -89.214005
+      value: 0
       objectReference: {fileID: 0}
     - target: {fileID: 400000, guid: 025f10692bbc17b4399faf94ff7fcc8b, type: 3}
       propertyPath: m_LocalEulerAnglesHint.y
@@ -1030,6 +1030,11 @@ PrefabInstance:
       propertyPath: m_Materials.Array.data[0]
       value: 
       objectReference: {fileID: 2100000, guid: 0d98b0da4da2b72449f7237943a37c27, type: 2}
+    - target: {fileID: 3300000, guid: 025f10692bbc17b4399faf94ff7fcc8b, type: 3}
+      propertyPath: m_Mesh
+      value: 
+      objectReference: {fileID: -246056799894200301, guid: 9fec5cd2cc0b24178ad41cfcbf438d92,
+        type: 3}
     m_RemovedComponents: []
   m_SourcePrefab: {fileID: 100100000, guid: 025f10692bbc17b4399faf94ff7fcc8b, type: 3}
 --- !u!4 &74781606 stripped
@@ -8816,7 +8821,8 @@ Transform:
   m_PrefabInstance: {fileID: 0}
   m_PrefabAsset: {fileID: 0}
   m_GameObject: {fileID: 201810246}
-  m_LocalRotation: {x: 0.119760305, y: -0.000000025758366, z: 0.000000003114366, w: 0.99280286}
+  m_LocalRotation: {x: 0.119760305, y: 0.000000019038136, z: -0.0000000022893683,
+    w: 0.99280286}
   m_LocalPosition: {x: 0, y: 9.518084, z: -21.87147}
   m_LocalScale: {x: 1, y: 1.3577, z: 1}
   m_Children:
@@ -16936,7 +16942,7 @@ RectTransform:
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
   m_AnchorMin: {x: 0, y: 1}
   m_AnchorMax: {x: 1, y: 1}
-  m_AnchoredPosition: {x: -34.250244, y: -34.450195}
+  m_AnchoredPosition: {x: -34.25, y: -34.450195}
   m_SizeDelta: {x: -1538.2, y: 67.1}
   m_Pivot: {x: 0.9999995, y: 0.9999996}
 --- !u!114 &655187684
@@ -29430,6 +29436,7 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 61fe0f6272fa94d4eb3dafc6aecd50ff, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
+  InitByUser: 0
 --- !u!114 &1146785326
 MonoBehaviour:
   m_ObjectHideFlags: 0
@@ -29442,6 +29449,7 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 86b3500b6f51c48488eb73d584f30b56, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
+  text: {fileID: 0}
 --- !u!114 &1146785327
 MonoBehaviour:
   m_ObjectHideFlags: 0
@@ -40679,7 +40687,7 @@ MeshCollider:
   serializedVersion: 4
   m_Convex: 0
   m_CookingOptions: 30
-  m_Mesh: {fileID: 4300000, guid: 025f10692bbc17b4399faf94ff7fcc8b, type: 3}
+  m_Mesh: {fileID: -246056799894200301, guid: 9fec5cd2cc0b24178ad41cfcbf438d92, type: 3}
 --- !u!114 &1531332831
 MonoBehaviour:
   m_ObjectHideFlags: 0
@@ -54421,7 +54429,7 @@ MonoBehaviour:
   m_outlineColor:
     serializedVersion: 2
     rgba: 4278190080
-  m_fontSize: 25.2
+  m_fontSize: 25.15
   m_fontSizeBase: 36
   m_fontWeight: 400
   m_enableAutoSizing: 1
