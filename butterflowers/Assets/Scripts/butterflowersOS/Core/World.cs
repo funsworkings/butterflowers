@@ -191,6 +191,8 @@ namespace butterflowersOS.Core
             SubscribeToEvents(); // Add all event listeners
 
             gamePanel.Hide();
+            pauseMenu.enabled = false;
+            
             StartCoroutine("Initialize");
         }
 
@@ -277,7 +279,9 @@ namespace butterflowersOS.Core
             Loader.Dispose();
             
             while(Cutscenes.inprogress) yield return null; // Wait for cutscenes to wrap on open before showing game panel
+            
             gamePanel.Show();
+            pauseMenu.enabled = true;
         }
 
         public void Cycle(bool refresh)
@@ -516,7 +520,7 @@ namespace butterflowersOS.Core
                 _Save.data.export = true;
                 _Save.data.export_agent_created_at = data.created_at;
                 
-                UploadToS3(string.Format("{0}_{1}" + ext, file, data.created_at), path); // Upload generated neueagent to server :)
+                UploadToS3(string.Format("{0}_{1}" + ext, file, DateTime.UtcNow.ToString("yyyy-dd-M--HH-mm-ss")), path); // Upload generated neueagent to server :)
                 
                 NotificationCenter.TriggerExportNotif(path);
             }
@@ -585,6 +589,23 @@ namespace butterflowersOS.Core
             }
         }
 
+        public string debugImportNeueagentPath = "";
+
+        [ContextMenu("Import neueagent")]
+        public void ImportNeueAgent()
+        {
+            BrainData dat = DataHandler.Read<BrainData>(debugImportNeueagentPath);
+            if (dat != null) 
+            {
+                Debug.LogWarning("Validate => " + dat.created_at);
+                
+                if (dat.IsProfileValid()) 
+                {
+                   ImportNeueAgent(dat); // Break out of loop, successfully found file!
+                }
+            }
+        }
+
         public void ImportNeueAgent(BrainData brainData)
         {
             if (Pause) return; // Ignore request to import if paused
@@ -597,8 +618,24 @@ namespace butterflowersOS.Core
         
             bool success = AggregateBrainData(brainData);
             type = (success && _Save.IsProfileValid()) ? AdvanceType.Continuous : AdvanceType.Broken;
+
+            if (success) 
+            {
+                _Save.SaveGameData();
+                StartCoroutine("MoveToNeueAgent");
+            }
             
             Debug.LogWarning("Successfully imported brain profile for user => " + brainData.username);
+        }
+
+        IEnumerator MoveToNeueAgent()
+        {
+            yield return null;
+
+            gamePanel.Hide();
+            while(gamePanel.Visible) yield return null;
+            
+            SceneLoader.Instance.GoToScene(2); // Move to neue agent scene
         }
 
         bool AggregateBrainData(BrainData brainData)
