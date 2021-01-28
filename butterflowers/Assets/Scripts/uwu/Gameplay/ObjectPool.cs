@@ -66,7 +66,7 @@ namespace uwu.Gameplay
 		}
 
 		#endregion
-		
+
 		#region Queue
 		
 		public void Queue(PoolObject @object)
@@ -98,6 +98,11 @@ namespace uwu.Gameplay
 
 			@object.gameObject.SetActive(true);
 			return @object;
+		}
+
+		public void Dequeue(PoolObject @object)
+		{
+			if(!pool.Contains(@object)) pool.Add(@object);
 		}
 
 		public void Wipe(PoolObject @object)
