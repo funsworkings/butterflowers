@@ -24,5 +24,13 @@ namespace uwu.Gameplay
 			
 			Destroy(gameObject);
 		}
+
+		void OnDestroy()
+		{
+			if (_pool != null) 
+			{
+				_pool.Wipe(this);
+			}
+		}
 	}
 }
