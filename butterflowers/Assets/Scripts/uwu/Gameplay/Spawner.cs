@@ -8,6 +8,7 @@ namespace uwu.Gameplay
 	{
 		public GameObject prefab;
 
+		[SerializeField] ObjectPool pool;
 		[SerializeField] int count;
 
 		[SerializeField] protected Transform root, parent;
@@ -162,7 +163,12 @@ namespace uwu.Gameplay
 			if (instance == null) 
 			{
 				refresh = false;
-				instance = Instantiate(prefab);
+
+				if (pool == null)
+					instance = Instantiate(prefab);
+				else
+					instance = pool.Request();
+				
 				instances.Add(instance);
 			}
 

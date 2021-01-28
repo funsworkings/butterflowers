@@ -58,6 +58,7 @@ namespace butterflowersOS.Objects.Managers
 		#region Properties
 
 		[SerializeField] WorldPreset preset;
+		[SerializeField] ObjectPool pool;
     
 		public Transition flowerTransition;
 		public Transition spawnTransition;
@@ -501,7 +502,8 @@ namespace butterflowersOS.Objects.Managers
 		
 			TriggerUpdateBeacons();
 		
-			Destroy(beacon.gameObject);
+			beacon.GetComponent<PoolObject>().Dispose();
+			//Destroy(beacon.gameObject);
 		}
 
 		void onActivatedBeacon(Beacon beacon)
