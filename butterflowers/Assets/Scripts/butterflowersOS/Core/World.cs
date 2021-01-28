@@ -240,7 +240,7 @@ namespace butterflowersOS.Core
             sceneAudio.FadeIn();
             yield return new WaitForEndOfFrame();
             
-            Loader.Load();
+            Loader.Load(.1f, 1f);
             while (Loader.IsLoading) yield return null;
 
 

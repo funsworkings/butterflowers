@@ -131,7 +131,7 @@ namespace butterflowersOS.Menu
                 yield return null;
             }
             
-            SceneLoader.Instance.GoToScene(1);
+            SceneLoader.Instance.GoToScene(1, 0f, .1f);
         }
     
         #endregion

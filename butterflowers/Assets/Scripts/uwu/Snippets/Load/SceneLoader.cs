@@ -70,7 +70,7 @@ namespace uwu.Snippets.Load
 		{
 			LoadOp = SceneManager.LoadSceneAsync(buildIndex);
 			LoadOp.allowSceneActivation = false;
-			Loader.Load();
+			Loader.Load(min, max);
 
 			while (!Completed || Loader.IsLoading) yield return null;
 			LoadOp.allowSceneActivation = true;
