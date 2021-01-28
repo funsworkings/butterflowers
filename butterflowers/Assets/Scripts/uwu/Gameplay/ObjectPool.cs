@@ -75,7 +75,8 @@ namespace uwu.Gameplay
 
 			if (active.Contains(@object)) active.Remove(@object);
 			pool.Add(@object);
-			
+
+			@object.transform.parent = transform; // Reset transform of queued pool object
 			@object.gameObject.SetActive(false);
 		}
 		
