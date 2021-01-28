@@ -38,7 +38,7 @@ namespace butterflowersOS.AI
 		{
 			while (!Save.load) yield return null;
 			
-			Loader.Load(0f, 1f); // Trigger load
+			Loader.Load(.1f, 1f); // Trigger load
 			
 			byte[] images = Save.data.images;
 			ushort image_height = Save.data.image_height;
