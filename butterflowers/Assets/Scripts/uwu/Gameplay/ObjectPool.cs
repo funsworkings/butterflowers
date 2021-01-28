@@ -98,6 +98,12 @@ namespace uwu.Gameplay
 			@object.gameObject.SetActive(true);
 			return @object;
 		}
+
+		public void Wipe(PoolObject @object)
+		{
+			if (active.Contains(@object)) active.Remove(@object);
+			if (pool.Contains(@object)) pool.Remove(@object);
+		}
 		
 		#endregion
 	}
