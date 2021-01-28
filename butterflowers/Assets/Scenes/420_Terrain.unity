@@ -8809,7 +8809,7 @@ Transform:
   m_PrefabInstance: {fileID: 0}
   m_PrefabAsset: {fileID: 0}
   m_GameObject: {fileID: 201810246}
-  m_LocalRotation: {x: 0.11976033, y: 0.000000004114268, z: -4.891245e-10, w: 0.99280286}
+  m_LocalRotation: {x: 0.119760305, y: 0.00000002575661, z: -0.0000000030998075, w: 0.99280286}
   m_LocalPosition: {x: 0, y: 9.518084, z: -21.87147}
   m_LocalScale: {x: 1, y: 1.3577, z: 1}
   m_Children:
@@ -31345,7 +31345,7 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: 
   visible: 0
-  cutscenes: {fileID: 0}
+  cutscenes: {fileID: 214334918}
   sceneAudio: {fileID: 287379315}
 --- !u!225 &1308009145
 CanvasGroup:
@@ -62510,7 +62510,7 @@ GameObject:
   m_Icon: {fileID: 0}
   m_NavMeshLayer: 0
   m_StaticEditorFlags: 0
-  m_IsActive: 0
+  m_IsActive: 1
 --- !u!114 &2085320095
 MonoBehaviour:
   m_ObjectHideFlags: 0
@@ -65906,6 +65906,7 @@ PrefabInstance:
       objectReference: {fileID: 86240247}
     m_RemovedComponents:
     - {fileID: 3804926315211342029, guid: 509b8aa7f5bcf044694c0db1f3688209, type: 3}
+    - {fileID: 3804926316754670702, guid: 509b8aa7f5bcf044694c0db1f3688209, type: 3}
   m_SourcePrefab: {fileID: 100100000, guid: 509b8aa7f5bcf044694c0db1f3688209, type: 3}
 --- !u!4 &3891065153410308730
 Transform:
