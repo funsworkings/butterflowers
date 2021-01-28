@@ -1,5 +1,6 @@
 ﻿using System;
 using System.Collections;
+using Neue.Agent.Brain.Data;
 using UnityEngine;
 using UnityEngine.SceneManagement;
 using uwu;
@@ -98,7 +99,7 @@ namespace butterflowersOS.Menu
             Save.SaveGameData(); // Save game data with username
 
             usernamePanel.Close();
-            MoveToTheGame();
+            MoveToTheGame(1);
         }
 
         public void ContinueGame()
@@ -106,7 +107,9 @@ namespace butterflowersOS.Menu
             route = Route.ContinueGame;
 
             Close();
-            MoveToTheGame();
+
+            int sceneIndex = (Save.IsProfileValid()) ? 2 : 1;
+            MoveToTheGame(sceneIndex);
         }
 
         public void Reset()
@@ -123,7 +126,7 @@ namespace butterflowersOS.Menu
             continueButton.SetActive(previousSave);
         }
 
-        IEnumerator MovingToGame()
+        IEnumerator MovingToGame(int sceneIndex)
         {
             var opacity = (route == Route.ContinueGame) ? this.opacity : continuePanel;
             while (opacity.Visible) 
@@ -131,7 +134,7 @@ namespace butterflowersOS.Menu
                 yield return null;
             }
             
-            SceneLoader.Instance.GoToScene(1, 0f, .1f);
+            SceneLoader.Instance.GoToScene(sceneIndex, 0f, .1f);
         }
     
         #endregion
@@ -146,7 +149,7 @@ namespace butterflowersOS.Menu
             Save.WipeGameData<GameData>(); 
         }
 
-        public void MoveToTheGame()
+        public void MoveToTheGame(int sceneIndex)
         {
             if (route == Route.NULL) 
             {
@@ -156,7 +159,7 @@ namespace butterflowersOS.Menu
             
             sceneAudio.FadeOut(); // Fade scene audio OUT
            
-            StartCoroutine("MovingToGame");
+            StartCoroutine("MovingToGame", sceneIndex);
         }
     }
 }
