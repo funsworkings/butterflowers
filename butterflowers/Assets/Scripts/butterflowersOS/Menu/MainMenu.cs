@@ -24,6 +24,7 @@ namespace butterflowersOS.Menu
         [SerializeField] GameObject continueButton;
         [SerializeField] ToggleOpacity continuePanel;
         [SerializeField] ChooseUsername usernamePanel;
+        [SerializeField] SceneAudioManager sceneAudio;
 
         public enum Route
         {
@@ -130,7 +131,7 @@ namespace butterflowersOS.Menu
                 yield return null;
             }
             
-            SceneLoader.Instance.GoToScene(1, 0f, .33f);
+            SceneLoader.Instance.GoToScene(1);
         }
     
         #endregion
@@ -152,6 +153,8 @@ namespace butterflowersOS.Menu
                 Debug.LogWarning("Ignore request to load scene when route is NULL!");
                 return;
             }
+            
+            sceneAudio.FadeOut(); // Fade scene audio OUT
            
             StartCoroutine("MovingToGame");
         }

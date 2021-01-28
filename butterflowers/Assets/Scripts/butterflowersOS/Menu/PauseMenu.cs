@@ -15,6 +15,7 @@ namespace butterflowersOS.Menu
 		World World;
 
 		[SerializeField] Cutscenes cutscenes;
+		[SerializeField] SceneAudioManager sceneAudio;
 		
 		// Properties
 
@@ -70,6 +71,7 @@ namespace butterflowersOS.Menu
 			while (opacity.Visible) 
 				yield return null;
 			
+			sceneAudio.FadeOut();
 			SceneLoader.Instance.GoToScene(0);
 		}
 
