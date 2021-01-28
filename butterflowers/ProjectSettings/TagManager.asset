@@ -35,11 +35,11 @@ TagManager:
   - Terrain_Plant
   - Terrain_Destroy
   - Terrain_Release
-  - 
-  - 
-  - 
-  - 
-  - 
+  - Scene_Insert
+  - Scene_Flower
+  - Scene_Plant
+  - Scene_Destroy
+  - Scene_Release
   m_SortingLayers:
   - name: Default
     uniqueID: 0

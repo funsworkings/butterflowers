@@ -864,10 +864,6 @@
             <e p="VideoScriptPlayableTrack.cs" t="Include" />
           </e>
         </e>
-        <e p="Examples" t="Include">
-          <e p="LICENSE.txt" t="Include" />
-          <e p="S3Example.cs" t="Include" />
-        </e>
         <e p="Extensions" t="Include">
           <e p="FontFormat.cs" t="Include" />
         </e>
@@ -1540,6 +1536,7 @@
             </e>
             <e p="Audio" t="Include">
               <e p="AudioHandler.cs" t="Include" />
+              <e p="SceneAudioManager.cs" t="Include" />
             </e>
             <e p="Behaviors" t="Include">
               <e p="IErrorHandler.cs" t="Include" />
@@ -1587,6 +1584,8 @@
             <e p="Gameplay" t="Include">
               <e p="IInteractable.cs" t="Include" />
               <e p="Interacter.cs" t="Include" />
+              <e p="ObjectPool.cs" t="Include" />
+              <e p="PoolObject.cs" t="Include" />
               <e p="Spawner.cs" t="Include" />
             </e>
             <e p="Generic" t="Include">

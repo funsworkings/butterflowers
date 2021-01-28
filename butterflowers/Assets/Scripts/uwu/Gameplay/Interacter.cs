@@ -1,4 +1,5 @@
-﻿using UnityEngine;
+﻿using System;
+using UnityEngine;
 using UnityEngine.EventSystems;
 using System.Collections.Generic;
 using System.Linq;
@@ -71,12 +72,15 @@ namespace uwu.Gameplay
 			ParseInteractions(ref _frameInteractions, hits3d, hits2d);
 			FilterInteractions(ref _frameInteractions);
 
+			_frameInteractions.OrderBy((_frameInteraction) =>
+				_frameInteraction.Key.Priority);
+
 			HandleInteractions(_frameInteractions);
 			DisposeInteractions(_frameInteractions);
 			
 			frameInteractions = _frameInteractions;
 		}
-		
+
 		#region Interact
 
 		protected virtual void QueryInteractions(out RaycastHit[] hits, out RaycastResult[] hits2d)

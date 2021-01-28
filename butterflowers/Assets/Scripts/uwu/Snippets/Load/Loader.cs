@@ -99,7 +99,7 @@ namespace uwu.Snippets.Load
 				loadTime += Time.unscaledDeltaTime;
 				progress = Mathf.Min(loadTime / minimumLoadTime, progress);
 
-				UpdateFill(Mathf.Pow(progress, 4f));
+				UpdateFill(Mathf.Pow(progress, 4f).RemapNRB(0f, 1f, min, max));
 				
 				if (onProgress != null)
 					onProgress(progress);

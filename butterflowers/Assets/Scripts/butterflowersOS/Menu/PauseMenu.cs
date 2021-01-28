@@ -15,6 +15,7 @@ namespace butterflowersOS.Menu
 		World World;
 
 		[SerializeField] Cutscenes cutscenes;
+		[SerializeField] SceneAudioManager sceneAudio;
 		
 		// Properties
 
@@ -38,7 +39,7 @@ namespace butterflowersOS.Menu
 
 		void Update()
 		{
-			if (Input.GetKeyUp(KeyCode.Escape) && World.LOAD && !disposeInProgress) 
+			if (Input.GetKeyUp(KeyCode.Escape) && World.LOAD && !cutscenes.playing &&  !disposeInProgress) 
 				Toggle();
 		}
 
@@ -47,11 +48,13 @@ namespace butterflowersOS.Menu
 		protected override void DidOpen()
 		{
 			opacity.Show();
+			AudioListener.pause = true;
 		}
 
 		protected override void DidClose()
 		{
 			opacity.Hide();
+			AudioListener.pause = false;
 		}
 		
 		#endregion
@@ -70,6 +73,7 @@ namespace butterflowersOS.Menu
 			while (opacity.Visible) 
 				yield return null;
 			
+			sceneAudio.FadeOut();
 			SceneLoader.Instance.GoToScene(0);
 		}
 

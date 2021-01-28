@@ -26,7 +26,7 @@ MonoBehaviour:
   m_EditorClassIdentifier: 
   template:
     color: {r: 1, g: 1, b: 1, a: 1}
-    intensity: 0
+    intensity: 1
     bounceIntensity: 1
     range: 10
 --- !u!114 &-8240174635511642676
@@ -57,7 +57,7 @@ MonoBehaviour:
   m_EditorClassIdentifier: 
   template:
     color: {r: 1, g: 1, b: 1, a: 1}
-    intensity: 1
+    intensity: 0
     bounceIntensity: 1
     range: 10
 --- !u!114 &-7219516323906641465
@@ -706,6 +706,54 @@ MonoBehaviour:
   m_Clips: []
   m_Markers:
     m_Objects: []
+--- !u!114 &950681507662391234
+MonoBehaviour:
+  m_ObjectHideFlags: 1
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 0}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 205d3b48bffc82a4ab8147414ba2ff88, type: 3}
+  m_Name: SubtitleData(Clone)(Clone)(Clone)
+  m_EditorClassIdentifier: 
+  subtitleData:
+    text: ' I can look down on the figures and see a funny Monster reaching upwards'
+    color: {r: 1, g: 1, b: 1, a: 1}
+    includeColor: 0
+--- !u!114 &1107348751709320430
+MonoBehaviour:
+  m_ObjectHideFlags: 1
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 0}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 205d3b48bffc82a4ab8147414ba2ff88, type: 3}
+  m_Name: SubtitleData(Clone)(Clone)
+  m_EditorClassIdentifier: 
+  subtitleData:
+    text: once settled
+    color: {r: 1, g: 1, b: 1, a: 1}
+    includeColor: 0
+--- !u!114 &1357901955883723309
+MonoBehaviour:
+  m_ObjectHideFlags: 1
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 0}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 205d3b48bffc82a4ab8147414ba2ff88, type: 3}
+  m_Name: SubtitleData(Clone)
+  m_EditorClassIdentifier: 
+  subtitleData:
+    text: cascaded into slow sheets and ribbons unto piles of snow/ice
+    color: {r: 1, g: 1, b: 1, a: 1}
+    includeColor: 0
 --- !u!114 &1445372806053583692
 MonoBehaviour:
   m_ObjectHideFlags: 1
@@ -720,7 +768,7 @@ MonoBehaviour:
   m_EditorClassIdentifier: 
   template:
     color: {r: 1, g: 1, b: 1, a: 1}
-    intensity: 0
+    intensity: 30
     bounceIntensity: 1
     range: 10
 --- !u!114 &1909855923135089396
@@ -736,9 +784,7 @@ MonoBehaviour:
   m_Name: SubtitleData
   m_EditorClassIdentifier: 
   subtitleData:
-    text: eventually too the whole Mass falls     cascaded into slow sheets and ribbons
-      unto piles of snow/ice           once settled             I can look down on
-      the figures and see a funny Monster reaching upwards
+    text: eventually too the whole Mass falls
     color: {r: 1, g: 1, b: 1, a: 1}
     includeColor: 0
 --- !u!114 &3086239184611152736
@@ -782,7 +828,160 @@ MonoBehaviour:
     m_Start: 8.95
     m_ClipIn: 0
     m_Asset: {fileID: 1909855923135089396}
-    m_Duration: 15.983333333333334
+    m_Duration: 3.8632954880595207
+    m_TimeScale: 1
+    m_ParentTrack: {fileID: 3612206845423783699}
+    m_EaseInDuration: 0
+    m_EaseOutDuration: 0
+    m_BlendInDuration: -1
+    m_BlendOutDuration: -1
+    m_MixInCurve:
+      serializedVersion: 2
+      m_Curve:
+      - serializedVersion: 3
+        time: 0
+        value: 0
+        inSlope: 0
+        outSlope: 0
+        tangentMode: 0
+        weightedMode: 0
+        inWeight: 0
+        outWeight: 0
+      - serializedVersion: 3
+        time: 1
+        value: 1
+        inSlope: 0
+        outSlope: 0
+        tangentMode: 0
+        weightedMode: 0
+        inWeight: 0
+        outWeight: 0
+      m_PreInfinity: 2
+      m_PostInfinity: 2
+      m_RotationOrder: 4
+    m_MixOutCurve:
+      serializedVersion: 2
+      m_Curve: []
+      m_PreInfinity: 2
+      m_PostInfinity: 2
+      m_RotationOrder: 4
+    m_BlendInCurveMode: 0
+    m_BlendOutCurveMode: 0
+    m_ExposedParameterNames: []
+    m_AnimationCurves: {fileID: 0}
+    m_Recordable: 0
+    m_PostExtrapolationMode: 0
+    m_PreExtrapolationMode: 0
+    m_PostExtrapolationTime: 0
+    m_PreExtrapolationTime: 8.95
+    m_DisplayName: SubtitleData
+  - m_Version: 1
+    m_Start: 12.81329548805952
+    m_ClipIn: 0
+    m_Asset: {fileID: 1357901955883723309}
+    m_Duration: 4.58527248352766
+    m_TimeScale: 1
+    m_ParentTrack: {fileID: 3612206845423783699}
+    m_EaseInDuration: 0
+    m_EaseOutDuration: 0
+    m_BlendInDuration: -1
+    m_BlendOutDuration: -1
+    m_MixInCurve:
+      serializedVersion: 2
+      m_Curve:
+      - serializedVersion: 3
+        time: 0
+        value: 0
+        inSlope: 0
+        outSlope: 0
+        tangentMode: 0
+        weightedMode: 0
+        inWeight: 0
+        outWeight: 0
+      - serializedVersion: 3
+        time: 1
+        value: 1
+        inSlope: 0
+        outSlope: 0
+        tangentMode: 0
+        weightedMode: 0
+        inWeight: 0
+        outWeight: 0
+      m_PreInfinity: 2
+      m_PostInfinity: 2
+      m_RotationOrder: 4
+    m_MixOutCurve:
+      serializedVersion: 2
+      m_Curve: []
+      m_PreInfinity: 2
+      m_PostInfinity: 2
+      m_RotationOrder: 4
+    m_BlendInCurveMode: 0
+    m_BlendOutCurveMode: 0
+    m_ExposedParameterNames: []
+    m_AnimationCurves: {fileID: 0}
+    m_Recordable: 0
+    m_PostExtrapolationMode: 0
+    m_PreExtrapolationMode: 0
+    m_PostExtrapolationTime: 0
+    m_PreExtrapolationTime: 0
+    m_DisplayName: SubtitleData
+  - m_Version: 1
+    m_Start: 17.39856797158718
+    m_ClipIn: 0
+    m_Asset: {fileID: 1107348751709320430}
+    m_Duration: 1.829970609396696
+    m_TimeScale: 1
+    m_ParentTrack: {fileID: 3612206845423783699}
+    m_EaseInDuration: 0
+    m_EaseOutDuration: 0
+    m_BlendInDuration: -1
+    m_BlendOutDuration: -1
+    m_MixInCurve:
+      serializedVersion: 2
+      m_Curve:
+      - serializedVersion: 3
+        time: 0
+        value: 0
+        inSlope: 0
+        outSlope: 0
+        tangentMode: 0
+        weightedMode: 0
+        inWeight: 0
+        outWeight: 0
+      - serializedVersion: 3
+        time: 1
+        value: 1
+        inSlope: 0
+        outSlope: 0
+        tangentMode: 0
+        weightedMode: 0
+        inWeight: 0
+        outWeight: 0
+      m_PreInfinity: 2
+      m_PostInfinity: 2
+      m_RotationOrder: 4
+    m_MixOutCurve:
+      serializedVersion: 2
+      m_Curve: []
+      m_PreInfinity: 2
+      m_PostInfinity: 2
+      m_RotationOrder: 4
+    m_BlendInCurveMode: 0
+    m_BlendOutCurveMode: 0
+    m_ExposedParameterNames: []
+    m_AnimationCurves: {fileID: 0}
+    m_Recordable: 0
+    m_PostExtrapolationMode: 0
+    m_PreExtrapolationMode: 0
+    m_PostExtrapolationTime: 0
+    m_PreExtrapolationTime: 0
+    m_DisplayName: SubtitleData
+  - m_Version: 1
+    m_Start: 19.228538580983876
+    m_ClipIn: 0
+    m_Asset: {fileID: 950681507662391234}
+    m_Duration: 6.188128085682791
     m_TimeScale: 1
     m_ParentTrack: {fileID: 3612206845423783699}
     m_EaseInDuration: 0
@@ -827,7 +1026,7 @@ MonoBehaviour:
     m_PostExtrapolationMode: 0
     m_PreExtrapolationMode: 0
     m_PostExtrapolationTime: Infinity
-    m_PreExtrapolationTime: 8.95
+    m_PreExtrapolationTime: 0
     m_DisplayName: SubtitleData
   m_Markers:
     m_Objects: []
@@ -977,7 +1176,7 @@ MonoBehaviour:
     m_Start: 0
     m_ClipIn: 0
     m_Asset: {fileID: 8519428173104185857}
-    m_Duration: 13.033333333333337
+    m_Duration: 13.516666666666671
     m_TimeScale: 1
     m_ParentTrack: {fileID: 5093019321023502043}
     m_EaseInDuration: 0
@@ -1043,7 +1242,7 @@ MonoBehaviour:
     m_PreExtrapolationTime: 0
     m_DisplayName: FadeIn
   - m_Version: 1
-    m_Start: 13.033333333333337
+    m_Start: 13.516666666666671
     m_ClipIn: 0
     m_Asset: {fileID: 1445372806053583692}
     m_Duration: 11.899999999999999
@@ -1366,7 +1565,7 @@ MonoBehaviour:
     m_Start: 0
     m_ClipIn: 0
     m_Asset: {fileID: -8042675331102630281}
-    m_Duration: 13.033333333333337
+    m_Duration: 13.516666666666671
     m_TimeScale: 1
     m_ParentTrack: {fileID: 7790934713934847585}
     m_EaseInDuration: 0
@@ -1432,7 +1631,7 @@ MonoBehaviour:
     m_PreExtrapolationTime: 0
     m_DisplayName: FadeIn
   - m_Version: 1
-    m_Start: 13.033333333333337
+    m_Start: 13.516666666666671
     m_ClipIn: 0
     m_Asset: {fileID: -8524459668853439587}
     m_Duration: 11.899999999999999

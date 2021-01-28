@@ -10,6 +10,8 @@ namespace uwu.Gameplay
 		void Grab(RaycastHit hit);
 		void Continue(RaycastHit hit);
 		void Release(RaycastHit hit);
+		
+		int Priority { get;  }
 	}
 
 	public static class IInteractableExtensions

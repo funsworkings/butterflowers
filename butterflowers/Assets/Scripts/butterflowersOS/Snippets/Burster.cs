@@ -1,10 +1,11 @@
 ﻿using UnityEngine;
+using uwu.Gameplay;
 
 namespace butterflowersOS.Snippets
 {
 	public class Burster : MonoBehaviour
 	{
-		[SerializeField] GameObject pr_burst;
+		[SerializeField] ObjectPool burstPool;
 		[SerializeField] float cameraDistance = 1f;
 
 		Camera camera;
@@ -18,7 +19,10 @@ namespace butterflowersOS.Snippets
 		public void Burst(Vector3 position)
 		{
 			var worldPosition = camera.ScreenToWorldPoint(new Vector3(position.x, position.y, cameraDistance));
-			Instantiate(pr_burst, worldPosition, pr_burst.transform.rotation);
+			var burst = burstPool.Request();
+				burst.transform.position = worldPosition;
+				
+			burst.GetComponent<ParticleSystem>().Play();
 		}
 	}
 }

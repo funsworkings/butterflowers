@@ -1,4 +1,5 @@
 ﻿using UnityEngine;
+using uwu.Gameplay;
 
 namespace uwu.Snippets
 {
@@ -7,6 +8,8 @@ namespace uwu.Snippets
 	{
 		bool played;
 		ParticleSystem ps;
+
+		public bool pooled = false;
 
 		void Awake()
 		{
@@ -27,6 +30,12 @@ namespace uwu.Snippets
 
 		void Kill()
 		{
+			if (pooled) 
+			{
+				GetComponent<PoolObject>().Dispose();
+				return;
+			}
+			
 			Destroy(gameObject);
 		}
 	}
