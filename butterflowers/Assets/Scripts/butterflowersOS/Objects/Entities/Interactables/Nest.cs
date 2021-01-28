@@ -519,8 +519,8 @@ namespace butterflowersOS.Objects.Entities.Interactables
             {
                 var e_Flammable = (entity as IFlammable);
             
-                if (IsOnFire) e_Flammable.Fire();
-                else e_Flammable.Extinguish();
+                if (IsOnFire && !e_Flammable.IsOnFire) e_Flammable.Fire();
+                else if(!IsOnFire && e_Flammable.IsOnFire) e_Flammable.Extinguish();
             }
         
 
