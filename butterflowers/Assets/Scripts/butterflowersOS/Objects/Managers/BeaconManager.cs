@@ -58,7 +58,7 @@ namespace butterflowersOS.Objects.Managers
 		#region Properties
 
 		[SerializeField] WorldPreset preset;
-		[SerializeField] ObjectPool pool;
+		[SerializeField] ObjectPool firePool, extinguishPool;
     
 		public Transition flowerTransition;
 		public Transition spawnTransition;
@@ -128,6 +128,8 @@ namespace butterflowersOS.Objects.Managers
 			Beacon.Planted += onPlantedBeacon;
 			Beacon.Flowered += onFloweredBeacon;
 			Beacon.Destroyed += onDestroyedBeacon;
+			Beacon.onFire += onFireBeacon;
+			Beacon.onExtinguish += onExtinguishBeacon;
         
 			Library = Library.Instance;
 			Library.onDeletedFiles += UserDeletedFiles;
@@ -146,6 +148,8 @@ namespace butterflowersOS.Objects.Managers
 			Beacon.Planted -= onPlantedBeacon;
 			Beacon.Flowered -= onFloweredBeacon;
 			Beacon.Destroyed -= onDestroyedBeacon;
+			Beacon.onFire -= onFireBeacon;
+			Beacon.onExtinguish -= onExtinguishBeacon;
         
 			Library.onDeletedFiles -= UserDeletedFiles;
 			Library.onRecoverFiles -= UserRecoveredFiles;
@@ -547,6 +551,20 @@ namespace butterflowersOS.Objects.Managers
 					b.Fire();    
 				}    
 			}
+		}
+
+		void onFireBeacon(Beacon beacon)
+		{
+			var position = beacon.transform.position;
+			var instance = firePool.Request();
+				instance.GetComponent<ParticleSystem>().Play();
+		}
+
+		void onExtinguishBeacon(Beacon beacon)
+		{
+			var position = beacon.transform.position;
+			var instance = extinguishPool.Request();
+				instance.GetComponent<ParticleSystem>().Play();
 		}
 
 		void TriggerUpdateBeacons()

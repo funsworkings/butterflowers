@@ -1289,7 +1289,8 @@ MonoBehaviour:
   boundsOffset: {x: 0, y: 0, z: 0}
   boundsMultiplier: {x: 1, y: 1, z: 1}
   preset: {fileID: 11400000, guid: 45ffdf5e02efb4848942aaeb5d029f6e, type: 2}
-  pool: {fileID: 0}
+  firePool: {fileID: 965696250}
+  extinguishPool: {fileID: 640037595}
   flowerTransition:
     onBegin:
       m_PersistentCalls:
@@ -8815,7 +8816,7 @@ Transform:
   m_PrefabInstance: {fileID: 0}
   m_PrefabAsset: {fileID: 0}
   m_GameObject: {fileID: 201810246}
-  m_LocalRotation: {x: 0.11976033, y: -0.000000013472056, z: 0.0000000016322874, w: 0.99280286}
+  m_LocalRotation: {x: 0.11976034, y: -0.000000024535291, z: 0.0000000029668294, w: 0.99280286}
   m_LocalPosition: {x: 0, y: 9.518084, z: -21.87147}
   m_LocalScale: {x: 1, y: 1.3577, z: 1}
   m_Children:
@@ -11558,7 +11559,7 @@ Transform:
   m_LocalScale: {x: 1, y: 1, z: 1}
   m_Children: []
   m_Father: {fileID: 756749475}
-  m_RootOrder: 2
+  m_RootOrder: 3
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
 --- !u!114 &341214823
 MonoBehaviour:
@@ -16537,6 +16538,53 @@ RectTransform:
     type: 3}
   m_PrefabInstance: {fileID: 638753077}
   m_PrefabAsset: {fileID: 0}
+--- !u!1 &640037593
+GameObject:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  serializedVersion: 6
+  m_Component:
+  - component: {fileID: 640037594}
+  - component: {fileID: 640037595}
+  m_Layer: 0
+  m_Name: Fire (Extinguish) Pooler
+  m_TagString: Untagged
+  m_Icon: {fileID: 0}
+  m_NavMeshLayer: 0
+  m_StaticEditorFlags: 0
+  m_IsActive: 1
+--- !u!4 &640037594
+Transform:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 640037593}
+  m_LocalRotation: {x: -0, y: -0, z: -0, w: 1}
+  m_LocalPosition: {x: 0, y: 0, z: 0}
+  m_LocalScale: {x: 1, y: 1, z: 1}
+  m_Children: []
+  m_Father: {fileID: 756749475}
+  m_RootOrder: 2
+  m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
+--- !u!114 &640037595
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 640037593}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: dcc5e8f66ed04f70baa25774ce962be9, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
+  active: []
+  pool: []
+  prefab: {fileID: 3956143340876385842, guid: 80e87ac8c1e72284ab49a644d9969301, type: 3}
+  initialSpawnAmount: 25
 --- !u!1 &644193529
 GameObject:
   m_ObjectHideFlags: 0
@@ -23138,6 +23186,7 @@ Transform:
   m_Children:
   - {fileID: 1425976795}
   - {fileID: 965696249}
+  - {fileID: 640037594}
   - {fileID: 341214822}
   m_Father: {fileID: 0}
   m_RootOrder: 6
@@ -26496,7 +26545,7 @@ GameObject:
   - component: {fileID: 965696249}
   - component: {fileID: 965696250}
   m_Layer: 0
-  m_Name: Fire Burst Pooler
+  m_Name: Fire (Start) Pooler
   m_TagString: Untagged
   m_Icon: {fileID: 0}
   m_NavMeshLayer: 0
@@ -26531,7 +26580,7 @@ MonoBehaviour:
   active: []
   pool: []
   prefab: {fileID: 3956143340876385842, guid: 80e87ac8c1e72284ab49a644d9969301, type: 3}
-  initialSpawnAmount: 0
+  initialSpawnAmount: 25
 --- !u!1001 &965847495
 PrefabInstance:
   m_ObjectHideFlags: 0
@@ -54372,7 +54421,7 @@ MonoBehaviour:
   m_outlineColor:
     serializedVersion: 2
     rgba: 4278190080
-  m_fontSize: 25.05
+  m_fontSize: 25.15
   m_fontSizeBase: 36
   m_fontWeight: 400
   m_enableAutoSizing: 1
