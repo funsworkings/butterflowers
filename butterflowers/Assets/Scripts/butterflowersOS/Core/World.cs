@@ -103,6 +103,7 @@ namespace butterflowersOS.Core
         [SerializeField] Loader Loader = null;
 
         [SerializeField] ToggleOpacity gamePanel;
+        [SerializeField] SceneAudioManager sceneAudio;
         [SerializeField] PauseMenu pauseMenu;
         [SerializeField] Profile profile;
 
@@ -236,6 +237,7 @@ namespace butterflowersOS.Core
             
             Butterflowers.Load();
             
+            sceneAudio.FadeIn();
             yield return new WaitForEndOfFrame();
             
             Loader.Load();
