@@ -91,6 +91,7 @@ namespace butterflowersOS.Objects.Entities.Interactables
 
         public static System.Action<Beacon> OnRegister, OnUnregister;
         public static System.Action<Beacon> Activated, Deactivated, Destroyed, Deleted, Planted, Flowered;
+        public static System.Action<Beacon> onFire, onExtinguish;
         public static System.Action<Beacon> onUpdateState;
 
         // Properties
@@ -327,7 +328,7 @@ namespace butterflowersOS.Objects.Entities.Interactables
             origin = point;
         
             ToggleCapabilities(false);
-            Extinguish();
+            if(IsOnFire)Extinguish();
             transform.localScale = Vector3.zero;
 
             if (Planted != null && events)
@@ -344,7 +345,7 @@ namespace butterflowersOS.Objects.Entities.Interactables
             origin = point;
         
             ToggleCapabilities(false);
-            Extinguish();
+            if(IsOnFire)Extinguish();
             transform.localScale = Vector3.zero;
 
             if (flower == null) 
@@ -448,11 +449,13 @@ namespace butterflowersOS.Objects.Entities.Interactables
         public void Fire()
         {
             deathPS.Play();
+            onFire?.Invoke(this);
         }
 
         public void Extinguish()
         {
             deathPS.Stop();
+            onExtinguish?.Invoke(this);
         }
     
         #endregion

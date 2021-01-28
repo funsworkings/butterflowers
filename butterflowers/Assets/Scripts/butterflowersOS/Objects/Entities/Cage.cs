@@ -1,5 +1,6 @@
 ﻿using System;
 using UnityEngine;
+using UnityEngine.Events;
 
 namespace butterflowersOS.Objects.Entities
 {
@@ -10,6 +11,8 @@ namespace butterflowersOS.Objects.Entities
 
         public System.Action onUpdateActiveCorners;
         public System.Action onCompleteCorners;
+        
+        public UnityEvent onComplete;
     
         #region Internal
 
@@ -102,8 +105,29 @@ namespace butterflowersOS.Objects.Entities
             if (sector._Status != Sector.Status.Wait) return false;
         
             sector.Activate();
+            CheckIfAllQueued();
         
             return true;
+        }
+
+        void CheckIfAllQueued()
+        {
+            bool _complete = true;
+            foreach (Sector sector in sectors) 
+            {
+                if (sector._Status == Sector.Status.Wait) 
+                {
+                    _complete = false;
+                    break;
+                }
+            }
+
+            if (_complete) {
+
+                onComplete.Invoke();
+            }
+
+            complete = _complete;
         }
 
         void CheckIfComplete(bool events = true)
