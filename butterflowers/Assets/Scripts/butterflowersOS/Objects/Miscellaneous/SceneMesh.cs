@@ -8,6 +8,9 @@ namespace butterflowersOS.Objects.Miscellaneous
 	public class SceneMesh : MonoBehaviour, IInteractable, ITooltip
 	{
 		// Properties
+		
+		[SerializeField] int _priority = 0;
+		public int Priority => _priority;
 
 		new Renderer _renderer;
 

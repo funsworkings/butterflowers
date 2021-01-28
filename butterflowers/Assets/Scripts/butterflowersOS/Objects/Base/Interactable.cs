@@ -5,7 +5,10 @@ namespace butterflowersOS.Objects.Base
 {
     public class Interactable : Entity, IInteractable
     {
-        
+
+        [SerializeField] int _priority = 0;
+        public int Priority => _priority;
+
         protected virtual void Awake(){}
         
         #region IInteractable impl
