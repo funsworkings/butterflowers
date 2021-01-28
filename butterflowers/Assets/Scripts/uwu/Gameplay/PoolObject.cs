@@ -25,6 +25,14 @@ namespace uwu.Gameplay
 			Destroy(gameObject);
 		}
 
+		void OnDisable()
+		{
+			if (_pool != null) 
+			{
+				_pool.Dequeue(this);
+			}
+		}
+
 		void OnDestroy()
 		{
 			if (_pool != null) 
