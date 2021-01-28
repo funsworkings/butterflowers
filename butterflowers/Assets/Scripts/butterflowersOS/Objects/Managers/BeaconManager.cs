@@ -557,6 +557,7 @@ namespace butterflowersOS.Objects.Managers
 		{
 			var position = beacon.transform.position;
 			var instance = firePool.Request();
+				instance.transform.position = position;
 				instance.GetComponent<ParticleSystem>().Play();
 		}
 
@@ -564,6 +565,7 @@ namespace butterflowersOS.Objects.Managers
 		{
 			var position = beacon.transform.position;
 			var instance = extinguishPool.Request();
+				instance.transform.position = position;
 				instance.GetComponent<ParticleSystem>().Play();
 		}
 
