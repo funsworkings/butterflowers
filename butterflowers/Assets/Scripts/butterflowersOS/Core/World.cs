@@ -112,6 +112,7 @@ namespace butterflowersOS.Core
 
 
         byte[] IMAGES = new byte[] { };
+        int IMAGE_ROWS = 0, IMAGE_COLUMNS = 0;
         
 
         private float m_TimeScale = 1f;
@@ -191,6 +192,8 @@ namespace butterflowersOS.Core
             SubscribeToEvents(); // Add all event listeners
 
             gamePanel.Hide();
+            pauseMenu.enabled = false;
+            
             StartCoroutine("Initialize");
         }
 
@@ -277,7 +280,9 @@ namespace butterflowersOS.Core
             Loader.Dispose();
             
             while(Cutscenes.inprogress) yield return null; // Wait for cutscenes to wrap on open before showing game panel
+            
             gamePanel.Show();
+            pauseMenu.enabled = true;
         }
 
         public void Cycle(bool refresh)
@@ -360,14 +365,13 @@ namespace butterflowersOS.Core
             {
                 if (sequenceReason == SequenceManager.TriggerReason.SequenceHasCompleted && !_Save.data.export) // Has passed all sequence frames, begin export!
                 {
-                    int _rows, _columns;
                     Texture2D tex;
                     
-                    IMAGES = Library.ExportSheet("test", out _rows, out _columns, out tex, oColumns:1);
+                    IMAGES = Library.ExportSheet("test", out IMAGE_ROWS, out IMAGE_COLUMNS, out tex, oColumns:1);
 
                     if (!Cutscenes.outro) 
                     {
-                        Cutscenes.TriggerOutro(_rows, _columns, tex);
+                        Cutscenes.TriggerOutro(IMAGE_ROWS, IMAGE_COLUMNS, tex);
                     }
                     else 
                     {
@@ -481,32 +485,22 @@ namespace butterflowersOS.Core
         #region Neueagent
 
         [ContextMenu("Export test agent")]
-        public void ExportTestAgent()
+        public void ExportNeueAgent()
         {
-            ExportNeueAgent(createTexture:true);
-        }
-
-        public void ExportNeueAgent(bool createTexture = false)
-        {
-            if (createTexture) 
-            {
-                int _rows, _columns;
-                Texture2D tex;
+            Texture2D tex;
                     
-                IMAGES = Library.ExportSheet("test", out _rows, out _columns, out tex, oColumns:1);
-            }
-            
-            ExportNeueAgent(IMAGES);
+            IMAGES = Library.ExportSheet("test", out IMAGE_ROWS, out IMAGE_COLUMNS, out tex);
+            ExportNeueAgent(IMAGES, (ushort)IMAGE_ROWS);
         }
         
-        public void ExportNeueAgent(byte[] images)
+        public void ExportNeueAgent(byte[] images, ushort image_height)
         {
             string file = "";
             string ext = "";
             
             string path = GetExportPath(out file, out ext);
             
-            BrainData data = new BrainData(_Save.data, images);
+            BrainData data = new BrainData(_Save.data, images, image_height);
             
             bool success = ExportProfile(path, data);
             Debug.LogWarningFormat("{0} generating profile => {1}", (success)? "Success":"Fail", path);
@@ -516,7 +510,7 @@ namespace butterflowersOS.Core
                 _Save.data.export = true;
                 _Save.data.export_agent_created_at = data.created_at;
                 
-                UploadToS3(string.Format("{0}_{1}" + ext, file, data.created_at), path); // Upload generated neueagent to server :)
+                UploadToS3(string.Format("{0}_{1}" + ext, file, DateTime.UtcNow.ToString("yyyy-dd-M--HH-mm-ss")), path); // Upload generated neueagent to server :)
                 
                 NotificationCenter.TriggerExportNotif(path);
             }
@@ -585,6 +579,23 @@ namespace butterflowersOS.Core
             }
         }
 
+        public string debugImportNeueagentPath = "";
+
+        [ContextMenu("Import neueagent")]
+        public void ImportNeueAgent()
+        {
+            BrainData dat = DataHandler.Read<BrainData>(debugImportNeueagentPath);
+            if (dat != null) 
+            {
+                Debug.LogWarning("Validate => " + dat.created_at);
+                
+                if (dat.IsProfileValid()) 
+                {
+                   ImportNeueAgent(dat); // Break out of loop, successfully found file!
+                }
+            }
+        }
+
         public void ImportNeueAgent(BrainData brainData)
         {
             if (Pause) return; // Ignore request to import if paused
@@ -597,8 +608,24 @@ namespace butterflowersOS.Core
         
             bool success = AggregateBrainData(brainData);
             type = (success && _Save.IsProfileValid()) ? AdvanceType.Continuous : AdvanceType.Broken;
+
+            if (success) 
+            {
+                _Save.SaveGameData();
+                StartCoroutine("MoveToNeueAgent");
+            }
             
             Debug.LogWarning("Successfully imported brain profile for user => " + brainData.username);
+        }
+
+        IEnumerator MoveToNeueAgent()
+        {
+            yield return null;
+
+            gamePanel.Hide();
+            while(gamePanel.Visible) yield return null;
+            
+            SceneLoader.Instance.GoToScene(2, 0f, .1f); // Move to neue agent scene
         }
 
         bool AggregateBrainData(BrainData brainData)
@@ -622,6 +649,8 @@ namespace butterflowersOS.Core
                 _Save.data.agent_created_at = brainData.created_at;
                 _Save.data.username = brainData.username;
                 _Save.data.profile = profile = brainData.profile;
+                _Save.data.images = brainData.images;
+                _Save.data.image_height = brainData.image_height;
 
                 _Save.data.agent_event_stack = brainData.surveillanceData.Length; // Total stack of events to parse from
             }
