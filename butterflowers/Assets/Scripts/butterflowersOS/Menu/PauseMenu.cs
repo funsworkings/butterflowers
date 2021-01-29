@@ -12,8 +12,6 @@ namespace butterflowersOS.Menu
 	{
 		// External
 
-		World World;
-
 		[SerializeField] Cutscenes cutscenes;
 		[SerializeField] SceneAudioManager sceneAudio;
 		
@@ -39,7 +37,7 @@ namespace butterflowersOS.Menu
 
 		void Update()
 		{
-			if (Input.GetKeyUp(KeyCode.Escape) && World.LOAD && !cutscenes.playing &&  !disposeInProgress) 
+			if (Input.GetKeyUp(KeyCode.Escape) && !cutscenes.playing &&  !disposeInProgress) 
 				Toggle();
 		}
 
