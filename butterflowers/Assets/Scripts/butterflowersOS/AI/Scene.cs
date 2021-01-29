@@ -18,8 +18,9 @@ namespace butterflowersOS.AI
 
 		Loader Loader;
 
-		[SerializeField] MeshRenderer ground;
-						 Texture2D groundTexture;
+		[SerializeField] ParticleSystem butterflowers;
+		[SerializeField] Material butterflowersMaterial;
+						 Texture2D butterflowersTexture;
 						 
 		void Start()
 		{
@@ -31,7 +32,7 @@ namespace butterflowersOS.AI
 
 		void OnDestroy()
 		{
-			if(groundTexture != null) Destroy(groundTexture);
+			if(butterflowersTexture != null) Destroy(butterflowersTexture);
 		}
 
 		IEnumerator Initialize()
@@ -43,7 +44,7 @@ namespace butterflowersOS.AI
 			byte[] images = Save.data.images;
 			ushort image_height = Save.data.image_height;
 			
-			if(images.Length > 0 && image_height > 0) ApplyImagesToGround(images, image_height); // Apply ground texture
+			if(images.Length > 0 && image_height > 0) ApplyImagesToParticleSystem(images, Library._COLUMNS, image_height); // Apply ground texture
 
 			while (Loader.IsLoading) yield return null;
 			Loader.Dispose();
@@ -52,16 +53,21 @@ namespace butterflowersOS.AI
 		
 		#region Ground
 
-		void ApplyImagesToGround(byte[] images, ushort _height)
+		void ApplyImagesToParticleSystem(byte[] images, ushort _width, ushort _height)
 		{
-			int width = Library._WIDTH * Library._COLUMNS;
+			int width = Library._WIDTH * _width;
 			int height = Library._HEIGHT * _height;
 
-			groundTexture = new Texture2D(width, height, TextureFormat.RGB24, false);
-				groundTexture.LoadImage(images);
-				groundTexture.Apply();
+			butterflowersTexture = new Texture2D(width, height, TextureFormat.RGB24, false);
+				butterflowersTexture.LoadImage(images);
+				butterflowersTexture.Apply();
 
-			ground.material.mainTexture = groundTexture;
+			var textureModule = butterflowers.textureSheetAnimation;
+				textureModule.numTilesX = _width;
+				textureModule.numTilesY = _height;
+				textureModule.startFrameMultiplier = (_width * _height);
+
+			butterflowersMaterial.mainTexture = butterflowersTexture;
 		}
 		
 		#endregion
