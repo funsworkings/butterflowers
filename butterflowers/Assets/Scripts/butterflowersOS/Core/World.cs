@@ -7,6 +7,7 @@ using System.Net;
 using System.Security.Cryptography;
 using System.Text;
 using System.Text.RegularExpressions;
+using B83.Win32;
 using butterflowersOS.Data;
 using butterflowersOS.Interfaces;
 using butterflowersOS.Menu;
@@ -42,7 +43,7 @@ using uwu.UI.Behaviors.Visibility;
 
 namespace butterflowersOS.Core
 {
-    public class World : MonoBehaviour, ISaveable, IReactToSunCycleReliable, IPauseSun
+    public class World : Importer, ISaveable, IReactToSunCycleReliable, IPauseSun
     {
         public static World Instance = null;
         public static bool LOAD = false;
@@ -773,6 +774,36 @@ namespace butterflowersOS.Core
         public void Load(object data)
         {
             print("Load world data!");
+        }
+
+        #endregion
+        
+        #region Import
+
+        protected override FileNavigator _Files
+        {
+            get => Files;
+        }
+
+        protected override void HandleImageImport(IEnumerable<string> images, POINT point)
+        {
+            bool multipleImages = images.Count() > 1;
+                
+            foreach (string image in images) {
+                var info = new FileInfo(image);
+                var path = info.FullName;
+
+                bool exists = Library.RegisterFileInstance(path, Library.FileType.User);
+                if (exists)
+                    wand.AddBeacon(path, point, random: multipleImages); // Add beacon to scene via wand
+                else
+                    Debug.LogErrorFormat("File => {0} does not exist on user's desktop!", path);
+            }
+        }
+
+        protected override void HandleBrainImport(BrainData brain, POINT point)
+        {
+            ImportNeueAgent(brain);
         }
 
         #endregion
