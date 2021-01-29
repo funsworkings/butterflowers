@@ -61,6 +61,8 @@ public class FileDragAndDrop : MonoBehaviour
 
     IEnumerable<string> GetImages(List<string> aFiles)
     {
+        
+        
         return aFiles.Where(file =>
             Files.ExtensionMatchesFilter(Path.GetExtension(file).ToLowerInvariant())
         );
