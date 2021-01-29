@@ -21,6 +21,8 @@ namespace butterflowersOS.AI
 		[SerializeField] ParticleSystem butterflowers;
 		[SerializeField] Material butterflowersMaterial;
 						 Texture2D butterflowersTexture;
+
+		[SerializeField] RemoteCursor cursor;
 						 
 		void Start()
 		{
@@ -45,6 +47,7 @@ namespace butterflowersOS.AI
 			ushort image_height = Save.data.image_height;
 			
 			if(images.Length > 0 && image_height > 0) ApplyImagesToParticleSystem(images, Library._COLUMNS, image_height); // Apply ground texture
+			cursor.Initialize(Save.data.surveillanceData);
 
 			while (Loader.IsLoading) yield return null;
 			Loader.Dispose();
