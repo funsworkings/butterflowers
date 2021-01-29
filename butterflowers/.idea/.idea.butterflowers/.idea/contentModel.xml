@@ -1021,6 +1021,7 @@
           <e p="UnityWindowsFileDrag-Drop-master" t="Include">
             <e p="B83.Win32.cs" t="Include" />
             <e p="FileDragAndDrop.cs" t="Include" />
+            <e p="IFileDragAndDropReceiver.cs" t="Include" />
             <e p="ImageExample.cs" t="Include" />
           </e>
           <e p="xNode" t="Include">
@@ -1289,6 +1290,7 @@
               </e>
               <e p="Events.cs" t="Include" />
               <e p="Focusing.cs" t="Include" />
+              <e p="Importer.cs" t="Include" />
               <e p="Library.cs" t="Include" />
               <e p="Surveillance.cs" t="Include" />
               <e p="Wand.cs" t="Include" />

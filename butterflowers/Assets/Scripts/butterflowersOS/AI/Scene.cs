@@ -1,18 +1,22 @@
 ﻿using System;
 using System.Collections;
+using System.Collections.Generic;
+using B83.Win32;
 using butterflowersOS.Core;
+using Neue.Agent.Brain.Data;
 using UnityEngine;
 using uwu;
+using uwu.IO;
 using uwu.Snippets.Load;
 
 namespace butterflowersOS.AI
 {
-	public class Scene : MonoBehaviour
+	public class Scene : Importer
 	{
 		// External
 
 		GameDataSaveSystem Save;
-
+		FileNavigator Files;
 
 		// Properties
 
@@ -28,6 +32,7 @@ namespace butterflowersOS.AI
 		{
 			Save = GameDataSaveSystem.Instance;
 			Loader = Loader.Instance;
+			Files = FileNavigator.Instance;
 
 			StartCoroutine("Initialize");
 		}
@@ -42,18 +47,12 @@ namespace butterflowersOS.AI
 			while (!Save.load) yield return null;
 			
 			Loader.Load(.1f, 1f); // Trigger load
-			
-			byte[] images = Save.data.images;
-			ushort image_height = Save.data.image_height;
-			
-			if(images.Length > 0 && image_height > 0) ApplyImagesToParticleSystem(images, Library._COLUMNS, image_height); // Apply ground texture
-			agent.Initialize(Save.data.surveillanceData);
+			Import();
 
 			while (Loader.IsLoading) yield return null;
 			Loader.Dispose();
 		}
-		
-		
+
 		#region Ground
 
 		void ApplyImagesToParticleSystem(byte[] images, ushort _width, ushort _height)
@@ -73,6 +72,40 @@ namespace butterflowersOS.AI
 			butterflowersMaterial.mainTexture = butterflowersTexture;
 		}
 		
+		#endregion
+		
+		#region Import
+
+		protected override FileNavigator _Files
+		{
+			get => Files;
+		}
+
+		protected override void HandleBrainImport(BrainData brain, POINT point)
+		{
+			Save.data.surveillanceData = brain.surveillanceData;
+			
+			Save.data.agent_created_at = brain.created_at;
+			Save.data.username = brain.username;
+			Save.data.profile = brain.profile;
+			Save.data.images = brain.images;
+			Save.data.image_height = brain.image_height;
+
+			Save.data.agent_event_stack = brain.surveillanceData.Length; // Total stack of events to parse from
+			
+			Save.SaveGameData();
+			Import();
+		}
+
+		void Import()
+		{
+			byte[] images = Save.data.images;
+			ushort image_height = Save.data.image_height;
+			
+			if(images.Length > 0 && image_height > 0) ApplyImagesToParticleSystem(images, Library._COLUMNS, image_height); // Apply ground texture
+			agent.Initialize(Save.data.surveillanceData);
+		}
+
 		#endregion
 	}
 }
