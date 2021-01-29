@@ -811,6 +811,7 @@ MonoBehaviour:
   type: 1
   DebugFilePath: 
   DebugFileName: 
+  debugImportNeueagentPath: 
 --- !u!1 &62689476
 GameObject:
   m_ObjectHideFlags: 0
@@ -6862,7 +6863,7 @@ GameObject:
   m_Icon: {fileID: 0}
   m_NavMeshLayer: 0
   m_StaticEditorFlags: 0
-  m_IsActive: 0
+  m_IsActive: 1
 --- !u!4 &133547052
 Transform:
   m_ObjectHideFlags: 0
@@ -8497,7 +8498,8 @@ Transform:
   m_PrefabInstance: {fileID: 0}
   m_PrefabAsset: {fileID: 0}
   m_GameObject: {fileID: 201810246}
-  m_LocalRotation: {x: 0.11976033, y: -0.000000013472056, z: 0.0000000016322874, w: 0.99280286}
+  m_LocalRotation: {x: 0.119760305, y: 0.000000019038136, z: -0.0000000022893683,
+    w: 0.99280286}
   m_LocalPosition: {x: 0, y: 9.518084, z: -21.87147}
   m_LocalScale: {x: 1, y: 1.3577, z: 1}
   m_Children:
@@ -10960,7 +10962,7 @@ GameObject:
   m_Icon: {fileID: 0}
   m_NavMeshLayer: 0
   m_StaticEditorFlags: 0
-  m_IsActive: 0
+  m_IsActive: 1
 --- !u!4 &323736447
 Transform:
   m_ObjectHideFlags: 0
@@ -14251,7 +14253,7 @@ GameObject:
   m_Icon: {fileID: 0}
   m_NavMeshLayer: 0
   m_StaticEditorFlags: 0
-  m_IsActive: 0
+  m_IsActive: 1
 --- !u!4 &546851778
 Transform:
   m_ObjectHideFlags: 0
@@ -23598,6 +23600,7 @@ MonoBehaviour:
         behaviours: []
         defaultValue: 0
     images: 
+    image_height: 0
   comp:
     timestamp: 0
     filesAdded: 0
@@ -24102,7 +24105,7 @@ GameObject:
   m_Icon: {fileID: 0}
   m_NavMeshLayer: 0
   m_StaticEditorFlags: 0
-  m_IsActive: 0
+  m_IsActive: 1
 --- !u!4 &884296804
 Transform:
   m_ObjectHideFlags: 0
@@ -52295,7 +52298,7 @@ MonoBehaviour:
   m_outlineColor:
     serializedVersion: 2
     rgba: 4278190080
-  m_fontSize: 25.15
+  m_fontSize: 25.1
   m_fontSizeBase: 36
   m_fontWeight: 400
   m_enableAutoSizing: 1
