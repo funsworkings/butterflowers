@@ -96,6 +96,7 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: 
   m_agent: 0
+  _priority: 0
   onFocused:
     m_PersistentCalls:
       m_Calls: []
@@ -187,6 +188,8 @@ MonoBehaviour:
   colorSmoothSpeed: 1
   inactiveColor: {r: 0.5754717, g: 0.5754717, b: 0.5754717, a: 1}
   t_color: {r: 0, g: 0, b: 0, a: 0}
+  minPitch: 0.5
+  maxPitch: 2
   safePointRadius: 1
   safePointInterval: 1
   safePoints: []
@@ -255,9 +258,9 @@ MonoBehaviour:
   audioClips: []
   overrideMixer: 0
   debug: 0
-  pitchRange: {x: 0.5, y: 1}
+  pitchRange: {x: 0, y: 99}
   m_pitch: 1
-  smoothPitch: 0
+  smoothPitch: 1
   pitchSmoothSpeed: 1
   m_volume: 1
   smoothVolume: 0

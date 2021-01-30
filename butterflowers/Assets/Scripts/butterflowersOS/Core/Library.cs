@@ -199,7 +199,7 @@ namespace butterflowersOS.Core
 			return payload;
 		}
 
-		public void Load(LibraryPayload payload, Texture2D NULL_TEXTURE, Dictionary<string, Texture2D[]> TEXTURE_PACKS, bool loadTexturesImmediate, bool createThumbnails)
+		public void Load(LibraryPayload payload, Texture2D NULL_TEXTURE, Dictionary<string, Texture2D[]> TEXTURE_PACKS, bool loadTexturesImmediate, bool createThumbnails, bool loadThumbnails, bool generateThumbnails)
 		{
 			Files = FileNavigator.Instance;
 
@@ -225,8 +225,8 @@ namespace butterflowersOS.Core
 
 			Restore();
 			
-			LoadThumbnails();
-			GenerateThumbnails();
+			if(loadThumbnails) LoadThumbnails();
+			if(generateThumbnails) GenerateThumbnails();
 			//LoadFiles();
 
 			textureLoadTarget = generateThumbnailQueue.Union(thumbnailQueue).ToList();

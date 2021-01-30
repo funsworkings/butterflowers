@@ -10,6 +10,7 @@ using UnityEditor;
 using UnityEngine;
 using UnityEngine.Events;
 using uwu;
+using uwu.Audio;
 using uwu.Extensions;
 using uwu.Snippets;
 using Object = System.Object;
@@ -40,6 +41,7 @@ namespace butterflowersOS.Objects.Entities.Interactables
         Material mat;
         new Collider collider;
         new Rigidbody rigidbody;
+        AudioHandler _audioHandler;
         Damage damage;
 
         [SerializeField] ParticleSystem sparklesPS, cometPS, deathPS;
@@ -70,6 +72,10 @@ namespace butterflowersOS.Objects.Entities.Interactables
         [Header("Appearance")]
         [SerializeField] float colorSmoothSpeed = 1f;
         [SerializeField] Color inactiveColor, t_color;
+
+        [Header("Audio")] 
+        [SerializeField] float minPitch = 1f;
+        [SerializeField] float maxPitch = 2f;
 
         [Header("Debug")] 
         [SerializeField] float safePointRadius = 1f;
@@ -111,6 +117,7 @@ namespace butterflowersOS.Objects.Entities.Interactables
             collider = GetComponent<Collider>();
             rigidbody = GetComponent<Rigidbody>();
             damage = GetComponent<Damage>();
+            _audioHandler = GetComponent<AudioHandler>();
 
             mat = GetComponent<Renderer>().sharedMaterial;
         }
@@ -156,6 +163,7 @@ namespace butterflowersOS.Objects.Entities.Interactables
             //transform.eulerAngles = new Vector3(Mathf.Round(transform.eulerAngles.x/15)*15, Mathf.Round(transform.eulerAngles.y/15)*15, Mathf.Round(transform.eulerAngles.z/15)*15);
 
             UpdateColorFromStateAndCapacity();
+            _audioHandler.pitch = fill.RemapNRB(0f, 1f, minPitch, maxPitch);
         }
 
         void OnDrawGizmos()

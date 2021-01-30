@@ -27,6 +27,7 @@ namespace butterflowersOS.Objects.Managers
         public static ButterflowerManager Instance = null;
 
         public UnityEvent onAllDead;
+        public UnityEvent onSpawn, onDeath;
 
         #region Internal
 
@@ -72,6 +73,8 @@ namespace butterflowersOS.Objects.Managers
         Mesh butterflyMesh;
 
         [SerializeField] Material butterflyMaterial;
+        [SerializeField] int spawnThreshold = 100, deathThreshold = 100;
+                         int spawnDuringFrame = 0, deadDuringFrame = 0;
 
         // Collections
 
@@ -295,7 +298,9 @@ namespace butterflowersOS.Objects.Managers
 
             _randoms.Dispose(); // Wipe random values
 
-            if (_op > 0) {
+            // Clean up frame ops
+            if (_op > 0) 
+            {
                 op = (Op) _op;
                 _op = -1;
             }
@@ -311,6 +316,7 @@ namespace butterflowersOS.Objects.Managers
 
             Butterfly.OnRegister -= AddButterfly;
             Butterfly.OnUnregister -= RemoveButterfly;
+
 
             // Dispose all native arrays (JOBS)
 
