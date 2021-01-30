@@ -25,6 +25,13 @@ namespace butterflowersOS.AI
 		// Attributes
 
 		[SerializeField] float refreshTime = 1f;
+		
+		[Header("Scene elements")]
+		[SerializeField] MeshRenderer lightRenderer;
+		[SerializeField] float minLightOpacity = 0f;
+		[SerializeField] float maxLightOpacity = .5f;
+		[SerializeField] float lightLerpSpeed = 1f;
+		float light, t_light;
 
 		[Header("Particle systems")]
 		[SerializeField] float minEmission = 0f;
@@ -58,7 +65,8 @@ namespace butterflowersOS.AI
 			this.logs = logs.ToArray();
 			logIndex = 0;
 			
-			OnUpdatedLog();
+			if(logs.Count > 0)
+				OnUpdatedLog();
 			
 			emission = t_emission;
 			saturation = t_saturation;
@@ -70,6 +78,7 @@ namespace butterflowersOS.AI
 	    void Update()
 	    {
 		    if (!load) return;
+		    if (logs.Length == 0) return;
 
 		    refresh_t += Time.deltaTime;
 		    if (refresh_t > refreshTime) 
@@ -86,11 +95,19 @@ namespace butterflowersOS.AI
 		    
 		    ApplyParticleEmission();
 		    ApplyPostProcessing();
+
+		    if (lightRenderer.gameObject.activeInHierarchy) 
+		    {
+			    LerpLight();
+			    ApplyLight();
+		    }
 	    }
 
 	    void OnUpdatedLog()
 	    {
-		    t_emission = (log.butterflyHealth / 255f).RemapNRB(0f, 1f, minEmission, maxEmission);
+		    var butterfly = (log.butterflyHealth / 255f);
+		    t_emission = butterfly.RemapNRB(0f, 1f, minEmission, maxEmission);
+		    t_light = butterfly.RemapNRB(0f, 1f, minLightOpacity, maxLightOpacity);
 
 		    var nest = (log.nestFill / 255f);
 				t_saturation = nest.RemapNRB(0f, 1f, minSaturation, maxSaturation);
@@ -134,6 +151,22 @@ namespace butterflowersOS.AI
 		    {
 			    bloom.intensity.value = this.bloom; // Adjust bloom intensity
 		    }
+	    }
+	    
+	    #endregion
+	    
+	    #region Scene elements
+	    
+	    void LerpLight()
+	    {
+		    light = Mathf.Lerp(light, t_light, Time.deltaTime * lightLerpSpeed);
+	    }
+
+	    void ApplyLight()
+	    {
+		    print("a[ply loight");
+		    var color = lightRenderer.material.GetColor("_TintColor");
+		    lightRenderer.material.SetColor("_TintColor", Extensions.SetOpacity(light, color));
 	    }
 	    
 	    #endregion
