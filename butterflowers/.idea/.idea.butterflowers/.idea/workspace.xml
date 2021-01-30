@@ -34,7 +34,22 @@
   </component>
   <component name="ChangeListManager">
     <list default="true" id="6ebb3891-c912-403e-9e42-400f227dea0b" name="Default Changelist" comment="">
-      <change beforePath="$PROJECT_DIR$/Library/ScriptMapper" beforeDir="false" afterPath="$PROJECT_DIR$/Library/ScriptMapper" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/Assets/Scripts/butterflowersOS/Audio.meta" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/Assets/Scripts/butterflowersOS/Audio/GameSceneAudioManager.cs" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/Assets/Scripts/butterflowersOS/Audio/GameSceneAudioManager.cs.meta" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/.idea/.idea.butterflowers/.idea/contentModel.xml" beforeDir="false" afterPath="$PROJECT_DIR$/.idea/.idea.butterflowers/.idea/contentModel.xml" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/.idea/.idea.butterflowers/.idea/workspace.xml" beforeDir="false" afterPath="$PROJECT_DIR$/.idea/.idea.butterflowers/.idea/workspace.xml" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/Assets/Materials/Canvas.mat" beforeDir="false" afterPath="$PROJECT_DIR$/Assets/Materials/Canvas.mat" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/Assets/Presets/Behaviours/World (Default).asset" beforeDir="false" afterPath="$PROJECT_DIR$/Assets/Presets/Behaviours/World (Default).asset" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/Assets/Scenes/420_Terrain.unity" beforeDir="false" afterPath="$PROJECT_DIR$/Assets/Scenes/420_Terrain.unity" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/Assets/Scenes/Main Menu.unity" beforeDir="false" afterPath="$PROJECT_DIR$/Assets/Scenes/Main Menu.unity" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/Assets/Scripts/butterflowersOS/Core/Library.cs" beforeDir="false" afterPath="$PROJECT_DIR$/Assets/Scripts/butterflowersOS/Core/Library.cs" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/Assets/Scripts/butterflowersOS/Core/World.cs" beforeDir="false" afterPath="$PROJECT_DIR$/Assets/Scripts/butterflowersOS/Core/World.cs" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/Assets/Scripts/butterflowersOS/Objects/Entities/Interactables/Nest.cs" beforeDir="false" afterPath="$PROJECT_DIR$/Assets/Scripts/butterflowersOS/Objects/Entities/Interactables/Nest.cs" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/Assets/Scripts/butterflowersOS/Objects/Managers/ButterflowerManager.cs" beforeDir="false" afterPath="$PROJECT_DIR$/Assets/Scripts/butterflowersOS/Objects/Managers/ButterflowerManager.cs" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/Assets/Scripts/butterflowersOS/Presets/WorldPreset.cs" beforeDir="false" afterPath="$PROJECT_DIR$/Assets/Scripts/butterflowersOS/Presets/WorldPreset.cs" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/Assets/Sounds/Mixers/Main Menu.mixer" beforeDir="false" afterPath="$PROJECT_DIR$/Assets/Sounds/Mixers/Main Menu.mixer" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/Library/InspectorExpandedItems.asset" beforeDir="false" afterPath="$PROJECT_DIR$/Library/InspectorExpandedItems.asset" afterDir="false" />
     </list>
     <option name="SHOW_DIALOG" value="false" />
     <option name="HIGHLIGHT_CONFLICTS" value="true" />
@@ -65,9 +80,6 @@
   <component name="IdeDocumentHistory">
     <option name="CHANGED_PATHS">
       <list>
-        <option value="$PROJECT_DIR$/Assets/Scripts/butterflowersOS/Objects/Entities/Interactables/Vine.cs" />
-        <option value="$PROJECT_DIR$/Assets/Scripts/butterflowersOS/UI/MenuOption.cs" />
-        <option value="$PROJECT_DIR$/Assets/Scripts/butterflowersOS/Objects/Entities/Sun.cs" />
         <option value="$PROJECT_DIR$/Assets/Scripts/butterflowersOS/Save &amp; Load/GameDataSaveSystem.cs" />
         <option value="$PROJECT_DIR$/Assets/Scripts/butterflowersOS/Data/SurveillanceData.cs" />
         <option value="$PROJECT_DIR$/Assets/Scripts/butterflowersOS/Core/Agent.cs" />
@@ -80,7 +92,6 @@
         <option value="$PROJECT_DIR$/Assets/Scripts/butterflowersOS/Core/Agent/Modules/Behaviours.cs" />
         <option value="$PROJECT_DIR$/Assets/Scripts/butterflowersOS/Core/Agent/Brain.cs" />
         <option value="$PROJECT_DIR$/Assets/Scripts/uwu/Snippets/Load/ILoadDependent.cs" />
-        <option value="$PROJECT_DIR$/Assets/Scripts/butterflowersOS/Objects/Managers/ButterflowerManager.cs" />
         <option value="$PROJECT_DIR$/Assets/SubtitleTrackExample/SubtitleMixer.cs" />
         <option value="$PROJECT_DIR$/Assets/Scripts/butterflowersOS/Objects/Managers/CutsceneManager.cs" />
         <option value="$PROJECT_DIR$/Assets/SubtitleTrackExample/SubtitleData.cs" />
@@ -104,7 +115,6 @@
         <option value="$PROJECT_DIR$/Assets/Scripts/butterflowersOS/Menu/MainMenu.cs" />
         <option value="$PROJECT_DIR$/Assets/Scripts/butterflowersOS/Save &amp; Load/GameData.cs" />
         <option value="$PROJECT_DIR$/Assets/Scripts/Neue/Agent/Brain/Data/BrainData.cs" />
-        <option value="$PROJECT_DIR$/Assets/Scripts/butterflowersOS/Core/Library.cs" />
         <option value="$PROJECT_DIR$/Assets/Scripts/butterflowersOS/AI/RemoteCursor.cs" />
         <option value="$PROJECT_DIR$/Assets/Shaders/FullBack.shader" />
         <option value="$PROJECT_DIR$/Assets/Scripts/butterflowersOS/AI/RemoteAgent.cs" />
@@ -113,9 +123,14 @@
         <option value="$PROJECT_DIR$/Assets/Packages/UnityWindowsFileDrag-Drop-master/IFileDragAndDropReceiver.cs" />
         <option value="$PROJECT_DIR$/Assets/Packages/UnityWindowsFileDrag-Drop-master/FileDragAndDrop.cs" />
         <option value="$PROJECT_DIR$/Assets/Scripts/butterflowersOS/Core/Importer.cs" />
-        <option value="$PROJECT_DIR$/Assets/Scripts/butterflowersOS/Core/World.cs" />
         <option value="$PROJECT_DIR$/Assets/Scripts/butterflowersOS/AI/Scene.cs" />
         <option value="$PROJECT_DIR$/Assets/Shaders/ButterflowerParticle.shader" />
+        <option value="$PROJECT_DIR$/Assets/Scripts/butterflowersOS/Audio/GameSceneAudioManager.cs" />
+        <option value="$PROJECT_DIR$/Assets/Scripts/butterflowersOS/Core/Library.cs" />
+        <option value="$PROJECT_DIR$/Assets/Scripts/butterflowersOS/Presets/WorldPreset.cs" />
+        <option value="$PROJECT_DIR$/Assets/Scripts/butterflowersOS/Core/World.cs" />
+        <option value="$PROJECT_DIR$/Assets/Scripts/butterflowersOS/Objects/Entities/Interactables/Nest.cs" />
+        <option value="$PROJECT_DIR$/Assets/Scripts/butterflowersOS/Objects/Managers/ButterflowerManager.cs" />
       </list>
     </option>
   </component>
@@ -337,12 +352,12 @@
     <state x="2628" y="-31" width="1120" height="1151" key="run.anything.popup/0.0.1536.824/1920.-349.2560.1400@1920.-349.2560.1400" timestamp="1609375011181" />
     <state x="2628" y="-40" width="1120" height="1151" key="run.anything.popup/0.0.1536.824/1920.-358.2560.1400@1920.-358.2560.1400" timestamp="1607910030966" />
     <state x="425" y="187" width="672" height="677" key="run.anything.popup/0.0.1536.824@0.0.1536.824" timestamp="1609791387421" />
-    <state x="-1843" y="-124" width="672" height="160" key="search.everywhere.popup" timestamp="1611953157551">
+    <state x="-1843" y="-124" width="672" height="160" key="search.everywhere.popup" timestamp="1611974575941">
       <screen x="-2560" y="-370" width="2560" height="1400" />
     </state>
     <state x="-1843" y="-103" width="672" height="160" key="search.everywhere.popup/0.0.1536.824/-2560.-349.2560.1400@-2560.-349.2560.1400" timestamp="1611024221131" />
     <state x="-1842" y="-112" width="1120" height="1152" key="search.everywhere.popup/0.0.1536.824/-2560.-358.2560.1400@-2560.-358.2560.1400" timestamp="1608687095751" />
-    <state x="-1843" y="-124" width="672" height="160" key="search.everywhere.popup/0.0.1536.824/-2560.-370.2560.1400@-2560.-370.2560.1400" timestamp="1611953157551" />
+    <state x="-1843" y="-124" width="672" height="160" key="search.everywhere.popup/0.0.1536.824/-2560.-370.2560.1400@-2560.-370.2560.1400" timestamp="1611974575941" />
     <state x="79" y="-1194" width="1120" height="1152" key="search.everywhere.popup/0.0.1536.824/-638.-1440.2560.1400@-638.-1440.2560.1400" timestamp="1609043539164" />
     <state x="2637" y="-103" width="1120" height="1152" key="search.everywhere.popup/0.0.1536.824/1920.-349.2560.1400@1920.-349.2560.1400" timestamp="1609698996642" />
     <state x="2638" y="-112" width="1120" height="1152" key="search.everywhere.popup/0.0.1536.824/1920.-358.2560.1400@1920.-358.2560.1400" timestamp="1607998254801" />

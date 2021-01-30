@@ -24,6 +24,8 @@ namespace butterflowersOS.Presets
             public bool takePhotos = false;
             public bool logEvents = false;
             public bool loadTexturesInEditor = true;
+            public bool loadThumbnailsInEditor = true;
+            public bool generateThumbnailsInEditor = true;
             public bool useDesktopFilesForDebugBeacons = true;
 
         [Header("Time Attributes")]

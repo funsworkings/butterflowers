@@ -757,8 +757,18 @@ namespace butterflowersOS.Core
             //lib_payload.userFiles = _Save.data.user_files;
             //lib_payload.sharedFiles = _Save.data.shared_files;
             //lib_payload.worldFiles = _Save.data.world_files;
+
+            bool loadTextures = true;
+            bool loadThumbnails = true;
+            bool generateThumbnails = true;
             
-            Library.Load(lib_payload, Preset.defaultNullTexture, texturePacks, Preset.loadTexturesInEditor, Preset.backlogTextures);
+            #if UNITY_EDITOR
+                loadTextures = Preset.loadTexturesInEditor;
+                loadThumbnails = Preset.loadThumbnailsInEditor;
+                generateThumbnails = Preset.generateThumbnailsInEditor;
+            #endif
+            
+            Library.Load(lib_payload, Preset.defaultNullTexture, texturePacks, loadTextures, Preset.backlogTextures, loadThumbnails, generateThumbnails);
         }
         
         void SaveLibraryItems()
