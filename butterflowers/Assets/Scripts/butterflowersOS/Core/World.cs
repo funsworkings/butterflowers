@@ -56,6 +56,15 @@ namespace butterflowersOS.Core
             Broken,
             Continuous
         }
+
+        public enum State
+        {
+            Load,
+            
+            Cutscene,
+            Summary,
+            Game
+        }
         
         #endregion
 
@@ -125,6 +134,8 @@ namespace butterflowersOS.Core
         }
 
         public bool ready = true;
+        
+        public State _State { get; set; }
 
         // Collections
     
