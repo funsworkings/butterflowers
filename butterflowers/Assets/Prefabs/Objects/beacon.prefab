@@ -14359,6 +14359,7 @@ GameObject:
   - component: {fileID: 1270796099338416105}
   - component: {fileID: 1270796099338416104}
   - component: {fileID: 91193539}
+  - component: {fileID: 3488882234533829138}
   m_Layer: 12
   m_Name: beacon
   m_TagString: Untagged
@@ -14402,6 +14403,67 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: 
   m_agent: 0
+  _priority: 0
+  OnFlower:
+    m_PersistentCalls:
+      m_Calls:
+      - m_Target: {fileID: 3488882234533829138}
+        m_MethodName: PlaySoundRandomPitch
+        m_Mode: 2
+        m_Arguments:
+          m_ObjectArgument: {fileID: 8300000, guid: 0f328b6e389c3184b8dd0e7dd5798e72,
+            type: 3}
+          m_ObjectArgumentAssemblyTypeName: UnityEngine.AudioClip, UnityEngine
+          m_IntArgument: 0
+          m_FloatArgument: 0
+          m_StringArgument: 
+          m_BoolArgument: 0
+        m_CallState: 2
+  OnVine:
+    m_PersistentCalls:
+      m_Calls:
+      - m_Target: {fileID: 3488882234533829138}
+        m_MethodName: PlaySound
+        m_Mode: 2
+        m_Arguments:
+          m_ObjectArgument: {fileID: 8300000, guid: e711a60c8c1caac4f87669c3d1cc2e4f,
+            type: 3}
+          m_ObjectArgumentAssemblyTypeName: UnityEngine.AudioClip, UnityEngine
+          m_IntArgument: 0
+          m_FloatArgument: 0
+          m_StringArgument: 
+          m_BoolArgument: 0
+        m_CallState: 2
+  OnSpawn:
+    m_PersistentCalls:
+      m_Calls:
+      - m_Target: {fileID: 3488882234533829138}
+        m_MethodName: PlaySoundRandomPitch
+        m_Mode: 2
+        m_Arguments:
+          m_ObjectArgument: {fileID: 8300000, guid: 77396d3683a62224faa9b3753336e2f5,
+            type: 3}
+          m_ObjectArgumentAssemblyTypeName: UnityEngine.AudioClip, UnityEngine
+          m_IntArgument: 0
+          m_FloatArgument: 0
+          m_StringArgument: 
+          m_BoolArgument: 0
+        m_CallState: 2
+  OnDestroy:
+    m_PersistentCalls:
+      m_Calls:
+      - m_Target: {fileID: 3488882234533829138}
+        m_MethodName: PlaySound
+        m_Mode: 2
+        m_Arguments:
+          m_ObjectArgument: {fileID: 8300000, guid: c72d6c19fc89f534b89114173d38ef1c,
+            type: 3}
+          m_ObjectArgumentAssemblyTypeName: UnityEngine.AudioClip, UnityEngine
+          m_IntArgument: 0
+          m_FloatArgument: 0
+          m_StringArgument: 
+          m_BoolArgument: 0
+        m_CallState: 2
   preset: {fileID: 11400000, guid: 45ffdf5e02efb4848942aaeb5d029f6e, type: 2}
   deathPS: {fileID: 2567470850076773811}
   trails: {fileID: 91193539}
@@ -14655,6 +14717,33 @@ TrailRenderer:
   m_MinVertexDistance: 0.1
   m_Autodestruct: 1
   m_Emitting: 1
+--- !u!114 &3488882234533829138
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 1270796099338416119}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 91c18a853de2e5049bc17361fc93b5ee, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
+  cv: 0
+  mixerGroup: {fileID: 243145500699233022, guid: 0f878cdc2b0f396499ef3380fce5e3c7,
+    type: 2}
+  audioClips: []
+  overrideMixer: 0
+  debug: 0
+  pitchRange: {x: 0.9, y: 1.1}
+  m_pitch: 1
+  smoothPitch: 0
+  pitchSmoothSpeed: 1
+  m_volume: 1
+  smoothVolume: 0
+  volumeSmoothSpeed: 1
+  pitchParam: 
+  volumeParam: 
 --- !u!1 &1270796099906857372
 GameObject:
   m_ObjectHideFlags: 0

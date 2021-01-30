@@ -25,7 +25,7 @@ namespace butterflowersOS.Objects.Entities.Interactables
         // Events
 
         public UnityEvent onOpen, onClose;
-        public UnityEvent onIngestBeacon, onReleaseBeacon;
+        public UnityEvent onIngestBeacon, onReleaseBeacon, onKick;
 
         // External
 
@@ -211,6 +211,7 @@ namespace butterflowersOS.Objects.Entities.Interactables
         void AddForceAndOpen(Vector3 point, Vector3 direction, float force, AGENT agent = AGENT.User, bool particles = true, bool events = true)
         {
             rigidbody.AddForceAtPosition(direction * force, point);
+            onKick.Invoke();
 
             if (particles) 
             {
