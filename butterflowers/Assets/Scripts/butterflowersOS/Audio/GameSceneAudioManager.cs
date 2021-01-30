@@ -1,87 +1,70 @@
 ﻿using System.Collections.Generic;
 using butterflowersOS.Core;
+using butterflowersOS.Objects.Managers;
 using UnityEngine;
 using UnityEngine.Audio;
+using uwu.Audio;
+using uwu.Snippets.Load;
 using uwu.Timeline.Core;
 
 namespace butterflowersOS.Audio
 {
 	public class GameSceneAudioManager : SceneAudioManager
 	{
+		// Properties
+
+		[Header("Scene")] 
+		Loader Loader;
+		Cutscenes Cutscenes;
 		
-		#region Internal
+		[Header("Audio")]
+		[SerializeField] AudioFader _loadFader;
+		[SerializeField] AudioFader _gameFader;
+		[SerializeField] AudioFader _cutsceneFader;
 
-		[System.Serializable]
-		public struct StateMixerVolume
+
+		protected override void Start()
 		{
-			public World.State state;
-
-			public float cutsceneVolume;
-			public float gameVolume;
-			public float loadVolume;
-			public float eodVolume;
-		}
-
-		[System.Serializable]
-		public struct StateMixer
-		{
-			public AudioMixer mixer;
-			public string volumeParam;
-			public float volume;
-			public float volumeSmoothSpeed;
-
-			public void SmoothVolume(float dt, float t_vol)
-			{
-				volume = Mathf.Lerp(volume, t_vol, dt * volumeSmoothSpeed);
-				SetVolume(volume);
-			}
-
-			public void SetVolume(float vol)
-			{
-				mixer.SetFloat(volumeParam, vol);
-			}
-		}
-		
-		#endregion
-		
-		// External
-
-		World World;
-
-		[Header("Parameters")] 
-			[SerializeField] List<StateMixerVolume> settings = new List<StateMixerVolume>();
-			[SerializeField] StateMixer loadMixer;
-			[SerializeField] StateMixer cutsceneMixer;
-			[SerializeField] StateMixer gameMixer;
-			[SerializeField] StateMixer eodMixer;
-
-		void Start()
-		{
-			World = World.Instance;
-			EvaluateMixers(World._State);
-		}
+			Loader = Loader.Instance;
+			Cutscenes = FindObjectOfType<Cutscenes>();
 			
-		void Update()
+			AdjustFadersFromState();
+			
+			base.Start();
+		}
+		
+		protected override void Update()
 		{
-			var state = World._State;
-			EvaluateMixers(state);
+			AdjustFadersFromState();
+			
+			base.Update();
 		}
 		
 		
 		#region Mixing
 
-		void EvaluateMixers(World.State state)
+		void AdjustFadersFromState()
 		{
-			float dt = Time.deltaTime;
-		
-			foreach (StateMixerVolume setting in settings) 
+			if(Loader.IsLoading)
 			{
-				if (setting.state != state) continue;
+				_loadFader.FadeIn();
+				_gameFader.FadeOut();
+				_cutsceneFader.FadeOut();
+			}
+			else 
+			{
+				_loadFader.FadeOut();
 				
-				loadMixer.SmoothVolume(dt, setting.loadVolume);
-				cutsceneMixer.SmoothVolume(dt, setting.cutsceneVolume);
-				gameMixer.SmoothVolume(dt, setting.gameVolume);
-				eodMixer.SmoothVolume(dt, setting.eodVolume);
+				if (Cutscenes.playing) 
+				{
+					_cutsceneFader.FadeIn();
+					_gameFader.FadeOut();
+				}
+				else 
+				{
+					_cutsceneFader.FadeOut();
+					_gameFader.FadeIn();
+				}
 			}
 		}
 		
