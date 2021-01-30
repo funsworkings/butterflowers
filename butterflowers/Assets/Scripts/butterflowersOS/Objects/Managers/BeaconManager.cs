@@ -656,6 +656,7 @@ namespace butterflowersOS.Objects.Managers
 		{
 			//Instantiate(impactPS, position, Quaternion.identity); // Spawn impact!
 			beacon.Trails.enabled = true;
+			beacon.OnFlowerSpawn.Invoke();
 		}
 
 		public void OnEndFlower(Beacon beacon, Vector3 position)

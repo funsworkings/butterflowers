@@ -116,7 +116,6 @@ namespace butterflowersOS.Objects.Entities.Interactables
             gravity_ext = GetComponent<ApplyGravityRelativeToCamera>();
             collider = GetComponent<Collider>();
             rigidbody = GetComponent<Rigidbody>();
-            damage = GetComponent<Damage>();
 
             mat = GetComponent<Renderer>().sharedMaterial;
         }
@@ -133,7 +132,7 @@ namespace butterflowersOS.Objects.Entities.Interactables
             if (Quilt == null) Quilt = FindObjectOfType<Quilt>();
             if (Beacons == null) Beacons = FindObjectOfType<BeaconManager>();
 
-            damage.onHit.AddListener(SpillKick);
+            if(damage != null)damage.onHit.AddListener(SpillKick);
 
             Beacon.Deleted += onDestroyBeacon;
 
@@ -176,7 +175,7 @@ namespace butterflowersOS.Objects.Entities.Interactables
         {
             base.OnDestroyed();
 
-            damage.onHit.RemoveListener(SpillKick);
+            if(damage != null)damage.onHit.RemoveListener(SpillKick);
 
             Beacon.Deleted -= onDestroyBeacon;
 
