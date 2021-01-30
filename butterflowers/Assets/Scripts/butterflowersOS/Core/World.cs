@@ -62,6 +62,7 @@ namespace butterflowersOS.Core
         // Events
 
         public UnityEvent onDiscovery;
+        public UnityEvent onLoad, onLoadComplete, onLoadTrigger;
 
         // External
 
@@ -137,7 +138,9 @@ namespace butterflowersOS.Core
             [SerializeField] PlayableAsset introductionCutscene;
             [SerializeField] PlayableAsset separationCutscene;
 
-            public bool fetchBuckets = false;
+        [Header("Audio")] 
+            [SerializeField] AudioSource loadAudio;
+            [SerializeField] AudioClip loadAudioClip;
             
         #region Accessors
 
@@ -204,12 +207,6 @@ namespace butterflowersOS.Core
             
             HandleReady();
             UpdateTimeScale();
-
-            if (fetchBuckets) 
-            {
-                UploadToS3(DebugFileName, DebugFilePath);
-                fetchBuckets = false;
-            }
         }
         
         void HandleReady()
@@ -243,10 +240,20 @@ namespace butterflowersOS.Core
             
             sceneAudio.FadeIn();
             yield return new WaitForEndOfFrame();
-            
+
+            onLoad.Invoke();
             Loader.Load(.1f, 1f);
             while (Loader.IsLoading) yield return null;
 
+            float loadDuration = loadAudioClip.length;
+            float remainder =  loadAudio.time % loadDuration;
+            
+            float t = 0f;
+            while (t < remainder) { t += Time.deltaTime; yield return null; }
+            
+            onLoadComplete.Invoke();
+            yield return new WaitForSeconds(.1f);
+            onLoadTrigger.Invoke();
 
             bool requireTutorial = !_Save.data.tutorial;
             if (requireTutorial && Tutorial.IsValid) {
