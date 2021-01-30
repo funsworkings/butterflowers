@@ -93,6 +93,8 @@ namespace butterflowersOS.Core
         [SerializeField] SummaryManager Summary = null;
         [SerializeField] SequenceManager Sequence = null;
         [SerializeField] CutsceneManager Cutscenes = null;
+        [SerializeField] PlayableDirector Director = null;
+        [SerializeField] Cutscenes _cutscenes = null;
         [SerializeField] NotificationCenter NotificationCenter = null;
         [SerializeField] TutorialManager Tutorial = null;
 
@@ -145,9 +147,8 @@ namespace butterflowersOS.Core
             [SerializeField] List<Interactable> interactables = new List<Interactable>();
             [SerializeField] List<Focusable> focusables = new List<Focusable>();
 
-        [Header("Cutscenes")] 
-            [SerializeField] PlayableAsset introductionCutscene;
-            [SerializeField] PlayableAsset separationCutscene;
+        [Header("Cutscenes")]
+        [SerializeField] PlayableAsset separationCutscene;
 
         [Header("Audio")] 
             [SerializeField] AudioSource loadAudio;
@@ -391,6 +392,18 @@ namespace butterflowersOS.Core
                     if (!Cutscenes.outro) 
                     {
                         Cutscenes.TriggerOutro(IMAGE_ROWS, IMAGE_COLUMNS, tex);
+                        while (!Cutscenes.inprogress) yield return null;
+
+                        while (Cutscenes.inprogress) 
+                        {
+                            if ((Director.time - 1.0) > separationCutscene.duration) 
+                            {
+                                _cutscenes.Cancel();
+                                break; // Break from loop if force cancel!
+                            }    
+                            
+                            yield return null;
+                        }
                     }
                     else 
                     {
@@ -665,6 +678,8 @@ namespace butterflowersOS.Core
 
             if (success) 
             {
+                _Save.data.surveillanceData = brainData.surveillanceData;
+                
                 _Save.data.agent_created_at = brainData.created_at;
                 _Save.data.username = brainData.username;
                 _Save.data.profile = profile = brainData.profile;
