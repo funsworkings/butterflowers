@@ -41,7 +41,7 @@ namespace butterflowersOS.Objects.Entities.Interactables
         Material mat;
         new Collider collider;
         new Rigidbody rigidbody;
-        AudioHandler _audioHandler;
+        [SerializeField] AudioHandler _audioHandler;
         Damage damage;
 
         [SerializeField] ParticleSystem sparklesPS, cometPS, deathPS;
@@ -117,7 +117,6 @@ namespace butterflowersOS.Objects.Entities.Interactables
             collider = GetComponent<Collider>();
             rigidbody = GetComponent<Rigidbody>();
             damage = GetComponent<Damage>();
-            _audioHandler = GetComponent<AudioHandler>();
 
             mat = GetComponent<Renderer>().sharedMaterial;
         }

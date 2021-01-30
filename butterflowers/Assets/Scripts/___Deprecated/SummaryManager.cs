@@ -6,6 +6,7 @@ using butterflowersOS.UI.Summary_Cards;
 using Neue.Agent.Brain.Data;
 using TMPro;
 using UnityEngine;
+using UnityEngine.Events;
 using UnityEngine.UIElements;
 using UnityEngine.UI;
 using uwu.Snippets.Load;
@@ -24,6 +25,10 @@ namespace Objects.Managers
 		}
 		
 		#endregion
+		
+		// EVents
+
+		public UnityEvent onOpen, onClose;
 
 		// Properties
 
@@ -70,6 +75,8 @@ namespace Objects.Managers
 		{
 			m_active = true;
 			panel = Panel.Grades;
+			
+			onOpen.Invoke();
 
 			StartCoroutine("Show");
 		}
@@ -98,6 +105,8 @@ namespace Objects.Managers
 			while (summaryPanel.Visible) yield return null;
 			
 			m_active = false;
+			
+			onClose.Invoke();
 		}
 
 		#endregion

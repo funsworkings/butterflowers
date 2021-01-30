@@ -15,7 +15,6 @@ GameObject:
   - component: {fileID: 3447281704321886860}
   - component: {fileID: 3447281704321886856}
   - component: {fileID: 3447281704321886859}
-  - component: {fileID: 3447281704321886870}
   - component: {fileID: 3447281704321886871}
   m_Layer: 11
   m_Name: nest
@@ -131,7 +130,7 @@ MonoBehaviour:
   onIngestBeacon:
     m_PersistentCalls:
       m_Calls:
-      - m_Target: {fileID: 3447281704321886870}
+      - m_Target: {fileID: 0}
         m_MethodName: PlaySoundRandomPitch
         m_Mode: 2
         m_Arguments:
@@ -146,7 +145,7 @@ MonoBehaviour:
   onReleaseBeacon:
     m_PersistentCalls:
       m_Calls:
-      - m_Target: {fileID: 3447281704321886870}
+      - m_Target: {fileID: 0}
         m_MethodName: PlaySoundRandomPitch
         m_Mode: 2
         m_Arguments:
@@ -158,6 +157,9 @@ MonoBehaviour:
           m_StringArgument: 
           m_BoolArgument: 0
         m_CallState: 2
+  onKick:
+    m_PersistentCalls:
+      m_Calls: []
   Quilt: {fileID: 0}
   Beacons: {fileID: 0}
   sparklesPS: {fileID: 3447281705891665370}
@@ -240,33 +242,6 @@ MeshRenderer:
   m_SortingLayerID: 0
   m_SortingLayer: 0
   m_SortingOrder: 0
---- !u!114 &3447281704321886870
-MonoBehaviour:
-  m_ObjectHideFlags: 0
-  m_CorrespondingSourceObject: {fileID: 0}
-  m_PrefabInstance: {fileID: 0}
-  m_PrefabAsset: {fileID: 0}
-  m_GameObject: {fileID: 3447281704321886848}
-  m_Enabled: 1
-  m_EditorHideFlags: 0
-  m_Script: {fileID: 11500000, guid: 91c18a853de2e5049bc17361fc93b5ee, type: 3}
-  m_Name: 
-  m_EditorClassIdentifier: 
-  cv: 0
-  mixerGroup: {fileID: 243905730911449828, guid: 0f878cdc2b0f396499ef3380fce5e3c7,
-    type: 2}
-  audioClips: []
-  overrideMixer: 0
-  debug: 0
-  pitchRange: {x: 0, y: 99}
-  m_pitch: 1
-  smoothPitch: 1
-  pitchSmoothSpeed: 1
-  m_volume: 1
-  smoothVolume: 0
-  volumeSmoothSpeed: 1
-  pitchParam: 
-  volumeParam: 
 --- !u!114 &3447281704321886871
 MonoBehaviour:
   m_ObjectHideFlags: 0
