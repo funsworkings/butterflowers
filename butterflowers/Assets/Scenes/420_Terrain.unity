@@ -838,7 +838,7 @@ MonoBehaviour:
   m_playerCamera: {fileID: 534669904}
   Loader: {fileID: 2085320096}
   gamePanel: {fileID: 415711558}
-  sceneAudio: {fileID: 287379315}
+  sceneAudio: {fileID: 287379316}
   pauseMenu: {fileID: 1308009144}
   profile:
     weights:
@@ -8641,7 +8641,7 @@ Transform:
   m_PrefabInstance: {fileID: 0}
   m_PrefabAsset: {fileID: 0}
   m_GameObject: {fileID: 201810246}
-  m_LocalRotation: {x: 0.119760334, y: -0.000000016846684, z: 0.000000002039364, w: 0.99280286}
+  m_LocalRotation: {x: 0.119760305, y: -0.000000025758366, z: 0.000000003114366, w: 0.99280286}
   m_LocalPosition: {x: 0, y: 9.518084, z: -21.87147}
   m_LocalScale: {x: 1, y: 1.3577, z: 1}
   m_Children:
@@ -11025,7 +11025,7 @@ GameObject:
   serializedVersion: 6
   m_Component:
   - component: {fileID: 287379314}
-  - component: {fileID: 287379315}
+  - component: {fileID: 287379316}
   m_Layer: 0
   m_Name: Scene Audio Manager
   m_TagString: Untagged
@@ -11047,7 +11047,7 @@ Transform:
   m_Father: {fileID: 1585638032}
   m_RootOrder: 7
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
---- !u!114 &287379315
+--- !u!114 &287379316
 MonoBehaviour:
   m_ObjectHideFlags: 0
   m_CorrespondingSourceObject: {fileID: 0}
@@ -11056,7 +11056,7 @@ MonoBehaviour:
   m_GameObject: {fileID: 287379313}
   m_Enabled: 1
   m_EditorHideFlags: 0
-  m_Script: {fileID: 11500000, guid: 4bc1cde59b6447b42b2325ab0c803212, type: 3}
+  m_Script: {fileID: 11500000, guid: d799b8afe0b241f692a445675c9ec5e8, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
   mixer: {fileID: 24100000, guid: 0f878cdc2b0f396499ef3380fce5e3c7, type: 2}
@@ -11068,6 +11068,47 @@ MonoBehaviour:
   fadeInOnAwake: 0
   fadeInSpeed: 16
   fadeOutSpeed: 16
+  settings:
+  - state: 0
+    cutsceneVolume: -80
+    gameVolume: -80
+    loadVolume: 0
+    eodVolume: -80
+  - state: 1
+    cutsceneVolume: 0
+    gameVolume: -80
+    loadVolume: -80
+    eodVolume: -80
+  - state: 2
+    cutsceneVolume: -80
+    gameVolume: -80
+    loadVolume: -80
+    eodVolume: 0
+  - state: 3
+    cutsceneVolume: -80
+    gameVolume: 0
+    loadVolume: -80
+    eodVolume: -80
+  loadMixer:
+    mixer: {fileID: 24100000, guid: 0f878cdc2b0f396499ef3380fce5e3c7, type: 2}
+    volumeParam: Loading_Volume
+    volume: 0
+    volumeSmoothSpeed: 1
+  cutsceneMixer:
+    mixer: {fileID: 24100000, guid: 0f878cdc2b0f396499ef3380fce5e3c7, type: 2}
+    volumeParam: Cutscenes_Volume
+    volume: 0
+    volumeSmoothSpeed: 1
+  gameMixer:
+    mixer: {fileID: 24100000, guid: 0f878cdc2b0f396499ef3380fce5e3c7, type: 2}
+    volumeParam: Scene_Volume
+    volume: 0
+    volumeSmoothSpeed: 1
+  eodMixer:
+    mixer: {fileID: 24100000, guid: 0f878cdc2b0f396499ef3380fce5e3c7, type: 2}
+    volumeParam: EOD_Volume
+    volume: 0
+    volumeSmoothSpeed: 1
 --- !u!1 &293440792
 GameObject:
   m_ObjectHideFlags: 0
@@ -14063,7 +14104,7 @@ Camera:
     height: 1
   near clip plane: 0.1
   far clip plane: 5000
-  field of view: 14
+  field of view: 30
   orthographic: 0
   orthographic size: 5
   m_Depth: 0
@@ -14088,8 +14129,8 @@ Transform:
   m_PrefabInstance: {fileID: 0}
   m_PrefabAsset: {fileID: 0}
   m_GameObject: {fileID: 534669902}
-  m_LocalRotation: {x: 0.011049519, y: -0.9863622, z: 0.07446293, w: 0.14636582}
-  m_LocalPosition: {x: 19.457602, y: 14.52165, z: 40.472775}
+  m_LocalRotation: {x: 0.119760305, y: -0.000000025758366, z: 0.000000003114366, w: 0.99280286}
+  m_LocalPosition: {x: 0, y: 9.518084, z: -33.22425}
   m_LocalScale: {x: 1, y: 1, z: 1}
   m_Children:
   - {fileID: 2418050}
@@ -30355,7 +30396,7 @@ MonoBehaviour:
   m_EditorClassIdentifier: 
   visible: 0
   cutscenes: {fileID: 214334918}
-  sceneAudio: {fileID: 287379315}
+  sceneAudio: {fileID: 0}
 --- !u!225 &1308009145
 CanvasGroup:
   m_ObjectHideFlags: 0
@@ -52801,7 +52842,7 @@ MonoBehaviour:
   m_outlineColor:
     serializedVersion: 2
     rgba: 4278190080
-  m_fontSize: 25.15
+  m_fontSize: 25.1
   m_fontSizeBase: 36
   m_fontWeight: 400
   m_enableAutoSizing: 1
@@ -73580,19 +73621,19 @@ PrefabInstance:
       objectReference: {fileID: 0}
     - target: {fileID: 1854825635, guid: bbe889dad4ed0dd48a0243ced6070a70, type: 3}
       propertyPath: m_LocalRotation.w
-      value: 0.7753867
+      value: 0.77474916
       objectReference: {fileID: 0}
     - target: {fileID: 1854825635, guid: bbe889dad4ed0dd48a0243ced6070a70, type: 3}
       propertyPath: m_LocalRotation.x
-      value: -0.24291089
+      value: -0.09432574
       objectReference: {fileID: 0}
     - target: {fileID: 1854825635, guid: bbe889dad4ed0dd48a0243ced6070a70, type: 3}
       propertyPath: m_LocalRotation.y
-      value: -0.5796176
+      value: 0.61213166
       objectReference: {fileID: 0}
     - target: {fileID: 1854825635, guid: bbe889dad4ed0dd48a0243ced6070a70, type: 3}
       propertyPath: m_LocalRotation.z
-      value: -0.061752256
+      value: -0.1271267
       objectReference: {fileID: 0}
     - target: {fileID: 1981574396, guid: bbe889dad4ed0dd48a0243ced6070a70, type: 3}
       propertyPath: m_Layer
@@ -73600,19 +73641,19 @@ PrefabInstance:
       objectReference: {fileID: 0}
     - target: {fileID: 1981574397, guid: bbe889dad4ed0dd48a0243ced6070a70, type: 3}
       propertyPath: m_LocalRotation.w
-      value: 0.7884556
+      value: 0.79561573
       objectReference: {fileID: 0}
     - target: {fileID: 1981574397, guid: bbe889dad4ed0dd48a0243ced6070a70, type: 3}
       propertyPath: m_LocalRotation.x
-      value: -0.22634272
+      value: -0.06900209
       objectReference: {fileID: 0}
     - target: {fileID: 1981574397, guid: bbe889dad4ed0dd48a0243ced6070a70, type: 3}
       propertyPath: m_LocalRotation.y
-      value: -0.5696676
+      value: 0.58257586
       objectReference: {fileID: 0}
     - target: {fileID: 1981574397, guid: bbe889dad4ed0dd48a0243ced6070a70, type: 3}
       propertyPath: m_LocalRotation.z
-      value: -0.050849248
+      value: -0.15112777
       objectReference: {fileID: 0}
     - target: {fileID: 1995632988, guid: bbe889dad4ed0dd48a0243ced6070a70, type: 3}
       propertyPath: overrideCamera

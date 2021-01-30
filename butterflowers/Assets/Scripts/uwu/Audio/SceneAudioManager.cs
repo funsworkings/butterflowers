@@ -22,7 +22,7 @@ public class SceneAudioManager : MonoBehaviour, ILoadDependent
     
     // Properties
 
-    [SerializeField] AudioMixer mixer;
+    [SerializeField] protected AudioMixer mixer;
     [SerializeField] string mixerVolumeParam;
     
     // Attributes
