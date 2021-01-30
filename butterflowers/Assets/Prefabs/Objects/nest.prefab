@@ -5078,7 +5078,6 @@ GameObject:
   - component: {fileID: 3447281704321886860}
   - component: {fileID: 3447281704321886856}
   - component: {fileID: 3447281704321886859}
-  - component: {fileID: 3447281704321886871}
   - component: {fileID: 3447281704964185448}
   - component: {fileID: 3447281704964185449}
   m_Layer: 22
@@ -5264,7 +5263,7 @@ MonoBehaviour:
         m_CallState: 2
   Quilt: {fileID: 0}
   Beacons: {fileID: 0}
-  _audioHandler: {fileID: 0}
+  _audioHandler: {fileID: 3447281704964185449}
   sparklesPS: {fileID: 3447281705891665370}
   cometPS: {fileID: 3447281704549602385}
   deathPS: {fileID: 1586535995}
@@ -5345,42 +5344,6 @@ MeshRenderer:
   m_SortingLayerID: 0
   m_SortingLayer: 0
   m_SortingOrder: 0
---- !u!114 &3447281704321886871
-MonoBehaviour:
-  m_ObjectHideFlags: 0
-  m_CorrespondingSourceObject: {fileID: 0}
-  m_PrefabInstance: {fileID: 0}
-  m_PrefabAsset: {fileID: 0}
-  m_GameObject: {fileID: 3447281704321886848}
-  m_Enabled: 0
-  m_EditorHideFlags: 0
-  m_Script: {fileID: 11500000, guid: 601c96ef35e700e479a75573568f187c, type: 3}
-  m_Name: 
-  m_EditorClassIdentifier: 
-  onHit:
-    m_PersistentCalls:
-      m_Calls:
-      - m_Target: {fileID: 0}
-        m_MethodName: Shake
-        m_Mode: 4
-        m_Arguments:
-          m_ObjectArgument: {fileID: 0}
-          m_ObjectArgumentAssemblyTypeName: UnityEngine.Object, UnityEngine
-          m_IntArgument: 0
-          m_FloatArgument: 1
-          m_StringArgument: 
-          m_BoolArgument: 0
-        m_CallState: 2
-  onRecover:
-    m_PersistentCalls:
-      m_Calls: []
-  damageColor: {r: 1, g: 1, b: 1, a: 1}
-  damageMaterials: []
-  damageScale: 1.25
-  damageDuration: 0.167
-  useColor: 1
-  renderer: {fileID: 0}
-  debugHit: 0
 --- !u!82 &3447281704964185448
 AudioSource:
   m_ObjectHideFlags: 0
