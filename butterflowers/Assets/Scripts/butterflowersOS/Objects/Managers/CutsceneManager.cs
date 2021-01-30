@@ -12,6 +12,7 @@ using UnityEngine.Playables;
 using UnityEngine.Timeline;
 using UnityEngine.UI;
 using uwu;
+using uwu.Audio;
 using uwu.Camera.Instances;
 using uwu.Timeline.Core;
 using uwu.UI.Behaviors.Visibility;
@@ -52,6 +53,8 @@ namespace butterflowersOS.Objects.Managers
 			[SerializeField] Nest Nest;
 			[SerializeField] ToggleOpacity sequenceSubtitles;
 			[SerializeField] Text sequenceSubtitleText;
+			[SerializeField] AudioFader sequenceBGMFader;
+			[SerializeField] AudioSource sequenceBGM;
 
 		[Header("Export")] 
 			[SerializeField] ParticleSystem exportPS;
@@ -60,6 +63,7 @@ namespace butterflowersOS.Objects.Managers
 		[Header("Status")] 
 			public bool intro = false;
 			public bool outro = false;
+			public bool epilogue = false;
 			public bool inprogress = false;
 
 		void OnEnable()
@@ -96,6 +100,7 @@ namespace butterflowersOS.Objects.Managers
 				if (currentScene != null) 
 				{
 					currentScene.Show(true); // Fully visible scene
+					TriggerFadeOutBGM();
 				}
 				
 				currentScene = null; // Wipe current scene
@@ -147,6 +152,8 @@ namespace butterflowersOS.Objects.Managers
 
 				ToggleSubtitle(true);
 				cutscenes.Play(_cutscene);
+				
+				TriggerFadeInBGM();
 				
 				return true;
 			}
@@ -235,6 +242,17 @@ namespace butterflowersOS.Objects.Managers
 		{
 			Nest.RandomKick(); // Re-activate nest after sequence pause
 		}
+
+		public void TriggerFadeInBGM()
+		{
+			sequenceBGM.Play();
+			sequenceBGMFader.FadeIn();
+		}
+		
+		public void TriggerFadeOutBGM()
+		{
+			sequenceBGMFader.FadeOut();
+		}
 		
 		#endregion
 		
@@ -281,7 +299,7 @@ namespace butterflowersOS.Objects.Managers
 
 		public object Save()
 		{
-			return new bool[] { intro, outro };
+			return new bool[] { intro, outro, epilogue };
 		}
 
 		public void Load(object data)
@@ -289,6 +307,7 @@ namespace butterflowersOS.Objects.Managers
 			bool[] cutscenes = (bool[]) data;
 				intro = cutscenes[0];
 				outro = cutscenes[1];
+				epilogue = cutscenes[2];
 
 			Sun = Sun.Instance;
 			World = World.Instance;

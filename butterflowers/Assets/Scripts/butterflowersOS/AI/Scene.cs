@@ -5,9 +5,11 @@ using B83.Win32;
 using butterflowersOS.Core;
 using Neue.Agent.Brain.Data;
 using UnityEngine;
+using UnityEngine.Playables;
 using uwu;
 using uwu.IO;
 using uwu.Snippets.Load;
+using uwu.Timeline.Core;
 
 namespace butterflowersOS.AI
 {
@@ -27,6 +29,10 @@ namespace butterflowersOS.AI
 						 Texture2D butterflowersTexture;
 
 		[SerializeField] RemoteAgent agent;
+		[SerializeField] Cutscenes cutscenes;
+		[SerializeField] PlayableAsset epilogue;
+
+		bool listen = false;
 						 
 		void Start()
 		{
@@ -51,6 +57,18 @@ namespace butterflowersOS.AI
 
 			while (Loader.IsLoading) yield return null;
 			Loader.Dispose();
+
+			bool hasCompletedEpilogue = Save.data.cutscenes[2];
+			if (!hasCompletedEpilogue) 
+			{
+				cutscenes.Play(epilogue);
+				while (!cutscenes.playing) yield return null;
+				
+				Save.data.cutscenes[2] = true;
+				Save.SaveGameData();
+			}
+
+			listen = true;
 		}
 
 		#region Ground
@@ -83,6 +101,8 @@ namespace butterflowersOS.AI
 
 		protected override void HandleBrainImport(BrainData brain, POINT point)
 		{
+			if (!listen) return; // Ignore brain import if loading!
+			
 			Save.data.surveillanceData = brain.surveillanceData;
 			
 			Save.data.agent_created_at = brain.created_at;

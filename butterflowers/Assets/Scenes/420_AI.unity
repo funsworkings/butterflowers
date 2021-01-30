@@ -7711,7 +7711,6 @@ GameObject:
   m_Component:
   - component: {fileID: 863279458}
   - component: {fileID: 863279457}
-  - component: {fileID: 863279456}
   - component: {fileID: 863279459}
   m_Layer: 0
   m_Name: Scene Camera
@@ -7720,41 +7719,6 @@ GameObject:
   m_NavMeshLayer: 0
   m_StaticEditorFlags: 0
   m_IsActive: 1
---- !u!114 &863279456
-MonoBehaviour:
-  m_ObjectHideFlags: 0
-  m_CorrespondingSourceObject: {fileID: 0}
-  m_PrefabInstance: {fileID: 0}
-  m_PrefabAsset: {fileID: 0}
-  m_GameObject: {fileID: 863279455}
-  m_Enabled: 1
-  m_EditorHideFlags: 0
-  m_Script: {fileID: 11500000, guid: f6381b738b97c3e4d957cc31a84f9f25, type: 3}
-  m_Name: 
-  m_EditorClassIdentifier: 
-  onEnable:
-    m_PersistentCalls:
-      m_Calls:
-      - m_Target: {fileID: 1270791307}
-        m_MethodName: set_pitch
-        m_Mode: 4
-        m_Arguments:
-          m_ObjectArgument: {fileID: 0}
-          m_ObjectArgumentAssemblyTypeName: UnityEngine.Object, UnityEngine
-          m_IntArgument: 0
-          m_FloatArgument: 1
-          m_StringArgument: 
-          m_BoolArgument: 0
-        m_CallState: 2
-  onDisable:
-    m_PersistentCalls:
-      m_Calls: []
-  target: {fileID: 0}
-  controls: 1
-  radius: 15
-  height: 3.3
-  angle: -90
-  resetOnDisable: 0
 --- !u!114 &863279457
 MonoBehaviour:
   m_ObjectHideFlags: 0
@@ -8472,7 +8436,6 @@ Transform:
   m_LocalPosition: {x: 0, y: 0, z: 0}
   m_LocalScale: {x: 1, y: 1, z: 1}
   m_Children:
-  - {fileID: 1456210956}
   - {fileID: 2089754372}
   - {fileID: 2145892801}
   - {fileID: 1758789786}
@@ -9027,7 +8990,7 @@ Transform:
   m_LocalScale: {x: 1, y: 1, z: 1}
   m_Children: []
   m_Father: {fileID: 1073008907}
-  m_RootOrder: 5
+  m_RootOrder: 4
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
 --- !u!114 &1238557746
 MonoBehaviour:
@@ -9502,37 +9465,6 @@ RectTransform:
   m_AnchoredPosition: {x: 643.16095, y: 40.9552}
   m_SizeDelta: {x: 128, y: 128}
   m_Pivot: {x: 0.5, y: 0.5}
---- !u!1 &1456210955
-GameObject:
-  m_ObjectHideFlags: 0
-  m_CorrespondingSourceObject: {fileID: 0}
-  m_PrefabInstance: {fileID: 0}
-  m_PrefabAsset: {fileID: 0}
-  serializedVersion: 6
-  m_Component:
-  - component: {fileID: 1456210956}
-  m_Layer: 2
-  m_Name: Managers
-  m_TagString: Untagged
-  m_Icon: {fileID: 0}
-  m_NavMeshLayer: 0
-  m_StaticEditorFlags: 0
-  m_IsActive: 1
---- !u!4 &1456210956
-Transform:
-  m_ObjectHideFlags: 0
-  m_CorrespondingSourceObject: {fileID: 0}
-  m_PrefabInstance: {fileID: 0}
-  m_PrefabAsset: {fileID: 0}
-  m_GameObject: {fileID: 1456210955}
-  m_LocalRotation: {x: -0, y: -0, z: -0, w: 1}
-  m_LocalPosition: {x: 0, y: 0, z: 0}
-  m_LocalScale: {x: 1, y: 1, z: 1}
-  m_Children:
-  - {fileID: 1755900820}
-  m_Father: {fileID: 1073008907}
-  m_RootOrder: 0
-  m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
 --- !u!1 &1589850056
 GameObject:
   m_ObjectHideFlags: 3
@@ -9543,8 +9475,8 @@ GameObject:
   m_Component:
   - component: {fileID: 1589850057}
   - component: {fileID: 1589850060}
-  - component: {fileID: 1589850059}
   - component: {fileID: 1589850058}
+  - component: {fileID: 1589850059}
   m_Layer: 0
   m_Name: cm
   m_TagString: Untagged
@@ -9602,11 +9534,11 @@ MonoBehaviour:
   m_GameObject: {fileID: 1589850056}
   m_Enabled: 1
   m_EditorHideFlags: 0
-  m_Script: {fileID: 11500000, guid: 9384ab8608cdc3d479fe89cd51eed48f, type: 3}
+  m_Script: {fileID: 11500000, guid: fa7155796051b734daa718462081dc5f, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  m_BindingMode: 3
-  m_FollowOffset: {x: 0, y: 0.9499991, z: 18.599998}
+  m_BindingMode: 1
+  m_FollowOffset: {x: 23.119997, y: 7.71, z: 12.339996}
   m_XDamping: 1
   m_YDamping: 1
   m_ZDamping: 1
@@ -9615,37 +9547,6 @@ MonoBehaviour:
   m_YawDamping: 0
   m_RollDamping: 0
   m_AngularDamping: 0
-  m_Heading:
-    m_Definition: 2
-    m_VelocityFilterStrength: 4
-    m_Bias: 0
-  m_RecenterToTargetHeading:
-    m_enabled: 0
-    m_WaitTime: 1
-    m_RecenteringTime: 2
-    m_LegacyHeadingDefinition: -1
-    m_LegacyVelocityFilterStrength: -1
-  m_XAxis:
-    Value: 0
-    m_MaxSpeed: 0
-    m_AccelTime: 0.1
-    m_DecelTime: 0.1
-    m_InputAxisName: Mouse X
-    m_InputAxisValue: 0
-    m_InvertInput: 1
-    m_MinValue: -180
-    m_MaxValue: 180
-    m_Wrap: 1
-    m_Recentering:
-      m_enabled: 0
-      m_WaitTime: 1
-      m_RecenteringTime: 2
-      m_LegacyHeadingDefinition: -1
-      m_LegacyVelocityFilterStrength: -1
-  m_LegacyRadius: 3.4028235e+38
-  m_LegacyHeightOffset: 3.4028235e+38
-  m_LegacyHeadingBias: 3.4028235e+38
-  m_HeadingIsSlave: 0
 --- !u!114 &1589850060
 MonoBehaviour:
   m_ObjectHideFlags: 3
@@ -9667,7 +9568,6 @@ GameObject:
   serializedVersion: 6
   m_Component:
   - component: {fileID: 1617910624}
-  - component: {fileID: 1617910623}
   m_Layer: 0
   m_Name: Cameras
   m_TagString: Untagged
@@ -9675,22 +9575,6 @@ GameObject:
   m_NavMeshLayer: 0
   m_StaticEditorFlags: 0
   m_IsActive: 1
---- !u!114 &1617910623
-MonoBehaviour:
-  m_ObjectHideFlags: 0
-  m_CorrespondingSourceObject: {fileID: 0}
-  m_PrefabInstance: {fileID: 0}
-  m_PrefabAsset: {fileID: 0}
-  m_GameObject: {fileID: 1617910622}
-  m_Enabled: 1
-  m_EditorHideFlags: 0
-  m_Script: {fileID: 11500000, guid: 44292813d8379ce479b93f8087b1890f, type: 3}
-  m_Name: 
-  m_EditorClassIdentifier: 
-  defaultCamera: {fileID: 863279456}
-  previousCamera: {fileID: 0}
-  currentCamera: {fileID: 0}
-  m_mainCamera: {fileID: 0}
 --- !u!4 &1617910624
 Transform:
   m_ObjectHideFlags: 0
@@ -9855,175 +9739,8 @@ MonoBehaviour:
   butterflowersMaterial: {fileID: 2100000, guid: 32ca2c75000076c40a6d8bfbc5bd159f,
     type: 2}
   agent: {fileID: 62210044}
---- !u!1 &1755900817
-GameObject:
-  m_ObjectHideFlags: 0
-  m_CorrespondingSourceObject: {fileID: 0}
-  m_PrefabInstance: {fileID: 0}
-  m_PrefabAsset: {fileID: 0}
-  serializedVersion: 6
-  m_Component:
-  - component: {fileID: 1755900820}
-  - component: {fileID: 1755900819}
-  - component: {fileID: 1755900818}
-  m_Layer: 2
-  m_Name: Cutscenes (Manager)
-  m_TagString: Untagged
-  m_Icon: {fileID: 0}
-  m_NavMeshLayer: 0
-  m_StaticEditorFlags: 0
-  m_IsActive: 1
---- !u!114 &1755900818
-MonoBehaviour:
-  m_ObjectHideFlags: 0
-  m_CorrespondingSourceObject: {fileID: 0}
-  m_PrefabInstance: {fileID: 0}
-  m_PrefabAsset: {fileID: 0}
-  m_GameObject: {fileID: 1755900817}
-  m_Enabled: 1
-  m_EditorHideFlags: 0
-  m_Script: {fileID: 11500000, guid: e52de21a22b6dd44c9cc19f810c65059, type: 3}
-  m_Name: 
-  m_EditorClassIdentifier: 
-  m_Events:
-    m_Signals:
-    - {fileID: 11400000, guid: ae9341c43bb341b409012ff8b8522836, type: 2}
-    - {fileID: 11400000, guid: 6f0ec58f10a2bce4e9c20d60fdbf4732, type: 2}
-    - {fileID: 11400000, guid: ea3405e1c3b1e2c45910f83d8f583271, type: 2}
-    - {fileID: 11400000, guid: 8cd5dd796918e18449ec970c97d8b8fc, type: 2}
-    m_Events:
-    - m_PersistentCalls:
-        m_Calls:
-        - m_Target: {fileID: 1755900819}
-          m_MethodName: ScaleSequenceObject
-          m_Mode: 1
-          m_Arguments:
-            m_ObjectArgument: {fileID: 0}
-            m_ObjectArgumentAssemblyTypeName: UnityEngine.Object, UnityEngine
-            m_IntArgument: 0
-            m_FloatArgument: 0
-            m_StringArgument: 
-            m_BoolArgument: 0
-          m_CallState: 2
-    - m_PersistentCalls:
-        m_Calls:
-        - m_Target: {fileID: 1755900819}
-          m_MethodName: FocusSequenceCamera
-          m_Mode: 1
-          m_Arguments:
-            m_ObjectArgument: {fileID: 0}
-            m_ObjectArgumentAssemblyTypeName: UnityEngine.Object, UnityEngine
-            m_IntArgument: 0
-            m_FloatArgument: 0
-            m_StringArgument: 
-            m_BoolArgument: 0
-          m_CallState: 2
-    - m_PersistentCalls:
-        m_Calls:
-        - m_Target: {fileID: 1755900819}
-          m_MethodName: DisableFocusCamera
-          m_Mode: 1
-          m_Arguments:
-            m_ObjectArgument: {fileID: 0}
-            m_ObjectArgumentAssemblyTypeName: UnityEngine.Object, UnityEngine
-            m_IntArgument: 0
-            m_FloatArgument: 0
-            m_StringArgument: 
-            m_BoolArgument: 0
-          m_CallState: 2
-    - m_PersistentCalls:
-        m_Calls:
-        - m_Target: {fileID: 1755900819}
-          m_MethodName: TriggerKick
-          m_Mode: 1
-          m_Arguments:
-            m_ObjectArgument: {fileID: 0}
-            m_ObjectArgumentAssemblyTypeName: UnityEngine.Object, UnityEngine
-            m_IntArgument: 0
-            m_FloatArgument: 0
-            m_StringArgument: 
-            m_BoolArgument: 0
-          m_CallState: 2
---- !u!114 &1755900819
-MonoBehaviour:
-  m_ObjectHideFlags: 0
-  m_CorrespondingSourceObject: {fileID: 0}
-  m_PrefabInstance: {fileID: 0}
-  m_PrefabAsset: {fileID: 0}
-  m_GameObject: {fileID: 1755900817}
-  m_Enabled: 1
-  m_EditorHideFlags: 0
-  m_Script: {fileID: 11500000, guid: 596d9e536cad403d915c9483754bbdaa, type: 3}
-  m_Name: 
-  m_EditorClassIdentifier: 
   cutscenes: {fileID: 1758789783}
-  vines: {fileID: 0}
-  cage: {fileID: 0}
-  director: {fileID: 0}
-  introCutscene: {fileID: 11400000, guid: 060e0d582dc20ad4e87421604e1f1df7, type: 2}
-  outroCutscene: {fileID: 11400000, guid: 48a4a8e5791e01b4aa7498d6cfaa0cdf, type: 2}
-  vineCornerCameraPivot: {fileID: 0}
-  vineCornerCutscene: {fileID: 11400000, guid: f849647cf8146ae4787f435e8f3505de, type: 2}
-  vineCageCutscene: {fileID: 0}
-  currentScene: {fileID: 0}
-  sequenceMeshScaleDuration: 1.3
-  sequenceMeshScaleTime: 3
-  sequenceMeshScaleCurve:
-    serializedVersion: 2
-    m_Curve:
-    - serializedVersion: 3
-      time: 0
-      value: 0
-      inSlope: 0
-      outSlope: 0
-      tangentMode: 0
-      weightedMode: 0
-      inWeight: 0
-      outWeight: 0
-    - serializedVersion: 3
-      time: 0.60501724
-      value: 1.4442716
-      inSlope: 1.3785458
-      outSlope: 1.3785458
-      tangentMode: 0
-      weightedMode: 0
-      inWeight: 0.33333334
-      outWeight: 0.33333334
-    - serializedVersion: 3
-      time: 1
-      value: 1
-      inSlope: 0
-      outSlope: 0
-      tangentMode: 0
-      weightedMode: 0
-      inWeight: 0
-      outWeight: 0
-    m_PreInfinity: 2
-    m_PostInfinity: 2
-    m_RotationOrder: 4
-  sequenceCutscene: {fileID: 0}
-  Nest: {fileID: 0}
-  sequenceSubtitles: {fileID: 364399747}
-  sequenceSubtitleText: {fileID: 364399752}
-  exportPS: {fileID: 0}
-  exportMaterial: {fileID: 2100000, guid: 9503d6d75b86d9e498808abfb925b710, type: 2}
-  intro: 0
-  outro: 0
-  inprogress: 0
---- !u!4 &1755900820
-Transform:
-  m_ObjectHideFlags: 0
-  m_CorrespondingSourceObject: {fileID: 0}
-  m_PrefabInstance: {fileID: 0}
-  m_PrefabAsset: {fileID: 0}
-  m_GameObject: {fileID: 1755900817}
-  m_LocalRotation: {x: 0, y: 0, z: 0, w: 1}
-  m_LocalPosition: {x: 0, y: 0, z: 0}
-  m_LocalScale: {x: 1, y: 1, z: 1}
-  m_Children: []
-  m_Father: {fileID: 1456210956}
-  m_RootOrder: 0
-  m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
+  epilogue: {fileID: 11400000, guid: 93fc853b2269aeb49ad4fafb707a9ff5, type: 2}
 --- !u!1 &1758789782
 GameObject:
   m_ObjectHideFlags: 0
@@ -10135,7 +9852,7 @@ PlayableDirector:
   - key: {fileID: 0}
     value: {fileID: 0}
   - key: {fileID: 0}
-    value: {fileID: 1755900818}
+    value: {fileID: 0}
   - key: {fileID: 114461535039594710, guid: 573dbb7847019584bbc2a48bb175d8bf, type: 2}
     value: {fileID: 364399752}
   - key: {fileID: 4665521137627676234, guid: 573dbb7847019584bbc2a48bb175d8bf, type: 2}
@@ -10147,11 +9864,11 @@ PlayableDirector:
   - key: {fileID: 4101078585522969240, guid: 30bf8c6c7c5900943bd058b62635ac70, type: 2}
     value: {fileID: 1809882243}
   - key: {fileID: -1502078509557316345, guid: 30bf8c6c7c5900943bd058b62635ac70, type: 2}
-    value: {fileID: 1755900818}
+    value: {fileID: 0}
   - key: {fileID: -1514575018840599503, guid: 30bf8c6c7c5900943bd058b62635ac70, type: 2}
-    value: {fileID: 1755900818}
+    value: {fileID: 0}
   - key: {fileID: -6382372190095241622, guid: 30bf8c6c7c5900943bd058b62635ac70, type: 2}
-    value: {fileID: 1755900818}
+    value: {fileID: 0}
   - key: {fileID: 3031199649728310034, guid: 48a4a8e5791e01b4aa7498d6cfaa0cdf, type: 2}
     value: {fileID: 0}
   - key: {fileID: 3040257712396218699, guid: 48a4a8e5791e01b4aa7498d6cfaa0cdf, type: 2}
@@ -10165,11 +9882,11 @@ PlayableDirector:
   - key: {fileID: -2736218771059355168, guid: a29fbb9277d50f442bb7a7ff15906be9, type: 2}
     value: {fileID: 0}
   - key: {fileID: -1502078509557316345, guid: a29fbb9277d50f442bb7a7ff15906be9, type: 2}
-    value: {fileID: 1755900818}
+    value: {fileID: 0}
   - key: {fileID: -1514575018840599503, guid: a29fbb9277d50f442bb7a7ff15906be9, type: 2}
-    value: {fileID: 1755900818}
+    value: {fileID: 0}
   - key: {fileID: -6382372190095241622, guid: a29fbb9277d50f442bb7a7ff15906be9, type: 2}
-    value: {fileID: 1755900818}
+    value: {fileID: 0}
   - key: {fileID: 3612206845423783699, guid: a29fbb9277d50f442bb7a7ff15906be9, type: 2}
     value: {fileID: 364399752}
   - key: {fileID: 4101078585522969240, guid: a29fbb9277d50f442bb7a7ff15906be9, type: 2}
@@ -10181,11 +9898,11 @@ PlayableDirector:
   - key: {fileID: -2736218771059355168, guid: 3df316c45797a364789cc6aa55ebc350, type: 2}
     value: {fileID: 0}
   - key: {fileID: -1502078509557316345, guid: 3df316c45797a364789cc6aa55ebc350, type: 2}
-    value: {fileID: 1755900818}
+    value: {fileID: 0}
   - key: {fileID: -1514575018840599503, guid: 3df316c45797a364789cc6aa55ebc350, type: 2}
-    value: {fileID: 1755900818}
+    value: {fileID: 0}
   - key: {fileID: -6382372190095241622, guid: 3df316c45797a364789cc6aa55ebc350, type: 2}
-    value: {fileID: 1755900818}
+    value: {fileID: 0}
   - key: {fileID: 3612206845423783699, guid: 3df316c45797a364789cc6aa55ebc350, type: 2}
     value: {fileID: 364399752}
   - key: {fileID: 4101078585522969240, guid: 3df316c45797a364789cc6aa55ebc350, type: 2}
@@ -10197,11 +9914,11 @@ PlayableDirector:
   - key: {fileID: -2736218771059355168, guid: 3ea8af131b019904fb59b53a41340dc7, type: 2}
     value: {fileID: 0}
   - key: {fileID: -1502078509557316345, guid: 3ea8af131b019904fb59b53a41340dc7, type: 2}
-    value: {fileID: 1755900818}
+    value: {fileID: 0}
   - key: {fileID: -1514575018840599503, guid: 3ea8af131b019904fb59b53a41340dc7, type: 2}
-    value: {fileID: 1755900818}
+    value: {fileID: 0}
   - key: {fileID: -6382372190095241622, guid: 3ea8af131b019904fb59b53a41340dc7, type: 2}
-    value: {fileID: 1755900818}
+    value: {fileID: 0}
   - key: {fileID: 3612206845423783699, guid: 3ea8af131b019904fb59b53a41340dc7, type: 2}
     value: {fileID: 364399752}
   - key: {fileID: 4101078585522969240, guid: 3ea8af131b019904fb59b53a41340dc7, type: 2}
@@ -10213,11 +9930,11 @@ PlayableDirector:
   - key: {fileID: -2736218771059355168, guid: 113d5b970ec2a2f46940f4199f610515, type: 2}
     value: {fileID: 0}
   - key: {fileID: -1502078509557316345, guid: 113d5b970ec2a2f46940f4199f610515, type: 2}
-    value: {fileID: 1755900818}
+    value: {fileID: 0}
   - key: {fileID: -1514575018840599503, guid: 113d5b970ec2a2f46940f4199f610515, type: 2}
-    value: {fileID: 1755900818}
+    value: {fileID: 0}
   - key: {fileID: -6382372190095241622, guid: 113d5b970ec2a2f46940f4199f610515, type: 2}
-    value: {fileID: 1755900818}
+    value: {fileID: 0}
   - key: {fileID: 3612206845423783699, guid: 113d5b970ec2a2f46940f4199f610515, type: 2}
     value: {fileID: 364399752}
   - key: {fileID: 4101078585522969240, guid: 113d5b970ec2a2f46940f4199f610515, type: 2}
@@ -10229,11 +9946,11 @@ PlayableDirector:
   - key: {fileID: -2736218771059355168, guid: 81ec82e5267c8e847a791f183698e725, type: 2}
     value: {fileID: 0}
   - key: {fileID: -1502078509557316345, guid: 81ec82e5267c8e847a791f183698e725, type: 2}
-    value: {fileID: 1755900818}
+    value: {fileID: 0}
   - key: {fileID: -1514575018840599503, guid: 81ec82e5267c8e847a791f183698e725, type: 2}
-    value: {fileID: 1755900818}
+    value: {fileID: 0}
   - key: {fileID: -6382372190095241622, guid: 81ec82e5267c8e847a791f183698e725, type: 2}
-    value: {fileID: 1755900818}
+    value: {fileID: 0}
   - key: {fileID: 3612206845423783699, guid: 81ec82e5267c8e847a791f183698e725, type: 2}
     value: {fileID: 364399752}
   - key: {fileID: 4101078585522969240, guid: 81ec82e5267c8e847a791f183698e725, type: 2}
@@ -10245,11 +9962,11 @@ PlayableDirector:
   - key: {fileID: -2736218771059355168, guid: 837ceb5901cdee54fb23b5ce7ab270b8, type: 2}
     value: {fileID: 0}
   - key: {fileID: -1502078509557316345, guid: 837ceb5901cdee54fb23b5ce7ab270b8, type: 2}
-    value: {fileID: 1755900818}
+    value: {fileID: 0}
   - key: {fileID: -1514575018840599503, guid: 837ceb5901cdee54fb23b5ce7ab270b8, type: 2}
-    value: {fileID: 1755900818}
+    value: {fileID: 0}
   - key: {fileID: -6382372190095241622, guid: 837ceb5901cdee54fb23b5ce7ab270b8, type: 2}
-    value: {fileID: 1755900818}
+    value: {fileID: 0}
   - key: {fileID: 3612206845423783699, guid: 837ceb5901cdee54fb23b5ce7ab270b8, type: 2}
     value: {fileID: 364399752}
   - key: {fileID: 4101078585522969240, guid: 837ceb5901cdee54fb23b5ce7ab270b8, type: 2}
@@ -10261,11 +9978,11 @@ PlayableDirector:
   - key: {fileID: -2736218771059355168, guid: dd00db6b9891d0d42a707c0125a25748, type: 2}
     value: {fileID: 0}
   - key: {fileID: -1502078509557316345, guid: dd00db6b9891d0d42a707c0125a25748, type: 2}
-    value: {fileID: 1755900818}
+    value: {fileID: 0}
   - key: {fileID: -1514575018840599503, guid: dd00db6b9891d0d42a707c0125a25748, type: 2}
-    value: {fileID: 1755900818}
+    value: {fileID: 0}
   - key: {fileID: -6382372190095241622, guid: dd00db6b9891d0d42a707c0125a25748, type: 2}
-    value: {fileID: 1755900818}
+    value: {fileID: 0}
   - key: {fileID: 3612206845423783699, guid: dd00db6b9891d0d42a707c0125a25748, type: 2}
     value: {fileID: 364399752}
   - key: {fileID: 4101078585522969240, guid: dd00db6b9891d0d42a707c0125a25748, type: 2}
@@ -10281,11 +9998,11 @@ PlayableDirector:
   - key: {fileID: -2736218771059355168, guid: 9cb3b1a02c6d3224e8ba1bfb2a2a553d, type: 2}
     value: {fileID: 0}
   - key: {fileID: -1502078509557316345, guid: 9cb3b1a02c6d3224e8ba1bfb2a2a553d, type: 2}
-    value: {fileID: 1755900818}
+    value: {fileID: 0}
   - key: {fileID: -1514575018840599503, guid: 9cb3b1a02c6d3224e8ba1bfb2a2a553d, type: 2}
-    value: {fileID: 1755900818}
+    value: {fileID: 0}
   - key: {fileID: -6382372190095241622, guid: 9cb3b1a02c6d3224e8ba1bfb2a2a553d, type: 2}
-    value: {fileID: 1755900818}
+    value: {fileID: 0}
   - key: {fileID: 3612206845423783699, guid: 9cb3b1a02c6d3224e8ba1bfb2a2a553d, type: 2}
     value: {fileID: 364399752}
   - key: {fileID: 4101078585522969240, guid: 9cb3b1a02c6d3224e8ba1bfb2a2a553d, type: 2}
@@ -10297,11 +10014,11 @@ PlayableDirector:
   - key: {fileID: -2736218771059355168, guid: ccac2552dd4cc4e488ce3871a1f6699f, type: 2}
     value: {fileID: 0}
   - key: {fileID: -1502078509557316345, guid: ccac2552dd4cc4e488ce3871a1f6699f, type: 2}
-    value: {fileID: 1755900818}
+    value: {fileID: 0}
   - key: {fileID: -1514575018840599503, guid: ccac2552dd4cc4e488ce3871a1f6699f, type: 2}
-    value: {fileID: 1755900818}
+    value: {fileID: 0}
   - key: {fileID: -6382372190095241622, guid: ccac2552dd4cc4e488ce3871a1f6699f, type: 2}
-    value: {fileID: 1755900818}
+    value: {fileID: 0}
   - key: {fileID: 3612206845423783699, guid: ccac2552dd4cc4e488ce3871a1f6699f, type: 2}
     value: {fileID: 364399752}
   - key: {fileID: 4101078585522969240, guid: ccac2552dd4cc4e488ce3871a1f6699f, type: 2}
@@ -10313,11 +10030,11 @@ PlayableDirector:
   - key: {fileID: -2736218771059355168, guid: 1b7929f8b0ba07741a996c7d8489d74d, type: 2}
     value: {fileID: 0}
   - key: {fileID: -1502078509557316345, guid: 1b7929f8b0ba07741a996c7d8489d74d, type: 2}
-    value: {fileID: 1755900818}
+    value: {fileID: 0}
   - key: {fileID: -1514575018840599503, guid: 1b7929f8b0ba07741a996c7d8489d74d, type: 2}
-    value: {fileID: 1755900818}
+    value: {fileID: 0}
   - key: {fileID: -6382372190095241622, guid: 1b7929f8b0ba07741a996c7d8489d74d, type: 2}
-    value: {fileID: 1755900818}
+    value: {fileID: 0}
   - key: {fileID: 3612206845423783699, guid: 1b7929f8b0ba07741a996c7d8489d74d, type: 2}
     value: {fileID: 364399752}
   - key: {fileID: 4101078585522969240, guid: 1b7929f8b0ba07741a996c7d8489d74d, type: 2}
@@ -10329,11 +10046,11 @@ PlayableDirector:
   - key: {fileID: -2736218771059355168, guid: 3e88fa92281da1d4893d9dc5cd423e58, type: 2}
     value: {fileID: 0}
   - key: {fileID: -1502078509557316345, guid: 3e88fa92281da1d4893d9dc5cd423e58, type: 2}
-    value: {fileID: 1755900818}
+    value: {fileID: 0}
   - key: {fileID: -1514575018840599503, guid: 3e88fa92281da1d4893d9dc5cd423e58, type: 2}
-    value: {fileID: 1755900818}
+    value: {fileID: 0}
   - key: {fileID: -6382372190095241622, guid: 3e88fa92281da1d4893d9dc5cd423e58, type: 2}
-    value: {fileID: 1755900818}
+    value: {fileID: 0}
   - key: {fileID: 3612206845423783699, guid: 3e88fa92281da1d4893d9dc5cd423e58, type: 2}
     value: {fileID: 364399752}
   - key: {fileID: 4101078585522969240, guid: 3e88fa92281da1d4893d9dc5cd423e58, type: 2}
@@ -10345,11 +10062,11 @@ PlayableDirector:
   - key: {fileID: -2736218771059355168, guid: 0ddd475aa8baf184a88da4c83dc520fb, type: 2}
     value: {fileID: 0}
   - key: {fileID: -1502078509557316345, guid: 0ddd475aa8baf184a88da4c83dc520fb, type: 2}
-    value: {fileID: 1755900818}
+    value: {fileID: 0}
   - key: {fileID: -1514575018840599503, guid: 0ddd475aa8baf184a88da4c83dc520fb, type: 2}
-    value: {fileID: 1755900818}
+    value: {fileID: 0}
   - key: {fileID: -6382372190095241622, guid: 0ddd475aa8baf184a88da4c83dc520fb, type: 2}
-    value: {fileID: 1755900818}
+    value: {fileID: 0}
   - key: {fileID: 3612206845423783699, guid: 0ddd475aa8baf184a88da4c83dc520fb, type: 2}
     value: {fileID: 364399752}
   - key: {fileID: 4101078585522969240, guid: 0ddd475aa8baf184a88da4c83dc520fb, type: 2}
@@ -10361,11 +10078,11 @@ PlayableDirector:
   - key: {fileID: -2736218771059355168, guid: 394c7b2d5a146f04ebfbb3ce8bc4edcf, type: 2}
     value: {fileID: 0}
   - key: {fileID: -1502078509557316345, guid: 394c7b2d5a146f04ebfbb3ce8bc4edcf, type: 2}
-    value: {fileID: 1755900818}
+    value: {fileID: 0}
   - key: {fileID: -1514575018840599503, guid: 394c7b2d5a146f04ebfbb3ce8bc4edcf, type: 2}
-    value: {fileID: 1755900818}
+    value: {fileID: 0}
   - key: {fileID: -6382372190095241622, guid: 394c7b2d5a146f04ebfbb3ce8bc4edcf, type: 2}
-    value: {fileID: 1755900818}
+    value: {fileID: 0}
   - key: {fileID: 3612206845423783699, guid: 394c7b2d5a146f04ebfbb3ce8bc4edcf, type: 2}
     value: {fileID: 364399752}
   - key: {fileID: 4101078585522969240, guid: 394c7b2d5a146f04ebfbb3ce8bc4edcf, type: 2}
@@ -10377,11 +10094,11 @@ PlayableDirector:
   - key: {fileID: -2736218771059355168, guid: abfb877b6312a6c49859f5603f333bdb, type: 2}
     value: {fileID: 0}
   - key: {fileID: -1502078509557316345, guid: abfb877b6312a6c49859f5603f333bdb, type: 2}
-    value: {fileID: 1755900818}
+    value: {fileID: 0}
   - key: {fileID: -1514575018840599503, guid: abfb877b6312a6c49859f5603f333bdb, type: 2}
-    value: {fileID: 1755900818}
+    value: {fileID: 0}
   - key: {fileID: -6382372190095241622, guid: abfb877b6312a6c49859f5603f333bdb, type: 2}
-    value: {fileID: 1755900818}
+    value: {fileID: 0}
   - key: {fileID: 3612206845423783699, guid: abfb877b6312a6c49859f5603f333bdb, type: 2}
     value: {fileID: 364399752}
   - key: {fileID: 4101078585522969240, guid: abfb877b6312a6c49859f5603f333bdb, type: 2}
@@ -10393,11 +10110,11 @@ PlayableDirector:
   - key: {fileID: -2736218771059355168, guid: 8ca44a706dabfab4c81963fb26054d90, type: 2}
     value: {fileID: 0}
   - key: {fileID: -1502078509557316345, guid: 8ca44a706dabfab4c81963fb26054d90, type: 2}
-    value: {fileID: 1755900818}
+    value: {fileID: 0}
   - key: {fileID: -1514575018840599503, guid: 8ca44a706dabfab4c81963fb26054d90, type: 2}
-    value: {fileID: 1755900818}
+    value: {fileID: 0}
   - key: {fileID: -6382372190095241622, guid: 8ca44a706dabfab4c81963fb26054d90, type: 2}
-    value: {fileID: 1755900818}
+    value: {fileID: 0}
   - key: {fileID: 3612206845423783699, guid: 8ca44a706dabfab4c81963fb26054d90, type: 2}
     value: {fileID: 364399752}
   - key: {fileID: 4101078585522969240, guid: 8ca44a706dabfab4c81963fb26054d90, type: 2}
@@ -10409,11 +10126,11 @@ PlayableDirector:
   - key: {fileID: -2736218771059355168, guid: d7519e3efd6e68c4394459cebb5627fd, type: 2}
     value: {fileID: 0}
   - key: {fileID: -1502078509557316345, guid: d7519e3efd6e68c4394459cebb5627fd, type: 2}
-    value: {fileID: 1755900818}
+    value: {fileID: 0}
   - key: {fileID: -1514575018840599503, guid: d7519e3efd6e68c4394459cebb5627fd, type: 2}
-    value: {fileID: 1755900818}
+    value: {fileID: 0}
   - key: {fileID: -6382372190095241622, guid: d7519e3efd6e68c4394459cebb5627fd, type: 2}
-    value: {fileID: 1755900818}
+    value: {fileID: 0}
   - key: {fileID: 3612206845423783699, guid: d7519e3efd6e68c4394459cebb5627fd, type: 2}
     value: {fileID: 364399752}
   - key: {fileID: 4101078585522969240, guid: d7519e3efd6e68c4394459cebb5627fd, type: 2}
@@ -10425,11 +10142,11 @@ PlayableDirector:
   - key: {fileID: -2736218771059355168, guid: 4b8f540f2424ac84bab20e6400103551, type: 2}
     value: {fileID: 0}
   - key: {fileID: -1502078509557316345, guid: 4b8f540f2424ac84bab20e6400103551, type: 2}
-    value: {fileID: 1755900818}
+    value: {fileID: 0}
   - key: {fileID: -1514575018840599503, guid: 4b8f540f2424ac84bab20e6400103551, type: 2}
-    value: {fileID: 1755900818}
+    value: {fileID: 0}
   - key: {fileID: -6382372190095241622, guid: 4b8f540f2424ac84bab20e6400103551, type: 2}
-    value: {fileID: 1755900818}
+    value: {fileID: 0}
   - key: {fileID: 3612206845423783699, guid: 4b8f540f2424ac84bab20e6400103551, type: 2}
     value: {fileID: 364399752}
   - key: {fileID: 4101078585522969240, guid: 4b8f540f2424ac84bab20e6400103551, type: 2}
@@ -10441,11 +10158,11 @@ PlayableDirector:
   - key: {fileID: -2736218771059355168, guid: 8e21902846dee1d4bbaa25e8436f342a, type: 2}
     value: {fileID: 0}
   - key: {fileID: -1502078509557316345, guid: 8e21902846dee1d4bbaa25e8436f342a, type: 2}
-    value: {fileID: 1755900818}
+    value: {fileID: 0}
   - key: {fileID: -1514575018840599503, guid: 8e21902846dee1d4bbaa25e8436f342a, type: 2}
-    value: {fileID: 1755900818}
+    value: {fileID: 0}
   - key: {fileID: -6382372190095241622, guid: 8e21902846dee1d4bbaa25e8436f342a, type: 2}
-    value: {fileID: 1755900818}
+    value: {fileID: 0}
   - key: {fileID: 3612206845423783699, guid: 8e21902846dee1d4bbaa25e8436f342a, type: 2}
     value: {fileID: 364399752}
   - key: {fileID: 4101078585522969240, guid: 8e21902846dee1d4bbaa25e8436f342a, type: 2}
@@ -10457,11 +10174,11 @@ PlayableDirector:
   - key: {fileID: -2736218771059355168, guid: e2c1370e068e49c499c268ca75068875, type: 2}
     value: {fileID: 0}
   - key: {fileID: -1502078509557316345, guid: e2c1370e068e49c499c268ca75068875, type: 2}
-    value: {fileID: 1755900818}
+    value: {fileID: 0}
   - key: {fileID: -1514575018840599503, guid: e2c1370e068e49c499c268ca75068875, type: 2}
-    value: {fileID: 1755900818}
+    value: {fileID: 0}
   - key: {fileID: -6382372190095241622, guid: e2c1370e068e49c499c268ca75068875, type: 2}
-    value: {fileID: 1755900818}
+    value: {fileID: 0}
   - key: {fileID: 3612206845423783699, guid: e2c1370e068e49c499c268ca75068875, type: 2}
     value: {fileID: 364399752}
   - key: {fileID: 4101078585522969240, guid: e2c1370e068e49c499c268ca75068875, type: 2}
@@ -10473,11 +10190,11 @@ PlayableDirector:
   - key: {fileID: -2736218771059355168, guid: 6dd8343326b784b498df964d5ac1c0c6, type: 2}
     value: {fileID: 0}
   - key: {fileID: -1502078509557316345, guid: 6dd8343326b784b498df964d5ac1c0c6, type: 2}
-    value: {fileID: 1755900818}
+    value: {fileID: 0}
   - key: {fileID: -1514575018840599503, guid: 6dd8343326b784b498df964d5ac1c0c6, type: 2}
-    value: {fileID: 1755900818}
+    value: {fileID: 0}
   - key: {fileID: -6382372190095241622, guid: 6dd8343326b784b498df964d5ac1c0c6, type: 2}
-    value: {fileID: 1755900818}
+    value: {fileID: 0}
   - key: {fileID: 3612206845423783699, guid: 6dd8343326b784b498df964d5ac1c0c6, type: 2}
     value: {fileID: 364399752}
   - key: {fileID: 4101078585522969240, guid: 6dd8343326b784b498df964d5ac1c0c6, type: 2}
@@ -10489,11 +10206,11 @@ PlayableDirector:
   - key: {fileID: -2736218771059355168, guid: 320ab5dbcb7fe22489767266179d57cb, type: 2}
     value: {fileID: 0}
   - key: {fileID: -1502078509557316345, guid: 320ab5dbcb7fe22489767266179d57cb, type: 2}
-    value: {fileID: 1755900818}
+    value: {fileID: 0}
   - key: {fileID: -1514575018840599503, guid: 320ab5dbcb7fe22489767266179d57cb, type: 2}
-    value: {fileID: 1755900818}
+    value: {fileID: 0}
   - key: {fileID: -6382372190095241622, guid: 320ab5dbcb7fe22489767266179d57cb, type: 2}
-    value: {fileID: 1755900818}
+    value: {fileID: 0}
   - key: {fileID: 3612206845423783699, guid: 320ab5dbcb7fe22489767266179d57cb, type: 2}
     value: {fileID: 364399752}
   - key: {fileID: 4101078585522969240, guid: 320ab5dbcb7fe22489767266179d57cb, type: 2}
@@ -10505,11 +10222,11 @@ PlayableDirector:
   - key: {fileID: -2736218771059355168, guid: 31742396b9f6ab647be52abcae9962bb, type: 2}
     value: {fileID: 0}
   - key: {fileID: -1502078509557316345, guid: 31742396b9f6ab647be52abcae9962bb, type: 2}
-    value: {fileID: 1755900818}
+    value: {fileID: 0}
   - key: {fileID: -1514575018840599503, guid: 31742396b9f6ab647be52abcae9962bb, type: 2}
-    value: {fileID: 1755900818}
+    value: {fileID: 0}
   - key: {fileID: -6382372190095241622, guid: 31742396b9f6ab647be52abcae9962bb, type: 2}
-    value: {fileID: 1755900818}
+    value: {fileID: 0}
   - key: {fileID: 3612206845423783699, guid: 31742396b9f6ab647be52abcae9962bb, type: 2}
     value: {fileID: 364399752}
   - key: {fileID: 4101078585522969240, guid: 31742396b9f6ab647be52abcae9962bb, type: 2}
@@ -10521,11 +10238,11 @@ PlayableDirector:
   - key: {fileID: -2736218771059355168, guid: eb0e48d7b097b7f4c8a302c9afd1ad97, type: 2}
     value: {fileID: 0}
   - key: {fileID: -1502078509557316345, guid: eb0e48d7b097b7f4c8a302c9afd1ad97, type: 2}
-    value: {fileID: 1755900818}
+    value: {fileID: 0}
   - key: {fileID: -1514575018840599503, guid: eb0e48d7b097b7f4c8a302c9afd1ad97, type: 2}
-    value: {fileID: 1755900818}
+    value: {fileID: 0}
   - key: {fileID: -6382372190095241622, guid: eb0e48d7b097b7f4c8a302c9afd1ad97, type: 2}
-    value: {fileID: 1755900818}
+    value: {fileID: 0}
   - key: {fileID: 3612206845423783699, guid: eb0e48d7b097b7f4c8a302c9afd1ad97, type: 2}
     value: {fileID: 364399752}
   - key: {fileID: 4101078585522969240, guid: eb0e48d7b097b7f4c8a302c9afd1ad97, type: 2}
@@ -10537,11 +10254,11 @@ PlayableDirector:
   - key: {fileID: -2736218771059355168, guid: 78c2abcd4477dad4c9f6db211e6d1626, type: 2}
     value: {fileID: 0}
   - key: {fileID: -1502078509557316345, guid: 78c2abcd4477dad4c9f6db211e6d1626, type: 2}
-    value: {fileID: 1755900818}
+    value: {fileID: 0}
   - key: {fileID: -1514575018840599503, guid: 78c2abcd4477dad4c9f6db211e6d1626, type: 2}
-    value: {fileID: 1755900818}
+    value: {fileID: 0}
   - key: {fileID: -6382372190095241622, guid: 78c2abcd4477dad4c9f6db211e6d1626, type: 2}
-    value: {fileID: 1755900818}
+    value: {fileID: 0}
   - key: {fileID: 3612206845423783699, guid: 78c2abcd4477dad4c9f6db211e6d1626, type: 2}
     value: {fileID: 364399752}
   - key: {fileID: 4101078585522969240, guid: 78c2abcd4477dad4c9f6db211e6d1626, type: 2}
@@ -10553,11 +10270,11 @@ PlayableDirector:
   - key: {fileID: -2736218771059355168, guid: 4f80d196eaa5059429146f40c62a0818, type: 2}
     value: {fileID: 0}
   - key: {fileID: -1502078509557316345, guid: 4f80d196eaa5059429146f40c62a0818, type: 2}
-    value: {fileID: 1755900818}
+    value: {fileID: 0}
   - key: {fileID: -1514575018840599503, guid: 4f80d196eaa5059429146f40c62a0818, type: 2}
-    value: {fileID: 1755900818}
+    value: {fileID: 0}
   - key: {fileID: -6382372190095241622, guid: 4f80d196eaa5059429146f40c62a0818, type: 2}
-    value: {fileID: 1755900818}
+    value: {fileID: 0}
   - key: {fileID: 3612206845423783699, guid: 4f80d196eaa5059429146f40c62a0818, type: 2}
     value: {fileID: 364399752}
   - key: {fileID: 4101078585522969240, guid: 4f80d196eaa5059429146f40c62a0818, type: 2}
@@ -10569,11 +10286,11 @@ PlayableDirector:
   - key: {fileID: -2736218771059355168, guid: eceab767b4c8ed940bdd6763b7d95906, type: 2}
     value: {fileID: 0}
   - key: {fileID: -1502078509557316345, guid: eceab767b4c8ed940bdd6763b7d95906, type: 2}
-    value: {fileID: 1755900818}
+    value: {fileID: 0}
   - key: {fileID: -1514575018840599503, guid: eceab767b4c8ed940bdd6763b7d95906, type: 2}
-    value: {fileID: 1755900818}
+    value: {fileID: 0}
   - key: {fileID: -6382372190095241622, guid: eceab767b4c8ed940bdd6763b7d95906, type: 2}
-    value: {fileID: 1755900818}
+    value: {fileID: 0}
   - key: {fileID: 3612206845423783699, guid: eceab767b4c8ed940bdd6763b7d95906, type: 2}
     value: {fileID: 364399752}
   - key: {fileID: 4101078585522969240, guid: eceab767b4c8ed940bdd6763b7d95906, type: 2}
@@ -10585,11 +10302,11 @@ PlayableDirector:
   - key: {fileID: -2736218771059355168, guid: 044aed6f3de2d484c9dbb8ab06fba55c, type: 2}
     value: {fileID: 0}
   - key: {fileID: -1502078509557316345, guid: 044aed6f3de2d484c9dbb8ab06fba55c, type: 2}
-    value: {fileID: 1755900818}
+    value: {fileID: 0}
   - key: {fileID: -1514575018840599503, guid: 044aed6f3de2d484c9dbb8ab06fba55c, type: 2}
-    value: {fileID: 1755900818}
+    value: {fileID: 0}
   - key: {fileID: -6382372190095241622, guid: 044aed6f3de2d484c9dbb8ab06fba55c, type: 2}
-    value: {fileID: 1755900818}
+    value: {fileID: 0}
   - key: {fileID: 3612206845423783699, guid: 044aed6f3de2d484c9dbb8ab06fba55c, type: 2}
     value: {fileID: 364399752}
   - key: {fileID: 4101078585522969240, guid: 044aed6f3de2d484c9dbb8ab06fba55c, type: 2}
@@ -10601,11 +10318,11 @@ PlayableDirector:
   - key: {fileID: -2736218771059355168, guid: f47d51ff2363af14d960f24f042689dc, type: 2}
     value: {fileID: 0}
   - key: {fileID: -1502078509557316345, guid: f47d51ff2363af14d960f24f042689dc, type: 2}
-    value: {fileID: 1755900818}
+    value: {fileID: 0}
   - key: {fileID: -1514575018840599503, guid: f47d51ff2363af14d960f24f042689dc, type: 2}
-    value: {fileID: 1755900818}
+    value: {fileID: 0}
   - key: {fileID: -6382372190095241622, guid: f47d51ff2363af14d960f24f042689dc, type: 2}
-    value: {fileID: 1755900818}
+    value: {fileID: 0}
   - key: {fileID: 3612206845423783699, guid: f47d51ff2363af14d960f24f042689dc, type: 2}
     value: {fileID: 364399752}
   - key: {fileID: 4101078585522969240, guid: f47d51ff2363af14d960f24f042689dc, type: 2}
@@ -10614,6 +10331,24 @@ PlayableDirector:
     value: {fileID: 364399752}
   - key: {fileID: -3897850928456864275, guid: 48a4a8e5791e01b4aa7498d6cfaa0cdf, type: 2}
     value: {fileID: 1809882243}
+  - key: {fileID: -3803989754153895901, guid: 93fc853b2269aeb49ad4fafb707a9ff5, type: 2}
+    value: {fileID: 364399752}
+  - key: {fileID: -3897850928456864275, guid: 93fc853b2269aeb49ad4fafb707a9ff5, type: 2}
+    value: {fileID: 1809882243}
+  - key: {fileID: 7581637618322103188, guid: 93fc853b2269aeb49ad4fafb707a9ff5, type: 2}
+    value: {fileID: 1842364616}
+  - key: {fileID: -7739908515276127800, guid: 93fc853b2269aeb49ad4fafb707a9ff5, type: 2}
+    value: {fileID: 1842364618}
+  - key: {fileID: 0}
+    value: {fileID: 0}
+  - key: {fileID: 0}
+    value: {fileID: 0}
+  - key: {fileID: 0}
+    value: {fileID: 0}
+  - key: {fileID: 0}
+    value: {fileID: 0}
+  - key: {fileID: 0}
+    value: {fileID: 0}
   m_ExposedReferences:
     m_References:
     - c5489b16d27df3d45a91ecb462b799f6: {fileID: 0}
@@ -10630,7 +10365,7 @@ Transform:
   m_LocalScale: {x: 1, y: 1, z: 1}
   m_Children: []
   m_Father: {fileID: 1073008907}
-  m_RootOrder: 3
+  m_RootOrder: 2
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
 --- !u!1 &1809882241
 GameObject:
@@ -10672,10 +10407,10 @@ AudioSource:
   m_GameObject: {fileID: 1809882241}
   m_Enabled: 1
   serializedVersion: 4
-  OutputAudioMixerGroup: {fileID: 3186186445022072392, guid: 0f878cdc2b0f396499ef3380fce5e3c7,
+  OutputAudioMixerGroup: {fileID: 7625724229531091582, guid: 0283ba021b2c7db49adfcc0c012b41a0,
     type: 2}
   m_audioClip: {fileID: 0}
-  m_PlayOnAwake: 1
+  m_PlayOnAwake: 0
   m_Volume: 1
   m_Pitch: 1
   Loop: 0
@@ -10770,7 +10505,6 @@ GameObject:
   m_Component:
   - component: {fileID: 1842364617}
   - component: {fileID: 1842364620}
-  - component: {fileID: 1842364619}
   - component: {fileID: 1842364618}
   m_Layer: 0
   m_Name: Distant Camera
@@ -10786,14 +10520,14 @@ Transform:
   m_PrefabInstance: {fileID: 0}
   m_PrefabAsset: {fileID: 0}
   m_GameObject: {fileID: 1842364616}
-  m_LocalRotation: {x: -0.021253364, y: -0.9557928, z: 0.071415916, w: -0.28444374}
-  m_LocalPosition: {x: -6.69, y: 5.26, z: 17.89}
+  m_LocalRotation: {x: -0.03460102, y: -0.96019393, z: 0.13831171, w: -0.24020882}
+  m_LocalPosition: {x: -12.34, y: 9.79, z: 23.119999}
   m_LocalScale: {x: 1, y: 1.3577, z: 1}
   m_Children:
   - {fileID: 1589850057}
   m_Father: {fileID: 1617910624}
   m_RootOrder: 1
-  m_LocalEulerAnglesHint: {x: 8.5460005, y: -213.146, z: 0}
+  m_LocalEulerAnglesHint: {x: 0, y: -129.604, z: 0}
 --- !u!95 &1842364618
 Animator:
   serializedVersion: 3
@@ -10813,41 +10547,6 @@ Animator:
   m_HasTransformHierarchy: 1
   m_AllowConstantClipSamplingOptimization: 1
   m_KeepAnimatorControllerStateOnDisable: 0
---- !u!114 &1842364619
-MonoBehaviour:
-  m_ObjectHideFlags: 0
-  m_CorrespondingSourceObject: {fileID: 0}
-  m_PrefabInstance: {fileID: 0}
-  m_PrefabAsset: {fileID: 0}
-  m_GameObject: {fileID: 1842364616}
-  m_Enabled: 1
-  m_EditorHideFlags: 0
-  m_Script: {fileID: 11500000, guid: f6381b738b97c3e4d957cc31a84f9f25, type: 3}
-  m_Name: 
-  m_EditorClassIdentifier: 
-  onEnable:
-    m_PersistentCalls:
-      m_Calls:
-      - m_Target: {fileID: 1270791307}
-        m_MethodName: set_pitch
-        m_Mode: 4
-        m_Arguments:
-          m_ObjectArgument: {fileID: 0}
-          m_ObjectArgumentAssemblyTypeName: UnityEngine.Object, UnityEngine
-          m_IntArgument: 0
-          m_FloatArgument: 1
-          m_StringArgument: 
-          m_BoolArgument: 0
-        m_CallState: 2
-  onDisable:
-    m_PersistentCalls:
-      m_Calls: []
-  target: {fileID: 0}
-  controls: 1
-  radius: 15
-  height: 3.3
-  angle: -90
-  resetOnDisable: 0
 --- !u!114 &1842364620
 MonoBehaviour:
   m_ObjectHideFlags: 0
@@ -10866,8 +10565,8 @@ MonoBehaviour:
   m_StreamingVersion: 20170927
   m_Priority: 10
   m_StandbyUpdate: 2
-  m_LookAt: {fileID: 0}
-  m_Follow: {fileID: 0}
+  m_LookAt: {fileID: 1945746563}
+  m_Follow: {fileID: 1945746563}
   m_Lens:
     FieldOfView: 60
     OrthographicSize: 10
@@ -11755,7 +11454,7 @@ MonoBehaviour:
   onLoseFocus:
     m_PersistentCalls:
       m_Calls: []
-  CameraManager: {fileID: 1617910623}
+  CameraManager: {fileID: 0}
   Camera: {fileID: 0}
   BackgroundAudio: {fileID: 1270791307}
   m_focus: {fileID: 0}
@@ -11791,7 +11490,7 @@ Transform:
   m_Children:
   - {fileID: 1451750715}
   m_Father: {fileID: 1073008907}
-  m_RootOrder: 1
+  m_RootOrder: 0
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
 --- !u!1 &2138830237
 GameObject:
@@ -11822,7 +11521,7 @@ Transform:
   m_LocalScale: {x: 1, y: 1, z: 1}
   m_Children: []
   m_Father: {fileID: 1073008907}
-  m_RootOrder: 4
+  m_RootOrder: 3
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
 --- !u!114 &2138830239
 MonoBehaviour:
@@ -11881,7 +11580,7 @@ Transform:
   m_LocalScale: {x: 1, y: 1, z: 1}
   m_Children: []
   m_Father: {fileID: 1073008907}
-  m_RootOrder: 2
+  m_RootOrder: 1
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
 --- !u!114 &2145892802
 MonoBehaviour:
