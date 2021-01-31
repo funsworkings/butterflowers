@@ -8990,7 +8990,7 @@ AudioSource:
   serializedVersion: 4
   OutputAudioMixerGroup: {fileID: 2325666229147458871, guid: 0283ba021b2c7db49adfcc0c012b41a0,
     type: 2}
-  m_audioClip: {fileID: 8300000, guid: 174902dd0202f984689a4acad30525fb, type: 3}
+  m_audioClip: {fileID: 8300000, guid: c606ef1b2c945d64aaceb0438a13da45, type: 3}
   m_PlayOnAwake: 1
   m_Volume: 1
   m_Pitch: 1
@@ -11559,12 +11559,14 @@ MonoBehaviour:
   - {fileID: 11400000, guid: 2113ca8d6483ed6498d9518bc5032a52, type: 2}
   - {fileID: 11400000, guid: e5d73c7f2c018a04f9fc05f0a27778f6, type: 2}
   - {fileID: 11400000, guid: 90685a7bd88e7e1409a515826fa201e6, type: 2}
+  mixer: {fileID: 0}
   minBGPitch: 0.4
   maxBGPitch: 1
   minBGLP: 333
   maxBGLP: 3333
   minBGVol: 0.87
   maxBGVol: 1
+  pitchParam: 
   lowpass: 0
   lowPassSmoothSpeed: 0.5
   lowPassFilterParam: LPCutoff_BackgroundMusic
