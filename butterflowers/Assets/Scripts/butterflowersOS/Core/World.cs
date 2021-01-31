@@ -251,15 +251,9 @@ namespace butterflowersOS.Core
             onLoad.Invoke();
             Loader.Load(.1f, 1f);
             while (Loader.IsLoading) yield return null;
-
-            float loadDuration = loadAudioClip.length;
-            float remainder =  loadAudio.time % loadDuration;
-            
-            float t = 0f;
-            while (t < remainder) { t += Time.deltaTime; yield return null; }
             
             onLoadComplete.Invoke();
-            yield return new WaitForSeconds(.1f);
+            while (loadAudio.isPlaying) yield return null;
             onLoadTrigger.Invoke();
 
             bool requireTutorial = !_Save.data.tutorial;
