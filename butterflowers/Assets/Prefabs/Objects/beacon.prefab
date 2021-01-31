@@ -14427,7 +14427,7 @@ MonoBehaviour:
         m_MethodName: PlaySound
         m_Mode: 2
         m_Arguments:
-          m_ObjectArgument: {fileID: 8300000, guid: e711a60c8c1caac4f87669c3d1cc2e4f,
+          m_ObjectArgument: {fileID: 8300000, guid: 25b9e1e13783dbb4ab87813b8bd1a2fa,
             type: 3}
           m_ObjectArgumentAssemblyTypeName: UnityEngine.AudioClip, UnityEngine
           m_IntArgument: 0
@@ -14437,19 +14437,7 @@ MonoBehaviour:
         m_CallState: 2
   OnSpawn:
     m_PersistentCalls:
-      m_Calls:
-      - m_Target: {fileID: 3488882234533829138}
-        m_MethodName: PlaySoundRandomPitch
-        m_Mode: 2
-        m_Arguments:
-          m_ObjectArgument: {fileID: 8300000, guid: 77396d3683a62224faa9b3753336e2f5,
-            type: 3}
-          m_ObjectArgumentAssemblyTypeName: UnityEngine.AudioClip, UnityEngine
-          m_IntArgument: 0
-          m_FloatArgument: 0
-          m_StringArgument: 
-          m_BoolArgument: 0
-        m_CallState: 2
+      m_Calls: []
   OnDestroy:
     m_PersistentCalls:
       m_Calls:
@@ -14773,7 +14761,7 @@ MonoBehaviour:
   m_pitch: 1
   smoothPitch: 0
   pitchSmoothSpeed: 1
-  m_volume: 1
+  m_volume: 0.67
   smoothVolume: 0
   volumeSmoothSpeed: 1
   pitchParam: 
@@ -14799,10 +14787,10 @@ AudioSource:
   SpatializePostEffects: 0
   Priority: 128
   DopplerLevel: 1
-  MinDistance: 1
-  MaxDistance: 500
+  MinDistance: 0
+  MaxDistance: 60
   Pan2D: 0
-  rolloffMode: 0
+  rolloffMode: 1
   BypassEffects: 0
   BypassListenerEffects: 0
   BypassReverbZones: 0
@@ -14835,7 +14823,7 @@ AudioSource:
     m_Curve:
     - serializedVersion: 3
       time: 0
-      value: 0
+      value: 1
       inSlope: 0
       outSlope: 0
       tangentMode: 0
