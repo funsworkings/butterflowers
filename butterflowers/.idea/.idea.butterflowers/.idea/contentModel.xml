@@ -1104,6 +1104,26 @@
             </e>
           </e>
         </e>
+        <e p="Plawius-NonConvexCollider" t="Include">
+          <e p="API" t="Include">
+            <e p="NonConvexColliderAPI.cs" t="Include" />
+            <e p="NonConvexColliderInterop.cs" t="Include" />
+            <e p="NonConvexColliderRuntimeAPI.asmdef" t="Include" />
+          </e>
+          <e p="Editor" t="Include">
+            <e p="NonConvexColliderComponentEditor.cs" t="Include" />
+            <e p="NonConvexColliderMenus.cs" t="Include" />
+            <e p="NonConvexColliderUnityExt.cs" t="Include" />
+            <e p="NonConvexEditor.asmdef" t="Include" />
+          </e>
+          <e p="NonConvexCollider.asmdef" t="Include" />
+          <e p="NonConvexColliderAsset.cs" t="Include" />
+          <e p="NonConvexColliderComponent.cs" t="Include" />
+          <e p="RuntimeDemo" t="Include">
+            <e p="RuntimeTest.cs" t="Include" />
+            <e p="RuntimeTestAssembly.asmdef" t="Include" />
+          </e>
+        </e>
         <e p="Plugins" t="Include">
           <e p="Android" t="Include">
             <e p="AndroidManifest.xml" t="Include" />
@@ -2132,8 +2152,12 @@
         </e>
       </e>
       <e p="butterflowers.sln" t="IncludeFlat" />
+      <e p="NonConvexCollider.csproj" t="IncludeRecursive" />
+      <e p="NonConvexColliderRuntimeAPI.csproj" t="IncludeRecursive" />
+      <e p="NonConvexEditor.csproj" t="IncludeRecursive" />
       <e p="obj" t="ExcludeRecursive" />
       <e p="Packages" t="ExcludeRecursive" />
+      <e p="RuntimeTestAssembly.csproj" t="IncludeRecursive" />
       <e p="Temp\bin" t="ExcludeRecursive" />
     </e>
   </component>

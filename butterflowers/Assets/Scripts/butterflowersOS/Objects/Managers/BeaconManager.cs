@@ -9,6 +9,7 @@ using butterflowersOS.Interfaces;
 using butterflowersOS.Objects.Entities.Interactables;
 using butterflowersOS.Presets;
 using UnityEngine;
+using UnityEngine.Events;
 using uwu;
 using uwu.Extensions;
 using uwu.Gameplay;
@@ -30,6 +31,8 @@ namespace butterflowersOS.Objects.Managers
 
 		public System.Action onUpdateBeacons;
 		public System.Action<Beacon> onPlantBeacon;
+
+		public UnityEvent onDestroyBeacon;
 
 		#endregion
 
@@ -543,6 +546,8 @@ namespace butterflowersOS.Objects.Managers
 		{
 			var file = beacon.File;
 			var others = beacons[file];
+			
+			onDestroyBeacon.Invoke();
 
 			foreach (Beacon b in others) 
 			{
