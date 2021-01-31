@@ -8784,7 +8784,7 @@ Transform:
   m_PrefabInstance: {fileID: 0}
   m_PrefabAsset: {fileID: 0}
   m_GameObject: {fileID: 201810246}
-  m_LocalRotation: {x: 0.11976033, y: -0.000000004116025, z: 5.036831e-10, w: 0.99280286}
+  m_LocalRotation: {x: 0.11976033, y: 0.000000004114268, z: -4.891245e-10, w: 0.99280286}
   m_LocalPosition: {x: 0, y: 9.518084, z: -21.87147}
   m_LocalScale: {x: 1, y: 1.3577, z: 1}
   m_Children:
@@ -9220,7 +9220,7 @@ PlayableDirector:
   m_GameObject: {fileID: 214334915}
   m_Enabled: 1
   serializedVersion: 3
-  m_PlayableAsset: {fileID: 0}
+  m_PlayableAsset: {fileID: 11400000, guid: 060e0d582dc20ad4e87421604e1f1df7, type: 2}
   m_InitialState: 0
   m_WrapMode: 2
   m_DirectorUpdateMode: 1
@@ -14306,7 +14306,7 @@ Camera:
     height: 1
   near clip plane: 0.1
   far clip plane: 5000
-  field of view: 30
+  field of view: 14
   orthographic: 0
   orthographic size: 5
   m_Depth: 0
@@ -14331,9 +14331,8 @@ Transform:
   m_PrefabInstance: {fileID: 0}
   m_PrefabAsset: {fileID: 0}
   m_GameObject: {fileID: 534669902}
-  m_LocalRotation: {x: -0.000000014359238, y: -0.14678228, z: -0.0000000013390794,
-    w: -0.9891688}
-  m_LocalPosition: {x: -0.31777573, y: 9.105735, z: -24.693329}
+  m_LocalRotation: {x: 0.011049519, y: -0.9863622, z: 0.07446293, w: 0.14636582}
+  m_LocalPosition: {x: 19.457602, y: 14.52165, z: 40.472775}
   m_LocalScale: {x: 1, y: 1, z: 1}
   m_Children:
   - {fileID: 2418050}
@@ -70378,19 +70377,19 @@ PrefabInstance:
       objectReference: {fileID: 0}
     - target: {fileID: 1854825635, guid: bbe889dad4ed0dd48a0243ced6070a70, type: 3}
       propertyPath: m_LocalRotation.w
-      value: 0.7822661
+      value: 0.77474916
       objectReference: {fileID: 0}
     - target: {fileID: 1854825635, guid: bbe889dad4ed0dd48a0243ced6070a70, type: 3}
       propertyPath: m_LocalRotation.x
-      value: -0.11512696
+      value: -0.09432574
       objectReference: {fileID: 0}
     - target: {fileID: 1854825635, guid: bbe889dad4ed0dd48a0243ced6070a70, type: 3}
       propertyPath: m_LocalRotation.y
-      value: 0.6014494
+      value: 0.61213166
       objectReference: {fileID: 0}
     - target: {fileID: 1854825635, guid: bbe889dad4ed0dd48a0243ced6070a70, type: 3}
       propertyPath: m_LocalRotation.z
-      value: -0.11429863
+      value: -0.1271267
       objectReference: {fileID: 0}
     - target: {fileID: 1981574396, guid: bbe889dad4ed0dd48a0243ced6070a70, type: 3}
       propertyPath: m_Layer
@@ -70398,19 +70397,19 @@ PrefabInstance:
       objectReference: {fileID: 0}
     - target: {fileID: 1981574397, guid: bbe889dad4ed0dd48a0243ced6070a70, type: 3}
       propertyPath: m_LocalRotation.w
-      value: 0.81232053
+      value: 0.79561573
       objectReference: {fileID: 0}
     - target: {fileID: 1981574397, guid: bbe889dad4ed0dd48a0243ced6070a70, type: 3}
       propertyPath: m_LocalRotation.x
-      value: -0.07790437
+      value: -0.06900209
       objectReference: {fileID: 0}
     - target: {fileID: 1981574397, guid: bbe889dad4ed0dd48a0243ced6070a70, type: 3}
       propertyPath: m_LocalRotation.y
-      value: 0.5586111
+      value: 0.58257586
       objectReference: {fileID: 0}
     - target: {fileID: 1981574397, guid: bbe889dad4ed0dd48a0243ced6070a70, type: 3}
       propertyPath: m_LocalRotation.z
-      value: -0.1483916
+      value: -0.15112777
       objectReference: {fileID: 0}
     - target: {fileID: 1995632988, guid: bbe889dad4ed0dd48a0243ced6070a70, type: 3}
       propertyPath: overrideCamera
