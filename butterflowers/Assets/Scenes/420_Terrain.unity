@@ -8671,7 +8671,8 @@ Transform:
   m_PrefabInstance: {fileID: 0}
   m_PrefabAsset: {fileID: 0}
   m_GameObject: {fileID: 201810246}
-  m_LocalRotation: {x: 0.11976033, y: -0.000000016146009, z: 0.0000000019548425, w: 0.99280286}
+  m_LocalRotation: {x: 0.119760305, y: -0.000000019039893, z: 0.0000000023039268,
+    w: 0.99280286}
   m_LocalPosition: {x: 0, y: 9.518084, z: -21.87147}
   m_LocalScale: {x: 1, y: 1.3577, z: 1}
   m_Children:
@@ -22916,6 +22917,39 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: 
   m_ShowMaskGraphic: 0
+--- !u!1 &787022935 stripped
+GameObject:
+  m_CorrespondingSourceObject: {fileID: 427166257, guid: e4ffaf7dd570b28469327a4909aedfd2,
+    type: 3}
+  m_PrefabInstance: {fileID: 3447281704964185446}
+  m_PrefabAsset: {fileID: 0}
+--- !u!114 &787022936
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 787022935}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 91c18a853de2e5049bc17361fc93b5ee, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
+  cv: 0
+  mixerGroup: {fileID: 243145500699233022, guid: 0f878cdc2b0f396499ef3380fce5e3c7,
+    type: 2}
+  audioClips: []
+  overrideMixer: 0
+  debug: 0
+  pitchRange: {x: 0.9, y: 1.1}
+  m_pitch: 1
+  smoothPitch: 0
+  pitchSmoothSpeed: 1
+  m_volume: 1
+  smoothVolume: 0
+  volumeSmoothSpeed: 1
+  pitchParam: 
+  volumeParam: 
 --- !u!1 &792321114
 GameObject:
   m_ObjectHideFlags: 0
@@ -30454,12 +30488,12 @@ MonoBehaviour:
   useMixerGroup: 1
   useScaledTime: 0
   minVolume: -80
-  maxVolume: 0
+  maxVolume: -20
   defaultVolume: -80
   _fadeOp: 0
-  fadeInOnAwake: 0
+  fadeInOnAwake: 1
   fadeInSpeed: 24
-  fadeOutSpeed: 8
+  fadeOutSpeed: 2
 --- !u!114 &1307039163 stripped
 MonoBehaviour:
   m_CorrespondingSourceObject: {fileID: 2519679717873304967, guid: 5dbad8f878594a2419fe9a294d04a8f5,
@@ -39327,8 +39361,8 @@ MonoBehaviour:
   defaultVolume: -80
   _fadeOp: 0
   fadeInOnAwake: 0
-  fadeInSpeed: 24
-  fadeOutSpeed: 24
+  fadeInSpeed: 8
+  fadeOutSpeed: 8
 --- !u!1 &1550434183
 GameObject:
   m_ObjectHideFlags: 0
@@ -71123,6 +71157,22 @@ PrefabInstance:
   m_Modification:
     m_TransformParent: {fileID: 443611955}
     m_Modifications:
+    - target: {fileID: 427166259, guid: e4ffaf7dd570b28469327a4909aedfd2, type: 3}
+      propertyPath: MaxDistance
+      value: 60
+      objectReference: {fileID: 0}
+    - target: {fileID: 427166259, guid: e4ffaf7dd570b28469327a4909aedfd2, type: 3}
+      propertyPath: MinDistance
+      value: 0
+      objectReference: {fileID: 0}
+    - target: {fileID: 427166259, guid: e4ffaf7dd570b28469327a4909aedfd2, type: 3}
+      propertyPath: rolloffMode
+      value: 1
+      objectReference: {fileID: 0}
+    - target: {fileID: 427166259, guid: e4ffaf7dd570b28469327a4909aedfd2, type: 3}
+      propertyPath: panLevelCustomCurve.m_Curve.Array.data[0].value
+      value: 1
+      objectReference: {fileID: 0}
     - target: {fileID: 3447281704321886848, guid: e4ffaf7dd570b28469327a4909aedfd2,
         type: 3}
       propertyPath: m_Name
@@ -71200,9 +71250,24 @@ PrefabInstance:
       objectReference: {fileID: 1964096156}
     - target: {fileID: 3447281704321886860, guid: e4ffaf7dd570b28469327a4909aedfd2,
         type: 3}
+      propertyPath: onKick.m_PersistentCalls.m_Calls.Array.data[0].m_Target
+      value: 
+      objectReference: {fileID: 787022936}
+    - target: {fileID: 3447281704321886860, guid: e4ffaf7dd570b28469327a4909aedfd2,
+        type: 3}
       propertyPath: onOpen.m_PersistentCalls.m_Calls.Array.data[0].m_Target
       value: 
       objectReference: {fileID: 247339871}
+    - target: {fileID: 3447281704321886860, guid: e4ffaf7dd570b28469327a4909aedfd2,
+        type: 3}
+      propertyPath: onKick.m_PersistentCalls.m_Calls.Array.data[0].m_MethodName
+      value: PlaySoundRandomPitch
+      objectReference: {fileID: 0}
+    - target: {fileID: 3447281704321886860, guid: e4ffaf7dd570b28469327a4909aedfd2,
+        type: 3}
+      propertyPath: onKick.m_PersistentCalls.m_Calls.Array.data[0].m_Arguments.m_ObjectArgument
+      value: 
+      objectReference: {fileID: 8300000, guid: 09b6882bdffaca54b8310ba39e4cf215, type: 3}
     m_RemovedComponents: []
   m_SourcePrefab: {fileID: 100100000, guid: e4ffaf7dd570b28469327a4909aedfd2, type: 3}
 --- !u!23 &3447609816531920970
