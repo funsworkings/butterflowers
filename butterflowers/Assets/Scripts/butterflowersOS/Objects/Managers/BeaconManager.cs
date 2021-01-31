@@ -558,24 +558,23 @@ namespace butterflowersOS.Objects.Managers
 			}
 		}
 
-		void onFireBeacon(Beacon beacon)
+		void onFireBeacon(Beacon beacon, bool self)
 		{
-			/*
-			var position = beacon.transform.position;
-			var instance = firePool.Request();
+			if (!self) 
+			{
+				var position = beacon.transform.position;
+				var instance = firePool.Request();
 				instance.transform.position = position;
 				instance.GetComponent<ParticleSystem>().Play();
-				*/
+			}
 		}
 
-		void onExtinguishBeacon(Beacon beacon)
+		void onExtinguishBeacon(Beacon beacon, bool self)
 		{
-			/*
 			var position = beacon.transform.position;
 			var instance = extinguishPool.Request();
 				instance.transform.position = position;
 				instance.GetComponent<ParticleSystem>().Play();
-				*/
 		}
 
 		void TriggerUpdateBeacons()

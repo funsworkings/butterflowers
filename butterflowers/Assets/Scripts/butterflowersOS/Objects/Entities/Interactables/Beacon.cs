@@ -91,7 +91,7 @@ namespace butterflowersOS.Objects.Entities.Interactables
 
         public static System.Action<Beacon> OnRegister, OnUnregister;
         public static System.Action<Beacon> Activated, Deactivated, Destroyed, Deleted, Planted, Flowered;
-        public static System.Action<Beacon> onFire, onExtinguish;
+        public static System.Action<Beacon, bool> onFire, onExtinguish;
         public static System.Action<Beacon> onUpdateState;
 
         public UnityEvent OnFlower, OnVine, OnSpawn, OnDestroy, OnFire, OnExtinguish, OnFlowerSpawn;
@@ -457,18 +457,18 @@ namespace butterflowersOS.Objects.Entities.Interactables
         {
             get => deathPS.isPlaying;
         }
-    
+
         public void Fire()
         {
             deathPS.Play();
-            onFire?.Invoke(this);
+            onFire?.Invoke(this, false);
             OnFire.Invoke();
         }
 
         public void Extinguish()
         {
             deathPS.Stop();
-            onExtinguish?.Invoke(this);
+            onExtinguish?.Invoke(this, false);
             OnExtinguish.Invoke();
         }
     
