@@ -11,16 +11,11 @@ public class TerrainDeformation : MonoBehaviour
     public Wand wand;
     public Vector4 wandPos;
 
-    // Start is called before the first frame update
-    void Start()
-    {
-        
-    }
-
     // Update is called once per frame
     void Update()
     {
         wandPos = wand.wandShaderParam;
-        mat.SetVector(property, wand.wandShaderParam);
+        //mat.SetVector(property, wand.wandShaderParam);
+        Shader.SetGlobalVector(property, wand.wandShaderParam);
     }
 }
