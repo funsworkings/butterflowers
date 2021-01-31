@@ -21,7 +21,7 @@ namespace uwu
         [Header("Miscellaneous")] 
         
         public bool tutorial = false;
-        public bool[] cutscenes = new bool[] { false, false };
+        public bool[] cutscenes = new bool[] { false, false, false };
 
         [Header("Neue")] 
         

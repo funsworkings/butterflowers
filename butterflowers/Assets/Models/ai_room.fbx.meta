@@ -7,8 +7,23 @@ ModelImporter:
   - first:
       type: UnityEngine:Material
       assembly: UnityEngine.CoreModule
+      name: inside_light
+    second: {fileID: 2100000, guid: 21f5f46af1c60f841a63723d7fd357da, type: 2}
+  - first:
+      type: UnityEngine:Material
+      assembly: UnityEngine.CoreModule
+      name: outside_light1
+    second: {fileID: 2100000, guid: b987c45baf2b52d4298618ce397eed9d, type: 2}
+  - first:
+      type: UnityEngine:Material
+      assembly: UnityEngine.CoreModule
       name: shadow_room
     second: {fileID: 2100000, guid: 42bfeb7fd0db6e64ea7298cdc607f2e3, type: 2}
+  - first:
+      type: UnityEngine:Material
+      assembly: UnityEngine.CoreModule
+      name: sunset_wall
+    second: {fileID: 2100000, guid: 630405f2f91ea614d82949c244b3be07, type: 2}
   - first:
       type: UnityEngine:Material
       assembly: UnityEngine.CoreModule

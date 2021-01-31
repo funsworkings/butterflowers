@@ -7,6 +7,7 @@ using System.Net;
 using System.Security.Cryptography;
 using System.Text;
 using System.Text.RegularExpressions;
+using B83.Win32;
 using butterflowersOS.Data;
 using butterflowersOS.Interfaces;
 using butterflowersOS.Menu;
@@ -42,7 +43,7 @@ using uwu.UI.Behaviors.Visibility;
 
 namespace butterflowersOS.Core
 {
-    public class World : MonoBehaviour, ISaveable, IReactToSunCycleReliable, IPauseSun
+    public class World : Importer, ISaveable, IReactToSunCycleReliable, IPauseSun
     {
         public static World Instance = null;
         public static bool LOAD = false;
@@ -55,12 +56,22 @@ namespace butterflowersOS.Core
             Broken,
             Continuous
         }
+
+        public enum State
+        {
+            Load,
+            
+            Cutscene,
+            Summary,
+            Game
+        }
         
         #endregion
 
         // Events
 
         public UnityEvent onDiscovery;
+        public UnityEvent onLoad, onLoadComplete, onLoadTrigger;
 
         // External
 
@@ -123,6 +134,8 @@ namespace butterflowersOS.Core
         }
 
         public bool ready = true;
+        
+        public State _State { get; set; }
 
         // Collections
     
@@ -132,11 +145,9 @@ namespace butterflowersOS.Core
             [SerializeField] List<Interactable> interactables = new List<Interactable>();
             [SerializeField] List<Focusable> focusables = new List<Focusable>();
 
-        [Header("Cutscenes")] 
-            [SerializeField] PlayableAsset introductionCutscene;
-            [SerializeField] PlayableAsset separationCutscene;
-
-            public bool fetchBuckets = false;
+        [Header("Audio")] 
+            [SerializeField] AudioSource loadAudio;
+            [SerializeField] AudioClip loadAudioClip;
             
         #region Accessors
 
@@ -203,12 +214,6 @@ namespace butterflowersOS.Core
             
             HandleReady();
             UpdateTimeScale();
-
-            if (fetchBuckets) 
-            {
-                UploadToS3(DebugFileName, DebugFilePath);
-                fetchBuckets = false;
-            }
         }
         
         void HandleReady()
@@ -242,10 +247,14 @@ namespace butterflowersOS.Core
             
             sceneAudio.FadeIn();
             yield return new WaitForEndOfFrame();
-            
+
+            onLoad.Invoke();
             Loader.Load(.1f, 1f);
             while (Loader.IsLoading) yield return null;
-
+            
+            onLoadComplete.Invoke();
+            while (loadAudio.isPlaying) yield return null;
+            onLoadTrigger.Invoke();
 
             bool requireTutorial = !_Save.data.tutorial;
             if (requireTutorial && Tutorial.IsValid) {
@@ -372,13 +381,12 @@ namespace butterflowersOS.Core
                     if (!Cutscenes.outro) 
                     {
                         Cutscenes.TriggerOutro(IMAGE_ROWS, IMAGE_COLUMNS, tex);
+                        while (!Cutscenes.inprogress) yield return null; // Wait for cutscene to finish
                     }
                     else 
                     {
                         ExportNeueAgent();
                     }
-
-                    yield return new WaitForEndOfFrame();
                 }
             }
 
@@ -646,6 +654,8 @@ namespace butterflowersOS.Core
 
             if (success) 
             {
+                _Save.data.surveillanceData = brainData.surveillanceData;
+                
                 _Save.data.agent_created_at = brainData.created_at;
                 _Save.data.username = brainData.username;
                 _Save.data.profile = profile = brainData.profile;
@@ -756,8 +766,18 @@ namespace butterflowersOS.Core
             //lib_payload.userFiles = _Save.data.user_files;
             //lib_payload.sharedFiles = _Save.data.shared_files;
             //lib_payload.worldFiles = _Save.data.world_files;
+
+            bool loadTextures = true;
+            bool loadThumbnails = true;
+            bool generateThumbnails = true;
             
-            Library.Load(lib_payload, Preset.defaultNullTexture, texturePacks, Preset.loadTexturesInEditor, Preset.backlogTextures);
+            #if UNITY_EDITOR
+                loadTextures = Preset.loadTexturesInEditor;
+                loadThumbnails = Preset.loadThumbnailsInEditor;
+                generateThumbnails = Preset.generateThumbnailsInEditor;
+            #endif
+            
+            Library.Load(lib_payload, Preset.defaultNullTexture, texturePacks, loadTextures, Preset.backlogTextures, loadThumbnails, generateThumbnails);
         }
         
         void SaveLibraryItems()
@@ -773,6 +793,36 @@ namespace butterflowersOS.Core
         public void Load(object data)
         {
             print("Load world data!");
+        }
+
+        #endregion
+        
+        #region Import
+
+        protected override FileNavigator _Files
+        {
+            get => Files;
+        }
+
+        protected override void HandleImageImport(IEnumerable<string> images, POINT point)
+        {
+            bool multipleImages = images.Count() > 1;
+                
+            foreach (string image in images) {
+                var info = new FileInfo(image);
+                var path = info.FullName;
+
+                bool exists = Library.RegisterFileInstance(path, Library.FileType.User);
+                if (exists)
+                    wand.AddBeacon(path, point, random: multipleImages); // Add beacon to scene via wand
+                else
+                    Debug.LogErrorFormat("File => {0} does not exist on user's desktop!", path);
+            }
+        }
+
+        protected override void HandleBrainImport(BrainData brain, POINT point)
+        {
+            ImportNeueAgent(brain);
         }
 
         #endregion

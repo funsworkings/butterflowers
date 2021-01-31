@@ -9,6 +9,7 @@ using butterflowersOS.Interfaces;
 using butterflowersOS.Objects.Entities.Interactables;
 using butterflowersOS.Presets;
 using UnityEngine;
+using UnityEngine.Events;
 using uwu;
 using uwu.Extensions;
 using uwu.Gameplay;
@@ -30,6 +31,8 @@ namespace butterflowersOS.Objects.Managers
 
 		public System.Action onUpdateBeacons;
 		public System.Action<Beacon> onPlantBeacon;
+
+		public UnityEvent onDestroyBeacon;
 
 		#endregion
 
@@ -543,6 +546,8 @@ namespace butterflowersOS.Objects.Managers
 		{
 			var file = beacon.File;
 			var others = beacons[file];
+			
+			onDestroyBeacon.Invoke();
 
 			foreach (Beacon b in others) 
 			{
@@ -553,15 +558,18 @@ namespace butterflowersOS.Objects.Managers
 			}
 		}
 
-		void onFireBeacon(Beacon beacon)
+		void onFireBeacon(Beacon beacon, bool self)
 		{
-			var position = beacon.transform.position;
-			var instance = firePool.Request();
+			if (!self) 
+			{
+				var position = beacon.transform.position;
+				var instance = firePool.Request();
 				instance.transform.position = position;
 				instance.GetComponent<ParticleSystem>().Play();
+			}
 		}
 
-		void onExtinguishBeacon(Beacon beacon)
+		void onExtinguishBeacon(Beacon beacon, bool self)
 		{
 			var position = beacon.transform.position;
 			var instance = extinguishPool.Request();
@@ -656,6 +664,7 @@ namespace butterflowersOS.Objects.Managers
 		{
 			//Instantiate(impactPS, position, Quaternion.identity); // Spawn impact!
 			beacon.Trails.enabled = true;
+			beacon.OnFlowerSpawn.Invoke();
 		}
 
 		public void OnEndFlower(Beacon beacon, Vector3 position)

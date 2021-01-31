@@ -91,8 +91,10 @@ namespace butterflowersOS.Objects.Entities.Interactables
 
         public static System.Action<Beacon> OnRegister, OnUnregister;
         public static System.Action<Beacon> Activated, Deactivated, Destroyed, Deleted, Planted, Flowered;
-        public static System.Action<Beacon> onFire, onExtinguish;
+        public static System.Action<Beacon, bool> onFire, onExtinguish;
         public static System.Action<Beacon> onUpdateState;
+
+        public UnityEvent OnFlower, OnVine, OnSpawn, OnDestroy, OnFire, OnExtinguish, OnFlowerSpawn;
 
         // Properties
 
@@ -239,6 +241,8 @@ namespace butterflowersOS.Objects.Entities.Interactables
             this.size = preset.normalBeaconScale * Vector3.one;
             this.lerp_duration = preset.beaconLerpDuration;
             this.scaleCurve = preset.beaconScaleCurve;
+            
+            if(IsOnFire) Extinguish();
 
             if (load) 
             {
@@ -260,6 +264,11 @@ namespace butterflowersOS.Objects.Entities.Interactables
                     default: break;
                 }
             }
+            else 
+            {
+                if(state == Locale.Terrain) OnSpawn.Invoke();    
+            }
+            
             this.state = state;
         
             StartTransition(transition);
@@ -331,6 +340,7 @@ namespace butterflowersOS.Objects.Entities.Interactables
             if(IsOnFire)Extinguish();
             transform.localScale = Vector3.zero;
 
+            OnVine.Invoke();
             if (Planted != null && events)
                 Planted(this);
 
@@ -356,6 +366,7 @@ namespace butterflowersOS.Objects.Entities.Interactables
                 flower.Grow(global::butterflowersOS.Objects.Entities.Interactables.Empty.Flower.Origin.Beacon, File, type);    
             }
 
+            OnFlower.Invoke();
             if (Flowered != null && events)
                 Flowered(this);
         
@@ -403,6 +414,7 @@ namespace butterflowersOS.Objects.Entities.Interactables
             ReleaseTransition();
             Fire();
 
+            OnDestroy.Invoke();
             if (Destroyed != null && events) 
                 Destroyed(this);
 
@@ -445,17 +457,19 @@ namespace butterflowersOS.Objects.Entities.Interactables
         {
             get => deathPS.isPlaying;
         }
-    
+
         public void Fire()
         {
             deathPS.Play();
-            onFire?.Invoke(this);
+            onFire?.Invoke(this, false);
+            OnFire.Invoke();
         }
 
         public void Extinguish()
         {
             deathPS.Stop();
-            onExtinguish?.Invoke(this);
+            onExtinguish?.Invoke(this, false);
+            OnExtinguish.Invoke();
         }
     
         #endregion
