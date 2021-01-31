@@ -241,6 +241,8 @@ namespace butterflowersOS.Objects.Entities.Interactables
             this.size = preset.normalBeaconScale * Vector3.one;
             this.lerp_duration = preset.beaconLerpDuration;
             this.scaleCurve = preset.beaconScaleCurve;
+            
+            if(IsOnFire) Extinguish();
 
             if (load) 
             {
