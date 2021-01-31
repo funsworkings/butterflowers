@@ -2,6 +2,7 @@
 using butterflowersOS.Objects.Base;
 using butterflowersOS.Objects.Entities;
 using UnityEngine;
+using UnityEngine.Audio;
 using UnityEngine.Events;
 using uwu.Audio;
 using uwu.Camera;
@@ -51,10 +52,13 @@ namespace butterflowersOS.Core
         [Header("Camera blends")]
         [SerializeField] CameraVisualBlendDefinition[] loseFocusBlends;
 
-        [Header("Audio")]
+        [Header("Audio")] 
+        [SerializeField] AudioMixer mixer;
         [SerializeField] float minBGPitch = .4f, maxBGPitch = 1f;
         [SerializeField] float minBGLP = 300f, maxBGLP = 5000f;
         [SerializeField] float minBGVol = 0f, maxBGVol = 1f;
+
+        [SerializeField] string pitchParam;
 
         [SerializeField] float lowpass = 0f, lowPassSmoothSpeed = .1f;
         [SerializeField] string lowPassFilterParam = null;
@@ -213,12 +217,13 @@ namespace butterflowersOS.Core
             if (active) 
             {
                 SetBackgroundAudioFromDistance(-1f);
-                SetBackgroundVolumeFromDistance(-1f);
+                //SetBackgroundVolumeFromDistance(-1f);
             }
             else 
             {
-                BackgroundAudio.pitch = 1f;
-                BackgroundAudio.volume = 1f;
+                mixer.SetFloat(pitchParam, 1f);
+                //BackgroundAudio.pitch = 1f;
+                //BackgroundAudio.volume = 1f;
 
                 lowpass = maxBGLP;
             }
@@ -228,20 +233,19 @@ namespace butterflowersOS.Core
 
         void SetBackgroundAudioFromDistance(float distance = -1f)
         {
-            if (BackgroundAudio == null || Camera == null) return;
+            if (Camera == null) return;
 
             if(distance < 0f)
                 distance = Vector3.Distance(m_focus.transform.position, Camera.transform.position);
 
             float pitch = distance.RemapNRB(minFocusDistance, maxFocusDistance, minBGPitch, maxBGPitch);
-            BackgroundAudio.pitch = pitch;
+            mixer.SetFloat(pitchParam, pitch);
 
             lowpass = distance.RemapNRB(minFocusDistance, maxFocusDistance, minBGLP, maxBGLP);
         }
 
         void SmoothLowPassFilter()
         {
-            var mixer = BackgroundAudio.Mixer;
             if (mixer == null) return;
 
             float current = 0f;
