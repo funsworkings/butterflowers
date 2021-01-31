@@ -41,6 +41,11 @@ namespace butterflowersOS.Menu
 				Toggle();
 		}
 
+		void OnDestroy()
+		{
+			AudioListener.pause = false; // Discard audio listener changes
+		}
+
 		#region Menu
 
 		protected override void DidOpen()
