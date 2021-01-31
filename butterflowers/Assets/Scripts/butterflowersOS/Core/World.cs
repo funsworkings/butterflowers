@@ -93,8 +93,6 @@ namespace butterflowersOS.Core
         [SerializeField] SummaryManager Summary = null;
         [SerializeField] SequenceManager Sequence = null;
         [SerializeField] CutsceneManager Cutscenes = null;
-        [SerializeField] PlayableDirector Director = null;
-        [SerializeField] Cutscenes _cutscenes = null;
         [SerializeField] NotificationCenter NotificationCenter = null;
         [SerializeField] TutorialManager Tutorial = null;
 
@@ -146,9 +144,6 @@ namespace butterflowersOS.Core
             [SerializeField] List<Entity> entities = new List<Entity>();
             [SerializeField] List<Interactable> interactables = new List<Interactable>();
             [SerializeField] List<Focusable> focusables = new List<Focusable>();
-
-        [Header("Cutscenes")]
-        [SerializeField] PlayableAsset separationCutscene;
 
         [Header("Audio")] 
             [SerializeField] AudioSource loadAudio;
@@ -392,25 +387,12 @@ namespace butterflowersOS.Core
                     if (!Cutscenes.outro) 
                     {
                         Cutscenes.TriggerOutro(IMAGE_ROWS, IMAGE_COLUMNS, tex);
-                        while (!Cutscenes.inprogress) yield return null;
-
-                        while (Cutscenes.inprogress) 
-                        {
-                            if ((Director.time - 1.0) > separationCutscene.duration) 
-                            {
-                                _cutscenes.Cancel();
-                                break; // Break from loop if force cancel!
-                            }    
-                            
-                            yield return null;
-                        }
+                        while (!Cutscenes.inprogress) yield return null; // Wait for cutscene to finish
                     }
                     else 
                     {
                         ExportNeueAgent();
                     }
-
-                    yield return new WaitForEndOfFrame();
                 }
             }
 
