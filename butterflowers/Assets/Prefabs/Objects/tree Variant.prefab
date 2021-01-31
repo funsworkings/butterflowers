@@ -344,20 +344,6 @@ MonoBehaviour:
   anchor: {fileID: 1677838454}
   dispose: 1
   overrideCamera: {fileID: 0}
---- !u!64 &2909332178095530286
-MeshCollider:
-  m_ObjectHideFlags: 0
-  m_CorrespondingSourceObject: {fileID: 0}
-  m_PrefabInstance: {fileID: 0}
-  m_PrefabAsset: {fileID: 0}
-  m_GameObject: {fileID: 8284386445594146630}
-  m_Material: {fileID: 0}
-  m_IsTrigger: 1
-  m_Enabled: 1
-  serializedVersion: 4
-  m_Convex: 1
-  m_CookingOptions: 30
-  m_Mesh: {fileID: 762683014073620400, guid: 5534055b6336c46cd9ae1c581568cc12, type: 3}
 --- !u!114 &2909332178095530287
 MonoBehaviour:
   m_ObjectHideFlags: 0
@@ -395,7 +381,7 @@ PrefabInstance:
     m_Modifications:
     - target: {fileID: 100000, guid: 512fba7d85686ff4da028e0b250a84a1, type: 3}
       propertyPath: m_Name
-      value: shadetreesgrow
+      value: tree Variant
       objectReference: {fileID: 0}
     - target: {fileID: 100000, guid: 512fba7d85686ff4da028e0b250a84a1, type: 3}
       propertyPath: m_Layer
