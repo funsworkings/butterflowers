@@ -10,7 +10,7 @@ Material:
   m_Name: Butterfly
   m_Shader: {fileID: 4800000, guid: 29ea3f604e89a4f0591507e26dc6a9a2, type: 3}
   m_ShaderKeywords: _EMISSION
-  m_LightmapFlags: 6
+  m_LightmapFlags: 2
   m_EnableInstancingVariants: 1
   m_DoubleSidedGI: 0
   m_CustomRenderQueue: -1
@@ -132,3 +132,4 @@ Material:
     - _OverrideColor: {r: 1, g: 1, b: 1, a: 1}
     - _Silhouette: {r: 0.48718402, g: 0.57977927, b: 0.6415094, a: 0.09803922}
     - _Vector0: {r: -0.3, g: 0, b: 0.5, a: 0}
+    - _emiscolor: {r: 0, g: 0, b: 0, a: 0}
