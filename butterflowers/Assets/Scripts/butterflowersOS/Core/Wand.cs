@@ -427,7 +427,7 @@ namespace butterflowersOS.Core
 
                 if (Physics.Raycast(ray, out hit, Mathf.Infinity, interactionMask.value)) // Found suitable position 
                 {
-                    var position = hit.point;
+                    var position = hit.point + Vector3.up*.3f;
                     @params.Add("position", position);
                     @params.Add("origin", position);
                     
