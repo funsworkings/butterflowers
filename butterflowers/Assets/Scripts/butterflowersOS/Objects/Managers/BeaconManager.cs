@@ -560,18 +560,22 @@ namespace butterflowersOS.Objects.Managers
 
 		void onFireBeacon(Beacon beacon)
 		{
+			/*
 			var position = beacon.transform.position;
 			var instance = firePool.Request();
 				instance.transform.position = position;
 				instance.GetComponent<ParticleSystem>().Play();
+				*/
 		}
 
 		void onExtinguishBeacon(Beacon beacon)
 		{
+			/*
 			var position = beacon.transform.position;
 			var instance = extinguishPool.Request();
 				instance.transform.position = position;
 				instance.GetComponent<ParticleSystem>().Play();
+				*/
 		}
 
 		void TriggerUpdateBeacons()
