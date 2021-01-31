@@ -116,6 +116,7 @@ namespace butterflowersOS.Objects.Entities.Interactables
             gravity_ext = GetComponent<ApplyGravityRelativeToCamera>();
             collider = GetComponent<Collider>();
             rigidbody = GetComponent<Rigidbody>();
+            damage = GetComponent<Damage>();
 
             mat = GetComponent<Renderer>().sharedMaterial;
         }
