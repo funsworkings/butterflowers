@@ -1,10 +1,12 @@
 ﻿using System;
 using UnityEngine;
+using UnityEngine.Events;
 
 namespace uwu.Gameplay
 {
 	public class PoolObject : MonoBehaviour
 	{
+		public UnityEvent onDispose;
 
 		ObjectPool _pool;
 
@@ -19,6 +21,8 @@ namespace uwu.Gameplay
 			if (_pool != null) 
 			{
 				_pool.Queue(this);
+				onDispose.Invoke();
+				
 				return;
 			}
 			
