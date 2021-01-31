@@ -10,6 +10,7 @@ using UnityEditor;
 using UnityEngine;
 using UnityEngine.Events;
 using uwu;
+using uwu.Audio;
 using uwu.Extensions;
 using uwu.Snippets;
 using Object = System.Object;
@@ -24,7 +25,7 @@ namespace butterflowersOS.Objects.Entities.Interactables
         // Events
 
         public UnityEvent onOpen, onClose;
-        public UnityEvent onIngestBeacon, onReleaseBeacon;
+        public UnityEvent onIngestBeacon, onReleaseBeacon, onKick;
 
         // External
 
@@ -40,6 +41,7 @@ namespace butterflowersOS.Objects.Entities.Interactables
         Material mat;
         new Collider collider;
         new Rigidbody rigidbody;
+        [SerializeField] AudioHandler _audioHandler;
         Damage damage;
 
         [SerializeField] ParticleSystem sparklesPS, cometPS, deathPS;
@@ -70,6 +72,10 @@ namespace butterflowersOS.Objects.Entities.Interactables
         [Header("Appearance")]
         [SerializeField] float colorSmoothSpeed = 1f;
         [SerializeField] Color inactiveColor, t_color;
+
+        [Header("Audio")] 
+        [SerializeField] float minPitch = 1f;
+        [SerializeField] float maxPitch = 2f;
 
         [Header("Debug")] 
         [SerializeField] float safePointRadius = 1f;
@@ -127,7 +133,7 @@ namespace butterflowersOS.Objects.Entities.Interactables
             if (Quilt == null) Quilt = FindObjectOfType<Quilt>();
             if (Beacons == null) Beacons = FindObjectOfType<BeaconManager>();
 
-            damage.onHit.AddListener(SpillKick);
+            if(damage != null)damage.onHit.AddListener(SpillKick);
 
             Beacon.Deleted += onDestroyBeacon;
 
@@ -156,6 +162,7 @@ namespace butterflowersOS.Objects.Entities.Interactables
             //transform.eulerAngles = new Vector3(Mathf.Round(transform.eulerAngles.x/15)*15, Mathf.Round(transform.eulerAngles.y/15)*15, Mathf.Round(transform.eulerAngles.z/15)*15);
 
             UpdateColorFromStateAndCapacity();
+            _audioHandler.pitch = fill.RemapNRB(0f, 1f, minPitch, maxPitch);
         }
 
         void OnDrawGizmos()
@@ -169,7 +176,7 @@ namespace butterflowersOS.Objects.Entities.Interactables
         {
             base.OnDestroyed();
 
-            damage.onHit.RemoveListener(SpillKick);
+            if(damage != null)damage.onHit.RemoveListener(SpillKick);
 
             Beacon.Deleted -= onDestroyBeacon;
 
@@ -203,6 +210,7 @@ namespace butterflowersOS.Objects.Entities.Interactables
         void AddForceAndOpen(Vector3 point, Vector3 direction, float force, AGENT agent = AGENT.User, bool particles = true, bool events = true)
         {
             rigidbody.AddForceAtPosition(direction * force, point);
+            onKick.Invoke();
 
             if (particles) 
             {

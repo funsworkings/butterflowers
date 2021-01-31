@@ -1,11 +1,11 @@
 ﻿using System;
 using UnityEngine;
+using UnityEngine.Events;
 
 namespace uwu.Gameplay
 {
 	public class PoolObject : MonoBehaviour
 	{
-
 		ObjectPool _pool;
 
 		

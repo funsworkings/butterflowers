@@ -27,6 +27,9 @@ namespace butterflowersOS.Objects.Managers
         public static ButterflowerManager Instance = null;
 
         public UnityEvent onAllDead;
+        public UnityEvent onSpawn, onDeath;
+
+        public UnityEvent onSpawnBatch, onKillBatch;
 
         #region Internal
 
@@ -67,11 +70,16 @@ namespace butterflowersOS.Objects.Managers
         bool respawn = true;
 
         [SerializeField] int alive = 0, dead = 0;
+        [SerializeField] float health = 1f;
+
+        [SerializeField] float healthChangeThreshold = .1f;
 
         [Header("Butterfly attributes")] [SerializeField]
         Mesh butterflyMesh;
 
         [SerializeField] Material butterflyMaterial;
+        [SerializeField] int spawnThreshold = 100, deathThreshold = 100;
+                         int spawnDuringFrame = 0, deadDuringFrame = 0;
 
         // Collections
 
@@ -288,14 +296,24 @@ namespace butterflowersOS.Objects.Managers
             m_PreBuildJobHandle = m_PreBuildJob.Schedule(amount, 2);
             m_VelocityJobHandle = m_VelocityJob.Schedule(transforms, m_PreBuildJobHandle);
             m_ScaleJobHandle = m_ScaleJob.Schedule(transforms, m_VelocityJobHandle);
-
-
-
+            
             m_ScaleJobHandle.Complete();
+
+
+            float previousHealth = health;
+            health = GetHealth();
+
+            float diff = (health - previousHealth);
+            if (Mathf.Abs(diff) > healthChangeThreshold) {
+                if(diff < 0f) onKillBatch.Invoke();
+                else onSpawnBatch.Invoke();
+            }
 
             _randoms.Dispose(); // Wipe random values
 
-            if (_op > 0) {
+            // Clean up frame ops
+            if (_op > 0) 
+            {
                 op = (Op) _op;
                 _op = -1;
             }
@@ -311,6 +329,7 @@ namespace butterflowersOS.Objects.Managers
 
             Butterfly.OnRegister -= AddButterfly;
             Butterfly.OnUnregister -= RemoveButterfly;
+
 
             // Dispose all native arrays (JOBS)
 
@@ -413,15 +432,28 @@ namespace butterflowersOS.Objects.Managers
 
         #region Butterfly operations
 
+        bool open = false;
+
         public void KillButterflies(bool infinite = true)
         {
             respawn = infinite;
             _op = (int)Op.Kill;
+
+            if (open) {
+                onDeath.Invoke();
+                open = false;
+            }
         }
 
         public void ReleaseButterflies()
         {
             _op = (int)Op.Release;
+
+            if (!open) 
+            {
+                onSpawn.Invoke();
+                open = true;
+            }
         }
 
         #endregion
