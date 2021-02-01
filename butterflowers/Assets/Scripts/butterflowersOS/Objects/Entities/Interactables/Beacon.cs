@@ -111,7 +111,6 @@ namespace butterflowersOS.Objects.Entities.Interactables
     
         public Type type;
         public Locale state = Locale.Terrain;
-        public AGENT parent = AGENT.NULL;
         public Flower flower = null;
     
         [SerializeField] string m_file = null;
@@ -126,13 +125,7 @@ namespace butterflowersOS.Objects.Entities.Interactables
         [SerializeField] Transition transition;
         [SerializeField] bool transitioning = false;
     
-        [SerializeField] bool hovered = false, m_discovered = false;
-        [SerializeField] bool m_destroyed = false;
-
-        [SerializeField] bool returnToOrigin = false;
-        [SerializeField] Vector3 releasePosition = Vector3.zero, releaseScale = Vector3.zero;
-        [SerializeField] float lerp_t = 0f, lerp_duration = 1f;
-        AnimationCurve scaleCurve;
+        [SerializeField] bool m_discovered = false, m_destroyed = false;
 
 
         #region Accessors
@@ -195,11 +188,12 @@ namespace butterflowersOS.Objects.Entities.Interactables
             }
         }
 
-        void OnDisable() 
+        protected override void OnDestroyed()
         {
-            Unregister();
+            base.OnDestroyed();
+            
+            Debug.LogFormat("Beacon => {0} was destroyed!", gameObject.GetInstanceID());
         }
-
 
         #endregion
 
@@ -208,16 +202,12 @@ namespace butterflowersOS.Objects.Entities.Interactables
         protected override void onHover(Vector3 point, Vector3 normal)
         {
             if (!Active) return;
-            hovered = true;
-
             base.onHover(point, normal);
         }
 
         protected override void onUnhover()
         {
             if (!Active) return;
-            hovered = false;
-
             base.onUnhover();
         }
 
@@ -239,9 +229,7 @@ namespace butterflowersOS.Objects.Entities.Interactables
             this.origin = origin;
         
             this.size = preset.normalBeaconScale * Vector3.one;
-            this.lerp_duration = preset.beaconLerpDuration;
-            this.scaleCurve = preset.beaconScaleCurve;
-            
+
             if(IsOnFire) Extinguish();
 
             if (load) 
@@ -282,10 +270,30 @@ namespace butterflowersOS.Objects.Entities.Interactables
                 OnRegister(this);
         }
 
-        public void Unregister()
+        void Unregister()
         {
             if (OnUnregister != null)
                 OnUnregister(this);
+            
+            Dispose();
+        }
+        
+        /// <summary>
+        /// Remove all beacon attributes (usually on unregister)
+        /// </summary>
+        void Dispose()
+        {
+            this.type = default(Type);
+            this.state = Locale.Terrain;
+            this.flower = null;
+
+            this.m_file = null;
+            
+            this.transition = default(Transition);
+
+            this.transitioning = false;
+            this.m_discovered = false;
+            this.m_destroyed = false;
         }
 
         #endregion
@@ -406,7 +414,7 @@ namespace butterflowersOS.Objects.Entities.Interactables
             ReleaseTransition();
         }
 
-        public bool Destroy(bool events = true)
+        public bool CustomDestroy(bool events = true)
         {
             if (state != Locale.Drag) return false;
             state = Locale.Terrain;
