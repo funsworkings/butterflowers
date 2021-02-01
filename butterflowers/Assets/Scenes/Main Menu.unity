@@ -4979,7 +4979,7 @@ Transform:
   m_PrefabAsset: {fileID: 0}
   m_GameObject: {fileID: 279093508}
   m_LocalRotation: {x: 0, y: 0, z: 0, w: 1}
-  m_LocalPosition: {x: 361.875, y: 203.49997, z: 0}
+  m_LocalPosition: {x: 361.876, y: 203.49997, z: 0}
   m_LocalScale: {x: 1, y: 1, z: 1}
   m_Children:
   - {fileID: 832239700}
@@ -5852,7 +5852,7 @@ MonoBehaviour:
   m_outlineColor:
     serializedVersion: 2
     rgba: 4278190080
-  m_fontSize: 43.55
+  m_fontSize: 43.5
   m_fontSizeBase: 36
   m_fontWeight: 400
   m_enableAutoSizing: 1
@@ -14814,12 +14814,14 @@ MonoBehaviour:
   - {fileID: 11400000, guid: 2113ca8d6483ed6498d9518bc5032a52, type: 2}
   - {fileID: 11400000, guid: e5d73c7f2c018a04f9fc05f0a27778f6, type: 2}
   - {fileID: 11400000, guid: 90685a7bd88e7e1409a515826fa201e6, type: 2}
+  mixer: {fileID: 0}
   minBGPitch: 0.4
   maxBGPitch: 1
   minBGLP: 333
   maxBGLP: 3333
   minBGVol: 0.87
   maxBGVol: 1
+  pitchParam: 
   lowpass: 0
   lowPassSmoothSpeed: 0.5
   lowPassFilterParam: LPCutoff_BackgroundMusic
