@@ -407,7 +407,6 @@ namespace butterflowersOS.Core
 					factors.AddRange(new float[] {
 						1f - delta.discoveries,
 						delta.hob,
-						1f - delta.cursorspeed,
 						1f - delta.volatility,
 						1f - delta.nestKicks
 					});
@@ -427,18 +426,20 @@ namespace butterflowersOS.Core
 						1f - delta.beaconsAdded,
 						delta.hob,
 						delta.nestfill,
+						delta.nestKicks,
 						delta.filesAdded
 					});
 
 					break;
 				case Frame.Destruction:
 					factors.AddRange(new float[] {
-						delta.filesRemoved,
 						1f - delta.hob,
 						1f - delta.nestfill,
 						delta.cursorspeed,
 						delta.beaconsAdded,
-						delta.nestSpills
+						delta.nestSpills,
+						delta.nestKicks,
+						delta.volatility
 					});
 
 					break;
