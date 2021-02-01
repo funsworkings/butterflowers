@@ -4,6 +4,7 @@ using butterflowersOS.Presets;
 using butterflowersOS.Snippets;
 using butterflowersOS.UI.Notifications;
 using UnityEngine;
+using uwu.UI.Behaviors.Visibility;
 using Random = UnityEngine.Random;
 
 namespace butterflowersOS.Objects.Managers
@@ -23,6 +24,9 @@ namespace butterflowersOS.Objects.Managers
 			[SerializeField] GameObject discoveryNotif;
 			[SerializeField] GameObject exportNotif;
 
+		[Header("Export")] 
+			[SerializeField] RectTransform exportRoot;
+			
 		[Header("Miscellaneous")] 
 			[SerializeField] Burster burster;
 
@@ -82,11 +86,9 @@ namespace butterflowersOS.Objects.Managers
 
 		public void TriggerExportNotif(string filename)
 		{
-			var containerSize = container.rect.size / 3f;
-			var randomPosition = new Vector2(Random.Range(-containerSize.x, containerSize.x), Random.Range(-containerSize.y, containerSize.y));
-			var lifetime = 6f;
+			var lifetime = 8f;
 
-			var notif = CreateNotification(exportNotif, filename, randomPosition, lifetime: lifetime);
+			var notif = CreateNotification(exportNotif, filename, exportRoot.anchoredPosition, lifetime: lifetime);
 			if (notif != null) 
 			{
 				burster.Burst(notif.Rect.position);
