@@ -1,4 +1,5 @@
-﻿using uwu.Extensions;
+﻿using butterflowersOS.Presets;
+using uwu.Extensions;
 
 namespace butterflowersOS.Data
 {
@@ -12,6 +13,8 @@ namespace butterflowersOS.Data
 
 		public float beaconsAdded = 0f; // Gluttony, destruction
 		public float beaconsPlanted = 0f; // Nurture, rest
+		public float beaconsFlowered = 0f;
+		public float beaconsDestroyed = 0f;
 
 		public float nestKicks = 0f; // Play, rest
 		public float nestSpills = 0f; // Destruction, gluttonyttony
@@ -19,19 +22,22 @@ namespace butterflowersOS.Data
 		public float MAX_DELTA;
 		
 		
-		public SurveillanceDataDelta(CompositeSurveillanceData a, CompositeSurveillanceData b)
+		public SurveillanceDataDelta(CompositeSurveillanceData a, CompositeSurveillanceData b, WorldPreset preset)
 		{
 			float MD = 0F;
 			
-			discoveries = Extensions.PercentageDifferenceWithMax(a.Discoveries, b.Discoveries, ref MD);
+			discoveries = preset.discoveryScoreCurve.Evaluate(b.Discoveries);
 
-			hob = Extensions.PercentageDifferenceWithMax(a.AverageHoB, b.AverageHoB, ref MD);
-			nestfill = Extensions.PercentageDifferenceWithMax(a.AverageNestFill, b.AverageNestFill, ref MD);
+			hob = b.AverageHoB;
+			nestfill = b.AverageNestFill;
 			
-			beaconsAdded = Extensions.PercentageDifferenceWithMax(a.BeaconsAdded, b.BeaconsAdded, ref MD);
-			beaconsPlanted = Extensions.PercentageDifferenceWithMax(a.BeaconsPlanted, b.BeaconsPlanted, ref MD);
-			nestKicks = Extensions.PercentageDifferenceWithMax(a.NestKicks, b.NestKicks, ref MD);
-			nestSpills = Extensions.PercentageDifferenceWithMax(a.NestSpills, b.NestSpills, ref MD);
+			beaconsAdded = preset.beaconsAddScoreCurve.Evaluate(b.BeaconsAdded);
+			beaconsPlanted = preset.beaconsPlantScoreCurve.Evaluate(b.BeaconsPlanted);
+			beaconsDestroyed = preset.beaconsDestroyScoreCurve.Evaluate(b.BeaconsDestroyed);
+			beaconsFlowered = preset.beaconsFlowerScoreCurve.Evaluate(b.BeaconsFlowered);
+			
+			nestKicks = preset.nestKickScoreCurve.Evaluate(b.NestKicks);
+			nestSpills = preset.nestSpillScoreCurve.Evaluate(b.NestSpills);
 
 			MAX_DELTA = MD;
 		}
