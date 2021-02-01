@@ -368,12 +368,15 @@ namespace butterflowersOS.Core
 		#endregion
 	
 		#region Profiling
+
+		public CompositeSurveillanceData _composite;
+		public SurveillanceDataDelta _delta;
 	
 		public Profile ConstructBehaviourProfile()
 		{
 			var profile = new Profile();
 
-			var compositeLog = CreateCompositeAverageLog(true);
+			var compositeLog = _composite = CreateCompositeAverageLog(true);
 			var logs = allLogs;
 
 			var maps = new List<FrameFloat>();
@@ -399,52 +402,52 @@ namespace butterflowersOS.Core
 		float CalculateBehaviourWeightForProfile(Frame frame, CompositeSurveillanceData composite,
 			SurveillanceData[] history)
 		{
-			var delta = new SurveillanceDataDelta(Preset.baselineSurveillanceData, composite);
+			var delta = _delta = new SurveillanceDataDelta(Preset.baselineSurveillanceData, composite);
+			var deltaM = delta.MAX_DELTA;
+
+			if (deltaM < -0f) deltaM = .1f;
+			
 			var factors = new List<float>();
 		
-			switch (frame) {
+			switch (frame) 
+			{
 				case Frame.Order:
-					factors.AddRange(new float[] {
-						1f - delta.discoveries,
-						delta.hob,
-						1f - delta.cursorspeed,
-						1f - delta.volatility,
-						1f - delta.nestKicks
+					factors.AddRange(new float[] 
+					{
+						- delta.discoveries/deltaM,
+						- delta.nestKicks/deltaM
 					});
 
 					break;
 				case Frame.Quiet:
 					factors.AddRange(new float[] {
-						1f - delta.volatility,
-						delta.beaconsPlanted,
-						1f - delta.nestKicks
+						- delta.beaconsPlanted/deltaM,
+						- delta.nestKicks/deltaM, 
+						- delta.beaconsAdded/deltaM
 					});
 
 					break;
 				case Frame.Nurture:
 					factors.AddRange(new float[] {
-						delta.beaconsPlanted,
-						1f - delta.beaconsAdded,
-						delta.hob,
-						delta.nestfill,
-						delta.filesAdded
+						delta.beaconsPlanted/deltaM,
+						delta.hob/deltaM,
+						delta.nestfill/deltaM
 					});
 
 					break;
 				case Frame.Destruction:
 					factors.AddRange(new float[] {
-						delta.filesRemoved,
-						1f - delta.hob,
-						1f - delta.nestfill,
-						delta.cursorspeed,
-						delta.beaconsAdded,
-						delta.nestSpills
+						- delta.hob/deltaM,
+						- delta.nestfill/deltaM,
+						
+						delta.nestSpills/deltaM,
+						delta.nestKicks/deltaM
 					});
 
 					break;
 			}
 
-			var average = factors.Average() / BrainPreset.baselineDeltaPercentage;
+			var average = factors.Average();
 			var avg = average.RemapNRB(-1f, 1f, 0f, 1f);
 
 			return avg;
