@@ -48,6 +48,8 @@ namespace butterflowersOS.Objects.Entities
                 sector.Load(this, statuses[index++]);
 
             CheckIfComplete(events: false);
+            if (complete) hasCompletedAll = true;
+            
             load = true;
         }
     
@@ -110,27 +112,34 @@ namespace butterflowersOS.Objects.Entities
             return true;
         }
 
+        bool hasCompletedAll = false;
+
         void CheckIfAllQueued()
         {
-            bool _complete = true;
+            int numReady = 0;
+            int numComplete = 0;
+            
             foreach (Sector sector in sectors) 
             {
-                if (sector._Status == Sector.Status.Wait) 
+                if (sector._Status == Sector.Status.Queue) 
                 {
-                    _complete = false;
-                    break;
+                    numReady++;
+                }
+                if (sector._Status == Sector.Status.Active) 
+                {
+                    numComplete++;
+                    numReady++;
                 }
             }
 
-            if (_complete) {
-
+            if (numReady == sectors.Length && !hasCompletedAll) // All corners have been queued/completed
+            {
                 onComplete.Invoke();
+                hasCompletedAll = true;
             }
-
-            complete = _complete;
         }
 
-        void CheckIfComplete(bool events = true)
+        public void CheckIfComplete(bool events = true)
         {
             bool _complete = true;
             foreach (Sector sector in sectors) 

@@ -274,25 +274,11 @@ namespace butterflowersOS.Objects.Managers
 		{
 			if (cutscenes.playing) return;
 
-			if (cage.Completed) 
-			{
-				DidCompleteCage();
-			}
-			else 
-			{
-				vineCornerCameraPivot.position = vertex.top;
-				vineCornerCameraPivot.transform.eulerAngles = Vector3.zero;
-				cutscenes.Play(vineCornerCutscene);
-			}
+			vineCornerCameraPivot.position = vertex.top;
+			vineCornerCameraPivot.transform.eulerAngles = Vector3.zero;
+			cutscenes.Play(vineCornerCutscene);
 		}
 
-		void DidCompleteCage()
-		{
-			if (cutscenes.playing) return;
-			
-			cutscenes.Play(vineCageCutscene);
-		}
-		
 		#endregion
 		
 		#region Save/load
