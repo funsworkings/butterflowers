@@ -83,35 +83,26 @@ namespace uwu.Gameplay
 		PoolObject Dequeue()
 		{
 			PoolObject @object = null;
+			PoolObject[] cache_pool = pool.ToArray();
 			
-			if (pool.Count == 0) 
+			if (cache_pool.Length == 0) 
 			{
 				@object = Spawn(); // Spawn new pooled instance!
 			}
 			else 
 			{
-				@object = pool[0];	
+				@object = cache_pool[0];	
 				pool.RemoveAt(0);
 			}
 
 			active.Add(@object);
 
+			@object.transform.parent = null; // Release from object pool
 			@object.gameObject.SetActive(true);
+			
 			return @object;
 		}
 
-		public void Dequeue(PoolObject @object)
-		{
-			if (active.Contains(@object)) active.Remove(@object);
-			if(!pool.Contains(@object)) pool.Add(@object);
-		}
-
-		public void Wipe(PoolObject @object)
-		{
-			if (active.Contains(@object)) active.Remove(@object);
-			if (pool.Contains(@object)) pool.Remove(@object);
-		}
-		
 		#endregion
 	}
 }

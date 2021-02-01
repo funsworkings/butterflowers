@@ -394,7 +394,7 @@ namespace butterflowersOS.Core
                         beacon.Plant(origin);
                         break;
                     case DragContext.Destroy:
-                        beacon.Destroy();
+                        beacon.CustomDestroy();
                         break;
                     case DragContext.Release:
                     default:

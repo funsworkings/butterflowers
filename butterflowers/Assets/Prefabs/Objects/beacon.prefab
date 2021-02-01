@@ -14483,7 +14483,6 @@ MonoBehaviour:
     type: 3}
   type: 0
   state: 0
-  parent: 0
   flower: {fileID: 0}
   m_file: 
   origin: {x: 0, y: 0, z: 0}
@@ -14609,14 +14608,8 @@ MonoBehaviour:
       m_RotationOrder: 4
     isValid: 0
   transitioning: 0
-  hovered: 0
   m_discovered: 0
   m_destroyed: 0
-  returnToOrigin: 0
-  releasePosition: {x: 0, y: 0, z: 0}
-  releaseScale: {x: 0, y: 0, z: 0}
-  lerp_t: 0
-  lerp_duration: 1
 --- !u!65 &1270796099338416104
 BoxCollider:
   m_ObjectHideFlags: 0
@@ -14725,7 +14718,7 @@ TrailRenderer:
     shadowBias: 0.5
     generateLightingData: 0
   m_MinVertexDistance: 0.1
-  m_Autodestruct: 1
+  m_Autodestruct: 0
   m_Emitting: 1
 --- !u!114 &3488882234533829138
 MonoBehaviour:
