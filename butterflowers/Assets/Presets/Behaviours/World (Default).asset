@@ -20,8 +20,8 @@ MonoBehaviour:
   persistBeacons: 1
   persistVines: 1
   persistSequence: 1
-  overrideSequence: 1
-  overrideSequenceFrame: 2
+  overrideSequence: 0
+  overrideSequenceFrame: 0
   alwaysIntro: 0
   alwaysAbsorb: 0
   useWizard: 0
@@ -75,7 +75,7 @@ MonoBehaviour:
     m_PostInfinity: 2
     m_RotationOrder: 4
   saplingGrowHeight: 0
-  daysToGrowVine: 0.05
+  daysToGrowVine: 0.03
   minimumVineGrowHeight: 5
   maximumVineGrowHeight: 8
   vineWidth: 0.067
@@ -152,14 +152,14 @@ MonoBehaviour:
     - serializedVersion: 3
       time: 0
       value: 0
-      inSlope: 0.07206605
-      outSlope: 0.07206605
+      inSlope: 0.104774185
+      outSlope: 0.104774185
       tangentMode: 0
       weightedMode: 0
       inWeight: 0
-      outWeight: 0.070197046
+      outWeight: 0.050903123
     - serializedVersion: 3
-      time: 20
+      time: 15
       value: 1
       inSlope: 0
       outSlope: 0
@@ -200,12 +200,12 @@ MonoBehaviour:
     - serializedVersion: 3
       time: 0
       value: 0
-      inSlope: 0
-      outSlope: 0
+      inSlope: 0.35589385
+      outSlope: 0.35589385
       tangentMode: 0
       weightedMode: 0
       inWeight: 0
-      outWeight: 0
+      outWeight: 0.020935962
     - serializedVersion: 3
       time: 6
       value: 1
@@ -257,9 +257,9 @@ MonoBehaviour:
     - serializedVersion: 3
       time: 12
       value: 1
-      inSlope: 0.09871139
+      inSlope: 0.083333336
       outSlope: 0.09871139
-      tangentMode: 0
+      tangentMode: 5
       weightedMode: 0
       inWeight: 0.06453713
       outWeight: 0
@@ -272,14 +272,14 @@ MonoBehaviour:
     - serializedVersion: 3
       time: 0
       value: 0
-      inSlope: 0.445804
-      outSlope: 0.445804
+      inSlope: 0.87037903
+      outSlope: 0.87037903
       tangentMode: 0
       weightedMode: 0
       inWeight: 0
-      outWeight: 0.051724143
+      outWeight: 0.036945816
     - serializedVersion: 3
-      time: 5
+      time: 3
       value: 1
       inSlope: 0
       outSlope: 0

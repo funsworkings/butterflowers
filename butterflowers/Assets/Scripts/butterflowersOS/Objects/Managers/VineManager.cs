@@ -190,6 +190,7 @@ namespace butterflowersOS.Objects.Managers
         void onVineCompleteGateGrowth(Vine vine)
         {
             vine.GrowFlower();
+            cage.CheckIfComplete(); // Check if cage is completed!
 
             if (onCompleteCorner != null)
                 onCompleteCorner(vine.Vertex);
