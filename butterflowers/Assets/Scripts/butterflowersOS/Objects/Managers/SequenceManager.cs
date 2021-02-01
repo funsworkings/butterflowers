@@ -118,9 +118,9 @@ namespace butterflowersOS.Objects.Managers
 
 			if (index >= 0) 
 			{
-				for (int i = 0; i < index; i++) // Reload all previous scenes
+				for (int i = 0; i <= index; i++) // Reload all previous scenes
 				{
-					Frame frame = frames[index];
+					Frame frame = frames[i]; Debug.LogWarningFormat("Find sequence ({0}) for {1}", i, frame);
 					Sequence sequence = FetchSequence(frame);
 					
 					if (sequence != null) 

@@ -45,18 +45,28 @@ namespace butterflowersOS.Objects.Entities
 			load = true;
 		}
 
-		public void Activate()
+		public bool Activate()
 		{
-			if (!load) return; // Ignore all trigger events if not loaded or activated
+			if (status == Status.Wait) 
+			{
+				status = Status.Queue;
+				onActivated.Invoke();
 
-			status = Status.Queue;
-			onActivated.Invoke();
+				return true;
+			}
+
+			return false;
 		}
 
-		public void Complete()
+		public bool Complete()
 		{
-			if (!load) return;
-			status = Status.Active;
+			if (status == Status.Queue) 
+			{
+				status = Status.Active;
+				return true;
+			}
+			
+			return false;
 		}
 
 		#endregion

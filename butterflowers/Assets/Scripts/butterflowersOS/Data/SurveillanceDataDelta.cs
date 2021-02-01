@@ -19,27 +19,27 @@ namespace butterflowersOS.Data
 		public float nestKicks = 0f; // Play, rest
 		public float nestSpills = 0f; // Destruction, gluttonyttony
 
-		public float MAX_DELTA;
+		public float events = 0f; // Quiet
 		
 		
 		public SurveillanceDataDelta(CompositeSurveillanceData a, CompositeSurveillanceData b, WorldPreset preset)
 		{
-			float MD = 0F;
+			float totalEvents = 0f;
 			
-			discoveries = preset.discoveryScoreCurve.Evaluate(b.Discoveries);
+			discoveries = preset.discoveryScoreCurve.Evaluate(b.Discoveries); totalEvents += b.Discoveries;
 
-			hob = b.AverageHoB;
-			nestfill = b.AverageNestFill;
+			hob = b.AverageHoB; totalEvents += b.AverageHoB;
+			nestfill = b.AverageNestFill; totalEvents += b.AverageNestFill;
 			
-			beaconsAdded = preset.beaconsAddScoreCurve.Evaluate(b.BeaconsAdded);
-			beaconsPlanted = preset.beaconsPlantScoreCurve.Evaluate(b.BeaconsPlanted);
-			beaconsDestroyed = preset.beaconsDestroyScoreCurve.Evaluate(b.BeaconsDestroyed);
-			beaconsFlowered = preset.beaconsFlowerScoreCurve.Evaluate(b.BeaconsFlowered);
+			beaconsAdded = preset.beaconsAddScoreCurve.Evaluate(b.BeaconsAdded); totalEvents += b.BeaconsAdded;
+			beaconsPlanted = preset.beaconsPlantScoreCurve.Evaluate(b.BeaconsPlanted); totalEvents += b.BeaconsPlanted;
+			beaconsDestroyed = preset.beaconsDestroyScoreCurve.Evaluate(b.BeaconsDestroyed); totalEvents += b.BeaconsDestroyed;
+			beaconsFlowered = preset.beaconsFlowerScoreCurve.Evaluate(b.BeaconsFlowered); totalEvents += b.BeaconsFlowered;
 			
-			nestKicks = preset.nestKickScoreCurve.Evaluate(b.NestKicks);
-			nestSpills = preset.nestSpillScoreCurve.Evaluate(b.NestSpills);
-
-			MAX_DELTA = MD;
+			nestKicks = preset.nestKickScoreCurve.Evaluate(b.NestKicks); totalEvents += b.NestKicks;
+			nestSpills = preset.nestSpillScoreCurve.Evaluate(b.NestSpills); totalEvents += b.NestSpills;
+			
+			events = preset.eventStackScoreCurve.Evaluate(totalEvents / preset.eventStackHeight);
 		}
 	}
 }

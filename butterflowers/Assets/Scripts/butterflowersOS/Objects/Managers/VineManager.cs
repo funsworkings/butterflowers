@@ -49,8 +49,6 @@ namespace butterflowersOS.Objects.Managers
 
             Vine.onCompleteNaturalGrowth += onVineCompleteNaturalGrowth;
             Vine.onCompleteGateGrowth += onVineCompleteGateGrowth;
-
-            cage.onUpdateActiveCorners += onCageUpdatedActiveCorner;
         }
 
         void OnDisable()
@@ -59,8 +57,6 @@ namespace butterflowersOS.Objects.Managers
         
             Vine.onCompleteNaturalGrowth -= onVineCompleteNaturalGrowth;
             Vine.onCompleteGateGrowth -= onVineCompleteGateGrowth;
-        
-            cage.onUpdateActiveCorners -= onCageUpdatedActiveCorner;
         }
 
         #endregion
@@ -173,36 +169,21 @@ namespace butterflowersOS.Objects.Managers
 
         void onVineCompleteNaturalGrowth(Vine vine)
         {
-            int vertexInd = 0;
-            Vertex vertex = cage.GetClosestVertex(vine.end, out vertexInd);
+            cage.GetClosestVertex(vine.end, out int vertexInd);
 
             bool success = cage.ActivateVertex(vertexInd);
-            if (success) 
-            {
-                vine.TransitionToGate(); // Turn into gate    
-            }
-            else 
-            {
+            if (success)
+                vine.TransitionToGate(); // Turn into gate   
+            else
                 vine.GrowFlower();
-            }
         }
 
-        void onVineCompleteGateGrowth(Vine vine)
+        void onVineCompleteGateGrowth(Vine vine) 
         {
             vine.GrowFlower();
             cage.CheckIfComplete(); // Check if cage is completed!
 
-            if (onCompleteCorner != null)
-                onCompleteCorner(vine.Vertex);
-        }
-    
-        #endregion
-    
-        #region Cage callbacks
-
-        void onCageUpdatedActiveCorner()
-        {
-            if (onUpdateVines != null) onUpdateVines();
+            onCompleteCorner?.Invoke(vine.Vertex);
         }
     
         #endregion

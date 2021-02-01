@@ -688,7 +688,7 @@ namespace butterflowersOS.Core
         string GetExportPath(out string filename, out string extension)
         {
             var desktop = Environment.GetFolderPath(Environment.SpecialFolder.Desktop);
-            desktop = Application.persistentDataPath; // Use local data path
+            //desktop = Application.persistentDataPath; // Use local data path
             
             var username = _Save.data.username;
             
