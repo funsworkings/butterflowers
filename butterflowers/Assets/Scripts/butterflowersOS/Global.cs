@@ -4,6 +4,7 @@ using butterflowersOS.Objects.Base;
 using butterflowersOS.Objects.Entities.Interactables;
 using butterflowersOS.Objects.Entities.Interactables.Empty;
 using UnityEngine;
+using Tree = butterflowersOS.Objects.Entities.Interactables.Empty.Tree;
 
 namespace butterflowersOS
 {
@@ -150,15 +151,31 @@ namespace butterflowersOS
         };
 
         public static string ACTION = "#E3FF00";
+        public static string SUBTEXT = "#FFFFFF";
     }
 
 
     public static class Copy
     {
         public static int ActionSize = 67;
+        public static int SubtextSize = 72;
         
         public static string FocusText = string.Format("Press {0} to focus", Controls.Focus.ToString());
         public static string LoseFocusText = string.Format("Press {0} to lose focus", Controls.LoseFocus.ToString());
+
+        public static string AppendSubtext(this string info, Entity entity)
+        {
+            string subtext = "";
+
+            if (entity is Nest) subtext = "Vessel for beacons";
+            else if (entity is Tree) subtext = "Loves flowers";
+            else if (entity is Star) subtext = "Deathbringer";
+
+            if (!string.IsNullOrEmpty(subtext)) 
+                info += ("\n" + FormatSubtextItem(subtext));
+
+            return info;
+        }
 
         public static string AppendActionableInformation(this string info, Entity entity, string separator = null)
         {
@@ -169,8 +186,9 @@ namespace butterflowersOS
             else if (entity is Flower) actions = "Click to duplicate";
             
             if (separator == null) separator = "\n\n";
-            
-            if (!string.IsNullOrEmpty(actions)) 
+
+            bool requireActions = !string.IsNullOrEmpty(actions);
+            if (requireActions) 
             {
                 actions = FormatActionItem(actions);
                 if (separator != null) actions = actions.Insert(0, separator);
@@ -178,10 +196,10 @@ namespace butterflowersOS
 
             if (entity is Focusable) 
             {
-                actions = actions.AppendFocusInformation(entity, "\n");
+                actions = actions.AppendFocusInformation(entity, (requireActions)? "\n":"\n\n");
             }
 
-            return (info + actions);
+            return (info.AppendSubtext(entity) + actions);
         }
 
         public static string AppendFocusInformation(this string info, Entity entity, string separator = null)
@@ -226,6 +244,12 @@ namespace butterflowersOS
         {
             string format = "<size={0}%><color={1}>-  {2}  -</color></size>";
             return string.Format(format, ActionSize, COLOR_LOOKUP.ACTION, action);
+        }
+
+        static string FormatSubtextItem(string subtext)
+        {
+            string format = "<i><size={0}%><color={1}>{2}</color></size></i>";
+            return string.Format(format, SubtextSize, COLOR_LOOKUP.SUBTEXT, subtext.ToLower());
         }
     }
 
