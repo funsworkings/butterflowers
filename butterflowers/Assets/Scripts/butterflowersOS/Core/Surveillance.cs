@@ -415,18 +415,24 @@ namespace butterflowersOS.Core
 				case Frame.Order:
 					factors.AddRange(new float[] 
 					{
+						delta.beaconsFlowered,
+						delta.beaconsPlanted,
+						
 						1f - delta.discoveries,
-						delta.beaconsFlowered
+						1f - delta.nestfill
 					});
 
 					break;
 				case Frame.Quiet:
 					factors.AddRange(new float[] 
 					{
+						1f - delta.beaconsAdded,
 						1f - delta.beaconsPlanted,
 						1f - delta.beaconsFlowered,
-						1f - delta.nestKicks, 
-						1f - delta.beaconsAdded
+						1f - delta.beaconsDestroyed,
+						
+						1f - delta.nestKicks,
+						1f - delta.nestSpills
 					});
 
 					break;
@@ -434,20 +440,25 @@ namespace butterflowersOS.Core
 					factors.AddRange(new float[] 
 					{
 						delta.beaconsPlanted,
+						
 						delta.hob,
-						delta.nestfill
+						delta.nestfill,
+						delta.nestKicks,
+						
+						1f - delta.beaconsDestroyed
 					});
 
 					break;
 				case Frame.Destruction:
 					factors.AddRange(new float[] 
 					{
-						1f - delta.hob,
-						1f - delta.nestfill,
-						
 						delta.nestSpills,
 						delta.nestKicks,
-						delta.beaconsDestroyed
+						delta.beaconsDestroyed,
+						delta.beaconsAdded,
+						
+						1f - delta.hob,
+						1f - delta.nestfill
 					});
 
 					break;
