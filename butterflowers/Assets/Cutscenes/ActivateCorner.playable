@@ -25,7 +25,7 @@ MonoBehaviour:
     m_Start: 0
     m_ClipIn: 0
     m_Asset: {fileID: -5157952463022578767}
-    m_Duration: 6.016666666666667
+    m_Duration: 5
     m_TimeScale: 1
     m_ParentTrack: {fileID: -8592993866566067305}
     m_EaseInDuration: 0
@@ -276,6 +276,23 @@ AnimationClip:
   m_HasGenericRootTransform: 0
   m_HasMotionFloatCurves: 0
   m_Events: []
+--- !u!114 &-6830281013645623277
+MonoBehaviour:
+  m_ObjectHideFlags: 1
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 0}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 4f10dd60657c6004587f237a7e90f8e4, type: 3}
+  m_Name: AudioPlayableAsset
+  m_EditorClassIdentifier: 
+  m_Clip: {fileID: 8300000, guid: e8e37ee2bff02e04d8cd509df32c4bbc, type: 3}
+  m_Loop: 0
+  m_bufferingTime: 0.1
+  m_ClipProperties:
+    volume: 1
 --- !u!114 &-5719881198762254344
 MonoBehaviour:
   m_ObjectHideFlags: 1
@@ -344,10 +361,10 @@ MonoBehaviour:
   m_Children: []
   m_Clips:
   - m_Version: 1
-    m_Start: 1.9333333333333333
-    m_ClipIn: 0
-    m_Asset: {fileID: 614124648104924747}
-    m_Duration: 3.05575
+    m_Start: 0
+    m_ClipIn: 1.1833333333333333
+    m_Asset: {fileID: -6830281013645623277}
+    m_Duration: 4.9281458333333354
     m_TimeScale: 1
     m_ParentTrack: {fileID: -2843460661662398009}
     m_EaseInDuration: 0
@@ -411,7 +428,7 @@ MonoBehaviour:
     m_PreExtrapolationMode: 0
     m_PostExtrapolationTime: 0
     m_PreExtrapolationTime: 0
-    m_DisplayName: Vine Flower Growth (Faster, Fade Out)
+    m_DisplayName: Vine Flower Growth
   m_Markers:
     m_Objects: []
   m_TrackProperties:
@@ -571,28 +588,11 @@ MonoBehaviour:
   - {fileID: -1703617022773429116}
   - {fileID: 9189959919861500124}
   - {fileID: -7987909151014263788}
-  m_FixedDuration: 6.016666666666667
+  m_FixedDuration: 0
   m_EditorSettings:
     m_Framerate: 60
-  m_DurationMode: 1
+  m_DurationMode: 0
   m_MarkerTrack: {fileID: 6205223718504359538}
---- !u!114 &614124648104924747
-MonoBehaviour:
-  m_ObjectHideFlags: 1
-  m_CorrespondingSourceObject: {fileID: 0}
-  m_PrefabInstance: {fileID: 0}
-  m_PrefabAsset: {fileID: 0}
-  m_GameObject: {fileID: 0}
-  m_Enabled: 1
-  m_EditorHideFlags: 0
-  m_Script: {fileID: 11500000, guid: 4f10dd60657c6004587f237a7e90f8e4, type: 3}
-  m_Name: AudioPlayableAsset
-  m_EditorClassIdentifier: 
-  m_Clip: {fileID: 8300000, guid: eb510ff75a217c3469b31a21dcb0b1da, type: 3}
-  m_Loop: 0
-  m_bufferingTime: 0.1
-  m_ClipProperties:
-    volume: 1
 --- !u!114 &3336417384008495894
 MonoBehaviour:
   m_ObjectHideFlags: 1
@@ -934,7 +934,7 @@ AnimationClip:
         inWeight: 0.33333334
         outWeight: 0.33333334
       - serializedVersion: 3
-        time: 4.483333
+        time: 4.4666667
         value: 1
         inSlope: 0
         outSlope: 0
@@ -943,8 +943,8 @@ AnimationClip:
         inWeight: 0.33333334
         outWeight: 0.33333334
       - serializedVersion: 3
-        time: 5.95
-        value: 1
+        time: 4.983333
+        value: 0
         inSlope: 0
         outSlope: 0
         tangentMode: 136
@@ -972,7 +972,7 @@ AnimationClip:
     m_AdditiveReferencePoseClip: {fileID: 0}
     m_AdditiveReferencePoseTime: 0
     m_StartTime: 0
-    m_StopTime: 5.95
+    m_StopTime: 4.983333
     m_OrientationOffsetY: 0
     m_Level: 0
     m_CycleOffset: 0
@@ -1001,7 +1001,7 @@ AnimationClip:
         inWeight: 0.33333334
         outWeight: 0.33333334
       - serializedVersion: 3
-        time: 4.483333
+        time: 4.4666667
         value: 1
         inSlope: 0
         outSlope: 0
@@ -1010,8 +1010,8 @@ AnimationClip:
         inWeight: 0.33333334
         outWeight: 0.33333334
       - serializedVersion: 3
-        time: 5.95
-        value: 1
+        time: 4.983333
+        value: 0
         inSlope: 0
         outSlope: 0
         tangentMode: 136
@@ -1077,7 +1077,7 @@ MonoBehaviour:
     m_Start: 0.5
     m_ClipIn: 0
     m_Asset: {fileID: -3136593514262367146}
-    m_Duration: 5.516666666666667
+    m_Duration: 4.5
     m_TimeScale: 1
     m_ParentTrack: {fileID: 8821627705042321004}
     m_EaseInDuration: 0

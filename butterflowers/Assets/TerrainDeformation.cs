@@ -7,14 +7,14 @@ public class TerrainDeformation : MonoBehaviour
 {
 
     public Material mat;
-    public string property = "PlayerPos";
+    public string property = "_PlayerPos";
     public Wand wand;
     public Vector4 wandPos;
 
     // Start is called before the first frame update
     void Start()
     {
-        
+        mat = GetComponent<MeshRenderer>().material;
     }
 
     // Update is called once per frame
@@ -22,5 +22,6 @@ public class TerrainDeformation : MonoBehaviour
     {
         wandPos = wand.wandShaderParam;
         mat.SetVector(property, wand.wandShaderParam);
+
     }
 }
