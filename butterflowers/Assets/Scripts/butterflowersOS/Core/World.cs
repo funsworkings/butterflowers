@@ -121,8 +121,6 @@ namespace butterflowersOS.Core
         [SerializeField] bool wait = false;
         [SerializeField] bool dispose = false;
 
-        [SerializeField] bool debugConstructProfile = false;
-
 
         byte[] IMAGES = new byte[] { };
         int IMAGE_ROWS = 0, IMAGE_COLUMNS = 0;
@@ -213,12 +211,6 @@ namespace butterflowersOS.Core
         void Update()
         {
             if (dispose) return;
-
-            if (debugConstructProfile) 
-            {
-                profile = Surveillance.ConstructBehaviourProfile();
-                debugConstructProfile = false;
-            }
             
             HandleReady();
             UpdateTimeScale();
