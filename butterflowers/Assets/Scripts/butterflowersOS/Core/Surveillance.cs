@@ -403,10 +403,7 @@ namespace butterflowersOS.Core
 			SurveillanceData[] history)
 		{
 			var delta = _delta = new SurveillanceDataDelta(Preset.baselineSurveillanceData, composite, Preset);
-			var deltaM = delta.MAX_DELTA;
 
-			if (deltaM < -0f) deltaM = .1f;
-			
 			var factors = new List<float>();
 			float average = 0f;
 		
@@ -426,13 +423,7 @@ namespace butterflowersOS.Core
 				case Frame.Quiet:
 					factors.AddRange(new float[] 
 					{
-						1f - delta.beaconsAdded,
-						1f - delta.beaconsPlanted,
-						1f - delta.beaconsFlowered,
-						1f - delta.beaconsDestroyed,
-						
-						1f - delta.nestKicks,
-						1f - delta.nestSpills
+						1f - delta.events
 					});
 
 					break;
