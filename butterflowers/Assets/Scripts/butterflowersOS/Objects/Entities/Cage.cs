@@ -9,9 +9,6 @@ namespace butterflowersOS.Objects.Entities
     
         // Events
 
-        public System.Action onUpdateActiveCorners;
-        public System.Action onCompleteCorners;
-        
         public UnityEvent onComplete;
     
         #region Internal
@@ -29,6 +26,7 @@ namespace butterflowersOS.Objects.Entities
     
         [SerializeField] Sector[] sectors;
         [SerializeField] bool complete = false;
+        [SerializeField] bool hasCompletedAll = false;
 
         public bool load = false;
     
@@ -47,8 +45,8 @@ namespace butterflowersOS.Objects.Entities
             foreach (Sector sector in sectors)
                 sector.Load(this, statuses[index++]);
 
-            CheckIfComplete(events: false);
-            if (complete) hasCompletedAll = true;
+            CheckIfComplete();
+            hasCompletedAll = complete;
             
             load = true;
         }
@@ -87,78 +85,69 @@ namespace butterflowersOS.Objects.Entities
     
         #region Activation
 
+        /// <summary>
+        /// Returns if vertex has already been activated by a different vine
+        /// </summary>
+        /// <param name="index"></param>
+        /// <returns></returns>
         public bool ActivateVertex(int index)
         {
             var sector = sectors[index];
-            if (sector._Status != Sector.Status.Queue) return false;
-        
-            sector.Complete();
-            if (onUpdateActiveCorners != null)
-                onUpdateActiveCorners();
-
-            CheckIfComplete(); // Check if cage was written during runtime
-        
-            return true;
+            return sector.Complete();
         }
 
+        /// <summary>
+        /// Set aside a corner of the terrain for a vine's growth
+        /// </summary>
+        /// <param name="index"></param>
+        /// <returns></returns>
         public bool QueueVertex(int index)
         {
             var sector = sectors[index];
-            if (sector._Status != Sector.Status.Wait) return false;
-        
-            sector.Activate();
+            bool success = sector.Activate();
+            
             CheckIfAllQueued();
-        
-            return true;
+            return success;
         }
-
-        bool hasCompletedAll = false;
 
         void CheckIfAllQueued()
         {
-            int numReady = 0;
-            int numComplete = 0;
-            
-            foreach (Sector sector in sectors) 
+            bool allQueued = false;
+
+            if (!hasCompletedAll) 
             {
-                if (sector._Status == Sector.Status.Queue) 
+                allQueued = true;
+                foreach (Sector sector in sectors) 
                 {
-                    numReady++;
-                }
-                if (sector._Status == Sector.Status.Active) 
-                {
-                    numComplete++;
-                    numReady++;
+                    if (sector._Status == Sector.Status.Wait) 
+                    {
+                        allQueued = false;
+                        break;
+                    }
                 }
             }
 
-            if (numReady == sectors.Length && !hasCompletedAll) // All corners have been queued/completed
+            if (allQueued) // All corners have been queued/completed
             {
                 onComplete.Invoke();
                 hasCompletedAll = true;
             }
         }
 
-        public void CheckIfComplete(bool events = true)
+        public void CheckIfComplete()
         {
-            bool _complete = true;
+            bool didComplete = true;
+            
             foreach (Sector sector in sectors) 
             {
                 if (sector._Status != Sector.Status.Active) 
                 {
-                    _complete = false;
+                    didComplete = false;
                     break;
                 }
             }
 
-            if (_complete && events) {
-
-                if (onCompleteCorners != null)
-                    onCompleteCorners();
-
-            }
-
-            complete = _complete;
+            complete = didComplete;
         }
     
         #endregion
