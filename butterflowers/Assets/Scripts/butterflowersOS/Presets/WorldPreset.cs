@@ -71,6 +71,14 @@ namespace butterflowersOS.Presets
         [Header("Surveillance Attributes")] 
             public float surveillanceLogRate = 1f;
             public bool backlogTextures = true;
+
+            public AnimationCurve discoveryScoreCurve;
+            public AnimationCurve beaconsAddScoreCurve;
+            public AnimationCurve beaconsPlantScoreCurve;
+            public AnimationCurve beaconsDestroyScoreCurve;
+            public AnimationCurve beaconsFlowerScoreCurve;
+            public AnimationCurve nestKickScoreCurve;
+            public AnimationCurve nestSpillScoreCurve;
             
         [Header("Scoring Attributes")]
             public CompositeSurveillanceData baselineSurveillanceData;
