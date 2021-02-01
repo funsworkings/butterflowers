@@ -80,7 +80,7 @@ Material:
         m_Scale: {x: 1, y: 1}
         m_Offset: {x: 0, y: 0}
     - _Texturealpha:
-        m_Texture: {fileID: 2800000, guid: 8e44fe896458128418bff33ed3981421, type: 3}
+        m_Texture: {fileID: 2800000, guid: 832dc5a2501052b4d8f685a7cda3b30b, type: 3}
         m_Scale: {x: 1, y: 1}
         m_Offset: {x: 0, y: 0}
     - _texcoord:
@@ -94,7 +94,7 @@ Material:
     - _Displacement: 0
     - _DstBlend: 10
     - _EdgeLength: 25
-    - _Float1: -0.1
+    - _Float1: -0.07
     - _Float2: 2
     - _GlossMapScale: 1
     - _Glossiness: 0.5
@@ -120,7 +120,7 @@ Material:
     - _ZWrite: 0
     - __dirty: 0
     - _hardness: 0
-    - _radius: 0
+    - _radius: 1
     m_Colors:
     - _Color: {r: 1, g: 0.16862746, b: 0.76100636, a: 0.6156863}
     - _EmissionColor: {r: 0.26415092, g: 0.1482734, b: 0.26415092, a: 1}
