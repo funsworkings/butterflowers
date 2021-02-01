@@ -100,10 +100,12 @@ Material:
     - _GlossMapScale: 1
     - _Glossiness: 0.5
     - _GlossyReflections: 1
-    - _GridUnits: 160.42
+    - _GridUnits: 351.5
+    - _InteractionRadius: 0
     - _Metallic: 0
     - _Mode: 0
     - _OcclusionStrength: 1
+    - _Opacity: 0
     - _Parallax: 0.02
     - _RadialAmount: 0
     - _Smoothness: 0
@@ -122,4 +124,6 @@ Material:
     - _Color0: {r: 0, g: 0, b: 0, a: 1}
     - _Color1: {r: 1, g: 0, b: 0, a: 1}
     - _EmissionColor: {r: 0, g: 0, b: 0, a: 1}
+    - _EmptyColor: {r: 0, g: 0, b: 0, a: 0}
+    - _FullColor: {r: 0.16109848, g: 0, b: 1, a: 0}
     - _PlayerPos: {r: 0, g: 0, b: 0, a: 0}
