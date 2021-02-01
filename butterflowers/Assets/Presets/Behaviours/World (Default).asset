@@ -28,8 +28,8 @@ MonoBehaviour:
   takePhotos: 1
   logEvents: 0
   loadTexturesInEditor: 0
-  loadThumbnailsInEditor: 1
-  generateThumbnailsInEditor: 1
+  loadThumbnailsInEditor: 0
+  generateThumbnailsInEditor: 0
   useDesktopFilesForDebugBeacons: 1
   hoursPerDay: 0.05
   startOfDay: 0.1
@@ -127,22 +127,22 @@ MonoBehaviour:
     filesAdded: 1
     filesRemoved: 0
     logs: []
-    AverageHoB: 0
-    AverageNestFill: 0
-    AverageCursorSpeed: 0
-    AverageTimeSpentInNest: 1
-    AverageTimeSpentInMagicStar: 0
-    AverageTimeSpentInTree: 0
-    AverageTimeSpentInDefault: 0
-    FilesAdded: 0
+    AverageHoB: 0.5
+    AverageNestFill: 0.5
+    AverageCursorSpeed: 100
+    AverageTimeSpentInNest: 0.25
+    AverageTimeSpentInMagicStar: 0.25
+    AverageTimeSpentInTree: 0.25
+    AverageTimeSpentInDefault: 0.25
+    FilesAdded: 7
     FilesRemoved: 0
-    Discoveries: 0
-    BeaconsAdded: 0
-    BeaconsDestroyed: 0
-    BeaconsPlanted: 0
-    BeaconsFlowered: 0
-    NestKicks: 0
-    NestSpills: 0
+    Discoveries: 10
+    BeaconsAdded: 16
+    BeaconsDestroyed: 10
+    BeaconsPlanted: 4
+    BeaconsFlowered: 4
+    NestKicks: 20
+    NestSpills: 3
   unknownPersistenceThreshold: 0.33
   cursorSpeedThreshold: 1
   cursorIdleTimeThreshold: 10

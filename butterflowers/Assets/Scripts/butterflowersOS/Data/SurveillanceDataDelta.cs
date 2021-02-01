@@ -6,7 +6,6 @@ namespace butterflowersOS.Data
 	public class SurveillanceDataDelta
 	{
 		public float filesAdded = 0f; // Gluttony, nurture
-		public float filesRemoved = 0f; // Destruction, spontaneity
 		public float discoveries = 0f; // Spontaneity, play
 
 		public float hob = 0f; // Destruction, play
@@ -26,7 +25,6 @@ namespace butterflowersOS.Data
 		public SurveillanceDataDelta(CompositeSurveillanceData a, CompositeSurveillanceData b)
 		{
 			filesAdded = Extensions.PercentageDifference(a.FilesAdded, b.FilesAdded);
-			filesRemoved = Extensions.PercentageDifference(a.FilesRemoved, b.FilesRemoved);
 			discoveries = Extensions.PercentageDifference(a.Discoveries, b.Discoveries);
 
 			hob = Extensions.PercentageDifference(a.AverageHoB, b.AverageHoB);
