@@ -68,7 +68,7 @@ Material:
     - _BumpScale: 1
     - _Cutoff: 0.6
     - _DetailNormalMapScale: 1
-    - _Displacement: 1
+    - _Displacement: 0.1
     - _Displacement1: 0
     - _DstBlend: 0
     - _Float0: 0
@@ -77,21 +77,21 @@ Material:
     - _GlossyReflections: 1
     - _I: 2
     - _InteractionRadius: 2
-    - _InteractionStrength: 0
+    - _InteractionStrength: 1.66
     - _Metallic: 0
     - _Mode: 1
     - _OcclusionStrength: 1
     - _Parallax: 0.02
-    - _Size: 1.69
+    - _Size: 0.01
     - _Smooth: 0
     - _SmoothnessTextureChannel: 0
     - _SpecularHighlights: 1
     - _SrcBlend: 1
     - _UVSec: 0
-    - _WorldNoiseStrength: 1
+    - _WorldNoiseStrength: 0
     - _ZWrite: 1
     - __dirty: 0
-    - _hardness: 0.5
+    - _hardness: 0.62
     - _hardness1: 0
     - _radius: 2
     - _radius1: 0

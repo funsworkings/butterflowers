@@ -40,7 +40,7 @@ Material:
         m_Scale: {x: 1, y: 1}
         m_Offset: {x: 0, y: 0}
     - _Emission:
-        m_Texture: {fileID: 2800000, guid: fb6566c21f717904f83743a5a76dd0b0, type: 3}
+        m_Texture: {fileID: 0}
         m_Scale: {x: 1, y: 1}
         m_Offset: {x: 0, y: 0}
     - _EmissionMap:
@@ -101,7 +101,7 @@ Material:
     - _Glossiness: 0.5
     - _GlossyReflections: 1
     - _GridUnits: 88.2
-    - _InteractionRadius: 1
+    - _InteractionRadius: 2
     - _Metallic: 0
     - _Mode: 0
     - _OcclusionStrength: 1
@@ -125,5 +125,5 @@ Material:
     - _Color1: {r: 1, g: 0, b: 0, a: 1}
     - _EmissionColor: {r: 0, g: 0, b: 0, a: 1}
     - _EmptyColor: {r: 0, g: 0, b: 0, a: 0}
-    - _FullColor: {r: 0.48043993, g: 0.4764151, b: 1, a: 0}
+    - _FullColor: {r: 0.48043984, g: 0.47641504, b: 1, a: 0}
     - _PlayerPos: {r: 0, g: 0, b: 0, a: 0}
