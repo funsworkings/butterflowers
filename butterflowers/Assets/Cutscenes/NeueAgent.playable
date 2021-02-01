@@ -511,6 +511,23 @@ MonoBehaviour:
   m_OpenClipOffsetRotation: {x: 0, y: 0, z: 0, w: 1}
   m_Rotation: {x: 0, y: 0, z: 0, w: 1}
   m_ApplyOffsets: 0
+--- !u!114 &-8016743863393908325
+MonoBehaviour:
+  m_ObjectHideFlags: 1
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 0}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 4f10dd60657c6004587f237a7e90f8e4, type: 3}
+  m_Name: AudioPlayableAsset
+  m_EditorClassIdentifier: 
+  m_Clip: {fileID: 8300000, guid: 13dd9859b1fda70458964f3d4e9ecab5, type: 3}
+  m_Loop: 0
+  m_bufferingTime: 0.1
+  m_ClipProperties:
+    volume: 1
 --- !u!114 &-7944266618761394240
 MonoBehaviour:
   m_ObjectHideFlags: 1
@@ -749,6 +766,23 @@ MonoBehaviour:
   m_Markers:
     m_Objects:
     - {fileID: 7518292363974410140}
+--- !u!114 &-7172692889567694102
+MonoBehaviour:
+  m_ObjectHideFlags: 1
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 0}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 4f10dd60657c6004587f237a7e90f8e4, type: 3}
+  m_Name: AudioPlayableAsset
+  m_EditorClassIdentifier: 
+  m_Clip: {fileID: 8300000, guid: 141591d895a32c342a8ed47e1ef699a9, type: 3}
+  m_Loop: 1
+  m_bufferingTime: 0.1
+  m_ClipProperties:
+    volume: 1
 --- !u!114 &-6848213411643407667
 MonoBehaviour:
   m_ObjectHideFlags: 1
@@ -2334,16 +2368,7 @@ AnimationClip:
         inWeight: 0.33333334
         outWeight: 0.33333334
       - serializedVersion: 3
-        time: 33.05
-        value: 0
-        inSlope: 0
-        outSlope: 0
-        tangentMode: 136
-        weightedMode: 0
-        inWeight: 0.33333334
-        outWeight: 0.33333334
-      - serializedVersion: 3
-        time: 34.383335
+        time: 33.4
         value: 1
         inSlope: 0
         outSlope: 0
@@ -2352,10 +2377,19 @@ AnimationClip:
         inWeight: 0.33333334
         outWeight: 0.33333334
       - serializedVersion: 3
-        time: 34.85
-        value: 0
+        time: 34.933334
+        value: 1
         inSlope: 0
         outSlope: 0
+        tangentMode: 136
+        weightedMode: 0
+        inWeight: 0.33333334
+        outWeight: 0.33333334
+      - serializedVersion: 3
+        time: 37.5
+        value: 1
+        inSlope: -0.005722345
+        outSlope: -0.005722345
         tangentMode: 136
         weightedMode: 0
         inWeight: 0.33333334
@@ -2446,16 +2480,7 @@ AnimationClip:
         inWeight: 0.33333334
         outWeight: 0.33333334
       - serializedVersion: 3
-        time: 33.05
-        value: 0
-        inSlope: 0
-        outSlope: 0
-        tangentMode: 136
-        weightedMode: 0
-        inWeight: 0.33333334
-        outWeight: 0.33333334
-      - serializedVersion: 3
-        time: 34.383335
+        time: 33.4
         value: 1
         inSlope: 0
         outSlope: 0
@@ -2464,10 +2489,19 @@ AnimationClip:
         inWeight: 0.33333334
         outWeight: 0.33333334
       - serializedVersion: 3
-        time: 34.85
-        value: 0
+        time: 34.933334
+        value: 1
         inSlope: 0
         outSlope: 0
+        tangentMode: 136
+        weightedMode: 0
+        inWeight: 0.33333334
+        outWeight: 0.33333334
+      - serializedVersion: 3
+        time: 37.5
+        value: 1
+        inSlope: -0.005722345
+        outSlope: -0.005722345
         tangentMode: 136
         weightedMode: 0
         inWeight: 0.33333334
@@ -2657,23 +2691,6 @@ MonoBehaviour:
     m_Framerate: 60
   m_DurationMode: 1
   m_MarkerTrack: {fileID: -7231510277343977554}
---- !u!114 &40102663791522793
-MonoBehaviour:
-  m_ObjectHideFlags: 1
-  m_CorrespondingSourceObject: {fileID: 0}
-  m_PrefabInstance: {fileID: 0}
-  m_PrefabAsset: {fileID: 0}
-  m_GameObject: {fileID: 0}
-  m_Enabled: 1
-  m_EditorHideFlags: 0
-  m_Script: {fileID: 11500000, guid: 4f10dd60657c6004587f237a7e90f8e4, type: 3}
-  m_Name: AudioPlayableAsset
-  m_EditorClassIdentifier: 
-  m_Clip: {fileID: 8300000, guid: db0e0e96c9c9fca488fcc2474b903a2d, type: 3}
-  m_Loop: 0
-  m_bufferingTime: 0.1
-  m_ClipProperties:
-    volume: 1
 --- !u!114 &315448807693757668
 MonoBehaviour:
   m_ObjectHideFlags: 1
@@ -2726,7 +2743,7 @@ AnimationClip:
         inWeight: 0.33333334
         outWeight: 0.33333334
       - serializedVersion: 3
-        time: 3.0666656
+        time: 3
         value: 1
         inSlope: 0
         outSlope: 0
@@ -2737,7 +2754,7 @@ AnimationClip:
       m_PreInfinity: 2
       m_PostInfinity: 2
       m_RotationOrder: 4
-    attribute: material._TintColor.r
+    attribute: material._Color.r
     path: wizard_combine2
     classID: 137
     script: {fileID: 0}
@@ -2754,7 +2771,7 @@ AnimationClip:
         inWeight: 0.33333334
         outWeight: 0.33333334
       - serializedVersion: 3
-        time: 3.0666656
+        time: 3
         value: 1
         inSlope: 0
         outSlope: 0
@@ -2765,7 +2782,7 @@ AnimationClip:
       m_PreInfinity: 2
       m_PostInfinity: 2
       m_RotationOrder: 4
-    attribute: material._TintColor.g
+    attribute: material._Color.g
     path: wizard_combine2
     classID: 137
     script: {fileID: 0}
@@ -2782,7 +2799,7 @@ AnimationClip:
         inWeight: 0.33333334
         outWeight: 0.33333334
       - serializedVersion: 3
-        time: 3.0666656
+        time: 3
         value: 1
         inSlope: 0
         outSlope: 0
@@ -2793,7 +2810,7 @@ AnimationClip:
       m_PreInfinity: 2
       m_PostInfinity: 2
       m_RotationOrder: 4
-    attribute: material._TintColor.b
+    attribute: material._Color.b
     path: wizard_combine2
     classID: 137
     script: {fileID: 0}
@@ -2810,8 +2827,8 @@ AnimationClip:
         inWeight: 0.33333334
         outWeight: 0.33333334
       - serializedVersion: 3
-        time: 3.0666656
-        value: 0.5686275
+        time: 3
+        value: 1
         inSlope: 0
         outSlope: 0
         tangentMode: 136
@@ -2821,7 +2838,7 @@ AnimationClip:
       m_PreInfinity: 2
       m_PostInfinity: 2
       m_RotationOrder: 4
-    attribute: material._TintColor.a
+    attribute: material._Color.a
     path: wizard_combine2
     classID: 137
     script: {fileID: 0}
@@ -2835,28 +2852,28 @@ AnimationClip:
     genericBindings:
     - serializedVersion: 2
       path: 684224094
-      attribute: 1895888582
+      attribute: 2108656497
       script: {fileID: 0}
       typeID: 137
       customType: 22
       isPPtrCurve: 0
     - serializedVersion: 2
       path: 684224094
-      attribute: 1090582214
+      attribute: 1303350129
       script: {fileID: 0}
       typeID: 137
       customType: 22
       isPPtrCurve: 0
     - serializedVersion: 2
       path: 684224094
-      attribute: 1359017670
+      attribute: 1571785585
       script: {fileID: 0}
       typeID: 137
       customType: 22
       isPPtrCurve: 0
     - serializedVersion: 2
       path: 684224094
-      attribute: 1627453126
+      attribute: 1840221041
       script: {fileID: 0}
       typeID: 137
       customType: 22
@@ -2867,7 +2884,7 @@ AnimationClip:
     m_AdditiveReferencePoseClip: {fileID: 0}
     m_AdditiveReferencePoseTime: 0
     m_StartTime: 0
-    m_StopTime: 3.0666656
+    m_StopTime: 3
     m_OrientationOffsetY: 0
     m_Level: 0
     m_CycleOffset: 0
@@ -2896,7 +2913,7 @@ AnimationClip:
         inWeight: 0.33333334
         outWeight: 0.33333334
       - serializedVersion: 3
-        time: 3.0666656
+        time: 3
         value: 1
         inSlope: 0
         outSlope: 0
@@ -2907,7 +2924,7 @@ AnimationClip:
       m_PreInfinity: 2
       m_PostInfinity: 2
       m_RotationOrder: 4
-    attribute: material._TintColor.r
+    attribute: material._Color.r
     path: wizard_combine2
     classID: 137
     script: {fileID: 0}
@@ -2924,7 +2941,7 @@ AnimationClip:
         inWeight: 0.33333334
         outWeight: 0.33333334
       - serializedVersion: 3
-        time: 3.0666656
+        time: 3
         value: 1
         inSlope: 0
         outSlope: 0
@@ -2935,7 +2952,7 @@ AnimationClip:
       m_PreInfinity: 2
       m_PostInfinity: 2
       m_RotationOrder: 4
-    attribute: material._TintColor.g
+    attribute: material._Color.g
     path: wizard_combine2
     classID: 137
     script: {fileID: 0}
@@ -2952,7 +2969,7 @@ AnimationClip:
         inWeight: 0.33333334
         outWeight: 0.33333334
       - serializedVersion: 3
-        time: 3.0666656
+        time: 3
         value: 1
         inSlope: 0
         outSlope: 0
@@ -2963,7 +2980,7 @@ AnimationClip:
       m_PreInfinity: 2
       m_PostInfinity: 2
       m_RotationOrder: 4
-    attribute: material._TintColor.b
+    attribute: material._Color.b
     path: wizard_combine2
     classID: 137
     script: {fileID: 0}
@@ -2980,8 +2997,8 @@ AnimationClip:
         inWeight: 0.33333334
         outWeight: 0.33333334
       - serializedVersion: 3
-        time: 3.0666656
-        value: 0.5686275
+        time: 3
+        value: 1
         inSlope: 0
         outSlope: 0
         tangentMode: 136
@@ -2991,7 +3008,7 @@ AnimationClip:
       m_PreInfinity: 2
       m_PostInfinity: 2
       m_RotationOrder: 4
-    attribute: material._TintColor.a
+    attribute: material._Color.a
     path: wizard_combine2
     classID: 137
     script: {fileID: 0}
@@ -2999,23 +3016,6 @@ AnimationClip:
   m_HasGenericRootTransform: 0
   m_HasMotionFloatCurves: 0
   m_Events: []
---- !u!114 &871339169012845568
-MonoBehaviour:
-  m_ObjectHideFlags: 1
-  m_CorrespondingSourceObject: {fileID: 0}
-  m_PrefabInstance: {fileID: 0}
-  m_PrefabAsset: {fileID: 0}
-  m_GameObject: {fileID: 0}
-  m_Enabled: 1
-  m_EditorHideFlags: 0
-  m_Script: {fileID: 11500000, guid: 4f10dd60657c6004587f237a7e90f8e4, type: 3}
-  m_Name: AudioPlayableAsset
-  m_EditorClassIdentifier: 
-  m_Clip: {fileID: 8300000, guid: 2c9c701f358e75a41b98b2b1e53d3a5d, type: 3}
-  m_Loop: 1
-  m_bufferingTime: 0.1
-  m_ClipProperties:
-    volume: 1
 --- !u!114 &1443102544708515291
 MonoBehaviour:
   m_ObjectHideFlags: 1
@@ -3062,8 +3062,8 @@ MonoBehaviour:
   - m_Version: 1
     m_Start: 7.516666666666667
     m_ClipIn: 0
-    m_Asset: {fileID: 871339169012845568}
-    m_Duration: 36.79999999999999
+    m_Asset: {fileID: -7172692889567694102}
+    m_Duration: 38.53333333333332
     m_TimeScale: 1
     m_ParentTrack: {fileID: 1500479429132818215}
     m_EaseInDuration: 0
@@ -3109,7 +3109,7 @@ MonoBehaviour:
     m_PreExtrapolationMode: 0
     m_PostExtrapolationTime: 0
     m_PreExtrapolationTime: 0
-    m_DisplayName: Thumbnails Spawning
+    m_DisplayName: Thumbnails Spawning (de-noised)
   m_Markers:
     m_Objects: []
   m_TrackProperties:
@@ -3603,8 +3603,17 @@ AnimationClip:
         inWeight: 0.33333334
         outWeight: 0.33333334
       - serializedVersion: 3
-        time: 36.35
-        value: 1
+        time: 34.516666
+        value: 0.63909817
+        inSlope: 0.0019320176
+        outSlope: 0.0019320176
+        tangentMode: 136
+        weightedMode: 0
+        inWeight: 0.33333334
+        outWeight: 0.33333334
+      - serializedVersion: 3
+        time: 38.45
+        value: 0.6541357
         inSlope: 0
         outSlope: 0
         tangentMode: 136
@@ -3679,8 +3688,17 @@ AnimationClip:
         inWeight: 0.33333334
         outWeight: 0.33333334
       - serializedVersion: 3
-        time: 36.35
-        value: 1
+        time: 34.516666
+        value: 0.63909817
+        inSlope: 0.0019320176
+        outSlope: 0.0019320176
+        tangentMode: 136
+        weightedMode: 0
+        inWeight: 0.33333334
+        outWeight: 0.33333334
+      - serializedVersion: 3
+        time: 38.45
+        value: 0.6541357
         inSlope: 0
         outSlope: 0
         tangentMode: 136
@@ -3741,10 +3759,10 @@ MonoBehaviour:
   m_Children: []
   m_Clips:
   - m_Version: 1
-    m_Start: 33.3
+    m_Start: 33.083333333333336
     m_ClipIn: 0
-    m_Asset: {fileID: 40102663791522793}
-    m_Duration: 1.5845351473922902
+    m_Asset: {fileID: -8016743863393908325}
+    m_Duration: 3.497687074829932
     m_TimeScale: 1
     m_ParentTrack: {fileID: 3643809889519081179}
     m_EaseInDuration: 0
@@ -3808,11 +3826,11 @@ MonoBehaviour:
     m_PreExtrapolationMode: 0
     m_PostExtrapolationTime: 0
     m_PreExtrapolationTime: 0
-    m_DisplayName: Neueagent falls to ground (Original)
+    m_DisplayName: Neueagent falls to ground (Reverb, 3 seconds)
   m_Markers:
     m_Objects: []
   m_TrackProperties:
-    volume: 0.0017293692
+    volume: 1
     stereoPan: 0
     spatialBlend: 0
 --- !u!74 &3988059035658057510
@@ -3842,12 +3860,21 @@ AnimationClip:
         outSlope: 0
         tangentMode: 136
         weightedMode: 0
-        inWeight: 0
-        outWeight: 0
+        inWeight: 0.33333334
+        outWeight: 0.33333334
+      - serializedVersion: 3
+        time: 3.5
+        value: 1
+        inSlope: 0
+        outSlope: 0
+        tangentMode: 136
+        weightedMode: 0
+        inWeight: 0.33333334
+        outWeight: 0.33333334
       m_PreInfinity: 2
       m_PostInfinity: 2
       m_RotationOrder: 4
-    attribute: material._TintColor.r
+    attribute: material._Color.r
     path: wizard_combine2
     classID: 137
     script: {fileID: 0}
@@ -3857,44 +3884,6 @@ AnimationClip:
       - serializedVersion: 3
         time: 0
         value: 1
-        inSlope: 0
-        outSlope: 0
-        tangentMode: 136
-        weightedMode: 0
-        inWeight: 0
-        outWeight: 0
-      m_PreInfinity: 2
-      m_PostInfinity: 2
-      m_RotationOrder: 4
-    attribute: material._TintColor.g
-    path: wizard_combine2
-    classID: 137
-    script: {fileID: 0}
-  - curve:
-      serializedVersion: 2
-      m_Curve:
-      - serializedVersion: 3
-        time: 0
-        value: 1
-        inSlope: 0
-        outSlope: 0
-        tangentMode: 136
-        weightedMode: 0
-        inWeight: 0
-        outWeight: 0
-      m_PreInfinity: 2
-      m_PostInfinity: 2
-      m_RotationOrder: 4
-    attribute: material._TintColor.b
-    path: wizard_combine2
-    classID: 137
-    script: {fileID: 0}
-  - curve:
-      serializedVersion: 2
-      m_Curve:
-      - serializedVersion: 3
-        time: 0
-        value: 0.5686275
         inSlope: 0
         outSlope: 0
         tangentMode: 136
@@ -3902,7 +3891,63 @@ AnimationClip:
         inWeight: 0.33333334
         outWeight: 0.33333334
       - serializedVersion: 3
-        time: 4.65
+        time: 3.5
+        value: 1
+        inSlope: 0
+        outSlope: 0
+        tangentMode: 136
+        weightedMode: 0
+        inWeight: 0.33333334
+        outWeight: 0.33333334
+      m_PreInfinity: 2
+      m_PostInfinity: 2
+      m_RotationOrder: 4
+    attribute: material._Color.g
+    path: wizard_combine2
+    classID: 137
+    script: {fileID: 0}
+  - curve:
+      serializedVersion: 2
+      m_Curve:
+      - serializedVersion: 3
+        time: 0
+        value: 1
+        inSlope: 0
+        outSlope: 0
+        tangentMode: 136
+        weightedMode: 0
+        inWeight: 0.33333334
+        outWeight: 0.33333334
+      - serializedVersion: 3
+        time: 3.5
+        value: 1
+        inSlope: 0
+        outSlope: 0
+        tangentMode: 136
+        weightedMode: 0
+        inWeight: 0.33333334
+        outWeight: 0.33333334
+      m_PreInfinity: 2
+      m_PostInfinity: 2
+      m_RotationOrder: 4
+    attribute: material._Color.b
+    path: wizard_combine2
+    classID: 137
+    script: {fileID: 0}
+  - curve:
+      serializedVersion: 2
+      m_Curve:
+      - serializedVersion: 3
+        time: 0
+        value: 1
+        inSlope: 0
+        outSlope: 0
+        tangentMode: 136
+        weightedMode: 0
+        inWeight: 0.33333334
+        outWeight: 0.33333334
+      - serializedVersion: 3
+        time: 3.5
         value: 0
         inSlope: 0
         outSlope: 0
@@ -3913,7 +3958,7 @@ AnimationClip:
       m_PreInfinity: 2
       m_PostInfinity: 2
       m_RotationOrder: 4
-    attribute: material._TintColor.a
+    attribute: material._Color.a
     path: wizard_combine2
     classID: 137
     script: {fileID: 0}
@@ -3927,28 +3972,28 @@ AnimationClip:
     genericBindings:
     - serializedVersion: 2
       path: 684224094
-      attribute: 1895888582
+      attribute: 2108656497
       script: {fileID: 0}
       typeID: 137
       customType: 22
       isPPtrCurve: 0
     - serializedVersion: 2
       path: 684224094
-      attribute: 1090582214
+      attribute: 1303350129
       script: {fileID: 0}
       typeID: 137
       customType: 22
       isPPtrCurve: 0
     - serializedVersion: 2
       path: 684224094
-      attribute: 1359017670
+      attribute: 1571785585
       script: {fileID: 0}
       typeID: 137
       customType: 22
       isPPtrCurve: 0
     - serializedVersion: 2
       path: 684224094
-      attribute: 1627453126
+      attribute: 1840221041
       script: {fileID: 0}
       typeID: 137
       customType: 22
@@ -3959,7 +4004,7 @@ AnimationClip:
     m_AdditiveReferencePoseClip: {fileID: 0}
     m_AdditiveReferencePoseTime: 0
     m_StartTime: 0
-    m_StopTime: 4.65
+    m_StopTime: 3.5
     m_OrientationOffsetY: 0
     m_Level: 0
     m_CycleOffset: 0
@@ -3985,12 +4030,21 @@ AnimationClip:
         outSlope: 0
         tangentMode: 136
         weightedMode: 0
-        inWeight: 0
-        outWeight: 0
+        inWeight: 0.33333334
+        outWeight: 0.33333334
+      - serializedVersion: 3
+        time: 3.5
+        value: 1
+        inSlope: 0
+        outSlope: 0
+        tangentMode: 136
+        weightedMode: 0
+        inWeight: 0.33333334
+        outWeight: 0.33333334
       m_PreInfinity: 2
       m_PostInfinity: 2
       m_RotationOrder: 4
-    attribute: material._TintColor.r
+    attribute: material._Color.r
     path: wizard_combine2
     classID: 137
     script: {fileID: 0}
@@ -4000,44 +4054,6 @@ AnimationClip:
       - serializedVersion: 3
         time: 0
         value: 1
-        inSlope: 0
-        outSlope: 0
-        tangentMode: 136
-        weightedMode: 0
-        inWeight: 0
-        outWeight: 0
-      m_PreInfinity: 2
-      m_PostInfinity: 2
-      m_RotationOrder: 4
-    attribute: material._TintColor.g
-    path: wizard_combine2
-    classID: 137
-    script: {fileID: 0}
-  - curve:
-      serializedVersion: 2
-      m_Curve:
-      - serializedVersion: 3
-        time: 0
-        value: 1
-        inSlope: 0
-        outSlope: 0
-        tangentMode: 136
-        weightedMode: 0
-        inWeight: 0
-        outWeight: 0
-      m_PreInfinity: 2
-      m_PostInfinity: 2
-      m_RotationOrder: 4
-    attribute: material._TintColor.b
-    path: wizard_combine2
-    classID: 137
-    script: {fileID: 0}
-  - curve:
-      serializedVersion: 2
-      m_Curve:
-      - serializedVersion: 3
-        time: 0
-        value: 0.5686275
         inSlope: 0
         outSlope: 0
         tangentMode: 136
@@ -4045,7 +4061,63 @@ AnimationClip:
         inWeight: 0.33333334
         outWeight: 0.33333334
       - serializedVersion: 3
-        time: 4.65
+        time: 3.5
+        value: 1
+        inSlope: 0
+        outSlope: 0
+        tangentMode: 136
+        weightedMode: 0
+        inWeight: 0.33333334
+        outWeight: 0.33333334
+      m_PreInfinity: 2
+      m_PostInfinity: 2
+      m_RotationOrder: 4
+    attribute: material._Color.g
+    path: wizard_combine2
+    classID: 137
+    script: {fileID: 0}
+  - curve:
+      serializedVersion: 2
+      m_Curve:
+      - serializedVersion: 3
+        time: 0
+        value: 1
+        inSlope: 0
+        outSlope: 0
+        tangentMode: 136
+        weightedMode: 0
+        inWeight: 0.33333334
+        outWeight: 0.33333334
+      - serializedVersion: 3
+        time: 3.5
+        value: 1
+        inSlope: 0
+        outSlope: 0
+        tangentMode: 136
+        weightedMode: 0
+        inWeight: 0.33333334
+        outWeight: 0.33333334
+      m_PreInfinity: 2
+      m_PostInfinity: 2
+      m_RotationOrder: 4
+    attribute: material._Color.b
+    path: wizard_combine2
+    classID: 137
+    script: {fileID: 0}
+  - curve:
+      serializedVersion: 2
+      m_Curve:
+      - serializedVersion: 3
+        time: 0
+        value: 1
+        inSlope: 0
+        outSlope: 0
+        tangentMode: 136
+        weightedMode: 0
+        inWeight: 0.33333334
+        outWeight: 0.33333334
+      - serializedVersion: 3
+        time: 3.5
         value: 0
         inSlope: 0
         outSlope: 0
@@ -4056,7 +4128,7 @@ AnimationClip:
       m_PreInfinity: 2
       m_PostInfinity: 2
       m_RotationOrder: 4
-    attribute: material._TintColor.a
+    attribute: material._Color.a
     path: wizard_combine2
     classID: 137
     script: {fileID: 0}
