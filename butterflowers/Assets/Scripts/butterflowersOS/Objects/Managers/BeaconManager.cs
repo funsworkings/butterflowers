@@ -255,6 +255,8 @@ namespace butterflowersOS.Objects.Managers
 				_transition.scaleB = preset.normalBeaconScale * Vector3.one;
 			}
 
+			_transition.time = 0f; // Reset transition time
+
 			beacon.Register(type, state, origin, _transition, load);
 			
 			var filetype = Library.FileType.World;
@@ -497,7 +499,8 @@ namespace butterflowersOS.Objects.Managers
 		void onUnregisterBeacon(Beacon beacon)
 		{
 			var file = beacon.File;
-			if (beacons.ContainsKey(file)) {
+			if (beacons.ContainsKey(file)) 
+			{
 				var curr = beacons[file];
 				curr.Remove(beacon);
 
@@ -664,12 +667,15 @@ namespace butterflowersOS.Objects.Managers
 		{
 			//Instantiate(impactPS, position, Quaternion.identity); // Spawn impact!
 			beacon.Trails.enabled = true;
+			//beacon.Trails.autodestruct = true;
+			
 			beacon.OnFlowerSpawn.Invoke();
 		}
 
 		public void OnEndFlower(Beacon beacon, Vector3 position)
 		{
 			//Instantiate(impactPS, position, Quaternion.identity); // Spawn impact!
+			//beacon.Trails.autodestruct = false;
 			beacon.Trails.enabled = false;
 		}
 

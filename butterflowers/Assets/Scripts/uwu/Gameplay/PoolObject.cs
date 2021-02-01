@@ -8,7 +8,13 @@ namespace uwu.Gameplay
 	{
 		ObjectPool _pool;
 
-		
+		bool _applicationWillQuit = false;
+
+		void OnApplicationQuit()
+		{
+			_applicationWillQuit = true;
+		}
+
 		public void Initialize(ObjectPool pool)
 		{
 			_pool = pool;
@@ -22,22 +28,14 @@ namespace uwu.Gameplay
 				return;
 			}
 			
-			Destroy(gameObject);
-		}
-
-		void OnDisable()
-		{
-			if (_pool != null) 
-			{
-				_pool.Dequeue(this);
-			}
+			Debug.LogWarning("would have destroyed pooled object :(");
 		}
 
 		void OnDestroy()
 		{
-			if (_pool != null) 
+			if (!_applicationWillQuit) 
 			{
-				_pool.Wipe(this);
+				Debug.LogWarning("Destroyed a pooled object, should be returned to the object pool!");	
 			}
 		}
 	}
