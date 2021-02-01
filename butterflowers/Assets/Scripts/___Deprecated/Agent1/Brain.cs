@@ -872,7 +872,7 @@ namespace Neue.Agent1
 		float CalculateBehaviourWeightForProfile(Frame frame, CompositeSurveillanceData composite,
 			SurveillanceData[] history)
 		{
-			var delta = d = new SurveillanceDataDelta(worldPreset.baselineSurveillanceData, composite);
+			var delta = d = new SurveillanceDataDelta(worldPreset.baselineSurveillanceData, composite, null);
 			var factors = new List<float>();
 
 			/*

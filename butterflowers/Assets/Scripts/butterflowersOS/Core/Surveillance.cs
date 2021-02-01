@@ -402,57 +402,61 @@ namespace butterflowersOS.Core
 		float CalculateBehaviourWeightForProfile(Frame frame, CompositeSurveillanceData composite,
 			SurveillanceData[] history)
 		{
-			var delta = _delta = new SurveillanceDataDelta(Preset.baselineSurveillanceData, composite);
+			var delta = _delta = new SurveillanceDataDelta(Preset.baselineSurveillanceData, composite, Preset);
 			var deltaM = delta.MAX_DELTA;
 
 			if (deltaM < -0f) deltaM = .1f;
 			
 			var factors = new List<float>();
+			float average = 0f;
 		
 			switch (frame) 
 			{
 				case Frame.Order:
 					factors.AddRange(new float[] 
 					{
-						- delta.discoveries/deltaM,
-						- delta.nestKicks/deltaM
+						1f - delta.discoveries,
+						delta.beaconsFlowered
 					});
 
 					break;
 				case Frame.Quiet:
-					factors.AddRange(new float[] {
-						- delta.beaconsPlanted/deltaM,
-						- delta.nestKicks/deltaM, 
-						- delta.beaconsAdded/deltaM
+					factors.AddRange(new float[] 
+					{
+						1f - delta.beaconsPlanted,
+						1f - delta.beaconsFlowered,
+						1f - delta.nestKicks, 
+						1f - delta.beaconsAdded
 					});
 
 					break;
 				case Frame.Nurture:
-					factors.AddRange(new float[] {
-						delta.beaconsPlanted/deltaM,
-						delta.hob/deltaM,
-						delta.nestfill/deltaM
+					factors.AddRange(new float[] 
+					{
+						delta.beaconsPlanted,
+						delta.hob,
+						delta.nestfill
 					});
 
 					break;
 				case Frame.Destruction:
-					factors.AddRange(new float[] {
-						- delta.hob/deltaM,
-						- delta.nestfill/deltaM,
+					factors.AddRange(new float[] 
+					{
+						1f - delta.hob,
+						1f - delta.nestfill,
 						
-						delta.nestSpills/deltaM,
-						delta.nestKicks/deltaM
+						delta.nestSpills,
+						delta.nestKicks,
+						delta.beaconsDestroyed
 					});
 
 					break;
 			}
 
-			var average = factors.Average();
-			var avg = average.RemapNRB(-1f, 1f, 0f, 1f);
-
-			return avg;
+			average = factors.Average();
+			return average;
 		}
-	
+
 		#endregion
 		
 		#region Neueagent
