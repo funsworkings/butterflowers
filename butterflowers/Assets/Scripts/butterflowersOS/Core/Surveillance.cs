@@ -403,46 +403,51 @@ namespace butterflowersOS.Core
 			SurveillanceData[] history)
 		{
 			var delta = _delta = new SurveillanceDataDelta(Preset.baselineSurveillanceData, composite);
+			var deltaM = delta.MAX_DELTA;
+
+			if (deltaM < -0f) deltaM = .1f;
+			
 			var factors = new List<float>();
 		
 			switch (frame) 
 			{
 				case Frame.Order:
-					factors.AddRange(new float[] {
-						1f - delta.discoveries,
-						1f - delta.nestKicks
+					factors.AddRange(new float[] 
+					{
+						- delta.discoveries/deltaM,
+						- delta.nestKicks/deltaM
 					});
 
 					break;
 				case Frame.Quiet:
 					factors.AddRange(new float[] {
-						1f - delta.beaconsPlanted,
-						1f - delta.nestKicks,
-						1f- delta.beaconsAdded
+						- delta.beaconsPlanted/deltaM,
+						- delta.nestKicks/deltaM, 
+						- delta.beaconsAdded/deltaM
 					});
 
 					break;
 				case Frame.Nurture:
 					factors.AddRange(new float[] {
-						delta.beaconsPlanted,
-						delta.hob,
-						delta.nestfill
+						delta.beaconsPlanted/deltaM,
+						delta.hob/deltaM,
+						delta.nestfill/deltaM
 					});
 
 					break;
 				case Frame.Destruction:
 					factors.AddRange(new float[] {
-						1f - delta.hob,
-						1f - delta.nestfill,
+						- delta.hob/deltaM,
+						- delta.nestfill/deltaM,
 						
-						delta.nestSpills,
-						delta.nestKicks
+						delta.nestSpills/deltaM,
+						delta.nestKicks/deltaM
 					});
 
 					break;
 			}
 
-			var average = Mathf.Clamp01(factors.Average() / BrainPreset.baselineDeltaPercentage);
+			var average = factors.Average();
 			var avg = average.RemapNRB(-1f, 1f, 0f, 1f);
 
 			return avg;
