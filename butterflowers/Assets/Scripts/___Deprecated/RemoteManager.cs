@@ -46,16 +46,6 @@ namespace Objects.Managers
 		
 		#endregion
 
-		void OnEnable()
-		{
-			cage.onCompleteCorners += TriggerParallel;
-		}
-
-		void OnDisable()
-		{
-			cage.onCompleteCorners -= TriggerParallel;
-		}
-
 		void Update()
 		{
 			if (!load) return;
