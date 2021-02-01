@@ -767,22 +767,14 @@ namespace uwu.Extensions
 			return d;
 		}
 
-		public static float PercentageDifference(float v1, float v2)
+		public static float PercentageDifference(float v1, float v2, bool includeSign = false)
 		{
 			float average = (v1 + v2) / 2f;
-			float percent = (average == 0f)? 0f : (v2 - v1) / Mathf.Abs(v1);
+			float percent = (average == 0f)? 0f : (v1 - v2) / average;
+			if (includeSign && (v1 < v2))
+				percent *= -1f;
 
 			return percent;
-		}
-
-		public static float PercentageDifferenceWithMax(float v1, float v2, ref float maxDelta)
-		{
-			float delta = PercentageDifference(v1, v2);
-			
-			float deltaM = Mathf.Abs(delta);
-			if (deltaM > maxDelta) maxDelta = deltaM;
-
-			return delta;
 		}
 		
 		#endregion
