@@ -40,7 +40,7 @@ Material:
         m_Scale: {x: 1, y: 1}
         m_Offset: {x: 0, y: 0}
     - _Emission:
-        m_Texture: {fileID: 2800000, guid: fb6566c21f717904f83743a5a76dd0b0, type: 3}
+        m_Texture: {fileID: 0}
         m_Scale: {x: 1, y: 1}
         m_Offset: {x: 0, y: 0}
     - _EmissionMap:
@@ -101,7 +101,7 @@ Material:
     - _Glossiness: 0.5
     - _GlossyReflections: 1
     - _GridUnits: 88.2
-    - _InteractionRadius: 1
+    - _InteractionRadius: 2
     - _Metallic: 0
     - _Mode: 0
     - _OcclusionStrength: 1

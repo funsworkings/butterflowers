@@ -115,7 +115,7 @@ Material:
     - _BumpScale: 1
     - _Cutoff: 0.5
     - _DetailNormalMapScale: 1
-    - _Displacement: 1
+    - _Displacement: 0.1
     - _DstBlend: 10
     - _EdgeLength: 25
     - _Float1: -0.07
@@ -144,6 +144,7 @@ Material:
     - _TransShadow: 0.9
     - _Translucency: 1
     - _UVSec: 0
+    - _VertexNormalStrength: -2
     - _VertexOffsetStrength: 0.03
     - _ZWrite: 0
     - __dirty: 0
