@@ -60,7 +60,7 @@ Material:
         m_Scale: {x: 1, y: 1}
         m_Offset: {x: 0, y: 0}
     - _Texture0:
-        m_Texture: {fileID: 2800000, guid: a2bb1f1e41ae1cd4fac910ebe93f00ae, type: 3}
+        m_Texture: {fileID: 2800000, guid: 5345ffbc111e0463e9be399a81e48ce7, type: 3}
         m_Scale: {x: 1, y: 1}
         m_Offset: {x: 0, y: 0}
     - _Texture1:
@@ -79,17 +79,22 @@ Material:
         m_Texture: {fileID: 2800000, guid: 8e44fe896458128418bff33ed3981421, type: 3}
         m_Scale: {x: 1, y: 1}
         m_Offset: {x: 0, y: 0}
+    - _Texturealpha:
+        m_Texture: {fileID: 2800000, guid: 5345ffbc111e0463e9be399a81e48ce7, type: 3}
+        m_Scale: {x: 1, y: 1}
+        m_Offset: {x: 0, y: 0}
     - _texcoord:
         m_Texture: {fileID: 0}
         m_Scale: {x: 1, y: 1}
         m_Offset: {x: 0, y: 0}
     m_Floats:
     - _BumpScale: 1
-    - _Cutoff: 0.5
+    - _Cutoff: -0.04
     - _DetailNormalMapScale: 1
+    - _Displacement: 0
     - _DstBlend: 10
     - _EdgeLength: 25
-    - _Float1: -0.1
+    - _Float1: 0.01
     - _Float2: 2
     - _GlossMapScale: 1
     - _Glossiness: 0.5
@@ -98,7 +103,7 @@ Material:
     - _Mode: 3
     - _OcclusionStrength: 1
     - _Parallax: 0.02
-    - _Size: 0.62
+    - _Size: 3.86
     - _SmoothnessTextureChannel: 0
     - _SpecularHighlights: 1
     - _SrcBlend: 1
@@ -114,6 +119,9 @@ Material:
     - _UVSec: 0
     - _ZWrite: 0
     - __dirty: 0
+    - _hardness: 0
+    - _radius: 0
     m_Colors:
     - _Color: {r: 1, g: 0.16862746, b: 0.76100636, a: 0.6156863}
     - _EmissionColor: {r: 0.26415092, g: 0.1482734, b: 0.26415092, a: 1}
+    - _PlayerPos: {r: 0, g: 0, b: 0, a: 0}
