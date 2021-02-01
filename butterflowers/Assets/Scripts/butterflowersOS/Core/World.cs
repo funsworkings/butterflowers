@@ -194,7 +194,7 @@ namespace butterflowersOS.Core
             /* * * * * * * * * * * * * * * * */
 
             username = _Save.username;
-            type = (_Save.IsProfileValid()) ? AdvanceType.Continuous : AdvanceType.Broken; // Adjust type from loaded profile!
+            type = (_Save.IsSelfProfileValid()) ? AdvanceType.Continuous : AdvanceType.Broken; // Adjust type from loaded profile!
             
             profile = _Save.data.profile;
 
@@ -304,7 +304,7 @@ namespace butterflowersOS.Core
         
         IEnumerator Advance()
         {
-            AdvanceType _type = (_Save.IsProfileValid()) ? AdvanceType.Continuous : AdvanceType.Broken; // Adjust type from loaded profile!
+            AdvanceType _type = (_Save.IsSelfProfileValid()) ? AdvanceType.Continuous : AdvanceType.Broken; // Adjust type from loaded profile!
             
             if (_type == AdvanceType.Broken)  // Deactivate sun
             {
@@ -669,7 +669,7 @@ namespace butterflowersOS.Core
         }
 
         [ContextMenu("Wipe neueagent")]
-        public void WipeNeueAgent()
+        public void WipeNeueAgent() // NEVER HAPPENS IN CURRENT ITERATION
         {
             if (Pause) return; // Ignore request to wipe if paused
             if (!_Save.IsProfileValid()) return;
