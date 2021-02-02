@@ -226,7 +226,7 @@ namespace butterflowersOS.Core
 			Restore();
 			
 			if(loadThumbnails) LoadThumbnails();
-			if(generateThumbnails) GenerateThumbnails();
+			//if(generateThumbnails) GenerateThumbnails();
 			//LoadFiles();
 
 			textureLoadTarget = generateThumbnailQueue.Union(thumbnailQueue).ToList();
@@ -234,8 +234,8 @@ namespace butterflowersOS.Core
 			
 			if (textureLoadTarget.Count > 0) 
 			{
-				if (generateThumbnailQueue.Count > 0) loadMode = LoadMode.Generate;
-				else if (thumbnailQueue.Count > 0) loadMode = LoadMode.Thumbnails;
+				//if (generateThumbnailQueue.Count > 0) loadMode = LoadMode.Generate;
+				if (thumbnailQueue.Count > 0) loadMode = LoadMode.Thumbnails;
 				//else if (fileQueue.Count > 0) loadMode = LoadMode.Files;
 				
 				StartCoroutine("LoadingAllFiles");
