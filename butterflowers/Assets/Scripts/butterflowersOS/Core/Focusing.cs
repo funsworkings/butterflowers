@@ -106,7 +106,7 @@ namespace butterflowersOS.Core
         {
             if (active && sun.active) 
             {
-                if (Input.GetKeyDown(KeyCode.Backspace))
+                if (Input.GetKeyDown(Controls.LoseFocus))
                     LoseFocus();
             }
 

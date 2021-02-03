@@ -61,7 +61,7 @@ namespace butterflowersOS.Objects.Base
             base.OnUpdate();
         
             if (queued) {
-                if (Input.GetKeyDown(KeyCode.LeftControl))
+                if (Input.GetKeyDown(Controls.Focus))
                     Focus();
             }
         }

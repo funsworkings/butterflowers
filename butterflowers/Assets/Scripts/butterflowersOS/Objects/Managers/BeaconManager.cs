@@ -160,7 +160,9 @@ namespace butterflowersOS.Objects.Managers
 
 		void Update()
 		{
-			if(Input.GetKeyDown(KeyCode.LeftBracket)) DebugBeaconFromDesktop();
+			#if UNITY_EDITOR
+				if(Input.GetKeyDown(KeyCode.LeftBracket)) DebugBeaconFromDesktop();
+			#endif
 		}
 
 		#endregion
