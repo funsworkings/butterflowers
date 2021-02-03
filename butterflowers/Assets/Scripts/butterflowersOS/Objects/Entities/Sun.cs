@@ -160,7 +160,9 @@ namespace butterflowersOS.Objects.Entities
 
             if (active) 
             {
-                if (Input.GetKeyDown(KeyCode.RightBracket)) time += Preset.secondsPerDay;
+                #if UNITY_EDITOR
+                    if (Input.GetKeyDown(KeyCode.RightBracket)) time += Preset.secondsPerDay;
+                #endif
 
                 time += Time.deltaTime; // Add time to global clock
 
