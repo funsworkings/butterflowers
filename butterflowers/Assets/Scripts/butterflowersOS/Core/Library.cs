@@ -517,7 +517,9 @@ namespace butterflowersOS.Core
 			bool success = true;
 			bool @new = !ALL_FILES.Contains(file); // New entry to files
 
-			if (type == FileType.User || type == FileType.Shared)  // Verify file exists (user or shared)
+			bool fromUser = type == FileType.User || type == FileType.Shared;
+			
+			if (fromUser)  // Verify file exists (user or shared)
 			{
 				var fileInfo = new FileInfo(file);
 				success = fileInfo.Exists;
@@ -541,6 +543,8 @@ namespace butterflowersOS.Core
 
 				if (OnRefreshItems != null)
 					OnRefreshItems();
+				
+				if(fromUser) RequestTexture(file); // Request texture immediately from file
 			}
 		
 			AddToFileLookup(type, file);
