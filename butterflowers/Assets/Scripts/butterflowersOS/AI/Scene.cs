@@ -50,6 +50,7 @@ namespace butterflowersOS.AI
 
 		IEnumerator Initialize()
 		{
+			Save.LoadGameData<GameData>(createIfEmpty: true);
 			while (!Save.load) yield return null;
 			
 			Loader.Load(.1f, 1f); // Trigger load
@@ -79,6 +80,7 @@ namespace butterflowersOS.AI
 			int height = Library._HEIGHT * _height;
 
 			butterflowersTexture = new Texture2D(width, height, TextureFormat.RGB24, false);
+			butterflowersTexture.filterMode = FilterMode.Point;
 				butterflowersTexture.LoadImage(images);
 				butterflowersTexture.Apply();
 
