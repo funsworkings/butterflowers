@@ -719,7 +719,7 @@ namespace butterflowersOS.Core
 			Texture2D[] thumbnails = FALLBACK_TEXTURE_LOOKUP.Values.ToArray();
 
 			int columns = _columns = (oColumns > 0)? oColumns:_COLUMNS;
-			int rows = _rows = (thumbnails.Length / columns)+1;
+			int rows = _rows = (columns > 1)? (thumbnails.Length / columns)+1:thumbnails.Length;
 
 			int width = columns * _WIDTH;
 			int height = rows * _HEIGHT;
@@ -766,7 +766,7 @@ namespace butterflowersOS.Core
 		public const int _WIDTH = 64;
 		public const int _HEIGHT = 64;
 
-		public const int _COLUMNS = 8;
+		public const int _COLUMNS = 1;
 
 		Texture2D DegradeBytes(string file, Texture2D texture, bool transparency)
 		{
