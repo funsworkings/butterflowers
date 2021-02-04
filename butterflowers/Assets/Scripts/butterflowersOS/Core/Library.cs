@@ -763,8 +763,8 @@ namespace butterflowersOS.Core
 		
 		#region Degradation
 		
-		public const int _WIDTH = 32;
-		public const int _HEIGHT = 32;
+		public const int _WIDTH = 64;
+		public const int _HEIGHT = 64;
 
 		public const int _COLUMNS = 8;
 

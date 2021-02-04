@@ -34,12 +34,22 @@
   </component>
   <component name="ChangeListManager">
     <list default="true" id="6ebb3891-c912-403e-9e42-400f227dea0b" name="Default Changelist" comment="">
+      <change afterPath="$PROJECT_DIR$/Assets/Scripts/butterflowersOS/AI/ButterflowerVFX.cs" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/Assets/Scripts/butterflowersOS/AI/ButterflowerVFX.cs.meta" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/.idea/.idea.butterflowers/.idea/contentModel.xml" beforeDir="false" afterPath="$PROJECT_DIR$/.idea/.idea.butterflowers/.idea/contentModel.xml" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/.idea/.idea.butterflowers/.idea/workspace.xml" beforeDir="false" afterPath="$PROJECT_DIR$/.idea/.idea.butterflowers/.idea/workspace.xml" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/Assets/Materials/Butterflower VFX.mat" beforeDir="false" afterPath="$PROJECT_DIR$/Assets/Materials/Butterflower VFX.mat" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/Assets/Materials/Discovery Notif.mat" beforeDir="false" afterPath="$PROJECT_DIR$/Assets/Materials/Discovery Notif.mat" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/Assets/Presets/Behaviours/World (Default).asset" beforeDir="false" afterPath="$PROJECT_DIR$/Assets/Presets/Behaviours/World (Default).asset" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/Assets/Scenes/420_AI.unity" beforeDir="false" afterPath="$PROJECT_DIR$/Assets/Scenes/420_AI.unity" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/Assets/Scenes/Main Menu_Profiles/AI_Scene Profile.asset" beforeDir="false" afterPath="$PROJECT_DIR$/Assets/Scenes/Main Menu_Profiles/AI_Scene Profile.asset" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/Assets/Scripts/butterflowersOS/AI/Scene.cs" beforeDir="false" afterPath="$PROJECT_DIR$/Assets/Scripts/butterflowersOS/AI/Scene.cs" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/Assets/Scripts/butterflowersOS/Core/Library.cs" beforeDir="false" afterPath="$PROJECT_DIR$/Assets/Scripts/butterflowersOS/Core/Library.cs" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/Library/EditorUserBuildSettings.asset" beforeDir="false" afterPath="$PROJECT_DIR$/Library/EditorUserBuildSettings.asset" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/Assets/Textures/testSheet.jpg.meta" beforeDir="false" afterPath="$PROJECT_DIR$/Assets/Textures/testSheet.jpg.meta" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/Library/InspectorExpandedItems.asset" beforeDir="false" afterPath="$PROJECT_DIR$/Library/InspectorExpandedItems.asset" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/Library/LastSceneManagerSetup.txt" beforeDir="false" afterPath="$PROJECT_DIR$/Library/LastSceneManagerSetup.txt" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/Library/SpriteAtlasDatabase.asset" beforeDir="false" afterPath="$PROJECT_DIR$/Library/SpriteAtlasDatabase.asset" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/ProjectSettings/ProjectSettings.asset" beforeDir="false" afterPath="$PROJECT_DIR$/ProjectSettings/ProjectSettings.asset" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/obj/Debug/Assembly-CSharp.csprojAssemblyReference.cache" beforeDir="false" afterPath="$PROJECT_DIR$/obj/Debug/Assembly-CSharp.csprojAssemblyReference.cache" afterDir="false" />
     </list>
     <option name="SHOW_DIALOG" value="false" />
     <option name="HIGHLIGHT_CONFLICTS" value="true" />
@@ -70,9 +80,6 @@
   <component name="IdeDocumentHistory">
     <option name="CHANGED_PATHS">
       <list>
-        <option value="$PROJECT_DIR$/Assets/Scripts/uwu/Gameplay/Interacter.cs" />
-        <option value="$PROJECT_DIR$/Assets/Scripts/uwu/Snippets/Load/SceneLoader.cs" />
-        <option value="$PROJECT_DIR$/Assets/Scripts/uwu/Snippets/Load/Loader.cs" />
         <option value="$PROJECT_DIR$/Assets/Scripts/uwu/Gameplay/ObjectPooler.cs" />
         <option value="$PROJECT_DIR$/Assets/Scripts/uwu/Snippets/KillParticles.cs" />
         <option value="$PROJECT_DIR$/Assets/Scripts/butterflowersOS/Snippets/Burster.cs" />
@@ -92,9 +99,7 @@
         <option value="$PROJECT_DIR$/Assets/Scripts/uwu/Audio/AudioFader.cs" />
         <option value="$PROJECT_DIR$/Assets/Scripts/butterflowersOS/Audio/GameSceneAudioManager.cs" />
         <option value="$PROJECT_DIR$/Assets/Scripts/butterflowersOS/Save &amp; Load/GameData.cs" />
-        <option value="$PROJECT_DIR$/Assets/Scripts/butterflowersOS/AI/Scene.cs" />
         <option value="$PROJECT_DIR$/Assets/Scripts/butterflowersOS/AI/RemoteAgent.cs" />
-        <option value="$PROJECT_DIR$/Assets/Scripts/butterflowersOS/Core/Focusing.cs" />
         <option value="$PROJECT_DIR$/Assets/Scripts/butterflowersOS/Objects/Managers/ButterflowerManager.cs" />
         <option value="$PROJECT_DIR$/Assets/Scripts/butterflowersOS/Menu/PauseMenu.cs" />
         <option value="$PROJECT_DIR$/Assets/Scripts/butterflowersOS/Core/Wand.cs" />
@@ -105,7 +110,6 @@
         <option value="$PROJECT_DIR$/Assets/Scripts/uwu/Gameplay/ObjectPool.cs" />
         <option value="$PROJECT_DIR$/Assets/Scripts/uwu/Gameplay/PoolObject.cs" />
         <option value="$PROJECT_DIR$/Assets/Scripts/butterflowersOS/Objects/Entities/Interactables/Beacon.cs" />
-        <option value="$PROJECT_DIR$/Assets/Scripts/butterflowersOS/Objects/Managers/BeaconManager.cs" />
         <option value="$PROJECT_DIR$/Assets/Scripts/butterflowersOS/Objects/Managers/CutsceneManager.cs" />
         <option value="$PROJECT_DIR$/Assets/Scripts/butterflowersOS/Objects/Entities/Sector.cs" />
         <option value="$PROJECT_DIR$/Assets/Scripts/butterflowersOS/Objects/Entities/Cage.cs" />
@@ -120,7 +124,13 @@
         <option value="$PROJECT_DIR$/Assets/Scripts/butterflowersOS/Data/SurveillanceDataDelta.cs" />
         <option value="$PROJECT_DIR$/Assets/Scripts/butterflowersOS/UI/Notifications/ExportNotification.cs" />
         <option value="$PROJECT_DIR$/Assets/Scripts/butterflowersOS/Objects/Managers/NotificationCenter.cs" />
+        <option value="$PROJECT_DIR$/Assets/Scripts/butterflowersOS/Objects/Entities/Sun.cs" />
+        <option value="$PROJECT_DIR$/Assets/Scripts/butterflowersOS/Objects/Managers/BeaconManager.cs" />
+        <option value="$PROJECT_DIR$/Assets/Scripts/butterflowersOS/Core/Focusing.cs" />
+        <option value="$PROJECT_DIR$/Assets/Scripts/butterflowersOS/Objects/Base/Focusable.cs" />
+        <option value="$PROJECT_DIR$/Assets/Scripts/butterflowersOS/AI/Scene.cs" />
         <option value="$PROJECT_DIR$/Assets/Scripts/butterflowersOS/Core/Library.cs" />
+        <option value="$PROJECT_DIR$/Assets/Scripts/butterflowersOS/AI/ButterflowerVFX.cs" />
       </list>
     </option>
   </component>
@@ -209,6 +219,7 @@
       <workItem from="1611282332264" duration="28781000" />
       <workItem from="1611790510295" duration="14508000" />
       <workItem from="1612136960685" duration="13354000" />
+      <workItem from="1612328224018" duration="6651000" />
     </task>
     <servers />
   </component>
@@ -330,11 +341,11 @@
       <screen x="0" y="0" width="1536" height="824" />
     </state>
     <state x="43" y="37" width="1507" height="810" key="dock-window-1/0.0.1536.824@0.0.1536.824" timestamp="1606582891568" />
-    <state x="-1868" y="-351" width="1175" height="1361" key="find.popup" timestamp="1612244701884">
+    <state x="-1868" y="-351" width="1175" height="1361" key="find.popup" timestamp="1612328481643">
       <screen x="-2560" y="-370" width="2560" height="1400" />
     </state>
     <state x="-1868" y="-330" width="1175" height="1361" key="find.popup/0.0.1536.824/-2560.-349.2560.1400@-2560.-349.2560.1400" timestamp="1610906515418" />
-    <state x="-1868" y="-351" width="1175" height="1361" key="find.popup/0.0.1536.824/-2560.-370.2560.1400@-2560.-370.2560.1400" timestamp="1612244701884" />
+    <state x="-1868" y="-351" width="1175" height="1361" key="find.popup/0.0.1536.824/-2560.-370.2560.1400@-2560.-370.2560.1400" timestamp="1612328481643" />
     <state x="415" y="11" width="705" height="801" key="find.popup/0.0.1536.824@0.0.1536.824" timestamp="1608524933137" />
     <state x="-1852" y="-52" width="1120" height="1151" key="run.anything.popup" timestamp="1612037328294">
       <screen x="-2560" y="-370" width="2560" height="1400" />
@@ -344,12 +355,12 @@
     <state x="2628" y="-31" width="1120" height="1151" key="run.anything.popup/0.0.1536.824/1920.-349.2560.1400@1920.-349.2560.1400" timestamp="1609375011181" />
     <state x="2628" y="-40" width="1120" height="1151" key="run.anything.popup/0.0.1536.824/1920.-358.2560.1400@1920.-358.2560.1400" timestamp="1607910030966" />
     <state x="425" y="187" width="672" height="677" key="run.anything.popup/0.0.1536.824@0.0.1536.824" timestamp="1609791387421" />
-    <state x="-1843" y="-124" width="672" height="160" key="search.everywhere.popup" timestamp="1612244908885">
+    <state x="-1843" y="-124" width="672" height="160" key="search.everywhere.popup" timestamp="1612402777710">
       <screen x="-2560" y="-370" width="2560" height="1400" />
     </state>
     <state x="-1843" y="-103" width="672" height="160" key="search.everywhere.popup/0.0.1536.824/-2560.-349.2560.1400@-2560.-349.2560.1400" timestamp="1611024221131" />
     <state x="-1842" y="-112" width="1120" height="1152" key="search.everywhere.popup/0.0.1536.824/-2560.-358.2560.1400@-2560.-358.2560.1400" timestamp="1608687095751" />
-    <state x="-1843" y="-124" width="672" height="160" key="search.everywhere.popup/0.0.1536.824/-2560.-370.2560.1400@-2560.-370.2560.1400" timestamp="1612244908885" />
+    <state x="-1843" y="-124" width="672" height="160" key="search.everywhere.popup/0.0.1536.824/-2560.-370.2560.1400@-2560.-370.2560.1400" timestamp="1612402777710" />
     <state x="79" y="-1194" width="1120" height="1152" key="search.everywhere.popup/0.0.1536.824/-638.-1440.2560.1400@-638.-1440.2560.1400" timestamp="1609043539164" />
     <state x="2637" y="-103" width="1120" height="1152" key="search.everywhere.popup/0.0.1536.824/1920.-349.2560.1400@1920.-349.2560.1400" timestamp="1609698996642" />
     <state x="2638" y="-112" width="1120" height="1152" key="search.everywhere.popup/0.0.1536.824/1920.-358.2560.1400@1920.-358.2560.1400" timestamp="1607998254801" />
