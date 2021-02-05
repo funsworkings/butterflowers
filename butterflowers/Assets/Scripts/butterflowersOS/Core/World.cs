@@ -277,7 +277,12 @@ namespace butterflowersOS.Core
             Sun.Load(_Save.data.sun);
 
             yield return new WaitForEndOfFrame();
+
+            if (type == AdvanceType.Broken)
                 Surveillance.New(onload: true); // Trigger surveillance (if profile not generated!)
+            else
+                Surveillance.Ignore();
+
 
             if (!Cutscenes.intro) 
             {
@@ -311,11 +316,16 @@ namespace butterflowersOS.Core
                 Sun.active = false;
                 yield return new WaitForEndOfFrame();
             }
-            
-            Surveillance.Stop();
-            Surveillance.Dispose();
-            while (Surveillance.recording) yield return null;
-                _Save.data.surveillanceData = (SurveillanceData[])Surveillance.Save(); // Continue saving surveillance data if profile has not been generated
+
+            if (Surveillance.IsRecording) 
+            {
+                Surveillance.Stop();
+                Surveillance.Dispose();
+                
+                while (Surveillance.recording) 
+                    yield return null;
+            }
+            _Save.data.surveillanceData = (SurveillanceData[])Surveillance.Save(); // Continue saving surveillance data if profile has not been generated
             
             while(Cutscenes.inprogress) yield return null; // Wait for all cutscenes to dispose before continuing
 
@@ -356,9 +366,12 @@ namespace butterflowersOS.Core
                     while (Sequence.Pause) yield return null;
                 }
             }
-            
-            Surveillance.New(); // Trigger
-            
+
+            if (_type == AdvanceType.Broken)
+                Surveillance.New(); // Trigger
+            else
+                Surveillance.Ignore();
+
             Beacons.RefreshBeacons(); // Refresh all beacons
             if (!string.IsNullOrEmpty(Surveillance.lastPhotoPath)) 
             {
