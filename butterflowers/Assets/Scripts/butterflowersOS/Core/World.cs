@@ -625,7 +625,7 @@ namespace butterflowersOS.Core
             string @agent = _Save.data.agent_created_at;
             string @other = brainData.created_at;
             
-            if (@agent == @other) return; // Ignore request to import duplicate neueagent
+            if (@agent == @other || @self != @agent) return; // Ignore request to import duplicate neueagent
         
             bool success = AggregateBrainData(brainData);
             type = (success && _Save.IsProfileValid()) ? AdvanceType.Continuous : AdvanceType.Broken;
