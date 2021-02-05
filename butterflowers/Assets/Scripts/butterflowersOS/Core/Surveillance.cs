@@ -100,6 +100,8 @@ namespace butterflowersOS.Core
 			return logs[index];
 		}
 
+		public bool IsRecording => recording;
+
 		#endregion
 	
 		#region Monobehaviour callbacks
@@ -123,9 +125,16 @@ namespace butterflowersOS.Core
 		{
 			cacheSunDays = Sun.days;
 			EnsureLog();
+			
+			Debug.LogWarningFormat("Surveillance was INITIALIZED => {0} logs", allLogs.Length);
 
 			StartCoroutine("Capturing");
 			recording = true;
+		}
+
+		public void Ignore()
+		{
+			Debug.LogWarningFormat("Surveillance was IGNORED => {0} logs", allLogs.Length);
 		}
 
 		public void Stop()
@@ -176,7 +185,7 @@ namespace butterflowersOS.Core
 				logs = new List<SurveillanceData>(previousLogs);
 			else
 				logs = new List<SurveillanceData>();
-			
+
 			SubscribeToEvents();
 		}
 	
