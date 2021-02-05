@@ -1,6 +1,7 @@
 ﻿using System;
 using System.Collections.Generic;
 using System.Linq;
+using butterflowersOS.Core;
 using butterflowersOS.Data;
 using UnityEngine;
 using UnityEngine.Rendering.PostProcessing;
@@ -21,6 +22,7 @@ namespace butterflowersOS.AI
 		[SerializeField] SurveillanceLogData log;
 		[SerializeField] ParticleSystem ps;
 		[SerializeField] PostProcessVolume postprocessing;
+		[SerializeField] EventSnake snake;
 
 		// Attributes
 
@@ -112,6 +114,8 @@ namespace butterflowersOS.AI
 		    var nest = (log.nestFill / 255f);
 				t_saturation = nest.RemapNRB(0f, 1f, minSaturation, maxSaturation);
 				t_bloom = nest.RemapNRB(0f, 1f, minBloom, maxBloom);
+				
+			snake.Push(log.events.ToArray(), refreshTime);
 	    }
 	    
 	    #region Particle systems

@@ -620,13 +620,18 @@ namespace butterflowersOS.Core
         public void ImportNeueAgent(BrainData brainData)
         {
             if (Pause) return; // Ignore request to import if paused
-            if (!_Save.IsSelfProfileValid()) return; // Ignore reques to import if not generated neueagent
+            
+            #if !UNITY_EDITOR
+                if (!_Save.IsSelfProfileValid()) return; // Ignore reques to import if not generated neueagent
+            #endif
 
             string @self = _Save.data.export_agent_created_at;
             string @agent = _Save.data.agent_created_at;
             string @other = brainData.created_at;
             
+            #if !UNITY_EDITOR
             if (@agent == @other || @self != @agent) return; // Ignore request to import duplicate neueagent
+            #endif
         
             bool success = AggregateBrainData(brainData);
             type = (success && _Save.IsProfileValid()) ? AdvanceType.Continuous : AdvanceType.Broken;
