@@ -867,30 +867,6 @@
         <e p="Extensions" t="Include">
           <e p="FontFormat.cs" t="Include" />
         </e>
-        <e p="Fonts" t="Include">
-          <e p="cantique-master" t="Include">
-            <e p="cantique-master" t="Include">
-              <e p="Fonts" t="Include">
-                <e p="web" t="Include">
-                  <e p="generator_config.txt" t="Include" />
-                </e>
-              </e>
-              <e p="LICENSE.txt" t="Include" />
-            </e>
-          </e>
-          <e p="linux_libertine" t="Include">
-            <e p="Bugs.txt" t="Include" />
-            <e p="ChangeLog.txt" t="Include" />
-            <e p="GPL.txt" t="Include" />
-            <e p="INSTALL.txt" t="Include" />
-            <e p="LICENCE.txt" t="Include" />
-            <e p="OFL.txt" t="Include" />
-            <e p="README.txt" t="Include" />
-          </e>
-          <e p="roman_sd" t="Include">
-            <e p="_Read Me.txt" t="Include" />
-          </e>
-        </e>
         <e p="GetMousePosition.cs" t="Include" />
         <e p="Packages" t="Include">
           <e p="noder" t="Include">
@@ -1159,6 +1135,32 @@
           </e>
           <e p="Scripts" t="Include">
             <e p="Outline.cs" t="Include" />
+          </e>
+        </e>
+        <e p="Resources" t="Include">
+          <e p="Fonts" t="Include">
+            <e p="cantique-master" t="Include">
+              <e p="cantique-master" t="Include">
+                <e p="Fonts" t="Include">
+                  <e p="web" t="Include">
+                    <e p="generator_config.txt" t="Include" />
+                  </e>
+                </e>
+                <e p="LICENSE.txt" t="Include" />
+              </e>
+            </e>
+            <e p="linux_libertine" t="Include">
+              <e p="Bugs.txt" t="Include" />
+              <e p="ChangeLog.txt" t="Include" />
+              <e p="GPL.txt" t="Include" />
+              <e p="INSTALL.txt" t="Include" />
+              <e p="LICENCE.txt" t="Include" />
+              <e p="OFL.txt" t="Include" />
+              <e p="README.txt" t="Include" />
+            </e>
+            <e p="roman_sd" t="Include">
+              <e p="_Read Me.txt" t="Include" />
+            </e>
           </e>
         </e>
         <e p="Scripts" t="Include">

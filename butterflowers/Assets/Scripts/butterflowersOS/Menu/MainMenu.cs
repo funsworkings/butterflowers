@@ -1,6 +1,9 @@
 ﻿using System;
 using System.Collections;
+using butterflowersOS.Presets;
+using butterflowersOS.UI;
 using Neue.Agent.Brain.Data;
+using TMPro;
 using UnityEngine;
 using UnityEngine.SceneManagement;
 using uwu;
@@ -21,9 +24,12 @@ namespace butterflowersOS.Menu
         // Properties
 
         ToggleOpacity opacity;
-        
+
+        [SerializeField] WorldPreset preset;
         [SerializeField] GameObject continueButton;
         [SerializeField] ToggleOpacity continuePanel;
+        [SerializeField] MenuOption continueOption;
+        [SerializeField] TMP_Text continueText;
         [SerializeField] ChooseUsername usernamePanel;
         [SerializeField] SceneAudioManager sceneAudio;
 
@@ -51,8 +57,11 @@ namespace butterflowersOS.Menu
             Time.timeScale = 1f;
             Loader.Instance.Dispose();
 
-            previousSaveExists = Save.LoadGameData<GameData>();
-            
+            if (Save.load)
+                previousSaveExists = (Save.data != null);
+            else
+                previousSaveExists = Save.LoadGameData<GameData>();
+
             base.Start();
             
             Reset();
@@ -123,6 +132,15 @@ namespace butterflowersOS.Menu
 
         void DisplayOptions(bool previousSave)
         {
+            Debug.LogWarningFormat("Main menu showed options! Save file exists => {0}", previousSaveExists);
+            
+            if (previousSave) 
+            {
+                float time = Save.data.sun.time;
+                int days = Mathf.FloorToInt(preset.ConvertSecondsToDays(time));
+
+                continueOption.DefaultText = string.Format("continue <size=45%>({0})</size>", days);
+            }
             continueButton.SetActive(previousSave);
         }
 

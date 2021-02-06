@@ -626,10 +626,10 @@ MonoBehaviour:
   m_OnCullStateChanged:
     m_PersistentCalls:
       m_Calls: []
-  m_text: "\u2192"
+  m_text: Continue
   m_isRightToLeft: 0
-  m_fontAsset: {fileID: 11400000, guid: e3c7fd2e45e6b56418eabe76c3548470, type: 2}
-  m_sharedMaterial: {fileID: 21766952227332230, guid: e3c7fd2e45e6b56418eabe76c3548470,
+  m_fontAsset: {fileID: 11400000, guid: 746da9ccbbd85d34cb931655105bc128, type: 2}
+  m_sharedMaterial: {fileID: 21935736288909906, guid: 746da9ccbbd85d34cb931655105bc128,
     type: 2}
   m_fontSharedMaterials: []
   m_fontMaterial: {fileID: 0}
@@ -655,7 +655,7 @@ MonoBehaviour:
   m_outlineColor:
     serializedVersion: 2
     rgba: 4278190080
-  m_fontSize: 114.85
+  m_fontSize: 33.7
   m_fontSizeBase: 36
   m_fontWeight: 400
   m_enableAutoSizing: 1
@@ -696,14 +696,14 @@ MonoBehaviour:
   m_margin: {x: 0, y: 0, z: 0, w: 0}
   m_textInfo:
     textComponent: {fileID: 4567076421198620191}
-    characterCount: 1
+    characterCount: 8
     spriteCount: 0
     spaceCount: 0
     wordCount: 1
     linkCount: 0
     lineCount: 1
     pageCount: 1
-    materialCount: 2
+    materialCount: 1
   m_isUsingLegacyAnimationComponent: 0
   m_isVolumetricText: 0
   m_spriteAnimator: {fileID: 0}

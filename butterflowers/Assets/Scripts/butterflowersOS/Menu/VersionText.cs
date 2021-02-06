@@ -15,7 +15,7 @@ namespace butterflowersOS.Menu
         // Start is called before the first frame update
         void Start()
         {
-            text.text = string.Format("version = {0}", Application.version);
+            text.text = string.Format("v {0}", Application.version);
         }
     }
 }
