@@ -29,6 +29,7 @@ namespace butterflowersOS.Presets
             public bool useDesktopFilesForDebugBeacons = true;
             public bool allowDebugSpawn = true;
             public bool allowDebugTimeSkip = true;
+            public bool allowExternalNeueagent = true;
 
         [Header("Time Attributes")]
             public float hoursPerDay = 24f;
