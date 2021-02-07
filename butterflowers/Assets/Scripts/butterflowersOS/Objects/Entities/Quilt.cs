@@ -118,6 +118,8 @@ namespace butterflowersOS.Objects.Entities
             material.SetFloat("_Interval", offset);
             material.SetFloat("_Death", (death > 0f)? 1f : 0f);
             material.SetInt("_TextureRange", textureStack.Length);
+            
+            UpdateTextures();
 
             UpdateLerpSpeed();
             if(wait <= 0f)
@@ -127,7 +129,8 @@ namespace butterflowersOS.Objects.Entities
         float wait = 0f;
         IEnumerator Wait()
         {
-            while (wait > 0f) {
+            while (wait > 0f) 
+            {
                 wait = Mathf.Max(0f, wait - Time.deltaTime);
                 yield return null;
             }
@@ -282,12 +285,49 @@ namespace butterflowersOS.Objects.Entities
 
         #region Textures
 
-        void ApplyTextures(){
-            if(material == null)
-                return;
-
+        void UpdateTextures()
+        {
             int count = textureStack.Length;
-        
+
+            Texture2D a = null, b = null;
+            float strA = 0f, strB = 0f;
+
+            if (count > 0) 
+            {
+                if (count == 1) 
+                {
+                    a = b = textureStack[0];
+                    strA = 1f;
+                    strB = 0f;
+                }
+                else 
+                {
+                    float _offset = (1f / count);
+                    
+                    float oa = Mathf.Repeat(offset, 1f);
+                    float ob = Mathf.Repeat(offset + _offset, 1f);
+                    
+                    int aIndex = Mathf.FloorToInt(oa * count);
+                    int bIndex = Mathf.FloorToInt(ob * count);
+
+                    a = textureStack[aIndex];
+                    b = textureStack[bIndex];
+
+                    strA = 1f - Mathf.Abs(oa - aIndex * _offset) / _offset;
+                    strB = 1f - strA;
+                }
+            }
+
+            material.SetTexture("_TextureA", a);
+            material.SetTexture("_TextureB", b);
+            material.SetFloat("_TextureAStrength", strA);
+            material.SetFloat("_TextureBStrength", strB);
+            material.SetInt("_TextureCount", count);
+        }
+
+        void ApplyTextures()
+        {
+            /*
             List<Texture2D> valid = new List<Texture2D>();
             valid.AddRange(textureStack);
             Texture2D[] append = new Texture2D[(textureCap - count)];
@@ -301,10 +341,13 @@ namespace butterflowersOS.Objects.Entities
             material.SetTexture("_Texture5", valid[5]);
 
             material.SetInt("_TextureCount", count);
+            */
 
             //textureArray.PopulateTextureArray(textureStack);
+            
             UpdateLerpSpeed();
-
+            UpdateTextures();
+            
             offset = 1f; // Snap back immediately to last added
 
             if (wait <= 0f) 
