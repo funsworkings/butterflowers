@@ -5,18 +5,14 @@
         _MainTex ("Main Texture", 2D) = "white" {}
         _NoiseTex ("Noise Texture", 2D) = "white" {}
         
-        _Texture0 ("Texture 0", 2D) = "white" {}
-        _Texture1 ("Texture 1", 2D) = "white" {}
-        _Texture2 ("Texture 2", 2D) = "white" {}
-        _Texture3 ("Texture 3", 2D) = "white" {}
-        _Texture4 ("Texture 4", 2D) = "white" {}
-        _Texture5 ("Texture 5", 2D) = "white" {}
-    
-        _Textures ("Textures", 2DArray) = ""{}
-        _TextureCount ("Texture Count", int) = 0
-        _TextureRange("Texture Range", int) = 1
+        _TextureA ("Texture A", 2D) = "white" {}
+        _TextureB ("Texture B", 2D) = "white" {}
         
-        _TextureStrength ("Texture Strength", Range(0,1)) = 0.5
+        _TextureAStrength ("Texture A Strength", Range(0,1)) = 0.5
+        _TextureBStrength ("Texture B Strength", Range(0,1)) = 0.5
+    
+        _TextureCount ("Texture Count", int) = 0
+        
         _NoiseStrength ("Noise Strength", Range(0,1)) = 0.5
         _LerpSpeed ("Lerp Speed", Float) = 1.0
 
@@ -63,13 +59,14 @@
             
             sampler2D _MainTex;
             sampler2D _NoiseTex;
-
-            sampler2D _Texture0, _Texture1, _Texture2, _Texture3, _Texture4, _Texture5;
             
             float4 _MainTex_ST;
             
-            int _TextureCount, _TextureRange;
-            float _TextureStrength, _NoiseStrength;
+            int _TextureCount;
+            float _NoiseStrength;
+
+            sampler2D _TextureA, _TextureB;
+            float _TextureAStrength, _TextureBStrength;
 
             float _Death;
             fixed4 _DeathColor;
@@ -106,57 +103,16 @@
                 float2 dir = (tex2D(_NoiseTex, uv.xy)).rg;
                 uv.xy = FlowUV(uv.xy, dir, _Interval);
                 
-                float t = _Interval;
-                float str = 0.0;
+                fixed4 col = fixed4(1.0, 1.0, 1.0, 1.0);
 
-                float r = _TextureRange * 1.0;
-                float maxrange = 0.0;
-
-
-                fixed4 mid = fixed4(.5, .5, .5, .5);
-                fixed4 ct = fixed4(0.0, 0.0, 0.0, 1.0);
-
-                if(_TextureCount == 0) 
-                    ct = fixed4(1.0, 1.0, 1.0, 1.0);
-                else 
-                    maxrange = saturate(r / _TextureCount) * 1.0;
-                
-                fixed4 c = fixed4(1.0, 1.0, 1.0, 1.0);
-                for(int i = 0; i < _TextureCount; i++)
-                {
-                    //uv.z = i;
-                    //c = UNITY_SAMPLE_TEX2DARRAY(_Textures, uv);
-                    c = half4(1.0, 1.0, 1.0, 1.0);
-                    
-                    if(i == 0) c = tex2D(_Texture0, uv);
-                    else if(i == 1) c = tex2D(_Texture1, uv);
-                    else if(i == 2) c = tex2D(_Texture2, uv);
-                    else if(i == 3) c = tex2D(_Texture3, uv);
-                    else if(i == 4) c = tex2D(_Texture4, uv);
-                    else if(i == 5) c = tex2D(_Texture5, uv);
-
-                    float index = 0.0;
-                    if(_TextureCount > 1)
-                        index = ((i)*1.0)/(_TextureCount - 1);
-
-                    float offset = t - index;
-                    float dist = abs(offset);
-
-                    str = 0.0;
-                    if(_TextureCount == 1) str = 1.0;
-                    else {
-                        //if(dist <= maxrange)
-                            str += _TextureStrength*(saturate(1.0 - pow(offset * r, 4.0)));
-                    }
-                    
-                    ct += ((c)*str);
-                }
-                ct.a = 1.0;
+                if(_TextureCount > 0)
+                    col = tex2D(_TextureA, uv)*_TextureAStrength + tex2D(_TextureB, uv)*_TextureBStrength;
 
                 // apply fog
-                UNITY_APPLY_FOG(i.fogCoord, ct);
                 
-                return (1.0 - _Death)*ct + _DeathColor;
+                UNITY_APPLY_FOG(i.fogCoord, col);
+                return (1.0 - _Death)*col + _DeathColor;
+                
                 //return (1.0 - _DebugStrength)*ct + _DebugStrength*_DebugColor;
             }
             ENDCG
