@@ -78,12 +78,14 @@ namespace butterflowersOS.UI
 
         void OnEnable()
         {
-            WindowResize.Instance.onResize += onResize;
+            var Resize = WindowResize.Instance;
+            if(Resize != null) Resize.onResize += onResize;
         }
 
         void OnDisable()
         {
-            WindowResize.Instance.onResize -= onResize;
+            var Resize = WindowResize.Instance;
+            if(Resize != null) Resize.onResize -= onResize;
         }
 
         // Start is called before the first frame update
