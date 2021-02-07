@@ -8979,7 +8979,6 @@ GameObject:
   m_Component:
   - component: {fileID: 1270791309}
   - component: {fileID: 1270791308}
-  - component: {fileID: 1270791307}
   m_Layer: 0
   m_Name: Background Music
   m_TagString: Untagged
@@ -8987,33 +8986,6 @@ GameObject:
   m_NavMeshLayer: 0
   m_StaticEditorFlags: 0
   m_IsActive: 1
---- !u!114 &1270791307
-MonoBehaviour:
-  m_ObjectHideFlags: 0
-  m_CorrespondingSourceObject: {fileID: 0}
-  m_PrefabInstance: {fileID: 0}
-  m_PrefabAsset: {fileID: 0}
-  m_GameObject: {fileID: 1270791306}
-  m_Enabled: 1
-  m_EditorHideFlags: 0
-  m_Script: {fileID: 11500000, guid: 91c18a853de2e5049bc17361fc93b5ee, type: 3}
-  m_Name: 
-  m_EditorClassIdentifier: 
-  cv: 0
-  mixerGroup: {fileID: 243905730911449828, guid: 0f878cdc2b0f396499ef3380fce5e3c7,
-    type: 2}
-  audioClips: []
-  overrideMixer: 1
-  debug: 0
-  pitchRange: {x: 0.167, y: 2}
-  m_pitch: 1
-  smoothPitch: 1
-  pitchSmoothSpeed: 0.067
-  m_volume: 1
-  smoothVolume: 1
-  volumeSmoothSpeed: 0.67
-  pitchParam: Pitch_BackgroundMusic
-  volumeParam: Volume_BackgroundMusic
 --- !u!82 &1270791308
 AudioSource:
   m_ObjectHideFlags: 0
