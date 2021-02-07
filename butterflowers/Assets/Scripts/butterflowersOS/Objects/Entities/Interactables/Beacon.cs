@@ -38,7 +38,7 @@ namespace butterflowersOS.Objects.Entities.Interactables
         }
 
         [System.Serializable]
-        public struct Transition
+        public class Transition
         {
             [System.Serializable] public class Event :UnityEvent<Beacon, Vector3> {}
             public Event onBegin, onEnd;
@@ -46,15 +46,32 @@ namespace butterflowersOS.Objects.Entities.Interactables
             [HideInInspector] public Vector3 posA, posB;
             [HideInInspector] public Vector3 scaleA, scaleB;
 
-            public float time;
-            public float duration;
-            public float height;
+            public float time = 0f;
+            public float duration = 0f;
+            public float height = 0f;
 
             public AnimationCurve heightCurve;
             public AnimationCurve scaleCurve;
             public AnimationCurve positionCurve;
 
-            public bool isValid;
+            public Transition(Transition copy)
+            {
+                this.onBegin = copy.onBegin;
+                this.onEnd = copy.onEnd;
+
+                this.posA = copy.posA;
+                this.posB = copy.posB;
+                this.scaleA = copy.scaleA;
+                this.scaleB = copy.scaleB;
+
+                this.time = copy.time;
+                this.duration = copy.duration;
+                this.height = copy.height;
+
+                this.heightCurve = copy.heightCurve;
+                this.scaleCurve = copy.scaleCurve;
+                this.positionCurve = copy.positionCurve;
+            }
 
             public bool Continue(Beacon beacon, float dt)
             {
@@ -122,7 +139,7 @@ namespace butterflowersOS.Objects.Entities.Interactables
 
         // Attributes
 
-        [SerializeField] Transition transition;
+        Transition transition = null;
         [SerializeField] bool transitioning = false;
     
         [SerializeField] bool m_discovered = false, m_destroyed = false;
@@ -184,6 +201,8 @@ namespace butterflowersOS.Objects.Entities.Interactables
             if (transitioning) 
             {
                 transitioning = !transition.Continue(this, Time.deltaTime);
+                if (!transitioning) transition = null;
+                
                 ToggleCapabilities(!transitioning);
             }
         }
@@ -288,8 +307,8 @@ namespace butterflowersOS.Objects.Entities.Interactables
             this.flower = null;
 
             this.m_file = null;
-            
-            this.transition = default(Transition);
+
+            this.transition = null;
 
             this.transitioning = false;
             this.m_discovered = false;
@@ -495,11 +514,19 @@ namespace butterflowersOS.Objects.Entities.Interactables
 
         public void StartTransition(Transition transition)
         {
+            if (transition == null) 
+            {
+                this.transition = null;
+                transitioning = false;
+                
+                return;
+            }
+
             var _transition = transition;
-            _transition.time = 0f;
-        
+                _transition.time = 0f;
+
             this.transition = _transition;
-            if (_transition.isValid) transitioning = true;
+            transitioning = true;
         }
 
         void ReleaseTransition()

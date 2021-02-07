@@ -238,25 +238,25 @@ namespace butterflowersOS.Objects.Managers
 			beacon.transform.rotation = rotation;
 
 
-			Transition _transition = default(Transition);
+			Transition _transition = null;
 			if (transition == TransitionType.Flower) 
 			{
-				_transition = flowerTransition;
-				_transition.posA = position;
-				_transition.posB = origin;
-				_transition.scaleA = Vector3.zero;
-				_transition.scaleB = preset.normalBeaconScale * Vector3.one;
+				_transition = new Transition(flowerTransition) {
+					posA = position,
+					posB = origin,
+					scaleA = Vector3.zero,
+					scaleB = preset.normalBeaconScale * Vector3.one
+				};
 			}
 			else if (transition == TransitionType.Spawn) 
 			{
-				_transition = spawnTransition;
-				_transition.posA = _transition.posB = origin;
-				_transition.scaleA = Vector3.zero;
-				_transition.scaleB = preset.normalBeaconScale * Vector3.one;
+				_transition = new Transition(spawnTransition) {
+					posA = origin, posB = origin, scaleA = Vector3.zero, scaleB = preset.normalBeaconScale * Vector3.one
+				};
 			}
+			if(_transition != null) _transition.time = 0f; // Reset transition time
 
-			_transition.time = 0f; // Reset transition time
-
+			
 			beacon.Register(type, state, origin, _transition, load);
 			
 			var filetype = Library.FileType.World;
