@@ -346,7 +346,7 @@ namespace butterflowersOS.Objects.Managers
             speedCurve.Dispose();
             deathCurve.Dispose();
 
-            _randoms.Dispose();
+            if(_randoms.IsCreated) _randoms.Dispose();
         }
 
         #region Cycle
