@@ -27,6 +27,8 @@ namespace butterflowersOS.Presets
             public bool loadThumbnailsInEditor = true;
             public bool generateThumbnailsInEditor = true;
             public bool useDesktopFilesForDebugBeacons = true;
+            public bool allowDebugSpawn = true;
+            public bool allowDebugTimeSkip = true;
 
         [Header("Time Attributes")]
             public float hoursPerDay = 24f;
