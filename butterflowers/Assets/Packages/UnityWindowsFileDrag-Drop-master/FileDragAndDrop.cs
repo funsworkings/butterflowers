@@ -15,13 +15,17 @@ public class FileDragAndDrop : MonoBehaviour
 {
     void OnEnable ()
     {
-        // must be installed on the main thread to get the right thread id.
-        UnityDragAndDropHook.InstallHook();
-        UnityDragAndDropHook.OnDroppedFiles += OnFiles;
+        #if UNITY_EDITOR_WIN || UNITY_STANDALONE_WIN
+            // must be installed on the main thread to get the right thread id.
+            UnityDragAndDropHook.InstallHook();
+            UnityDragAndDropHook.OnDroppedFiles += OnFiles;
+        #endif
     }
     void OnDisable()
     {
-        UnityDragAndDropHook.UninstallHook();
+        #if UNITY_EDITOR_WIN || UNITY_STANDALONE_WIN
+            UnityDragAndDropHook.UninstallHook();
+        #endif
     }
 
     void OnFiles(List<string> aFiles, POINT aPos)
