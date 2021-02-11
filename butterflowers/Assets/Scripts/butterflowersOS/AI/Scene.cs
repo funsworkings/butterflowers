@@ -50,9 +50,12 @@ namespace butterflowersOS.AI
 
 		IEnumerator Initialize()
 		{
-			Save.LoadGameData<GameData>(createIfEmpty: true);
-			while (!Save.load) yield return null;
-			
+			if (!Save.load) 
+			{
+				Save.LoadGameData<GameData>(createIfEmpty: true);
+				while (!Save.load) yield return null;
+			}
+
 			Loader.Load(.1f, 1f); // Trigger load
 			Import();
 

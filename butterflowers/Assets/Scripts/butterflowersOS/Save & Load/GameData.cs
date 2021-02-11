@@ -40,7 +40,7 @@ namespace uwu
 
 	    public Profile profile = new Profile();
 	    
-	    public byte[] images = new byte[]{};
+	    [HideInInspector] public byte[] images = new byte[]{};
 	    public ushort image_height = 0;
     }
 
