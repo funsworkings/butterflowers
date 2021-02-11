@@ -6,6 +6,8 @@ namespace butterflowersOS.Objects.Base
 {
     public class Focusable : Interactable
     {
+        public static Focusable Queued, Active;
+        
         // Events
 
         public UnityEvent onFocused, onLostFocus, onQueue;
@@ -29,6 +31,7 @@ namespace butterflowersOS.Objects.Base
         #region Accessors
 
         public bool isFocused => focused;
+        public bool isQueued => queued;
 
         public new FocusCamera camera => overrideCamera;
 
@@ -60,8 +63,9 @@ namespace butterflowersOS.Objects.Base
         {
             base.OnUpdate();
         
-            if (queued) {
-                if (Input.GetKeyDown(Controls.Focus))
+            if (queued) 
+            {
+                if (Input.GetMouseButtonUp(1))
                     Focus();
             }
         }
@@ -69,9 +73,14 @@ namespace butterflowersOS.Objects.Base
         public bool Focus()
         {
             if (focused) return false;
+            if (Queued != this) return false;
+            
             focused = true;
 
             Debug.Log("Focus on " + gameObject.name);
+
+            Active = this;
+            Queued = null;
 
             onFocused.Invoke();
             if (onFocus != null)
@@ -87,6 +96,8 @@ namespace butterflowersOS.Objects.Base
             if (!focused) return false;
             focused = false;
 
+            Active = null;
+            
             onLostFocus.Invoke();
             if (onLoseFocus != null)
                 onLoseFocus();
@@ -96,7 +107,10 @@ namespace butterflowersOS.Objects.Base
 
         #region Interactable callbacks
 
-        protected override void onHover(Vector3 point, Vector3 normal) {
+        protected override void onHover(Vector3 point, Vector3 normal)
+        {
+            if(Active != this) Queued = this;
+            
             queued = true;
             onQueue.Invoke();
         
@@ -105,6 +119,8 @@ namespace butterflowersOS.Objects.Base
 
         protected override void onUnhover() {
             queued = false;
+
+            if (Queued == this) Queued = null;
 
             base.onUnhover();
         }

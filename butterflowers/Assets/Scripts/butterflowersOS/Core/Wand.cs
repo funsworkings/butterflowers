@@ -14,6 +14,7 @@ using UnityEngine;
 using UnityEngine.EventSystems;
 using UnityEngine.Serialization;
 using uwu.Gameplay;
+using uwu.Settings;
 using uwu.Snippets;
 using uwu.UI.Behaviors.Visibility;
 using uwu.UI.Extras;
@@ -600,6 +601,13 @@ namespace butterflowersOS.Core
                     if (_interactable.IsValid() && _interactable is ITooltip) 
                     {
                         message = ((ITooltip) _interactable).GetInfo();
+                    }
+                    else 
+                    {
+                        if (Focusable.Active != null) 
+                        {
+                            message = Copy.FormatActionItem(Copy.LoseFocusText);
+                        }
                     }
                 }
                 else 

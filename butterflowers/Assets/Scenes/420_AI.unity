@@ -1185,6 +1185,7 @@ MonoBehaviour:
   preset: {fileID: 11400000, guid: 45ffdf5e02efb4848942aaeb5d029f6e, type: 2}
   butterflowers: {fileID: 0}
   beacons: {fileID: 0}
+  focus: {fileID: 0}
   nest: {fileID: 0}
   m_spells: 1
   cursor: {fileID: 180030195}
@@ -8406,6 +8407,7 @@ Transform:
   - {fileID: 1758789786}
   - {fileID: 2138830238}
   - {fileID: 1238557745}
+  - {fileID: 1963656311}
   m_Father: {fileID: 0}
   m_RootOrder: 2
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
@@ -11026,6 +11028,57 @@ Transform:
     type: 3}
   m_PrefabInstance: {fileID: 1945746562}
   m_PrefabAsset: {fileID: 0}
+--- !u!1 &1963656310
+GameObject:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  serializedVersion: 6
+  m_Component:
+  - component: {fileID: 1963656311}
+  - component: {fileID: 1963656312}
+  m_Layer: 2
+  m_Name: Camera Blend
+  m_TagString: Untagged
+  m_Icon: {fileID: 0}
+  m_NavMeshLayer: 0
+  m_StaticEditorFlags: 0
+  m_IsActive: 1
+--- !u!4 &1963656311
+Transform:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 1963656310}
+  m_LocalRotation: {x: -0, y: -0, z: -0, w: 1}
+  m_LocalPosition: {x: 0, y: 0, z: 0}
+  m_LocalScale: {x: 1, y: 1, z: 1}
+  m_Children: []
+  m_Father: {fileID: 1073008907}
+  m_RootOrder: 3
+  m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
+--- !u!114 &1963656312
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 1963656310}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: c1370d38c6315ed4c91ff4badde10db5, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
+  transitionCamera: {fileID: 2016326770}
+  cinemachineBrain: {fileID: 243631794}
+  blendDefinition: {fileID: 11400000, guid: 90685a7bd88e7e1409a515826fa201e6, type: 2}
+  cinemachineBlendMultiplier: 1
+  transitioner: {fileID: 2016326769}
+  transitionPlane: {fileID: 879372607}
+  planeOpacity: {fileID: 879372606}
+  planeAnimation: {fileID: 879372603}
 --- !u!1 &2016326768
 GameObject:
   m_ObjectHideFlags: 0
