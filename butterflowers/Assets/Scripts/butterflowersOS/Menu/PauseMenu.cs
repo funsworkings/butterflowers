@@ -1,6 +1,7 @@
 ﻿using System;
 using System.Collections;
 using butterflowersOS.Core;
+using TMPro;
 using UnityEngine;
 using uwu.Snippets.Load;
 using uwu.Timeline.Core;
@@ -19,6 +20,7 @@ namespace butterflowersOS.Menu
 
 		ToggleOpacity opacity;
 		[SerializeField] GameObject teleporter;
+		[SerializeField] TMP_Text exitTextElement;
 
 		bool disposeInProgress = false;
 		public bool Dispose => disposeInProgress;
@@ -72,6 +74,7 @@ namespace butterflowersOS.Menu
 		public void ToggleTeleport(bool active)
 		{
 			teleporter.SetActive(active);
+			exitTextElement.text = string.Format("{0}. exit", (active) ? "iii" : "ii");
 		}
 		
 		#endregion
