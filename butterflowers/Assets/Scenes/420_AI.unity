@@ -7302,33 +7302,38 @@ PrefabInstance:
       objectReference: {fileID: 0}
     - target: {fileID: 2017255769437621799, guid: 4ec5ab60b92a4e9419bebcfffedef8c6,
         type: 3}
+      propertyPath: m_text
+      value: iii.  exit
+      objectReference: {fileID: 0}
+    - target: {fileID: 2017255769437621799, guid: 4ec5ab60b92a4e9419bebcfffedef8c6,
+        type: 3}
       propertyPath: m_textInfo.lineCount
-      value: 0
+      value: 1
       objectReference: {fileID: 0}
     - target: {fileID: 2017255769437621799, guid: 4ec5ab60b92a4e9419bebcfffedef8c6,
         type: 3}
       propertyPath: m_textInfo.pageCount
-      value: 0
+      value: 1
       objectReference: {fileID: 0}
     - target: {fileID: 2017255769437621799, guid: 4ec5ab60b92a4e9419bebcfffedef8c6,
         type: 3}
       propertyPath: m_textInfo.wordCount
-      value: 0
+      value: 2
       objectReference: {fileID: 0}
     - target: {fileID: 2017255769437621799, guid: 4ec5ab60b92a4e9419bebcfffedef8c6,
         type: 3}
       propertyPath: m_textInfo.spaceCount
-      value: 0
+      value: 2
       objectReference: {fileID: 0}
     - target: {fileID: 2017255769437621799, guid: 4ec5ab60b92a4e9419bebcfffedef8c6,
         type: 3}
       propertyPath: m_textInfo.characterCount
-      value: 0
+      value: 10
       objectReference: {fileID: 0}
     - target: {fileID: 2017255769902890854, guid: 4ec5ab60b92a4e9419bebcfffedef8c6,
         type: 3}
       propertyPath: m_text
-      value: iii.  terrain
+      value: ii.  terrain
       objectReference: {fileID: 0}
     - target: {fileID: 2017255769902890854, guid: 4ec5ab60b92a4e9419bebcfffedef8c6,
         type: 3}
@@ -7353,7 +7358,7 @@ PrefabInstance:
     - target: {fileID: 2017255769902890854, guid: 4ec5ab60b92a4e9419bebcfffedef8c6,
         type: 3}
       propertyPath: m_textInfo.characterCount
-      value: 13
+      value: 12
       objectReference: {fileID: 0}
     - target: {fileID: 2017255770392569488, guid: 4ec5ab60b92a4e9419bebcfffedef8c6,
         type: 3}
