@@ -18,9 +18,14 @@ namespace butterflowersOS.Menu
 		// Properties
 
 		ToggleOpacity opacity;
+		[SerializeField] GameObject teleporter;
 
 		bool disposeInProgress = false;
 		public bool Dispose => disposeInProgress;
+		
+		// Attributes
+
+		[SerializeField] int teleportSceneIndex = 0;
 		
 		
 		void Awake()
@@ -58,6 +63,15 @@ namespace butterflowersOS.Menu
 		{
 			opacity.Hide();
 			AudioListener.pause = false;
+		}
+		
+		#endregion
+		
+		#region Teleportation
+
+		public void ToggleTeleport(bool active)
+		{
+			teleporter.SetActive(active);
 		}
 		
 		#endregion
@@ -100,6 +114,22 @@ namespace butterflowersOS.Menu
 			if (disposeInProgress) return;
 			
 			Close();
+		}
+
+		public void Teleport()
+		{
+			StartCoroutine("Teleporting");
+			disposeInProgress = true;
+		}
+
+		IEnumerator Teleporting()
+		{
+			opacity.Hide();
+			while (opacity.Visible) 
+				yield return null;
+			
+			sceneAudio.FadeOut();
+			SceneLoader.Instance.GoToScene(teleportSceneIndex);
 		}
 		
 		#endregion
