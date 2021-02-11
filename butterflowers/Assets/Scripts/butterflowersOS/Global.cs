@@ -208,11 +208,13 @@ namespace butterflowersOS
 
             if (entity is Focusable) 
             {
-                if ((entity as Focusable) == Focusable.Queued) actions = FocusText;
-                else actions = LoseFocusText;
+                if ((entity as Focusable) == Focusable.Queued) 
+                {
+                    actions = FocusText;
 
-                actions = FormatActionItem(actions);
-                if (separator != null) actions = actions.Insert(0, separator);
+                    actions = FormatActionItem(actions);
+                    if (separator != null) actions = actions.Insert(0, separator);
+                }
             }
 
             return (info + actions);
