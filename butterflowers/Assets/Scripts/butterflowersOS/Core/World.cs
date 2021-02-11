@@ -302,7 +302,9 @@ namespace butterflowersOS.Core
             while(Cutscenes.inprogress) yield return null; // Wait for cutscenes to wrap on open before showing game panel
 
             gamePanel.Show();
+            
             pauseMenu.enabled = true;
+            pauseMenu.ToggleTeleport(_Save.IsProfileValid());
         }
 
         public void Cycle(bool refresh)

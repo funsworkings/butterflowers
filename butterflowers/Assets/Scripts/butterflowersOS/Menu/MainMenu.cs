@@ -117,7 +117,7 @@ namespace butterflowersOS.Menu
 
             Close();
 
-            int sceneIndex = (Save.IsProfileValid()) ? 2 : 1;
+            int sceneIndex = 1;
             MoveToTheGame(sceneIndex);
         }
 
