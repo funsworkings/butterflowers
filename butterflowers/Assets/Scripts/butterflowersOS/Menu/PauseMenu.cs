@@ -48,7 +48,7 @@ namespace butterflowersOS.Menu
 
 		void OnDestroy()
 		{
-			AudioListener.pause = false; // Discard audio listener changes
+			AudioListener.pause = false; // Discard audio listener changess
 		}
 
 		#region Menu
