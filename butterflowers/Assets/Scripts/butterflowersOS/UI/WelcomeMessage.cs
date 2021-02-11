@@ -7,36 +7,35 @@ using UnityEngine;
 using UnityEngine.UI;
 using UnityEngine.UI.Extensions;
 using uwu;
+using uwu.Extensions;
 
 namespace butterflowersOS.UI
 {
     public class WelcomeMessage : MonoBehaviour
     {
-        World World;
-        
         // Properties
 
-        [SerializeField] TMP_Text text;
+        Animator animator;
+        TMP_Text text;
+        
+        // Attributes
 
-        // Start is called before the first frame update
-        IEnumerator Start()
+        [SerializeField] Color usernameColor;
+
+        void Awake()
         {
-            World = World.Instance;
-            while (!World.LOAD) yield return null;
-
-            var username = World.username;
-            DisplayUsername(username);
+            animator = GetComponent<Animator>();
+            text = GetComponentInChildren<TMP_Text>();
         }
 
-        void DisplayUsername(string username)
+        public void DisplayUsername(string username)
         {
-            if (string.IsNullOrEmpty(username)) 
-            {
-                text.gameObject.SetActive(false);
-                return;
-            }
+            if (string.IsNullOrEmpty(username)) return;
+
+            string colorHex = Extensions.ParseColor(usernameColor);
+            text.text = string.Format("welcome back <color={0}>{1}</color>!", colorHex, username);
             
-            text.text = username;
+            animator.SetTrigger("show");
         }
     }
 }

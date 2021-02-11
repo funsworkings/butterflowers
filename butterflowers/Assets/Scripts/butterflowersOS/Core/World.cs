@@ -16,6 +16,7 @@ using butterflowersOS.Objects.Entities;
 using butterflowersOS.Objects.Entities.Interactables;
 using butterflowersOS.Objects.Managers;
 using butterflowersOS.Presets;
+using butterflowersOS.UI;
 using Neue.Agent.Brain.Data;
 using Objects.Managers;
 using UnityEngine;
@@ -103,6 +104,9 @@ namespace butterflowersOS.Core
         [SerializeField] Cage Cage = null;
 
         [SerializeField] Wand wand;
+
+        [Header("UI")] 
+        [SerializeField] WelcomeMessage welcomeMessage;
 
         // Attributes
 
@@ -292,9 +296,11 @@ namespace butterflowersOS.Core
            
             LOAD = true;
             Loader.Dispose();
+
+            if(Cutscenes.HasCompletedIntro) welcomeMessage.DisplayUsername(username);
             
             while(Cutscenes.inprogress) yield return null; // Wait for cutscenes to wrap on open before showing game panel
-            
+
             gamePanel.Show();
             pauseMenu.enabled = true;
         }
