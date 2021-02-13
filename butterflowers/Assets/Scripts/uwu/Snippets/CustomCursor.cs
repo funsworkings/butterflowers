@@ -19,13 +19,13 @@ namespace uwu.Snippets
 		[SerializeField] Setting[] settings;
 
 		private void OnApplicationFocus(bool hasFocus)
-		{
-			NativeCursor.visible = hasFocus;
+		{ 
+			//NativeCursor.visible = hasFocus;
 		}
 
 		private void OnApplicationPause(bool pauseStatus)
 		{
-			NativeCursor.visible = !pauseStatus;
+			//NativeCursor.visible = !pauseStatus;
 		}
 
 		// Update is called once per frame
@@ -37,10 +37,6 @@ namespace uwu.Snippets
 				var tex = setting.icon;
 
 				var mode = CursorMode.Auto;
-
-#if UNITY_STANDALONE_OSX && !UNITY_EDITOR
-                mode = CursorMode.ForceSoftware;
-#endif
 
 				var visible = NativeCursor.visible = (tex != null);
 				if(visible)
