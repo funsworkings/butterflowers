@@ -10,7 +10,7 @@ Material:
   m_Name: Butterfly
   m_Shader: {fileID: 4800000, guid: 29ea3f604e89a4f0591507e26dc6a9a2, type: 3}
   m_ShaderKeywords: _EMISSION
-  m_LightmapFlags: 6
+  m_LightmapFlags: 2
   m_EnableInstancingVariants: 1
   m_DoubleSidedGI: 0
   m_CustomRenderQueue: -1
@@ -21,6 +21,10 @@ Material:
     m_TexEnvs:
     - _BumpMap:
         m_Texture: {fileID: 0}
+        m_Scale: {x: 1, y: 1}
+        m_Offset: {x: 0, y: 0}
+    - _ButterflyAlpha:
+        m_Texture: {fileID: 2800000, guid: e1ce2ebce3a5d415cbdbdc23cc1c5e86, type: 3}
         m_Scale: {x: 1, y: 1}
         m_Offset: {x: 0, y: 0}
     - _DetailAlbedoMap:
@@ -97,7 +101,7 @@ Material:
         m_Offset: {x: 0, y: 0}
     m_Floats:
     - _BumpScale: 1
-    - _Cutoff: 0.5
+    - _Cutoff: 0.35
     - _Death: 0
     - _DetailNormalMapScale: 1
     - _DstBlend: 0
@@ -107,15 +111,15 @@ Material:
     - _GlossyReflections: 1
     - _Metallic: 0
     - _Mode: 0
-    - _Noise: 0
-    - _NoiseStrength: 1
+    - _Noise: 0.091
+    - _NoiseStrength: 0
     - _OcclusionStrength: 1
     - _OverrideColorWeight: 0
     - _Parallax: 0.02
     - _SinWave: 1
     - _SmoothnessTextureChannel: 0
     - _SpecularHighlights: 1
-    - _Speed: 1
+    - _Speed: 2
     - _SrcBlend: 1
     - _Strength: 0
     - _Tiling: 1
@@ -131,5 +135,5 @@ Material:
     - _EmissionColor: {r: 0.125, g: 0.125, b: 0.125, a: 1}
     - _OverrideColor: {r: 1, g: 1, b: 1, a: 1}
     - _Silhouette: {r: 0.48718402, g: 0.57977927, b: 0.6415094, a: 0.09803922}
-    - _Vector0: {r: -0.3, g: 0, b: 0.5, a: 0}
+    - _Vector0: {r: 2.5, g: 0, b: 5, a: 0}
     - _emiscolor: {r: 0, g: 0, b: 0, a: 0}

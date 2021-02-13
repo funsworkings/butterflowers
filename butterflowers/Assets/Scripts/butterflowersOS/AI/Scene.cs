@@ -50,9 +50,12 @@ namespace butterflowersOS.AI
 
 		IEnumerator Initialize()
 		{
-			Save.LoadGameData<GameData>(createIfEmpty: true);
-			while (!Save.load) yield return null;
-			
+			if (!Save.load) 
+			{
+				Save.LoadGameData<GameData>(createIfEmpty: true);
+				while (!Save.load) yield return null;
+			}
+
 			Loader.Load(.1f, 1f); // Trigger load
 			Import();
 
@@ -122,9 +125,15 @@ namespace butterflowersOS.AI
 		void Import()
 		{
 			byte[] images = Save.data.images;
-			ushort image_height = Save.data.image_height;
 			
-			if(images.Length > 0 && image_height > 0) ApplyImagesToParticleSystem(images, Library._COLUMNS, image_height); // Apply ground texture
+			ushort image_height = Save.data.image_height;
+			ushort image_width = Save.data.image_width;
+
+			if (images.Length > 0 && image_height > 0 && image_width > 0) 
+			{
+				ApplyImagesToParticleSystem(images, image_width, image_height); // Apply ground texture
+			}
+
 			agent.Initialize(Save.data.surveillanceData);
 		}
 

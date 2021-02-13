@@ -1,3 +1,4 @@
+using System;
 using System.Linq;
 using butterflowersOS.Core;
 using butterflowersOS.Data;
@@ -175,6 +176,11 @@ namespace butterflowersOS.Objects.Entities
                 //if (advanced)
                 //  active = false; // Pause sun when crosses into new day (debug)
             }
+        }
+
+        void OnDestroy()
+        {
+            Time.timeScale = 1f; // Reset time scale back to normal
         }
 
         #endregion

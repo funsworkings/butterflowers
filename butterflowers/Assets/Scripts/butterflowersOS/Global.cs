@@ -160,8 +160,8 @@ namespace butterflowersOS
         public static int ActionSize = 67;
         public static int SubtextSize = 72;
         
-        public static string FocusText = string.Format("Press {0} to focus", Controls.Focus.ToString());
-        public static string LoseFocusText = string.Format("Press {0} to lose focus", Controls.LoseFocus.ToString());
+        public static string FocusText = string.Format("Right click to focus");
+        public static string LoseFocusText = string.Format("Right click to lose focus");
 
         public static string AppendSubtext(this string info, Entity entity)
         {
@@ -208,11 +208,13 @@ namespace butterflowersOS
 
             if (entity is Focusable) 
             {
-                if (!(entity as Focusable).isFocused) actions = FocusText;
-                else actions = LoseFocusText;
+                if ((entity as Focusable) == Focusable.Queued) 
+                {
+                    actions = FocusText;
 
-                actions = FormatActionItem(actions);
-                if (separator != null) actions = actions.Insert(0, separator);
+                    actions = FormatActionItem(actions);
+                    if (separator != null) actions = actions.Insert(0, separator);
+                }
             }
 
             return (info + actions);
@@ -240,13 +242,13 @@ namespace butterflowersOS
             return (info + contextual);
         }
 
-        static string FormatActionItem(string action)
+        public static string FormatActionItem(string action)
         {
             string format = "<size={0}%><color={1}>-  {2}  -</color></size>";
             return string.Format(format, ActionSize, COLOR_LOOKUP.ACTION, action);
         }
 
-        static string FormatSubtextItem(string subtext)
+        public static string FormatSubtextItem(string subtext)
         {
             string format = "<i><size={0}%><color={1}>{2}</color></size></i>";
             return string.Format(format, SubtextSize, COLOR_LOOKUP.SUBTEXT, subtext.ToLower());
@@ -256,7 +258,7 @@ namespace butterflowersOS
     public static class Controls
     {
         public static KeyCode Focus = KeyCode.LeftControl;
-        public static KeyCode LoseFocus = KeyCode.Backspace;
+        public static KeyCode LoseFocus = KeyCode.LeftControl;
     }
     
 }

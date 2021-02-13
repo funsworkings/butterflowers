@@ -102,7 +102,7 @@ namespace uwu.Timeline.Core
 				debugTriggerPlay = false;
 			}
 
-			if (debugTriggerCancel) 
+			if (debugTriggerCancel || (Input.GetKey(KeyCode.LeftControl) && Input.GetKeyUp(KeyCode.X))) 
 			{
 				Cancel();	
 				debugTriggerCancel = false;

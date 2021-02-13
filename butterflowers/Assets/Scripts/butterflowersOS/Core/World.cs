@@ -16,6 +16,7 @@ using butterflowersOS.Objects.Entities;
 using butterflowersOS.Objects.Entities.Interactables;
 using butterflowersOS.Objects.Managers;
 using butterflowersOS.Presets;
+using butterflowersOS.UI;
 using Neue.Agent.Brain.Data;
 using Objects.Managers;
 using UnityEngine;
@@ -103,6 +104,9 @@ namespace butterflowersOS.Core
         [SerializeField] Cage Cage = null;
 
         [SerializeField] Wand wand;
+
+        [Header("UI")] 
+        [SerializeField] WelcomeMessage welcomeMessage;
 
         // Attributes
 
@@ -292,11 +296,15 @@ namespace butterflowersOS.Core
            
             LOAD = true;
             Loader.Dispose();
+
+            if(Cutscenes.HasCompletedIntro) welcomeMessage.DisplayUsername(username);
             
             while(Cutscenes.inprogress) yield return null; // Wait for cutscenes to wrap on open before showing game panel
-            
+
             gamePanel.Show();
+            
             pauseMenu.enabled = true;
+            pauseMenu.ToggleTeleport(_Save.IsProfileValid());
         }
 
         public void Cycle(bool refresh)
@@ -389,7 +397,7 @@ namespace butterflowersOS.Core
                 {
                     Texture2D tex;
                     
-                    IMAGES = Library.ExportSheet("test", out IMAGE_ROWS, out IMAGE_COLUMNS, out tex, oColumns:1);
+                    IMAGES = Library.ExportSheet("test", out IMAGE_ROWS, out IMAGE_COLUMNS, out tex);
 
                     if (!Cutscenes.outro) 
                     {
@@ -511,17 +519,17 @@ namespace butterflowersOS.Core
             Texture2D tex;
                     
             IMAGES = Library.ExportSheet("test", out IMAGE_ROWS, out IMAGE_COLUMNS, out tex);
-            ExportNeueAgent(IMAGES, (ushort)IMAGE_ROWS);
+            ExportNeueAgent(IMAGES, (ushort)IMAGE_ROWS, (ushort)IMAGE_COLUMNS);
         }
         
-        public void ExportNeueAgent(byte[] images, ushort image_height)
+        public void ExportNeueAgent(byte[] images, ushort image_height, ushort image_width)
         {
             string file = "";
             string ext = "";
             
             string path = GetExportPath(out file, out ext);
             
-            BrainData data = new BrainData(_Save.data, images, image_height);
+            BrainData data = new BrainData(_Save.data, images, image_height, image_width);
             
             bool success = ExportProfile(path, data);
             Debug.LogWarningFormat("{0} generating profile => {1}", (success)? "Success":"Fail", path);
@@ -675,6 +683,7 @@ namespace butterflowersOS.Core
                 _Save.data.profile = profile = brainData.profile;
                 _Save.data.images = brainData.images;
                 _Save.data.image_height = brainData.image_height;
+                _Save.data.image_width = brainData.image_width;
 
                 _Save.data.agent_event_stack = brainData.surveillanceData.Length; // Total stack of events to parse from
             }

@@ -115,6 +115,12 @@ namespace butterflowersOS.Objects.Managers
 				_Save.SaveGameData(); // Save all cutscene data immediately when completed!
 			}
 		}
+		
+		#region Accessors
+
+		public bool HasCompletedIntro => intro;
+		
+		#endregion
 
 		#region Intro/outro
 
