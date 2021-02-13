@@ -18,6 +18,16 @@ namespace uwu.Snippets
 
 		[SerializeField] Setting[] settings;
 
+		private void OnApplicationFocus(bool hasFocus)
+		{
+			NativeCursor.visible = hasFocus;
+		}
+
+		private void OnApplicationPause(bool pauseStatus)
+		{
+			NativeCursor.visible = !pauseStatus;
+		}
+
 		// Update is called once per frame
 		void Update()
 		{
