@@ -11,7 +11,7 @@ namespace Shibuya24.Utility
         /// <summary>
         /// Callback to return the local path of a drag-and-drop file
         /// </summary>
-        public static Action<string> onDragAndDropFilePath;
+        public static Action<string> onDragAndDropFiles;
 
         /// <summary>
         /// Initialization functions that must be called
@@ -31,9 +31,9 @@ namespace Shibuya24.Utility
 
         // call from Objective-C
         [MonoPInvokeCallback(typeof(callback_delegate))]
-        private static void cs_callback(string val)
+        private static void cs_callback(string ret)
         {
-            onDragAndDropFilePath?.Invoke(val);
+            onDragAndDropFiles?.Invoke(ret);
         }
 #endif
     }
