@@ -125,9 +125,15 @@ namespace butterflowersOS.AI
 		void Import()
 		{
 			byte[] images = Save.data.images;
-			ushort image_height = Save.data.image_height;
 			
-			if(images.Length > 0 && image_height > 0) ApplyImagesToParticleSystem(images, Library._COLUMNS, image_height); // Apply ground texture
+			ushort image_height = Save.data.image_height;
+			ushort image_width = Save.data.image_width;
+
+			if (images.Length > 0 && image_height > 0 && image_width > 0) 
+			{
+				ApplyImagesToParticleSystem(images, image_width, image_height); // Apply ground texture
+			}
+
 			agent.Initialize(Save.data.surveillanceData);
 		}
 
