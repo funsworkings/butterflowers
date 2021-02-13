@@ -2169,6 +2169,10 @@
             <e p="EmojiOne Attribution.txt" t="Include" />
           </e>
         </e>
+        <e p="UniDragAndDrop" t="Include">
+          <e p="UniDragAndDrop.asmdef" t="Include" />
+          <e p="UniDragAndDrop.cs" t="Include" />
+        </e>
       </e>
       <e p="butterflowers.sln" t="IncludeFlat" />
       <e p="NonConvexCollider.csproj" t="IncludeRecursive" />
@@ -2178,6 +2182,7 @@
       <e p="Packages" t="ExcludeRecursive" />
       <e p="RuntimeTestAssembly.csproj" t="IncludeRecursive" />
       <e p="Temp\bin" t="ExcludeRecursive" />
+      <e p="UniDragAndDrop.csproj" t="IncludeRecursive" />
     </e>
   </component>
 </project>
