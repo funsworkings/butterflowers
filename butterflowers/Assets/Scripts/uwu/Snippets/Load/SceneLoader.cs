@@ -37,18 +37,20 @@ namespace uwu.Snippets.Load
 			}
 		}
 
-		void Start()
+		void OnEnable()
 		{
 			Loader = Loader.Instance;
 
-			if (Instance == this) {
+			if (Instance == this) 
+			{
 				SceneManager.sceneLoaded += OnSceneChanged;
 			}
 		}
 
-		void OnDestroy()
+		void OnDisable()
 		{
-			if (Instance == this) {
+			if (Instance == this) 
+			{
 				SceneManager.sceneLoaded -= OnSceneChanged;
 			}
 		}
