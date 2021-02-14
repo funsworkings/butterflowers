@@ -203,8 +203,11 @@ namespace butterflowersOS.Core
 
 		void UnsubscribeFromEvents()
 		{
-			Lib.onAddedFiles -= onAddedFiles;
-			Lib.onRemovedFiles -= onRemovedFiles;
+			if (Lib.IsValid()) 
+			{
+				Lib.onAddedFiles -= onAddedFiles;
+				Lib.onRemovedFiles -= onRemovedFiles;
+			}
 
 			Events.onFireEvent -= OnReceiveEvent;
 		}

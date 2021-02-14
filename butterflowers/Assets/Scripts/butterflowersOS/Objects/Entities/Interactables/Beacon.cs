@@ -5,6 +5,7 @@ using butterflowersOS.Objects.Entities.Interactables.Empty;
 using butterflowersOS.Presets;
 using UnityEngine;
 using UnityEngine.Events;
+using UnityEngine.Serialization;
 
 namespace butterflowersOS.Objects.Entities.Interactables
 {
@@ -111,7 +112,9 @@ namespace butterflowersOS.Objects.Entities.Interactables
         public static System.Action<Beacon, bool> onFire, onExtinguish;
         public static System.Action<Beacon> onUpdateState;
 
-        public UnityEvent OnFlower, OnVine, OnSpawn, OnDestroy, OnFire, OnExtinguish, OnFlowerSpawn;
+        public UnityEvent OnFlower, OnVine, OnSpawn;
+        [FormerlySerializedAs("OnDestroy")] public UnityEvent OnDestruct;
+        public UnityEvent OnFire, OnExtinguish, OnFlowerSpawn;
 
         // Properties
 
@@ -441,7 +444,7 @@ namespace butterflowersOS.Objects.Entities.Interactables
             ReleaseTransition();
             Fire();
 
-            OnDestroy.Invoke();
+            OnDestruct.Invoke();
             if (Destroyed != null && events) 
                 Destroyed(this);
 

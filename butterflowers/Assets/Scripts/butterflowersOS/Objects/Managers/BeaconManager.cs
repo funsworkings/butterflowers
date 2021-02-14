@@ -153,12 +153,15 @@ namespace butterflowersOS.Objects.Managers
 			Beacon.Destroyed -= onDestroyedBeacon;
 			Beacon.onFire -= onFireBeacon;
 			Beacon.onExtinguish -= onExtinguishBeacon;
-        
-			Library.onDeletedFiles -= UserDeletedFiles;
-			Library.onRecoverFiles -= UserRecoveredFiles;
+
+			if (Library.IsValid()) 
+			{
+				Library.onDeletedFiles -= UserDeletedFiles;
+				Library.onRecoverFiles -= UserRecoveredFiles;
+			}
 		}
 
-		void Update()
+		protected override void Update()
 		{
 			if(Input.GetKeyDown(KeyCode.LeftBracket) && preset.allowDebugSpawn) DebugBeaconFromDesktop();
 		}

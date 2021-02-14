@@ -325,8 +325,6 @@ namespace butterflowersOS.Objects.Managers
 
         protected override void OnDestroy()
         {
-            base.OnDestroy();
-
             Butterfly.OnRegister -= AddButterfly;
             Butterfly.OnUnregister -= RemoveButterfly;
 
@@ -347,6 +345,9 @@ namespace butterflowersOS.Objects.Managers
             deathCurve.Dispose();
 
             if(_randoms.IsCreated) _randoms.Dispose();
+            
+            
+            base.OnDestroy();
         }
 
         #region Cycle

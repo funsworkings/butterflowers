@@ -208,7 +208,7 @@ namespace butterflowersOS
 
             if (entity is Focusable) 
             {
-                if ((entity as Focusable) == Focusable.Queued) 
+                if ((entity as Focusable) == Focusable.QueueFocus) 
                 {
                     actions = FocusText;
 

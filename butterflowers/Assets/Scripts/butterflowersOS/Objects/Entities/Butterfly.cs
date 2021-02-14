@@ -32,7 +32,7 @@ namespace butterflowersOS.Objects.Entities
     
         TrailRenderer trailRenderer;
         Renderer[] renderers;
-        new Material material;
+        Material material;
         MaterialPropertyBlock propertyBlock; 
     
         [Header("Base")]
@@ -86,7 +86,7 @@ namespace butterflowersOS.Objects.Entities
 
         void OnDestroy()
         {
-            Unregister();
+            //Unregister();
         }
 
         void Update()

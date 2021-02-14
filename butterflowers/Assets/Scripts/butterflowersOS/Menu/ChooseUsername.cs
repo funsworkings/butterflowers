@@ -9,7 +9,7 @@ namespace butterflowersOS.Menu
 {
 	public class ChooseUsername : GenericMenu
 	{
-		Camera camera;
+		new Camera camera;
 		
 		// Events
 

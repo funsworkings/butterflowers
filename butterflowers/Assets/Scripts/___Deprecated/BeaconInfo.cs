@@ -24,11 +24,8 @@ public class BeaconInfo : MonoBehaviour
         string file = "";
         if (beacon != null)
             file = parseBeaconFileName(beacon);
-
-        var def_file = file;
-        return file;
         
-        return string.Format(template, def_file, color_hex);
+        return file;
     }
 
     public string parseBeaconFileName(Beacon beacon)

@@ -30,12 +30,6 @@ namespace uwu.Settings
 			    localData = new Data();*/
 		}
 
-		void OnDestroy()
-		{
-			//if(localData != null)
-			//    DataHandler.WriteJSON<Data>(localData, path, true);
-		}
-
 		#region Sound
 
 		public bool sfx => localData.sfx;
@@ -66,7 +60,7 @@ namespace uwu.Settings
 			{
 				return sensitivity;
 
-				if (globalSettings != null) {
+				/*if (globalSettings != null) {
 					var min = globalSettings.GetValueFromKey("sensitivity_min");
 					var max = globalSettings.GetValueFromKey("sensitivity_max");
 					var sensitive = sensitivity;
@@ -74,7 +68,7 @@ namespace uwu.Settings
 				}
 				else {
 					return sensitivity;
-				}
+				}*/
 			}
 			set => localData.sensitivity = Mathf.Clamp01(value);
 		}
@@ -87,7 +81,7 @@ namespace uwu.Settings
 			{
 				return brightness;
 
-				if (globalSettings != null) {
+				/*if (globalSettings != null) {
 					var min = globalSettings.GetValueFromKey("brightness_min");
 					var max = globalSettings.GetValueFromKey("brightness_max");
 					var bright = brightness;
@@ -96,7 +90,7 @@ namespace uwu.Settings
 				else {
 					Debug.Log("Global settings is NULL!");
 					return brightness;
-				}
+				}*/
 			}
 			set => localData.brightness = Mathf.Clamp01(value);
 		}
@@ -109,7 +103,7 @@ namespace uwu.Settings
 			{
 				return textSize;
 
-				if (globalSettings != null) {
+				/*if (globalSettings != null) {
 					var min = globalSettings.GetValueFromKey("textsize_min");
 					var max = globalSettings.GetValueFromKey("textsize_max");
 					var size = textSize;
@@ -117,7 +111,7 @@ namespace uwu.Settings
 				}
 				else {
 					return textSize;
-				}
+				}*/
 			}
 			set => localData.textSize = Mathf.Clamp01(value);
 		}

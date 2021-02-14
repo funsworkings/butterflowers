@@ -21,6 +21,8 @@ namespace uwu.Data
 				return true;
 			}
 			catch (Exception e) {
+				Debug.LogWarning(e.Message);
+				
 				file.Close();
 				return false;
 			}
@@ -42,6 +44,7 @@ namespace uwu.Data
 				}
 				catch (System.Exception err) 
 				{
+					Debug.LogWarning(err.Message);
 					return default;
 				}
 			}

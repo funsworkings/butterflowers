@@ -176,7 +176,7 @@ namespace butterflowersOS.Objects.Entities.Interactables
         {
             base.OnDestroyed();
 
-            if(damage != null)damage.onHit.RemoveListener(SpillKick);
+            if(damage != null) damage.onHit.RemoveListener(SpillKick);
 
             Beacon.Deleted -= onDestroyBeacon;
 

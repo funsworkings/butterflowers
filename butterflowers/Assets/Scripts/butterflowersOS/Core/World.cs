@@ -422,7 +422,7 @@ namespace butterflowersOS.Core
 
         void UnsubscribeToEvents()
         {
-            Library.onDiscoverFile -= DidDiscoverFile;
+            if(Library.IsValid()) Library.onDiscoverFile -= DidDiscoverFile;
         }
 
         #endregion

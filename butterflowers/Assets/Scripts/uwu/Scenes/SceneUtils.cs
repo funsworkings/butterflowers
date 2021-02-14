@@ -43,15 +43,6 @@ namespace uwu.Scenes
 			}
 		}
 
-		void OnDestroy()
-		{
-			foreach (var item in queue) {
-				var scene = item.Key;
-				//if(scene.id != target.id)
-				//  SceneManager.UnloadSceneAsync( // Unload all scenes in queue from memory
-			}
-		}
-
 		public void GoToScene(int index)
 		{
 			var scene = new Scene();
@@ -93,7 +84,7 @@ namespace uwu.Scenes
 					operation.op = SceneManager.LoadSceneAsync(index);
 				}
 				catch (Exception e) {
-					Debug.LogWarning("Unable to parse scene index from parameter, using id...");
+					Debug.LogWarning("Unable to parse scene index from parameter, using id... " + e.Message);
 
 					operation.op = SceneManager.LoadSceneAsync(scene.id);
 				}

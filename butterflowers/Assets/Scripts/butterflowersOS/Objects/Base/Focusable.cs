@@ -6,7 +6,7 @@ namespace butterflowersOS.Objects.Base
 {
     public class Focusable : Interactable
     {
-        public static Focusable Queued, Active;
+        public static Focusable QueueFocus, ActiveFocus;
         
         // Events
 
@@ -73,14 +73,14 @@ namespace butterflowersOS.Objects.Base
         public bool Focus()
         {
             if (focused) return false;
-            if (Queued != this) return false;
+            if (QueueFocus != this) return false;
             
             focused = true;
 
             Debug.Log("Focus on " + gameObject.name);
 
-            Active = this;
-            Queued = null;
+            ActiveFocus = this;
+            QueueFocus = null;
 
             onFocused.Invoke();
             if (onFocus != null)
@@ -96,7 +96,7 @@ namespace butterflowersOS.Objects.Base
             if (!focused) return false;
             focused = false;
 
-            Active = null;
+            ActiveFocus = null;
             
             onLostFocus.Invoke();
             if (onLoseFocus != null)
@@ -109,7 +109,7 @@ namespace butterflowersOS.Objects.Base
 
         protected override void onHover(Vector3 point, Vector3 normal)
         {
-            if(Active != this) Queued = this;
+            if(ActiveFocus != this) QueueFocus = this;
             
             queued = true;
             onQueue.Invoke();
@@ -120,7 +120,7 @@ namespace butterflowersOS.Objects.Base
         protected override void onUnhover() {
             queued = false;
 
-            if (Queued == this) Queued = null;
+            if (QueueFocus == this) QueueFocus = null;
 
             base.onUnhover();
         }

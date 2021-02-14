@@ -109,7 +109,7 @@ namespace butterflowersOS.Menu
 			while (opacity.Visible) 
 				yield return null;
 		
-			Application.Quit();
+			if (!Application.isEditor) { System.Diagnostics.Process.GetCurrentProcess().Kill(); }
 		}
 
 		public void Cancel()
