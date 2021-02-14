@@ -58,7 +58,7 @@ namespace butterflowersOS.Core
 		// External
 
 		FileNavigator Files = null;
-		TextureLoader TextureLoader = null;
+		[SerializeField] TextureLoader TextureLoader = null;
 
 		// Collections
 	
@@ -136,12 +136,7 @@ namespace butterflowersOS.Core
 			{
 				Destroy(gameObject);	
 			}
-		}
-
-		void Start()
-		{
-			TextureLoader = TextureLoader.Instance;
-		}
+		} 
 
 		void Update()
 		{

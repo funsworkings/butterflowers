@@ -12,7 +12,7 @@ using uwu.IO;
 
 namespace uwu.Textures
 {
-	public class TextureLoader : Singleton<TextureLoader>
+	public class TextureLoader : MonoBehaviour
 	{
 		// Collections
 		
@@ -22,6 +22,11 @@ namespace uwu.Textures
 		// Properties
 
 		private bool read = false;
+
+		void Awake()
+		{
+			
+		}
 
 		void Start()
 		{
@@ -73,6 +78,8 @@ namespace uwu.Textures
 			
 			Pop(file, result);
 			read = false;
+			
+			www.Dispose(); // Dispose WWW!
 		}
 		
 		#endregion
