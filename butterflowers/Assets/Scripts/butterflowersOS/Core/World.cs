@@ -840,7 +840,7 @@ namespace butterflowersOS.Core
 
                 bool exists = Library.RegisterFileInstance(path, Library.FileType.User);
                 if (exists)
-                    wand.AddBeacon(path, point, random: multipleImages); // Add beacon to scene via wand
+                    wand.AddBeacon(path, point, random: useRandomPosition); // Add beacon to scene via wand
                 else
                     Debug.LogErrorFormat("File => {0} does not exist on user's desktop!", path);
             }
