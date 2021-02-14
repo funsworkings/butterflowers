@@ -15,7 +15,7 @@ namespace uwu.Extensions
 		[Serializable]
 		class Wrapper<T>
 		{
-			public T[] array;
+			public T[] array = new T[]{};
 		}
 	}
 }

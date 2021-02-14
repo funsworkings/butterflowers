@@ -21,7 +21,6 @@ namespace uwu.UI.Extras
 		[SerializeField] bool globalOffset = true;
 
 		[SerializeField] bool tracking = false, fitInCanvas = true, closeOnPointerExit = false;
-		[SerializeField] float smoothSpeed = 1f;
 		UnityEngine.Camera mainCamera;
 
 		public bool @override = false;

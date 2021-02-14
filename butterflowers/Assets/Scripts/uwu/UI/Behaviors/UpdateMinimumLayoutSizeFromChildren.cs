@@ -8,7 +8,7 @@ namespace uwu.UI.Behaviors
 	[ExecuteInEditMode]
 	public class UpdateMinimumLayoutSizeFromChildren : MonoBehaviour
 	{
-		[SerializeField] bool width, height;
+		[SerializeField] bool width = false, height = false;
 
 		public bool refresh = true;
 		public bool continuous;

@@ -8,7 +8,6 @@ namespace uwu.Settings
 	{
 		[SerializeField] Data localData;
 		[SerializeField] FloatArray globalSettings;
-		string path = "settings.json";
 
 
 		public bool notifications => localData.notifications;

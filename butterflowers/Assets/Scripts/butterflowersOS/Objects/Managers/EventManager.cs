@@ -20,10 +20,10 @@ namespace butterflowersOS.Objects.Managers
 
 		// Properties
 
-		[SerializeField] WorldPreset World;
+		[SerializeField] WorldPreset World = null;
 	
-		[SerializeField] Transform logsContainer;
-		[SerializeField] GameObject logPrefab;
+		[SerializeField] Transform logsContainer = null;
+		[SerializeField] GameObject logPrefab = null;
 
 		// Collections
 
@@ -34,7 +34,7 @@ namespace butterflowersOS.Objects.Managers
 
 		// Attributes
 	
-		[SerializeField] Color defaultColor;
+		[SerializeField] Color defaultColor = Color.white;
 		string defaultColorHex;
 
 		[SerializeField] EVENTCODE[] excludes = new EVENTCODE[] { };

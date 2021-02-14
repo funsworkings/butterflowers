@@ -40,7 +40,7 @@ namespace butterflowersOS.UI
 		
 		// Attributes
 
-		[SerializeField] string label;
+		[SerializeField] string label = "";
 		[SerializeField] Type type = Type.Integer;
 		[SerializeField] string unitMeasurement = "";
 		

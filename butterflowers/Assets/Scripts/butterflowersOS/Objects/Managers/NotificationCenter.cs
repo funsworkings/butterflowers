@@ -18,17 +18,17 @@ namespace butterflowersOS.Objects.Managers
 		// Properties
 
 		[SerializeField] WorldPreset preset;
-		[SerializeField] RectTransform container;
+		[SerializeField] RectTransform container = null;
 
 		[Header("Types")]
-			[SerializeField] GameObject discoveryNotif;
-			[SerializeField] GameObject exportNotif;
+			[SerializeField] GameObject discoveryNotif = null;
+			[SerializeField] GameObject exportNotif = null;
 
 		[Header("Export")] 
-			[SerializeField] RectTransform exportRoot;
+			[SerializeField] RectTransform exportRoot = null;
 			
 		[Header("Miscellaneous")] 
-			[SerializeField] Burster burster;
+			[SerializeField] Burster burster = null;
 
 
 		void Start()

@@ -9,8 +9,8 @@ namespace butterflowersOS.Objects.Miscellaneous
 		// Properties
 		
 		[SerializeField] SceneMesh[] _meshes;
-		[SerializeField] PlayableAsset _cutscene;
-		[SerializeField] CinemachineVirtualCamera _camera;
+		[SerializeField] PlayableAsset _cutscene = null;
+		[SerializeField] CinemachineVirtualCamera _camera = null;
 		
 		
 		#region Accessors

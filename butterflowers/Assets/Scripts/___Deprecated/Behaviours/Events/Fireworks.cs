@@ -14,7 +14,7 @@ namespace Noder.Nodes.Behaviours.Events {
     [Obsolete("Obsolete agent!", true)]
     public class Fireworks: BaseEventNode<Object> {
 
-        private Brain brain;
+        private Brain brain = null;
 
         protected override void OnEnter()
         {

@@ -64,7 +64,9 @@ public static class IEnumeratorAwaitExtensions
     }
 
     // Return itself so you can do things like (await new WWW(url)).bytes
+#pragma warning disable 618
     public static SimpleCoroutineAwaiter<WWW> GetAwaiter(this WWW instruction)
+#pragma warning restore 618
     {
         return GetAwaiterReturnSelf(instruction);
     }

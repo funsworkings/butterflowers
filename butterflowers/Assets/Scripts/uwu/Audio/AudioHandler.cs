@@ -34,8 +34,8 @@ namespace uwu.Audio
 
 		#region Properties
 
-		[SerializeField] AudioMixerGroup mixerGroup;
-		[SerializeField] AudioClip[] audioClips;
+		[SerializeField] AudioMixerGroup mixerGroup = null;
+		[SerializeField] AudioClip[] audioClips = new AudioClip[]{};
 
 		#endregion
 

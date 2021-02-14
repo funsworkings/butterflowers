@@ -30,35 +30,35 @@ namespace butterflowersOS.Objects.Managers
 		
 		// Properties
 
-		[SerializeField] Cutscenes cutscenes;
-		[SerializeField] VineManager vines;
+		[SerializeField] Cutscenes cutscenes = null;
+		[SerializeField] VineManager vines = null;
 		[SerializeField] Cage cage;
 		[SerializeField] PlayableDirector director;
 
 		[Header("General")] 
-			[SerializeField] PlayableAsset introCutscene;
-			[SerializeField] PlayableAsset outroCutscene;
+			[SerializeField] PlayableAsset introCutscene = null;
+			[SerializeField] PlayableAsset outroCutscene = null;
 
 		[Header("Vines")] 
-			[SerializeField] Transform vineCornerCameraPivot;
-			[SerializeField] PlayableAsset vineCornerCutscene;
+			[SerializeField] Transform vineCornerCameraPivot = null;
+			[SerializeField] PlayableAsset vineCornerCutscene = null;
 			[SerializeField] PlayableAsset vineCageCutscene;
 
 		[Header("Sequences")]
 			[SerializeField] Scene currentScene;
 			[SerializeField] float sequenceMeshScaleDuration = 1f;
 			[SerializeField] float sequenceMeshScaleTime = 1f;
-			[SerializeField] AnimationCurve sequenceMeshScaleCurve;
+			[SerializeField] AnimationCurve sequenceMeshScaleCurve = null;
 			[SerializeField] PlayableAsset sequenceCutscene;
-			[SerializeField] Nest Nest;
-			[SerializeField] ToggleOpacity sequenceSubtitles;
-			[SerializeField] Text sequenceSubtitleText;
-			[SerializeField] AudioFader sequenceBGMFader;
-			[SerializeField] AudioSource sequenceBGM;
+			[SerializeField] Nest Nest = null;
+			[SerializeField] ToggleOpacity sequenceSubtitles = null;
+			[SerializeField] Text sequenceSubtitleText = null;
+			[SerializeField] AudioFader sequenceBGMFader = null;
+			[SerializeField] AudioSource sequenceBGM = null;
 
 		[Header("Export")] 
-			[SerializeField] ParticleSystem exportPS;
-			[SerializeField] Material exportMaterial;
+			[SerializeField] ParticleSystem exportPS = null;
+			[SerializeField] Material exportMaterial = null;
 
 		[Header("Status")] 
 			public bool intro = false;
