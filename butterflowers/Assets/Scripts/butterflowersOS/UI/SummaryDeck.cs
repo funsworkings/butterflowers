@@ -38,6 +38,7 @@ namespace butterflowersOS.UI
         [SerializeField] float t = 0f;
 
         [SerializeField] RectTransform anchor;
+        [SerializeField] WindowResize resizer;
         RectTransform rect;
         Animator animator;
         
@@ -78,14 +79,12 @@ namespace butterflowersOS.UI
 
         void OnEnable()
         {
-            var Resize = WindowResize.Instance;
-            if(Resize != null) Resize.onResize += onResize;
+            resizer.onResize += onResize;
         }
 
         void OnDisable()
         {
-            var Resize = WindowResize.Instance;
-            if(Resize != null) Resize.onResize -= onResize;
+            resizer.onResize -= onResize;
         }
 
         // Start is called before the first frame update
