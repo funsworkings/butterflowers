@@ -38,14 +38,14 @@ public class FileDragAndDrop : MonoBehaviour
         #endif
     }
 
-    void OnFiles(string lFiles)
+    void OnFiles(string lFiles, int screenX, int screenY)
     {
-        //Debug.LogError("Did receive files from mac drag & drop => " + lFiles);
+        Debug.LogErrorFormat("Did receive files from mac drag & drop => {0} \nx:{1}\ny:{2}", lFiles, screenX, screenY);
 
         if (!string.IsNullOrEmpty(lFiles))
         {
             string[] files = JsonHelper.getJsonArray<string>(lFiles);
-            POINT pt = new POINT(0, 0); // Dummy point for import from drag
+            POINT pt = new POINT(screenX, screenY);
 
             if (files.Length > 0)
             {
