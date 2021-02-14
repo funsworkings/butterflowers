@@ -829,9 +829,9 @@ namespace butterflowersOS.Core
             bool multipleImages = images.Count() > 1;
             bool useRandomPosition = multipleImages;
             
-            #if UNITY_STANDALONE_OSX
+            /*#if UNITY_STANDALONE_OSX
                 useRandomPosition = true; // override random position for OSX
-            #endif
+            #endif*/
                 
             foreach (string image in images) 
             {

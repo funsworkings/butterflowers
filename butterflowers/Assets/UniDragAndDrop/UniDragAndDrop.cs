@@ -11,7 +11,7 @@ namespace Shibuya24.Utility
         /// <summary>
         /// Callback to return the local path of a drag-and-drop file
         /// </summary>
-        public static Action<string> onDragAndDropFiles;
+        public static Action<string, int, int> onDragAndDropFiles;
 
         /// <summary>
         /// Initialization functions that must be called
@@ -23,7 +23,7 @@ namespace Shibuya24.Utility
 #endif
         }
 
-        delegate void callback_delegate(string val);
+        delegate void callback_delegate(string val, int x, int y);
 
 #if UNITY_STANDALONE_OSX
         [DllImport("UniDragAndDrop")]
@@ -31,9 +31,9 @@ namespace Shibuya24.Utility
 
         // call from Objective-C
         [MonoPInvokeCallback(typeof(callback_delegate))]
-        private static void cs_callback(string ret)
+        private static void cs_callback(string ret, int x, int y)
         {
-            onDragAndDropFiles?.Invoke(ret);
+            onDragAndDropFiles?.Invoke(ret, x, y);
         }
 #endif
     }
