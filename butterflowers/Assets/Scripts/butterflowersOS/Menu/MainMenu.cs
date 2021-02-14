@@ -1,5 +1,6 @@
 ﻿using System;
 using System.Collections;
+using System.IO;
 using butterflowersOS.Presets;
 using butterflowersOS.UI;
 using Neue.Agent.Brain.Data;
@@ -32,6 +33,7 @@ namespace butterflowersOS.Menu
         [SerializeField] TMP_Text continueText;
         [SerializeField] ChooseUsername usernamePanel = null;
         [SerializeField] SceneAudioManager sceneAudio = null;
+        [SerializeField] bool disposePreviousVersion = false;
 
         public enum Route
         {
@@ -133,6 +135,8 @@ namespace butterflowersOS.Menu
         void DisplayOptions(bool previousSave)
         {
             Debug.LogWarningFormat("Main menu showed options! Save file exists => {0}", previousSaveExists);
+
+            bool showContinue = previousSave;
             
             if (previousSave) 
             {
@@ -140,8 +144,17 @@ namespace butterflowersOS.Menu
                 int days = Mathf.FloorToInt(preset.ConvertSecondsToDays(time));
 
                 continueOption.DefaultText = string.Format("continue <size=45%>({0})</size>", days);
+
+                string prev_version = Save.data.BUILD_VERSION;
+                string curr_version = Application.version;
+
+                if (prev_version != curr_version && disposePreviousVersion) 
+                {
+                    DisposeVersionData();
+                    showContinue = false; // Versions don't match
+                }
             }
-            continueButton.SetActive(previousSave);
+            continueButton.SetActive(showContinue);
         }
 
         IEnumerator MovingToGame(int sceneIndex)
@@ -156,6 +169,19 @@ namespace butterflowersOS.Menu
         }
     
         #endregion
+
+        void DisposeVersionData()
+        {
+            var thumbnailDir = Path.Combine(Path.GetFullPath(Application.persistentDataPath), "_thumbnails");
+            if (Directory.Exists(thumbnailDir)) // Has thumbnails from previous version
+            {
+                var files = Directory.GetFiles(thumbnailDir);
+                foreach (string file in files) 
+                {
+                    File.Delete(file); // Delete previous thumbnails
+                }
+            }
+        }
 
         void RecoverGameData()
         {

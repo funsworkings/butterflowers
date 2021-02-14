@@ -827,8 +827,14 @@ namespace butterflowersOS.Core
         protected override void HandleImageImport(IEnumerable<string> images, POINT point)
         {
             bool multipleImages = images.Count() > 1;
+            bool useRandomPosition = multipleImages;
+            
+            #if UNITY_STANDALONE_OSX
+                useRandomPosition = true; // override random position for OSX
+            #endif
                 
-            foreach (string image in images) {
+            foreach (string image in images) 
+            {
                 var info = new FileInfo(image);
                 var path = info.FullName;
 
