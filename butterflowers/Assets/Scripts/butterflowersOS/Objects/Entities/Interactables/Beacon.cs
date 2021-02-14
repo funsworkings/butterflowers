@@ -118,16 +118,16 @@ namespace butterflowersOS.Objects.Entities.Interactables
 
         // Properties
 
-        [SerializeField] WorldPreset preset;
-        [SerializeField] ParticleSystem deathPS;
-        [SerializeField] TrailRenderer trails;
+        [SerializeField] WorldPreset preset = null;
+        [SerializeField] ParticleSystem deathPS = null;
+        [SerializeField] TrailRenderer trails = null;
     
         new MeshRenderer renderer;
         new Collider collider;
         Material material;
 
-        [SerializeField] GameObject pr_impactPS;
-        [SerializeField] GameObject pr_flower;
+        [SerializeField] GameObject pr_impactPS = null;
+        [SerializeField] GameObject pr_flower = null;
     
         public Type type;
         public Locale state = Locale.Terrain;
@@ -138,7 +138,7 @@ namespace butterflowersOS.Objects.Entities.Interactables
         public Vector3 origin = Vector3.zero;
         public Vector3 size = Vector3.one;
     
-        [SerializeField] Transition releaseTransition;
+        [SerializeField] Transition releaseTransition = null;
 
         // Attributes
 

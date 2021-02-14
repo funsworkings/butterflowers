@@ -25,7 +25,6 @@ namespace Neue.Agent.Brain
 		// Attributes
 
 		[SerializeField] float maxCaptureDistance = 1f;
-		[SerializeField] bool debug = false;
 		
 		// Collections
 		

@@ -13,7 +13,7 @@ namespace uwu.Gameplay
 		
 		// Properties
 
-		[SerializeField] GameObject prefab;
+		[SerializeField] GameObject prefab = null;
 		
 		// Attributes
 

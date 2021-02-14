@@ -13,29 +13,28 @@ public class Sequences : MonoBehaviour
 
 	[Header("Objects")]
 		[SerializeField] World world;
-		[SerializeField] Wand wand;
+		[SerializeField] Wand wand = null;
 		[SerializeField] Wizard.Controller wizard;
 
 	[Header("Intro")]
 		[SerializeField] float introDelay = 1f;
 		[SerializeField] float introEndDelay = 1.5f;
-		[SerializeField] Animation wizardIntroAnimation;
-		[SerializeField] ToggleOpacity escapeFocusContainer;
+		[SerializeField] Animation wizardIntroAnimation = null;
+		[SerializeField] ToggleOpacity escapeFocusContainer = null;
 
 	[Header("Absorption")]
 		[SerializeField] float absorbIntroDelay = 1f;
 		[SerializeField] float dampenCameraTime = 1f, slowCameraDelay = 1f, wrapCameraDelay = 1f;
 		[SerializeField] float levelUpSustainDelay = 1f;
-		[SerializeField] float camerSpeedAcceleration = 1f;
-		[SerializeField] Animation levelAnimation;
-		[SerializeField] AnimationClip level_in, level_out;
-		[SerializeField] SimpleRotate revolveFeedCamera;
-		[SerializeField] Cinemachine.CinemachineVirtualCamera revolveCamera;
-		[SerializeField] ToggleOpacity wizardFeedContainer, levelUpContainer;
+		[SerializeField] Animation levelAnimation = null;
+		[SerializeField] AnimationClip level_in = null, level_out = null;
+		[SerializeField] SimpleRotate revolveFeedCamera = null;
+		[SerializeField] Cinemachine.CinemachineVirtualCamera revolveCamera = null;
+		[SerializeField] ToggleOpacity wizardFeedContainer = null, levelUpContainer = null;
 
 	[Header("Shared")]
-		[SerializeField] CanvasGroup wizardOpacity;
-		[SerializeField] CanvasGroup wizardCloudsOpacity;
+		[SerializeField] CanvasGroup wizardOpacity = null;
+		[SerializeField] CanvasGroup wizardCloudsOpacity = null;
 
 	#endregion
 

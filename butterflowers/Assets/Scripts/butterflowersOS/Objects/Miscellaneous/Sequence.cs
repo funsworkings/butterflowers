@@ -10,8 +10,8 @@ namespace butterflowersOS.Objects.Miscellaneous
 	{
 		// Properties
 		
-		[SerializeField] Frame _frame;
-		[SerializeField] Scene[] _scenes;
+		[SerializeField] Frame _frame = Frame.Destruction;
+		[SerializeField] Scene[] _scenes = new Scene[]{};
 
 		
 		#region Accessors

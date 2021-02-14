@@ -21,8 +21,8 @@ namespace butterflowersOS.Objects.Entities
 
         // External
     
-        [SerializeField] WorldPreset Preset;
-        [SerializeField] Cutscenes Cutscenes;
+        [SerializeField] WorldPreset Preset = null;
+        [SerializeField] Cutscenes Cutscenes = null;
 
         World World;
     
@@ -40,8 +40,8 @@ namespace butterflowersOS.Objects.Entities
 
         new Light light;
 
-        [SerializeField] Animator dayTracker;
-        [SerializeField] TMP_Text previousDayText, currentDayText;
+        [SerializeField] Animator dayTracker = null;
+        [SerializeField] TMP_Text previousDayText = null, currentDayText = null;
     
         // Attributes
 

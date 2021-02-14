@@ -14,7 +14,7 @@ public class TrajectoryLine : MonoBehaviour
 
     [SerializeField] int vertices = 100;
     [SerializeField] float height = 1f;
-    [SerializeField] AnimationCurve arcCurve;
+    [SerializeField] AnimationCurve arcCurve = null;
 
     Vector3 a, b;
 

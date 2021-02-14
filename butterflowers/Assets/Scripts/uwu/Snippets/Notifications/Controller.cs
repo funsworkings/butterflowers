@@ -9,13 +9,13 @@ namespace uwu.Snippets.Notifications
 
 	public class Controller : MonoBehaviour
 	{
-		[SerializeField] float clearTime = 1f, timeout = 5f;
+		[SerializeField] float clearTime = 1f;
 
-		[SerializeField] Transform staticContainer;
-		[SerializeField] GameObject staticPrefab;
+		[SerializeField] Transform staticContainer = null;
+		[SerializeField] GameObject staticPrefab = null;
 
-		[SerializeField] Transform nonstaticContainer;
-		[SerializeField] GameObject nonstaticPrefab;
+		[SerializeField] Transform nonstaticContainer = null;
+		[SerializeField] GameObject nonstaticPrefab = null;
 		bool clearing;
 
 		public Dictionary<Notification, instance> instances = new Dictionary<Notification, instance>();

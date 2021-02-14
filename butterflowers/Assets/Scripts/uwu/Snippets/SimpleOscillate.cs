@@ -11,7 +11,7 @@ namespace uwu.Snippets
 		public float speed = 1f, magnitude = 1f;
 		public bool local;
 
-		[SerializeField] bool randomSpeed, randomMagnitude, randomDelay;
+		[SerializeField] bool randomSpeed = false, randomMagnitude = false, randomDelay = false;
 
 		bool oscillating;
 		Vector3 root = Vector3.zero;

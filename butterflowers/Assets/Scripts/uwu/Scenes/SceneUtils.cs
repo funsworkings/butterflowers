@@ -7,7 +7,7 @@ namespace uwu.Scenes
 {
 	public class SceneUtils : MonoBehaviour
 	{
-		[SerializeField] Scene loadOnAwake;
+		[SerializeField] Scene loadOnAwake = null;
 
 		readonly Dictionary<string, LoadOp> queue = new Dictionary<string, LoadOp>();
 

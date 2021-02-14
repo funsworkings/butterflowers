@@ -4,10 +4,10 @@ namespace butterflowersOS.Snippets
 {
     public class BindDistortionWithOpacity : MonoBehaviour
     {
-        [SerializeField] CanvasGroup opacity;
-        [SerializeField] Material material;
+        [SerializeField] CanvasGroup opacity = null;
+        [SerializeField] Material material = null;
 
-        [SerializeField] AnimationCurve curve;
+        [SerializeField] AnimationCurve curve = null;
         [SerializeField] bool invert = false;
 
         // Update is called once per frame

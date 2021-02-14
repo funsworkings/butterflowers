@@ -88,7 +88,6 @@ namespace butterflowersOS.Core
 		// Attributes
 
 		[SerializeField] bool read = false, load = false, initialized = false;
-		[SerializeField] bool listenForEvents = false;
 
 		[SerializeField] LoadMode loadMode;
 		[SerializeField] bool exportSheet = false;

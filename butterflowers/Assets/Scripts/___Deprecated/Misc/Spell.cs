@@ -16,8 +16,8 @@ public class Spell : MonoBehaviour
     [SerializeField] float duration = 1f;
     [SerializeField] float height = 1f;
 
-    [SerializeField] AnimationCurve heightCurve;
-    [SerializeField] AnimationCurve moveCurve;
+    [SerializeField] AnimationCurve heightCurve = null;
+    [SerializeField] AnimationCurve moveCurve = null;
     
 
     void Awake()

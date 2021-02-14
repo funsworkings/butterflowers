@@ -19,8 +19,6 @@ namespace Noder.Nodes.External.Editor {
         private BaseDialogueNode node;
         private State state_node;
 
-        private int textAreaHeight = 8;
-
         GUIStyle editorstyle;
 
         public override void OnBodyGUI()
