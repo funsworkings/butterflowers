@@ -53,9 +53,11 @@ namespace uwu.Textures
 			}
 		}
 		
-		async Task ReadBytes(string file)
+		async void ReadBytes(string file)
 		{
+#pragma warning disable 618
 			var www = await new WWW(string.Format("file://{0}", file));
+#pragma warning restore 618
 			
 			Texture2D result = null;
 

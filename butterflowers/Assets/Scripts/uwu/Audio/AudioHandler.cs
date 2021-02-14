@@ -180,6 +180,7 @@ namespace uwu.Audio
 						mixer.SetFloat(pitchParam, pitch);
 					}
 					catch (Exception e) {
+						Debug.LogWarning(e.Message);
 					}
 
 				return;

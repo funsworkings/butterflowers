@@ -828,4 +828,17 @@ namespace butterflowersOS.Core
 
 		#endregion
 	}
+
+	public static class LibraryExtensions
+	{
+		public static bool IsValid(this Library lib)
+		{
+			Library Lib = Library.Instance;
+			
+			if (Lib == null) return false;
+			if (lib == null) return false;
+
+			return (lib == Lib);
+		}
+	}
 }

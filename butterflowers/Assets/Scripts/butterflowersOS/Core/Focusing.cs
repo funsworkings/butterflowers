@@ -106,7 +106,7 @@ namespace butterflowersOS.Core
         {
             if (active && sun.active) 
             {
-                if (Focusable.Queued == null && Input.GetMouseButtonUp(1))
+                if (Focusable.QueueFocus == null && Input.GetMouseButtonUp(1))
                     LoseFocus();
             }
 

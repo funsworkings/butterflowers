@@ -69,7 +69,7 @@ namespace Neue.Agent.Brain.Data
 			}
 			catch (System.Exception err) 
 			{
-				UnityEngine.Debug.LogWarning("Profile in save file was invalid!");
+				UnityEngine.Debug.LogWarning("Profile in save file was invalid! => " + err.Message);
 				return false;	
 			}
 		}

@@ -31,8 +31,9 @@ namespace butterflowersOS.AI
 		[SerializeField] float minLightOpacity = 0f;
 		[SerializeField] float maxLightOpacity = .5f;
 		[SerializeField] float lightLerpSpeed = 1f;
-		float light, t_light;
-
+		new float light;
+		float t_light;
+		
 		[Header("Particle systems")]
 		[SerializeField] float minEmission = 0f;
 		[SerializeField] float maxEmission = 666f;

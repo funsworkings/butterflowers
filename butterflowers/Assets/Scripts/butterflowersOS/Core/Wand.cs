@@ -604,7 +604,7 @@ namespace butterflowersOS.Core
                     }
                     else 
                     {
-                        if (Focusable.Active != null) 
+                        if (Focusable.ActiveFocus != null) 
                         {
                             message = Copy.FormatActionItem(Copy.LoseFocusText);
                         }

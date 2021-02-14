@@ -78,16 +78,16 @@ namespace uwu.IO
 		{
 			return;
 
-			if (!paused)
-				Refresh(); // Refresh all files in directory
+			//if (!paused)
+			//	Refresh(); // Refresh all files in directory
 		}
 
 		void OnApplicationFocus(bool focused)
 		{
 			return;
 
-			if (focused)
-				Refresh();
+			//if (focused)
+			//	Refresh();
 		}
 
 		#endregion

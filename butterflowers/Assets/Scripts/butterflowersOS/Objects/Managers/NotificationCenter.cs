@@ -39,7 +39,7 @@ namespace butterflowersOS.Objects.Managers
 
 		void OnDestroy()
 		{
-			Lib.onDiscoverFile -= TriggerDiscoveryNotif;
+			if(Lib.IsValid()) Lib.onDiscoverFile -= TriggerDiscoveryNotif;
 		}
 
 		#region Generic

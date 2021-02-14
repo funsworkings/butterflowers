@@ -35,7 +35,7 @@ namespace Objects.Managers
 
 		void OnDestroy()
 		{
-			Lib.onAddedFiles -= onAddedFilesToDesktop;
+			if(Lib.IsValid()) Lib.onAddedFiles -= onAddedFilesToDesktop;
 		}
 
 		#endregion

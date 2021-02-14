@@ -25,7 +25,7 @@ namespace uwu.Audio
 		// Properties
 
 		[SerializeField] protected AudioMixer mixer; 
-		[SerializeField] protected AudioSource audio;
+		[SerializeField] protected new AudioSource audio;
 		[SerializeField] string mixerVolumeParam;
 
 		[SerializeField] bool useMixerGroup = true;

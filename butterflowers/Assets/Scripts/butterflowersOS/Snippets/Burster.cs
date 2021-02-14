@@ -8,7 +8,7 @@ namespace butterflowersOS.Snippets
 		[SerializeField] ObjectPool burstPool;
 		[SerializeField] float cameraDistance = 1f;
 
-		Camera camera;
+		new Camera camera;
     
 		// Start is called before the first frame update
 		void Start()
