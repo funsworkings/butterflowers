@@ -45,7 +45,7 @@ public class FileDragAndDrop : MonoBehaviour
         if (!string.IsNullOrEmpty(lFiles))
         {
             string[] files = JsonHelper.getJsonArray<string>(lFiles);
-            POINT pt = new POINT(screenX, screenY);
+            POINT pt = new POINT(screenX*2, (Screen.height - screenY*2));
 
             if (files.Length > 0)
             {
