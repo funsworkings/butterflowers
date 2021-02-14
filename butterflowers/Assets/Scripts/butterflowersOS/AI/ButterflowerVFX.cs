@@ -16,7 +16,7 @@ namespace butterflowersOS.AI
 		
 		// Attributes
 
-		[SerializeField] AnimationCurve lifetimeEffectorCurve;
+		[SerializeField] AnimationCurve lifetimeEffectorCurve = null;
 
 		void Awake()
 		{

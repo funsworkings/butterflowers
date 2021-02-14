@@ -25,13 +25,13 @@ namespace butterflowersOS.Menu
 
         ToggleOpacity opacity;
 
-        [SerializeField] WorldPreset preset;
-        [SerializeField] GameObject continueButton;
-        [SerializeField] ToggleOpacity continuePanel;
-        [SerializeField] MenuOption continueOption;
+        [SerializeField] WorldPreset preset = null;
+        [SerializeField] GameObject continueButton = null;
+        [SerializeField] ToggleOpacity continuePanel = null;
+        [SerializeField] MenuOption continueOption = null;
         [SerializeField] TMP_Text continueText;
-        [SerializeField] ChooseUsername usernamePanel;
-        [SerializeField] SceneAudioManager sceneAudio;
+        [SerializeField] ChooseUsername usernamePanel = null;
+        [SerializeField] SceneAudioManager sceneAudio = null;
 
         public enum Route
         {

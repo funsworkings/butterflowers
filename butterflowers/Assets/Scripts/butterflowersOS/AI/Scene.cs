@@ -24,13 +24,13 @@ namespace butterflowersOS.AI
 
 		Loader Loader;
 
-		[SerializeField] ParticleSystem butterflowers;
-		[SerializeField] Material butterflowersMaterial;
+		[SerializeField] ParticleSystem butterflowers = null;
+		[SerializeField] Material butterflowersMaterial = null;
 						 Texture2D butterflowersTexture;
 
-		[SerializeField] RemoteAgent agent;
-		[SerializeField] Cutscenes cutscenes;
-		[SerializeField] PlayableAsset epilogue;
+		[SerializeField] RemoteAgent agent = null;
+		[SerializeField] Cutscenes cutscenes = null;
+		[SerializeField] PlayableAsset epilogue = null;
 
 		bool listen = false;
 						 

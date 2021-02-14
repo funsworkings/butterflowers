@@ -106,7 +106,7 @@ namespace uwu.Animation
 		double timeSincePreview;
 		AnimationClip previewClip;
 
-		bool init, position = false;
+		bool init = false;
 
 		#endregion
 

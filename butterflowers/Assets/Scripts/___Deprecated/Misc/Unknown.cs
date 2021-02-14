@@ -18,7 +18,7 @@ public class Unknown : MonoBehaviour
 
     #region External
 
-    [SerializeField] ButterflowerManager Butterflies;
+    [SerializeField] ButterflowerManager Butterflies = null;
     [SerializeField] Nest Nest;
     [SerializeField] World World;
 
@@ -32,7 +32,7 @@ public class Unknown : MonoBehaviour
 
     #region Properties
 
-    [SerializeField] WorldPreset Preset;
+    [SerializeField] WorldPreset Preset = null;
     [SerializeField] Camera feedCamera;
 
 	#endregion
@@ -60,7 +60,7 @@ public class Unknown : MonoBehaviour
     [SerializeField] char[] noise_chars = new char[] { };
 
     [Header("Feed")]
-    [SerializeField] RenderTexture feedTexture;
+    [SerializeField] RenderTexture feedTexture = null;
     [SerializeField] Texture2D sampler;
     [SerializeField] char wiz_char = '+';
     [SerializeField] int _y = 0;
@@ -73,8 +73,6 @@ public class Unknown : MonoBehaviour
     public delegate string patternFunction();
 
 	#endregion
-
-	bool plague = false;
 
     void OnEnable()
     {

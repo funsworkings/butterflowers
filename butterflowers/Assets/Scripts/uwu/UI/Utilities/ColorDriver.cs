@@ -22,8 +22,7 @@ namespace uwu.UI.Utilities
 
 		[Range(0, 1)] public float opacity = 1f;
 
-		[SerializeField] Palette styling;
-		bool defaulted = false;
+		[SerializeField] Palette styling = null;
 
 		Image image;
 		RawImage rawImage;

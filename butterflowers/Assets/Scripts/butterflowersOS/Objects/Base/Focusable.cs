@@ -18,7 +18,7 @@ namespace butterflowersOS.Objects.Base
         // Attributes
 
         [SerializeField] bool focused = false, queued = false;
-        [SerializeField] Transform anchor;
+        [SerializeField] Transform anchor = null;
 
         public bool dispose = true;
 

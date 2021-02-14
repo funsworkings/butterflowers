@@ -16,7 +16,7 @@ namespace uwu.Snippets
 
 		public State state = State.Normal;
 
-		[SerializeField] Setting[] settings;
+		[SerializeField] Setting[] settings = new Setting[]{};
 
 		// Update is called once per frame
 		void Update()

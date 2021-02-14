@@ -6,7 +6,7 @@ namespace uwu.Snippets.Notifications
 {
 	public class Listener : MonoBehaviour
 	{
-		[SerializeField] Controller controller;
+		[SerializeField] Controller controller = null;
 
 
 		[SerializeField] NotificationEvent[] events = { };

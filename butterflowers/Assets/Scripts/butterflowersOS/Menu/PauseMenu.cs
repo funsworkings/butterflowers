@@ -13,14 +13,14 @@ namespace butterflowersOS.Menu
 	{
 		// External
 
-		[SerializeField] Cutscenes cutscenes;
-		[SerializeField] SceneAudioManager sceneAudio;
+		[SerializeField] Cutscenes cutscenes = null;
+		[SerializeField] SceneAudioManager sceneAudio = null;
 		
 		// Properties
 
 		ToggleOpacity opacity;
-		[SerializeField] GameObject teleporter;
-		[SerializeField] TMP_Text exitTextElement;
+		[SerializeField] GameObject teleporter = null;
+		[SerializeField] TMP_Text exitTextElement = null;
 
 		bool disposeInProgress = false;
 		public bool Dispose => disposeInProgress;

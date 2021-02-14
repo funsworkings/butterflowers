@@ -17,7 +17,7 @@ public class FileDragAndDrop : MonoBehaviour
 {
     void OnEnable ()
     {
-        #if UNITY_EDITOR_WIN || UNITY_STANDALONE_WIN
+        #if !UNITY_EDITOR_WIN && UNITY_STANDALONE_WIN
             // must be installed on the main thread to get the right thread id.
             UnityDragAndDropHook.InstallHook();
             UnityDragAndDropHook.OnDroppedFiles += OnFiles;
@@ -31,7 +31,7 @@ public class FileDragAndDrop : MonoBehaviour
     }
     void OnDisable()
     {
-        #if UNITY_EDITOR_WIN || UNITY_STANDALONE_WIN
+        #if !UNITY_EDITOR_WIN && UNITY_STANDALONE_WIN
             UnityDragAndDropHook.UninstallHook();
         #elif UNITY_STANDALONE_OSX
             UniDragAndDrop.onDragAndDropFiles -= OnFiles;

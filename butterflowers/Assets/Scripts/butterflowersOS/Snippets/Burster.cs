@@ -5,7 +5,7 @@ namespace butterflowersOS.Snippets
 {
 	public class Burster : MonoBehaviour
 	{
-		[SerializeField] ObjectPool burstPool;
+		[SerializeField] ObjectPool burstPool = null;
 		[SerializeField] float cameraDistance = 1f;
 
 		new Camera camera;

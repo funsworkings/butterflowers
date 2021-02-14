@@ -5,7 +5,7 @@ namespace uwu.UI.Elements
 	[ExecuteInEditMode]
 	public class Exit : MonoBehaviour
 	{
-		[SerializeField] RectTransform icon;
+		[SerializeField] RectTransform icon = null;
 		readonly Vector2 anchor = new Vector2(64f, -64f);
 
 		readonly Vector2 pivot = new Vector2(0f, 1f);
