@@ -31,16 +31,16 @@ namespace Neue.Agent1
 
 		CameraManager CameraManager;
 
-		[SerializeField] Nest Nest;
+		[SerializeField] Nest Nest = null;
 		[SerializeField] BeaconManager Beacons;
-		[SerializeField] Focusing Focus;
-		[SerializeField] CameraVisualBlend CameraBlend;
+		[SerializeField] Focusing Focus = null;
+		[SerializeField] CameraVisualBlend CameraBlend = null;
 
 		// Properties
 
-		[SerializeField] Agent.Presets.BrainPreset Preset;
-		[SerializeField] Wand wand;
-		[SerializeField] GameObject avatar;
+		[SerializeField] Agent.Presets.BrainPreset Preset = null;
+		[SerializeField] Wand wand = null;
+		[SerializeField] GameObject avatar = null;
 
 		Brain Brain;
 		Body _body;

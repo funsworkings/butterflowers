@@ -7,13 +7,10 @@ namespace butterflowersOS.UI
 {
 	public class MenuOption : MonoBehaviour, IPointerEnterHandler, IPointerExitHandler
 	{
-		string defaultFormat = "{0}";
-		string hoverFormat = "{0}  *";
-		
 		// Properties
 
-		[SerializeField] TMP_Text textField;
-		[SerializeField] TMP_Text astriskField;
+		[SerializeField] TMP_Text textField = null;
+		[SerializeField] TMP_Text astriskField = null;
 
 		public string DefaultText { get; set; }
 

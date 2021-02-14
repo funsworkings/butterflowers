@@ -37,11 +37,11 @@ namespace butterflowersOS.Objects.Entities
     
         [Header("Base")]
 
-        [SerializeField] Preset preset;
+        [SerializeField] Preset preset = null;
     
         [Header("Appearance")]
     
-        [SerializeField] GameObject trailsPrefab;
+        [SerializeField] GameObject trailsPrefab = null;
         GameObject trails = null;
         ParticleSystem trails_ps;
                      

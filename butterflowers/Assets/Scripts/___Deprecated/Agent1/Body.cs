@@ -23,7 +23,7 @@ namespace Neue.Agent1
 		Transform root;
 		new SkinnedMeshRenderer renderer;
 
-		[SerializeField] Brain Brain;
+		[SerializeField] Brain Brain = null;
 
 		// Attributes
 

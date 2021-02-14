@@ -43,7 +43,7 @@ namespace uwu.IO
 
 		#region Attributes
 
-		[SerializeField] Environment.SpecialFolder root;
+		[SerializeField] Environment.SpecialFolder root = Environment.SpecialFolder.Desktop;
 		[SerializeField] string[] filters = { };
 
 		#endregion

@@ -11,7 +11,7 @@ namespace uwu.Animation
 		
 		Animator animator;
 		
-		[SerializeField] Transform _head;
+		[SerializeField] Transform _head = null;
 		[SerializeField] Transform lookAtTarget = null;
 
 		[SerializeField] float weight;

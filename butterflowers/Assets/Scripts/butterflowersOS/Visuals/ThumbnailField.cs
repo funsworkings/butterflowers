@@ -22,7 +22,7 @@ namespace butterflowersOS.Visuals
 		
 		// Properties
 
-		[SerializeField] Material panelMaterial;
+		[SerializeField] Material panelMaterial = null;
 						 MaterialPropertyBlock panelPropertyBlock = new MaterialPropertyBlock();
 		
 		[SerializeField] int panelLayer = 0;

@@ -7,9 +7,9 @@ namespace uwu.Snippets
 		[SerializeField] Vector3 axis = Vector3.up;
 		[SerializeField] float speed = 1f;
 
-		[SerializeField] bool global;
-		[SerializeField] bool randomSpeed;
-		[SerializeField] bool randomAxis;
+		[SerializeField] bool global = false;
+		[SerializeField] bool randomSpeed = false;
+		[SerializeField] bool randomAxis = false;
 
 
 		public float Speed

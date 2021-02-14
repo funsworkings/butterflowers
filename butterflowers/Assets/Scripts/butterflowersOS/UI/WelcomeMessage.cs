@@ -20,7 +20,7 @@ namespace butterflowersOS.UI
         
         // Attributes
 
-        [SerializeField] Color usernameColor;
+        [SerializeField] Color usernameColor = Color.white;
 
         void Awake()
         {

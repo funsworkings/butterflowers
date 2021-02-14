@@ -545,7 +545,9 @@ namespace uwu.Extensions
 			try {
 				var num = int.Parse(value);
 			}
-			catch (Exception e) {
+			catch (Exception e) 
+			{
+				Debug.LogWarning(e.Message);
 				return false;
 			}
 
@@ -711,7 +713,9 @@ namespace uwu.Extensions
 						var character = formatted[i] + "";
 						var digit = int.Parse(character);
 					}
-					catch (Exception e) {
+					catch (Exception e) 
+					{
+						Debug.LogWarning(e.Message);
 						formatted = null;
 						break;
 					}

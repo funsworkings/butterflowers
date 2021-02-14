@@ -77,9 +77,9 @@ namespace butterflowersOS.Core
         // External
 
         [Header("General")]
-        [SerializeField] WorldPreset Preset;
+        [SerializeField] WorldPreset Preset = null;
         [SerializeField] CameraManager CameraManager;
-        [SerializeField] Focusing Focusing;
+        [SerializeField] Focusing Focusing = null;
 
         GameDataSaveSystem _Save = null;
         Library Library = null;
@@ -100,13 +100,11 @@ namespace butterflowersOS.Core
         [Header("Objects")]
         Sun Sun = null;
         Nest Nest = null;
-        Quilt Quilt = null;
-        [SerializeField] Cage Cage = null;
 
-        [SerializeField] Wand wand;
+        [SerializeField] Wand wand = null;
 
         [Header("UI")] 
-        [SerializeField] WelcomeMessage welcomeMessage;
+        [SerializeField] WelcomeMessage welcomeMessage = null;
 
         // Attributes
 
@@ -117,9 +115,9 @@ namespace butterflowersOS.Core
         [SerializeField] Camera m_playerCamera = null;
         [SerializeField] Loader Loader = null;
 
-        [SerializeField] ToggleOpacity gamePanel;
-        [SerializeField] SceneAudioManager sceneAudio;
-        [SerializeField] PauseMenu pauseMenu;
+        [SerializeField] ToggleOpacity gamePanel = null;
+        [SerializeField] SceneAudioManager sceneAudio  = null;
+        [SerializeField] PauseMenu pauseMenu = null;
         [SerializeField] Profile profile;
 
         [SerializeField] bool wait = false;
@@ -150,7 +148,7 @@ namespace butterflowersOS.Core
             [SerializeField] List<Focusable> focusables = new List<Focusable>();
 
         [Header("Audio")] 
-            [SerializeField] AudioSource loadAudio;
+            [SerializeField] AudioSource loadAudio = null;
             [SerializeField] AudioClip loadAudioClip;
             
         #region Accessors
@@ -193,7 +191,6 @@ namespace butterflowersOS.Core
             Library = Library.Instance;
             Files = FileNavigator.Instance;
             Nest = Nest.Instance;
-            Quilt = Quilt.Instance;
 
             /* * * * * * * * * * * * * * * * */
 
@@ -604,7 +601,7 @@ namespace butterflowersOS.Core
             }
             catch (System.Exception err) 
             {
-                Debug.LogWarning("Unable to upload neueagent to server!");
+                Debug.LogWarning("Unable to upload neueagent to server! => " + err.Message);
             }
         }
 

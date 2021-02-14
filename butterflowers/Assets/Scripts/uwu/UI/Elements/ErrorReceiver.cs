@@ -20,7 +20,7 @@ namespace uwu.UI.Elements
 
 		#region Properties
 
-		[SerializeField] TMP_Text errorTitleField, errorBodyField;
+		[SerializeField] TMP_Text errorTitleField = null, errorBodyField = null;
 
 		#endregion
 

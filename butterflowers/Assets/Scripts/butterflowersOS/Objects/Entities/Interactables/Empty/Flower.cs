@@ -26,7 +26,7 @@ namespace butterflowersOS.Objects.Entities.Interactables.Empty
 		[SerializeField] WorldPreset preset;
 		
 		public Animator animator;
-		[SerializeField] ParticleSystem firePS;
+		[SerializeField] ParticleSystem firePS = null;
 
 		string file;
 		BeaconType type;

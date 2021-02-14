@@ -60,8 +60,8 @@ namespace butterflowersOS.Objects.Managers
 
 		#region Properties
 
-		[SerializeField] WorldPreset preset;
-		[SerializeField] ObjectPool firePool, extinguishPool;
+		[SerializeField] WorldPreset preset = null;
+		[SerializeField] ObjectPool firePool = null, extinguishPool = null;
     
 		public Transition flowerTransition;
 		public Transition spawnTransition;
@@ -218,7 +218,6 @@ namespace butterflowersOS.Objects.Managers
 			Vector3 origin = Vector3.zero;
 
 			bool requirePosition = false;
-			bool requireOrigin = false;
 
 			if (@params== null || !@params.ContainsKey("position")) { DecidePosition(ref position); requirePosition = true; }
 			else position = (Vector3) @params["position"];

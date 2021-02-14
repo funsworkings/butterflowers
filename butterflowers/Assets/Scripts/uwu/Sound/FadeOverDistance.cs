@@ -7,17 +7,17 @@ namespace uwu.Sound
 	[RequireComponent(typeof(SphereCollider))]
 	public class FadeOverDistance : MonoBehaviour
 	{
-		[SerializeField] Transform origin, target;
+		[SerializeField] Transform origin = null, target = null;
 		[SerializeField] bool x = true, y = true, z = true;
 
-		[SerializeField] float minDistance, maxDistance = 1f;
+		[SerializeField] float minDistance = 0f, maxDistance = 1f;
 		[SerializeField] float distance;
-		[SerializeField] AnimationCurve falloff;
+		[SerializeField] AnimationCurve falloff = null;
 
-		[SerializeField] float minVolume, maxVolume = 1f;
-		[SerializeField] float volume;
+		[SerializeField] float minVolume = 0f, maxVolume = 1f;
+		[SerializeField] float volume = 0f;
 
-		[SerializeField] bool inverse;
+		[SerializeField] bool inverse = false;
 
 		[SerializeField] float d;
 

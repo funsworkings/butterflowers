@@ -19,11 +19,11 @@ namespace butterflowersOS.Objects.Entities
 
         // Properties
 
-        [SerializeField] WorldPreset preset;
+        [SerializeField] WorldPreset preset = null;
     
         [SerializeField] Material material = null;
         [SerializeField] CreateTextureArray textureArray;
-        [SerializeField] RenderTexture canvas;
+        [SerializeField] RenderTexture canvas = null;
     
         // Collections
     
@@ -39,9 +39,7 @@ namespace butterflowersOS.Objects.Entities
         [SerializeField] float offset = 0f;
         [SerializeField] float interval = 0f;
         [SerializeField] float m_death = 0f, m_deathDecay = 1f;
-    
-        [SerializeField] float refreshRate = .167f;
-    
+
         // Private fields
 
         int index = -1;

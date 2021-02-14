@@ -8,7 +8,7 @@ namespace butterflowersOS.UI.Notifications
 	{
 		// Attributes
 		
-		[SerializeField] AnimationCurve scaleCurve;
+		[SerializeField] AnimationCurve scaleCurve = null;
 		[SerializeField] float scaleTime = 1f;
 
 		int interact = 0;

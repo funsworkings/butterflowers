@@ -11,10 +11,9 @@ using uwu.Extensions;
 [Obsolete("Obsolete API!", true)]
 public class BeaconInfo : MonoBehaviour
 {
-    string template = "{0}\n\n<color={1}>[ A ] dd to nest\n[ P ] lant in terrain"; 
 
     [SerializeField] TMPro.TMP_Text text;
-    [SerializeField] Color unknownColor, knownColor;
+    [SerializeField] Color unknownColor = Color.white, knownColor = Color.yellow;
 
     public string parseTextFromBeacon(Beacon beacon)
     {

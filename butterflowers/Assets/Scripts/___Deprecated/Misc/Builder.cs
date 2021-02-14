@@ -9,7 +9,7 @@ public class Builder : MonoBehaviour
     public System.Action<Vector3> onBuildInDirection;
 
 
-    [SerializeField] GameObject roomPrefab;
+    [SerializeField] GameObject roomPrefab = null;
     [SerializeField] GameObject origin = null;
 
     [SerializeField] Vector3 bounds;

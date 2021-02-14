@@ -9,7 +9,6 @@ namespace uwu.Animation.Editor
 		AnimationClip clip;
 		string clip_name = "";
 		Gestures Gestures;
-		bool recording = false;
 
 		// Update is called once per frame
 		public override void OnInspectorGUI()

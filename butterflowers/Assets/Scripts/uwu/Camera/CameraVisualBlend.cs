@@ -42,19 +42,19 @@ namespace uwu.Camera
 
 		#region Properties
 
-		[SerializeField] UnityEngine.Camera transitionCamera;
-		[SerializeField] CinemachineBrain cinemachineBrain;
+		[SerializeField] UnityEngine.Camera transitionCamera = null;
+		[SerializeField] CinemachineBrain cinemachineBrain = null;
 
 		public CameraVisualBlendDefinition blendDefinition;
 		CameraVisualBlendDefinition defaultBlendDefinition;
 
 		[SerializeField] [Range(0f, 1f)] float cinemachineBlendMultiplier = 1f;
 
-		[SerializeField] Snapshot transitioner;
-		[SerializeField] RawImage transitionPlane;
+		[SerializeField] Snapshot transitioner = null;
+		[SerializeField] RawImage transitionPlane = null;
 
-		[SerializeField] CanvasGroup planeOpacity;
-		[SerializeField] UnityEngine.Animation planeAnimation;
+		[SerializeField] CanvasGroup planeOpacity = null;
+		[SerializeField] UnityEngine.Animation planeAnimation = null;
 
 		#endregion
 		
