@@ -20,7 +20,7 @@ namespace uwu.Textures
 		Dictionary<string, List<ITextureReceiver>> _receivers= new Dictionary<string, List<ITextureReceiver>>();
 
 		// Properties
-
+		
 		private bool read = false;
 
 		void Awake()
@@ -30,6 +30,7 @@ namespace uwu.Textures
 
 		void Start()
 		{
+			//Texture.allowThreadedTextureCreation = true;
 			StartCoroutine("LoadFromStack");
 		}
 
@@ -46,19 +47,43 @@ namespace uwu.Textures
 			{
 				if (STACK.Count > 0) 
 				{
-					if (!read) {
+					//if (!read) 
+					//{
 						var file = STACK[0];
 
-						ReadBytes(file);
-						read = true;
-					}	
+						
+#pragma warning disable 618
+						var www = new WWW(string.Format("file://{0}", file));
+						yield return www;
+#pragma warning restore 618
+			
+						Texture2D result = null;
+
+						if (!string.IsNullOrEmpty(www.error))
+							Debug.LogWarning("Error reading from texture => " + file);
+						else 
+						{
+							Debug.LogWarning("Success load = " + file);
+				
+							result = www.texture;
+							result.name = file;
+						}
+			
+						Pop(file, result);
+					//	read = false;
+			
+						www.Dispose(); // Dispose WWW!
+						
+						
+					//	read = true;
+					//}	
 				}
 
 				yield return null;
 			}
 		}
 		
-		async void ReadBytes(string file)
+		async Task ReadBytes(string file)
 		{
 #pragma warning disable 618
 			var www = await new WWW(string.Format("file://{0}", file));
