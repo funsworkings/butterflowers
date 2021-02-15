@@ -11,21 +11,32 @@ namespace uwu.Data
 
 		public static bool Write(object dat, string path)
 		{
-			var bf = new BinaryFormatter();
-			var file = File.Open(path, FileMode.Create);
+			bool success = false;
+			
+			try 
+			{
+				var bf = new BinaryFormatter();
+				var file = File.Open(path, FileMode.Create);
 
-			try {
-				bf.Serialize(file, dat);
-				file.Close();
-
-				return true;
-			}
-			catch (Exception e) {
-				Debug.LogWarning(e.Message);
+				// Passed open check!
+				try 
+				{
+					bf.Serialize(file, dat);
+					success = true;
+				}
+				catch (Exception e) 
+				{
+					Debug.LogWarning(e.Message);
+				}
 				
 				file.Close();
-				return false;
 			}
+			catch (SystemException err) 
+			{
+				Debug.LogWarning(err.Message);
+			}
+
+			return success;
 		}
 
 		public static T Read<T>(string path)
