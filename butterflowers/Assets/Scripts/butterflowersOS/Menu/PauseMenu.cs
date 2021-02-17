@@ -108,8 +108,16 @@ namespace butterflowersOS.Menu
 			opacity.Hide();
 			while (opacity.Visible) 
 				yield return null;
+			
+			#if UNITY_STANDALONE_WIN && !UNITY_EDITOR
 		
-			if (!Application.isEditor) { System.Diagnostics.Process.GetCurrentProcess().Kill(); }
+			 System.Diagnostics.Process.GetCurrentProcess().Kill();
+			
+			#elif UNITY_STANDALONE_OSX && !UNITY_EDITOR
+			
+			Application.Quit();
+			
+			#endif
 		}
 
 		public void Cancel()
