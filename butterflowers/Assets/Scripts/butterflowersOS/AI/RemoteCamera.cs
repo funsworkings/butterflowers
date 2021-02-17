@@ -1,6 +1,7 @@
 ﻿using System;
 using System.Collections.Generic;
 using System.Linq;
+using butterflowersOS.Menu;
 using UnityEngine;
 using Cinemachine;
 using uwu.Camera;
@@ -9,6 +10,10 @@ namespace butterflowersOS.AI
 {
 	public class RemoteCamera : GameCamera
 	{
+		// External
+
+		[SerializeField] PauseMenu pauseMenu;
+		
 		// Properties
 
 		[SerializeField] float radius = 0f;
@@ -49,13 +54,17 @@ namespace butterflowersOS.AI
 
 			Vector3 mousePosition = Input.mousePosition;
 
-			if (Input.GetMouseButtonDown(0)) 
+			bool @down = Input.GetMouseButtonDown(0);
+			bool @continue = Input.GetMouseButton(0);
+			bool @release = Input.GetMouseButtonUp(0);
+
+			if (@down) 
 			{
 				mouseA = mouseB = mousePosition;
 				velocity = Vector3.zero;
 				velocities = new List<Vector3>();
 			}
-			else if (Input.GetMouseButton(0)) 
+			else if (@continue) 
 			{
 				mouseB = mousePosition;
 				velocity = (mouseB - mouseA) * strength * Time.deltaTime;
@@ -65,7 +74,7 @@ namespace butterflowersOS.AI
 			}
 			else 
 			{
-				if (Input.GetMouseButtonUp(0)) 
+				if (@release) 
 				{
 					Propel();
 				}
