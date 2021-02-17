@@ -1007,7 +1007,6 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: 
   speed: 1
-  adjustSpeed: 1
 --- !u!114 &173352282
 MonoBehaviour:
   m_ObjectHideFlags: 0
@@ -6343,6 +6342,7 @@ GameObject:
   - component: {fileID: 336089645}
   - component: {fileID: 336089647}
   - component: {fileID: 336089646}
+  - component: {fileID: 336089648}
   m_Layer: 0
   m_Name: Default Camera
   m_TagString: Untagged
@@ -6419,6 +6419,33 @@ MonoBehaviour:
         m_Calls: []
   m_LegacyBlendHint: 0
   m_ComponentOwner: {fileID: 1760857551}
+--- !u!114 &336089648
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 336089644}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: eea0b2bd03ee47dfa1a610f3c381993f, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
+  onEnable:
+    m_PersistentCalls:
+      m_Calls: []
+  onDisable:
+    m_PersistentCalls:
+      m_Calls: []
+  radius: 0
+  height: 0
+  xAngle: 0
+  yAngle: 0
+  dampening: 2
+  strength: 0.067
+  velocityStackSize: 33
+  minYAngle: -1.5707963
+  maxYAngle: 1.5707963
 --- !u!1 &364399745
 GameObject:
   m_ObjectHideFlags: 0
@@ -8541,6 +8568,7 @@ GameObject:
   serializedVersion: 6
   m_Component:
   - component: {fileID: 1617910624}
+  - component: {fileID: 1617910623}
   m_Layer: 0
   m_Name: Cameras
   m_TagString: Untagged
@@ -8548,6 +8576,22 @@ GameObject:
   m_NavMeshLayer: 0
   m_StaticEditorFlags: 0
   m_IsActive: 1
+--- !u!114 &1617910623
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 1617910622}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 44292813d8379ce479b93f8087b1890f, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
+  defaultCamera: {fileID: 336089648}
+  previousCamera: {fileID: 0}
+  currentCamera: {fileID: 0}
+  m_mainCamera: {fileID: 0}
 --- !u!4 &1617910624
 Transform:
   m_ObjectHideFlags: 0
@@ -8667,6 +8711,7 @@ MonoBehaviour:
   butterflowersMaterial: {fileID: 2100000, guid: 32ca2c75000076c40a6d8bfbc5bd159f,
     type: 2}
   agent: {fileID: 62210044}
+  camera: {fileID: 336089648}
   cutscenes: {fileID: 1758789783}
   epilogue: {fileID: 11400000, guid: 93fc853b2269aeb49ad4fafb707a9ff5, type: 2}
 --- !u!1 &1758789782

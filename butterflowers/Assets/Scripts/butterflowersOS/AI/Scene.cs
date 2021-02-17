@@ -29,6 +29,7 @@ namespace butterflowersOS.AI
 						 Texture2D butterflowersTexture;
 
 		[SerializeField] RemoteAgent agent = null;
+		[SerializeField] new RemoteCamera camera = null;
 		[SerializeField] Cutscenes cutscenes = null;
 		[SerializeField] PlayableAsset epilogue = null;
 
@@ -72,6 +73,7 @@ namespace butterflowersOS.AI
 				Save.SaveGameData();
 			}
 
+			camera.ReadInput = true;
 			listen = true;
 		}
 
