@@ -1384,6 +1384,7 @@
               <e p="MainMenu.cs" t="Include" />
               <e p="PauseMenu.cs" t="Include" />
               <e p="PreviewButterflowers.cs" t="Include" />
+              <e p="SettingsMenu.cs" t="Include" />
               <e p="VersionText.cs" t="Include" />
             </e>
             <e p="Miscellaneous" t="Include">
@@ -1477,6 +1478,9 @@
               <e p="SummaryDeck.cs" t="Include" />
               <e p="TutorialPanel.cs" t="Include" />
               <e p="WelcomeMessage.cs" t="Include" />
+            </e>
+            <e p="Utils" t="Include">
+              <e p="Settings.cs" t="Include" />
             </e>
             <e p="Visuals" t="Include">
               <e p="ParticleMesh.cs" t="Include" />
@@ -1691,6 +1695,7 @@
               <e p="SceneUtils.cs" t="Include" />
             </e>
             <e p="Settings" t="Include">
+              <e p="Controller.cs" t="Include" />
               <e p="Data.cs" t="Include" />
               <e p="Global.cs" t="Include" />
               <e p="Instances" t="Include">
@@ -1818,6 +1823,7 @@
               <e p="Editor" t="Include">
                 <e p="Assets.cs" t="Include" />
               </e>
+              <e p="Settings.cs" t="Include" />
             </e>
           </e>
         </e>
