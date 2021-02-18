@@ -15,6 +15,8 @@ namespace butterflowersOS.Menu
 		[SerializeField] MainMenu _mainMenu = null;
 		[SerializeField] Slider _bgmVolume = null, _sfxVolume = null;
 
+		bool load = false;
+
 		void Awake()
 		{
 			opacity = GetComponent<ToggleOpacity>();
@@ -22,8 +24,8 @@ namespace butterflowersOS.Menu
 
 		protected override void Start()
 		{
-			_bgmVolume.value = (float) Settings.Instance.FetchSetting("bgm_volume", Settings.Type.Float);
-			_sfxVolume.value = (float) Settings.Instance.FetchSetting("sfx_volume", Settings.Type.Float);
+			_bgmVolume.normalizedValue = (float) Settings.Instance.FetchSetting("bgm_volume", Settings.Type.Float);
+			_sfxVolume.normalizedValue = (float) Settings.Instance.FetchSetting("sfx_volume", Settings.Type.Float);
 			
 			base.Start();
 		}
@@ -39,18 +41,24 @@ namespace butterflowersOS.Menu
 
 		protected override void DidOpen()
 		{
+			load = true;
 			opacity.Show();
 
-			_bgmVolume.value = (float) Settings.Instance.FetchSetting("bgm_volume", Settings.Type.Float);
-			_sfxVolume.value = (float) Settings.Instance.FetchSetting("sfx_volume", Settings.Type.Float);
+			_bgmVolume.normalizedValue = (float) Settings.Instance.FetchSetting("bgm_volume", Settings.Type.Float);
+			_sfxVolume.normalizedValue = (float) Settings.Instance.FetchSetting("sfx_volume", Settings.Type.Float);
 		}
 
 		protected override void DidClose()
 		{
 			opacity.Hide();
+		}
 
-			Settings.Instance.ApplySetting("bgm_volume", Settings.Type.Float, _bgmVolume.value);
-			Settings.Instance.ApplySetting("sfx_volume", Settings.Type.Float, _sfxVolume.value);
+		public void DidUpdate()
+		{
+			if (!load) return;
+			
+			Settings.Instance.ApplySetting("bgm_volume", Settings.Type.Float, _bgmVolume.normalizedValue);
+			Settings.Instance.ApplySetting("sfx_volume", Settings.Type.Float, _sfxVolume.normalizedValue);
 		}
 	}
 }

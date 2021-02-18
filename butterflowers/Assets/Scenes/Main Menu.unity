@@ -678,7 +678,7 @@ RectTransform:
   m_PrefabInstance: {fileID: 0}
   m_PrefabAsset: {fileID: 0}
   m_GameObject: {fileID: 148301435}
-  m_LocalRotation: {x: 0, y: 0, z: 0, w: 1}
+  m_LocalRotation: {x: -0, y: -0, z: -0, w: 1}
   m_LocalPosition: {x: 0, y: 0, z: 0}
   m_LocalScale: {x: 1, y: 1, z: 1}
   m_Children:
@@ -8382,6 +8382,46 @@ PrefabInstance:
       propertyPath: m_AnchoredPosition.y
       value: 0
       objectReference: {fileID: 0}
+    - target: {fileID: 3191199170720272063, guid: 2cd9d1c7a6e636247bcfd7f1b9e24762,
+        type: 3}
+      propertyPath: m_MaxValue
+      value: 10
+      objectReference: {fileID: 0}
+    - target: {fileID: 3191199170720272063, guid: 2cd9d1c7a6e636247bcfd7f1b9e24762,
+        type: 3}
+      propertyPath: m_WholeNumbers
+      value: 1
+      objectReference: {fileID: 0}
+    - target: {fileID: 3191199170720272063, guid: 2cd9d1c7a6e636247bcfd7f1b9e24762,
+        type: 3}
+      propertyPath: m_OnValueChanged.m_PersistentCalls.m_Calls.Array.size
+      value: 1
+      objectReference: {fileID: 0}
+    - target: {fileID: 3191199170720272063, guid: 2cd9d1c7a6e636247bcfd7f1b9e24762,
+        type: 3}
+      propertyPath: m_OnValueChanged.m_PersistentCalls.m_Calls.Array.data[0].m_Mode
+      value: 1
+      objectReference: {fileID: 0}
+    - target: {fileID: 3191199170720272063, guid: 2cd9d1c7a6e636247bcfd7f1b9e24762,
+        type: 3}
+      propertyPath: m_OnValueChanged.m_PersistentCalls.m_Calls.Array.data[0].m_Target
+      value: 
+      objectReference: {fileID: 189645200}
+    - target: {fileID: 3191199170720272063, guid: 2cd9d1c7a6e636247bcfd7f1b9e24762,
+        type: 3}
+      propertyPath: m_OnValueChanged.m_PersistentCalls.m_Calls.Array.data[0].m_CallState
+      value: 2
+      objectReference: {fileID: 0}
+    - target: {fileID: 3191199170720272063, guid: 2cd9d1c7a6e636247bcfd7f1b9e24762,
+        type: 3}
+      propertyPath: m_OnValueChanged.m_PersistentCalls.m_Calls.Array.data[0].m_MethodName
+      value: DidUpdate
+      objectReference: {fileID: 0}
+    - target: {fileID: 3191199170720272063, guid: 2cd9d1c7a6e636247bcfd7f1b9e24762,
+        type: 3}
+      propertyPath: m_OnValueChanged.m_PersistentCalls.m_Calls.Array.data[0].m_Arguments.m_ObjectArgumentAssemblyTypeName
+      value: UnityEngine.Object, UnityEngine
+      objectReference: {fileID: 0}
     m_RemovedComponents: []
   m_SourcePrefab: {fileID: 100100000, guid: 2cd9d1c7a6e636247bcfd7f1b9e24762, type: 3}
 --- !u!224 &1790667771 stripped
@@ -10264,6 +10304,46 @@ PrefabInstance:
       propertyPath: m_AnchoredPosition.y
       value: 0
       objectReference: {fileID: 0}
+    - target: {fileID: 3191199170720272063, guid: 2cd9d1c7a6e636247bcfd7f1b9e24762,
+        type: 3}
+      propertyPath: m_MaxValue
+      value: 10
+      objectReference: {fileID: 0}
+    - target: {fileID: 3191199170720272063, guid: 2cd9d1c7a6e636247bcfd7f1b9e24762,
+        type: 3}
+      propertyPath: m_WholeNumbers
+      value: 1
+      objectReference: {fileID: 0}
+    - target: {fileID: 3191199170720272063, guid: 2cd9d1c7a6e636247bcfd7f1b9e24762,
+        type: 3}
+      propertyPath: m_OnValueChanged.m_PersistentCalls.m_Calls.Array.size
+      value: 1
+      objectReference: {fileID: 0}
+    - target: {fileID: 3191199170720272063, guid: 2cd9d1c7a6e636247bcfd7f1b9e24762,
+        type: 3}
+      propertyPath: m_OnValueChanged.m_PersistentCalls.m_Calls.Array.data[0].m_Mode
+      value: 1
+      objectReference: {fileID: 0}
+    - target: {fileID: 3191199170720272063, guid: 2cd9d1c7a6e636247bcfd7f1b9e24762,
+        type: 3}
+      propertyPath: m_OnValueChanged.m_PersistentCalls.m_Calls.Array.data[0].m_Target
+      value: 
+      objectReference: {fileID: 189645200}
+    - target: {fileID: 3191199170720272063, guid: 2cd9d1c7a6e636247bcfd7f1b9e24762,
+        type: 3}
+      propertyPath: m_OnValueChanged.m_PersistentCalls.m_Calls.Array.data[0].m_CallState
+      value: 2
+      objectReference: {fileID: 0}
+    - target: {fileID: 3191199170720272063, guid: 2cd9d1c7a6e636247bcfd7f1b9e24762,
+        type: 3}
+      propertyPath: m_OnValueChanged.m_PersistentCalls.m_Calls.Array.data[0].m_MethodName
+      value: DidUpdate
+      objectReference: {fileID: 0}
+    - target: {fileID: 3191199170720272063, guid: 2cd9d1c7a6e636247bcfd7f1b9e24762,
+        type: 3}
+      propertyPath: m_OnValueChanged.m_PersistentCalls.m_Calls.Array.data[0].m_Arguments.m_ObjectArgumentAssemblyTypeName
+      value: UnityEngine.Object, UnityEngine
+      objectReference: {fileID: 0}
     m_RemovedComponents: []
   m_SourcePrefab: {fileID: 100100000, guid: 2cd9d1c7a6e636247bcfd7f1b9e24762, type: 3}
 --- !u!1001 &5982207057633303216
@@ -10569,19 +10649,90 @@ PrefabInstance:
     m_Modifications:
     - target: {fileID: 1952548831182338477, guid: 63f22d96c76e04147aaeb11736e883ca,
         type: 3}
-      propertyPath: bgmMixers.Array.size
-      value: 1
+      propertyPath: bgmMixers.Array.data[0].mixer
+      value: 
       objectReference: {fileID: 0}
     - target: {fileID: 1952548831182338477, guid: 63f22d96c76e04147aaeb11736e883ca,
         type: 3}
-      propertyPath: bgmMixers.Array.data[0].mixer
+      propertyPath: bgmMixers.Array.data[1].mixer
+      value: 
+      objectReference: {fileID: -7761773727966239100, guid: 0f878cdc2b0f396499ef3380fce5e3c7,
+        type: 2}
+    - target: {fileID: 1952548831182338477, guid: 63f22d96c76e04147aaeb11736e883ca,
+        type: 3}
+      propertyPath: bgmMixers.Array.data[2].mixer
+      value: 
+      objectReference: {fileID: -8159573712805371960, guid: 0f878cdc2b0f396499ef3380fce5e3c7,
+        type: 2}
+    - target: {fileID: 1952548831182338477, guid: 63f22d96c76e04147aaeb11736e883ca,
+        type: 3}
+      propertyPath: bgmMixers.Array.data[3].mixer
+      value: 
+      objectReference: {fileID: -3069303877654125015, guid: 0f878cdc2b0f396499ef3380fce5e3c7,
+        type: 2}
+    - target: {fileID: 1952548831182338477, guid: 63f22d96c76e04147aaeb11736e883ca,
+        type: 3}
+      propertyPath: bgmMixers.Array.data[4].mixer
       value: 
       objectReference: {fileID: 300165668147208379, guid: 43f2320b0e00d714eb87f535e445bd20,
         type: 2}
     - target: {fileID: 1952548831182338477, guid: 63f22d96c76e04147aaeb11736e883ca,
         type: 3}
+      propertyPath: bgmMixers.Array.data[5].mixer
+      value: 
+      objectReference: {fileID: 300165668147208379, guid: 43f2320b0e00d714eb87f535e445bd20,
+        type: 2}
+    - target: {fileID: 1952548831182338477, guid: 63f22d96c76e04147aaeb11736e883ca,
+        type: 3}
+      propertyPath: bgmMixers.Array.data[6].mixer
+      value: 
+      objectReference: {fileID: 300165668147208379, guid: 43f2320b0e00d714eb87f535e445bd20,
+        type: 2}
+    - target: {fileID: 1952548831182338477, guid: 63f22d96c76e04147aaeb11736e883ca,
+        type: 3}
+      propertyPath: sfxMixers.Array.data[0].mixer
+      value: 
+      objectReference: {fileID: 775810993853759091, guid: 43f2320b0e00d714eb87f535e445bd20,
+        type: 2}
+    - target: {fileID: 1952548831182338477, guid: 63f22d96c76e04147aaeb11736e883ca,
+        type: 3}
       propertyPath: bgmMixers.Array.data[0].volumeParam
-      value: MainMenuBGM_Volume
+      value: 
+      objectReference: {fileID: 0}
+    - target: {fileID: 1952548831182338477, guid: 63f22d96c76e04147aaeb11736e883ca,
+        type: 3}
+      propertyPath: bgmMixers.Array.data[1].volumeParam
+      value: BGMCtrl_Volume
+      objectReference: {fileID: 0}
+    - target: {fileID: 1952548831182338477, guid: 63f22d96c76e04147aaeb11736e883ca,
+        type: 3}
+      propertyPath: bgmMixers.Array.data[2].volumeParam
+      value: BGMCtrl_Volume
+      objectReference: {fileID: 0}
+    - target: {fileID: 1952548831182338477, guid: 63f22d96c76e04147aaeb11736e883ca,
+        type: 3}
+      propertyPath: bgmMixers.Array.data[3].volumeParam
+      value: BGMCtrl_Volume
+      objectReference: {fileID: 0}
+    - target: {fileID: 1952548831182338477, guid: 63f22d96c76e04147aaeb11736e883ca,
+        type: 3}
+      propertyPath: bgmMixers.Array.data[4].volumeParam
+      value: BGMCtrl_Volume
+      objectReference: {fileID: 0}
+    - target: {fileID: 1952548831182338477, guid: 63f22d96c76e04147aaeb11736e883ca,
+        type: 3}
+      propertyPath: bgmMixers.Array.data[5].volumeParam
+      value: BGMCtrl_Volume
+      objectReference: {fileID: 0}
+    - target: {fileID: 1952548831182338477, guid: 63f22d96c76e04147aaeb11736e883ca,
+        type: 3}
+      propertyPath: bgmMixers.Array.data[6].volumeParam
+      value: BGMCtrl_Volume
+      objectReference: {fileID: 0}
+    - target: {fileID: 1952548831182338477, guid: 63f22d96c76e04147aaeb11736e883ca,
+        type: 3}
+      propertyPath: sfxMixers.Array.data[0].volumeParam
+      value: SFXCtrl_Volume
       objectReference: {fileID: 0}
     - target: {fileID: 7765984912757349044, guid: 63f22d96c76e04147aaeb11736e883ca,
         type: 3}
