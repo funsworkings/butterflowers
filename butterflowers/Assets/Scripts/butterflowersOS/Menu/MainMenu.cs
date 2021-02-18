@@ -32,6 +32,7 @@ namespace butterflowersOS.Menu
         [SerializeField] MenuOption continueOption = null;
         [SerializeField] TMP_Text continueText;
         [SerializeField] ChooseUsername usernamePanel = null;
+        [SerializeField] SettingsMenu settingsPanel = null;
         [SerializeField] SceneAudioManager sceneAudio = null;
         [SerializeField] bool disposePreviousVersion = false;
 
@@ -123,9 +124,16 @@ namespace butterflowersOS.Menu
             MoveToTheGame(sceneIndex);
         }
 
+        public void GoToSettings()
+        {
+            Close();
+            settingsPanel.Open();
+        }
+
         public void Reset()
         {
             if(usernamePanel.IsVisible) usernamePanel.Close();
+            if(settingsPanel.IsVisible) settingsPanel.Close();
 
             route = Route.NULL;
             Open();
