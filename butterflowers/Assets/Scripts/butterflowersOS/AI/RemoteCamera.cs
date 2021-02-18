@@ -59,6 +59,8 @@ namespace butterflowersOS.AI
 			Vector3 offset = transposer.m_FollowOffset;
 			
 			radius = offset.magnitude; // Calculate radius of transposer from anchor
+
+			xAngle = Mathf.Asin(offset.z / radius);
 			yAngle = Mathf.Asin(offset.y / radius);
 		}
 
@@ -151,6 +153,8 @@ namespace butterflowersOS.AI
 			float dt = Time.deltaTime;
 			
 			xAngle = Mathf.Repeat(xAngle + velocity.x, 2f*Mathf.PI);
+			yAngle = Mathf.Clamp(yAngle + velocity.y, minYAngle, maxYAngle);
+			
 			velocity *= (1f - (dampening * dt));
 		}
 		
