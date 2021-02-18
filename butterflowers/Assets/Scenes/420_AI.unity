@@ -6437,6 +6437,7 @@ MonoBehaviour:
   onDisable:
     m_PersistentCalls:
       m_Calls: []
+  pauseMenu: {fileID: 361797822}
   radius: 0
   height: 0
   xAngle: 0
@@ -6446,6 +6447,18 @@ MonoBehaviour:
   velocityStackSize: 33
   minYAngle: -1.5707963
   maxYAngle: 1.5707963
+--- !u!114 &361797822 stripped
+MonoBehaviour:
+  m_CorrespondingSourceObject: {fileID: 2973830041358062866, guid: 4ec5ab60b92a4e9419bebcfffedef8c6,
+    type: 3}
+  m_PrefabInstance: {fileID: 916937448}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 0}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: b8df235b25c547fe9e2643e76e0ec7a6, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
 --- !u!1 &364399745
 GameObject:
   m_ObjectHideFlags: 0
