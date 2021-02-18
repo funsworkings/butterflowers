@@ -10,6 +10,18 @@ namespace butterflowersOS.AI
 {
 	public class RemoteCamera : GameCamera
 	{
+		#region Internal
+
+		public enum State
+		{
+			Wait,
+			
+			Pan,
+			Release
+		}
+		
+		#endregion
+		
 		// External
 
 		[SerializeField] PauseMenu pauseMenu;
@@ -24,6 +36,8 @@ namespace butterflowersOS.AI
 		Vector3 velocity = Vector3.zero;
 		
 		public bool ReadInput { get; set; }
+
+		[SerializeField] State _state = State.Wait; 
 		
 		// Attributes
 
@@ -52,36 +66,53 @@ namespace butterflowersOS.AI
 		{
 			if (!IsActive || !ReadInput) return;
 
-			Vector3 mousePosition = Input.mousePosition;
+			bool releaseDuringFrame = false;
 
-			bool @down = Input.GetMouseButtonDown(0);
-			bool @continue = Input.GetMouseButton(0);
-			bool @release = Input.GetMouseButtonUp(0);
+			if (!pauseMenu.IsActive) 
+			{
+				Vector3 mousePosition = Input.mousePosition;
 
-			if (@down) 
-			{
-				mouseA = mouseB = mousePosition;
-				velocity = Vector3.zero;
-				velocities = new List<Vector3>();
-			}
-			else if (@continue) 
-			{
-				mouseB = mousePosition;
-				velocity = (mouseB - mouseA) * strength * Time.deltaTime;
-				mouseA = mouseB;
-				
-				Drag();
+				if ((_state == State.Wait || _state == State.Release) && Input.GetMouseButtonDown(0)) 
+				{
+					mouseA = mouseB = mousePosition;
+					velocity = Vector3.zero;
+					velocities = new List<Vector3>();
+
+					_state = State.Pan;
+				}
+				else if ((_state == State.Pan) && Input.GetMouseButton(0)) 
+				{
+					mouseB = mousePosition;
+					velocity = (mouseB - mouseA) * strength * Time.deltaTime;
+					mouseA = mouseB;
+
+					Drag();
+
+					_state = State.Pan;
+				}
+				else 
+				{
+					releaseDuringFrame = (_state == State.Pan && Input.GetMouseButtonUp(0));
+				}
 			}
 			else 
 			{
-				if (@release) 
+				releaseDuringFrame = (_state != State.Wait && _state != State.Release);
+			}
+
+			if (releaseDuringFrame) 
+			{
+				if (_state != State.Release) 
 				{
 					Propel();
+					_state = State.Release;
 				}
-				
-				Release();	
 			}
-			
+			else 
+			{
+				if(_state == State.Release) Release();	
+			}
+
 			ApplyOffset();
 		}
 		

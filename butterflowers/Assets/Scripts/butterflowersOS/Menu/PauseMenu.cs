@@ -23,6 +23,8 @@ namespace butterflowersOS.Menu
 		[SerializeField] TMP_Text exitTextElement = null;
 
 		bool disposeInProgress = false;
+
+		public bool IsActive => IsVisible || Dispose;
 		public bool Dispose => disposeInProgress;
 		
 		// Attributes
