@@ -96,7 +96,7 @@ namespace butterflowersOS.Utils
 					m.mixer.audioMixer.SetFloat(m.volumeParam, bgv);
 				}
 			}
-			else if (key == "sfx_mixers") 
+			else if (key == "sfx_volume") 
 			{
 				sfx_vol = volumeCurve.Evaluate((float) value);
 				

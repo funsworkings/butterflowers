@@ -1,8 +1,10 @@
 ﻿using System;
 using System.Collections;
 using butterflowersOS.Core;
+using butterflowersOS.Utils;
 using TMPro;
 using UnityEngine;
+using UnityEngine.UI;
 using uwu.Snippets.Load;
 using uwu.Timeline.Core;
 using uwu.UI.Behaviors.Visibility;
@@ -21,6 +23,7 @@ namespace butterflowersOS.Menu
 		ToggleOpacity opacity;
 		[SerializeField] GameObject teleporter = null;
 		[SerializeField] TMP_Text exitTextElement = null;
+		[SerializeField] Slider _bgmVolume = null, _sfxVolume = null;
 
 		bool disposeInProgress = false;
 
@@ -60,7 +63,11 @@ namespace butterflowersOS.Menu
 		protected override void DidOpen()
 		{
 			opacity.Show();
+			
 			AudioListener.pause = true;
+			
+			_bgmVolume.normalizedValue = (float) Settings.Instance.FetchSetting("bgm_volume", Settings.Type.Float);
+			_sfxVolume.normalizedValue = (float) Settings.Instance.FetchSetting("sfx_volume", Settings.Type.Float);
 		}
 
 		protected override void DidClose()
@@ -143,6 +150,12 @@ namespace butterflowersOS.Menu
 			
 			sceneAudio.FadeOut();
 			SceneLoader.Instance.GoToScene(teleportSceneIndex);
+		}
+
+		public void DidUpdateSettings()
+		{
+			Settings.Instance.ApplySetting("bgm_volume", Settings.Type.Float, _bgmVolume.normalizedValue);
+			Settings.Instance.ApplySetting("sfx_volume", Settings.Type.Float, _sfxVolume.normalizedValue);
 		}
 		
 		#endregion
