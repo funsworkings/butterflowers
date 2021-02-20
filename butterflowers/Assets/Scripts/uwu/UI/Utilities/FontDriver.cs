@@ -19,7 +19,7 @@ namespace uwu.UI.Utilities
 
 		public Setting setting = Setting.Body2;
 
-		[SerializeField] FontStyle styling;
+		[SerializeField] FontStyle styling = null;
 
 		Local settings;
 

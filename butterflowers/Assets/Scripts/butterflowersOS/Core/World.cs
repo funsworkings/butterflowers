@@ -16,6 +16,7 @@ using butterflowersOS.Objects.Entities;
 using butterflowersOS.Objects.Entities.Interactables;
 using butterflowersOS.Objects.Managers;
 using butterflowersOS.Presets;
+using butterflowersOS.UI;
 using Neue.Agent.Brain.Data;
 using Objects.Managers;
 using UnityEngine;
@@ -76,9 +77,9 @@ namespace butterflowersOS.Core
         // External
 
         [Header("General")]
-        [SerializeField] WorldPreset Preset;
+        [SerializeField] WorldPreset Preset = null;
         [SerializeField] CameraManager CameraManager;
-        [SerializeField] Focusing Focusing;
+        [SerializeField] Focusing Focusing = null;
 
         GameDataSaveSystem _Save = null;
         Library Library = null;
@@ -99,10 +100,11 @@ namespace butterflowersOS.Core
         [Header("Objects")]
         Sun Sun = null;
         Nest Nest = null;
-        Quilt Quilt = null;
-        [SerializeField] Cage Cage = null;
 
-        [SerializeField] Wand wand;
+        [SerializeField] Wand wand = null;
+
+        [Header("UI")] 
+        [SerializeField] WelcomeMessage welcomeMessage = null;
 
         // Attributes
 
@@ -113,9 +115,9 @@ namespace butterflowersOS.Core
         [SerializeField] Camera m_playerCamera = null;
         [SerializeField] Loader Loader = null;
 
-        [SerializeField] ToggleOpacity gamePanel;
-        [SerializeField] SceneAudioManager sceneAudio;
-        [SerializeField] PauseMenu pauseMenu;
+        [SerializeField] ToggleOpacity gamePanel = null;
+        [SerializeField] SceneAudioManager sceneAudio  = null;
+        [SerializeField] PauseMenu pauseMenu = null;
         [SerializeField] Profile profile;
 
         [SerializeField] bool wait = false;
@@ -146,7 +148,7 @@ namespace butterflowersOS.Core
             [SerializeField] List<Focusable> focusables = new List<Focusable>();
 
         [Header("Audio")] 
-            [SerializeField] AudioSource loadAudio;
+            [SerializeField] AudioSource loadAudio = null;
             [SerializeField] AudioClip loadAudioClip;
             
         #region Accessors
@@ -189,7 +191,6 @@ namespace butterflowersOS.Core
             Library = Library.Instance;
             Files = FileNavigator.Instance;
             Nest = Nest.Instance;
-            Quilt = Quilt.Instance;
 
             /* * * * * * * * * * * * * * * * */
 
@@ -277,7 +278,12 @@ namespace butterflowersOS.Core
             Sun.Load(_Save.data.sun);
 
             yield return new WaitForEndOfFrame();
+
+            if (type == AdvanceType.Broken)
                 Surveillance.New(onload: true); // Trigger surveillance (if profile not generated!)
+            else
+                Surveillance.Ignore();
+
 
             if (!Cutscenes.intro) 
             {
@@ -287,11 +293,15 @@ namespace butterflowersOS.Core
            
             LOAD = true;
             Loader.Dispose();
+
+            if(Cutscenes.HasCompletedIntro) welcomeMessage.DisplayUsername(username);
             
             while(Cutscenes.inprogress) yield return null; // Wait for cutscenes to wrap on open before showing game panel
-            
+
             gamePanel.Show();
+            
             pauseMenu.enabled = true;
+            pauseMenu.ToggleTeleport(_Save.IsProfileValid());
         }
 
         public void Cycle(bool refresh)
@@ -311,11 +321,16 @@ namespace butterflowersOS.Core
                 Sun.active = false;
                 yield return new WaitForEndOfFrame();
             }
-            
-            Surveillance.Stop();
-            Surveillance.Dispose();
-            while (Surveillance.recording) yield return null;
-                _Save.data.surveillanceData = (SurveillanceData[])Surveillance.Save(); // Continue saving surveillance data if profile has not been generated
+
+            if (Surveillance.IsRecording) 
+            {
+                Surveillance.Stop();
+                Surveillance.Dispose();
+                
+                while (Surveillance.recording) 
+                    yield return null;
+            }
+            _Save.data.surveillanceData = (SurveillanceData[])Surveillance.Save(); // Continue saving surveillance data if profile has not been generated
             
             while(Cutscenes.inprogress) yield return null; // Wait for all cutscenes to dispose before continuing
 
@@ -356,9 +371,12 @@ namespace butterflowersOS.Core
                     while (Sequence.Pause) yield return null;
                 }
             }
-            
-            Surveillance.New(); // Trigger
-            
+
+            if (_type == AdvanceType.Broken)
+                Surveillance.New(); // Trigger
+            else
+                Surveillance.Ignore();
+
             Beacons.RefreshBeacons(); // Refresh all beacons
             if (!string.IsNullOrEmpty(Surveillance.lastPhotoPath)) 
             {
@@ -376,7 +394,7 @@ namespace butterflowersOS.Core
                 {
                     Texture2D tex;
                     
-                    IMAGES = Library.ExportSheet("test", out IMAGE_ROWS, out IMAGE_COLUMNS, out tex, oColumns:1);
+                    IMAGES = Library.ExportSheet("test", out IMAGE_ROWS, out IMAGE_COLUMNS, out tex);
 
                     if (!Cutscenes.outro) 
                     {
@@ -401,7 +419,7 @@ namespace butterflowersOS.Core
 
         void UnsubscribeToEvents()
         {
-            Library.onDiscoverFile -= DidDiscoverFile;
+            if(Library.IsValid()) Library.onDiscoverFile -= DidDiscoverFile;
         }
 
         #endregion
@@ -498,17 +516,17 @@ namespace butterflowersOS.Core
             Texture2D tex;
                     
             IMAGES = Library.ExportSheet("test", out IMAGE_ROWS, out IMAGE_COLUMNS, out tex);
-            ExportNeueAgent(IMAGES, (ushort)IMAGE_ROWS);
+            ExportNeueAgent(IMAGES, (ushort)IMAGE_ROWS, (ushort)IMAGE_COLUMNS);
         }
         
-        public void ExportNeueAgent(byte[] images, ushort image_height)
+        public void ExportNeueAgent(byte[] images, ushort image_height, ushort image_width)
         {
             string file = "";
             string ext = "";
             
             string path = GetExportPath(out file, out ext);
             
-            BrainData data = new BrainData(_Save.data, images, image_height);
+            BrainData data = new BrainData(_Save.data, images, image_height, image_width);
             
             bool success = ExportProfile(path, data);
             Debug.LogWarningFormat("{0} generating profile => {1}", (success)? "Success":"Fail", path);
@@ -583,7 +601,7 @@ namespace butterflowersOS.Core
             }
             catch (System.Exception err) 
             {
-                Debug.LogWarning("Unable to upload neueagent to server!");
+                Debug.LogWarning("Unable to upload neueagent to server! => " + err.Message);
             }
         }
 
@@ -607,12 +625,13 @@ namespace butterflowersOS.Core
         public void ImportNeueAgent(BrainData brainData)
         {
             if (Pause) return; // Ignore request to import if paused
+            if (!_Save.IsSelfProfileValid()) return; // Ignore reques to import if not generated neueagent
 
             string @self = _Save.data.export_agent_created_at;
             string @agent = _Save.data.agent_created_at;
             string @other = brainData.created_at;
             
-            if (@agent == @other) return; // Ignore request to import duplicate neueagent
+            if (!Preset.allowExternalNeueagent && (@agent == @other || @self != @other)) return; // Ignore request to import duplicate neueagent
         
             bool success = AggregateBrainData(brainData);
             type = (success && _Save.IsProfileValid()) ? AdvanceType.Continuous : AdvanceType.Broken;
@@ -661,6 +680,7 @@ namespace butterflowersOS.Core
                 _Save.data.profile = profile = brainData.profile;
                 _Save.data.images = brainData.images;
                 _Save.data.image_height = brainData.image_height;
+                _Save.data.image_width = brainData.image_width;
 
                 _Save.data.agent_event_stack = brainData.surveillanceData.Length; // Total stack of events to parse from
             }
@@ -807,14 +827,20 @@ namespace butterflowersOS.Core
         protected override void HandleImageImport(IEnumerable<string> images, POINT point)
         {
             bool multipleImages = images.Count() > 1;
+            bool useRandomPosition = multipleImages;
+            
+            /*#if UNITY_STANDALONE_OSX
+                useRandomPosition = true; // override random position for OSX
+            #endif*/
                 
-            foreach (string image in images) {
+            foreach (string image in images) 
+            {
                 var info = new FileInfo(image);
                 var path = info.FullName;
 
                 bool exists = Library.RegisterFileInstance(path, Library.FileType.User);
                 if (exists)
-                    wand.AddBeacon(path, point, random: multipleImages); // Add beacon to scene via wand
+                    wand.AddBeacon(path, point, random: useRandomPosition); // Add beacon to scene via wand
                 else
                     Debug.LogErrorFormat("File => {0} does not exist on user's desktop!", path);
             }

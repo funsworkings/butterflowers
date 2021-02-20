@@ -17,7 +17,7 @@ namespace Objects.Managers
 	{
 		// External
 
-		[SerializeField] Surveillance Surveillance;
+		[SerializeField] Surveillance Surveillance = null;
 		
 		// Properties
 
@@ -29,17 +29,12 @@ namespace Objects.Managers
 		[SerializeField] TMP_Text score;
 
 		[SerializeField] Transform scoreItemParent;
-		[SerializeField] SummaryDeck deck;
+		[SerializeField] SummaryDeck deck = null;
 
 		[SerializeField] ToggleScale scoreScaler;
 
 		[SerializeField] Image strokeImage;
 		[SerializeField] Animation scoreDropdownAnimation;
-		
-		// Attributes
-		
-		[SerializeField] float timeBetweenScores = .1f;
-		[SerializeField] float timeBeforeStroke = .3f;
 
 
 		#region Monobehaviour callbacks

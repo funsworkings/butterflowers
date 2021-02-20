@@ -96,8 +96,8 @@ namespace uwu.Dialogue
 
 		#region External
 
-		[SerializeField] UnityEngine.UI.Text txt_container;
-		[SerializeField] TMP_Text tmp_container;
+		[SerializeField] UnityEngine.UI.Text txt_container = null;
+		[SerializeField] TMP_Text tmp_container = null;
 
 		#endregion
 

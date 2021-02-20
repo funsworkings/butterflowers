@@ -16,7 +16,7 @@ namespace uwu.Snippets
 
 		public State state = State.Normal;
 
-		[SerializeField] Setting[] settings;
+		[SerializeField] Setting[] settings = new Setting[]{};
 
 		// Update is called once per frame
 		void Update()
@@ -27,10 +27,6 @@ namespace uwu.Snippets
 				var tex = setting.icon;
 
 				var mode = CursorMode.Auto;
-
-#if UNITY_STANDALONE_OSX && !UNITY_EDITOR
-                mode = CursorMode.ForceSoftware;
-#endif
 
 				var visible = NativeCursor.visible = (tex != null);
 				if(visible)

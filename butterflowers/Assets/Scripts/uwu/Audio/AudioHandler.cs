@@ -34,8 +34,8 @@ namespace uwu.Audio
 
 		#region Properties
 
-		[SerializeField] AudioMixerGroup mixerGroup;
-		[SerializeField] AudioClip[] audioClips;
+		[SerializeField] AudioMixerGroup mixerGroup = null;
+		[SerializeField] AudioClip[] audioClips = new AudioClip[]{};
 
 		#endregion
 
@@ -180,6 +180,7 @@ namespace uwu.Audio
 						mixer.SetFloat(pitchParam, pitch);
 					}
 					catch (Exception e) {
+						Debug.LogWarning(e.Message);
 					}
 
 				return;

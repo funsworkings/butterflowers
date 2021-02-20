@@ -6,8 +6,8 @@ namespace uwu.UI.Behaviors
 	[RequireComponent(typeof(RectTransform))]
 	public class FitInCanvas : MonoBehaviour
 	{
-		[SerializeField] float paddingTop, paddingBottom;
-		[SerializeField] float paddingLeft, paddingRight;
+		[SerializeField] float paddingTop = 0f, paddingBottom = 0f;
+		[SerializeField] float paddingLeft = 0f, paddingRight = 0f;
 
 		Canvas canvas;
 		float height = -1f;

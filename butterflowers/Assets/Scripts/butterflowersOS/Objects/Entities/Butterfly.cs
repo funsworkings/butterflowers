@@ -32,16 +32,16 @@ namespace butterflowersOS.Objects.Entities
     
         TrailRenderer trailRenderer;
         Renderer[] renderers;
-        new Material material;
+        Material material;
         MaterialPropertyBlock propertyBlock; 
     
         [Header("Base")]
 
-        [SerializeField] Preset preset;
+        [SerializeField] Preset preset = null;
     
         [Header("Appearance")]
     
-        [SerializeField] GameObject trailsPrefab;
+        [SerializeField] GameObject trailsPrefab = null;
         GameObject trails = null;
         ParticleSystem trails_ps;
                      
@@ -86,7 +86,7 @@ namespace butterflowersOS.Objects.Entities
 
         void OnDestroy()
         {
-            Unregister();
+            //Unregister();
         }
 
         void Update()
@@ -141,7 +141,7 @@ namespace butterflowersOS.Objects.Entities
         
             propertyBlock.SetFloat("_Death", 0f);
             propertyBlock.SetFloat("_TimeOffset", Random.Range(0f, 1f));
-            propertyBlock.SetFloat("_Speed", Random.Range(0.5f, 1.5f));
+            propertyBlock.SetFloat("_Speed", Random.Range(2f, 5f));
             foreach (Renderer r in renderers) {
                 r.SetPropertyBlock(propertyBlock);
             }

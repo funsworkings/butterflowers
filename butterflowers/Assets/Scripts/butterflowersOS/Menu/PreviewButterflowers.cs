@@ -5,11 +5,6 @@ namespace butterflowersOS.Menu
 {
 	public class PreviewButterflowers : Spawner
 	{
-		// Properties
-
-		[SerializeField] int amount = 100;
-
-
 		protected override void Start()
 		{
 			CalculateBounds();

@@ -11,7 +11,7 @@ public class Preview : MonoBehaviour
     RectTransform rect;
     RawImage image;
 
-    [SerializeField] CanvasGroup canvasGroup;
+    [SerializeField] CanvasGroup canvasGroup = null;
 
     public bool hiding = false;
 

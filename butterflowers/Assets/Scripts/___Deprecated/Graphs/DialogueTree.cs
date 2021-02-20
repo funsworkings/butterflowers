@@ -18,7 +18,7 @@ namespace Noder.Graphs {
         public static System.Action<DialogueTree, string> onReceiveDialogue;
         public static System.Action<DialogueTree> onCompleteTree;
 
-        [SerializeField] DialogueTree m_externalTree;
+        [SerializeField] DialogueTree m_externalTree = null;
         public DialogueTree externalTree => m_externalTree; 
 
         DialogueHandler m_dialogueHandler = null;
@@ -33,7 +33,7 @@ namespace Noder.Graphs {
             }
         }
 
-        [SerializeField] Memories Memories;
+        [SerializeField] Memories Memories = null;
 
         public void FlagTemporaryDialogue(int[] node_ids)
         {

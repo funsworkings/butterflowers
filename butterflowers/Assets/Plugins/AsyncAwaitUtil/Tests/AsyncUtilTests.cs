@@ -147,7 +147,9 @@ namespace UnityAsyncAwaitUtil
         async Task RunWwwAsync()
         {
             Debug.Log("Downloading asset bundle using WWW");
+#pragma warning disable 618
             var bytes = (await new WWW(AssetBundleSampleUrl)).bytes;
+#pragma warning restore 618
             Debug.Log("Downloaded " + (bytes.Length / 1024) + " kb");
         }
 
@@ -210,7 +212,9 @@ namespace UnityAsyncAwaitUtil
         async Task<byte[]> DownloadRawDataAsync(string url)
         {
             var request = UnityWebRequest.Get(url);
+#pragma warning disable 618
             await request.Send();
+#pragma warning restore 618
             return request.downloadHandler.data;
         }
 

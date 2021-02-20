@@ -8,8 +8,8 @@ namespace uwu.Snippets.Notifications
 	{
 		public delegate void OnDismissed(Notification notification);
 
-		[SerializeField] TMP_Text dialog;
-		[SerializeField] Image icon;
+		[SerializeField] TMP_Text dialog = null;
+		[SerializeField] Image icon = null;
 
 		Notification m_notification;
 

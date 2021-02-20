@@ -5,7 +5,7 @@ namespace uwu.Snippets
 	[ExecuteInEditMode]
 	public class MaintainGlobalScale : MonoBehaviour
 	{
-		[SerializeField] Vector3 scale;
+		[SerializeField] Vector3 scale = Vector3.zero;
 
 		// Update is called once per frame
 		void Update()

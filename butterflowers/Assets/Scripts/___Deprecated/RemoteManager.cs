@@ -19,18 +19,18 @@ namespace Objects.Managers
 		
 		// External
 
-		[SerializeField] Wand wand;
+		[SerializeField] Wand wand = null;
 		
 		// Properties
 
 		bool load = false;
 
-		[SerializeField] WorldPreset preset;
+		[SerializeField] WorldPreset preset = null;
 		[SerializeField] Cage cage;
 		[SerializeField] WorldState state = WorldState.User;
 		
-		[SerializeField] UnityEngine.UI.Image remoteProgressBar;
-		[SerializeField] ToggleOpacity userOverlay, remoteOverlay;
+		[SerializeField] UnityEngine.UI.Image remoteProgressBar = null;
+		[SerializeField] ToggleOpacity userOverlay = null, remoteOverlay = null;
 		
 		// Attributes
 

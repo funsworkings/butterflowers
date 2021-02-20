@@ -4,7 +4,7 @@ namespace uwu.Snippets
 {
 	public class Follow : MonoBehaviour
 	{
-		[SerializeField] Transform target;
+		[SerializeField] Transform target = null;
 		[SerializeField] Vector3 offset = Vector3.zero;
 
 		[SerializeField] bool x = true, y = true, z = true;

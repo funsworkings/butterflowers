@@ -23,7 +23,7 @@ namespace butterflowersOS.Core.Agent
 		[SerializeField] World World;
 		[SerializeField] Nest Nest;
 
-		[SerializeField] Surveillance Surveillance;
+		[SerializeField] Surveillance Surveillance = null;
 		[SerializeField] BeaconManager Beacons;
 		[SerializeField] VineManager Vines;
 		
@@ -32,10 +32,10 @@ namespace butterflowersOS.Core.Agent
 		FOV fov;
 
 		[Header("Properties")] 
-			[SerializeField] WorldPreset preset;
+			[SerializeField] WorldPreset preset = null;
 
 		[Header("Elements")]
-			[SerializeField] ToggleOpacity uiPanel;
+			[SerializeField] ToggleOpacity uiPanel = null;
 
 		[Header("Data")] 
 			[SerializeField] SurveillanceData data = null;
@@ -43,7 +43,6 @@ namespace butterflowersOS.Core.Agent
 			
 		[Header("Behaviours")]
 			[SerializeField] float refresh_t = 0f;
-			[SerializeField] int logIndex = 0;
 
 
 		void Awake()
@@ -91,7 +90,6 @@ namespace butterflowersOS.Core.Agent
 			FetchSurveillanceData(); // Get current surveillance data
 
 			refresh_t = 0f; // Reset refresh time
-			logIndex = 0;
 		}
 
 		#endregion
