@@ -8,7 +8,7 @@ namespace uwu.Gameplay
 	{
 		public GameObject prefab;
 
-		[SerializeField] ObjectPool pool;
+		[SerializeField] ObjectPool pool = null;
 		[SerializeField] int count;
 
 		[SerializeField] protected Transform root, parent;

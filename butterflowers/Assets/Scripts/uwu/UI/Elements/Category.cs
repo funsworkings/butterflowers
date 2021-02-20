@@ -5,7 +5,7 @@ namespace uwu.UI.Elements
 {
 	public class Category : MonoBehaviour
 	{
-		[SerializeField] TogglePosition options;
+		[SerializeField] TogglePosition options = null;
 		ToggleOpacity opacity;
 
 		void Awake()

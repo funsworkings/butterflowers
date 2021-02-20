@@ -41,11 +41,11 @@ namespace butterflowersOS.Objects.Entities.Interactables
         Material mat;
         new Collider collider;
         new Rigidbody rigidbody;
-        [SerializeField] AudioHandler _audioHandler;
+        [SerializeField] AudioHandler _audioHandler = null;
         Damage damage;
 
-        [SerializeField] ParticleSystem sparklesPS, cometPS, deathPS;
-        [SerializeField] GameObject pr_impactPS, pr_shinePS;
+        [SerializeField] ParticleSystem sparklesPS = null, cometPS = null, deathPS = null;
+        [SerializeField] GameObject pr_impactPS = null;
 
         [SerializeField] TMPro.TMP_Text infoText;
     
@@ -57,10 +57,10 @@ namespace butterflowersOS.Objects.Entities.Interactables
         public bool queue = false;
 
         [SerializeField] bool disposeOnClose = true;
-        [SerializeField] WorldPreset worldPreset;
+        [SerializeField] WorldPreset worldPreset = null;
 
         [Header("Physics")]
-        [SerializeField] float force = 10f, m_energy = 0f, m_globalEnergy = 0f;
+        [SerializeField] float force = 10f, m_energy = 0f;
         [SerializeField] float energyDecaySpeed = 1f, energyDecayDelay = 0f, timeSinceEnergyBoost = 0f;
 
         [Header("Beacons")]
@@ -68,10 +68,6 @@ namespace butterflowersOS.Objects.Entities.Interactables
         [SerializeField] int m_capacity = 12;
         [SerializeField] float dropRadius = 3f, dropDistance = 50f;
         [SerializeField] LayerMask dropMask;
-
-        [Header("Appearance")]
-        [SerializeField] float colorSmoothSpeed = 1f;
-        [SerializeField] Color inactiveColor, t_color;
 
         [Header("Audio")] 
         [SerializeField] float minPitch = 1f;
@@ -176,7 +172,7 @@ namespace butterflowersOS.Objects.Entities.Interactables
         {
             base.OnDestroyed();
 
-            if(damage != null)damage.onHit.RemoveListener(SpillKick);
+            if(damage != null) damage.onHit.RemoveListener(SpillKick);
 
             Beacon.Deleted -= onDestroyBeacon;
 

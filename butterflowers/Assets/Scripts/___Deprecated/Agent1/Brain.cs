@@ -47,23 +47,22 @@ namespace Neue.Agent1
 
 		// Properties
 
-		[SerializeField] WorldPreset worldPreset;
-		[SerializeField] Surveillance surveillance;
+		[SerializeField] WorldPreset worldPreset = null;
+		[SerializeField] Surveillance surveillance = null;
 
-		[SerializeField] Agent.Presets.BrainPreset preset;
+		[SerializeField] Agent.Presets.BrainPreset preset = null;
 
 		[SerializeField] Profile cacheProfile;
 		[SerializeField] Profile m_profile;
 
 		[SerializeField] FrameFloatGroup profileDelta = new FrameFloatGroup();
-		bool needsToCalculateDelta = false;
 
-		[SerializeField] ModuleTree[] behaviourTrees;
-		[SerializeField] ModuleTreeHelper behaviourTreeHelper;
+		[SerializeField] ModuleTree[] behaviourTrees = new ModuleTree[]{};
+		[SerializeField] ModuleTreeHelper behaviourTreeHelper = null;
 
 		Actions actions;
 
-		[SerializeField] Body body;
+		[SerializeField] Body body = null;
 
 		// Collections
 
@@ -75,7 +74,7 @@ namespace Neue.Agent1
 
 		// Attributes
 
-		[SerializeField] bool load = false, active = false, reset = true, deltas = false;
+		[SerializeField] bool load = false, active = false, reset = true;
 
 		[Header("State")] [SerializeField] [Range(-1f, 1f)]
 		float m_mood = 0f;
@@ -106,7 +105,7 @@ namespace Neue.Agent1
 		public List<EVENTCODE> NEST_EVENTS = new List<EVENTCODE>();
 		int RECEIVE_NEST_EVENT = -1;
 
-		[Header("UI")] [SerializeField] Transform hudAttributesRoot, hudStatsRoot;
+		[Header("UI")] [SerializeField] Transform hudAttributesRoot = null, hudStatsRoot  = null;
 		[SerializeField] GameObject hudAttributePrefab, hudStatPrefab;
 
 		[SerializeField] FrameStringGroup hudIdentifiers = new FrameStringGroup();
@@ -855,7 +854,9 @@ namespace Neue.Agent1
 				try {
 					old = cacheProfile.GetWeight(behaviour);
 				}
-				catch (System.Exception e) {
+				catch (System.Exception e) 
+				{
+					Debug.LogWarning(e.Message);
 					old = 0f;
 				}
 

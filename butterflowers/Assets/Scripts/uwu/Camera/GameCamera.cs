@@ -11,6 +11,9 @@ namespace uwu.Camera
 	[RequireComponent(typeof(CinemachineVirtualCamera))]
 	public class GameCamera : MonoBehaviour
 	{
+		public static GameCamera ActiveCamera = null;
+		
+		
 		#region Events
 
 		public UnityEvent onEnable, onDisable;
@@ -31,6 +34,8 @@ namespace uwu.Camera
 		public float fov => camera.m_Lens.FieldOfView;
 		public float nearClipPlane => camera.m_Lens.NearClipPlane;
 		public float farClipPlane => camera.m_Lens.FarClipPlane;
+
+		public bool IsActive => (ActiveCamera == this);
 
 		#endregion
 
@@ -59,6 +64,8 @@ namespace uwu.Camera
 
 			onEnabled();
 			onEnable.Invoke();
+
+			ActiveCamera = this;
 		}
 
 		protected virtual void onEnabled()
@@ -72,6 +79,8 @@ namespace uwu.Camera
 
 			onDisabled();
 			onDisable.Invoke();
+
+			if (ActiveCamera == this) ActiveCamera = null;
 		}
 
 		protected virtual void onDisabled()

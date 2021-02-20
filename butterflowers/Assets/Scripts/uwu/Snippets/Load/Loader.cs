@@ -20,8 +20,8 @@ namespace uwu.Snippets.Load
 		
 		// Properties
 
-		[SerializeField] ToggleOpacity opacity;
-		[SerializeField] Image fill;
+		[SerializeField] ToggleOpacity opacity = null;
+		[SerializeField] Image fill = null;
 		
 		[SerializeField] bool loading = false;
 		
@@ -36,7 +36,8 @@ namespace uwu.Snippets.Load
 
 		void Awake()
 		{
-			if (Instance == null) {
+			if (Instance == null) 
+			{
 				Instance = this;
 				DontDestroyOnLoad(gameObject);
 			}

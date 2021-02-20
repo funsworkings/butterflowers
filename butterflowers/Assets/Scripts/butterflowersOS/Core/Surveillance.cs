@@ -31,13 +31,13 @@ namespace butterflowersOS.Core
 		Library Lib;
 		World World;
 
-		[SerializeField] Sun Sun;
-		[SerializeField] ButterflowerManager ButterflyManager;
-		[SerializeField] CameraManager CameraManager;
-		[SerializeField] Snapshot snapshotCamera;
-		[SerializeField] Nest Nest;
-		[SerializeField] Wand Wand;
-		[SerializeField] Focusing Focus;
+		[SerializeField] Sun Sun = null;
+		[SerializeField] ButterflowerManager ButterflyManager = null;
+		[SerializeField] CameraManager CameraManager = null;
+		[SerializeField] Snapshot snapshotCamera = null;
+		[SerializeField] Nest Nest = null;
+		[SerializeField] Wand Wand = null;
+		[SerializeField] Focusing Focus = null;
 
 		// Collections
 
@@ -46,7 +46,7 @@ namespace butterflowersOS.Core
 
 		// Properties
 	
-		[SerializeField] WorldPreset Preset;
+		[SerializeField] WorldPreset Preset = null;
 		[SerializeField] global::Neue.Agent.Presets.BrainPreset BrainPreset;
 	
 		public bool recording = true;
@@ -100,6 +100,8 @@ namespace butterflowersOS.Core
 			return logs[index];
 		}
 
+		public bool IsRecording => recording;
+
 		#endregion
 	
 		#region Monobehaviour callbacks
@@ -123,9 +125,16 @@ namespace butterflowersOS.Core
 		{
 			cacheSunDays = Sun.days;
 			EnsureLog();
+			
+			Debug.LogWarningFormat("Surveillance was INITIALIZED => {0} logs", allLogs.Length);
 
 			StartCoroutine("Capturing");
 			recording = true;
+		}
+
+		public void Ignore()
+		{
+			Debug.LogWarningFormat("Surveillance was IGNORED => {0} logs", allLogs.Length);
 		}
 
 		public void Stop()
@@ -176,7 +185,7 @@ namespace butterflowersOS.Core
 				logs = new List<SurveillanceData>(previousLogs);
 			else
 				logs = new List<SurveillanceData>();
-			
+
 			SubscribeToEvents();
 		}
 	
@@ -194,8 +203,11 @@ namespace butterflowersOS.Core
 
 		void UnsubscribeFromEvents()
 		{
-			Lib.onAddedFiles -= onAddedFiles;
-			Lib.onRemovedFiles -= onRemovedFiles;
+			if (Lib.IsValid()) 
+			{
+				Lib.onAddedFiles -= onAddedFiles;
+				Lib.onRemovedFiles -= onRemovedFiles;
+			}
 
 			Events.onFireEvent -= OnReceiveEvent;
 		}

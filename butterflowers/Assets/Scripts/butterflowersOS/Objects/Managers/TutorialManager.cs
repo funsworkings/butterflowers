@@ -19,10 +19,10 @@ namespace butterflowersOS.Objects.Managers
 		public bool inprogress = false, dispose = false;
 		public int index = -1;
 		
-		[SerializeField] GameObject root;
-		[SerializeField] ToggleOpacity opacity;
-		[SerializeField] TMP_Text progressText;
-		[SerializeField] Text actionText;
+		[SerializeField] GameObject root = null;
+		[SerializeField] ToggleOpacity opacity = null;
+		[SerializeField] TMP_Text progressText = null;
+		[SerializeField] Text actionText = null;
 
 		#region Accessors
 

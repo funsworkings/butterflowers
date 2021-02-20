@@ -303,21 +303,6 @@ namespace B83.Win32
         public IntPtr hwnd;
     }
 
-    [StructLayout(LayoutKind.Sequential)]
-    public struct POINT
-    {
-        public int x, y;
-        public POINT(int aX, int aY)
-        {
-            x = aX;
-            y = aY;
-        }
-        public override string ToString()
-        {
-            return "(" + x + ", " + y + ")";
-        }
-    }
-
     //WH_GETMESSAGE
     [StructLayout(LayoutKind.Sequential)]
     public struct MSG
@@ -416,9 +401,10 @@ namespace B83.Win32
     public static class UnityDragAndDropHook
     {
         public delegate void DroppedFilesEvent(List<string> aPathNames, POINT aDropPoint);
-        public static event DroppedFilesEvent OnDroppedFiles;
 
 #if UNITY_STANDALONE_WIN && !UNITY_EDITOR_WIN
+
+        public static event DroppedFilesEvent OnDroppedFiles; 
 
         private static uint threadId;
         private static IntPtr mainWindow = IntPtr.Zero;

@@ -33,8 +33,9 @@ namespace uwu.Net.Core
 						var err = JsonUtility.FromJson<Error>(response);
 						message = err.message;
 					}
-					catch (Exception e) {
-						message = string.Format("Server error*{0}", status);
+					catch (Exception e) 
+					{
+						message = string.Format("Server error*{0} message*{1}", status, e.Message);
 					}
 
 					error = new Exception(message);

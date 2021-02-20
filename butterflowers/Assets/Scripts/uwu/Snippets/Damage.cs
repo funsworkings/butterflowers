@@ -37,7 +37,8 @@ namespace uwu.Snippets
 		{
 			def_scale = transform.localScale;
 
-			if (renderer != null && useColor) {
+			if (renderer != null && useColor) 
+			{
 				materials = renderer.materials;
 				def_colors = new Color[materials.Length];
 				for (var i = 0; i < materials.Length; i++)

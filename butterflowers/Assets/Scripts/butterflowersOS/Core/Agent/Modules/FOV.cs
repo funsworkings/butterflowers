@@ -8,7 +8,7 @@ namespace butterflowersOS.Core.Agent.Modules
 	{
 		// External
 		
-		[SerializeField] Wand Wand;
+		[SerializeField] Wand Wand = null;
 		
 		
 		#region Queries

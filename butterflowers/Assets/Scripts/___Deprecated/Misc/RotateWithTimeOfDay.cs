@@ -7,7 +7,7 @@ using UnityEngine;
 [Obsolete("Obsolete API!", true)]
 public class RotateWithTimeOfDay : MonoBehaviour, IReactToSun
 {
-    [SerializeField] Vector3 axis;
+    [SerializeField] Vector3 axis = Vector3.up;
     [SerializeField] float offset = 0f;
 
     public void ReactToDay(int days)

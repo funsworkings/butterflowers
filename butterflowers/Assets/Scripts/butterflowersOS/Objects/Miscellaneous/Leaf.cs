@@ -5,11 +5,11 @@ namespace butterflowersOS.Objects.Miscellaneous
 {
 	public class Leaf : MonoBehaviour
 	{
-		[SerializeField] WorldPreset preset;
+		[SerializeField] WorldPreset preset = null;
 		[SerializeField] Transform mesh;
 		
 		Vector3 scale = Vector3.zero;
-		[SerializeField] bool visible = false, awake = false;
+		[SerializeField] bool visible = false;
 		
 		bool lerp = false;
 		float lerp_t = 0f, lerp_duration = 3f;

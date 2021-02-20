@@ -5,10 +5,10 @@ namespace butterflowersOS.Snippets
 {
 	public class Burster : MonoBehaviour
 	{
-		[SerializeField] ObjectPool burstPool;
+		[SerializeField] ObjectPool burstPool = null;
 		[SerializeField] float cameraDistance = 1f;
 
-		Camera camera;
+		new Camera camera;
     
 		// Start is called before the first frame update
 		void Start()

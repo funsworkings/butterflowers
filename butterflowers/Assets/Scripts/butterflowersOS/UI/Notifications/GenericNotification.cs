@@ -44,7 +44,9 @@ namespace butterflowersOS.UI.Notifications
 			if (persistent) return;
 
 			time += Time.unscaledDeltaTime;
-			if(time > lifetime) 
+			if (time > lifetime) time = lifetime;
+			
+			if(time >= lifetime) 
 				Clear();
 			else
 				OnUpdate();
@@ -78,7 +80,7 @@ namespace butterflowersOS.UI.Notifications
 			}
 		}
 
-		public void Clear()
+		protected virtual void Clear()
 		{
 			visible = false;
 			Destroy(gameObject);

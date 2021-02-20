@@ -25,9 +25,19 @@ namespace uwu
 			
 			protected List<object> datas = new List<object>();
 
-		
-		
-		#region Autosaving
+
+			void Awake()
+			{
+				
+			}
+
+			void Start()
+			{
+				
+			}
+
+
+			#region Autosaving
 		
 		bool m_autosave;
 		public bool autosave

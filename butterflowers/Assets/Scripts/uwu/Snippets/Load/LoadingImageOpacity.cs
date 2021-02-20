@@ -6,7 +6,7 @@ namespace uwu.Snippets.Load
 	[RequireComponent(typeof(Loader))]
 	public class LoadingImageOpacity : MonoBehaviour
 	{
-		[SerializeField] Image fill;
+		[SerializeField] Image fill = null;
 		Loader loading;
 
 		void Awake()
