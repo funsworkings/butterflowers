@@ -102,11 +102,10 @@ namespace butterflowersOS.AI
 				FreeLook();
 				FreeMove();
 			}
-		}
 
-		void FixedUpdate()
-		{
-			_rigid.MovePosition(_rigid.position + _velocity * Time.fixedDeltaTime);
+			_rigid.velocity = _velocity;
+			
+			//_rigid.MovePosition(transform.position +  * Time.deltaTime);
 		}
 
 		#region Freeplay
