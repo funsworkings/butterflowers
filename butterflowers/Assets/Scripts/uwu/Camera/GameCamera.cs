@@ -51,7 +51,8 @@ namespace uwu.Camera
 
 		protected virtual void Start()
 		{
-			if (camera != null) {
+			if (camera != null) 
+			{
 				transposer = camera.GetCinemachineComponent<CinemachineTransposer>();
 				composer = camera.GetCinemachineComponent<CinemachineComposer>();
 			}

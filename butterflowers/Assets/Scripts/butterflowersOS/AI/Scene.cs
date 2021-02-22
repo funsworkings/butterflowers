@@ -74,6 +74,8 @@ namespace butterflowersOS.AI
 			}
 
 			camera.ReadInput = true;
+			camera.SwitchToFreeplay();
+			
 			listen = true;
 		}
 

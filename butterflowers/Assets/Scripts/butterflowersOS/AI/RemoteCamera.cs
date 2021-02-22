@@ -5,6 +5,7 @@ using butterflowersOS.Menu;
 using UnityEngine;
 using Cinemachine;
 using uwu.Camera;
+using uwu.Extensions;
 
 namespace butterflowersOS.AI
 {
@@ -33,7 +34,10 @@ namespace butterflowersOS.AI
 		[SerializeField] float xAngle = 0f, yAngle = 0f;
 
 		Vector3 mouseA, mouseB;
-		Vector3 velocity = Vector3.zero;
+
+		Rigidbody _rigid;
+		
+		Vector3 anchor = Vector3.zero;
 		
 		public bool ReadInput { get; set; }
 
@@ -46,11 +50,32 @@ namespace butterflowersOS.AI
 		[SerializeField] int velocityStackSize = 10;
 
 		[SerializeField] float minYAngle = 0f, maxYAngle = 2f * Mathf.PI;
-		
+
+		[Header("Free look")]
+			[SerializeField] Quaternion _rootAngle;
+			[SerializeField] Vector2 _rotation = Vector2.zero;
+			[SerializeField] bool invertX = false, invertY = false;
+			[SerializeField] float rotationSpeedX = 1f, rotationSpeedY = 1f;
+			[SerializeField] float minRotationY = -89f, maxRotationY = 89f;
+			[SerializeField] int rotationSmoothFrames = 1;
+
+		[Header("Free move")] 
+			[SerializeField] float acceleration = 1f, deceleration = 1f;
+			[SerializeField] Vector3 _velocity = Vector3.zero;
+			[SerializeField] float maxSpeed = 1f;
+
 		// Collections
 		
 		List<Vector3> velocities = new List<Vector3>();
+		List<Vector2> rotationFrames = new List<Vector2>();
 		
+
+		protected override void Awake()
+		{
+			base.Awake();
+
+			_rigid = GetComponent<Rigidbody>();
+		}
 		
 		protected override void Start()
 		{
@@ -62,110 +87,80 @@ namespace butterflowersOS.AI
 
 			xAngle = Mathf.Asin(offset.z / radius);
 			yAngle = Mathf.Asin(offset.y / radius);
+
+			_rootAngle = transform.localRotation;
+
+			_rigid.freezeRotation = true;
 		}
 
 		void Update()
 		{
 			if (!IsActive || !ReadInput) return;
 
-			bool releaseDuringFrame = false;
-
 			if (!pauseMenu.IsActive) 
 			{
-				Vector3 mousePosition = Input.mousePosition;
+				FreeLook();
+				FreeMove();
+			}
+		}
 
-				if ((_state == State.Wait || _state == State.Release) && Input.GetMouseButtonDown(0)) 
-				{
-					mouseA = mouseB = mousePosition;
-					velocity = Vector3.zero;
-					velocities = new List<Vector3>();
+		void FixedUpdate()
+		{
+			_rigid.MovePosition(_rigid.position + _velocity * Time.fixedDeltaTime);
+		}
 
-					_state = State.Pan;
-				}
-				else if ((_state == State.Pan) && Input.GetMouseButton(0)) 
-				{
-					mouseB = mousePosition;
-					velocity = (mouseB - mouseA) * strength * Time.deltaTime;
-					mouseA = mouseB;
+		#region Freeplay
 
-					Drag();
+		public void SwitchToFreeplay()
+		{
+			transposer.enabled = false;
+			composer.enabled = false;
+		}
 
-					_state = State.Pan;
-				}
-				else 
-				{
-					releaseDuringFrame = (_state == State.Pan && Input.GetMouseButtonUp(0));
-				}
+		void FreeLook()
+		{
+			Vector2 rot = new Vector2(Input.GetAxis("Mouse X") * rotationSpeedX * ((invertX)? -1f:1f), Input.GetAxis("Mouse Y") * rotationSpeedY * ((invertY)? -1f:1f)) * Time.timeScale;
+			
+			Vector2 r_Vel = Vector2.zero;
+
+			rotationFrames.Add(rot);
+			if (rotationFrames.Count >= rotationSmoothFrames)
+			{
+				rotationFrames.RemoveAt(0);	
+			}
+
+			int size = rotationFrames.Count;
+			for (int i = 0; i < size; i++) 
+			{
+				r_Vel += (rotationFrames[i]);
+			}
+			r_Vel /= size;
+
+			_rotation += r_Vel;
+			_rotation.y = Mathf.Clamp(_rotation.y, minRotationY, maxRotationY);
+
+			Quaternion xAngle = Quaternion.AngleAxis(_rotation.x, Vector3.up);
+			Quaternion yAngle = Quaternion.AngleAxis(_rotation.y, Vector3.right);
+			
+			transform.localRotation = _rootAngle * xAngle * yAngle;
+
+		}
+
+		void FreeMove()
+		{
+			if (Input.GetMouseButton(0)) 
+			{
+				_velocity += (transform.forward * acceleration * Time.deltaTime);
 			}
 			else 
 			{
-				releaseDuringFrame = (_state != State.Wait && _state != State.Release);
+				_velocity *= (1f - (Time.deltaTime * deceleration));
 			}
 
-			if (releaseDuringFrame) 
-			{
-				if (_state != State.Release) 
-				{
-					Propel();
-					_state = State.Release;
-				}
-			}
-			else 
-			{
-				if(_state == State.Release) Release();	
-			}
-
-			ApplyOffset();
-		}
-		
-		
-		#region Ops
-
-		void Drag()
-		{
-			xAngle = Mathf.Repeat(xAngle + velocity.x, 2f*Mathf.PI);
-			yAngle = Mathf.Clamp(yAngle + velocity.y, minYAngle, maxYAngle);
-
-			int count = velocities.Count;
-			if (count >= velocityStackSize) 
-				velocities.RemoveAt(0);
+			float speed = _velocity.magnitude;
+			float dampen = Mathf.Min(maxSpeed / speed, 1f);
 			
-			velocities.Add(velocity);
-		}
-
-		void Propel()
-		{
-			if (velocities.Count > 0) 
-			{
-				foreach (Vector3 vel in velocities) 
-				{
-					float speed = vel.magnitude;
-					if (speed > velocity.magnitude) 
-					{
-						velocity = vel;
-					}
-				}	
-			}
-		}
-
-		void Release()
-		{
-			float dt = Time.deltaTime;
-			
-			xAngle = Mathf.Repeat(xAngle + velocity.x, 2f*Mathf.PI);
-			yAngle = Mathf.Clamp(yAngle + velocity.y, minYAngle, maxYAngle);
-			
-			velocity *= (1f - (dampening * dt));
-		}
-		
-		#endregion
-		
-		#region Camera
-
-		void ApplyOffset()
-		{
-			Vector3 offset = new Vector3(Mathf.Cos(xAngle), Mathf.Sin(yAngle), Mathf.Sin(xAngle)) * radius;
-			transposer.m_FollowOffset = offset;
+			_velocity *= dampen;
 		}
 		
 		#endregion
