@@ -17,7 +17,7 @@ namespace butterflowersOS.Objects.Managers
         #region External
 
         GameDataSaveSystem _Save;
-        [SerializeField] BeaconManager Beacons;
+        [SerializeField] BeaconManager Beacons = null;
 
         #endregion
     
@@ -32,14 +32,12 @@ namespace butterflowersOS.Objects.Managers
 
         // Properties
 
-        [SerializeField] WorldPreset Preset;
+        [SerializeField] WorldPreset Preset = null;
 
-        [SerializeField] Cage cage;
+        [SerializeField] Cage cage = null;
 
         [SerializeField] GameObject vinePrefab = null;
         [SerializeField] Transform vineRoot = null;
-
-        bool load = false;
 
         #region Monobehaviour callbacks
 
@@ -112,7 +110,6 @@ namespace butterflowersOS.Objects.Managers
             }
 
             _Save = GameDataSaveSystem.Instance;
-            load = true;
         }
 
         #endregion

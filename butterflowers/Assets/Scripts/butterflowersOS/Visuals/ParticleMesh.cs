@@ -9,9 +9,9 @@ namespace butterflowersOS.Visuals
 		// Properties
 
 		[SerializeField] ParticleSystem ps;
-		[SerializeField] Transform root;
-		[SerializeField] MeshFilter basicMesh;
-		[SerializeField] SkinnedMeshRenderer skinnedMesh;
+		[SerializeField] Transform root = null;
+		[SerializeField] MeshFilter basicMesh = null;
+		[SerializeField] SkinnedMeshRenderer skinnedMesh = null;
 
 		Mesh mesh;
 		ParticleSystem.Particle[] particles;

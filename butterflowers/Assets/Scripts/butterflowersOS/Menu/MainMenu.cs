@@ -1,5 +1,6 @@
 ﻿using System;
 using System.Collections;
+using System.IO;
 using butterflowersOS.Presets;
 using butterflowersOS.UI;
 using Neue.Agent.Brain.Data;
@@ -25,13 +26,15 @@ namespace butterflowersOS.Menu
 
         ToggleOpacity opacity;
 
-        [SerializeField] WorldPreset preset;
-        [SerializeField] GameObject continueButton;
-        [SerializeField] ToggleOpacity continuePanel;
-        [SerializeField] MenuOption continueOption;
+        [SerializeField] WorldPreset preset = null;
+        [SerializeField] GameObject continueButton = null;
+        [SerializeField] ToggleOpacity continuePanel = null;
+        [SerializeField] MenuOption continueOption = null;
         [SerializeField] TMP_Text continueText;
-        [SerializeField] ChooseUsername usernamePanel;
-        [SerializeField] SceneAudioManager sceneAudio;
+        [SerializeField] ChooseUsername usernamePanel = null;
+        [SerializeField] SettingsMenu settingsPanel = null;
+        [SerializeField] SceneAudioManager sceneAudio = null;
+        [SerializeField] bool disposePreviousVersion = false;
 
         public enum Route
         {
@@ -121,9 +124,16 @@ namespace butterflowersOS.Menu
             MoveToTheGame(sceneIndex);
         }
 
+        public void GoToSettings()
+        {
+            Close();
+            settingsPanel.Open();
+        }
+
         public void Reset()
         {
             if(usernamePanel.IsVisible) usernamePanel.Close();
+            if(settingsPanel.IsVisible) settingsPanel.Close();
 
             route = Route.NULL;
             Open();
@@ -133,6 +143,8 @@ namespace butterflowersOS.Menu
         void DisplayOptions(bool previousSave)
         {
             Debug.LogWarningFormat("Main menu showed options! Save file exists => {0}", previousSaveExists);
+
+            bool showContinue = previousSave;
             
             if (previousSave) 
             {
@@ -140,8 +152,17 @@ namespace butterflowersOS.Menu
                 int days = Mathf.FloorToInt(preset.ConvertSecondsToDays(time));
 
                 continueOption.DefaultText = string.Format("continue <size=45%>({0})</size>", days);
+
+                string prev_version = Save.data.BUILD_VERSION;
+                string curr_version = Application.version;
+
+                if (prev_version != curr_version && disposePreviousVersion) 
+                {
+                    DisposeVersionData();
+                    showContinue = false; // Versions don't match
+                }
             }
-            continueButton.SetActive(previousSave);
+            continueButton.SetActive(showContinue);
         }
 
         IEnumerator MovingToGame(int sceneIndex)
@@ -156,6 +177,19 @@ namespace butterflowersOS.Menu
         }
     
         #endregion
+
+        void DisposeVersionData()
+        {
+            var thumbnailDir = Path.Combine(Path.GetFullPath(Application.persistentDataPath), "_thumbnails");
+            if (Directory.Exists(thumbnailDir)) // Has thumbnails from previous version
+            {
+                var files = Directory.GetFiles(thumbnailDir);
+                foreach (string file in files) 
+                {
+                    File.Delete(file); // Delete previous thumbnails
+                }
+            }
+        }
 
         void RecoverGameData()
         {

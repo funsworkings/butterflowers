@@ -1,8 +1,8 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <project version="4">
   <component name="ContentModelStore">
-    <e p="C:\Users\rickg\AppData\Local\JetBrains\Rider2020.2\extResources" t="IncludeRecursive" />
-    <e p="C:\Users\rickg\AppData\Local\JetBrains\Rider2020.2\resharper-host\Local\Transient\Rider\v202\SolutionCaches\_butterflowers.-1642005719.00" t="ExcludeRecursive" />
+    <e p="C:\Users\rickg\AppData\local\JetBrains\Rider2020.2\extResources" t="IncludeRecursive" />
+    <e p="C:\Users\rickg\AppData\local\JetBrains\Rider2020.2\resharper-host\local\Transient\Rider\v202\SolutionCaches\_butterflowers.-1642005719.00" t="ExcludeRecursive" />
     <e p="C:\Users\rickg\Desktop\b2\butterflowers" t="IncludeRecursive">
       <e p="AmplifyShaderEditor.csproj" t="IncludeRecursive" />
       <e p="Assembly-CSharp-Editor-firstpass.csproj" t="IncludeRecursive" />
@@ -999,7 +999,8 @@
             <e p="B83.Win32.cs" t="Include" />
             <e p="FileDragAndDrop.cs" t="Include" />
             <e p="IFileDragAndDropReceiver.cs" t="Include" />
-            <e p="ImageExample.cs" t="Include" />
+            <e p="MacOSDragAndDrop.cs" t="Include" />
+            <e p="POINT.cs" t="Include" />
           </e>
           <e p="xNode" t="Include">
             <e p="Examples" t="Include">
@@ -1310,7 +1311,9 @@
           <e p="butterflowersOS" t="Include">
             <e p="AI" t="Include">
               <e p="ButterflowerVFX.cs" t="Include" />
+              <e p="EventLog.cs" t="Include" />
               <e p="RemoteAgent.cs" t="Include" />
+              <e p="RemoteCamera.cs" t="Include" />
               <e p="Scene.cs" t="Include" />
             </e>
             <e p="Audio" t="Include">
@@ -1382,6 +1385,7 @@
               <e p="MainMenu.cs" t="Include" />
               <e p="PauseMenu.cs" t="Include" />
               <e p="PreviewButterflowers.cs" t="Include" />
+              <e p="SettingsMenu.cs" t="Include" />
               <e p="VersionText.cs" t="Include" />
             </e>
             <e p="Miscellaneous" t="Include">
@@ -1475,6 +1479,9 @@
               <e p="SummaryDeck.cs" t="Include" />
               <e p="TutorialPanel.cs" t="Include" />
               <e p="WelcomeMessage.cs" t="Include" />
+            </e>
+            <e p="Utils" t="Include">
+              <e p="Settings.cs" t="Include" />
             </e>
             <e p="Visuals" t="Include">
               <e p="ParticleMesh.cs" t="Include" />
@@ -1689,6 +1696,7 @@
               <e p="SceneUtils.cs" t="Include" />
             </e>
             <e p="Settings" t="Include">
+              <e p="Controller.cs" t="Include" />
               <e p="Data.cs" t="Include" />
               <e p="Global.cs" t="Include" />
               <e p="Instances" t="Include">
@@ -1816,6 +1824,7 @@
               <e p="Editor" t="Include">
                 <e p="Assets.cs" t="Include" />
               </e>
+              <e p="Settings.cs" t="Include" />
             </e>
           </e>
         </e>
@@ -2167,6 +2176,10 @@
             <e p="EmojiOne Attribution.txt" t="Include" />
           </e>
         </e>
+        <e p="UniDragAndDrop" t="Include">
+          <e p="UniDragAndDrop.asmdef" t="Include" />
+          <e p="UniDragAndDrop.cs" t="Include" />
+        </e>
       </e>
       <e p="butterflowers.sln" t="IncludeFlat" />
       <e p="NonConvexCollider.csproj" t="IncludeRecursive" />
@@ -2176,6 +2189,7 @@
       <e p="Packages" t="ExcludeRecursive" />
       <e p="RuntimeTestAssembly.csproj" t="IncludeRecursive" />
       <e p="Temp\bin" t="ExcludeRecursive" />
+      <e p="UniDragAndDrop.csproj" t="IncludeRecursive" />
     </e>
   </component>
 </project>

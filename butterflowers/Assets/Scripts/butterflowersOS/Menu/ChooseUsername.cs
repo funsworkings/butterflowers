@@ -9,7 +9,7 @@ namespace butterflowersOS.Menu
 {
 	public class ChooseUsername : GenericMenu
 	{
-		Camera camera;
+		new Camera camera;
 		
 		// Events
 
@@ -20,16 +20,15 @@ namespace butterflowersOS.Menu
 
 		ToggleOpacity opacity;
 
-		[SerializeField] MainMenu _mainMenu;
-		[SerializeField] CanvasGroup usernameContainer;
-		[SerializeField] TMPro.TMP_InputField inputfield;
-		[SerializeField] RectTransform inputrect;
+		[SerializeField] MainMenu _mainMenu = null;
+		[SerializeField] CanvasGroup usernameContainer = null;
+		[SerializeField] TMPro.TMP_InputField inputfield = null;
+		[SerializeField] RectTransform inputrect = null;
 		
-		[SerializeField] ToggleOpacity submitButtonOpacity;
-		[SerializeField] GameObject pr_burst;
+		[SerializeField] ToggleOpacity submitButtonOpacity = null;
+		[SerializeField] GameObject pr_burst = null;
 
 		bool isInputValid = false;
-		string validInput = null;
 
 		// Attributes
 

@@ -30,6 +30,9 @@ namespace uwu.Snippets.Load
 			if (Instance == null) 
 			{
 				Instance = this;
+				
+				SceneManager.sceneLoaded += OnSceneChanged;
+				
 				DontDestroyOnLoad(gameObject);
 			}
 			else {
@@ -40,17 +43,6 @@ namespace uwu.Snippets.Load
 		void Start()
 		{
 			Loader = Loader.Instance;
-
-			if (Instance == this) {
-				SceneManager.sceneLoaded += OnSceneChanged;
-			}
-		}
-
-		void OnDestroy()
-		{
-			if (Instance == this) {
-				SceneManager.sceneLoaded -= OnSceneChanged;
-			}
 		}
 
 		#region Ops

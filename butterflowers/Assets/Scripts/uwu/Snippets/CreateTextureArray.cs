@@ -5,8 +5,8 @@ namespace uwu.Snippets
 {
 	public class CreateTextureArray : MonoBehaviour
 	{
-		[SerializeField] Material material;
-		[SerializeField] Renderer rend;
+		[SerializeField] Material material = null;
+		[SerializeField] Renderer rend = null;
 		[SerializeField] List<Texture2D> textures = new List<Texture2D>();
 
 		[SerializeField] Texture2D[] validated = { };
@@ -126,10 +126,10 @@ namespace uwu.Snippets
 				var minw = -1;
 				var minh = -1;
 
-				foreach (var tex in textures) {
-					var flag = false;
-
-					if (tex != null) {
+				foreach (var tex in textures) 
+				{
+					if (tex != null) 
+					{
 						var w = tex.width;
 						var h = tex.height;
 

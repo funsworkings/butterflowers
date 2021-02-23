@@ -43,7 +43,7 @@ namespace uwu.IO
 
 		#region Attributes
 
-		[SerializeField] Environment.SpecialFolder root;
+		[SerializeField] Environment.SpecialFolder root = Environment.SpecialFolder.Desktop;
 		[SerializeField] string[] filters = { };
 
 		#endregion
@@ -78,16 +78,16 @@ namespace uwu.IO
 		{
 			return;
 
-			if (!paused)
-				Refresh(); // Refresh all files in directory
+			//if (!paused)
+			//	Refresh(); // Refresh all files in directory
 		}
 
 		void OnApplicationFocus(bool focused)
 		{
 			return;
 
-			if (focused)
-				Refresh();
+			//if (focused)
+			//	Refresh();
 		}
 
 		#endregion

@@ -58,7 +58,7 @@ namespace butterflowersOS.Core
 		// External
 
 		FileNavigator Files = null;
-		TextureLoader TextureLoader = null;
+		[SerializeField] TextureLoader TextureLoader = null;
 
 		// Collections
 	
@@ -83,12 +83,11 @@ namespace butterflowersOS.Core
 		[SerializeField] List<string> textureLoadCompleted = new List<string>();
 		[SerializeField] List<string> textureLoadTarget = new List<string>();
 
-		Texture2D textureSheet = null;
+		[SerializeField] Texture2D textureSheet = null;
 
 		// Attributes
 
 		[SerializeField] bool read = false, load = false, initialized = false;
-		[SerializeField] bool listenForEvents = false;
 
 		[SerializeField] LoadMode loadMode;
 		[SerializeField] bool exportSheet = false;
@@ -136,12 +135,7 @@ namespace butterflowersOS.Core
 			{
 				Destroy(gameObject);	
 			}
-		}
-
-		void Start()
-		{
-			TextureLoader = TextureLoader.Instance;
-		}
+		} 
 
 		void Update()
 		{
@@ -712,7 +706,7 @@ namespace butterflowersOS.Core
 			Debug.LogFormat("Added {0} to thumbnails", file);
 		}
 
-		public byte[] ExportSheet(string filename, out int _rows, out int _columns, out Texture2D tex, int oColumns = -1)
+		public byte[] ExportSheet(string filename, out int _rows, out int _columns, out Texture2D tex)
 		{
 			if(textureSheet != null) Destroy(textureSheet);
 			
@@ -721,9 +715,10 @@ namespace butterflowersOS.Core
 			var path = Path.Combine(directory, filename + ".jpg");
 
 			Texture2D[] thumbnails = FALLBACK_TEXTURE_LOOKUP.Values.ToArray();
-
-			int columns = _columns = (oColumns > 0)? oColumns:_COLUMNS;
-			int rows = _rows = (columns > 1)? (thumbnails.Length / columns)+1:thumbnails.Length;
+			int thumbnailCount = thumbnails.Length;
+			
+			int rows = _rows = Mathf.Min(thumbnailCount, _MAX_DIMENSION);
+			int columns = _columns = Mathf.Min( Mathf.Max(Mathf.CeilToInt((float)thumbnailCount / rows)), _MAX_DIMENSION);
 
 			int width = columns * _WIDTH;
 			int height = rows * _HEIGHT;
@@ -736,16 +731,17 @@ namespace butterflowersOS.Core
 			for (int i = 0; i < fill.Length; i++) fill[i] = Color.blue; // Set default fill color
 
 			int _x = 0, _y = 0;
+			int _maxX = width, _maxY = height;
 			Texture2D thumbnail = null;
 			
-			for (int i = 0; i < rows; i++) 
+			for (int i = 0; i < columns; i++) 
 			{
-				for (int j = 0; j < columns; j++) 
+				for (int j = 0; j < rows; j++) 
 				{
-					_x = j * _WIDTH;
-					_y = i * _HEIGHT;
+					_x = i * _WIDTH;
+					_y = j * _HEIGHT;
 
-					var _index = j + (i * columns);
+					var _index = j + (i * rows);
 					if (_index < thumbnails.Length) thumbnail = thumbnails[_index];
 					else thumbnail = null;
 				
@@ -770,7 +766,7 @@ namespace butterflowersOS.Core
 		public const int _WIDTH = 64;
 		public const int _HEIGHT = 64;
 
-		public const int _COLUMNS = 1;
+		public const int _MAX_DIMENSION = 64;
 
 		Texture2D DegradeBytes(string file, Texture2D texture, bool transparency)
 		{
@@ -825,5 +821,18 @@ namespace butterflowersOS.Core
 		public bool IsWorldFile(string file) => FILE_LOOKUP[FileType.World].Contains(file);
 
 		#endregion
+	}
+
+	public static class LibraryExtensions
+	{
+		public static bool IsValid(this Library lib)
+		{
+			Library Lib = Library.Instance;
+			
+			if (Lib == null) return false;
+			if (lib == null) return false;
+
+			return (lib == Lib);
+		}
 	}
 }

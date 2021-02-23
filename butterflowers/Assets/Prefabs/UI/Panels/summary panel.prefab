@@ -299,7 +299,7 @@ MonoBehaviour:
   m_material: {fileID: 0}
   m_sharedMaterial: {fileID: 0}
   m_isDefaultMaterial: 0
-  m_padding: 1.25
+  m_padding: 0
   m_canvasRenderer: {fileID: 4567076420605662188}
   m_TextComponent: {fileID: 4567076421198620191}
   m_materialReferenceIndex: 1
@@ -448,7 +448,7 @@ RectTransform:
   m_AnchorMin: {x: 0.5, y: 1}
   m_AnchorMax: {x: 0.5, y: 1}
   m_AnchoredPosition: {x: 0, y: -29}
-  m_SizeDelta: {x: 815.70386, y: 86.39137}
+  m_SizeDelta: {x: 815.70386, y: 138.31583}
   m_Pivot: {x: 0.5, y: 1.0000007}
 --- !u!222 &4567076420855120825
 CanvasRenderer:
@@ -849,6 +849,7 @@ MonoBehaviour:
   open: 0
   t: 0
   anchor: {fileID: 4567076421421624206}
+  resizer: {fileID: 0}
   cardInQueue: {fileID: 0}
   cardInFocus: {fileID: 0}
   startingCardIndex: 0
@@ -2156,7 +2157,6 @@ MonoBehaviour:
   overlay: {fileID: 0}
   fillArea: {fileID: 0}
   animator: {fileID: 0}
-  damage: {fileID: 0}
 --- !u!222 &5589633484329079983
 CanvasRenderer:
   m_ObjectHideFlags: 0

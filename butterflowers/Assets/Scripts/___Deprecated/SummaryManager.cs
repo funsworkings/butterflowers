@@ -32,11 +32,11 @@ namespace Objects.Managers
 
 		// Properties
 
-		[SerializeField] GradingManager Grading;
+		[SerializeField] GradingManager Grading = null;
 		
-		[SerializeField] ToggleOpacity summaryPanel;
+		[SerializeField] ToggleOpacity summaryPanel = null;
 
-		[SerializeField] PhotoOfTheDay photoOfTheDay;
+		[SerializeField] PhotoOfTheDay photoOfTheDay = null;
 		[SerializeField] TMP_Text photoCaption;
 
 		public bool Pause => active;
@@ -46,8 +46,6 @@ namespace Objects.Managers
 		[SerializeField] bool m_active = false;
 		[SerializeField] Panel panel = Panel.Grades;
 
-		float basePhotoWidth = -1f, basePhotoHeight = -1f;
-		
 		#region Accessors
 
 		public bool active => m_active;

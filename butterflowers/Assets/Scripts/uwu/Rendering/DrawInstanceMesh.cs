@@ -5,7 +5,7 @@ namespace uwu.Rendering
 {
 	public class DrawInstanceMesh : MonoBehaviour
 	{
-		[SerializeField] Transform root;
+		[SerializeField] Transform root = null;
 		ShadowCastingMode castShadows;
 		Material mat;
 

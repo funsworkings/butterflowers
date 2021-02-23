@@ -24,7 +24,7 @@ namespace butterflowersOS.Objects.Entities
     
         // Properties
     
-        [SerializeField] Sector[] sectors;
+        [SerializeField] Sector[] sectors = new Sector[]{};
         [SerializeField] bool complete = false;
         [SerializeField] bool hasCompletedAll = false;
 

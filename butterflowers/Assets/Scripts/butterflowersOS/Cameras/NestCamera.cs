@@ -6,8 +6,8 @@ namespace butterflowersOS.Cameras
 {
     public class NestCamera : FocusCamera
     {
-        [SerializeField] Transform anchor;
-        [SerializeField] Nest nest;
+        [SerializeField] Transform anchor = null;
+        [SerializeField] Nest nest = null;
 
         [SerializeField] float smoothMoveSpeed = 1f, smoothLookSpeed = 1f;
         [SerializeField] [Range(0f, 1f)] float nestLookAtWeight = 1f;

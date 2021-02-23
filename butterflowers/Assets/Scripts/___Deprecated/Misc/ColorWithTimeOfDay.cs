@@ -7,7 +7,7 @@ using UnityEngine;
 [Obsolete("Obsolete API!", true)]
 public class ColorWithTimeOfDay : MonoBehaviour, IReactToSun
 {
-    [SerializeField] Material material;
+    [SerializeField] Material material = null;
     [SerializeField] Color baseColor = new Color(1f, 1f, 1f, 1f);
 
     [SerializeField] bool inverted = false;

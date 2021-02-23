@@ -31,16 +31,16 @@ namespace butterflowersOS.Objects.Entities.Interactables
 
         #region Properties
 
-        [SerializeField] WorldPreset preset;
+        [SerializeField] WorldPreset preset = null;
 
         LineRenderer line;
         new CapsuleCollider collider;
         VineManager Manager;
 
-        [SerializeField] ParticleSystem smokePS;
-        [SerializeField] GameObject wallPrefab;
-        [SerializeField] GameObject flowerPrefab;
-        [SerializeField] GameObject leafPrefab;
+        [SerializeField] ParticleSystem smokePS = null;
+        [SerializeField] GameObject wallPrefab = null;
+        [SerializeField] GameObject flowerPrefab = null;
+        [SerializeField] GameObject leafPrefab = null;
 
         #endregion
 
@@ -51,9 +51,6 @@ namespace butterflowersOS.Objects.Entities.Interactables
     
         [SerializeField] List<Vector3> vertices = new List<Vector3>();
         [SerializeField] List<Leaf> leaves = new List<Leaf>();
-
-        [SerializeField] Vector3 gate_midpoint = Vector3.zero;
-        [SerializeField] float gate_width = 0f, gate_height = 0f;
 
         #endregion
 

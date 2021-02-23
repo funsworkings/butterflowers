@@ -20,7 +20,7 @@ namespace Noder.Nodes.External.Editor {
         private Memory node;
         private Texture2D node_tex;
 
-        private int textureWidth = 64, width = 72, textAreaHeight = 72;
+        private int textureWidth = 64, textAreaHeight = 72;
         private Vector2 scroll;
 
         private GUIStyle editorstyle;

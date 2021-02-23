@@ -6,7 +6,7 @@ using UnityEngine;
 [Obsolete("Obsolete API!", true)]
 public class Follower : MonoBehaviour
 {
-    [SerializeField] Builder builder;
+    [SerializeField] Builder builder = null;
 
 
     [SerializeField] List<Vector3> locations = new List<Vector3>();

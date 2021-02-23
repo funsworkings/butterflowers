@@ -15,7 +15,7 @@ namespace Objects.Managers
 		// Properties
 
 		SummaryManager Summary;
-		[SerializeField] TMP_Text loadingPrompt;
+		[SerializeField] TMP_Text loadingPrompt = null;
 		
 		// Attributes
 
@@ -35,7 +35,7 @@ namespace Objects.Managers
 
 		void OnDestroy()
 		{
-			Lib.onAddedFiles -= onAddedFilesToDesktop;
+			if(Lib.IsValid()) Lib.onAddedFiles -= onAddedFilesToDesktop;
 		}
 
 		#endregion

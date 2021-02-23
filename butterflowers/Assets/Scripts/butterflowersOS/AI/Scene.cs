@@ -24,13 +24,14 @@ namespace butterflowersOS.AI
 
 		Loader Loader;
 
-		[SerializeField] ParticleSystem butterflowers;
-		[SerializeField] Material butterflowersMaterial;
+		[SerializeField] ParticleSystem butterflowers = null;
+		[SerializeField] Material butterflowersMaterial = null;
 						 Texture2D butterflowersTexture;
 
-		[SerializeField] RemoteAgent agent;
-		[SerializeField] Cutscenes cutscenes;
-		[SerializeField] PlayableAsset epilogue;
+		[SerializeField] RemoteAgent agent = null;
+		[SerializeField] new RemoteCamera camera = null;
+		[SerializeField] Cutscenes cutscenes = null;
+		[SerializeField] PlayableAsset epilogue = null;
 
 		bool listen = false;
 						 
@@ -72,6 +73,9 @@ namespace butterflowersOS.AI
 				Save.SaveGameData();
 			}
 
+			camera.ReadInput = true;
+			camera.SwitchToFreeplay();
+			
 			listen = true;
 		}
 
@@ -125,9 +129,15 @@ namespace butterflowersOS.AI
 		void Import()
 		{
 			byte[] images = Save.data.images;
-			ushort image_height = Save.data.image_height;
 			
-			if(images.Length > 0 && image_height > 0) ApplyImagesToParticleSystem(images, Library._COLUMNS, image_height); // Apply ground texture
+			ushort image_height = Save.data.image_height;
+			ushort image_width = Save.data.image_width;
+
+			if (images.Length > 0 && image_height > 0 && image_width > 0) 
+			{
+				ApplyImagesToParticleSystem(images, image_width, image_height); // Apply ground texture
+			}
+
 			agent.Initialize(Save.data.surveillanceData);
 		}
 
