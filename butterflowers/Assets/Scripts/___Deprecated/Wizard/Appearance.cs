@@ -24,10 +24,8 @@ namespace Wizard
         public State state = State.Normal;
 
         float fadeTime = 0f, flickerTime = 0f, levelTime = 0f;
-        bool flicker = false;
 
         [Header("Absorption")]
-            [SerializeField] [Range(0f, 1f)] float flickerThreshold = .87f;
             [SerializeField] float absorbFadeTime = 1f;
             [SerializeField] float absorbFlickerRate = 1f;
             [SerializeField] float absorbLevelTime = 1f;

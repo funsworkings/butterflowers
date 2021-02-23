@@ -10,7 +10,7 @@ namespace butterflowersOS.Objects.Miscellaneous
 
         float brightness = 0f, t_brightness = 1f;
 
-        [SerializeField] float minBrightness, maxBrightness = 1f;
+        [SerializeField] float minBrightness = 0f, maxBrightness = 1f;
         [SerializeField] float fadeSpeed = 1f;
 
         void Awake()

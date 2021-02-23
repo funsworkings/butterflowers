@@ -303,6 +303,24 @@ namespace uwu.Extensions
 		}
 
 		#endregion
+		
+		#region Angles
+		
+		public static float ClampAngle (float angle, float min, float max)
+		{
+			angle = angle % 360;
+			if ((angle >= -360F) && (angle <= 360F)) {
+				if (angle < -360F) {
+					angle += 360F;
+				}
+				if (angle > 360F) {
+					angle -= 360F;
+				}			
+			}
+			return Mathf.Clamp (angle, min, max);
+		}
+		
+		#endregion
 
 		#region Screen conversions
 
@@ -545,7 +563,9 @@ namespace uwu.Extensions
 			try {
 				var num = int.Parse(value);
 			}
-			catch (Exception e) {
+			catch (Exception e) 
+			{
+				Debug.LogWarning(e.Message);
 				return false;
 			}
 
@@ -711,7 +731,9 @@ namespace uwu.Extensions
 						var character = formatted[i] + "";
 						var digit = int.Parse(character);
 					}
-					catch (Exception e) {
+					catch (Exception e) 
+					{
+						Debug.LogWarning(e.Message);
 						formatted = null;
 						break;
 					}

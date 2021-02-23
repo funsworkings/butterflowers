@@ -5,7 +5,7 @@ namespace uwu.Snippets
 	[ExecuteInEditMode]
 	public class VirtualCanvas : MonoBehaviour
 	{
-		[SerializeField] new UnityEngine.Camera camera;
+		[SerializeField] new UnityEngine.Camera camera = null;
 		[SerializeField] float thickness = 1f;
 		
 		float pr_asp = -1f;

@@ -31,16 +31,16 @@ namespace butterflowersOS.Core
 
         // External
 
-        [SerializeField] CameraManager CameraManager;
+        [SerializeField] CameraManager CameraManager = null;
         [SerializeField] FocusCamera Camera;
-        [SerializeField] AudioHandler BackgroundAudio;
+        [SerializeField] AudioHandler BackgroundAudio = null;
 
         Sun sun;
 
         // Properties
 
         [SerializeField] Focusable m_focus = null;
-        [SerializeField] CameraVisualBlend CameraBlending;
+        [SerializeField] CameraVisualBlend CameraBlending = null;
         [SerializeField] ToggleOpacity overlayOpacity;
 
         // Attributes
@@ -50,15 +50,15 @@ namespace butterflowersOS.Core
         [SerializeField] float minFocusDistance = 1f, maxFocusDistance = 10f;
     
         [Header("Camera blends")]
-        [SerializeField] CameraVisualBlendDefinition[] loseFocusBlends;
+        [SerializeField] CameraVisualBlendDefinition[] loseFocusBlends = new CameraVisualBlendDefinition[]{};
 
         [Header("Audio")] 
-        [SerializeField] AudioMixer mixer;
+        [SerializeField] AudioMixer mixer = null;
         [SerializeField] float minBGPitch = .4f, maxBGPitch = 1f;
         [SerializeField] float minBGLP = 300f, maxBGLP = 5000f;
         [SerializeField] float minBGVol = 0f, maxBGVol = 1f;
 
-        [SerializeField] string pitchParam;
+        [SerializeField] string pitchParam = "";
 
         [SerializeField] float lowpass = 0f, lowPassSmoothSpeed = .1f;
         [SerializeField] string lowPassFilterParam = null;
@@ -106,7 +106,7 @@ namespace butterflowersOS.Core
         {
             if (active && sun.active) 
             {
-                if (Focusable.Queued == null && Input.GetMouseButtonUp(1))
+                if (Focusable.QueueFocus == null && Input.GetMouseButtonUp(1))
                     LoseFocus();
             }
 

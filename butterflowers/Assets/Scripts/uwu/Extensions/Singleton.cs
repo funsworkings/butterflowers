@@ -27,7 +27,7 @@ namespace uwu.Extensions
 				}
 
 				lock (m_Lock) {
-					if (m_Instance == null) {
+					if (m_Instance == null) { 
 						// Search for existing instance.
 						m_Instance = (T) FindObjectOfType(typeof(T));
 

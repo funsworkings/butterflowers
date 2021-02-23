@@ -21,12 +21,10 @@ namespace butterflowersOS.Objects.Entities
 
 		// Properties
 
-		[SerializeField] Cage cage;
+		[SerializeField] Cage cage = null;
 
-		[SerializeField] Transform vertex;
+		[SerializeField] Transform vertex = null;
 		[SerializeField] Status status = Status.Wait;
-
-		bool load = false;
 
 		#region Accessors
 
@@ -42,7 +40,6 @@ namespace butterflowersOS.Objects.Entities
 		public void Load(Cage cage, int _status)
 		{
 			status = (Status)_status;
-			load = true;
 		}
 
 		public bool Activate()

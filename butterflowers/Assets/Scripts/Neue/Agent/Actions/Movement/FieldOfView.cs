@@ -9,7 +9,7 @@ namespace Neue.Agent.Actions.Movement
 	{
 		// Properties
 
-		[SerializeField] MovementPreset preset;
+		[SerializeField] MovementPreset preset = null;
 		
 		IK ik;
 		Navigation navigation;

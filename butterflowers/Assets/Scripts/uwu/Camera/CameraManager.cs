@@ -11,7 +11,7 @@ namespace uwu.Camera
 	/// </summary>
 	public class CameraManager : MonoBehaviour
 	{
-		[SerializeField] GameCamera defaultCamera, previousCamera, currentCamera;
+		[SerializeField] GameCamera defaultCamera = null, previousCamera, currentCamera;
 
 		[SerializeField] UnityEngine.Camera m_mainCamera;
 

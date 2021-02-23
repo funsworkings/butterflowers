@@ -8,8 +8,7 @@ namespace uwu.Snippets
 	{
 		[SerializeField] float radius = 1f;
 		[SerializeField] float dampening = 1f;
-
-		bool active = false;
+		
 		CinemachineBrain brain;
 		new UnityEngine.Camera camera;
 

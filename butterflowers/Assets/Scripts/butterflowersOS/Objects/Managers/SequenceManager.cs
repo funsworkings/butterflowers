@@ -39,19 +39,19 @@ namespace butterflowersOS.Objects.Managers
 		Sun Sun;
 		GameDataSaveSystem _Save;
 		
-		[SerializeField] Cage Cage;
+		[SerializeField] Cage Cage = null;
 		[SerializeField] Focusing Focus;
 		[SerializeField] ButterflowerManager Butterflowers;
-		[SerializeField] CutsceneManager Cutscenes;
+		[SerializeField] CutsceneManager Cutscenes = null;
 
-		[SerializeField] Transform root;
+		[SerializeField] Transform root = null;
 		
 		// Properties
 
-		[SerializeField] WorldPreset preset;
+		[SerializeField] WorldPreset preset = null;
 		[SerializeField] ToggleOpacity opacity, frameOpacity;
 		[SerializeField] TMP_Text frameText;
-		[SerializeField] DialogueHandler sceneCaption;
+		[SerializeField] DialogueHandler sceneCaption = null;
 		[SerializeField] AudioSource sceneAudio;
 
 		Sequence[] sequences;
@@ -59,17 +59,6 @@ namespace butterflowersOS.Objects.Managers
 		[SerializeField] int index = -1;
 		[SerializeField] Frame[] frames = new Frame[]{};
 		[SerializeField] bool inprogress = false;
-		
-		// Attributes
-
-		[SerializeField] AnimationCurve lightTransitionInCurve, lightTransitionOutCurve;
-		[SerializeField] float lightInTime = 1f, lightOutTime = 1f;
-		
-		[SerializeField] AnimationCurve meshScaleCurve;
-		[SerializeField] float meshScaleTime = 1f;
-
-		[SerializeField] float startDelay = 1f, endDelay = 1f, closeDelay = 1f;
-		[SerializeField] float frameDelay = 3f;
 
 		#region Accessors
 

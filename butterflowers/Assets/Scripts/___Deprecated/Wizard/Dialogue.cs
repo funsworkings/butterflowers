@@ -4,7 +4,6 @@ using System.Collections.Generic;
 using UnityEngine;
 using System.Text.RegularExpressions;
 using System.Reflection.Emit;
-using UnityScript.Steps;
 
 using Noder;
 using Noder.Nodes.External;
@@ -31,17 +30,17 @@ namespace Wizard {
 
         #region Properties
 
-        [SerializeField] DialogueTree[] dialogueTrees;
-        [SerializeField] DialogueTree coreDialogueTree, introDialogueTree;
+        [SerializeField] DialogueTree[] dialogueTrees = new DialogueTree[]{};
+        [SerializeField] DialogueTree coreDialogueTree = null;
 
         Controller controller;
         Memories memories;
         BrainOld brain;
 
-        [SerializeField] GameObject alert;
+        [SerializeField] GameObject alert = null;
 
-        [SerializeField] TMP_Text normalTextContainer, memoryTextContainer;
-        [SerializeField] ToggleOpacity normalOpacity, memoryOpacity;
+        [SerializeField] TMP_Text normalTextContainer = null, memoryTextContainer = null;
+        [SerializeField] ToggleOpacity normalOpacity = null, memoryOpacity = null;
         [SerializeField] ToggleOpacity advancer = null;
 
         #endregion

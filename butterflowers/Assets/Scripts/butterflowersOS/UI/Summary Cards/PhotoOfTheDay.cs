@@ -7,8 +7,8 @@ namespace butterflowersOS.UI.Summary_Cards
 {
 	public class PhotoOfTheDay : SummaryCard
 	{
-		[SerializeField] RawImage imageField;
-		[SerializeField] TMP_Text captionField;
+		[SerializeField] RawImage imageField = null;
+		[SerializeField] TMP_Text captionField = null;
 
 		public RawImage Image => imageField;
 

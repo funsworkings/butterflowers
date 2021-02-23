@@ -19,20 +19,22 @@ namespace butterflowersOS.AI
 		bool load = false;
 
 		[SerializeField] SurveillanceLogData log;
-		[SerializeField] ParticleSystem ps;
-		[SerializeField] PostProcessVolume postprocessing;
+		[SerializeField] EventLog events = null;
+		[SerializeField] ParticleSystem ps = null;
+		[SerializeField] PostProcessVolume postprocessing = null;
 
 		// Attributes
 
 		[SerializeField] float refreshTime = 1f;
 		
 		[Header("Scene elements")]
-		[SerializeField] MeshRenderer lightRenderer;
+		[SerializeField] MeshRenderer lightRenderer = null;
 		[SerializeField] float minLightOpacity = 0f;
 		[SerializeField] float maxLightOpacity = .5f;
 		[SerializeField] float lightLerpSpeed = 1f;
-		float light, t_light;
-
+		new float light;
+		float t_light;
+		
 		[Header("Particle systems")]
 		[SerializeField] float minEmission = 0f;
 		[SerializeField] float maxEmission = 666f;
@@ -112,6 +114,8 @@ namespace butterflowersOS.AI
 		    var nest = (log.nestFill / 255f);
 				t_saturation = nest.RemapNRB(0f, 1f, minSaturation, maxSaturation);
 				t_bloom = nest.RemapNRB(0f, 1f, minBloom, maxBloom);
+				
+		    PushAllEventLogs();
 	    }
 	    
 	    #region Particle systems
@@ -167,6 +171,20 @@ namespace butterflowersOS.AI
 		    print("a[ply loight");
 		    var color = lightRenderer.material.GetColor("_TintColor");
 		    lightRenderer.material.SetColor("_TintColor", Extensions.SetOpacity(light, color));
+	    }
+	    
+	    #endregion
+	    
+	    #region Events
+
+	    void PushAllEventLogs()
+	    {
+		    if (log == null) return;
+		    
+		    List<EVENTCODE> eventStack = new List<EVENTCODE>();
+		    foreach(sbyte e in log.events) eventStack.Add((EVENTCODE)e);
+		    
+		    events.Push(eventStack.ToArray());
 	    }
 	    
 	    #endregion

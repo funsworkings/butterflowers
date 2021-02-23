@@ -7,7 +7,7 @@ namespace Neue.Utilities
 	[Obsolete("Obsolete agent!", true)]
 	public class AnimationRelay : MonoBehaviour
 	{
-		[SerializeField] Body body;
+		[SerializeField] Body body = null;
 		
 		public void OnCastSpell()
 		{

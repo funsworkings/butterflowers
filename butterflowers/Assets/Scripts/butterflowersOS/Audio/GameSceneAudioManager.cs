@@ -18,9 +18,9 @@ namespace butterflowersOS.Audio
 		Cutscenes Cutscenes;
 		
 		[Header("Audio")]
-		[SerializeField] AudioFader _loadFader;
-		[SerializeField] AudioFader _gameFader;
-		[SerializeField] AudioFader _cutsceneFader;
+		[SerializeField] AudioFader _loadFader = null;
+		[SerializeField] AudioFader _gameFader = null;
+		[SerializeField] AudioFader _cutsceneFader = null;
 
 
 		protected override void Start()

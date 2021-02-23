@@ -30,8 +30,20 @@ namespace butterflowersOS.Objects.Base
 				OnUpdate();
 		}
 
+		bool quit = false;
+		protected void OnApplicationQuit()
+		{
+			quit = true;
+		}
+
 		protected void OnDestroy()
 		{
+			if (quit) 
+			{
+				Debug.LogWarning("Application quitting, ignore request to destroy el!");
+				return;
+			}
+
 			if(World != null) World.UnregisterEntity(this);
 			OnDestroyed();
 		}

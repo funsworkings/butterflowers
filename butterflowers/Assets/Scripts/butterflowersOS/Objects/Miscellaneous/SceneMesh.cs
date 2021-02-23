@@ -12,7 +12,7 @@ namespace butterflowersOS.Objects.Miscellaneous
 		[SerializeField] int _priority = 0;
 		public int Priority => _priority;
 
-		new Renderer _renderer;
+		Renderer _renderer;
 
 		[SerializeField] Vector3 _hiddenScale, _shownScale;
 		

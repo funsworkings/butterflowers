@@ -37,13 +37,14 @@ namespace butterflowersOS.UI
         [SerializeField] bool open = false;
         [SerializeField] float t = 0f;
 
-        [SerializeField] RectTransform anchor;
+        [SerializeField] RectTransform anchor = null;
+        [SerializeField] WindowResize resizer = null;
         RectTransform rect;
         Animator animator;
         
         [SerializeField] SummaryCard cardInQueue, cardInFocus = null;
         [SerializeField] int startingCardIndex = -1;
-        [SerializeField] AnimationCurve elasticCurve;
+        [SerializeField] AnimationCurve elasticCurve = null;
 
         int cardsBeforeQueue = 0;
         int tempDelayBeforeQueue = 0;
@@ -54,7 +55,7 @@ namespace butterflowersOS.UI
         [Range(1f, 180f)] public float range = 180f;
         [Range(0f, 180f)] public float offset = 90f;
         [SerializeField] float focusSpeed = 1f;
-        [SerializeField] float openDuration, closeDuration;
+        [SerializeField] float openDuration = 1f, closeDuration = 1f;
 
         [HideInInspector] public bool inprogress = false;
 
@@ -78,14 +79,12 @@ namespace butterflowersOS.UI
 
         void OnEnable()
         {
-            var Resize = WindowResize.Instance;
-            if(Resize != null) Resize.onResize += onResize;
+            resizer.onResize += onResize;
         }
 
         void OnDisable()
         {
-            var Resize = WindowResize.Instance;
-            if(Resize != null) Resize.onResize -= onResize;
+            resizer.onResize -= onResize;
         }
 
         // Start is called before the first frame update
