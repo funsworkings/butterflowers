@@ -20,7 +20,6 @@ namespace butterflowersOS.Menu
 
 		ToggleOpacity opacity;
 
-		[SerializeField] MainMenu _mainMenu = null;
 		[SerializeField] CanvasGroup usernameContainer = null;
 		[SerializeField] TMPro.TMP_InputField inputfield = null;
 		[SerializeField] RectTransform inputrect = null;

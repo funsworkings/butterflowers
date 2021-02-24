@@ -26,11 +26,11 @@ namespace butterflowersOS.Utils
 		[SerializeField] List<AudioMixerVolumeSetting> bgmMixers = new List<AudioMixerVolumeSetting>();
 		[SerializeField] List<AudioMixerVolumeSetting> sfxMixers = new List<AudioMixerVolumeSetting>();
 
-		[SerializeField] AudioMixerGroup[] sceneMixers;
+		[SerializeField] AudioMixerGroup[] sceneMixers = new AudioMixerGroup[]{};
 
 		float bgm_vol = 0f, sfx_vol = 0f;
 		[SerializeField] float minVolume = -80f, maxVolume = 20f;
-		[SerializeField] AnimationCurve volumeCurve;
+		[SerializeField] AnimationCurve volumeCurve = null;
 
 		protected override object[] Items { get; } = new object[] 
 		{

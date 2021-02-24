@@ -57,12 +57,13 @@ namespace uwu.Utilities
 					}
 					catch (SystemException err) 
 					{
+						Debug.LogWarning(err.Message);
 						ApplySetting(key, type, defaultValue, force:true);	
 					}
 				}
 				catch (System.Exception err) 
 				{
-					Debug.LogWarning("Unable to parse setting item based on type!");	
+					Debug.LogWarning("Unable to parse setting item based on type! => " + err.Message);	
 				}
 			}
 		}
