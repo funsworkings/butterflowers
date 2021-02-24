@@ -7,7 +7,7 @@ using uwu.UI.Behaviors.Visibility;
 
 namespace butterflowersOS.Menu
 {
-	public class ChooseUsername : GenericMenu
+	public class ChooseUsername : MainMenuSubPage
 	{
 		new Camera camera;
 		
@@ -49,9 +49,9 @@ namespace butterflowersOS.Menu
 			base.Start();
 		}
 
-		void Update()
+		protected override void Update()
 		{
-			if (!IsVisible) return;
+			base.Update();
 			
 			if(!Input.GetKeyUp(KeyCode.Escape))
 			{
@@ -65,11 +65,7 @@ namespace butterflowersOS.Menu
 				{
 					SubmitInput();
 				}
-
-				return;
 			}
-			
-			_mainMenu.Reset();
 		}
 
 		#endregion
@@ -91,6 +87,8 @@ namespace butterflowersOS.Menu
 			inputfield.text = ""; // Wipe input
 			opacity.Hide();
 			isInputValid = false;
+			
+			base.DidClose();
 		}
 		
 		#endregion
