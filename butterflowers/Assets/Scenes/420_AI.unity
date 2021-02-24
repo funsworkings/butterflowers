@@ -6451,6 +6451,7 @@ MonoBehaviour:
   velocityStackSize: 33
   minYAngle: -1.5707963
   maxYAngle: 1.5707963
+  cursor: {fileID: 1453013674}
   _rootAngle: {x: 0, y: 0, z: 0, w: 0}
   _rotation: {x: 0, y: 0}
   invertX: 0
@@ -7631,7 +7632,7 @@ PrefabInstance:
     - target: {fileID: 2973830041851690829, guid: 4ec5ab60b92a4e9419bebcfffedef8c6,
         type: 3}
       propertyPath: m_AnchoredPosition.x
-      value: 960
+      value: 0
       objectReference: {fileID: 0}
     - target: {fileID: 2973830041851690829, guid: 4ec5ab60b92a4e9419bebcfffedef8c6,
         type: 3}
