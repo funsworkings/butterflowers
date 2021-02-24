@@ -6,6 +6,7 @@ using UnityEngine;
 using Cinemachine;
 using uwu.Camera;
 using uwu.Extensions;
+using uwu.Snippets;
 
 namespace butterflowersOS.AI
 {
@@ -51,6 +52,9 @@ namespace butterflowersOS.AI
 
 		[SerializeField] float minYAngle = 0f, maxYAngle = 2f * Mathf.PI;
 
+		[Header("General")] 
+			[SerializeField] CustomCursor cursor;
+
 		[Header("Free look")]
 			[SerializeField] Quaternion _rootAngle;
 			[SerializeField] Vector2 _rotation = Vector2.zero;
@@ -95,6 +99,8 @@ namespace butterflowersOS.AI
 
 		void Update()
 		{
+			cursor.lockCursor = !pauseMenu.IsActive; // Ensure cursor is visible during menu
+			
 			if (!IsActive || !ReadInput) return;
 
 			if (!pauseMenu.IsActive) 

@@ -19,14 +19,12 @@ namespace uwu.Snippets
 
 		[SerializeField] Setting[] settings = new Setting[]{};
 
-		void Start()
-		{
-			NativeCursor.lockState = (lockCursor) ? CursorLockMode.Locked : CursorLockMode.None;
-		}
-
 		// Update is called once per frame
 		void Update()
 		{
+			NativeCursor.lockState = (lockCursor) ? CursorLockMode.Locked : CursorLockMode.None;
+			
+			
 			Texture2D t_texture = null;
 
 			if (!lockCursor) 
