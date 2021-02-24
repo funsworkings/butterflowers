@@ -962,7 +962,7 @@ MonoBehaviour:
   events: {fileID: 1169193675}
   ps: {fileID: 275925503}
   postprocessing: {fileID: 586734669}
-  refreshTime: 0.3
+  refreshTime: 1.67
   lightRenderer: {fileID: 1434513868}
   minLightOpacity: 0
   maxLightOpacity: 0.5
@@ -976,6 +976,11 @@ MonoBehaviour:
   minBloom: 0
   maxBloom: 12
   bloomLerpSpeed: 1
+  debugButterflowerHealth: -1
+  debugNestFill: -1
+  debugEvents: 1
+  debugMinEventStack: 1
+  debugMaxEventStack: 10
 --- !u!1 &173352280
 GameObject:
   m_ObjectHideFlags: 0
@@ -7632,7 +7637,7 @@ PrefabInstance:
     - target: {fileID: 2973830041851690829, guid: 4ec5ab60b92a4e9419bebcfffedef8c6,
         type: 3}
       propertyPath: m_AnchoredPosition.x
-      value: 0
+      value: 960
       objectReference: {fileID: 0}
     - target: {fileID: 2973830041851690829, guid: 4ec5ab60b92a4e9419bebcfffedef8c6,
         type: 3}
@@ -8518,7 +8523,7 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: 
   textField: {fileID: 522211792}
-  stackPopDelay: 0.1
+  stackPopDelay: 0.03
   stackHeight: 10
 --- !u!1 &1181772879
 GameObject:
