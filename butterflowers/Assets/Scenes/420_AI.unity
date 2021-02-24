@@ -6455,8 +6455,8 @@ MonoBehaviour:
   _rotation: {x: 0, y: 0}
   invertX: 0
   invertY: 1
-  rotationSpeedX: 1
-  rotationSpeedY: 1
+  rotationSpeedX: 3
+  rotationSpeedY: 3
   minRotationY: -89
   maxRotationY: 89
   rotationSmoothFrames: 10
@@ -7631,7 +7631,7 @@ PrefabInstance:
     - target: {fileID: 2973830041851690829, guid: 4ec5ab60b92a4e9419bebcfffedef8c6,
         type: 3}
       propertyPath: m_AnchoredPosition.x
-      value: 959.6977
+      value: 960
       objectReference: {fileID: 0}
     - target: {fileID: 2973830041851690829, guid: 4ec5ab60b92a4e9419bebcfffedef8c6,
         type: 3}
