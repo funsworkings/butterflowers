@@ -5,6 +5,7 @@ using butterflowersOS.Data;
 using UnityEngine;
 using UnityEngine.Rendering.PostProcessing;
 using uwu.Extensions;
+using Random = System.Random;
 
 namespace butterflowersOS.AI
 {
@@ -48,6 +49,13 @@ namespace butterflowersOS.AI
 		[SerializeField] float minBloom = 0f;
 		[SerializeField] float maxBloom = 1f;
 		[SerializeField] float bloomLerpSpeed = 1f;
+
+		[Header("Debug")] 
+		[SerializeField, Range(-1f, 1f)] float debugButterflowerHealth = -1f;
+		[SerializeField, Range(-1f, 1f)] float debugNestFill = -1f;
+		[SerializeField] bool debugEvents = false;
+		[SerializeField] int debugMinEventStack = 1, debugMaxEventStack = 10;
+
 		
 		float saturation, t_saturation;
 		float bloom, t_bloom;
@@ -107,11 +115,14 @@ namespace butterflowersOS.AI
 
 	    void OnUpdatedLog()
 	    {
-		    var butterfly = (log.butterflyHealth / 255f);
+		    float b = (debugButterflowerHealth >= 0f) ? debugButterflowerHealth*255f : log.butterflyHealth;
+		    float n = (debugNestFill >= 0f) ? debugNestFill*255f : log.nestFill;
+		    
+		    var butterfly = (b / 255f);
 		    t_emission = butterfly.RemapNRB(0f, 1f, minEmission, maxEmission);
 		    t_light = butterfly.RemapNRB(0f, 1f, minLightOpacity, maxLightOpacity);
 
-		    var nest = (log.nestFill / 255f);
+		    var nest = (n / 255f);
 				t_saturation = nest.RemapNRB(0f, 1f, minSaturation, maxSaturation);
 				t_bloom = nest.RemapNRB(0f, 1f, minBloom, maxBloom);
 				
@@ -182,8 +193,22 @@ namespace butterflowersOS.AI
 		    if (log == null) return;
 		    
 		    List<EVENTCODE> eventStack = new List<EVENTCODE>();
-		    foreach(sbyte e in log.events) eventStack.Add((EVENTCODE)e);
-		    
+
+		    if (!debugEvents) {
+			    foreach (sbyte e in log.events) eventStack.Add((EVENTCODE) e);
+		    }
+		    else 
+		    {
+			    int eventCount = UnityEngine.Random.Range(debugMinEventStack, debugMaxEventStack);
+			    for (int i = 0; i < eventCount; i++) 
+			    {
+				    var vals = System.Enum.GetValues(typeof(EVENTCODE));
+				    var val = vals.GetValue(UnityEngine.Random.Range(0, vals.Length));
+				    
+				    eventStack.Add((EVENTCODE)val);
+			    }
+		    }
+
 		    events.Push(eventStack.ToArray());
 	    }
 	    

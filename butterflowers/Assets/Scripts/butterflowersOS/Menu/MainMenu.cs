@@ -110,7 +110,7 @@ namespace butterflowersOS.Menu
             
             Save.SaveGameData(); // Save game data with username
 
-            usernamePanel.Close();
+            usernamePanel.Dispose();
             MoveToTheGame(1);
         }
 
