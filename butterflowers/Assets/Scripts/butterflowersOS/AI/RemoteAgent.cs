@@ -27,8 +27,9 @@ namespace butterflowersOS.AI
 		// Attributes
 
 		[SerializeField] float refreshTime = 1f;
-		
-		[Header("Scene elements")]
+
+		[Header("Scene elements")] 
+		[SerializeField] EventSnake snake = null;
 		[SerializeField] MeshRenderer lightRenderer = null;
 		[SerializeField] float minLightOpacity = 0f;
 		[SerializeField] float maxLightOpacity = .5f;
@@ -209,7 +210,10 @@ namespace butterflowersOS.AI
 			    }
 		    }
 
-		    events.Push(eventStack.ToArray());
+		    EVENTCODE[] payload = eventStack.ToArray();
+
+		    events.Push(payload);
+		    snake.Push(payload);
 	    }
 	    
 	    #endregion
