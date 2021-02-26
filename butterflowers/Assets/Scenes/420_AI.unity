@@ -6446,16 +6446,6 @@ MonoBehaviour:
     m_PersistentCalls:
       m_Calls: []
   pauseMenu: {fileID: 361797822}
-  radius: 0
-  height: 0
-  xAngle: 0
-  yAngle: 0
-  _state: 0
-  dampening: 2
-  strength: 0.067
-  velocityStackSize: 33
-  minYAngle: -1.5707963
-  maxYAngle: 1.5707963
   cursor: {fileID: 1453013674}
   _rootAngle: {x: 0, y: 0, z: 0, w: 0}
   _rotation: {x: 0, y: 0}
@@ -8470,7 +8460,7 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 85170ebb2b8ca794b90b39d71f6573e5, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  shown: 1
+  shown: 0
   lerps: 1
   lerping: 0
   value: 0
