@@ -81,11 +81,7 @@ namespace butterflowersOS.Menu
 
 		protected override void DidClose()
 		{
-			inputfield.onValueChanged.RemoveListener(onEditInput);
-			
-			inputfield.text = ""; // Wipe input
-			opacity.Hide();
-			isInputValid = false;
+			Dispose();
 			
 			base.DidClose();
 		}
@@ -141,6 +137,15 @@ namespace butterflowersOS.Menu
 		{
 			Vector3 pos = camera.ScreenToWorldPoint(new Vector3(screen_pos.x, screen_pos.y, 10f));
 			Instantiate(pr_burst, pos, pr_burst.transform.rotation);
+		}
+
+		public void Dispose()
+		{
+			inputfield.onValueChanged.RemoveListener(onEditInput);
+			
+			inputfield.text = ""; // Wipe input
+			opacity.Hide();
+			isInputValid = false;
 		}
 	}
 }
