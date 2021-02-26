@@ -962,7 +962,7 @@ MonoBehaviour:
   events: {fileID: 1169193675}
   ps: {fileID: 275925503}
   postprocessing: {fileID: 586734669}
-  refreshTime: 0.3
+  refreshTime: 1.67
   lightRenderer: {fileID: 1434513868}
   minLightOpacity: 0
   maxLightOpacity: 0.5
@@ -976,6 +976,11 @@ MonoBehaviour:
   minBloom: 0
   maxBloom: 12
   bloomLerpSpeed: 1
+  debugButterflowerHealth: -1
+  debugNestFill: -1
+  debugEvents: 1
+  debugMinEventStack: 1
+  debugMaxEventStack: 10
 --- !u!1 &173352280
 GameObject:
   m_ObjectHideFlags: 0
@@ -6441,22 +6446,13 @@ MonoBehaviour:
     m_PersistentCalls:
       m_Calls: []
   pauseMenu: {fileID: 361797822}
-  radius: 0
-  height: 0
-  xAngle: 0
-  yAngle: 0
-  _state: 0
-  dampening: 2
-  strength: 0.067
-  velocityStackSize: 33
-  minYAngle: -1.5707963
-  maxYAngle: 1.5707963
+  cursor: {fileID: 1453013674}
   _rootAngle: {x: 0, y: 0, z: 0, w: 0}
   _rotation: {x: 0, y: 0}
   invertX: 0
   invertY: 1
-  rotationSpeedX: 1
-  rotationSpeedY: 1
+  rotationSpeedX: 3
+  rotationSpeedY: 3
   minRotationY: -89
   maxRotationY: 89
   rotationSmoothFrames: 10
@@ -7631,7 +7627,7 @@ PrefabInstance:
     - target: {fileID: 2973830041851690829, guid: 4ec5ab60b92a4e9419bebcfffedef8c6,
         type: 3}
       propertyPath: m_AnchoredPosition.x
-      value: 959.6977
+      value: 960
       objectReference: {fileID: 0}
     - target: {fileID: 2973830041851690829, guid: 4ec5ab60b92a4e9419bebcfffedef8c6,
         type: 3}
@@ -8464,7 +8460,7 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 85170ebb2b8ca794b90b39d71f6573e5, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  shown: 1
+  shown: 0
   lerps: 1
   lerping: 0
   value: 0
@@ -8517,7 +8513,7 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: 
   textField: {fileID: 522211792}
-  stackPopDelay: 0.1
+  stackPopDelay: 0.03
   stackHeight: 10
 --- !u!1 &1181772879
 GameObject:

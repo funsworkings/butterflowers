@@ -6,50 +6,26 @@ using UnityEngine;
 using Cinemachine;
 using uwu.Camera;
 using uwu.Extensions;
+using uwu.Snippets;
 
 namespace butterflowersOS.AI
 {
 	public class RemoteCamera : GameCamera
 	{
-		#region Internal
-
-		public enum State
-		{
-			Wait,
-			
-			Pan,
-			Release
-		}
-		
-		#endregion
-		
 		// External
 
-		[SerializeField] PauseMenu pauseMenu;
+		[SerializeField] PauseMenu pauseMenu = null;
 		
 		// Properties
-
-		[SerializeField] float radius = 0f;
-		[SerializeField] float height = 0f;
-		[SerializeField] float xAngle = 0f, yAngle = 0f;
-
-		Vector3 mouseA, mouseB;
-
+		
 		Rigidbody _rigid;
-		
-		Vector3 anchor = Vector3.zero;
-		
-		public bool ReadInput { get; set; }
 
-		[SerializeField] State _state = State.Wait; 
+		public bool ReadInput { get; set; }
 		
 		// Attributes
 
-		[SerializeField] float dampening = 1f;
-		[SerializeField] float strength = 1f;
-		[SerializeField] int velocityStackSize = 10;
-
-		[SerializeField] float minYAngle = 0f, maxYAngle = 2f * Mathf.PI;
+		[Header("General")] 
+			[SerializeField] CustomCursor cursor = null;
 
 		[Header("Free look")]
 			[SerializeField] Quaternion _rootAngle;
@@ -66,7 +42,6 @@ namespace butterflowersOS.AI
 
 		// Collections
 		
-		List<Vector3> velocities = new List<Vector3>();
 		List<Vector2> rotationFrames = new List<Vector2>();
 		
 
@@ -80,14 +55,7 @@ namespace butterflowersOS.AI
 		protected override void Start()
 		{
 			base.Start();
-
-			Vector3 offset = transposer.m_FollowOffset;
 			
-			radius = offset.magnitude; // Calculate radius of transposer from anchor
-
-			xAngle = Mathf.Asin(offset.z / radius);
-			yAngle = Mathf.Asin(offset.y / radius);
-
 			_rootAngle = transform.localRotation;
 
 			_rigid.freezeRotation = true;
@@ -95,6 +63,8 @@ namespace butterflowersOS.AI
 
 		void Update()
 		{
+			cursor.lockCursor = !pauseMenu.IsActive; // Ensure cursor is visible during menu
+			
 			if (!IsActive || !ReadInput) return;
 
 			if (!pauseMenu.IsActive) 
@@ -104,8 +74,6 @@ namespace butterflowersOS.AI
 			}
 
 			_rigid.velocity = _velocity;
-			
-			//_rigid.MovePosition(transform.position +  * Time.deltaTime);
 		}
 
 		#region Freeplay

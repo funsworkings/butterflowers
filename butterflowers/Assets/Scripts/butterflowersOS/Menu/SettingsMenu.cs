@@ -6,13 +6,12 @@ using uwu.UI.Behaviors.Visibility;
 
 namespace butterflowersOS.Menu
 {
-	public class SettingsMenu : GenericMenu
+	public class SettingsMenu : MainMenuSubPage
 	{
 		// Properties
 
 		ToggleOpacity opacity;
-
-		[SerializeField] MainMenu _mainMenu = null;
+		
 		[SerializeField] Slider _bgmVolume = null, _sfxVolume = null;
 
 		bool load = false;
@@ -30,15 +29,6 @@ namespace butterflowersOS.Menu
 			base.Start();
 		}
 
-		void Update()
-		{
-			if (!IsVisible) return;
-
-			if (Input.GetKeyUp(KeyCode.Escape)) {
-				_mainMenu.Reset();
-			}
-		}
-
 		protected override void DidOpen()
 		{
 			load = true;
@@ -51,6 +41,8 @@ namespace butterflowersOS.Menu
 		protected override void DidClose()
 		{
 			opacity.Hide();
+			
+			base.DidClose();
 		}
 
 		public void DidUpdate()

@@ -19,15 +19,6 @@ namespace uwu.Textures
 		[SerializeField] List<string> STACK = new List<string>();
 		Dictionary<string, List<ITextureReceiver>> _receivers= new Dictionary<string, List<ITextureReceiver>>();
 
-		// Properties
-		
-		private bool read = false;
-
-		void Awake()
-		{
-			
-		}
-
 		void Start()
 		{
 			//Texture.allowThreadedTextureCreation = true;
@@ -102,8 +93,7 @@ namespace uwu.Textures
 			}
 			
 			Pop(file, result);
-			read = false;
-			
+
 			www.Dispose(); // Dispose WWW!
 		}
 		

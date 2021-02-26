@@ -1,10 +1,13 @@
 ﻿using System;
 using UnityEngine;
+using UnityEngine.Events;
 
 namespace butterflowersOS.Menu
 {
 	public abstract class GenericMenu : MonoBehaviour
 	{
+		public UnityEvent OnOpen, OnClose;
+		
 		[SerializeField] 
 		protected bool visible = false;
 		
@@ -23,12 +26,16 @@ namespace butterflowersOS.Menu
 		{
 			visible = true;
 			DidOpen();
+			
+			OnOpen.Invoke();
 		}
 
 		public void Close()
 		{
 			visible = false;
 			DidClose();
+			
+			OnClose.Invoke();
 		}
 		
 		public void Toggle()
