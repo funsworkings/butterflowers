@@ -52,14 +52,18 @@ public class PoemGeometryMaterialPropBlock : MonoBehaviour
 
     MaterialPropertyBlock propertyBlock;
     Renderer rend;
-    // Start is called before the first frame update
+    
     void Start()
     {
         rend = GetComponent<Renderer>();
         propertyBlock = new MaterialPropertyBlock();
+    }
 
+    void OnEnable()
+    {
         //destruction
         if (gameObject.layer == 30) {
+            Debug.Log("Set property block for north star material");
             propertyBlock.SetFloat("_Cutoff", maskClip_d);
             propertyBlock.SetFloat("_InteractionRadius", interactionRadius_d);
             propertyBlock.SetFloat("_Size", size);
@@ -68,12 +72,24 @@ public class PoemGeometryMaterialPropBlock : MonoBehaviour
             propertyBlock.SetFloat("_VertexNormalStrength", vertexNormalStrength);
             propertyBlock.SetFloat("_VertexOffsetStrength", vertexOffsetStrength);
             propertyBlock.SetFloat("_Smoothness", smoothness);
+            if(flowTexture != null)
             propertyBlock.SetTexture("_Flow", flowTexture);
+
+            if(vertexOffsetMask != null)
             propertyBlock.SetTexture("_VertexOffsetMask", vertexOffsetMask);
+
+            if(roundedEmission != null)
             propertyBlock.SetTexture("_RoundedEmission", roundedEmission);
+
+            if(opacityMask != null)
             propertyBlock.SetTexture("_OpacityMask", opacityMask);
+
+            if(materialTexture != null)
             propertyBlock.SetTexture("_MaterialTexture", materialTexture);
+
+            if(normal != null)
             propertyBlock.SetTexture("_Normal", normal);
+
             propertyBlock.SetVector("_RoundedEmission_ST", new Vector4(emissionTiling.x, emissionTiling.y));
             propertyBlock.SetVector("_OpacityMask_ST", new Vector4(maskTiling.x, maskTiling.y));
             propertyBlock.SetVector("_MaterialTexture_ST", new Vector4(materialTiling.x, materialTiling.y));
@@ -133,11 +149,5 @@ public class PoemGeometryMaterialPropBlock : MonoBehaviour
         }
 
         rend.SetPropertyBlock(propertyBlock);
-    }
-
-    // Update is called once per frame
-    void Update()
-    {
-        
     }
 }
