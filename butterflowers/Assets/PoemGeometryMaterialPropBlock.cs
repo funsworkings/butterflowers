@@ -24,10 +24,12 @@ public class PoemGeometryMaterialPropBlock : MonoBehaviour
     [SerializeField] float interactionRadius_n;
     [SerializeField] float maskClip_n;
     [SerializeField] float hardness_n;
+    [SerializeField] float displacement_n;
+    [SerializeField] float radialAmount;
     [SerializeField] float smoothness_n;
     [SerializeField] float opacity;
     [SerializeField] Color emptyColor, fullColor;
-    [SerializeField] Texture2D albedoTex, emissionTex, normalTex, opacityTex;
+    [SerializeField] Texture2D albedoTex, emissionTex, normalTex;
 
     [Header("Quiet Variables")]
     [Space(10)]
@@ -104,6 +106,8 @@ public class PoemGeometryMaterialPropBlock : MonoBehaviour
             propertyBlock.SetFloat("_InteractionRadius", interactionRadius_n);
             propertyBlock.SetFloat("_Cutoff", maskClip_n);
             propertyBlock.SetFloat("_hardness", hardness_n);
+            propertyBlock.SetFloat("_Displacement", displacement_n);
+            propertyBlock.SetFloat("_RadialAmount", radialAmount);
             propertyBlock.SetFloat("_Smoothness", smoothness_n);
             propertyBlock.SetFloat("_Opacity", opacity);
 
@@ -119,8 +123,6 @@ public class PoemGeometryMaterialPropBlock : MonoBehaviour
             if(normalTex != null)
             propertyBlock.SetTexture("_Normal", normalTex);
 
-            if(opacityTex != null)
-            propertyBlock.SetTexture("_OpacityMask", opacityTex);
         }
 
         //quiet
