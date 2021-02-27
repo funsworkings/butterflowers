@@ -33,7 +33,8 @@ public class PoemGeometryMaterialPropBlock : MonoBehaviour
     [Space(10)]
     [SerializeField] float smoothness_q;
     [SerializeField] float normal_height;
-    [SerializeField] Color albedoCol, emissionCol;
+    [ColorUsageAttribute(true, true)]
+    [SerializeField] Color albedoCol, emissonCol;
     [SerializeField] Texture2D albedo_q, metallic, normal_q;
     [SerializeField] Vector2 albedoTiling_q;
     
@@ -129,7 +130,7 @@ public class PoemGeometryMaterialPropBlock : MonoBehaviour
             propertyBlock.SetFloat("_BumpScale", normal_height);
 
             propertyBlock.SetColor("_Color", albedoCol);
-            propertyBlock.SetColor("_EmissionColor", emissionCol);
+            propertyBlock.SetColor("_EmissionColor", emissonCol);
 
             if(albedo_q != null)
             propertyBlock.SetTexture("_MainTex", albedo_q);
