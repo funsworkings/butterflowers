@@ -109,9 +109,16 @@ public class PoemGeometryMaterialPropBlock : MonoBehaviour
             propertyBlock.SetColor("_EmptyColor", emptyColor);
             propertyBlock.SetColor("_FullColor", fullColor);
 
+            if(albedoTex != null)
             propertyBlock.SetTexture("_AlbedoTexture", albedoTex);
+
+            if(emissionTex != null)
             propertyBlock.SetTexture("_Emission", emissionTex);
+
+            if(normalTex != null)
             propertyBlock.SetTexture("_Normal", normalTex);
+
+            if(opacityTex != null)
             propertyBlock.SetTexture("_OpacityMask", opacityTex);
         }
 
@@ -124,8 +131,13 @@ public class PoemGeometryMaterialPropBlock : MonoBehaviour
             propertyBlock.SetColor("_Color", albedoCol);
             propertyBlock.SetColor("_EmissionColor", emissionCol);
 
+            if(albedo_q != null)
             propertyBlock.SetTexture("_MainTex", albedo_q);
+
+            if(metallic != null)
             propertyBlock.SetTexture("_MetallicGlossMap", metallic);
+
+            if(normal_q != null)
             propertyBlock.SetTexture("_BumpMap", normal_q);
 
             propertyBlock.SetVector("_MainTex_ST", new Vector4(albedoTiling_q.x, albedoTiling_q.y));
@@ -143,6 +155,7 @@ public class PoemGeometryMaterialPropBlock : MonoBehaviour
             propertyBlock.SetFloat("_Displacement", displacement_o);
             propertyBlock.SetFloat("_InteractionStrength", interactionStrength_o);
 
+            if(texture != null)
             propertyBlock.SetTexture("_MainTex", texture);
 
             propertyBlock.SetVector("_MainTex_ST", new Vector4(textureTiling.x, textureTiling.y));
