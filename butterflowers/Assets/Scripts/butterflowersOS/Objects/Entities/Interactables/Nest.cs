@@ -341,7 +341,8 @@ namespace butterflowersOS.Objects.Entities.Interactables
             {
                 float fill = (float)beacons.Length / capacity;
                 //t_color = new Color(1f, (1f - fill), 1f);
-                Shader.SetGlobalFloat("_Fill", fill);
+                Shader.SetGlobalFloat("Fill", fill);
+                Debug.Log("Setting fill value");
             }
             //else
                 //t_color = inactiveColor;
