@@ -56,14 +56,15 @@ public class PoemGeometryMaterialPropBlock : MonoBehaviour
     MaterialPropertyBlock propertyBlock;
     Renderer rend;
     
-    void Start()
+    void Awake()
     {
         rend = GetComponent<Renderer>();
         propertyBlock = new MaterialPropertyBlock();
     }
 
-    void OnEnable()
+    void Start()
     {
+        
         //destruction
         if (gameObject.layer == 30) {
             Debug.Log("Set property block for north star material");
@@ -75,6 +76,7 @@ public class PoemGeometryMaterialPropBlock : MonoBehaviour
             propertyBlock.SetFloat("_VertexNormalStrength", vertexNormalStrength);
             propertyBlock.SetFloat("_VertexOffsetStrength", vertexOffsetStrength);
             propertyBlock.SetFloat("_Smoothness", smoothness);
+
             if(flowTexture != null)
             propertyBlock.SetTexture("_Flow", flowTexture);
 
@@ -102,6 +104,8 @@ public class PoemGeometryMaterialPropBlock : MonoBehaviour
         //nurture
         if (gameObject.layer == 27)
         {
+
+            Debug.Log(name + "is setting prop block for material");
             propertyBlock.SetFloat("_GridUnits", gridUnits);
             propertyBlock.SetFloat("_InteractionRadius", interactionRadius_n);
             propertyBlock.SetFloat("_Cutoff", maskClip_n);
@@ -115,7 +119,7 @@ public class PoemGeometryMaterialPropBlock : MonoBehaviour
             propertyBlock.SetColor("_FullColor", fullColor);
 
             if(albedoTex != null)
-            propertyBlock.SetTexture("_AlbedoTexture", albedoTex);
+            propertyBlock.SetTexture("_FillTex", albedoTex);
 
             if(emissionTex != null)
             propertyBlock.SetTexture("_Emission", emissionTex);
@@ -159,9 +163,9 @@ public class PoemGeometryMaterialPropBlock : MonoBehaviour
             propertyBlock.SetFloat("_InteractionStrength", interactionStrength_o);
 
             if(texture != null)
-            propertyBlock.SetTexture("_MainTex", texture);
+            propertyBlock.SetTexture("_treetop_1", texture);
 
-            propertyBlock.SetVector("_MainTex_ST", new Vector4(textureTiling.x, textureTiling.y));
+            propertyBlock.SetVector("_treetop_1_ST", new Vector4(textureTiling.x, textureTiling.y));
         }
 
         rend.SetPropertyBlock(propertyBlock);
