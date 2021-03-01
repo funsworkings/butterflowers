@@ -119,7 +119,7 @@ public class PoemGeometryMaterialPropBlock : MonoBehaviour
             propertyBlock.SetColor("_FullColor", fullColor);
 
             if(albedoTex != null)
-            propertyBlock.SetTexture("_AlbedoTexture", albedoTex);
+            propertyBlock.SetTexture("_FillTex", albedoTex);
 
             if(emissionTex != null)
             propertyBlock.SetTexture("_Emission", emissionTex);
