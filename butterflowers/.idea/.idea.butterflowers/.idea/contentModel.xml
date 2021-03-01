@@ -1127,6 +1127,7 @@
             </e>
           </e>
         </e>
+        <e p="PoemGeometryMaterialPropBlock.cs" t="Include" />
         <e p="QuickOutline" t="Include">
           <e p="README.txt" t="Include" />
           <e p="Resources" t="Include">
@@ -1830,6 +1831,7 @@
           </e>
         </e>
         <e p="Shaders" t="Include">
+          <e p="AlwaysVisible.shader" t="Include" />
           <e p="BlendNoMaterial.shader" t="Include" />
           <e p="blurUI.shader" t="Include" />
           <e p="ButterflowerParticle.shader" t="Include" />
@@ -1851,16 +1853,19 @@
           <e p="MyDeferredShading.cginc" t="Include" />
           <e p="NestVertexSnap.shader" t="Include" />
           <e p="NestVertexSnapping.shader" t="Include" />
+          <e p="NestVertexSnappingSil.shader" t="Include" />
           <e p="NewUnlitShader.shader" t="Include" />
           <e p="NorthStar.shader" t="Include" />
           <e p="NoZWrite.shader" t="Include" />
           <e p="RippleUI.shader" t="Include" />
+          <e p="Simple Multi Pass Outline.shader" t="Include" />
           <e p="TerrainDistort.shader" t="Include" />
           <e p="Texture Splatting.shader" t="Include" />
           <e p="Textured With Detail.shader" t="Include" />
           <e p="TransparentShadowCollector.shader" t="Include" />
           <e p="UVVertexOffset.shader" t="Include" />
           <e p="WaveTransTexture.shader" t="Include" />
+          <e p="WorldSnappingSil.shader" t="Include" />
         </e>
         <e p="Standard Assets" t="Include">
           <e p="2D" t="Include">

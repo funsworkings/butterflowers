@@ -49,6 +49,10 @@ namespace butterflowersOS.AI
 		[SerializeField] float minBloom = 0f;
 		[SerializeField] float maxBloom = 1f;
 		[SerializeField] float bloomLerpSpeed = 1f;
+		
+		[Header("Ragdoll")]
+			[SerializeField] Rigidbody[] _rigidbodies = new Rigidbody[]{};
+			[SerializeField] Vector3 rigidVelocity = Vector3.zero;
 
 		[Header("Debug")] 
 		[SerializeField, Range(-1f, 1f)] float debugButterflowerHealth = -1f;
@@ -63,6 +67,11 @@ namespace butterflowersOS.AI
 		
 		float refresh_t = 0f;
 		int logIndex = 0;
+
+		void Start()
+		{
+			FetchRagdollParts();
+		}
 
 		public void Initialize(SurveillanceData[] data)
 		{
@@ -111,6 +120,11 @@ namespace butterflowersOS.AI
 			    LerpLight();
 			    ApplyLight();
 		    }
+	    }
+
+	    void FixedUpdate()
+	    {
+		    foreach (Rigidbody _rigid in _rigidbodies) _rigid.AddForce(rigidVelocity * Time.fixedDeltaTime);
 	    }
 
 	    void OnUpdatedLog()
@@ -210,6 +224,26 @@ namespace butterflowersOS.AI
 		    }
 
 		    events.Push(eventStack.ToArray());
+	    }
+	    
+	    #endregion
+	    
+	    #region Ragdoll
+
+	    void FetchRagdollParts()
+	    {
+		    var validBodies = new List<Rigidbody>();
+		    var bodies = GetComponentsInChildren<Rigidbody>();
+
+		    foreach (Rigidbody r in bodies) 
+		    {
+			    if (r.constraints != RigidbodyConstraints.FreezePosition) 
+			    {
+					validBodies.Add(r);    
+			    }    
+		    }
+		    
+		    _rigidbodies = validBodies.ToArray();
 	    }
 	    
 	    #endregion
