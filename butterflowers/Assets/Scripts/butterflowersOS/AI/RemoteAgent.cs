@@ -103,6 +103,7 @@ namespace butterflowersOS.AI
 		    LerpParticleEmission();
 		    LerpPostProcessing();
 		    
+		    /*
 		    ApplyParticleEmission();
 		    ApplyPostProcessing();
 
@@ -111,6 +112,7 @@ namespace butterflowersOS.AI
 			    LerpLight();
 			    ApplyLight();
 		    }
+		    */
 	    }
 
 	    void OnUpdatedLog()
