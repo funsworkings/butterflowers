@@ -85,6 +85,9 @@ namespace butterflowersOS.Presets
 
             public float eventStackHeight = 64f;
             public AnimationCurve eventStackScoreCurve;
+
+            public float currentLogWeight = 0f;
+            public float averageLogWeight = 1f;
             
         [Header("Scoring Attributes")]
             public CompositeSurveillanceData baselineSurveillanceData;
