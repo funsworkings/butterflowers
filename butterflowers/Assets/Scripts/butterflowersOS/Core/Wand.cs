@@ -61,6 +61,8 @@ namespace butterflowersOS.Core
 
         [Header("General")]
         [SerializeField] bool m_spells = true;
+        [SerializeField] bool m_hints = true;
+        [SerializeField] bool overrideSpells = true;
 
         [SerializeField] Cursor cursor = null;
         [SerializeField] CustomCursor cursor_icon = null;
@@ -225,7 +227,8 @@ namespace butterflowersOS.Core
 
         protected override void Update()
         {
-            m_spells = infocus && sun.active && World.ready;
+            if(overrideSpells)
+                m_spells = infocus && sun.active && World.ready;
             
             base.Update();
 
@@ -618,7 +621,7 @@ namespace butterflowersOS.Core
                     }
                 }
 
-                if (string.IsNullOrEmpty(message)) 
+                if (string.IsNullOrEmpty(message) || !m_hints) 
                 {
                     infoOpacity.Hide();
                 }

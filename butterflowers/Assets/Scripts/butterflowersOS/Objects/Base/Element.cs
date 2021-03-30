@@ -19,7 +19,7 @@ namespace butterflowersOS.Objects.Base
 			World = World.Instance;
 			Sun = Sun.Instance;
         
-			World.RegisterEntity(this);
+			if(World != null) World.RegisterEntity(this);
         
 			OnStart();
 		}

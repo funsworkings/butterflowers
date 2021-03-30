@@ -29,6 +29,7 @@ namespace butterflowersOS.AI
 		[SerializeField] float refreshTime = 1f;
 		
 		[Header("Scene elements")]
+		[SerializeField] RemoteNest nest = null;
 		[SerializeField] MeshRenderer lightRenderer = null;
 		[SerializeField] float minLightOpacity = 0f;
 		[SerializeField] float maxLightOpacity = .5f;
@@ -51,6 +52,7 @@ namespace butterflowersOS.AI
 		[SerializeField] float bloomLerpSpeed = 1f;
 
 		[Header("Debug")] 
+		[SerializeField] DebugMenu _debugMenu;
 		[SerializeField, Range(-1f, 1f)] float debugButterflowerHealth = -1f;
 		[SerializeField, Range(-1f, 1f)] float debugNestFill = -1f;
 		[SerializeField] bool debugEvents = false;
@@ -129,6 +131,11 @@ namespace butterflowersOS.AI
 				t_bloom = nest.RemapNRB(0f, 1f, minBloom, maxBloom);
 				
 		    PushAllEventLogs();
+		    
+		    _debugMenu.SetNestFill(nest);
+		    _debugMenu.SetHOB(butterfly);
+		    
+		    _debugMenu.PrintLog(log, logIndex);
 	    }
 	    
 	    #region Particle systems
