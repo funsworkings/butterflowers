@@ -77,6 +77,7 @@ namespace butterflowersOS.Objects.Entities.Interactables
         [SerializeField] float safePointRadius = 1f;
         [SerializeField] float safePointInterval = 1f;
         [SerializeField] List<Vector3> safePoints = new List<Vector3>();
+        [SerializeField] float overrideFill = -1f;
 
         #region Accessors
 
@@ -339,10 +340,9 @@ namespace butterflowersOS.Objects.Entities.Interactables
         {
             if (open) 
             {
-                float fill = (float)beacons.Length / capacity;
+                float fill = (overrideFill >= 0f)? overrideFill:(float)beacons.Length / capacity;
                 //t_color = new Color(1f, (1f - fill), 1f);
                 Shader.SetGlobalFloat("Fill", fill);
-                Debug.Log("Setting fill value");
             }
             //else
                 //t_color = inactiveColor;
