@@ -8,17 +8,12 @@ namespace butterflowersOS.Miscellaneous
 	{
 		public int FPS { get; set; }
 
-		TMP_Text textField;
-
-		void Awake()
-		{
-			textField = GetComponent<TMP_Text>();
-		}
+		[SerializeField] TMP_Text[] textFields;
 
 		void Update()
 		{
 			FPS = (int)(1f / Time.unscaledDeltaTime);
-			textField.text = FPS + "";
+			foreach(TMP_Text textField in textFields) textField.text = FPS + "";
 		}
 	}
 }

@@ -28,7 +28,7 @@ namespace butterflowersOS.AI
 		[SerializeField] Material butterflowersMaterial = null;
 						 Texture2D butterflowersTexture;
 
-		[SerializeField] RemoteAgent agent = null;
+		[SerializeField] Driver agent = null;
 		[SerializeField] Cutscenes cutscenes = null;
 		[SerializeField] PlayableAsset epilogue = null;
 

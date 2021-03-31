@@ -1178,6 +1178,12 @@
                 <e p="ActionSequence.cs" t="Include" />
               </e>
             </e>
+            <e p="AI" t="Include">
+              <e p="ButterflowerVFX.cs" t="Include" />
+              <e p="DebugMenu.cs" t="Include" />
+              <e p="EventLog.cs" t="Include" />
+              <e p="RemoteCamera.cs" t="Include" />
+            </e>
             <e p="BeaconInfo.cs" t="Include" />
             <e p="Behaviours" t="Include">
               <e p="Branches" t="Include">
@@ -1312,13 +1318,15 @@
           </e>
           <e p="butterflowersOS" t="Include">
             <e p="AI" t="Include">
-              <e p="ButterflowerVFX.cs" t="Include" />
-              <e p="DebugMenu.cs" t="Include" />
-              <e p="EventLog.cs" t="Include" />
-              <e p="RemoteAgent.cs" t="Include" />
-              <e p="RemoteCamera.cs" t="Include" />
-              <e p="RemoteNest.cs" t="Include" />
+              <e p="Box.cs" t="Include" />
+              <e p="Driver.cs" t="Include" />
+              <e p="Globals.cs" t="Include" />
+              <e p="Objects" t="Include">
+                <e p="Entity.cs" t="Include" />
+              </e>
+              <e p="Platform.cs" t="Include" />
               <e p="Scene.cs" t="Include" />
+              <e p="Wrapper.cs" t="Include" />
             </e>
             <e p="Audio" t="Include">
               <e p="GameSceneAudioManager.cs" t="Include" />
