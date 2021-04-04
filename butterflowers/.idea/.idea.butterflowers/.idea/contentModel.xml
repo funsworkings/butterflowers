@@ -1319,13 +1319,25 @@
           <e p="butterflowersOS" t="Include">
             <e p="AI" t="Include">
               <e p="Box.cs" t="Include" />
+              <e p="CCTV.cs" t="Include" />
+              <e p="Drawings" t="Include">
+                <e p="Circle.cs" t="Include" />
+                <e p="Firework.cs" t="Include" />
+                <e p="Star.cs" t="Include" />
+                <e p="Trail.cs" t="Include" />
+              </e>
               <e p="Driver.cs" t="Include" />
               <e p="Globals.cs" t="Include" />
               <e p="Objects" t="Include">
+                <e p="Burst.cs" t="Include" />
                 <e p="Entity.cs" t="Include" />
+                <e p="Node.cs" t="Include" />
+                <e p="POINT.cs" t="Include" />
               </e>
               <e p="Platform.cs" t="Include" />
               <e p="Scene.cs" t="Include" />
+              <e p="Shape.cs" t="Include" />
+              <e p="VFXER.cs" t="Include" />
               <e p="Wrapper.cs" t="Include" />
             </e>
             <e p="Audio" t="Include">

@@ -464,7 +464,7 @@ namespace butterflowersOS.Objects.Entities.Interactables
             while(gh <= growHeight) {
                 float h = Random.Range(minHeight, maxHeight);
             
-                if (i > 0) // Past origin
+                if (i > 0) // Past position
                 { 
                     lastWaypoint = waypoints[waypoints.Count - 1];
                     nextWaypoint = NextWaypoint(origin, lastWaypoint, gh);

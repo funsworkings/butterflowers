@@ -57,7 +57,7 @@ namespace butterflowersOS
 
         DISCOVERY = 0,
 
-        NESTKICK = 10, //
+        NESTKICK = 10, // 
         NESTPOP = 11, //
         NESTCLEAR = 12, //
         NESTSPILL = 13,

@@ -20,6 +20,10 @@ namespace uwu.Gameplay
 		[SerializeField] int initialSpawnAmount = 0;
 
 
+		public GameObject Prefab
+		{
+			set => prefab = value;
+		}
 
 		void Start()
 		{

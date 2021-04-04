@@ -17,7 +17,7 @@ namespace uwu.Gameplay
 		{
 			if (_pool != null) 
 			{
-				_pool.Queue(this);
+				_pool.Queue(this); Debug.LogWarning("Did dispose" + gameObject.name);
 				return;
 			}
 			
