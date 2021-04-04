@@ -26,9 +26,10 @@ namespace butterflowersOS.AI
 
 		[SerializeField] ParticleSystem butterflowers = null;
 		[SerializeField] Material butterflowersMaterial = null;
-						 Texture2D butterflowersTexture;
+		[SerializeField]				 Texture2D butterflowersTexture;
 
 		[SerializeField] Driver agent = null;
+		[SerializeField] Wrapper wrapper = null;
 		[SerializeField] Cutscenes cutscenes = null;
 		[SerializeField] PlayableAsset epilogue = null;
 
@@ -82,8 +83,9 @@ namespace butterflowersOS.AI
 			int width = Library._WIDTH * _width;
 			int height = Library._HEIGHT * _height;
 
-			butterflowersTexture = new Texture2D(width, height, TextureFormat.RGB24, false);
+			butterflowersTexture = new Texture2D(width, height, TextureFormat.ARGB32, false);
 			butterflowersTexture.filterMode = FilterMode.Point;
+			butterflowersTexture.wrapMode = TextureWrapMode.Repeat;
 				butterflowersTexture.LoadImage(images);
 				butterflowersTexture.Apply();
 
@@ -92,7 +94,9 @@ namespace butterflowersOS.AI
 				textureModule.numTilesY = _height;
 				textureModule.startFrameMultiplier = (_width * _height);
 
-			butterflowersMaterial.mainTexture = butterflowersTexture;
+			butterflowersMaterial.SetTexture("_MainTexture", butterflowersTexture);
+			
+			wrapper.Setup(10);
 		}
 		
 		#endregion

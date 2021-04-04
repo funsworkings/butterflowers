@@ -1,8 +1,11 @@
 ﻿using System;
+using System.Collections;
 using butterflowersOS.AI.Objects;
 using butterflowersOS.Objects.Entities.Interactables;
 using UnityEngine;
 using uwu.Extensions;
+using uwu.Gameplay;
+using uwu.Snippets;
 using Random = UnityEngine.Random;
 
 namespace butterflowersOS.AI
@@ -13,9 +16,13 @@ namespace butterflowersOS.AI
 
 		[SerializeField] 
 		Platform _platform;
-		
+
+		[SerializeField] VFXER vfx;
+
 		Rigidbody rigid;
+		ApplyCustomGravity gravity;
 		Collider collider;
+		Trail trail;
 
 		Ray safeRay;
 		RaycastHit safeHit;
@@ -27,18 +34,35 @@ namespace butterflowersOS.AI
 		[SerializeField] float shiftPaddingTime = 1f;
 		[SerializeField] float speedLimit = 67f;
 		[SerializeField, Range(0f, 1f)] float brake = 0f;
+		[SerializeField] float nodeDropRate = 1f;
 		
 		int velYDirection = 0;
 		bool hasPlatform = false;
 
-		void Awake()
+		public Vector3 Velocity => rigid.velocity;
+
+		protected override void Awake()
 		{
+			base.Awake();
+			
 			rigid = GetComponent<Rigidbody>();
 			collider = GetComponent<Collider>();
+			
+			gravity = GetComponent<ApplyCustomGravity>(); 
+			if (gravity == null) gravity = gameObject.AddComponent<ApplyCustomGravity>();
+			
+			trail = GetComponent<Trail>();
 		}
 
-		void Update()
+		void Start()
 		{
+			StartCoroutine("Drop");
+		}
+
+		protected override void Update()
+		{
+			base.Update();
+			
 			CheckForPlatform(); // Is platform underneath?
 
 			int previousVelYDirection = velYDirection;
@@ -48,7 +72,7 @@ namespace butterflowersOS.AI
 			if (velY < 0f && !hasPlatform) // Descent! 
 			{
 				ShiftPlatform();
-			}
+			} 
 			
 			DampenVelocity();
 		}
@@ -85,6 +109,20 @@ namespace butterflowersOS.AI
 		}
 		
 		#endregion
+		
+		#region Wrap
+
+		protected override void OnPostWrap()
+		{
+			base.OnPostWrap();
+
+			Vector3 gravDir = Random.insideUnitSphere.normalized;
+			gravity.directionOfGravity = gravDir;
+			
+			//trail.Clear();
+		}
+
+		#endregion
 
 		#region Ops
 
@@ -94,6 +132,8 @@ namespace butterflowersOS.AI
 			Vector3 dir = -sphere_pos;
 
 			rigid.AddForce(dir * strength);
+			
+			trail.Push(transform.position);
 			
 			/*
 			Vector3 ray_origin = -dir * 5f;
@@ -105,12 +145,23 @@ namespace butterflowersOS.AI
 			if (collider.Raycast(ray, out hit, 10f)) {
 				var normal = hit.normal;
 
-				Vector3 origin = hit.point;
+				Vector3 position = hit.point;
 				Vector3 _dir = (-normal - 3f * Physics.gravity).normalized;
 
 				rigid.AddForce(dir * strength);
 			}
 			*/
+		}
+
+		IEnumerator Drop()
+		{
+			while (true) 
+			{
+				var node = vfx.RequestEntity("box_node");
+				if(node != null) node.transform.position = transform.position;
+				
+				yield return new WaitForSeconds(nodeDropRate);
+			}
 		}
 		
 		#endregion

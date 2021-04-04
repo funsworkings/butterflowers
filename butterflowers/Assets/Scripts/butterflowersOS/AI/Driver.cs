@@ -19,8 +19,12 @@ namespace butterflowersOS.AI
 		
 		List<Entity> activeEntities = new List<Entity>();
 		List<Entity> inactiveEntities = new List<Entity>();
-		
+
+		List<Point> points = new List<Point>();
+
 		// Properties
+		
+		[SerializeField] VFXER _pool;
 
 		[SerializeField] SurveillanceData log;
 		[SerializeField] SurveillanceLogData[] captures = new SurveillanceLogData[]{};
@@ -30,6 +34,7 @@ namespace butterflowersOS.AI
 
 		[SerializeField] float refreshTime = 1f;
 		[SerializeField] bool readEvents = false;
+		[SerializeField] int eventStackHeight = 5;
 		
 		[Header("Scene elements")]
 		[SerializeField] Box nest = null;
@@ -42,6 +47,7 @@ namespace butterflowersOS.AI
 		#region Accessors
 
 		public List<Entity> ActiveEntities => activeEntities;
+		public List<Point> EventStack => points;
 
 		#endregion
 		
@@ -183,8 +189,52 @@ namespace butterflowersOS.AI
 					float nestKick = Random.Range(minNestKick, maxNestKick);
 					nest.Propel(nestKick);
 					break;
+				
+				case EVENTCODE.BEACONACTIVATE:
+					SpawnObject("beacon_add");
+					break;
+				case EVENTCODE.DISCOVERY:
+					SpawnObject("discovery");
+					break;
+				case EVENTCODE.NESTSPILL:
+					SpawnObject("fireworks");
+					break;
+				/*case EVENTCODE.BEACONPLANT:
+					SpawnPS("beacon_plant");
+					break;
+				case EVENTCODE.BEACONFLOWER:
+					SpawnPS("beacon_flower");
+					break;*/
+				default:
+					break; // Default state
 		    }
+		    
+		    if(points.Count >= eventStackHeight)
+		    {
+				points.RemoveAt(0); // Pop first element to free space
+		    }
+		    points.Add(new Point(@event, nest.transform.position));
 	    }
+	    
+	    #region Event ops
+
+	    GameObject SpawnObject(string id)
+	    {
+		    GameObject instance = _pool.RequestEntity(id);
+		    instance.transform.position = nest.transform.position;
+		    
+		    return instance;
+	    }
+
+	    void SpawnPS(string id)
+	    {
+		    GameObject ba = SpawnObject(id);
+					
+		    ParticleSystem ps = ba.GetComponent<ParticleSystem>();
+		    ps.Play();
+	    }
+	    
+	    #endregion
 
 	    IEnumerator LoopEventsFromLog(EVENTCODE[] events, float duration)
 	    {

@@ -5,7 +5,7 @@ namespace uwu.Snippets
 	[RequireComponent(typeof(Rigidbody))]
 	public class ApplyCustomGravity : MonoBehaviour
 	{
-		protected Vector3 directionOfGravity = Vector3.down;
+		public Vector3 directionOfGravity { get; set; } = Vector3.down;
 		protected new Rigidbody rigidbody;
 
 		void Awake()
