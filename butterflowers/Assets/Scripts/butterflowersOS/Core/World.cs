@@ -625,7 +625,7 @@ namespace butterflowersOS.Core
         public void ImportNeueAgent(BrainData brainData)
         {
             if (Pause) return; // Ignore request to import if paused
-            if (!_Save.IsSelfProfileValid()) return; // Ignore reques to import if not generated neueagent
+            //if (!_Save.IsSelfProfileValid()) return; // Ignore reques to import if not generated neueagent
 
             string @self = _Save.data.export_agent_created_at;
             string @agent = _Save.data.agent_created_at;

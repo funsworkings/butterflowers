@@ -1,5 +1,6 @@
 ﻿using butterflowersOS.AI.Objects;
 using UnityEngine;
+using uwu.Extensions;
 
 namespace butterflowersOS.AI
 {
@@ -11,6 +12,7 @@ namespace butterflowersOS.AI
 		float radius = 0f;
 
 		[SerializeField] float growRate = 1f;
+		float m_growRate = 0f;
 
 		protected override void OnEnable()
 		{
@@ -18,11 +20,18 @@ namespace butterflowersOS.AI
 			radius = 0f;
 		}
 
+		public override void Trigger(float saturation, float value, Color baseline, params object[] data)
+		{
+			base.Trigger(saturation, value, baseline, data);
+
+			m_growRate = Mathf.Pow(saturation, 2f).RemapNRB(0f, 1f, .3f, 1f) * growRate;
+		}
+
 		protected override void Update()
 		{
 			base.Update();
 
-			radius += Time.deltaTime * growRate;
+			radius += Time.deltaTime * m_growRate;
 		}
 
 		protected override void DidRenderShape()
