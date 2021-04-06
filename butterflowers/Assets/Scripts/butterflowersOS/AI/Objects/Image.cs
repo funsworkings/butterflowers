@@ -10,6 +10,7 @@ namespace butterflowersOS.AI.Objects
 		Material material;
 
 		Vector3 axis;
+		Vector3 scale;
 
 		protected override void Awake()
 		{
@@ -17,6 +18,15 @@ namespace butterflowersOS.AI.Objects
 			
 			renderer = GetComponent<MeshRenderer>();
 			material = renderer.material;
+			scale = transform.localScale;
+		}
+
+		protected override void OnEnable()
+		{
+			base.OnEnable();
+
+			float minScale = scale.x;
+			//transform.localScale = Vector3.one * Random.Range(minScale, minScale * 2f);
 		}
 
 		protected override void Update()
