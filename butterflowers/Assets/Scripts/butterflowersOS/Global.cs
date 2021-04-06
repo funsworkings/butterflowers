@@ -55,16 +55,16 @@ namespace butterflowersOS
         NULL = -1,
         UNKNOWN = 255,
 
-        DISCOVERY = 0,
+        DISCOVERY = 0, // *
 
-        NESTKICK = 10, // 
+        NESTKICK = 10, // *
         NESTPOP = 11, //
         NESTCLEAR = 12, //
-        NESTSPILL = 13,
+        NESTSPILL = 13, // *
         NESTGROW = 14,
         NESTSHRINK = 15,
 
-        BEACONACTIVATE = 20, //
+        BEACONACTIVATE = 20, // *
         BEACONADD = 21,
         BEACONDELETE = 22, //
         BEACONPLANT = 23, //

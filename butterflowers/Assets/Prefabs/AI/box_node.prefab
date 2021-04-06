@@ -44,8 +44,9 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: 
   lifetime: 12
+  _waitForTrigger: 0
   color: {r: 1, g: 1, b: 1, a: 1}
-  randomizeColor: 0
+  colorMode: 0
   minRadius: 1
   maxRadius: 2
   minNodes: 3

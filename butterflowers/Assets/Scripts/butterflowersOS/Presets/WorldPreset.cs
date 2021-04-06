@@ -100,6 +100,9 @@ namespace butterflowersOS.Presets
             public float cursorIdleTimeThreshold = 10f;
             public float cursorIdleDelay = 1f;
 
+        [Header("Miscellaneous")] 
+            public Texture2D[] worldTextures;
+
         #region Time conversions
 
         public float minutesPerDay {

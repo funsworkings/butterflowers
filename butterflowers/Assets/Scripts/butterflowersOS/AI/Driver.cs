@@ -4,6 +4,8 @@ using System.Collections.Generic;
 using System.Linq;
 using butterflowersOS.AI.Objects;
 using butterflowersOS.Data;
+using Neue.Agent.Brain.Data;
+using Neue.Reference.Types;
 using UnityEngine;
 using UnityEngine.Rendering.PostProcessing;
 using uwu.Extensions;
@@ -40,7 +42,14 @@ namespace butterflowersOS.AI
 		[SerializeField] Box nest = null;
 		[SerializeField] float minNestKick = 1f, maxNestKick = 10f;
 
-
+		[Header("Scene attributes")] 
+		[SerializeField] Vector4 baseline;
+		[SerializeField, Range(0f, 1f)] float saturation = 0f, value = 0f;
+		[SerializeField, Range(0f, 1f)] float maxSaturationSpread = 1f, maxValueSpread = 1f;
+		[SerializeField] int tileX, tileY;
+		[SerializeField] float tileSX, tileSY;
+		[SerializeField] bool useLogForColorValues = true;
+		
 		float refresh_t = 0f;
 		int logIndex = 0;
 		
@@ -52,8 +61,15 @@ namespace butterflowersOS.AI
 		#endregion
 		
 
-		public void Initialize(SurveillanceData[] data)
+		public void Initialize(Profile profile, SurveillanceData[] data, Texture2D image, int dimensionX, int dimensionY)
 		{
+			baseline = new Vector4(profile.GetWeight(Frame.Destruction), profile.GetWeight(Frame.Nurture), profile.GetWeight(Frame.Order), 1f - profile.GetWeight(Frame.Quiet));
+			
+			tileX = dimensionX;
+			tileSX = 1f / tileX;
+			tileY = dimensionY;
+			tileSY = 1f / tileY;
+			
 			allLogs.AddRange(data);
 			if(allLogs.Count > 0) StartCoroutine("Loop");
 		}
@@ -171,16 +187,26 @@ namespace butterflowersOS.AI
 	    {
 		    var events = ScrapeEventLogs(log);
 		    Debug.LogFormat("Handle capture #{0} with {1} events", index, events.Length);
-		    
+
+		    // Set nest fill attributes
+		    if (useLogForColorValues) 
+		    {
+			    saturation = log.nestFill / 255f * maxSaturationSpread;
+			    value = log.butterflyHealth / 255f * maxValueSpread;
+		    }
+
 		    if(readEvents) StopCoroutine("LoopEventsFromLog");
 
 		    readEvents = true;
-		    StartCoroutine(LoopEventsFromLog(events, interval));
+		    StartCoroutine(LoopEventsFromLog(log, events, interval));
 	    }
 
-	    void HandleEvent(EVENTCODE @event)
+	    void HandleEvent(EVENTCODE @event, SurveillanceLogData log)
 	    {
 		    Debug.LogFormat("Handle event => {0}", @event);
+
+		    Entity entity = null;
+		    bool fallbackEntityTrigger = true;
 
 		    switch (@event) 
 		    {
@@ -191,24 +217,34 @@ namespace butterflowersOS.AI
 					break;
 				
 				case EVENTCODE.BEACONACTIVATE:
-					SpawnObject("beacon_add");
+					entity = SpawnEntity("beacon_add");
 					break;
 				case EVENTCODE.DISCOVERY:
-					SpawnObject("discovery");
+					entity = SpawnEntity("discovery");
 					break;
 				case EVENTCODE.NESTSPILL:
-					SpawnObject("fireworks");
+					entity = SpawnEntity("fireworks");
 					break;
-				/*case EVENTCODE.BEACONPLANT:
-					SpawnPS("beacon_plant");
+				case EVENTCODE.BEACONPLANT:
+					entity = SpawnEntity("quad");
+
+					float ox = Random.Range(0, tileX) * tileSX;
+					float oy = Random.Range(0, tileY) * tileSY;
+					
+					entity.Trigger(saturation, value, baseline, new object[] { ox, oy });
+					
+					fallbackEntityTrigger = false; // Ignore fallback
 					break;
 				case EVENTCODE.BEACONFLOWER:
-					SpawnPS("beacon_flower");
-					break;*/
 				default:
 					break; // Default state
 		    }
-		    
+
+		    if (fallbackEntityTrigger && entity != null) 
+		    {
+				entity.Trigger(saturation, value, baseline); // Trigger entity drawing with values    
+		    }
+
 		    if(points.Count >= eventStackHeight)
 		    {
 				points.RemoveAt(0); // Pop first element to free space
@@ -218,25 +254,17 @@ namespace butterflowersOS.AI
 	    
 	    #region Event ops
 
-	    GameObject SpawnObject(string id)
+	    Entity SpawnEntity(string id)
 	    {
 		    GameObject instance = _pool.RequestEntity(id);
 		    instance.transform.position = nest.transform.position;
 		    
-		    return instance;
+		    return instance.GetComponent<Entity>();
 	    }
 
-	    void SpawnPS(string id)
-	    {
-		    GameObject ba = SpawnObject(id);
-					
-		    ParticleSystem ps = ba.GetComponent<ParticleSystem>();
-		    ps.Play();
-	    }
-	    
 	    #endregion
 
-	    IEnumerator LoopEventsFromLog(EVENTCODE[] events, float duration)
+	    IEnumerator LoopEventsFromLog(SurveillanceLogData log, EVENTCODE[] events, float duration)
 	    {
 		    int eHeight = events.Length;
 		    
@@ -253,7 +281,7 @@ namespace butterflowersOS.AI
 				    t = 0f;
 				    @event = events[e];
 				    
-				    HandleEvent(@event);
+				    HandleEvent(@event, log);
 
 				    while (t < i) 
 				    {
