@@ -1,6 +1,7 @@
 ﻿using System;
 using UnityEngine;
 using uwu.Gameplay;
+using Object = System.Object;
 
 namespace butterflowersOS.AI.Objects
 {
@@ -13,12 +14,18 @@ namespace butterflowersOS.AI.Objects
 		CCTV _cctv;
 		
 		[SerializeField] float lifetime = -1f;
+		[SerializeField] bool _waitForTrigger = true;
+		
 		float life = 0f;
 
 		Vector3 _wrapPosition;
 		
 		bool _didWrap = false;
 		bool _wrapDuringFrame = false;
+		bool _ready = false;
+
+		protected bool ready => _ready;
+		protected bool waitForTrigger => _waitForTrigger;
 
 		public bool WillWrapDuringFrame => _wrapDuringFrame;
 		
@@ -38,6 +45,7 @@ namespace butterflowersOS.AI.Objects
 			OnEnabled?.Invoke(this);
 
 			life = lifetime; // Reset life
+			_ready = !waitForTrigger;
 			
 			if(_cctv != null) OrientToCamera();
 		}
@@ -53,6 +61,8 @@ namespace butterflowersOS.AI.Objects
 
 		protected virtual void Update()
 		{
+			if (!ready) return; // Wait until ready to fire
+			
 			if (_didWrap) 
 			{
 				if (_wrapDuringFrame) PostWrap();
@@ -65,6 +75,11 @@ namespace butterflowersOS.AI.Objects
 		protected virtual void OnDestroy()
 		{
 			OnDisposed?.Invoke(this);
+		}
+
+		public virtual void Trigger(float saturation, float value, Color baseline, params object[] data)
+		{
+			_ready = true;
 		}
 		
 		#region Wrapping
@@ -111,12 +126,17 @@ namespace butterflowersOS.AI.Objects
 		
 		#region Camera
 
-		void OrientToCamera()
+		protected void OrientToCamera()
 		{
 			Vector3 direction = (_cctv.transform.position - transform.position).normalized;
+			DidOrientToCamera(direction);
+		}
+
+		protected virtual void DidOrientToCamera(Vector3 direction)
+		{
 			transform.forward = direction;
 		}
-		
+
 		#endregion
 	}
 }

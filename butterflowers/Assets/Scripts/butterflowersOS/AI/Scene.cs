@@ -3,6 +3,7 @@ using System.Collections;
 using System.Collections.Generic;
 using B83.Win32;
 using butterflowersOS.Core;
+using butterflowersOS.Presets;
 using Neue.Agent.Brain.Data;
 using UnityEngine;
 using UnityEngine.Playables;
@@ -24,9 +25,10 @@ namespace butterflowersOS.AI
 
 		Loader Loader;
 
-		[SerializeField] ParticleSystem butterflowers = null;
+		[SerializeField] WorldPreset preset;
 		[SerializeField] Material butterflowersMaterial = null;
-		[SerializeField]				 Texture2D butterflowersTexture;
+		[SerializeField] Texture2D butterflowersTexture;
+		[SerializeField] int bWidth = 0, bHeight = 0;
 
 		[SerializeField] Driver agent = null;
 		[SerializeField] Wrapper wrapper = null;
@@ -78,10 +80,13 @@ namespace butterflowersOS.AI
 
 		#region Ground
 
-		void ApplyImagesToParticleSystem(byte[] images, ushort _width, ushort _height)
+		void UnpackTexture(byte[] images, ushort _width, ushort _height)
 		{
 			int width = Library._WIDTH * _width;
 			int height = Library._HEIGHT * _height;
+
+			bWidth = _width;
+			bHeight = _height;
 
 			butterflowersTexture = new Texture2D(width, height, TextureFormat.ARGB32, false);
 			butterflowersTexture.filterMode = FilterMode.Point;
@@ -89,12 +94,8 @@ namespace butterflowersOS.AI
 				butterflowersTexture.LoadImage(images);
 				butterflowersTexture.Apply();
 
-			var textureModule = butterflowers.textureSheetAnimation;
-				textureModule.numTilesX = _width;
-				textureModule.numTilesY = _height;
-				textureModule.startFrameMultiplier = (_width * _height);
-
-			butterflowersMaterial.SetTexture("_MainTexture", butterflowersTexture);
+			butterflowersMaterial.SetTexture("_MainTex", butterflowersTexture);
+			butterflowersMaterial.mainTextureScale = new Vector2(1f / _width, 1f / _height);
 			
 			wrapper.Setup(10);
 		}
@@ -135,10 +136,10 @@ namespace butterflowersOS.AI
 
 			if (images.Length > 0 && image_height > 0 && image_width > 0) 
 			{
-				ApplyImagesToParticleSystem(images, image_width, image_height); // Apply ground texture
+				UnpackTexture(images, image_width, image_height); // Apply ground texture
 			}
 
-			agent.Initialize(Save.data.surveillanceData);
+			agent.Initialize(Save.data.profile, Save.data.surveillanceData, butterflowersTexture, bWidth, bHeight);
 		}
 
 		#endregion

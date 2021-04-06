@@ -1,19 +1,46 @@
-﻿using butterflowersOS.AI.Objects;
-using UnityEngine;
+﻿using UnityEngine;
 
-namespace butterflowersOS.AI
+namespace butterflowersOS.AI.Objects
 {
 	public abstract class Shape : Entity
 	{
 		[SerializeField] protected Color color = Color.white;
-		[SerializeField] bool randomizeColor = true;
+		[SerializeField] ColorMode colorMode = ColorMode.Default;
+
+
+		public enum ColorMode
+		{
+			Default,
+			Random,
+			Baseline,
+			RandomFromBaseline
+		}
+		
 
 		protected override void OnEnable()
 		{
 			base.OnEnable();
 			
-			if(randomizeColor) color = new Color(Random.Range(0f, 1f), Random.Range(0f, 1f), Random.Range(0f, 1f));
 			transform.localEulerAngles = Vector3.zero;
+
+			if (colorMode == ColorMode.Random) 
+			{
+				color = new Color(Random.Range(0f, 1f), Random.Range(0f, 1f), Random.Range(0f, 1f), 1f);
+			}
+		}
+
+		public override void Trigger(float saturation, float value, Color baseline, params object[] data)
+		{
+			base.Trigger(saturation, value, baseline);
+
+			if (colorMode == ColorMode.Baseline) 
+			{
+				color = baseline;
+			}
+			else if (colorMode == ColorMode.RandomFromBaseline) 
+			{
+				color = ShapeExtensions.RandomColorFromRange(baseline, saturation, value);
+			}
 		}
 
 		static Material lineMaterial;
@@ -39,6 +66,8 @@ namespace butterflowersOS.AI
 		// Will be called after all regular rendering is done
 		public virtual void OnRenderObject()
 		{
+			if (!ready) return; // Ignore draw calls when not initialized
+			
 			if (WillRenderWithCamera(Camera.current)) {
 
 				CreateLineMaterial();
@@ -55,6 +84,22 @@ namespace butterflowersOS.AI
 		{
 			var mask = camera.cullingMask;
 			return mask == (mask | (1 << gameObject.layer));
+		}
+	}
+
+	public static class ShapeExtensions
+	{
+		public static Color RandomColorFromRange(Color color, float sRange, float hRange)
+		{
+			Color.RGBToHSV(color, out float h, out float s, out float v);
+
+			h = Mathf.Repeat(h + Random.Range(0f, sRange), 1f);
+			s = Mathf.Repeat(s + Random.Range(0f, hRange), 1f);
+			
+			Color resultant = Color.HSVToRGB(h, s, v);
+			resultant.a = color.a;
+			
+			return resultant;
 		}
 	}
 }
