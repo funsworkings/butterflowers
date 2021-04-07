@@ -4,6 +4,7 @@ using System.Collections.Generic;
 using System.Linq;
 using butterflowersOS.AI.Objects;
 using butterflowersOS.Data;
+using butterflowersOS.Presets;
 using Neue.Agent.Brain.Data;
 using Neue.Reference.Types;
 using UnityEngine;
@@ -25,7 +26,8 @@ namespace butterflowersOS.AI
 		List<Point> points = new List<Point>();
 
 		// Properties
-		
+
+		[SerializeField] WorldPreset preset;
 		[SerializeField] VFXER _pool;
 
 		[SerializeField] SurveillanceData log;
@@ -49,7 +51,9 @@ namespace butterflowersOS.AI
 		[SerializeField] int tileX, tileY;
 		[SerializeField] float tileSX, tileSY;
 		[SerializeField] bool useLogForColorValues = true;
-		
+		[SerializeField] int numberOfPlayerTextures, numberOfWorldTextures;
+		[SerializeField] Texture2D playerTexture;
+
 		float refresh_t = 0f;
 		int logIndex = 0;
 		
@@ -69,6 +73,11 @@ namespace butterflowersOS.AI
 			tileSX = 1f / tileX;
 			tileY = dimensionY;
 			tileSY = 1f / tileY;
+			
+			numberOfPlayerTextures = dimensionX * dimensionY;
+			numberOfWorldTextures = preset.worldTextures.Length;
+
+			playerTexture = image;
 			
 			allLogs.AddRange(data);
 			if(allLogs.Count > 0) StartCoroutine("Loop");
@@ -159,6 +168,7 @@ namespace butterflowersOS.AI
 				    {
 					    t = 0f;
 					    i = (refreshTime / captures.Length);
+					    //i = refreshTime;
 					    
 					    capture = captures[captureIndex];
 					    HandleLog(capture, captureIndex, i);
@@ -230,12 +240,24 @@ namespace butterflowersOS.AI
 
 					float ox = Random.Range(0, tileX) * tileSX;
 					float oy = Random.Range(0, tileY) * tileSY;
+
+					Texture2D targetTexture = playerTexture;
+					int randomTexture = Random.Range(0, numberOfPlayerTextures + Mathf.FloorToInt(numberOfWorldTextures * preset.worldTextureProbability));
 					
-					entity.Trigger(saturation, value, baseline, new object[] { ox, oy });
+					bool usePlayerTexture = randomTexture < numberOfPlayerTextures;
+					if (!usePlayerTexture) 
+					{
+						targetTexture = preset.worldTextures[Random.Range(0, numberOfWorldTextures)];
+						Debug.LogWarningFormat("Import custom external file: {0}", targetTexture.name);
+					}
+					
+					entity.Trigger(saturation, value, baseline, new object[] { ox, oy, targetTexture, usePlayerTexture });
 					
 					fallbackEntityTrigger = false; // Ignore fallback
 					break;
 				case EVENTCODE.BEACONFLOWER:
+					entity = SpawnEntity("flora");
+					break;
 				default:
 					break; // Default state
 		    }

@@ -100,7 +100,8 @@ namespace butterflowersOS.Presets
             public float cursorIdleTimeThreshold = 10f;
             public float cursorIdleDelay = 1f;
 
-        [Header("Miscellaneous")] 
+            [Header("Miscellaneous")] 
+            [Range(0f, 1f)] public float worldTextureProbability = .5f;
             public Texture2D[] worldTextures;
 
         #region Time conversions

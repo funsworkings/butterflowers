@@ -12,12 +12,16 @@ namespace butterflowersOS.AI.Objects
 		Vector3 axis;
 		Vector3 scale;
 
+		Vector2 textureScale;
+
 		protected override void Awake()
 		{
 			base.Awake();
 			
 			renderer = GetComponent<MeshRenderer>();
 			material = renderer.material;
+			textureScale = material.mainTextureScale;
+			
 			scale = transform.localScale;
 		}
 
@@ -40,8 +44,13 @@ namespace butterflowersOS.AI.Objects
 		public override void Trigger(float saturation, float value, Color baseline, params object[] data)
 		{
 			base.Trigger(saturation, value, baseline, data);
+
+			bool usePlayerTexture = (bool) data[3];
+
+			material.mainTexture = (Texture2D) data[2];
+			material.mainTextureScale = (usePlayerTexture) ? textureScale : Vector2.one;
+			material.mainTextureOffset = (usePlayerTexture)?  new Vector2((float)data[0], (float)data[1]) : Vector2.zero;
 			
-			material.mainTextureOffset = new Vector2((float)data[0], (float)data[1]);
 			axis = Random.insideUnitSphere;
 		}
 
