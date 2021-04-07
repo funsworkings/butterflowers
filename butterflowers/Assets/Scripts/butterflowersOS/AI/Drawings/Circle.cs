@@ -24,7 +24,7 @@ namespace butterflowersOS.AI
 		{
 			base.Trigger(saturation, value, baseline, data);
 
-			m_growRate = Mathf.Pow(saturation, 2f).RemapNRB(0f, 1f, .3f, 1f) * growRate;
+			m_growRate = Mathf.Pow(saturation, 2f).RemapNRB(0f, 1f, .87f, 2f) * growRate;
 		}
 
 		protected override void Update()

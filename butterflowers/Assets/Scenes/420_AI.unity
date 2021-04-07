@@ -7862,7 +7862,7 @@ PrefabInstance:
     - target: {fileID: 2973830041851690829, guid: 4ec5ab60b92a4e9419bebcfffedef8c6,
         type: 3}
       propertyPath: m_AnchoredPosition.x
-      value: 960.23285
+      value: 0
       objectReference: {fileID: 0}
     - target: {fileID: 2973830041851690829, guid: 4ec5ab60b92a4e9419bebcfffedef8c6,
         type: 3}
@@ -9690,7 +9690,7 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: 
   filter: 1
-  preset: {fileID: 0}
+  preset: {fileID: 11400000, guid: 45ffdf5e02efb4848942aaeb5d029f6e, type: 2}
   butterflowersMaterial: {fileID: 2100000, guid: f7590f8c698b0b548954df9833e762bc,
     type: 2}
   butterflowersTexture: {fileID: 0}
@@ -9712,6 +9712,7 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 39059c57448042d6aa3d2f27bf211e09, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
+  preset: {fileID: 11400000, guid: 45ffdf5e02efb4848942aaeb5d029f6e, type: 2}
   _pool: {fileID: 1942578238}
   log:
     timestamp: 0
@@ -9742,6 +9743,9 @@ MonoBehaviour:
   tileSX: 0
   tileSY: 0
   useLogForColorValues: 1
+  numberOfPlayerTextures: 0
+  numberOfWorldTextures: 0
+  playerTexture: {fileID: 0}
 --- !u!65 &1740291652
 BoxCollider:
   m_ObjectHideFlags: 0
@@ -10866,6 +10870,7 @@ MonoBehaviour:
   - {fileID: 1111468988078718005, guid: 14e391aa68606e5418a5ced2f507adfd, type: 3}
   - {fileID: 8952220747280696226, guid: 0b1297387a1e82845b3dcd6e05185c2d, type: 3}
   - {fileID: 170796884976062952, guid: d86888b37daf9c548911232e5e7a00ae, type: 3}
+  - {fileID: 6695795137231882170, guid: 7ff1f43ecf6b49147ae8f65482571ac5, type: 3}
 --- !u!1001 &1945746562
 PrefabInstance:
   m_ObjectHideFlags: 0
