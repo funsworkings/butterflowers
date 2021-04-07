@@ -9,9 +9,10 @@ namespace butterflowersOS.AI
 	public class Flower : Shape
 	{
 		int nodes = 0;
+		int petals = 0;
 		float radius = 0f;
 
-		[SerializeField] int petals = 3;
+		[SerializeField] int minPetals = 3, maxPetals = 6;
 		[SerializeField] float minRadius = 1f, maxRadius;
 		[SerializeField] int minNodes = 3, maxNodes = 16;
 
@@ -21,6 +22,7 @@ namespace butterflowersOS.AI
 		{
 			base.OnEnable();
 
+			petals = Random.Range(minPetals, maxPetals);
 			radius = (Math.Abs(minRadius - maxRadius) < .01f)? minRadius: Random.Range(minRadius, maxRadius);
 			nodes = (minNodes == maxNodes)? minNodes:Random.Range(minNodes, maxNodes);
 			nodeOffsets = new List<Vector3>();
