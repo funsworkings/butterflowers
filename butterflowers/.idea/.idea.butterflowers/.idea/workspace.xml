@@ -34,34 +34,105 @@
   </component>
   <component name="ChangeListManager">
     <list default="true" id="6ebb3891-c912-403e-9e42-400f227dea0b" name="Default Changelist" comment="">
-      <change afterPath="$PROJECT_DIR$/Assets/Prefabs/AI/flora.prefab" afterDir="false" />
-      <change afterPath="$PROJECT_DIR$/Assets/Prefabs/AI/flora.prefab.meta" afterDir="false" />
-      <change afterPath="$PROJECT_DIR$/Assets/Scripts/butterflowersOS/AI/Drawings/Flower.cs" afterDir="false" />
-      <change afterPath="$PROJECT_DIR$/Assets/Scripts/butterflowersOS/AI/Drawings/Flower.cs.meta" afterDir="false" />
-      <change afterPath="$PROJECT_DIR$/Assets/Textures/Starter Pack/040621.meta" afterDir="false" />
-      <change afterPath="$PROJECT_DIR$/Assets/Textures/Starter Pack/040621/Image from iOS (10).jpg" afterDir="false" />
-      <change afterPath="$PROJECT_DIR$/Assets/Textures/Starter Pack/040621/Image from iOS (10).jpg.meta" afterDir="false" />
-      <change afterPath="$PROJECT_DIR$/Assets/Textures/Starter Pack/040621/Image from iOS (4).jpg" afterDir="false" />
-      <change afterPath="$PROJECT_DIR$/Assets/Textures/Starter Pack/040621/Image from iOS (4).jpg.meta" afterDir="false" />
-      <change afterPath="$PROJECT_DIR$/Assets/Textures/Starter Pack/040621/Image from iOS (5).jpg" afterDir="false" />
-      <change afterPath="$PROJECT_DIR$/Assets/Textures/Starter Pack/040621/Image from iOS (5).jpg.meta" afterDir="false" />
-      <change afterPath="$PROJECT_DIR$/Assets/Textures/Starter Pack/040621/Image from iOS (6).jpg" afterDir="false" />
-      <change afterPath="$PROJECT_DIR$/Assets/Textures/Starter Pack/040621/Image from iOS (6).jpg.meta" afterDir="false" />
-      <change afterPath="$PROJECT_DIR$/Assets/Textures/Starter Pack/040621/Image from iOS (7).jpg" afterDir="false" />
-      <change afterPath="$PROJECT_DIR$/Assets/Textures/Starter Pack/040621/Image from iOS (7).jpg.meta" afterDir="false" />
-      <change afterPath="$PROJECT_DIR$/Assets/Textures/Starter Pack/040621/Image from iOS (8).jpg" afterDir="false" />
-      <change afterPath="$PROJECT_DIR$/Assets/Textures/Starter Pack/040621/Image from iOS (8).jpg.meta" afterDir="false" />
-      <change afterPath="$PROJECT_DIR$/Assets/Textures/Starter Pack/040621/Image from iOS (9).jpg" afterDir="false" />
-      <change afterPath="$PROJECT_DIR$/Assets/Textures/Starter Pack/040621/Image from iOS (9).jpg.meta" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/Assets/Scripts/butterflowersOS/Presets/Editor.meta" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/Assets/Scripts/butterflowersOS/Presets/Editor/WorldPresetEditor.cs" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/Assets/Scripts/butterflowersOS/Presets/Editor/WorldPresetEditor.cs.meta" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/.idea/.idea.butterflowers/.idea/contentModel.xml" beforeDir="false" afterPath="$PROJECT_DIR$/.idea/.idea.butterflowers/.idea/contentModel.xml" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/.idea/.idea.butterflowers/.idea/workspace.xml" beforeDir="false" afterPath="$PROJECT_DIR$/.idea/.idea.butterflowers/.idea/workspace.xml" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/Assets/Presets/Behaviours/World (Default).asset" beforeDir="false" afterPath="$PROJECT_DIR$/Assets/Presets/Behaviours/World (Default).asset" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/Assets/Scenes/420_AI.unity" beforeDir="false" afterPath="$PROJECT_DIR$/Assets/Scenes/420_AI.unity" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/Assets/Scripts/butterflowersOS/AI/Drawings/Circle.cs" beforeDir="false" afterPath="$PROJECT_DIR$/Assets/Scripts/butterflowersOS/AI/Drawings/Circle.cs" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/Assets/Scripts/butterflowersOS/AI/Driver.cs" beforeDir="false" afterPath="$PROJECT_DIR$/Assets/Scripts/butterflowersOS/AI/Driver.cs" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/Assets/Scripts/butterflowersOS/AI/Objects/Image.cs" beforeDir="false" afterPath="$PROJECT_DIR$/Assets/Scripts/butterflowersOS/AI/Objects/Image.cs" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/Assets/Scripts/butterflowersOS/Presets/WorldPreset.cs" beforeDir="false" afterPath="$PROJECT_DIR$/Assets/Scripts/butterflowersOS/Presets/WorldPreset.cs" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/Assets/Prefabs/AI/quad.prefab" beforeDir="false" afterPath="$PROJECT_DIR$/Assets/Prefabs/AI/quad.prefab" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/Assets/Textures/Starter Pack.meta" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/Assets/Textures/Starter Pack/040621.meta" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/Assets/Textures/Starter Pack/040621/Image from iOS (10).jpg" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/Assets/Textures/Starter Pack/040621/Image from iOS (10).jpg.meta" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/Assets/Textures/Starter Pack/040621/Image from iOS (4).jpg" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/Assets/Textures/Starter Pack/040621/Image from iOS (4).jpg.meta" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/Assets/Textures/Starter Pack/040621/Image from iOS (5).jpg" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/Assets/Textures/Starter Pack/040621/Image from iOS (5).jpg.meta" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/Assets/Textures/Starter Pack/040621/Image from iOS (6).jpg" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/Assets/Textures/Starter Pack/040621/Image from iOS (6).jpg.meta" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/Assets/Textures/Starter Pack/040621/Image from iOS (7).jpg" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/Assets/Textures/Starter Pack/040621/Image from iOS (7).jpg.meta" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/Assets/Textures/Starter Pack/040621/Image from iOS (8).jpg" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/Assets/Textures/Starter Pack/040621/Image from iOS (8).jpg.meta" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/Assets/Textures/Starter Pack/040621/Image from iOS (9).jpg" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/Assets/Textures/Starter Pack/040621/Image from iOS (9).jpg.meta" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/Assets/Textures/Starter Pack/071320.meta" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/Assets/Textures/Starter Pack/071320/106494897_2884428761679988_3719807341895487679_n.jpg" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/Assets/Textures/Starter Pack/071320/106494897_2884428761679988_3719807341895487679_n.jpg.meta" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/Assets/Textures/Starter Pack/071320/3yjiju.jpg" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/Assets/Textures/Starter Pack/071320/3yjiju.jpg.meta" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/Assets/Textures/Starter Pack/071320/EV-V9G-U4AEzs2H.jpeg" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/Assets/Textures/Starter Pack/071320/EV-V9G-U4AEzs2H.jpeg.meta" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/Assets/Textures/Starter Pack/071320/EVQBG2MUEAQWOBu.png" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/Assets/Textures/Starter Pack/071320/EVQBG2MUEAQWOBu.png.meta" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/Assets/Textures/Starter Pack/071320/EVQO9PBXsAIbvqe.jpeg" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/Assets/Textures/Starter Pack/071320/EVQO9PBXsAIbvqe.jpeg.meta" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/Assets/Textures/Starter Pack/071320/EW4ok3tWoAkiUVn.jpeg" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/Assets/Textures/Starter Pack/071320/EW4ok3tWoAkiUVn.jpeg.meta" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/Assets/Textures/Starter Pack/071320/EXiEcs6U0AArfZU.jpeg" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/Assets/Textures/Starter Pack/071320/EXiEcs6U0AArfZU.jpeg.meta" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/Assets/Textures/Starter Pack/071320/EcraqOwWAAAHMzj.jpeg" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/Assets/Textures/Starter Pack/071320/EcraqOwWAAAHMzj.jpeg.meta" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/Assets/Textures/Starter Pack/071320/images.jpeg" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/Assets/Textures/Starter Pack/071320/images.jpeg.meta" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/Assets/Textures/Starter Pack/071720.meta" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/Assets/Textures/Starter Pack/071720/104434930_216635145993601_4351359208575214168_n.jpg" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/Assets/Textures/Starter Pack/071720/104434930_216635145993601_4351359208575214168_n.jpg.meta" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/Assets/Textures/Starter Pack/071720/32105251_1941927725882594_1090271100127936512_n.png" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/Assets/Textures/Starter Pack/071720/32105251_1941927725882594_1090271100127936512_n.png.meta" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/Assets/Textures/Starter Pack/071720/38909541_10157588774433362_1233856680081489920_n.jpg" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/Assets/Textures/Starter Pack/071720/38909541_10157588774433362_1233856680081489920_n.jpg.meta" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/Assets/Textures/Starter Pack/071720/51LEpUEz8W1aobBd5D2-JnMNpa68RzF-7v1YvM0LntA.png" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/Assets/Textures/Starter Pack/071720/51LEpUEz8W1aobBd5D2-JnMNpa68RzF-7v1YvM0LntA.png.meta" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/Assets/Textures/Starter Pack/071720/7qiys6fyy8041.png" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/Assets/Textures/Starter Pack/071720/7qiys6fyy8041.png.meta" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/Assets/Textures/Starter Pack/071720/90-charged-messages-now-anxiety-what-if-youre-not-good-28419650.png" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/Assets/Textures/Starter Pack/071720/90-charged-messages-now-anxiety-what-if-youre-not-good-28419650.png.meta" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/Assets/Textures/Starter Pack/071720/DSC_0427.JPG" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/Assets/Textures/Starter Pack/071720/DSC_0427.JPG.meta" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/Assets/Textures/Starter Pack/071720/ET-9QLJWoAQnZCf.png" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/Assets/Textures/Starter Pack/071720/ET-9QLJWoAQnZCf.png.meta" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/Assets/Textures/Starter Pack/071720/EUJX_XXXkAA43zt.png" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/Assets/Textures/Starter Pack/071720/EUJX_XXXkAA43zt.png.meta" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/Assets/Textures/Starter Pack/071720/EUMsbkLXkAAwFpw.jpeg" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/Assets/Textures/Starter Pack/071720/EUMsbkLXkAAwFpw.jpeg.meta" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/Assets/Textures/Starter Pack/071720/EUfDUvIXYAANFdj.jpeg" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/Assets/Textures/Starter Pack/071720/EUfDUvIXYAANFdj.jpeg.meta" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/Assets/Textures/Starter Pack/071720/EUsPzhpX0AAJE2J.jpeg" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/Assets/Textures/Starter Pack/071720/EUsPzhpX0AAJE2J.jpeg.meta" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/Assets/Textures/Starter Pack/071720/EdBkCUbUcAAU-zg.jpg" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/Assets/Textures/Starter Pack/071720/EdBkCUbUcAAU-zg.jpg.meta" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/Assets/Textures/Starter Pack/071720/IMG_5078.JPG" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/Assets/Textures/Starter Pack/071720/IMG_5078.JPG.meta" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/Assets/Textures/Starter Pack/071720/IMG_5949.JPG" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/Assets/Textures/Starter Pack/071720/IMG_5949.JPG.meta" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/Assets/Textures/Starter Pack/071720/image (9).png" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/Assets/Textures/Starter Pack/071720/image (9).png.meta" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/Assets/Textures/Starter Pack/071720/royalty-free magnify glass.jpg" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/Assets/Textures/Starter Pack/071720/royalty-free magnify glass.jpg.meta" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/Assets/Textures/Starter Pack/072820.meta" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/Assets/Textures/Starter Pack/072820/61475390628__78A45B98-EA48-4512-83ED-438412CB497A.jpeg" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/Assets/Textures/Starter Pack/072820/61475390628__78A45B98-EA48-4512-83ED-438412CB497A.jpeg.meta" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/Assets/Textures/Starter Pack/072820/61725664087__E7952DC5-E044-485D-91BC-5F68836FE1A8.jpeg" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/Assets/Textures/Starter Pack/072820/61725664087__E7952DC5-E044-485D-91BC-5F68836FE1A8.jpeg.meta" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/Assets/Textures/Starter Pack/072820/IMG_3302.jpeg" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/Assets/Textures/Starter Pack/072820/IMG_3302.jpeg.meta" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/Assets/Textures/Starter Pack/072820/IMG_4353.jpeg" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/Assets/Textures/Starter Pack/072820/IMG_4353.jpeg.meta" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/Assets/Textures/Starter Pack/072820/IMG_4641.jpeg" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/Assets/Textures/Starter Pack/072820/IMG_4641.jpeg.meta" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/Assets/Textures/Starter Pack/072820/IMG_5449.jpeg" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/Assets/Textures/Starter Pack/072820/IMG_5449.jpeg.meta" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/Assets/Textures/Starter Pack/072820/IMG_5717.jpeg" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/Assets/Textures/Starter Pack/072820/IMG_5717.jpeg.meta" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/Assets/Textures/Starter Pack/072820/IMG_6102.jpeg" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/Assets/Textures/Starter Pack/072820/IMG_6102.jpeg.meta" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/Assets/Textures/Starter Pack/072820/IMG_6311.jpeg" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/Assets/Textures/Starter Pack/072820/IMG_6311.jpeg.meta" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/Assets/Textures/Starter Pack/072820/Starter Pack.asset" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/Assets/Textures/Starter Pack/072820/Starter Pack.asset.meta" beforeDir="false" />
       <change beforePath="$PROJECT_DIR$/Library/InspectorExpandedItems.asset" beforeDir="false" afterPath="$PROJECT_DIR$/Library/InspectorExpandedItems.asset" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/Library/SpriteAtlasDatabase.asset" beforeDir="false" afterPath="$PROJECT_DIR$/Library/SpriteAtlasDatabase.asset" afterDir="false" />
     </list>
     <option name="SHOW_DIALOG" value="false" />
     <option name="HIGHLIGHT_CONFLICTS" value="true" />
@@ -94,7 +165,6 @@
   <component name="IdeDocumentHistory">
     <option name="CHANGED_PATHS">
       <list>
-        <option value="$PROJECT_DIR$/Assets/Scripts/butterflowersOS/Menu/MainMenu.cs" />
         <option value="$PROJECT_DIR$/Assets/Scripts/uwu/Settings/Controller.cs" />
         <option value="$PROJECT_DIR$/Assets/Scripts/uwu/Utilities/Settings.cs" />
         <option value="$PROJECT_DIR$/Assets/Scripts/butterflowersOS/Utils/Settings.cs" />
@@ -141,10 +211,11 @@
         <option value="$PROJECT_DIR$/Assets/Scripts/butterflowersOS/Core/Importer.cs" />
         <option value="$PROJECT_DIR$/Assets/Scripts/butterflowersOS/Core/World.cs" />
         <option value="$PROJECT_DIR$/Assets/Scripts/butterflowersOS/AI/Drawings/Circle.cs" />
-        <option value="$PROJECT_DIR$/Assets/Scripts/butterflowersOS/AI/Drawings/Flower.cs" />
         <option value="$PROJECT_DIR$/Assets/Scripts/butterflowersOS/AI/Objects/Image.cs" />
         <option value="$PROJECT_DIR$/Assets/Scripts/butterflowersOS/Presets/WorldPreset.cs" />
         <option value="$PROJECT_DIR$/Assets/Scripts/butterflowersOS/AI/Driver.cs" />
+        <option value="$PROJECT_DIR$/Assets/Scripts/butterflowersOS/AI/Drawings/Flower.cs" />
+        <option value="$PROJECT_DIR$/Assets/Scripts/butterflowersOS/Presets/Editor/WorldPresetEditor.cs" />
       </list>
     </option>
   </component>
@@ -239,7 +310,7 @@
       <workItem from="1615078235884" duration="1965000" />
       <workItem from="1616813561578" duration="32478000" />
       <workItem from="1617411602157" duration="22663000" />
-      <workItem from="1617708799445" duration="13659000" />
+      <workItem from="1617708799445" duration="15932000" />
     </task>
     <servers />
   </component>
@@ -297,12 +368,12 @@
     <state x="425" y="187" width="672" height="678" key="run.anything.popup/0.0.1536.824/-2560.-370.2560.1400@0.0.1536.824" timestamp="1617422770326" />
     <state x="2628" y="-31" width="1120" height="1151" key="run.anything.popup/0.0.1536.824/1920.-349.2560.1400@1920.-349.2560.1400" timestamp="1609375011181" />
     <state x="425" y="187" width="672" height="677" key="run.anything.popup/0.0.1536.824@0.0.1536.824" timestamp="1609791387421" />
-    <state x="430" y="145" width="672" height="160" key="search.everywhere.popup" timestamp="1617768602974">
+    <state x="430" y="145" width="672" height="160" key="search.everywhere.popup" timestamp="1617803002067">
       <screen x="0" y="0" width="1536" height="824" />
     </state>
     <state x="-1843" y="-103" width="672" height="160" key="search.everywhere.popup/0.0.1536.824/-2560.-349.2560.1400@-2560.-349.2560.1400" timestamp="1611024221131" />
     <state x="-1843" y="-124" width="748" height="544" key="search.everywhere.popup/0.0.1536.824/-2560.-370.2560.1400@-2560.-370.2560.1400" timestamp="1617718136650" />
-    <state x="430" y="145" width="672" height="160" key="search.everywhere.popup/0.0.1536.824/-2560.-370.2560.1400@0.0.1536.824" timestamp="1617768602974" />
+    <state x="430" y="145" width="672" height="160" key="search.everywhere.popup/0.0.1536.824/-2560.-370.2560.1400@0.0.1536.824" timestamp="1617803002067" />
     <state x="2637" y="-103" width="1120" height="1152" key="search.everywhere.popup/0.0.1536.824/1920.-349.2560.1400@1920.-349.2560.1400" timestamp="1609698996642" />
     <state x="430" y="145" width="672" height="678" key="search.everywhere.popup/0.0.1536.824@0.0.1536.824" timestamp="1609797945979" />
   </component>

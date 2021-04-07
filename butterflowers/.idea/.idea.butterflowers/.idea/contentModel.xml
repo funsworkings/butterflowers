@@ -1466,6 +1466,9 @@
             </e>
             <e p="Presets" t="Include">
               <e p="ButterflyPreset.cs" t="Include" />
+              <e p="Editor" t="Include">
+                <e p="WorldPresetEditor.cs" t="Include" />
+              </e>
               <e p="WorldPreset.cs" t="Include" />
             </e>
             <e p="Save &amp; Load" t="Include">
