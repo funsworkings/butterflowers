@@ -768,11 +768,20 @@ namespace butterflowersOS.Core
 
 		public const int _MAX_DIMENSION = 64;
 
+		public static Texture2D DegradeTexture(Texture2D _original)
+		{
+			var _texture = new Texture2D(_original.width, _original.height);
+			_texture.SetPixels(_original.GetPixels());
+			_texture.Apply();
+
+			TextureScale.Bilinear(_texture, _WIDTH, _HEIGHT);
+			_texture.Apply();
+
+			return _texture;
+		}
+
 		Texture2D DegradeBytes(string file, Texture2D texture, bool transparency)
 		{
-			var width = texture.width;
-			var height = texture.height;
-
 			string path = DefaultThumbnailPathFromFile(file);
 			byte[] _data = new byte[] { };
 			
@@ -780,12 +789,7 @@ namespace butterflowersOS.Core
 			{
 				try 
 				{
-					var _texture = new Texture2D(texture.width, texture.height);
-					_texture.SetPixels(texture.GetPixels());
-					_texture.Apply();
-
-					TextureScale.Bilinear(_texture, _WIDTH, _HEIGHT);
-					_texture.Apply();
+					Texture2D _texture = DegradeTexture(texture);
 
 					if (transparency) _data = _texture.EncodeToPNG();
 					else _data = _texture.EncodeToJPG();
