@@ -242,7 +242,7 @@ namespace butterflowersOS.AI
 					float oy = Random.Range(0, tileY) * tileSY;
 
 					Texture2D targetTexture = playerTexture;
-					int randomTexture = Random.Range(0, numberOfPlayerTextures + Mathf.FloorToInt(numberOfWorldTextures * preset.worldTextureProbability));
+					int randomTexture = Random.Range(0, numberOfPlayerTextures + Mathf.FloorToInt(numberOfPlayerTextures * preset.worldTextureProbability));
 					
 					bool usePlayerTexture = randomTexture < numberOfPlayerTextures;
 					if (!usePlayerTexture) 
