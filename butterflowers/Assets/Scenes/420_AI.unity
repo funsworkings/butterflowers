@@ -7862,7 +7862,7 @@ PrefabInstance:
     - target: {fileID: 2973830041851690829, guid: 4ec5ab60b92a4e9419bebcfffedef8c6,
         type: 3}
       propertyPath: m_AnchoredPosition.x
-      value: 960
+      value: 960.00006
       objectReference: {fileID: 0}
     - target: {fileID: 2973830041851690829, guid: 4ec5ab60b92a4e9419bebcfffedef8c6,
         type: 3}
@@ -9052,10 +9052,11 @@ MonoBehaviour:
   m_EditorClassIdentifier: 
   driver: {fileID: 1740291651}
   box: {fileID: 1551884105}
-  lookaheadDistance: 3
-  stepbackDistance: 67
-  focusWeight: 0.5
-  eventWeight: 0.5
+  lookaheadDistance: 96
+  stepbackDistance: 96
+  focusWeight: 0.244
+  eventWeight: 0.862
+  debugDrawRadius: 8
 --- !u!114 &1279467278
 MonoBehaviour:
   m_ObjectHideFlags: 0
@@ -9575,7 +9576,7 @@ RectTransform:
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
   m_AnchorMin: {x: 0, y: 0}
   m_AnchorMax: {x: 1, y: 1}
-  m_AnchoredPosition: {x: 2208, y: 1302}
+  m_AnchoredPosition: {x: 0, y: 0}
   m_SizeDelta: {x: 0, y: 0}
   m_Pivot: {x: 0.5, y: 0.5}
 --- !u!114 &1631980217
@@ -11730,7 +11731,7 @@ RectTransform:
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
   m_AnchorMin: {x: 1, y: 1}
   m_AnchorMax: {x: 1, y: 1}
-  m_AnchoredPosition: {x: -32, y: 16}
+  m_AnchoredPosition: {x: -32, y: 212.5}
   m_SizeDelta: {x: 200, y: 50}
   m_Pivot: {x: 0.9999996, y: 1.000001}
 --- !u!114 &2136114120
@@ -11754,8 +11755,8 @@ MonoBehaviour:
       m_Calls: []
   m_text: 60
   m_isRightToLeft: 0
-  m_fontAsset: {fileID: 11400000, guid: ff3f711f30104414f9bb6530239fca48, type: 2}
-  m_sharedMaterial: {fileID: 8506712898121336428, guid: ff3f711f30104414f9bb6530239fca48,
+  m_fontAsset: {fileID: 11400000, guid: 8619fc627c6049246bdbb3ddbd2e90ae, type: 2}
+  m_sharedMaterial: {fileID: 5290599664626855507, guid: 8619fc627c6049246bdbb3ddbd2e90ae,
     type: 2}
   m_fontSharedMaterials: []
   m_fontMaterial: {fileID: 0}
@@ -11781,15 +11782,15 @@ MonoBehaviour:
   m_outlineColor:
     serializedVersion: 2
     rgba: 4278190080
-  m_fontSize: 64
-  m_fontSizeBase: 64
+  m_fontSize: 156
+  m_fontSizeBase: 156
   m_fontWeight: 400
   m_enableAutoSizing: 0
   m_fontSizeMin: 18
   m_fontSizeMax: 72
   m_fontStyle: 0
   m_textAlignment: 260
-  m_characterSpacing: 0
+  m_characterSpacing: 12
   m_wordSpacing: 0
   m_lineSpacing: 0
   m_lineSpacingMax: 0
