@@ -11,7 +11,7 @@ namespace butterflowersOS.AI.Objects
 		public Point(EVENTCODE @event, Vector3 point)
 		{
 			this.@event = @event;
-			this.position = position;
+			this.position = point;
 		}
 	}
 }
