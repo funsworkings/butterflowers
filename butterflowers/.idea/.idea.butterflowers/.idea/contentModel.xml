@@ -1329,6 +1329,7 @@
               </e>
               <e p="Driver.cs" t="Include" />
               <e p="Globals.cs" t="Include" />
+              <e p="Grayscale.cs" t="Include" />
               <e p="Objects" t="Include">
                 <e p="Burst.cs" t="Include" />
                 <e p="Entity.cs" t="Include" />
@@ -1869,10 +1870,12 @@
           <e p="Canvas.shader" t="Include" />
           <e p="Canvas2.shader" t="Include" />
           <e p="ColorKey.shader" t="Include" />
+          <e p="CustomBlueLightGlassesPPSSettings.cs" t="Include" />
           <e p="DeferredFog.shader" t="Include" />
           <e p="DeferredShading.shader" t="Include" />
           <e p="EtherealBoy.shader" t="Include" />
           <e p="FullBack.shader" t="Include" />
+          <e p="Grayscale.shader" t="Include" />
           <e p="Instancing.shader" t="Include" />
           <e p="My First Lighting Shader.shader" t="Include" />
           <e p="My First Shader.shader" t="Include" />
