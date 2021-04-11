@@ -20,8 +20,6 @@ namespace butterflowersOS.Objects.Base
         [SerializeField] bool focused = false, queued = false;
         [SerializeField] Transform anchor = null;
 
-        public bool dispose = true;
-
         string m_message = null;
 
         // Properties
@@ -113,7 +111,7 @@ namespace butterflowersOS.Objects.Base
             
             queued = true;
             onQueue.Invoke();
-        
+
             base.onHover(point, normal);
         }
 

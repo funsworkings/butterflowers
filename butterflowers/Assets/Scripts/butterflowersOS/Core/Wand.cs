@@ -433,7 +433,7 @@ namespace butterflowersOS.Core
                 {
                     var position = hit.point + Vector3.up*.3f;
                     @params.Add("position", position);
-                    @params.Add("position", position);
+//                    @params.Add("position", position);
                     
                     beacons.CreateBeacon(file, Beacon.Type.Desktop, Beacon.Locale.Terrain, @params, fromSave: false, transition: BeaconManager.TransitionType.Spawn);
                     return true;
