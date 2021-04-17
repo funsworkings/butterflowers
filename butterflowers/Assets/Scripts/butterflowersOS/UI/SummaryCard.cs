@@ -1,4 +1,5 @@
-﻿using butterflowersOS.Data;
+﻿using System;
+using butterflowersOS.Data;
 using TMPro;
 using UnityEngine;
 using UnityEngine.UI;
@@ -28,6 +29,8 @@ namespace butterflowersOS.UI
 		
 		// Properties
 
+		Canvas canvas;
+
 		protected SummaryDeck deck;
 		
 		[HideInInspector] public RectTransform rect;
@@ -50,6 +53,8 @@ namespace butterflowersOS.UI
 		[SerializeField] bool m_focus = false;
 
 		[HideInInspector] public State state = State.Normal;
+		
+		public Vector3 Scale { get; set; } = Vector3.one;
 
 		#region Accessors
 		
@@ -80,12 +85,14 @@ namespace butterflowersOS.UI
 		protected virtual void Start()
 		{
 			deck = GetComponentInParent<SummaryDeck>();
+			canvas = GetComponentInParent<Canvas>();
+			
 			trigger = GetComponentInChildren<SummaryCardTrigger>();
 
-			labelField = descriptionItem.GetComponent<TMP_Text>();
-			scoreField = scoreItem.GetComponentInChildren<TMP_Text>();
-			deltaField = scoreItem.GetComponentInChildren<Image>();
-			averageField = averageItem.GetComponentInChildren<TMP_Text>();
+			if(descriptionItem != null) labelField = descriptionItem.GetComponent<TMP_Text>();
+			if(scoreItem != null) scoreField = scoreItem.GetComponentInChildren<TMP_Text>();
+			if(scoreItem != null) deltaField = scoreItem.GetComponentInChildren<Image>();
+			if(averageItem != null) averageField = averageItem.GetComponentInChildren<TMP_Text>();
 
 			labelField.text = label;
 
@@ -93,7 +100,12 @@ namespace butterflowersOS.UI
 			focusScale.Scale(normalScale);
 		}
 
-		#region Operations
+		void Update()
+		{
+			transform.localScale = Scale * canvas.scaleFactor * 2f;
+		}
+
+		#region Operatiananons
 		
 		public abstract void ShowScore(CompositeSurveillanceData average, CompositeSurveillanceData score);
 
