@@ -391,7 +391,7 @@ namespace butterflowersOS.Objects.Managers
 					Debug.LogFormat("Success restore beacon!  file= {0}  locale={1}", p, s);
 
 					var @params = new Hashtable() {
-						{"position", loc},
+						//{"position", loc},
 						{"position", loc}
 					};
 
