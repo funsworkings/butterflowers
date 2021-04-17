@@ -360,7 +360,7 @@ namespace butterflowersOS.Core
             {
                 gamePanel.Hide();
 
-                Summary.ShowSummary(profile);
+                Summary.ShowSummary();
                 while (Summary.Pause) yield return null;
 
                 sequenceReason = Sequence.Cycle();

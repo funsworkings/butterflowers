@@ -7,8 +7,10 @@ using butterflowersOS.Objects.Base;
 using butterflowersOS.Objects.Entities;
 using butterflowersOS.Objects.Miscellaneous;
 using butterflowersOS.Presets;
+using butterflowersOS.Snippets;
 using Neue.Reference.Types;
 using Neue.Reference.Types.Maps;
+using Neue.Reference.Types.Maps.Groups;
 using TMPro;
 using UnityEngine;
 using uwu;
@@ -51,14 +53,17 @@ namespace butterflowersOS.Objects.Managers
 		[SerializeField] WorldPreset preset = null;
 		[SerializeField] ToggleOpacity opacity, frameOpacity;
 		[SerializeField] TMP_Text frameText;
+		[SerializeField] FitViaScale frameScaler;
 		[SerializeField] DialogueHandler sceneCaption = null;
 		[SerializeField] AudioSource sceneAudio;
+		[SerializeField] FrameVector2Group frameTextSizingGroup;
 
 		Sequence[] sequences;
 
 		[SerializeField] int index = -1;
 		[SerializeField] Frame[] frames = new Frame[]{};
 		[SerializeField] bool inprogress = false;
+		[SerializeField] float frameTextDelay = 2f;
 
 		#region Accessors
 
@@ -75,6 +80,8 @@ namespace butterflowersOS.Objects.Managers
 
 			frames = new Frame[7];
 			sequences = root.GetComponentsInChildren<Sequence>();
+
+			frameScaler = frameText.GetComponent<FitViaScale>();
 			
 			sceneCaption.Dispose(); // Clear text in caption
 		}
@@ -190,7 +197,21 @@ namespace butterflowersOS.Objects.Managers
 			Scene _scene = FetchScene(_index);
 			
 			bool didCutscene = Cutscenes.TriggerSequence(_scene);
-			if(didCutscene) yield return new WaitForSecondsRealtime(1.3f);
+			if (didCutscene) 
+			{
+				frameText.text = System.Enum.GetName(typeof(Frame), frame).ToUpper(); // Trigger name for framing
+				
+				Vector2 scale = frameTextSizingGroup.GetValue(frame);
+				frameScaler.XScale = scale.x;
+				frameScaler.YScale = scale.y;
+				
+				frameOpacity.Show();
+				while (frameOpacity.Hidden) 
+					yield return null;
+				
+				yield return new WaitForSecondsRealtime(frameTextDelay);
+				frameOpacity.Hide();
+			}
 
 			while (Cutscenes.inprogress) 
 				yield return null;

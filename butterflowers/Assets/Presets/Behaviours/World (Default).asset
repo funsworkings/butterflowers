@@ -19,16 +19,16 @@ MonoBehaviour:
   persistKnowledge: 1
   persistBeacons: 1
   persistVines: 1
-  persistSequence: 1
-  overrideSequence: 0
-  overrideSequenceFrame: 1
+  persistSequence: 0
+  overrideSequence: 1
+  overrideSequenceFrame: 3
   alwaysIntro: 0
   alwaysAbsorb: 0
   useWizard: 0
   takePhotos: 1
   logEvents: 0
   loadTexturesInEditor: 0
-  loadThumbnailsInEditor: 1
+  loadThumbnailsInEditor: 0
   generateThumbnailsInEditor: 0
   useDesktopFilesForDebugBeacons: 1
   allowDebugSpawn: 1
