@@ -67,8 +67,8 @@ namespace butterflowersOS.UI
 
         float duration => (open) ? openDuration : closeDuration;
 
-        float _width => rect.rect.width * canvas.scaleFactor * widthMultiplier;
-        float _height => rect.rect.height * canvas.scaleFactor * heightMultiplier;
+        float _width => rect.rect.width * widthMultiplier / 2f;
+        float _height => rect.rect.height;
 
         #endregion
 
@@ -205,11 +205,12 @@ namespace butterflowersOS.UI
 
             float angle = Mathf.Clamp(180f - (interval * range * time + offset), 0f, 180f); // Target angle of card
             float angleRads = angle * Mathf.Deg2Rad;
-            
-            Vector2 circle = new Vector2(Mathf.Cos(angleRads) * _width, Mathf.Sin(angleRads) * _height);
+
+            Vector2 origin = Vector2.up * (-_height / 2f);
+            Vector2 circle = new Vector2(Mathf.Cos(angleRads) * _width, Mathf.Sin(angleRads) * _height * heightMultiplier);
             Vector3 rotation = new Vector3(0f, 0f, angle - 90f);
 
-            card.rect.anchoredPosition = circle + Vector2.up * (_height *( heightOffset));
+            card.transform.localPosition = origin + circle;
             card.rect.eulerAngles = rotation;
             card.rect.localScale = card.normalScale;
 
