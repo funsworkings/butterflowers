@@ -1303,7 +1303,6 @@
               <e p="Gesture.cs" t="Include" />
               <e p="GestureCollection.cs" t="Include" />
             </e>
-            <e p="SummaryManager.cs" t="Include" />
             <e p="TooltipManager.cs" t="Include" />
             <e p="Wizard" t="Include">
               <e p="Appearance.cs" t="Include" />
@@ -1454,6 +1453,7 @@
                 <e p="EventManager.cs" t="Include" />
                 <e p="NotificationCenter.cs" t="Include" />
                 <e p="SequenceManager.cs" t="Include" />
+                <e p="SummaryManager.cs" t="Include" />
                 <e p="TutorialManager.cs" t="Include" />
                 <e p="VineManager.cs" t="Include" />
               </e>
@@ -1491,6 +1491,7 @@
                 <e p="ExportNotification.cs" t="Include" />
                 <e p="GenericNotification.cs" t="Include" />
               </e>
+              <e p="StatSlider.cs" t="Include" />
               <e p="Summary Cards" t="Include">
                 <e p="BeaconsAdded.cs" t="Include" />
                 <e p="BeaconsDestroyed.cs" t="Include" />
@@ -1506,9 +1507,14 @@
                 <e p="NestSpills.cs" t="Include" />
                 <e p="PhotoOfTheDay.cs" t="Include" />
               </e>
+              <e p="Summary Panels" t="Include">
+                <e p="HighlightsPanel.cs" t="Include" />
+                <e p="StatsPanel.cs" t="Include" />
+              </e>
               <e p="SummaryCard.cs" t="Include" />
               <e p="SummaryCardTrigger.cs" t="Include" />
               <e p="SummaryDeck.cs" t="Include" />
+              <e p="SummaryPanel.cs" t="Include" />
               <e p="TutorialPanel.cs" t="Include" />
               <e p="WelcomeMessage.cs" t="Include" />
             </e>

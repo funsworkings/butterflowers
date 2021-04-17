@@ -40,7 +40,6 @@ namespace butterflowersOS.UI
         [SerializeField] RectTransform anchor = null;
         [SerializeField] WindowResize resizer = null;
         RectTransform rect;
-        Animator animator;
         
         [SerializeField] SummaryCard cardInQueue, cardInFocus = null;
         [SerializeField] int startingCardIndex = -1;
@@ -54,6 +53,8 @@ namespace butterflowersOS.UI
         [SerializeField] float width, height;
         [Range(1f, 180f)] public float range = 180f;
         [Range(0f, 180f)] public float offset = 90f;
+        [SerializeField, Range(0f, 1f)] float widthMultiplier, heightMultiplier;
+        [SerializeField, Range(-1f, 1f)] float heightOffset = 0f;
         [SerializeField] float focusSpeed = 1f;
         [SerializeField] float openDuration = 1f, closeDuration = 1f;
 
@@ -66,15 +67,14 @@ namespace butterflowersOS.UI
 
         float duration => (open) ? openDuration : closeDuration;
 
-        float _width => rect.rect.width * canvas.scaleFactor / 4f;
-        float _height => rect.rect.height * canvas.scaleFactor / 4f;
+        float _width => rect.rect.width * canvas.scaleFactor * widthMultiplier;
+        float _height => rect.rect.height * canvas.scaleFactor * heightMultiplier;
 
         #endregion
 
         void Awake()
         {
             rect = GetComponent<RectTransform>();
-            animator = GetComponent<Animator>();
         }
 
         void OnEnable()
@@ -178,11 +178,6 @@ namespace butterflowersOS.UI
             state = State.Disabled;
         }
 
-        public void Drop()
-        {
-            animator.SetTrigger("drop");
-        }
-
         float GetInterval(int index)
         {
             return (index * 1f / (cards.Length - 1));
@@ -214,7 +209,7 @@ namespace butterflowersOS.UI
             Vector2 circle = new Vector2(Mathf.Cos(angleRads) * _width, Mathf.Sin(angleRads) * _height);
             Vector3 rotation = new Vector3(0f, 0f, angle - 90f);
 
-            card.rect.anchoredPosition = circle;
+            card.rect.anchoredPosition = circle + Vector2.up * (_height *( heightOffset));
             card.rect.eulerAngles = rotation;
             card.rect.localScale = card.normalScale;
 

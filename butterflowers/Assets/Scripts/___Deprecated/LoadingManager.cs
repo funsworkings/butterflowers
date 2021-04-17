@@ -1,5 +1,6 @@
 ﻿using System;
 using butterflowersOS.Core;
+using butterflowersOS.Objects.Managers;
 using TMPro;
 using UnityEngine;
 
@@ -53,7 +54,7 @@ namespace Objects.Managers
 
 		void onAddedFilesToDesktop(string[] files)
 		{
-			if (!Summary.active || Summary.ActivePanel != SummaryManager.Panel.Reload) return;
+			//if (!Summary.active || Summary.ActivePanel != SummaryManager.Panel.Reload) return;
 
 			if (files.Length > 0)
 				loadingPrompt.text = string.Format(foundFilesText, files.Length);
