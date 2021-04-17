@@ -12,6 +12,15 @@ namespace butterflowersOS.UI.Summary_Cards
 
 		public RawImage Image => imageField;
 
+		protected override void Start()
+		{
+			deck = GetComponentInParent<SummaryDeck>();
+			trigger = GetComponentInChildren<SummaryCardTrigger>();
+			
+			normalScale = rect.localScale;
+			focusScale.Scale(normalScale);
+		}
+
 		public override void ShowScore(CompositeSurveillanceData average, CompositeSurveillanceData score){}
 
 		public void ShowPhoto(Texture2D image, string caption)
