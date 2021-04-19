@@ -15,6 +15,13 @@ namespace butterflowersOS.AI.Objects
 			Baseline,
 			RandomFromBaseline
 		}
+
+		public class DrawCall
+		{
+			public int GL_TYPE;
+			public Color GL_COLOR;
+			public Vector3[] nodes = new Vector3[]{};
+		}
 		
 
 		protected override void OnEnable()
