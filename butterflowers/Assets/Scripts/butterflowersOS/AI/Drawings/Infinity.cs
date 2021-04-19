@@ -15,6 +15,7 @@ namespace butterflowersOS.AI
 			// Draw lines
 			GL.Begin(GL.LINE_STRIP);
 			
+			/*
 			Vector3 firstNode = Vector3.zero;
 			for (int i = 0; i < lineCount; ++i)
 			{
@@ -31,7 +32,7 @@ namespace butterflowersOS.AI
 				
 				GL.Vertex3(node.x, node.y, 0);
 			}
-			GL.Vertex3(firstNode.x, firstNode.y, 0);
+			GL.Vertex3(firstNode.x, firstNode.y, 0);*/
 			
 			GL.End();
 			GL.PopMatrix();
