@@ -1,5 +1,6 @@
 ﻿using System;
 using System.Collections.Generic;
+using System.Linq;
 using butterflowersOS.AI.Objects;
 using UnityEngine;
 using Random = UnityEngine.Random;
@@ -67,6 +68,32 @@ namespace butterflowersOS.AI
 
 			GL.End();
 			GL.PopMatrix();
+		}
+
+		public static DrawCall Draw(float radius, int petals, int nodes)
+		{
+			List<Vector3> nodeOffsets = new List<Vector3>();
+			for (int i = 0; i < nodes; i++) 
+			{
+				Vector3 node = Vector3.zero;
+				float angle = 2f * Mathf.PI * (1f * i / nodes);
+
+				float len = radius * Mathf.Cos(petals * angle);
+				node = new Vector3(Mathf.Cos(angle), Mathf.Sin(angle), 0f);
+
+				node *= (len / node.magnitude);
+				
+				nodeOffsets.Add(node);
+			}
+			nodeOffsets.Add(nodeOffsets.First());
+
+			DrawCall drawOp = new DrawCall 
+			{
+				GL_TYPE = GL.LINE_STRIP,
+				nodes = nodeOffsets.ToArray()
+			};
+			
+			return drawOp;
 		}
 	}
 }
