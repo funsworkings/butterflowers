@@ -95,6 +95,7 @@ namespace butterflowersOS.Core
         [SerializeField] SequenceManager Sequence = null;
         [SerializeField] CutsceneManager Cutscenes = null;
         [SerializeField] NotificationCenter NotificationCenter = null;
+        [SerializeField] YvesManager Yves = null;
         [SerializeField] TutorialManager Tutorial = null;
 
         [Header("Objects")]
@@ -276,6 +277,7 @@ namespace butterflowersOS.Core
             Beacons.Load((Preset.persistBeacons) ? _Save.data.beacons : null);
             Vines.Load((Preset.persistVines) ? _Save.data.vines : null);
             Sun.Load(_Save.data.sun);
+            Yves.Load(_Save.IsSelfProfileValid());
 
             yield return new WaitForEndOfFrame();
 

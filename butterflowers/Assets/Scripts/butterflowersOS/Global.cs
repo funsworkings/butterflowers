@@ -13,6 +13,8 @@ namespace butterflowersOS
         public const float BaseCursorVelocityVector = 5f;
         public const float BeaconSnapDistance = .033f;
         public const float VineWaypointSnapDistance = .033f;
+
+        public const string AIAccessKey = "AI_Access";
     }
 
     public enum GAMESTATE {
