@@ -129,7 +129,7 @@ namespace butterflowersOS.Presets
 			var tImporter = AssetImporter.GetAtPath( assetPath ) as TextureImporter;
 			if ( tImporter != null )
 			{
-				tImporter.textureType = TextureImporterType.Advanced;
+				tImporter.textureType = TextureImporterType.Default;
 				tImporter.isReadable = true; // Ensure texture is readable
 
 				AssetDatabase.ImportAsset( assetPath );
