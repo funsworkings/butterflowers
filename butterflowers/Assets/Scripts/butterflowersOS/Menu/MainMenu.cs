@@ -27,7 +27,7 @@ namespace butterflowersOS.Menu
         ToggleOpacity opacity;
 
         [SerializeField] WorldPreset preset = null;
-        [SerializeField] GameObject continueButton = null;
+        [SerializeField] GameObject continueButton = null, aiButton = null;
         [SerializeField] ToggleOpacity continuePanel = null;
         [SerializeField] MenuOption continueOption = null;
         [SerializeField] TMP_Text continueText;
@@ -41,7 +41,8 @@ namespace butterflowersOS.Menu
             NULL,
         
             NewGame,
-            ContinueGame
+            ContinueGame,
+            ContinueAI
         }
 
         public Route route = Route.NULL;
@@ -124,6 +125,16 @@ namespace butterflowersOS.Menu
             MoveToTheGame(sceneIndex);
         }
 
+        public void ContinueAI()
+        {
+            route = Route.ContinueAI;
+
+            Close();
+
+            int sceneIndex = 2;
+            MoveToTheGame(sceneIndex);
+        }
+
         public void GoToSettings()
         {
             Close();
@@ -162,7 +173,11 @@ namespace butterflowersOS.Menu
                     showContinue = false; // Versions don't match
                 }
             }
+            
             continueButton.SetActive(showContinue);
+
+            bool hasAIAccess = PlayerPrefs.GetInt(Constants.AIAccessKey, 0) == 0;
+            aiButton.SetActive(hasAIAccess);
         }
 
         IEnumerator MovingToGame(int sceneIndex)

@@ -25,5 +25,11 @@ namespace butterflowersOS.Objects.Managers
 			blulite.blend.value = value;
 			blulite.intensity.value = depth;
 		}
+
+		public void Load(bool didGenerateAgent)
+		{
+			depth = (didGenerateAgent) ? 1f : 0f;
+			value = (didGenerateAgent) ? 1f : 0f;
+		}
 	}
 }
