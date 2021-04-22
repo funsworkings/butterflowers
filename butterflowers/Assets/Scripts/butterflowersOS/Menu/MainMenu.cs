@@ -76,6 +76,8 @@ namespace butterflowersOS.Menu
         protected override void DidOpen()
         {
             route = Route.NULL;
+            
+            if(Save.IsSelfProfileValid()) PlayerPrefs.SetInt(Constants.AIAccessKey, 1); //  Ensure player access if fixed
             DisplayOptions(previousSaveExists);
             
             opacity.Show();   
@@ -176,7 +178,7 @@ namespace butterflowersOS.Menu
             
             continueButton.SetActive(showContinue);
 
-            bool hasAIAccess = PlayerPrefs.GetInt(Constants.AIAccessKey, 0) == 0;
+            bool hasAIAccess = PlayerPrefs.GetInt(Constants.AIAccessKey, 0) == 1;
             aiButton.SetActive(hasAIAccess);
         }
 

@@ -16,8 +16,12 @@ namespace uwu
 		{
 			get
 			{
-				var dat = (GameData)cache_data_lookup["save.dat"];
-				sceneDat = dat;
+				GameData dat = null;
+				if (cache_data_lookup.ContainsKey("save.dat")) 
+				{
+					dat = (GameData) cache_data_lookup["save.dat"];
+					sceneDat = dat;
+				}
 
 				return dat;
 			}

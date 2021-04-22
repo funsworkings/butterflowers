@@ -16,8 +16,8 @@ namespace uwu
         public SequenceData sequence = new SequenceData();
 
         public string export_agent_created_at = "";
-        public bool export = false;
-        
+        public string import_agent_created_at = "";
+
         [Header("Miscellaneous")] 
         
         public bool tutorial = false;

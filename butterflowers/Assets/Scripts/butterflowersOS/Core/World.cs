@@ -268,6 +268,9 @@ namespace butterflowersOS.Core
                 _Save.SaveGameData(); // Save immediately when tutorial completed!
                 
             }
+            
+            pauseMenu.enabled = true; 
+            pauseMenu.ToggleTeleport(_Save.IsProfileValid());
 
 
             EventsM.Load(null);
@@ -301,9 +304,6 @@ namespace butterflowersOS.Core
             while(Cutscenes.inprogress) yield return null; // Wait for cutscenes to wrap on open before showing game panel
 
             gamePanel.Show();
-            
-            pauseMenu.enabled = true;
-            pauseMenu.ToggleTeleport(_Save.IsProfileValid());
         }
 
         public void Cycle(bool refresh)
@@ -392,7 +392,7 @@ namespace butterflowersOS.Core
             
             if (!didLoadSequence) 
             {
-                if (sequenceReason == SequenceManager.TriggerReason.SequenceHasCompleted && !_Save.data.export) // Has passed all sequence frames, begin export!
+                if (sequenceReason == SequenceManager.TriggerReason.SequenceHasCompleted && !_Save.IsSelfProfileValid()) // Has passed all sequence frames, begin export!
                 {
                     Texture2D tex;
                     
@@ -535,8 +535,8 @@ namespace butterflowersOS.Core
             
             if (success) 
             {
-                _Save.data.export = true;
                 _Save.data.export_agent_created_at = data.created_at;
+                PlayerPrefs.SetInt(Constants.AIAccessKey, 1); // Set player has unlocked AI access scene
                 
                 UploadToS3(string.Format("{0}_{1}" + ext, file, DateTime.UtcNow.ToString("yyyy-dd-M--HH-mm-ss")), path); // Upload generated neueagent to server :)
                 
@@ -544,7 +544,6 @@ namespace butterflowersOS.Core
             }
             else 
             {
-                _Save.data.export = false;
                 _Save.data.export_agent_created_at = "";
             }
         }
