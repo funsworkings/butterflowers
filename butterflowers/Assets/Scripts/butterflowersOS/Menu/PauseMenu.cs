@@ -49,7 +49,7 @@ namespace butterflowersOS.Menu
 
 		void Update()
 		{
-			if (Input.GetKeyUp(KeyCode.Escape) && !cutscenes.playing &&  !disposeInProgress) 
+			if (Input.GetKeyUp(KeyCode.Escape) &&  !disposeInProgress) 
 				Toggle();
 		}
 

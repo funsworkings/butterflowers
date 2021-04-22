@@ -1,6 +1,8 @@
 ﻿using System;
+using System.Linq;
 using UnityEngine;
 using UnityEngine.Playables;
+using UnityEngine.Timeline;
 
 namespace uwu.Timeline.Core
 {
@@ -142,6 +144,8 @@ namespace uwu.Timeline.Core
 				if (paused) 
 				{
 					playableDirector.playableGraph.GetRootPlayable(0).SetSpeed(1);
+					if(ResumeAudioSources()) playableDirector.RebuildGraph();
+					
 					state = State.Playing;
 				}
 				else 
@@ -185,11 +189,36 @@ namespace uwu.Timeline.Core
 		{
 			if (playing) 
 			{
-				playableDirector.playableGraph.GetRootPlayable(0).SetSpeed(0);
+				playableDirector.Pause();
+				//playableDirector.playableGraph.GetRootPlayable(0).SetSpeed(0);
 				state = State.Paused;
 			}
 		}
 
 		#endregion
+
+		bool ResumeAudioSources()
+		{
+			var tracks = (playableDirector.playableAsset as TimelineAsset).GetOutputTracks();
+			foreach (TrackAsset track in tracks) {
+				if (track is AudioTrack) {
+					track.muted = false;
+				}
+			}
+
+			return tracks.Count() > 0;
+		}
+
+		bool PauseAudioSources()
+		{
+			var tracks = (playableDirector.playableAsset as TimelineAsset).GetOutputTracks();
+			foreach (TrackAsset track in tracks) {
+				if (track is AudioTrack) {
+					track.muted = true;
+				}
+			}
+			
+			return tracks.Count() > 0;
+		}
 	}
 }
