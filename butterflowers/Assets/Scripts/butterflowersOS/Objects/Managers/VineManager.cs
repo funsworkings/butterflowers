@@ -1,4 +1,5 @@
-﻿using System.Collections;
+﻿using System;
+using System.Collections;
 using System.Collections.Generic;
 using System.Linq;
 using butterflowersOS.Core;
@@ -33,6 +34,7 @@ namespace butterflowersOS.Objects.Managers
         // Properties
 
         [SerializeField] WorldPreset Preset = null;
+        [SerializeField] Library Lib = null;
 
         [SerializeField] Cage cage = null;
 
@@ -55,6 +57,11 @@ namespace butterflowersOS.Objects.Managers
         
             Vine.onCompleteNaturalGrowth -= onVineCompleteNaturalGrowth;
             Vine.onCompleteGateGrowth -= onVineCompleteGateGrowth;
+        }
+
+        void Start()
+        {
+            Lib = FindObjectOfType<Library>();
         }
 
         #endregion
@@ -103,7 +110,9 @@ namespace butterflowersOS.Objects.Managers
                 if (success) 
                 {
                     var vine = DropVine(transform.position, vineRoot.up);
-                    vine.Initialize(this, cage, file, v);
+                    var vineTexture = Lib.RequestTextureImmediate(file);
+                    
+                    vine.Initialize(this, cage, file, vineTexture, v);
 
                     vines.Add(vine);
                 }
@@ -120,12 +129,12 @@ namespace butterflowersOS.Objects.Managers
         {
             var origin = beacon.origin;
         
-            var vine = DropVine(origin, vineRoot.up);
-            vine.Initialize(this, cage,null);
-        
             var file = beacon.File;
-            vine.File = file;
+            var tex = Lib.RequestTextureImmediate(file);
             
+            var vine = DropVine(origin, vineRoot.up);
+            vine.Initialize(this, cage, file, tex);
+
             vines.Add(vine);
 
             if (onUpdateVines != null) onUpdateVines();

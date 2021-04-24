@@ -27,12 +27,13 @@ MonoBehaviour:
   useWizard: 0
   takePhotos: 1
   logEvents: 0
-  loadTexturesInEditor: 0
-  loadThumbnailsInEditor: 0
+  loadTexturesInEditor: 1
+  loadThumbnailsInEditor: 1
   generateThumbnailsInEditor: 0
   useDesktopFilesForDebugBeacons: 1
   allowDebugSpawn: 1
   allowDebugTimeSkip: 1
+  allowImportBeforeExportAgent: 0
   allowExternalNeueagent: 1
   hoursPerDay: 0.05
   startOfDay: 0.1
@@ -84,6 +85,9 @@ MonoBehaviour:
   vineWidth: 0.067
   minimumLeavesPerSegment: 5
   maximumLeavesPerSegment: 10
+  minimumFileDepth: 3
+  maximumFileDepth: 10
+  vineHeightAllowance: 0.1
   leafDensityPerSegment: 0.18
   leafGrowCurve:
     serializedVersion: 2

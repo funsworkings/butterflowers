@@ -180,7 +180,7 @@ namespace butterflowersOS.Objects.Entities.Interactables
 
         #region Growth
     
-        public void Initialize(VineManager manager, Cage cage, string file, VineData data = null)
+        public void Initialize(VineManager manager, Cage cage, string file, Texture2D tex, VineData data = null)
         {
             Manager = manager;
 
@@ -243,6 +243,8 @@ namespace butterflowersOS.Objects.Entities.Interactables
                 vertex = cage.GetClosestVertex(waypoints.Last(), out vertexIndex);
                 cage.QueueVertex(vertexIndex);
             }
+
+            line.material.mainTexture = tex; // Set main texture for vine
 
             gate = new List<Vector3>(ConstructGatedLine(vertex)); // Construct gate from waypoints
 

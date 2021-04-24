@@ -4873,7 +4873,7 @@ LineRenderer:
   m_RenderingLayerMask: 1
   m_RendererPriority: 0
   m_Materials:
-  - {fileID: 2100000, guid: ff263f2f182244c97b1049361012b8c6, type: 2}
+  - {fileID: 2100000, guid: b84074928efd33b459d5a0784317d0f9, type: 2}
   m_StaticBatchInfo:
     firstSubMesh: 0
     subMeshCount: 0
@@ -4986,9 +4986,6 @@ MonoBehaviour:
   gate: []
   vertices: []
   leaves: []
-  gate_midpoint: {x: 0, y: 0, z: 0}
-  gate_width: 0
-  gate_height: 0
   state: 0
   m_file: 
   growRadius: 0.3
