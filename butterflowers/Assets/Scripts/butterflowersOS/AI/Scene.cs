@@ -8,6 +8,7 @@ using Neue.Agent.Brain.Data;
 using UnityEngine;
 using UnityEngine.Playables;
 using uwu;
+using uwu.Data;
 using uwu.IO;
 using uwu.Snippets.Load;
 using uwu.Timeline.Core;
@@ -60,7 +61,8 @@ namespace butterflowersOS.AI
 			}
 
 			Loader.Load(.1f, 1f); // Trigger load
-			Import();
+			
+			ImportFromSaveFile();
 
 			while (Loader.IsLoading) yield return null;
 			Loader.Dispose();
@@ -109,37 +111,50 @@ namespace butterflowersOS.AI
 			get => Files;
 		}
 
-		protected override void HandleBrainImport(BrainData brain, POINT point)
+		protected override void OnDebugImportFNS(string path, BrainData dat)
 		{
-			if (!listen) return; // Ignore brain import if loading!
-			
-			Save.data.surveillanceData = brain.surveillanceData;
-			
-			Save.data.agent_created_at = brain.created_at;
-			Save.data.username = brain.username;
-			Save.data.profile = brain.profile;
-			Save.data.images = brain.images;
-			Save.data.image_height = brain.image_height;
-
-			Save.data.agent_event_stack = brain.surveillanceData.Length; // Total stack of events to parse from
-			
-			Save.SaveGameData();
-			Import();
+			HandleBrainImport(path, dat, new POINT(0, 0)); // Trigger brain import
 		}
 
-		void Import()
+		void ImportFromSaveFile()
 		{
-			byte[] images = Save.data.images;
+			string path = Save.data.import_agent_created_at;
+			if (string.IsNullOrEmpty(path)) return;
 			
-			ushort image_height = Save.data.image_height;
-			ushort image_width = Save.data.image_width;
+			BrainData dat = DataHandler.Read<BrainData>(path);
+			if (dat != null) 
+			{
+				Debug.LogWarning("Validate => " + dat.created_at);
+				if (dat.IsProfileValid()) 
+				{
+					Import(dat); // Break out of loop, successfully found file!
+				}
+			}
+		}
+
+		protected override void HandleBrainImport(string path, BrainData brain, POINT point)
+		{
+			if (!listen) return; // Ignore brain import if loading!
+
+			Save.data.import_agent_created_at = path;
+			Save.SaveGameData();
+			
+			Import(brain);
+		}
+
+		void Import(BrainData dat)
+		{
+			byte[] images = dat.images;
+			
+			ushort image_height = dat.image_height;
+			ushort image_width = dat.image_width;
 
 			if (images.Length > 0 && image_height > 0 && image_width > 0) 
 			{
 				UnpackTexture(images, image_width, image_height); // Apply ground texture
 			}
 
-			agent.Initialize(Save.data.profile, Save.data.surveillanceData, butterflowersTexture, bWidth, bHeight);
+			agent.Initialize(dat.profile, dat.surveillanceData, butterflowersTexture, bWidth, bHeight);
 		}
 
 		#endregion

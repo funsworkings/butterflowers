@@ -266,12 +266,10 @@ namespace butterflowersOS.Core
                 
                 _Save.data.tutorial = true;
                 _Save.SaveGameData(); // Save immediately when tutorial completed!
-                
             }
             
             pauseMenu.enabled = true; 
-            pauseMenu.ToggleTeleport(_Save.IsProfileValid());
-
+            pauseMenu.ToggleTeleport(PlayerPrefs.GetInt(Constants.AIAccessKey, 0) == 1);
 
             EventsM.Load(null);
             Cutscenes.Load(_Save.data.cutscenes);
@@ -606,40 +604,29 @@ namespace butterflowersOS.Core
             }
         }
 
-        public string debugImportNeueagentPath = "";
-
-        [ContextMenu("Import neueagent")]
-        public void ImportNeueAgent()
+        protected override void OnDebugImportFNS(string path, BrainData dat)
         {
-            BrainData dat = DataHandler.Read<BrainData>(debugImportNeueagentPath);
-            if (dat != null) 
-            {
-                Debug.LogWarning("Validate => " + dat.created_at);
-                
-                if (dat.IsProfileValid()) 
-                {
-                   ImportNeueAgent(dat); // Break out of loop, successfully found file!
-                }
-            }
+            ImportNeueAgent(path, dat);
         }
 
-        public void ImportNeueAgent(BrainData brainData)
+        public void ImportNeueAgent(string path, BrainData brainData)
         {
             if (Pause) return; // Ignore request to import if paused
-            //if (!_Save.IsSelfProfileValid()) return; // Ignore reques to import if not generated neueagent
+            if (!_Save.IsSelfProfileValid() && !Preset.allowImportBeforeExportAgent) return; // Ignore reques to import if not generated neueagent
 
             string @self = _Save.data.export_agent_created_at;
-            string @agent = _Save.data.agent_created_at;
             string @other = brainData.created_at;
             
-            if (!Preset.allowExternalNeueagent && (@agent == @other || @self != @other)) return; // Ignore request to import duplicate neueagent
-        
-            bool success = AggregateBrainData(brainData);
-            type = (success && _Save.IsProfileValid()) ? AdvanceType.Continuous : AdvanceType.Broken;
+            if (!Preset.allowExternalNeueagent && (@self != @other)) return; // Ignore request to import duplicate neueagent
+
+            bool success = BrainDataExtensions.IsProfileTimestampValid(@other);
+            type = (success) ? AdvanceType.Continuous : AdvanceType.Broken;
 
             if (success) 
             {
+                _Save.data.import_agent_created_at = path;
                 _Save.SaveGameData();
+                
                 StartCoroutine("MoveToNeueAgent");
             }
             
@@ -655,56 +642,6 @@ namespace butterflowersOS.Core
             
             SceneLoader.Instance.GoToScene(2, 0f, .1f); // Move to neue agent scene
         }
-
-        bool AggregateBrainData(BrainData brainData)
-        {
-            bool success = false;
-            
-            var lib_payload = new LibraryPayload();
-                lib_payload.directories = brainData.directories;
-                lib_payload.files = brainData.files;
-                lib_payload.userFiles = brainData.user_files.Select(uf => (int)uf).ToArray();
-                lib_payload.sharedFiles = brainData.shared_files.Select(sf => (int)sf).ToArray();
-                lib_payload.worldFiles = brainData.world_files.Select(wf => (int)wf).ToArray();
-
-            if (Library.AggregateNeueAgentData(lib_payload)) 
-            {
-                success = Surveillance.AggregateNeueAgentData(brainData.surveillanceData);
-            }
-
-            if (success) 
-            {
-                _Save.data.surveillanceData = brainData.surveillanceData;
-                
-                _Save.data.agent_created_at = brainData.created_at;
-                _Save.data.username = brainData.username;
-                _Save.data.profile = profile = brainData.profile;
-                _Save.data.images = brainData.images;
-                _Save.data.image_height = brainData.image_height;
-                _Save.data.image_width = brainData.image_width;
-
-                _Save.data.agent_event_stack = brainData.surveillanceData.Length; // Total stack of events to parse from
-            }
-
-            return success;
-        }
-
-        [ContextMenu("Wipe neueagent")]
-        public void WipeNeueAgent() // NEVER HAPPENS IN CURRENT ITERATION
-        {
-            if (Pause) return; // Ignore request to wipe if paused
-            if (!_Save.IsProfileValid()) return;
-        
-            string username = (_Save.data.username);
-            
-            _Save.data.agent_created_at = "";
-            _Save.data.username = PlayerPrefs.GetString("_Username"); // Get previous username
-            _Save.data.profile = profile = Surveillance.ConstructBehaviourProfile();
-            
-            type = AdvanceType.Broken;
-            Debug.LogWarning("Successfully wiped brain profile for user => " + (string.IsNullOrEmpty(username)? "NULL":username));
-        }
-
 
         string GetExportPath(out string filename, out string extension)
         {
@@ -847,9 +784,9 @@ namespace butterflowersOS.Core
             }
         }
 
-        protected override void HandleBrainImport(BrainData brain, POINT point)
+        protected override void HandleBrainImport(string path, BrainData brain, POINT point)
         {
-            ImportNeueAgent(brain);
+            ImportNeueAgent(path, brain);
         }
 
         #endregion

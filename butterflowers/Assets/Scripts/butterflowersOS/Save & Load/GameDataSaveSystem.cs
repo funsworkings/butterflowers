@@ -36,13 +36,7 @@ namespace uwu
 			get => (data == null) ? null : data.username;
 			set => data.username = value;
 		}
-
-		public bool IsProfileValid()
-		{
-			if (data == null) return false;
-			return BrainDataExtensions.IsProfileTimestampValid(data.agent_created_at);
-		}
-
+		
 		public bool IsSelfProfileValid()
 		{
 			if (data == null) return false;
