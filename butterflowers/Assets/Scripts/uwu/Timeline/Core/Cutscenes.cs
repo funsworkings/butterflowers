@@ -219,9 +219,8 @@ namespace uwu.Timeline.Core
 		{
 			var tracks = (playableDirector.playableAsset as TimelineAsset).GetOutputTracks();Debug.Log(tracks.Count());
 			foreach (TrackAsset track in tracks) {
-				Debug.Log(track.name);
 				if (track is AudioTrack) {
-					track.muted = true; Debug.Log($"Successfully muted -> {track.name}");
+					track.muted = true;
 				}
 			}
 			
