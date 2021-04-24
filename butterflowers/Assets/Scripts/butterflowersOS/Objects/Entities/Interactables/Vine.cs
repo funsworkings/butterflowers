@@ -195,9 +195,21 @@ namespace butterflowersOS.Objects.Entities.Interactables
                 bool successQueue = cage.QueueVertex(vertexIndex);
                 if (successQueue) 
                     growHeight = preset.maximumVineGrowHeight;
-                else 
-                    growHeight = Random.Range(preset.minimumVineGrowHeight, preset.maximumVineGrowHeight);
-            
+                else {
+                    float min_h = preset.minimumVineGrowHeight;
+                    float max_h = preset.maximumVineGrowHeight;
+
+                    float spread = (max_h - min_h);
+                    float vh = preset.vineHeightAllowance * spread;
+                    
+                    float depth = Mathf.Clamp(file.Split('/').Length, preset.minimumFileDepth, preset.maximumFileDepth) / (1f * preset.maximumFileDepth); // 0-1 depth value
+
+                    float height = min_h + (depth * spread);
+                    float offset = Random.Range(-vh, vh);
+                    
+                    growHeight = Mathf.Clamp(height + offset, min_h, max_h);
+                }
+
                 waypoints = new List<Vector3>(ConstructNaturalLine());
                 leaves = new List<Leaf>(ConstructAllLeaves());
 
@@ -461,7 +473,8 @@ namespace butterflowersOS.Objects.Entities.Interactables
             float gh = 0f;
 
             int i = 0;
-            while(gh <= growHeight) {
+            while(gh <= growHeight) 
+            {
                 float h = Random.Range(minHeight, maxHeight);
             
                 if (i > 0) // Past position

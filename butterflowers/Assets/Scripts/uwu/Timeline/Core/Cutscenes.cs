@@ -1,4 +1,5 @@
 ﻿using System;
+using System.Collections.Generic;
 using System.Linq;
 using UnityEngine;
 using UnityEngine.Playables;
@@ -28,6 +29,7 @@ namespace uwu.Timeline.Core
 		#region Properties
 
 		PlayableDirector playableDirector;
+		float cache_t = 0f;
 
 		#endregion
 
@@ -144,7 +146,8 @@ namespace uwu.Timeline.Core
 				if (paused) 
 				{
 					playableDirector.playableGraph.GetRootPlayable(0).SetSpeed(1);
-					if(ResumeAudioSources()) playableDirector.RebuildGraph();
+					if(ResumeAudioSources()) playableDirector.RebuildGraph(); // Resume all audio tracks
+					playableDirector.time = cache_t;
 					
 					state = State.Playing;
 				}
@@ -164,6 +167,7 @@ namespace uwu.Timeline.Core
 			if (cutscene == null) return;
 			
 			this.cutscene = playableDirector.playableAsset = cutscene;
+
 			Play();
 		}
 
@@ -189,8 +193,10 @@ namespace uwu.Timeline.Core
 		{
 			if (playing) 
 			{
-				playableDirector.Pause();
-				//playableDirector.playableGraph.GetRootPlayable(0).SetSpeed(0);
+				playableDirector.playableGraph.GetRootPlayable(0).SetSpeed(0);
+				PauseAudioSources(); // Pause all audio tracks
+				cache_t = (float)playableDirector.time;
+				
 				state = State.Paused;
 			}
 		}
@@ -202,7 +208,7 @@ namespace uwu.Timeline.Core
 			var tracks = (playableDirector.playableAsset as TimelineAsset).GetOutputTracks();
 			foreach (TrackAsset track in tracks) {
 				if (track is AudioTrack) {
-					track.muted = false;
+					track.muted = false; 
 				}
 			}
 
@@ -211,10 +217,11 @@ namespace uwu.Timeline.Core
 
 		bool PauseAudioSources()
 		{
-			var tracks = (playableDirector.playableAsset as TimelineAsset).GetOutputTracks();
+			var tracks = (playableDirector.playableAsset as TimelineAsset).GetOutputTracks();Debug.Log(tracks.Count());
 			foreach (TrackAsset track in tracks) {
+				Debug.Log(track.name);
 				if (track is AudioTrack) {
-					track.muted = true;
+					track.muted = true; Debug.Log($"Successfully muted -> {track.name}");
 				}
 			}
 			

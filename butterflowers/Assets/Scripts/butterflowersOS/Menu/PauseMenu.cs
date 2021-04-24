@@ -26,6 +26,7 @@ namespace butterflowersOS.Menu
 		[SerializeField] Slider _bgmVolume = null, _sfxVolume = null;
 
 		bool disposeInProgress = false;
+		bool didPauseCutscenes = false;
 
 		public bool IsActive => IsVisible || Dispose;
 		public bool Dispose => disposeInProgress;
@@ -65,6 +66,14 @@ namespace butterflowersOS.Menu
 			opacity.Show();
 			
 			AudioListener.pause = true;
+
+			if (cutscenes.playing) {
+				didPauseCutscenes = true;
+				cutscenes.Pause();
+			}
+			else {
+				didPauseCutscenes = false;
+			}
 			
 			_bgmVolume.normalizedValue = (float) Settings.Instance.FetchSetting("bgm_volume", Settings.Type.Float);
 			_sfxVolume.normalizedValue = (float) Settings.Instance.FetchSetting("sfx_volume", Settings.Type.Float);
@@ -73,7 +82,12 @@ namespace butterflowersOS.Menu
 		protected override void DidClose()
 		{
 			opacity.Hide();
+			
 			AudioListener.pause = false;
+
+			if (didPauseCutscenes) {
+				cutscenes.Play();
+			}
 		}
 		
 		#endregion
