@@ -9,7 +9,7 @@ using UnityEngine.Serialization;
 
 namespace butterflowersOS.Objects.Entities.Interactables
 {
-    public class Beacon: Interactable, IFlammable, ITooltip, IFileContainer {
+    public class Beacon: Interactable, IFlammable, ITooltip, IFileContainer, IYves {
 
         #region Internal
 
@@ -125,7 +125,9 @@ namespace butterflowersOS.Objects.Entities.Interactables
         new MeshRenderer renderer;
         new Collider collider;
         Material material;
-
+        [SerializeField] Material yvesMat;
+        
+        
         [SerializeField] GameObject pr_impactPS = null;
         [SerializeField] GameObject pr_flower = null;
     
@@ -553,5 +555,15 @@ namespace butterflowersOS.Objects.Entities.Interactables
         }
     
         #endregion
+
+        public void EnableYves()
+        {
+            renderer.material = yvesMat;
+        }
+
+        public void DisableYves()
+        {
+            renderer.material = material;
+        }
     }
 }

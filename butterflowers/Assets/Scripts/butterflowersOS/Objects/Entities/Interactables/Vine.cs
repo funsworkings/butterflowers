@@ -12,7 +12,7 @@ using uwu.Extensions;
 
 namespace butterflowersOS.Objects.Entities.Interactables
 {
-    public class Vine : Entity, ITooltip, IFileContainer
+    public class Vine : Entity, ITooltip, IFileContainer, IYves
     {
         #region Internal
 
@@ -34,6 +34,7 @@ namespace butterflowersOS.Objects.Entities.Interactables
         [SerializeField] WorldPreset preset = null;
 
         LineRenderer line;
+        Material mat;
         new CapsuleCollider collider;
         VineManager Manager;
 
@@ -41,6 +42,7 @@ namespace butterflowersOS.Objects.Entities.Interactables
         [SerializeField] GameObject wallPrefab = null;
         [SerializeField] GameObject flowerPrefab = null;
         [SerializeField] GameObject leafPrefab = null;
+        [SerializeField] Material yvesMaterial;
 
         #endregion
 
@@ -124,6 +126,13 @@ namespace butterflowersOS.Objects.Entities.Interactables
             line.positionCount = 0;
             
             collider = GetComponent<CapsuleCollider>();
+        }
+
+        protected override void OnStart()
+        {
+            base.OnStart();
+
+            mat = line.material;
         }
 
         // Update is called once per frame
@@ -709,5 +718,15 @@ namespace butterflowersOS.Objects.Entities.Interactables
         }
     
         #endregion
+
+        public void EnableYves()
+        {
+            line.material = yvesMaterial;
+        }
+
+        public void DisableYves()
+        {
+            line.material = mat;
+        }
     }
 }

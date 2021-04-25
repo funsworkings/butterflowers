@@ -18,7 +18,7 @@ using Random = UnityEngine.Random;
 
 namespace butterflowersOS.Objects.Entities.Interactables
 {
-    public class Nest : Focusable, IReactToSunCycle, ISaveable, IFlammable, ITooltip
+    public class Nest : Focusable, IReactToSunCycle, ISaveable, IFlammable, ITooltip, IYves
     {
         public static Nest Instance = null;
 
@@ -48,7 +48,9 @@ namespace butterflowersOS.Objects.Entities.Interactables
         [SerializeField] GameObject pr_impactPS = null;
 
         [SerializeField] TMPro.TMP_Text infoText;
-    
+
+        [SerializeField] GameObject yvesMesh;
+        
         // Attributes
 
         [Header("General")]
@@ -652,6 +654,20 @@ namespace butterflowersOS.Objects.Entities.Interactables
     
 #endif
     
+        #endregion
+        
+        #region Yves
+
+        public void EnableYves()
+        {
+            yvesMesh.SetActive(true);
+        }
+
+        public void DisableYves()
+        {
+            yvesMesh.SetActive(false);
+        }
+        
         #endregion
     }
 }
