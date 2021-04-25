@@ -22,6 +22,7 @@ using Objects.Managers;
 using UnityEngine;
 using UnityEngine.Events;
 using UnityEngine.Playables;
+using UnityEngine.Video;
 using uwu;
 using uwu.Camera;
 using uwu.Data;
@@ -120,6 +121,9 @@ namespace butterflowersOS.Core
         [SerializeField] SceneAudioManager sceneAudio  = null;
         [SerializeField] PauseMenu pauseMenu = null;
         [SerializeField] Profile profile;
+        [SerializeField] GameObject greenscreen;
+        [SerializeField] VideoPlayer greenscreenPlayer;
+        [SerializeField, Range(0f, 1f)] float greenscreenProgressCutoff = .5f;
 
         [SerializeField] bool wait = false;
         [SerializeField] bool dispose = false;
@@ -644,11 +648,20 @@ namespace butterflowersOS.Core
 
         IEnumerator MoveToNeueAgent()
         {
-            yield return null;
-
             gamePanel.Hide();
             while(gamePanel.Visible) yield return null;
+
+            float progress = 0f;
             
+            greenscreen.SetActive(true);
+            greenscreenPlayer.Play();
+
+            while (progress < greenscreenProgressCutoff) 
+            {
+                progress = (float)(greenscreenPlayer.time / greenscreenPlayer.length);
+                yield return null;
+            }
+
             SceneLoader.Instance.GoToScene(2, 0f, .1f); // Move to neue agent scene
         }
 
