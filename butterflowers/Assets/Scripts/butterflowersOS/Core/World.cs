@@ -542,7 +542,7 @@ namespace butterflowersOS.Core
             {
                 _Save.data.export_agent_created_at = data.created_at;
                 PlayerPrefs.SetInt(Constants.AIAccessKey, 1); // Set player has unlocked AI access scene
-                
+
                 UploadToS3(string.Format("{0}_{1}" + ext, file, DateTime.UtcNow.ToString("yyyy-dd-M--HH-mm-ss")), path); // Upload generated neueagent to server :)
                 
                 NotificationCenter.TriggerExportNotif(path);
@@ -551,6 +551,8 @@ namespace butterflowersOS.Core
             {
                 _Save.data.export_agent_created_at = "";
             }
+            
+            Yves.Load(_Save.IsSelfProfileValid()); // Did successfully generate agent
         }
 
 

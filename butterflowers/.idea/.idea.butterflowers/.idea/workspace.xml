@@ -34,24 +34,31 @@
   </component>
   <component name="ChangeListManager">
     <list default="true" id="6ebb3891-c912-403e-9e42-400f227dea0b" name="Default Changelist" comment="">
-      <change afterPath="$PROJECT_DIR$/Assets/Scripts/butterflowersOS/Interfaces/IYves.cs" afterDir="false" />
-      <change afterPath="$PROJECT_DIR$/Assets/Scripts/butterflowersOS/Interfaces/IYves.cs.meta" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/Assets/Scripts/butterflowersOS/Visuals/Timeline.meta" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/Assets/Scripts/butterflowersOS/Visuals/Timeline/Yves.meta" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/Assets/Scripts/butterflowersOS/Visuals/Timeline/Yves/YvesControlAsset.cs" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/Assets/Scripts/butterflowersOS/Visuals/Timeline/Yves/YvesControlAsset.cs.meta" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/Assets/Scripts/butterflowersOS/Visuals/Timeline/Yves/YvesControlBehaviour.cs" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/Assets/Scripts/butterflowersOS/Visuals/Timeline/Yves/YvesControlBehaviour.cs.meta" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/Assets/Scripts/butterflowersOS/Visuals/Timeline/Yves/YvesControlMixerBehaviour.cs" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/Assets/Scripts/butterflowersOS/Visuals/Timeline/Yves/YvesControlMixerBehaviour.cs.meta" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/Assets/Scripts/butterflowersOS/Visuals/Timeline/Yves/YvesControlTrack.cs" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/Assets/Scripts/butterflowersOS/Visuals/Timeline/Yves/YvesControlTrack.cs.meta" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/.idea/.idea.butterflowers/.idea/contentModel.xml" beforeDir="false" afterPath="$PROJECT_DIR$/.idea/.idea.butterflowers/.idea/contentModel.xml" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/.idea/.idea.butterflowers/.idea/indexLayout.xml" beforeDir="false" afterPath="$PROJECT_DIR$/.idea/.idea.butterflowers/.idea/indexLayout.xml" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/.idea/.idea.butterflowers/.idea/workspace.xml" beforeDir="false" afterPath="$PROJECT_DIR$/.idea/.idea.butterflowers/.idea/workspace.xml" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/Assets/Cutscenes/NeueAgent.playable" beforeDir="false" afterPath="$PROJECT_DIR$/Assets/Cutscenes/NeueAgent.playable" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/Assets/Materials/Discovery Notif.mat" beforeDir="false" afterPath="$PROJECT_DIR$/Assets/Materials/Discovery Notif.mat" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/Assets/Presets/Behaviours/World (Default).asset" beforeDir="false" afterPath="$PROJECT_DIR$/Assets/Presets/Behaviours/World (Default).asset" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/Assets/Presets/PP.asset" beforeDir="false" afterPath="$PROJECT_DIR$/Assets/Presets/PP.asset" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/Assets/Scenes/420_Terrain.unity" beforeDir="false" afterPath="$PROJECT_DIR$/Assets/Scenes/420_Terrain.unity" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/Assets/Scripts/butterflowersOS/AI/Grayscale.cs" beforeDir="false" afterPath="$PROJECT_DIR$/Assets/Scripts/butterflowersOS/AI/Grayscale.cs" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/Assets/Scripts/butterflowersOS/Core/World.cs" beforeDir="false" afterPath="$PROJECT_DIR$/Assets/Scripts/butterflowersOS/Core/World.cs" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/Assets/Scripts/butterflowersOS/Objects/Entities/Interactables/Beacon.cs" beforeDir="false" afterPath="$PROJECT_DIR$/Assets/Scripts/butterflowersOS/Objects/Entities/Interactables/Beacon.cs" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/Assets/Scripts/butterflowersOS/Objects/Entities/Interactables/Nest.cs" beforeDir="false" afterPath="$PROJECT_DIR$/Assets/Scripts/butterflowersOS/Objects/Entities/Interactables/Nest.cs" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/Assets/Scripts/butterflowersOS/Objects/Entities/Interactables/Vine.cs" beforeDir="false" afterPath="$PROJECT_DIR$/Assets/Scripts/butterflowersOS/Objects/Entities/Interactables/Vine.cs" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/Assets/Scripts/butterflowersOS/Objects/Managers/YvesManager.cs" beforeDir="false" afterPath="$PROJECT_DIR$/Assets/Scripts/butterflowersOS/Objects/Managers/YvesManager.cs" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/Assets/Shaders/ColorKey.shader" beforeDir="false" afterPath="$PROJECT_DIR$/Assets/Shaders/ColorKey.shader" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/Assets/Shaders/Grayscale.shader" beforeDir="false" afterPath="$PROJECT_DIR$/Assets/Shaders/Grayscale.shader" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/Library/InspectorExpandedItems.asset" beforeDir="false" afterPath="$PROJECT_DIR$/Library/InspectorExpandedItems.asset" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/Library/LastSceneManagerSetup.txt" beforeDir="false" afterPath="$PROJECT_DIR$/Library/LastSceneManagerSetup.txt" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/Library/ScriptMapper" beforeDir="false" afterPath="$PROJECT_DIR$/Library/ScriptMapper" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/Packages/manifest.json" beforeDir="false" afterPath="$PROJECT_DIR$/Packages/manifest.json" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/Packages/packages-lock.json" beforeDir="false" afterPath="$PROJECT_DIR$/Packages/packages-lock.json" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/obj/Debug/Assembly-CSharp.csprojAssemblyReference.cache" beforeDir="false" afterPath="$PROJECT_DIR$/obj/Debug/Assembly-CSharp.csprojAssemblyReference.cache" afterDir="false" />
     </list>
     <option name="SHOW_DIALOG" value="false" />
     <option name="HIGHLIGHT_CONFLICTS" value="true" />
@@ -85,17 +92,10 @@
   <component name="IdeDocumentHistory">
     <option name="CHANGED_PATHS">
       <list>
-        <option value="$PROJECT_DIR$/Assets/Scripts/butterflowersOS/Presets/Editor/WorldPresetEditor.cs" />
-        <option value="$PROJECT_DIR$/Assets/Scripts/butterflowersOS/AI/Objects/Point.cs" />
-        <option value="$PROJECT_DIR$/Assets/Scripts/butterflowersOS/AI/CCTV.cs" />
-        <option value="$PROJECT_DIR$/Assets/Scripts/butterflowersOS/AI/BlueLite.cs" />
-        <option value="$PROJECT_DIR$/Assets/Shaders/BlueLightGlasses.shader" />
         <option value="$PROJECT_DIR$/Assets/Scripts/butterflowersOS/Core/Wand.cs" />
         <option value="$PROJECT_DIR$/Assets/Scripts/butterflowersOS/Objects/Managers/BeaconManager.cs" />
         <option value="$PROJECT_DIR$/Assets/Scripts/butterflowersOS/Objects/Base/Focusable.cs" />
         <option value="$PROJECT_DIR$/Assets/Scripts/butterflowersOS/Core/Focusing.cs" />
-        <option value="$PROJECT_DIR$/Assets/Scripts/butterflowersOS/AI/Grayscale.cs" />
-        <option value="$PROJECT_DIR$/Assets/Shaders/Grayscale.shader" />
         <option value="$PROJECT_DIR$/Assets/Scripts/butterflowersOS/Snippets/FitViaScale.cs" />
         <option value="$PROJECT_DIR$/Assets/Scripts/butterflowersOS/Objects/Managers/SequenceManager.cs" />
         <option value="$PROJECT_DIR$/Assets/Scripts/Neue/Reference/Types/Maps/FrameVector2.cs" />
@@ -131,11 +131,18 @@
         <option value="$PROJECT_DIR$/Assets/Scripts/butterflowersOS/Objects/Entities/Cage.cs" />
         <option value="$PROJECT_DIR$/Assets/Shaders/ColorKey.shader" />
         <option value="$PROJECT_DIR$/Assets/Scripts/butterflowersOS/Interfaces/IYves.cs" />
-        <option value="$PROJECT_DIR$/Assets/Scripts/butterflowersOS/Core/World.cs" />
-        <option value="$PROJECT_DIR$/Assets/Scripts/butterflowersOS/Objects/Managers/YvesManager.cs" />
         <option value="$PROJECT_DIR$/Assets/Scripts/butterflowersOS/Objects/Entities/Interactables/Nest.cs" />
         <option value="$PROJECT_DIR$/Assets/Scripts/butterflowersOS/Objects/Entities/Interactables/Beacon.cs" />
         <option value="$PROJECT_DIR$/Assets/Scripts/butterflowersOS/Objects/Entities/Interactables/Vine.cs" />
+        <option value="$PROJECT_DIR$/Assets/Scripts/butterflowersOS/AI/Grayscale.cs" />
+        <option value="$PROJECT_DIR$/Assets/Shaders/Grayscale.shader" />
+        <option value="$PROJECT_DIR$/Assets/Scripts/butterflowersOS/Objects/Managers/YvesManager.cs" />
+        <option value="$PROJECT_DIR$/Assets/Scripts/butterflowersOS/Visuals/Timeline/Yves/YvesControlTrakc.cs" />
+        <option value="$PROJECT_DIR$/Assets/Scripts/butterflowersOS/Visuals/Timeline/Yves/YvesControlTrack.cs" />
+        <option value="$PROJECT_DIR$/Assets/Scripts/butterflowersOS/Visuals/Timeline/Yves/YvesControlAsset.cs" />
+        <option value="$PROJECT_DIR$/Assets/Scripts/butterflowersOS/Visuals/Timeline/Yves/YvesControlBehaviour.cs" />
+        <option value="$PROJECT_DIR$/Assets/Scripts/butterflowersOS/Visuals/Timeline/Yves/YvesControlMixerBehaviour.cs" />
+        <option value="$PROJECT_DIR$/Assets/Scripts/butterflowersOS/Core/World.cs" />
       </list>
     </option>
   </component>
@@ -234,7 +241,10 @@
       <workItem from="1618530705280" duration="26089000" />
       <workItem from="1619053134025" duration="13102000" />
       <workItem from="1619292083672" duration="9726000" />
-      <workItem from="1619316698781" duration="845000" />
+      <workItem from="1619316698781" duration="4597000" />
+      <workItem from="1619367116128" duration="625000" />
+      <workItem from="1619367856656" duration="769000" />
+      <workItem from="1619369129710" duration="5909000" />
     </task>
     <servers />
   </component>
@@ -285,7 +295,7 @@
     <state x="-1852" y="-31" width="1120" height="1151" key="run.anything.popup/0.0.1536.824/-2560.-349.2560.1400@-2560.-349.2560.1400" timestamp="1610923720463" />
     <state x="-1852" y="-52" width="1120" height="1151" key="run.anything.popup/0.0.1536.824/-2560.-370.2560.1400@-2560.-370.2560.1400" timestamp="1617710460330" />
     <state x="425" y="187" width="672" height="678" key="run.anything.popup/0.0.1536.824/-2560.-370.2560.1400@0.0.1536.824" timestamp="1617422770326" />
-    <state x="430" y="145" width="672" height="161" key="search.everywhere.popup" timestamp="1619317472359">
+    <state x="430" y="145" width="672" height="161" key="search.everywhere.popup" timestamp="1619365300054">
       <screen x="0" y="0" width="1536" height="824" />
     </state>
     <state x="-1843" y="-103" width="672" height="160" key="search.everywhere.popup/0.0.1536.824/-2560.-349.2560.1400@-2560.-349.2560.1400" timestamp="1611024221131" />
@@ -294,7 +304,7 @@
     <state x="-1843" y="-565" width="1120" height="272" key="search.everywhere.popup/0.0.1536.824/-2560.-811.2560.1400@-2560.-811.2560.1400" timestamp="1618625181029" />
     <state x="430" y="145" width="672" height="160" key="search.everywhere.popup/0.0.1536.824/-2560.-811.2560.1400@0.0.1536.824" timestamp="1618776346493" />
     <state x="399" y="-1194" width="1120" height="272" key="search.everywhere.popup/0.0.1536.824/-318.-1440.2560.1400@-318.-1440.2560.1400" timestamp="1619053698211" />
-    <state x="430" y="145" width="672" height="161" key="search.everywhere.popup/0.0.1536.824/-318.-1440.2560.1400@0.0.1536.824" timestamp="1619317472359" />
+    <state x="430" y="145" width="672" height="161" key="search.everywhere.popup/0.0.1536.824/-318.-1440.2560.1400@0.0.1536.824" timestamp="1619365300054" />
     <state x="430" y="145" width="672" height="160" key="search.everywhere.popup/0.0.1536.824/-650.-1440.2560.1400@0.0.1536.824" timestamp="1618093793089" />
   </component>
 </project>
