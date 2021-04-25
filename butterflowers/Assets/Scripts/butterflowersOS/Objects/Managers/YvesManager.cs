@@ -7,6 +7,7 @@ using UnityEngine.Rendering.PostProcessing;
 
 namespace butterflowersOS.Objects.Managers
 {
+	[ExecuteInEditMode]
 	public class YvesManager : MonoBehaviour
 	{
 		// Properties
@@ -14,24 +15,26 @@ namespace butterflowersOS.Objects.Managers
 		[SerializeField] PostProcessVolume pp;
 		Grayscale blulite = null;
 		
-		[SerializeField, Range(0f, 1f)] float depth, value;
-
+		[Range(0f, 1f)] public float depth, value, brightness;
+		[UnityEngine.Min(0)] public int splits = 0;
 
 		bool active = false;
 		public bool IsActive => depth > 0f;
 
-		void Start()
+		void OnEnable()
 		{
 			active = IsActive;
 			
 			bool success = pp.profile.TryGetSettings(out blulite);
-			Debug.LogWarningFormat("Yves found setting for blulite? " + success);
+			Debug.LogWarningFormat("Yves found setting for blulite? " + success); 
 		}
 		
 		void Update()
 		{
 			blulite.blend.value = value;
 			blulite.intensity.value = depth;
+			blulite.brightness.value = brightness;
+			blulite.tiling.value = 1f / (Mathf.Pow(2f, splits));
 
 			if (active != IsActive) 
 			{
@@ -44,6 +47,8 @@ namespace butterflowersOS.Objects.Managers
 		{
 			depth = (didGenerateAgent) ? 1f : 0f;
 			value = (didGenerateAgent) ? 1f : 0f;
+			brightness = 0f;
+			splits = 0;
 			
 			IterateOverElements();
 		}
@@ -51,6 +56,8 @@ namespace butterflowersOS.Objects.Managers
 
 		void IterateOverElements()
 		{
+			if (!Application.isPlaying) return;
+			
 			var elements = FindObjectsOfType<MonoBehaviour>().OfType<IYves>();
 			foreach (IYves e in elements) {
 				if(IsActive) e.EnableYves();
