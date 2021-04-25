@@ -446,6 +446,13 @@ namespace butterflowersOS.Core
                 if(!managers.Contains(manager))
                     managers.Add(manager);
             }
+
+            // Trigger yves state
+            if (el is IYves) {
+                var elyves = (el as IYves);
+                if(Yves.IsActive) elyves.EnableYves();
+                else elyves.DisableYves();
+            }
         }
 
         public void UnregisterEntity(Element el)

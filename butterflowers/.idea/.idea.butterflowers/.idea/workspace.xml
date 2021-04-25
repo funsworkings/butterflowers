@@ -34,20 +34,24 @@
   </component>
   <component name="ChangeListManager">
     <list default="true" id="6ebb3891-c912-403e-9e42-400f227dea0b" name="Default Changelist" comment="">
+      <change afterPath="$PROJECT_DIR$/Assets/Scripts/butterflowersOS/Interfaces/IYves.cs" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/Assets/Scripts/butterflowersOS/Interfaces/IYves.cs.meta" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/.idea/.idea.butterflowers/.idea/contentModel.xml" beforeDir="false" afterPath="$PROJECT_DIR$/.idea/.idea.butterflowers/.idea/contentModel.xml" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/.idea/.idea.butterflowers/.idea/indexLayout.xml" beforeDir="false" afterPath="$PROJECT_DIR$/.idea/.idea.butterflowers/.idea/indexLayout.xml" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/.idea/.idea.butterflowers/.idea/workspace.xml" beforeDir="false" afterPath="$PROJECT_DIR$/.idea/.idea.butterflowers/.idea/workspace.xml" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/Assets/Materials/Canvas.mat" beforeDir="false" afterPath="$PROJECT_DIR$/Assets/Materials/Canvas.mat" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/Assets/Materials/Vine_Static.mat" beforeDir="false" afterPath="$PROJECT_DIR$/Assets/Materials/Vine_Static.mat" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/Assets/Prefabs/Objects/sector.prefab" beforeDir="false" afterPath="$PROJECT_DIR$/Assets/Prefabs/Objects/sector.prefab" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/Assets/Materials/Discovery Notif.mat" beforeDir="false" afterPath="$PROJECT_DIR$/Assets/Materials/Discovery Notif.mat" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/Assets/Presets/Behaviours/World (Default).asset" beforeDir="false" afterPath="$PROJECT_DIR$/Assets/Presets/Behaviours/World (Default).asset" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/Assets/Scenes/420_Terrain.unity" beforeDir="false" afterPath="$PROJECT_DIR$/Assets/Scenes/420_Terrain.unity" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/Assets/Scripts/butterflowersOS/Objects/Entities/Cage.cs" beforeDir="false" afterPath="$PROJECT_DIR$/Assets/Scripts/butterflowersOS/Objects/Entities/Cage.cs" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/Assets/Scripts/butterflowersOS/Objects/Entities/Sector.cs" beforeDir="false" afterPath="$PROJECT_DIR$/Assets/Scripts/butterflowersOS/Objects/Entities/Sector.cs" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/Library/InspectorExpandedItems.asset" beforeDir="false" afterPath="$PROJECT_DIR$/Library/InspectorExpandedItems.asset" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/Assets/Scripts/butterflowersOS/Core/World.cs" beforeDir="false" afterPath="$PROJECT_DIR$/Assets/Scripts/butterflowersOS/Core/World.cs" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/Assets/Scripts/butterflowersOS/Objects/Entities/Interactables/Beacon.cs" beforeDir="false" afterPath="$PROJECT_DIR$/Assets/Scripts/butterflowersOS/Objects/Entities/Interactables/Beacon.cs" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/Assets/Scripts/butterflowersOS/Objects/Entities/Interactables/Nest.cs" beforeDir="false" afterPath="$PROJECT_DIR$/Assets/Scripts/butterflowersOS/Objects/Entities/Interactables/Nest.cs" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/Assets/Scripts/butterflowersOS/Objects/Entities/Interactables/Vine.cs" beforeDir="false" afterPath="$PROJECT_DIR$/Assets/Scripts/butterflowersOS/Objects/Entities/Interactables/Vine.cs" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/Assets/Scripts/butterflowersOS/Objects/Managers/YvesManager.cs" beforeDir="false" afterPath="$PROJECT_DIR$/Assets/Scripts/butterflowersOS/Objects/Managers/YvesManager.cs" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/Assets/Shaders/ColorKey.shader" beforeDir="false" afterPath="$PROJECT_DIR$/Assets/Shaders/ColorKey.shader" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/Library/LastSceneManagerSetup.txt" beforeDir="false" afterPath="$PROJECT_DIR$/Library/LastSceneManagerSetup.txt" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/Library/ScriptMapper" beforeDir="false" afterPath="$PROJECT_DIR$/Library/ScriptMapper" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/Library/ShaderCache.db" beforeDir="false" afterPath="$PROJECT_DIR$/Library/ShaderCache.db" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/Library/SpriteAtlasDatabase.asset" beforeDir="false" afterPath="$PROJECT_DIR$/Library/SpriteAtlasDatabase.asset" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/obj/Debug/Assembly-CSharp.csprojAssemblyReference.cache" beforeDir="false" afterPath="$PROJECT_DIR$/obj/Debug/Assembly-CSharp.csprojAssemblyReference.cache" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/Packages/manifest.json" beforeDir="false" afterPath="$PROJECT_DIR$/Packages/manifest.json" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/Packages/packages-lock.json" beforeDir="false" afterPath="$PROJECT_DIR$/Packages/packages-lock.json" afterDir="false" />
     </list>
     <option name="SHOW_DIALOG" value="false" />
     <option name="HIGHLIGHT_CONFLICTS" value="true" />
@@ -81,10 +85,6 @@
   <component name="IdeDocumentHistory">
     <option name="CHANGED_PATHS">
       <list>
-        <option value="$PROJECT_DIR$/Assets/Scripts/butterflowersOS/AI/Objects/Entity.cs" />
-        <option value="$PROJECT_DIR$/Assets/Scripts/butterflowersOS/AI/Drawings/Circle.cs" />
-        <option value="$PROJECT_DIR$/Assets/Scripts/butterflowersOS/AI/Objects/Image.cs" />
-        <option value="$PROJECT_DIR$/Assets/Scripts/butterflowersOS/Core/Library.cs" />
         <option value="$PROJECT_DIR$/Assets/Scripts/butterflowersOS/Presets/Editor/WorldPresetEditor.cs" />
         <option value="$PROJECT_DIR$/Assets/Scripts/butterflowersOS/AI/Objects/Point.cs" />
         <option value="$PROJECT_DIR$/Assets/Scripts/butterflowersOS/AI/CCTV.cs" />
@@ -115,7 +115,6 @@
         <option value="$PROJECT_DIR$/Assets/Scripts/butterflowersOS/AI/Drawings/Flower.cs" />
         <option value="$PROJECT_DIR$/Assets/Scripts/butterflowersOS/AI/Drawings/Infinity.cs" />
         <option value="$PROJECT_DIR$/Assets/Scripts/butterflowersOS/Global.cs" />
-        <option value="$PROJECT_DIR$/Assets/Scripts/butterflowersOS/Objects/Managers/YvesManager.cs" />
         <option value="$PROJECT_DIR$/Assets/Scripts/butterflowersOS/Menu/MainMenu.cs" />
         <option value="$PROJECT_DIR$/Assets/Scripts/uwu/Timeline/Core/CutsceneAudioSource.cs" />
         <option value="$PROJECT_DIR$/Assets/Scripts/butterflowersOS/Save &amp; Load/GameData.cs" />
@@ -123,15 +122,20 @@
         <option value="$PROJECT_DIR$/Assets/Scripts/butterflowersOS/AI/Driver.cs" />
         <option value="$PROJECT_DIR$/Assets/Scripts/butterflowersOS/Core/Importer.cs" />
         <option value="$PROJECT_DIR$/Assets/Scripts/butterflowersOS/AI/Scene.cs" />
-        <option value="$PROJECT_DIR$/Assets/Scripts/butterflowersOS/Core/World.cs" />
         <option value="$PROJECT_DIR$/Assets/Scripts/butterflowersOS/Presets/WorldPreset.cs" />
         <option value="$PROJECT_DIR$/Assets/Scripts/butterflowersOS/Menu/PauseMenu.cs" />
         <option value="$PROJECT_DIR$/Assets/Scripts/uwu/Timeline/Core/Cutscenes.cs" />
         <option value="$PROJECT_DIR$/Assets/Scripts/butterflowersOS/Objects/Managers/VineManager.cs" />
-        <option value="$PROJECT_DIR$/Assets/Scripts/butterflowersOS/Objects/Entities/Interactables/Vine.cs" />
         <option value="$PROJECT_DIR$/Assets/Shaders/VineShader.shader" />
         <option value="$PROJECT_DIR$/Assets/Scripts/butterflowersOS/Objects/Entities/Sector.cs" />
         <option value="$PROJECT_DIR$/Assets/Scripts/butterflowersOS/Objects/Entities/Cage.cs" />
+        <option value="$PROJECT_DIR$/Assets/Shaders/ColorKey.shader" />
+        <option value="$PROJECT_DIR$/Assets/Scripts/butterflowersOS/Interfaces/IYves.cs" />
+        <option value="$PROJECT_DIR$/Assets/Scripts/butterflowersOS/Core/World.cs" />
+        <option value="$PROJECT_DIR$/Assets/Scripts/butterflowersOS/Objects/Managers/YvesManager.cs" />
+        <option value="$PROJECT_DIR$/Assets/Scripts/butterflowersOS/Objects/Entities/Interactables/Nest.cs" />
+        <option value="$PROJECT_DIR$/Assets/Scripts/butterflowersOS/Objects/Entities/Interactables/Beacon.cs" />
+        <option value="$PROJECT_DIR$/Assets/Scripts/butterflowersOS/Objects/Entities/Interactables/Vine.cs" />
       </list>
     </option>
   </component>
@@ -229,7 +233,8 @@
       <workItem from="1617708799445" duration="35169000" />
       <workItem from="1618530705280" duration="26089000" />
       <workItem from="1619053134025" duration="13102000" />
-      <workItem from="1619292083672" duration="7400000" />
+      <workItem from="1619292083672" duration="9726000" />
+      <workItem from="1619316698781" duration="845000" />
     </task>
     <servers />
   </component>
@@ -254,11 +259,11 @@
     <option name="CLEAR_INITIAL_COMMIT_MESSAGE" value="true" />
   </component>
   <component name="WindowStateProjectService">
-    <state x="-1558" y="-151" key="RiderGenerateDialog" timestamp="1614137363164">
-      <screen x="-2560" y="-370" width="2560" height="1400" />
+    <state x="601" y="129" key="RiderGenerateDialog" timestamp="1619317529854">
+      <screen x="0" y="0" width="1536" height="824" />
     </state>
-    <state x="-1558" y="-130" key="RiderGenerateDialog/0.0.1536.824/-2560.-349.2560.1400@-2560.-349.2560.1400" timestamp="1610425707617" />
     <state x="-1558" y="-151" key="RiderGenerateDialog/0.0.1536.824/-2560.-370.2560.1400@-2560.-370.2560.1400" timestamp="1614137363164" />
+    <state x="601" y="129" key="RiderGenerateDialog/0.0.1536.824/-318.-1440.2560.1400@0.0.1536.824" timestamp="1619317529854" />
     <state x="622" y="20" width="914" height="707" key="SettingsEditor" timestamp="1617419325956">
       <screen x="0" y="0" width="1536" height="824" />
     </state>
@@ -280,7 +285,7 @@
     <state x="-1852" y="-31" width="1120" height="1151" key="run.anything.popup/0.0.1536.824/-2560.-349.2560.1400@-2560.-349.2560.1400" timestamp="1610923720463" />
     <state x="-1852" y="-52" width="1120" height="1151" key="run.anything.popup/0.0.1536.824/-2560.-370.2560.1400@-2560.-370.2560.1400" timestamp="1617710460330" />
     <state x="425" y="187" width="672" height="678" key="run.anything.popup/0.0.1536.824/-2560.-370.2560.1400@0.0.1536.824" timestamp="1617422770326" />
-    <state x="430" y="145" width="672" height="161" key="search.everywhere.popup" timestamp="1619289007164">
+    <state x="430" y="145" width="672" height="161" key="search.everywhere.popup" timestamp="1619317472359">
       <screen x="0" y="0" width="1536" height="824" />
     </state>
     <state x="-1843" y="-103" width="672" height="160" key="search.everywhere.popup/0.0.1536.824/-2560.-349.2560.1400@-2560.-349.2560.1400" timestamp="1611024221131" />
@@ -289,7 +294,7 @@
     <state x="-1843" y="-565" width="1120" height="272" key="search.everywhere.popup/0.0.1536.824/-2560.-811.2560.1400@-2560.-811.2560.1400" timestamp="1618625181029" />
     <state x="430" y="145" width="672" height="160" key="search.everywhere.popup/0.0.1536.824/-2560.-811.2560.1400@0.0.1536.824" timestamp="1618776346493" />
     <state x="399" y="-1194" width="1120" height="272" key="search.everywhere.popup/0.0.1536.824/-318.-1440.2560.1400@-318.-1440.2560.1400" timestamp="1619053698211" />
-    <state x="430" y="145" width="672" height="161" key="search.everywhere.popup/0.0.1536.824/-318.-1440.2560.1400@0.0.1536.824" timestamp="1619289007164" />
+    <state x="430" y="145" width="672" height="161" key="search.everywhere.popup/0.0.1536.824/-318.-1440.2560.1400@0.0.1536.824" timestamp="1619317472359" />
     <state x="430" y="145" width="672" height="160" key="search.everywhere.popup/0.0.1536.824/-650.-1440.2560.1400@0.0.1536.824" timestamp="1618093793089" />
   </component>
 </project>
