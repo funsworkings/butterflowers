@@ -4,6 +4,7 @@
     {
         [PerRendererData] _MainTex ("Texture", 2D) = "white" {}
         _Color ("Key Color", Color) = (1,1,1,1)
+        _MainColor ("Main Color", Color) = (1, 1, 1, 1)
         _Threshold ("Threshold", float) = 0
     }
     SubShader
@@ -34,7 +35,7 @@
 
             sampler2D _MainTex;
             float4 _MainTex_ST;
-            fixed4 _Color;
+            fixed4 _Color, _MainColor;
             float _Threshold;
 
             v2f vert (appdata v)
@@ -52,7 +53,9 @@
                 half3 diff = col.rgb - _Color.rgb;
                 half diff_dist = dot(diff, diff);
 
+                col.rgb *= _MainColor.rgb;
                 col.a = saturate(diff_dist - _Threshold);
+                
                 return col;
             }
             ENDCG
