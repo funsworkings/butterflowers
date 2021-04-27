@@ -166,9 +166,9 @@ MonoBehaviour:
   m_IgnoreLayout: 0
   m_MinWidth: -1
   m_MinHeight: -1
-  m_PreferredWidth: -1
+  m_PreferredWidth: 860
   m_PreferredHeight: 43.8
-  m_FlexibleWidth: 99
+  m_FlexibleWidth: -1
   m_FlexibleHeight: -1
   m_LayoutPriority: 1
 --- !u!114 &4781165698715510618
@@ -260,8 +260,11 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 2eae7979d78d4e4f911ac0b64505c91c, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
+  barLayout: {fileID: 4781165698715510617}
+  textLayout: {fileID: 4781165700220663578}
   bar: {fileID: 4781165698518110440}
   frame: 0
+  barPercentage: 0.75
 --- !u!1 &4781165700220663590
 GameObject:
   m_ObjectHideFlags: 0
@@ -359,9 +362,9 @@ MonoBehaviour:
   m_fontSize: 36
   m_fontSizeBase: 36
   m_fontWeight: 400
-  m_enableAutoSizing: 0
-  m_fontSizeMin: 18
-  m_fontSizeMax: 72
+  m_enableAutoSizing: 1
+  m_fontSizeMin: 8
+  m_fontSizeMax: 24
   m_fontStyle: 10
   m_textAlignment: 513
   m_characterSpacing: 0
@@ -435,7 +438,7 @@ MonoBehaviour:
   m_IgnoreLayout: 0
   m_MinWidth: -1
   m_MinHeight: -1
-  m_PreferredWidth: -1
+  m_PreferredWidth: 96
   m_PreferredHeight: -1
   m_FlexibleWidth: -1
   m_FlexibleHeight: -1

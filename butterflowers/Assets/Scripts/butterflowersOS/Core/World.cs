@@ -27,6 +27,7 @@ using uwu;
 using uwu.Camera;
 using uwu.Data;
 using uwu.IO;
+using uwu.Snippets;
 using uwu.Snippets.Load;
 using uwu.Timeline.Core;
 using uwu.UI.Behaviors.Visibility;
@@ -124,6 +125,7 @@ namespace butterflowersOS.Core
         [SerializeField] GameObject greenscreen;
         [SerializeField] VideoPlayer greenscreenPlayer;
         [SerializeField, Range(0f, 1f)] float greenscreenProgressCutoff = .5f;
+        [SerializeField] SimpleRotate magicStar;
 
         [SerializeField] bool wait = false;
         [SerializeField] bool dispose = false;
@@ -188,6 +190,8 @@ namespace butterflowersOS.Core
             Loader = Loader.Instance;
 
             _Save.LoadGameData<GameData>(createIfEmpty: true);
+
+            magicStar.enabled = false;
 
             while (!_Save.load)
                 yield return null;
@@ -300,6 +304,8 @@ namespace butterflowersOS.Core
            
             LOAD = true;
             Loader.Dispose();
+
+            magicStar.enabled = true; // Set star rotation to active
 
             if(Cutscenes.HasCompletedIntro) welcomeMessage.DisplayUsername(username);
             

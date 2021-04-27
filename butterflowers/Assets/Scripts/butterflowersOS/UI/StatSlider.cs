@@ -10,11 +10,23 @@ namespace butterflowersOS.UI
 	{
 		// Properties
 
+		RectTransform _rect;
+		HorizontalLayoutGroup _layoutGroup;
+
+		[SerializeField] LayoutElement barLayout, textLayout;
 		[SerializeField] Image bar;
 		
 		// Attributes
 		
 		public Frame frame;
+
+		[SerializeField, Range(0f, 1f)] float barPercentage = .75f;
+
+		void Awake()
+		{
+			_rect = GetComponent<RectTransform>();
+			_layoutGroup = GetComponent<HorizontalLayoutGroup>();
+		}
 
 		public void Trigger(float weight, float speed)
 		{
@@ -33,6 +45,14 @@ namespace butterflowersOS.UI
 				bar.fillAmount = w;
 				yield return null;
 			}
+		}
+
+		public void Refresh()
+		{
+			float width = _rect.sizeDelta.x - _layoutGroup.spacing;
+
+			barLayout.preferredWidth = barPercentage * width;
+			textLayout.preferredWidth = (1f - barPercentage) * width;
 		}
 	}
 }
