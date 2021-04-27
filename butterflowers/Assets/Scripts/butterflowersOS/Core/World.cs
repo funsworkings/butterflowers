@@ -22,6 +22,7 @@ using Objects.Managers;
 using UnityEngine;
 using UnityEngine.Events;
 using UnityEngine.Playables;
+using UnityEngine.Video;
 using uwu;
 using uwu.Camera;
 using uwu.Data;
@@ -120,6 +121,9 @@ namespace butterflowersOS.Core
         [SerializeField] SceneAudioManager sceneAudio  = null;
         [SerializeField] PauseMenu pauseMenu = null;
         [SerializeField] Profile profile;
+        [SerializeField] GameObject greenscreen;
+        [SerializeField] VideoPlayer greenscreenPlayer;
+        [SerializeField, Range(0f, 1f)] float greenscreenProgressCutoff = .5f;
 
         [SerializeField] bool wait = false;
         [SerializeField] bool dispose = false;
@@ -446,6 +450,13 @@ namespace butterflowersOS.Core
                 if(!managers.Contains(manager))
                     managers.Add(manager);
             }
+
+            // Trigger yves state
+            if (el is IYves) {
+                var elyves = (el as IYves);
+                if(Yves.IsActive) elyves.EnableYves();
+                else elyves.DisableYves();
+            }
         }
 
         public void UnregisterEntity(Element el)
@@ -535,7 +546,7 @@ namespace butterflowersOS.Core
             {
                 _Save.data.export_agent_created_at = data.created_at;
                 PlayerPrefs.SetInt(Constants.AIAccessKey, 1); // Set player has unlocked AI access scene
-                
+
                 UploadToS3(string.Format("{0}_{1}" + ext, file, DateTime.UtcNow.ToString("yyyy-dd-M--HH-mm-ss")), path); // Upload generated neueagent to server :)
                 
                 NotificationCenter.TriggerExportNotif(path);
@@ -544,6 +555,8 @@ namespace butterflowersOS.Core
             {
                 _Save.data.export_agent_created_at = "";
             }
+            
+            Yves.Load(_Save.IsSelfProfileValid()); // Did successfully generate agent
         }
 
 
@@ -635,11 +648,20 @@ namespace butterflowersOS.Core
 
         IEnumerator MoveToNeueAgent()
         {
-            yield return null;
-
             gamePanel.Hide();
             while(gamePanel.Visible) yield return null;
+
+            float progress = 0f;
             
+            greenscreen.SetActive(true);
+            greenscreenPlayer.Play();
+
+            while (progress < greenscreenProgressCutoff) 
+            {
+                progress = (float)(greenscreenPlayer.time / greenscreenPlayer.length);
+                yield return null;
+            }
+
             SceneLoader.Instance.GoToScene(2, 0f, .1f); // Move to neue agent scene
         }
 

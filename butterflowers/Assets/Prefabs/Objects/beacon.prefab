@@ -14438,7 +14438,7 @@ MonoBehaviour:
   OnSpawn:
     m_PersistentCalls:
       m_Calls: []
-  OnDestroy:
+  OnDestruct:
     m_PersistentCalls:
       m_Calls: []
   OnFire:
@@ -14477,6 +14477,7 @@ MonoBehaviour:
   preset: {fileID: 11400000, guid: 45ffdf5e02efb4848942aaeb5d029f6e, type: 2}
   deathPS: {fileID: 2567470850076773811}
   trails: {fileID: 91193539}
+  yvesMat: {fileID: 10302, guid: 0000000000000000f000000000000000, type: 0}
   pr_impactPS: {fileID: 5683122868263647427, guid: ada8750f99e3ae240a0cdbd90f03ffe1,
     type: 3}
   pr_flower: {fileID: 8040875481186664252, guid: f20db615abd81b74d9d5880fd72a699e,
@@ -14573,40 +14574,6 @@ MonoBehaviour:
       m_PreInfinity: 2
       m_PostInfinity: 2
       m_RotationOrder: 4
-    isValid: 1
-  transition:
-    onBegin:
-      m_PersistentCalls:
-        m_Calls: []
-    onEnd:
-      m_PersistentCalls:
-        m_Calls: []
-    posA: {x: 0, y: 0, z: 0}
-    posB: {x: 0, y: 0, z: 0}
-    scaleA: {x: 0, y: 0, z: 0}
-    scaleB: {x: 0, y: 0, z: 0}
-    time: 0
-    duration: 0
-    height: 0
-    heightCurve:
-      serializedVersion: 2
-      m_Curve: []
-      m_PreInfinity: 2
-      m_PostInfinity: 2
-      m_RotationOrder: 4
-    scaleCurve:
-      serializedVersion: 2
-      m_Curve: []
-      m_PreInfinity: 2
-      m_PostInfinity: 2
-      m_RotationOrder: 4
-    positionCurve:
-      serializedVersion: 2
-      m_Curve: []
-      m_PreInfinity: 2
-      m_PostInfinity: 2
-      m_RotationOrder: 4
-    isValid: 0
   transitioning: 0
   m_discovered: 0
   m_destroyed: 0

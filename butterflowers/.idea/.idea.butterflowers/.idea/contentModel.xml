@@ -1405,6 +1405,7 @@
               <e p="IReactToSunCycle.cs" t="Include" />
               <e p="IReactToSunCycleReliable.cs" t="Include" />
               <e p="ITooltip.cs" t="Include" />
+              <e p="IYves.cs" t="Include" />
             </e>
             <e p="Menu" t="Include">
               <e p="ChooseUsername.cs" t="Include" />
@@ -1526,6 +1527,14 @@
             <e p="Visuals" t="Include">
               <e p="ParticleMesh.cs" t="Include" />
               <e p="ThumbnailField.cs" t="Include" />
+              <e p="Timeline" t="Include">
+                <e p="Yves" t="Include">
+                  <e p="YvesControlAsset.cs" t="Include" />
+                  <e p="YvesControlBehaviour.cs" t="Include" />
+                  <e p="YvesControlMixerBehaviour.cs" t="Include" />
+                  <e p="YvesControlTrack.cs" t="Include" />
+                </e>
+              </e>
               <e p="Types" t="Include">
                 <e p="WandAffectorMaterial.cs" t="Include" />
               </e>
