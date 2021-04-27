@@ -6,11 +6,16 @@ using butterflowersOS.Interfaces;
 using butterflowersOS.Objects.Entities;
 using butterflowersOS.Objects.Entities.Interactables;
 using butterflowersOS.Objects.Miscellaneous;
+using butterflowersOS.Snippets;
 using Cinemachine;
+using Neue.Reference.Types;
+using Neue.Reference.Types.Maps.Groups;
+using TMPro;
 using UnityEngine;
 using UnityEngine.Playables;
 using UnityEngine.Timeline;
 using UnityEngine.UI;
+using UnityEngine.Video;
 using uwu;
 using uwu.Audio;
 using uwu.Camera.Instances;
@@ -59,6 +64,14 @@ namespace butterflowersOS.Objects.Managers
 			[SerializeField] Text sequenceSubtitleText = null;
 			[SerializeField] AudioFader sequenceBGMFader = null;
 			[SerializeField] AudioSource sequenceBGM = null;
+			[SerializeField] GameObject greenscreenPanel;
+			[SerializeField] VideoPlayer greenscreenVideo;
+			[SerializeField, Range(0f, 1f)] float greenscreenDisposeTrigger;
+			[SerializeField] TMP_Text sequenceFrameText;
+			[SerializeField] FrameVector2Group frameTextSizingGroup;
+			[SerializeField] FitViaScale frameScaler;
+			[SerializeField] ToggleOpacity frameOpacity;
+			[SerializeField] float frameTextDelay = 1f;
 
 		[Header("Export")] 
 			[SerializeField] ParticleSystem exportPS = null;
@@ -110,7 +123,7 @@ namespace butterflowersOS.Objects.Managers
 			}
 			else if (cutscene == sequenceCutscene) 
 			{
-				
+				// Do nothing, maybe?
 			}
 			
 			ToggleSubtitle(false);
@@ -162,10 +175,7 @@ namespace butterflowersOS.Objects.Managers
 				currentScene = sc;
 				sequenceCutscene = _cutscene;
 
-				ToggleSubtitle(true);
-				cutscenes.Play(_cutscene);
-
-				StartCoroutine("Sequencing", seq);
+				StartCoroutine(Sequencing(seq, _cutscene));
 				
 				return true;
 			}
@@ -179,14 +189,31 @@ namespace butterflowersOS.Objects.Managers
 			}
 		}
 
-		IEnumerator Sequencing(Sequence sq)
+		IEnumerator Sequencing(Sequence sq, PlayableAsset cutscene)
 		{
+			greenscreenPanel.SetActive(true);
+			greenscreenVideo.Play();
+
+			while ((float) (greenscreenVideo.time / greenscreenVideo.length) < greenscreenDisposeTrigger) yield return null; // Wait for dispose trigger
+			greenscreenVideo.Pause();
+			
+			TriggerFrameText(sq.frame);
+			while (frameOpacity.Hidden) yield return null; // Wait for frame opacity to complete
+			yield return new WaitForSecondsRealtime(frameTextDelay);
+			HideFrameText();
+			
+			greenscreenVideo.Play();
+			
 			mainCamera.cullingMask = sq.culling;
 			mainCamera.clearFlags = CameraClearFlags.Color;
 			
+			ToggleSubtitle(true);
+			cutscenes.Play(cutscene);
+			
 			List<SceneMesh> meshes = new List<SceneMesh>();
 			var _meshes = FindObjectsOfType<SceneMesh>();
-			foreach (SceneMesh m in _meshes) {
+			foreach (SceneMesh m in _meshes) 
+			{
 				if (m.visible) {
 					m.visible = false;
 					meshes.Add(m);
@@ -207,6 +234,8 @@ namespace butterflowersOS.Objects.Managers
 			DisableFocusCamera(); // Disable focus camera
 			TriggerFadeOutBGM();
 			
+			greenscreenPanel.SetActive(false); // Disable 
+			
 			foreach (SceneMesh m in meshes) {
 				m.visible = true;
 			}
@@ -214,8 +243,24 @@ namespace butterflowersOS.Objects.Managers
 			currentScene = null; // Wipe current scene
 			sequenceCutscene = null; // Wipe current cutscene
 		}
+
+		void TriggerFrameText(Frame frame)
+		{
+			sequenceFrameText.text = System.Enum.GetName(typeof(Frame), frame).ToUpper(); // Trigger name for framing
+				
+			Vector2 scale = frameTextSizingGroup.GetValue(frame);
+			frameScaler.XScale = scale.x;
+			frameScaler.YScale = scale.y;
+			
+			frameOpacity.Show();
+		}
+
+		void HideFrameText()
+		{
+			frameOpacity.Hide();
+		}
 		
-		public void FocusSequenceCamera() 
+		void FocusSequenceCamera() 
 		{
 			if(currentScene == null) return;
 			
@@ -225,7 +270,7 @@ namespace butterflowersOS.Objects.Managers
 			CinemachineBrain.SoloCamera = camera;
 		}
 
-		public void DisableFocusCamera()
+		void DisableFocusCamera()
 		{
 			if(currentScene == null) return;
 			
@@ -235,80 +280,22 @@ namespace butterflowersOS.Objects.Managers
 			CinemachineBrain.SoloCamera = null;
 		}
 
-		public void TriggerFadeInBGM()
+		void TriggerFadeInBGM()
 		{
 			sequenceBGM.Play();
 			sequenceBGMFader.FadeIn();
 		}
 		
-		public void TriggerFadeOutBGM()
+		void TriggerFadeOutBGM()
 		{
 			sequenceBGMFader.FadeOut();
 		}
 
-		public void ScaleSequenceObject()
+		void ScaleSequenceObject()
 		{
 			if(currentScene == null) return;
 			currentScene.Show(true); // Trigger visibility immediately
-			
-			/*
-			SceneMesh[] meshes = currentScene.meshes;
-			if (meshes.Length > 0) 
-			{
-				StartCoroutine("ScalingSequenceMeshes", meshes);
-			}*/
 		}
-
-		/*
-		IEnumerator ScalingSequenceMeshes(SceneMesh[] meshes)
-		{
-			float t = 0f;
-
-			List<float> timestamps = new List<float>();
-			foreach (SceneMesh mesh in meshes) 
-			{
-				float __t = Random.Range(0f, sequenceMeshScaleDuration - sequenceMeshScaleTime);
-				timestamps.Add(__t);
-			}
-			
-			float _t = 0f;
-			float _duration = 0f;
-
-			while (t < sequenceMeshScaleDuration) 
-			{
-				t += Time.deltaTime;
-
-				for (int i = 0; i < meshes.Length; i++) 
-				{
-					var mesh = meshes[i];
-
-					_t = timestamps[i];
-
-					if (t > _t) 
-					{
-						_duration = (sequenceMeshScaleDuration - _t);
-
-						var si = Mathf.Clamp01((t - _t) / sequenceMeshScaleTime);
-						var sc = sequenceMeshScaleCurve.Evaluate(si);
-
-						Vector3 a = mesh.hidden;
-						Vector3 b = mesh.shown;
-							b.y = Mathf.Lerp(a.y, b.y, sc);
-
-						mesh.transform.localScale = b;
-					}
-				}
-
-				yield return null;
-			}
-		}
-		
-		public void TriggerKick()
-		{
-			Nest.RandomKick(); // Re-activate nest after sequence pause
-		}
-		
-		*/
 
 		#endregion
 		
