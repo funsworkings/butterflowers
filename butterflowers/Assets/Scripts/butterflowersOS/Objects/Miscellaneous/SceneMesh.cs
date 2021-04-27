@@ -1,11 +1,12 @@
-﻿using butterflowersOS.Interfaces;
+﻿using System;
+using butterflowersOS.Interfaces;
 using UnityEngine;
 using uwu.Gameplay;
 
 namespace butterflowersOS.Objects.Miscellaneous
 {
 	[RequireComponent(typeof(Renderer))]
-	public class SceneMesh : MonoBehaviour, IInteractable, ITooltip
+	public class SceneMesh : MonoBehaviour, IInteractable, ITooltip, IYves
 	{
 		// Properties
 		
@@ -15,7 +16,8 @@ namespace butterflowersOS.Objects.Miscellaneous
 		Renderer _renderer;
 
 		[SerializeField] Vector3 _hiddenScale, _shownScale;
-		
+		[SerializeField] Material yvesMaterial;
+		Material[] normalMaterial;
 		
 		#region Accessors
 
@@ -38,6 +40,11 @@ namespace butterflowersOS.Objects.Miscellaneous
 			
 			_hiddenScale = new Vector3(scale.x, 0f, scale.z);
 			_shownScale = scale;
+		}
+
+		void Start()
+		{
+			normalMaterial = _renderer.sharedMaterials;
 		}
 
 		#region Ops
@@ -79,6 +86,16 @@ namespace butterflowersOS.Objects.Miscellaneous
 		public string GetInfo()
 		{
 			return gameObject.name;
+		}
+
+		public void EnableYves()
+		{
+			if(yvesMaterial != null) _renderer.sharedMaterials = new Material[] {yvesMaterial};
+		}
+
+		public void DisableYves()
+		{
+			if(yvesMaterial != null) _renderer.sharedMaterials = normalMaterial;
 		}
 	}
 }
