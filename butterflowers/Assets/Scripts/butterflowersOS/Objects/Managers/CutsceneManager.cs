@@ -44,7 +44,11 @@ namespace butterflowersOS.Objects.Managers
 			[SerializeField] PlayableAsset vineCornerCutscene = null;
 			[SerializeField] PlayableAsset vineCageCutscene;
 
-		[Header("Sequences")]
+			[Header("Sequences")] 
+			[SerializeField] Camera mainCamera;
+			CinemachineBrain mainCameraBrain;
+			[SerializeField] int def_cameraCullingMask = 0;
+			[SerializeField] CameraClearFlags def_cameraClearFlags;
 			[SerializeField] Scene currentScene;
 			[SerializeField] float sequenceMeshScaleDuration = 1f;
 			[SerializeField] float sequenceMeshScaleTime = 1f;
@@ -69,13 +73,22 @@ namespace butterflowersOS.Objects.Managers
 		void OnEnable()
 		{
 			cutscenes.Completed += DidCompleteCutscene;
-			vines.onCompleteCorner += DidCompleteCorner;
+			vines.onCompleteCorner += DidCompleteCorner; 
 		}
 
 		void OnDisable()
 		{
 			cutscenes.Completed -= DidCompleteCutscene;
 			vines.onCompleteCorner -= DidCompleteCorner;
+		}
+
+		void Start()
+		{
+			mainCamera = Camera.main;
+			mainCameraBrain = mainCamera.GetComponent<CinemachineBrain>();
+			
+			def_cameraCullingMask = mainCamera.cullingMask;
+			def_cameraClearFlags = mainCamera.clearFlags;
 		}
 
 		void Update()
@@ -97,14 +110,7 @@ namespace butterflowersOS.Objects.Managers
 			}
 			else if (cutscene == sequenceCutscene) 
 			{
-				if (currentScene != null) 
-				{
-					currentScene.Show(true); // Fully visible scene
-					TriggerFadeOutBGM();
-				}
 				
-				currentScene = null; // Wipe current scene
-				sequenceCutscene = null; // Wipe current cutscene
 			}
 			
 			ToggleSubtitle(false);
@@ -146,20 +152,20 @@ namespace butterflowersOS.Objects.Managers
 		
 		#region Sequences
 
-		public bool TriggerSequence(Scene seq)
+		public bool TriggerSequence(Scene sc, Sequence seq)
 		{
-			if (seq == null) return false;
+			if (sc == null) return false;
 			
-			var _cutscene = seq.cutscene;
+			var _cutscene = sc.cutscene;
 			if (_cutscene != null) 
 			{
-				currentScene = seq;
+				currentScene = sc;
 				sequenceCutscene = _cutscene;
 
 				ToggleSubtitle(true);
 				cutscenes.Play(_cutscene);
-				
-				TriggerFadeInBGM();
+
+				StartCoroutine("Sequencing", seq);
 				
 				return true;
 			}
@@ -168,9 +174,76 @@ namespace butterflowersOS.Objects.Managers
 				currentScene = null;
 				sequenceCutscene = null;	
 				
-				seq.Show(true);	// Immediate visibility
+				sc.Show(true);	// Immediate visibility
 				return false;
 			}
+		}
+
+		IEnumerator Sequencing(Sequence sq)
+		{
+			mainCamera.cullingMask = sq.culling;
+			mainCamera.clearFlags = CameraClearFlags.Color;
+			
+			List<SceneMesh> meshes = new List<SceneMesh>();
+			var _meshes = FindObjectsOfType<SceneMesh>();
+			foreach (SceneMesh m in _meshes) {
+				if (m.visible) {
+					m.visible = false;
+					meshes.Add(m);
+				}
+			}
+			
+			FocusSequenceCamera();
+			TriggerFadeInBGM();
+			ScaleSequenceObject();
+			
+			while (cutscenes.playing) yield return null; // Wait for subtitles + VO to finish
+
+			mainCamera.cullingMask = def_cameraCullingMask; // Switch back to def culling mask
+			mainCamera.clearFlags = def_cameraClearFlags;
+
+			currentScene.Show(true); // Fully visible scene
+			
+			DisableFocusCamera(); // Disable focus camera
+			TriggerFadeOutBGM();
+			
+			foreach (SceneMesh m in meshes) {
+				m.visible = true;
+			}
+			
+			currentScene = null; // Wipe current scene
+			sequenceCutscene = null; // Wipe current cutscene
+		}
+		
+		public void FocusSequenceCamera() 
+		{
+			if(currentScene == null) return;
+			
+			CinemachineVirtualCamera camera = currentScene.camera;
+			if(camera != null) camera.gameObject.SetActive(true);
+
+			CinemachineBrain.SoloCamera = camera;
+		}
+
+		public void DisableFocusCamera()
+		{
+			if(currentScene == null) return;
+			
+			CinemachineVirtualCamera camera = currentScene.camera;
+			if(camera != null) camera.gameObject.SetActive(false);
+
+			CinemachineBrain.SoloCamera = null;
+		}
+
+		public void TriggerFadeInBGM()
+		{
+			sequenceBGM.Play();
+			sequenceBGMFader.FadeIn();
+		}
+		
+		public void TriggerFadeOutBGM()
+		{
+			sequenceBGMFader.FadeOut();
 		}
 
 		public void ScaleSequenceObject()
@@ -178,13 +251,15 @@ namespace butterflowersOS.Objects.Managers
 			if(currentScene == null) return;
 			currentScene.Show(true); // Trigger visibility immediately
 			
+			/*
 			SceneMesh[] meshes = currentScene.meshes;
 			if (meshes.Length > 0) 
 			{
 				StartCoroutine("ScalingSequenceMeshes", meshes);
-			}
+			}*/
 		}
 
+		/*
 		IEnumerator ScalingSequenceMeshes(SceneMesh[] meshes)
 		{
 			float t = 0f;
@@ -228,38 +303,13 @@ namespace butterflowersOS.Objects.Managers
 			}
 		}
 		
-		public void FocusSequenceCamera() 
-		{
-			if(currentScene == null) return;
-			
-			CinemachineVirtualCamera camera = currentScene.camera;
-			if(camera != null) camera.gameObject.SetActive(true);
-		}
-
-		public void DisableFocusCamera()
-		{
-			if(currentScene == null) return;
-			
-			CinemachineVirtualCamera camera = currentScene.camera;
-			if(camera != null) camera.gameObject.SetActive(false);
-		}
-
 		public void TriggerKick()
 		{
 			Nest.RandomKick(); // Re-activate nest after sequence pause
 		}
+		
+		*/
 
-		public void TriggerFadeInBGM()
-		{
-			sequenceBGM.Play();
-			sequenceBGMFader.FadeIn();
-		}
-		
-		public void TriggerFadeOutBGM()
-		{
-			sequenceBGMFader.FadeOut();
-		}
-		
 		#endregion
 		
 		#region Subtitles

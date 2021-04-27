@@ -273,7 +273,7 @@ MonoBehaviour:
   m_Children: []
   m_Clips:
   - m_Version: 1
-    m_Start: 8.95
+    m_Start: 0
     m_ClipIn: 0
     m_Asset: {fileID: 1909855923135089396}
     m_Duration: 5.664472717046738
@@ -321,10 +321,10 @@ MonoBehaviour:
     m_PostExtrapolationMode: 0
     m_PreExtrapolationMode: 0
     m_PostExtrapolationTime: 0
-    m_PreExtrapolationTime: 8.95
+    m_PreExtrapolationTime: 0
     m_DisplayName: SubtitleData
   - m_Version: 1
-    m_Start: 14.614472717046738
+    m_Start: 5.664472717046739
     m_ClipIn: 0
     m_Asset: {fileID: -6653507657152463587}
     m_Duration: 3.818860616286596
@@ -333,28 +333,10 @@ MonoBehaviour:
     m_EaseInDuration: 0
     m_EaseOutDuration: 0
     m_BlendInDuration: -1
-    m_BlendOutDuration: -1
+    m_BlendOutDuration: 0
     m_MixInCurve:
       serializedVersion: 2
-      m_Curve:
-      - serializedVersion: 3
-        time: 0
-        value: 0
-        inSlope: 0
-        outSlope: 0
-        tangentMode: 0
-        weightedMode: 0
-        inWeight: 0
-        outWeight: 0
-      - serializedVersion: 3
-        time: 1
-        value: 1
-        inSlope: 0
-        outSlope: 0
-        tangentMode: 0
-        weightedMode: 0
-        inWeight: 0
-        outWeight: 0
+      m_Curve: []
       m_PreInfinity: 2
       m_PostInfinity: 2
       m_RotationOrder: 4
@@ -375,7 +357,7 @@ MonoBehaviour:
     m_PreExtrapolationTime: 0
     m_DisplayName: SubtitleData
   - m_Version: 1
-    m_Start: 18.433333333333334
+    m_Start: 9.483333333333333
     m_ClipIn: 0
     m_Asset: {fileID: -8791534343882878407}
     m_Duration: 3.056932508945465
@@ -383,7 +365,7 @@ MonoBehaviour:
     m_ParentTrack: {fileID: 3612206845423783699}
     m_EaseInDuration: 0
     m_EaseOutDuration: 0
-    m_BlendInDuration: -1
+    m_BlendInDuration: 0
     m_BlendOutDuration: -1
     m_MixInCurve:
       serializedVersion: 2
@@ -431,7 +413,7 @@ MonoBehaviour:
   m_Children: []
   m_Clips:
   - m_Version: 1
-    m_Start: 8.95
+    m_Start: 0
     m_ClipIn: 0
     m_Asset: {fileID: 8095039276802131863}
     m_Duration: 11.95827664399093
