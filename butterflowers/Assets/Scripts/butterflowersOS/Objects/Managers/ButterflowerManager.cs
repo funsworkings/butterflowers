@@ -71,6 +71,11 @@ namespace butterflowersOS.Objects.Managers
 
         [SerializeField] int alive = 0, dead = 0;
         [SerializeField] float health = 1f;
+        [SerializeField] float scaleMultiplier = 1f;
+        [SerializeField] float scaleTime = 3f;
+        [SerializeField] float scaleAmount = 30f;
+        [SerializeField] bool scaling = false, triggerScaleAnim = false;
+        [SerializeField] AnimationCurve scaleCurve;
 
         [SerializeField] float healthChangeThreshold = .1f;
 
@@ -192,6 +197,23 @@ namespace butterflowersOS.Objects.Managers
             load = true;
         }
 
+        IEnumerator ScaleAnim()
+        {
+            float t = 0f;
+
+            while (t < scaleTime) {
+                t += Time.deltaTime;
+
+                var i = Mathf.Clamp01(t / scaleTime);
+                scaleMultiplier = scaleCurve.Evaluate(i) * scaleAmount;
+                
+                yield return null;
+            }
+
+            scaling = false;
+            scaleMultiplier = 1f;
+        }
+        
         protected override void Update()
         {
             base.Update();
@@ -209,6 +231,20 @@ namespace butterflowersOS.Objects.Managers
 
             Camera camera = wand.Camera;
             Transform camera_t = camera.transform;
+
+
+
+            if (triggerScaleAnim) {
+
+                if (!scaling) 
+                {
+                    scaling = true;
+                    StartCoroutine("ScaleAnim");
+                }
+
+                triggerScaleAnim = false;
+            }
+            
 
             m_PreBuildJob = new PreBuildButterflyJob() {
                 op = (int) op,
@@ -280,7 +316,7 @@ namespace butterflowersOS.Objects.Managers
                 timeInState = tsi,
                 relPosition = relPositions,
 
-                scale = butterflyPreset.scale,
+                scale = butterflyPreset.scale * scaleMultiplier,
                 growTime = butterflyPreset.timeToGrow,
 
                 wandPosition3d = wand.position3d,

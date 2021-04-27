@@ -156,6 +156,8 @@ namespace butterflowersOS.Objects.Entities.Interactables
                 DisposeDuringFrame();
                 disposeduringframe = false;
             }
+            
+            if(Input.GetKeyUp(KeyCode.X)) RandomKick();
 
             //transform.position = new Vector3(Mathf.Round(transform.position.x), Mathf.Round(transform.position.y), Mathf.Round(transform.position.z));
             //transform.eulerAngles = new Vector3(Mathf.Round(transform.eulerAngles.x/15)*15, Mathf.Round(transform.eulerAngles.y/15)*15, Mathf.Round(transform.eulerAngles.z/15)*15);
