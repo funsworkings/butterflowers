@@ -176,7 +176,7 @@ namespace butterflowersOS.Objects.Managers
 		public void ScaleSequenceObject()
 		{
 			if(currentScene == null) return;
-			currentScene.Show(false);
+			currentScene.Show(true); // Trigger visibility immediately
 			
 			SceneMesh[] meshes = currentScene.meshes;
 			if (meshes.Length > 0) 
