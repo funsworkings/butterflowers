@@ -196,7 +196,7 @@ namespace butterflowersOS.Objects.Managers
 			Frame frame = frames[_index];
 			Scene _scene = FetchScene(_index);
 			
-			bool didCutscene = Cutscenes.TriggerSequence(_scene);
+			bool didCutscene = Cutscenes.TriggerSequence(_scene, FetchSequence(frame));
 			if (didCutscene) 
 			{
 				frameText.text = System.Enum.GetName(typeof(Frame), frame).ToUpper(); // Trigger name for framing
