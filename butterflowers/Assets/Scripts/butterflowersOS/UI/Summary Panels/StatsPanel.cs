@@ -7,24 +7,12 @@ namespace butterflowersOS.UI.Summary_Panels
 {
 	public class StatsPanel : SummaryPanel
 	{
-		WindowResize resizer;
-		
 		World World = null;
 		StatSlider[] _sliders = new StatSlider[]{};
 		
 		// Attributes
 
 		[SerializeField] float fillSpeed = 1f;
-
-		void OnEnable()
-		{
-			resizer.onResize += WindowDidResize;
-		}
-
-		void OnDisable()
-		{
-			resizer.onResize -= WindowDidResize;
-		}
 
 		protected override void Start()
 		{
@@ -36,7 +24,6 @@ namespace butterflowersOS.UI.Summary_Panels
 
 		protected override void OnShown()
 		{
-			WindowDidResize(0, 0);
 			TriggerSliders();
 		}
 
@@ -48,14 +35,6 @@ namespace butterflowersOS.UI.Summary_Panels
 			{
 				float weight = cacheProfile.GetWeight(slider.frame);
 				slider.Trigger(weight, fillSpeed);
-			}
-		}
-
-		void WindowDidResize(int width, int height)
-		{
-			foreach (StatSlider slider in _sliders) 
-			{
-				slider.Refresh();
 			}
 		}
 	}
