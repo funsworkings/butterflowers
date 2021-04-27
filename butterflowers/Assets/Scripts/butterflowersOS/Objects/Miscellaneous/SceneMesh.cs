@@ -17,7 +17,9 @@ namespace butterflowersOS.Objects.Miscellaneous
 
 		[SerializeField] Vector3 _hiddenScale, _shownScale;
 		[SerializeField] Material yvesMaterial;
+		
 		Material[] normalMaterial;
+		Material[] yvesMaterials;
 		
 		#region Accessors
 
@@ -45,6 +47,11 @@ namespace butterflowersOS.Objects.Miscellaneous
 		void Start()
 		{
 			normalMaterial = _renderer.sharedMaterials;
+			
+			int count = normalMaterial.Length;
+			yvesMaterials = new Material[count];
+
+			for (int i = 0; i < count; i++) yvesMaterials[i] = yvesMaterial;
 		}
 
 		#region Ops
@@ -90,7 +97,7 @@ namespace butterflowersOS.Objects.Miscellaneous
 
 		public void EnableYves()
 		{
-			if(yvesMaterial != null) _renderer.sharedMaterials = new Material[] {yvesMaterial};
+			if (yvesMaterial != null) _renderer.sharedMaterials = yvesMaterials;
 		}
 
 		public void DisableYves()
