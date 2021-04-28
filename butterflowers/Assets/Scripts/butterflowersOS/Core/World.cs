@@ -157,6 +157,10 @@ namespace butterflowersOS.Core
         [Header("Audio")] 
             [SerializeField] AudioSource loadAudio = null;
             [SerializeField] AudioClip loadAudioClip;
+
+        [Header("Recording")] 
+        [SerializeField] bool triggerIntro = false;
+        [SerializeField] Vector3 def_rot;
             
         #region Accessors
 
@@ -192,6 +196,7 @@ namespace butterflowersOS.Core
             _Save.LoadGameData<GameData>(createIfEmpty: true);
 
             magicStar.enabled = false;
+            def_rot = magicStar.transform.localEulerAngles;
 
             while (!_Save.load)
                 yield return null;
@@ -289,6 +294,24 @@ namespace butterflowersOS.Core
             Yves.Load(_Save.IsSelfProfileValid());
 
             yield return new WaitForEndOfFrame();
+
+            /*
+            Loader.Dispose();
+            while (true) {
+
+                triggerIntro = Input.GetKeyUp(KeyCode.I);
+                if (triggerIntro) 
+                {
+                    Cutscenes.TriggerIntro(); // Trigger intro cutscene    
+
+                    magicStar.enabled = true;
+                    magicStar.transform.localEulerAngles = def_rot;
+                    
+                    triggerIntro = false;
+                }
+
+                yield return null;
+            }*/
 
             if (type == AdvanceType.Broken)
                 Surveillance.New(onload: true); // Trigger surveillance (if profile not generated!)
