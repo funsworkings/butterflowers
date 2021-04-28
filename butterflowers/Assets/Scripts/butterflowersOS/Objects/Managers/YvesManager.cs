@@ -49,6 +49,8 @@ namespace butterflowersOS.Objects.Managers
 			value = (didGenerateAgent) ? 1f : 0f;
 			brightness = 0f;
 			splits = 0;
+
+			active = IsActive;
 			
 			IterateOverElements();
 		}
