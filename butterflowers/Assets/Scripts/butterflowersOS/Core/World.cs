@@ -353,6 +353,8 @@ namespace butterflowersOS.Core
             if (_type == AdvanceType.Broken)  // Deactivate sun
             {
                 Sun.active = false;
+                wand.DisposeBeaconIfExists();
+                
                 yield return new WaitForEndOfFrame();
             }
 
