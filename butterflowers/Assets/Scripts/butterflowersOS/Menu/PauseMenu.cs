@@ -61,8 +61,11 @@ namespace butterflowersOS.Menu
 
 		#region Menu
 
+		bool didLoad = false;
+
 		protected override void DidOpen()
 		{
+			didLoad = false;
 			opacity.Show();
 			
 			AudioListener.pause = true;
@@ -75,12 +78,16 @@ namespace butterflowersOS.Menu
 				didPauseCutscenes = false;
 			}
 			
-			_bgmVolume.normalizedValue = (float) Settings.Instance.FetchSetting("bgm_volume", Settings.Type.Float);
-			_sfxVolume.normalizedValue = (float) Settings.Instance.FetchSetting("sfx_volume", Settings.Type.Float);
+			float bgm = _bgmVolume.normalizedValue = (float) Settings.Instance.FetchSetting(Constants.BGM_Key, Settings.Type.Float);
+			float sfx = _sfxVolume.normalizedValue = (float) Settings.Instance.FetchSetting(Constants.SFX_Key, Settings.Type.Float);
+			
+			Debug.LogWarning($"Sounds? bgm -> {bgm}%  sfx -> {sfx}%");
+			didLoad = true;
 		}
 
 		protected override void DidClose()
 		{
+			didLoad = false;
 			opacity.Hide();
 			
 			AudioListener.pause = false;
@@ -168,8 +175,10 @@ namespace butterflowersOS.Menu
 
 		public void DidUpdateSettings()
 		{
-			Settings.Instance.ApplySetting("bgm_volume", Settings.Type.Float, _bgmVolume.normalizedValue);
-			Settings.Instance.ApplySetting("sfx_volume", Settings.Type.Float, _sfxVolume.normalizedValue);
+			if (!didLoad) return;
+			
+			Settings.Instance.ApplySetting(Constants.BGM_Key, Settings.Type.Float, _bgmVolume.normalizedValue);
+			Settings.Instance.ApplySetting(Constants.SFX_Key, Settings.Type.Float, _sfxVolume.normalizedValue);
 		}
 		
 		#endregion
