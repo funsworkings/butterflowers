@@ -284,6 +284,8 @@ namespace butterflowersOS.Core
             pauseMenu.enabled = true; 
             pauseMenu.ToggleTeleport(PlayerPrefs.GetInt(Constants.AIAccessKey, 0) == 1);
 
+            Yves.Load(_Save.IsSelfProfileValid());
+            
             EventsM.Load(null);
             Cutscenes.Load(_Save.data.cutscenes);
             Sequence.Load(_Save.data.sequence);
@@ -291,7 +293,6 @@ namespace butterflowersOS.Core
             Beacons.Load((Preset.persistBeacons) ? _Save.data.beacons : null);
             Vines.Load((Preset.persistVines) ? _Save.data.vines : null);
             Sun.Load(_Save.data.sun);
-            Yves.Load(_Save.IsSelfProfileValid());
 
             yield return new WaitForEndOfFrame();
 

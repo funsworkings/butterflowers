@@ -35,12 +35,17 @@
   <component name="ChangeListManager">
     <list default="true" id="6ebb3891-c912-403e-9e42-400f227dea0b" name="Default Changelist" comment="">
       <change beforePath="$PROJECT_DIR$/.idea/.idea.butterflowers/.idea/workspace.xml" beforeDir="false" afterPath="$PROJECT_DIR$/.idea/.idea.butterflowers/.idea/workspace.xml" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/Assets/Cutscenes/Prologue.playable" beforeDir="false" afterPath="$PROJECT_DIR$/Assets/Cutscenes/Prologue.playable" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/Assets/Materials/Discovery Notif.mat" beforeDir="false" afterPath="$PROJECT_DIR$/Assets/Materials/Discovery Notif.mat" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/Assets/Recordings/animation_Pivot2_003.anim" beforeDir="false" afterPath="$PROJECT_DIR$/Assets/Recordings/animation_Pivot2_003.anim" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/Assets/Cutscenes/NeueAgent.playable" beforeDir="false" afterPath="$PROJECT_DIR$/Assets/Cutscenes/NeueAgent.playable" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/Assets/Prefabs/Objects/vine.prefab" beforeDir="false" afterPath="$PROJECT_DIR$/Assets/Prefabs/Objects/vine.prefab" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/Assets/Presets/Behaviours/World (Default).asset" beforeDir="false" afterPath="$PROJECT_DIR$/Assets/Presets/Behaviours/World (Default).asset" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/Assets/Scenes/420_Terrain.unity" beforeDir="false" afterPath="$PROJECT_DIR$/Assets/Scenes/420_Terrain.unity" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/Assets/Scripts/butterflowersOS/Core/World.cs" beforeDir="false" afterPath="$PROJECT_DIR$/Assets/Scripts/butterflowersOS/Core/World.cs" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/Assets/Scripts/butterflowersOS/Objects/Entities/Interactables/Vine.cs" beforeDir="false" afterPath="$PROJECT_DIR$/Assets/Scripts/butterflowersOS/Objects/Entities/Interactables/Vine.cs" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/Assets/Scripts/butterflowersOS/Objects/Managers/VineManager.cs" beforeDir="false" afterPath="$PROJECT_DIR$/Assets/Scripts/butterflowersOS/Objects/Managers/VineManager.cs" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/Assets/Scripts/butterflowersOS/Objects/Managers/YvesManager.cs" beforeDir="false" afterPath="$PROJECT_DIR$/Assets/Scripts/butterflowersOS/Objects/Managers/YvesManager.cs" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/Library/InspectorExpandedItems.asset" beforeDir="false" afterPath="$PROJECT_DIR$/Library/InspectorExpandedItems.asset" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/Library/SpriteAtlasDatabase.asset" beforeDir="false" afterPath="$PROJECT_DIR$/Library/SpriteAtlasDatabase.asset" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/Library/expandedItems" beforeDir="false" afterPath="$PROJECT_DIR$/Library/expandedItems" afterDir="false" />
     </list>
     <option name="SHOW_DIALOG" value="false" />
     <option name="HIGHLIGHT_CONFLICTS" value="true" />
@@ -98,7 +103,6 @@
         <option value="$PROJECT_DIR$/Assets/Scripts/butterflowersOS/Presets/WorldPreset.cs" />
         <option value="$PROJECT_DIR$/Assets/Scripts/butterflowersOS/Menu/PauseMenu.cs" />
         <option value="$PROJECT_DIR$/Assets/Scripts/uwu/Timeline/Core/Cutscenes.cs" />
-        <option value="$PROJECT_DIR$/Assets/Scripts/butterflowersOS/Objects/Managers/VineManager.cs" />
         <option value="$PROJECT_DIR$/Assets/Shaders/VineShader.shader" />
         <option value="$PROJECT_DIR$/Assets/Scripts/butterflowersOS/Objects/Entities/Sector.cs" />
         <option value="$PROJECT_DIR$/Assets/Scripts/butterflowersOS/Objects/Entities/Cage.cs" />
@@ -106,10 +110,8 @@
         <option value="$PROJECT_DIR$/Assets/Scripts/butterflowersOS/Interfaces/IYves.cs" />
         <option value="$PROJECT_DIR$/Assets/Scripts/butterflowersOS/Objects/Entities/Interactables/Nest.cs" />
         <option value="$PROJECT_DIR$/Assets/Scripts/butterflowersOS/Objects/Entities/Interactables/Beacon.cs" />
-        <option value="$PROJECT_DIR$/Assets/Scripts/butterflowersOS/Objects/Entities/Interactables/Vine.cs" />
         <option value="$PROJECT_DIR$/Assets/Scripts/butterflowersOS/AI/Grayscale.cs" />
         <option value="$PROJECT_DIR$/Assets/Shaders/Grayscale.shader" />
-        <option value="$PROJECT_DIR$/Assets/Scripts/butterflowersOS/Objects/Managers/YvesManager.cs" />
         <option value="$PROJECT_DIR$/Assets/Scripts/butterflowersOS/Visuals/Timeline/Yves/YvesControlTrakc.cs" />
         <option value="$PROJECT_DIR$/Assets/Scripts/butterflowersOS/Visuals/Timeline/Yves/YvesControlTrack.cs" />
         <option value="$PROJECT_DIR$/Assets/Scripts/butterflowersOS/Visuals/Timeline/Yves/YvesControlAsset.cs" />
@@ -125,7 +127,10 @@
         <option value="$PROJECT_DIR$/Assets/Scripts/butterflowersOS/UI/SummaryPanel.cs" />
         <option value="$PROJECT_DIR$/Assets/Scripts/butterflowersOS/UI/StatSlider.cs" />
         <option value="$PROJECT_DIR$/Assets/Scripts/butterflowersOS/UI/Summary Panels/StatsPanel.cs" />
+        <option value="$PROJECT_DIR$/Assets/Scripts/butterflowersOS/Objects/Managers/VineManager.cs" />
+        <option value="$PROJECT_DIR$/Assets/Scripts/butterflowersOS/Objects/Managers/YvesManager.cs" />
         <option value="$PROJECT_DIR$/Assets/Scripts/butterflowersOS/Core/World.cs" />
+        <option value="$PROJECT_DIR$/Assets/Scripts/butterflowersOS/Objects/Entities/Interactables/Vine.cs" />
       </list>
     </option>
   </component>
@@ -281,7 +286,7 @@
     <state x="-1852" y="-31" width="1120" height="1151" key="run.anything.popup/0.0.1536.824/-2560.-349.2560.1400@-2560.-349.2560.1400" timestamp="1610923720463" />
     <state x="-1852" y="-52" width="1120" height="1151" key="run.anything.popup/0.0.1536.824/-2560.-370.2560.1400@-2560.-370.2560.1400" timestamp="1617710460330" />
     <state x="425" y="187" width="672" height="678" key="run.anything.popup/0.0.1536.824/-2560.-370.2560.1400@0.0.1536.824" timestamp="1617422770326" />
-    <state x="399" y="-1194" width="1120" height="272" key="search.everywhere.popup" timestamp="1619569142003">
+    <state x="399" y="-1194" width="1120" height="272" key="search.everywhere.popup" timestamp="1619576877676">
       <screen x="-318" y="-1440" width="2560" height="1400" />
     </state>
     <state x="-1843" y="-103" width="672" height="160" key="search.everywhere.popup/0.0.1536.824/-2560.-349.2560.1400@-2560.-349.2560.1400" timestamp="1611024221131" />
@@ -289,7 +294,7 @@
     <state x="430" y="145" width="672" height="160" key="search.everywhere.popup/0.0.1536.824/-2560.-370.2560.1400@0.0.1536.824" timestamp="1617809163285" />
     <state x="-1843" y="-565" width="1120" height="272" key="search.everywhere.popup/0.0.1536.824/-2560.-811.2560.1400@-2560.-811.2560.1400" timestamp="1618625181029" />
     <state x="430" y="145" width="672" height="160" key="search.everywhere.popup/0.0.1536.824/-2560.-811.2560.1400@0.0.1536.824" timestamp="1618776346493" />
-    <state x="399" y="-1194" width="1120" height="272" key="search.everywhere.popup/0.0.1536.824/-318.-1440.2560.1400@-318.-1440.2560.1400" timestamp="1619569142003" />
+    <state x="399" y="-1194" width="1120" height="272" key="search.everywhere.popup/0.0.1536.824/-318.-1440.2560.1400@-318.-1440.2560.1400" timestamp="1619576877676" />
     <state x="430" y="145" width="672" height="161" key="search.everywhere.popup/0.0.1536.824/-318.-1440.2560.1400@0.0.1536.824" timestamp="1619484872805" />
     <state x="430" y="145" width="672" height="160" key="search.everywhere.popup/0.0.1536.824/-650.-1440.2560.1400@0.0.1536.824" timestamp="1618093793089" />
   </component>

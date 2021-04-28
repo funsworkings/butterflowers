@@ -124,15 +124,10 @@ namespace butterflowersOS.Objects.Entities.Interactables
         {
             line = GetComponent<LineRenderer>();
             line.positionCount = 0;
-            
-            collider = GetComponent<CapsuleCollider>();
-        }
-
-        protected override void OnStart()
-        {
-            base.OnStart();
 
             mat = line.material;
+            
+            collider = GetComponent<CapsuleCollider>();
         }
 
         // Update is called once per frame
@@ -196,6 +191,8 @@ namespace butterflowersOS.Objects.Entities.Interactables
             bool refresh = (data != null);
         
             int vertexIndex = 0;
+            
+            File = file;
         
             if (data == null) 
             {
@@ -237,7 +234,6 @@ namespace butterflowersOS.Objects.Entities.Interactables
                 state = (Status) data.status; // Assign status
                 index = data.index;
                 interval = data.interval / 255f;
-                File = file;
 
                 transform.position = waypoints[0];
                 transform.up = transform.parent.up;
