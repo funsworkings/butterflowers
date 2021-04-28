@@ -650,7 +650,7 @@ namespace butterflowersOS.Core
 
         public void Cycle(bool refresh)
         {
-            DropBeacon(); 
+            DisposeBeaconIfExists(); // Dispose beacon
         }
     }
 }
