@@ -74,7 +74,7 @@ namespace butterflowersOS.Core
         // Events
 
         public UnityEvent onDiscovery;
-        public UnityEvent onLoad, onLoadComplete, onLoadTrigger;
+        public UnityEvent onLoad, onLoadComplete, onLoadTrigger, onImport;
 
         // External
 
@@ -671,6 +671,8 @@ namespace butterflowersOS.Core
             {
                 _Save.data.import_agent_created_at = path;
                 _Save.SaveGameData();
+                
+                onImport.Invoke();
                 
                 StartCoroutine("MoveToNeueAgent");
             }
