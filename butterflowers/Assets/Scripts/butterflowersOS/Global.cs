@@ -1,4 +1,5 @@
 ﻿using System.Collections.Generic;
+using System.Runtime.CompilerServices;
 using butterflowersOS.Core;
 using butterflowersOS.Objects.Base;
 using butterflowersOS.Objects.Entities.Interactables;
@@ -15,6 +16,9 @@ namespace butterflowersOS
         public const float VineWaypointSnapDistance = .033f;
 
         public const string AIAccessKey = "AI_Access";
+
+        public const string SFX_Key = "sfx_volume";
+        public const string BGM_Key = "bgm_volume";
     }
 
     public enum GAMESTATE {
