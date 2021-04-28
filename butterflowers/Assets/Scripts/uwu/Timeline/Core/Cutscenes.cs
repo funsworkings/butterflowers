@@ -12,7 +12,7 @@ namespace uwu.Timeline.Core
 	{
 		// Events
 
-		public System.Action<PlayableAsset> Completed;
+		public System.Action<PlayableAsset> Started, Completed;
 		
 		
 		#region Internal
@@ -121,6 +121,8 @@ namespace uwu.Timeline.Core
 		{
 			state = State.Playing;
 			lastTimestamp = director.time;
+			
+			Started?.Invoke(director.playableAsset);
 		}
 
 		void onStop(PlayableDirector director)

@@ -39,6 +39,7 @@ namespace butterflowersOS.Objects.Managers
 		[SerializeField] VineManager vines = null;
 		[SerializeField] Cage cage;
 		[SerializeField] PlayableDirector director;
+		[SerializeField] Wand wand;
 
 		[Header("General")] 
 			[SerializeField] PlayableAsset introCutscene = null;
@@ -85,13 +86,17 @@ namespace butterflowersOS.Objects.Managers
 
 		void OnEnable()
 		{
+			cutscenes.Started += DidStartCutscene;
 			cutscenes.Completed += DidCompleteCutscene;
+			
 			vines.onCompleteCorner += DidCompleteCorner; 
 		}
 
 		void OnDisable()
 		{
+			cutscenes.Started -= DidStartCutscene;
 			cutscenes.Completed -= DidCompleteCutscene;
+			
 			vines.onCompleteCorner -= DidCompleteCorner;
 		}
 
@@ -107,6 +112,11 @@ namespace butterflowersOS.Objects.Managers
 		void Update()
 		{
 			inprogress = cutscenes.playing;
+		}
+
+		void DidStartCutscene(PlayableAsset cutscene)
+		{
+			wand.DisposeBeaconIfExists();
 		}
 
 		void DidCompleteCutscene(PlayableAsset cutscene)

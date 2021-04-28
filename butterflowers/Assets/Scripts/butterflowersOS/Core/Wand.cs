@@ -380,6 +380,16 @@ namespace butterflowersOS.Core
             }
         }
 
+        public void DisposeBeaconIfExists()
+        {
+            if (beacon == null) return;
+            beacon.Release();
+            
+            _interaction = Interaction.Normal;
+            context = DragContext.Release;
+            beacon = null;
+        }
+
         void DropBeacon()
         {
             if (beacon != null) 
