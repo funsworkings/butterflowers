@@ -214,8 +214,7 @@ namespace butterflowersOS.Objects.Managers
 			
 			greenscreenVideo.Play();
 			
-			mainCamera.cullingMask = sq.culling;
-			mainCamera.clearFlags = CameraClearFlags.Color;
+			TriggerMainCamera(sq.culling);
 			
 			ToggleSubtitle(true);
 			cutscenes.Play(cutscene);
@@ -236,8 +235,7 @@ namespace butterflowersOS.Objects.Managers
 			
 			while (cutscenes.playing) yield return null; // Wait for subtitles + VO to finish
 
-			mainCamera.cullingMask = def_cameraCullingMask; // Switch back to def culling mask
-			mainCamera.clearFlags = def_cameraClearFlags;
+			ResetMainCamera();
 
 			currentScene.Show(true); // Fully visible scene
 			
@@ -252,6 +250,18 @@ namespace butterflowersOS.Objects.Managers
 			
 			currentScene = null; // Wipe current scene
 			sequenceCutscene = null; // Wipe current cutscene
+		}
+
+		public void TriggerMainCamera(int culling)
+		{
+			mainCamera.cullingMask = culling;
+			mainCamera.clearFlags = CameraClearFlags.Color;
+		}
+
+		public void ResetMainCamera()
+		{
+			mainCamera.cullingMask = def_cameraCullingMask; // Switch back to def culling mask
+			mainCamera.clearFlags = def_cameraClearFlags;
 		}
 
 		void TriggerFrameText(Frame frame)
