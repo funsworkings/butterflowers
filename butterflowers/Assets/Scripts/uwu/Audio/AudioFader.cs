@@ -164,14 +164,14 @@ namespace uwu.Audio
 		
 		#region Pausing
 
-		float playbackSpeed = 1f;
+		protected float playbackSpeed = 1f;
 		
-		public void Pause()
+		public virtual void Pause()
 		{
 			playbackSpeed = 0f;
 		}
 
-		public void Resume()
+		public virtual void Resume()
 		{
 			playbackSpeed = 1f;
 		}
