@@ -3,6 +3,7 @@ using System.Collections;
 using System.Collections.Generic;
 using butterflowersOS.Core;
 using butterflowersOS.Interfaces;
+using butterflowersOS.Miscellaneous;
 using butterflowersOS.Objects.Entities;
 using butterflowersOS.Objects.Entities.Interactables;
 using butterflowersOS.Objects.Miscellaneous;
@@ -73,6 +74,7 @@ namespace butterflowersOS.Objects.Managers
 			[SerializeField] FitViaScale frameScaler;
 			[SerializeField] ToggleOpacity frameOpacity;
 			[SerializeField] float frameTextDelay = 1f;
+			[SerializeField] Avi avi;
 
 		[Header("Export")] 
 			[SerializeField] ParticleSystem exportPS = null;
@@ -218,7 +220,7 @@ namespace butterflowersOS.Objects.Managers
 			
 			ToggleSubtitle(true);
 			cutscenes.Play(cutscene);
-			
+			 
 			List<SceneMesh> meshes = new List<SceneMesh>();
 			var _meshes = FindObjectsOfType<SceneMesh>();
 			foreach (SceneMesh m in _meshes) 
@@ -233,6 +235,8 @@ namespace butterflowersOS.Objects.Managers
 			TriggerFadeInBGM();
 			ScaleSequenceObject();
 			
+			avi.Show(sq.gameObject.layer);
+			
 			while (cutscenes.playing) yield return null; // Wait for subtitles + VO to finish
 
 			ResetMainCamera();
@@ -241,6 +245,8 @@ namespace butterflowersOS.Objects.Managers
 			
 			DisableFocusCamera(); // Disable focus camera
 			TriggerFadeOutBGM();
+			
+			avi.Hide();
 			
 			greenscreenPanel.SetActive(false); // Disable 
 			
