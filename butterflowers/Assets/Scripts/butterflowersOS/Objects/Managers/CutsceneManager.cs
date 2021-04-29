@@ -48,6 +48,7 @@ namespace butterflowersOS.Objects.Managers
 			[SerializeField] PlayableAsset introCutscene = null;
 			[SerializeField] PlayableAsset outroCutscene = null;
 			[SerializeField] GameObject introAvi;
+			[SerializeField] Rigidbody[] apparels = new Rigidbody[]{};
 			[SerializeField, Min(0f)] float minTorque, maxTorque;
 			[SerializeField, Min(0f)] float minForce, maxForce;
 
@@ -171,12 +172,14 @@ namespace butterflowersOS.Objects.Managers
 		public Transform trajectory;
 		public void KickApparel()
 		{
+			introAvi.transform.parent = null; // Unbind intro avi
+			
 			var rigidbodies = introAvi.GetComponentsInChildren<Rigidbody>();
 			var trajectory = this.trajectory.forward;
 
 			foreach (Rigidbody r in rigidbodies) {
 				r.isKinematic = false;
-				
+
 				r.AddForce(trajectory * Random.Range(minForce, maxForce));
 				r.AddTorque(Random.insideUnitSphere * Random.Range(minTorque, maxTorque));
 			}
