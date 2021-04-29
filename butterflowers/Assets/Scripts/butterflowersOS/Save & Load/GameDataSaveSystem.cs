@@ -16,8 +16,12 @@ namespace uwu
 		{
 			get
 			{
-				var dat = (GameData)cache_data_lookup["save.dat"];
-				sceneDat = dat;
+				GameData dat = null;
+				if (cache_data_lookup.ContainsKey("save.dat")) 
+				{
+					dat = (GameData) cache_data_lookup["save.dat"];
+					sceneDat = dat;
+				}
 
 				return dat;
 			}
@@ -32,13 +36,7 @@ namespace uwu
 			get => (data == null) ? null : data.username;
 			set => data.username = value;
 		}
-
-		public bool IsProfileValid()
-		{
-			if (data == null) return false;
-			return BrainDataExtensions.IsProfileTimestampValid(data.agent_created_at);
-		}
-
+		
 		public bool IsSelfProfileValid()
 		{
 			if (data == null) return false;

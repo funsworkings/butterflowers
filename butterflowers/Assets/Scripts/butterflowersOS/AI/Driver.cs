@@ -80,7 +80,10 @@ namespace butterflowersOS.AI
 			playerTexture = image;
 			
 			allLogs.AddRange(data);
-			if(allLogs.Count > 0) StartCoroutine("Loop");
+			if (allLogs.Count > 0) {
+				StopCoroutine("Loop");
+				StartCoroutine("Loop");
+			}
 		}
 
 		void Start()

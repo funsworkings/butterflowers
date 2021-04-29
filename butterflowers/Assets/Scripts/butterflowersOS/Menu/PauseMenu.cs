@@ -1,6 +1,8 @@
 ﻿using System;
 using System.Collections;
+using System.Linq;
 using butterflowersOS.Core;
+using butterflowersOS.Interfaces;
 using butterflowersOS.Utils;
 using TMPro;
 using UnityEngine;
@@ -26,6 +28,7 @@ namespace butterflowersOS.Menu
 		[SerializeField] Slider _bgmVolume = null, _sfxVolume = null;
 
 		bool disposeInProgress = false;
+		bool didPauseCutscenes = false;
 
 		public bool IsActive => IsVisible || Dispose;
 		public bool Dispose => disposeInProgress;
@@ -49,7 +52,7 @@ namespace butterflowersOS.Menu
 
 		void Update()
 		{
-			if (Input.GetKeyUp(KeyCode.Escape) && !cutscenes.playing &&  !disposeInProgress) 
+			if (Input.GetKeyUp(KeyCode.Escape) &&  !disposeInProgress) 
 				Toggle();
 		}
 
@@ -60,20 +63,52 @@ namespace butterflowersOS.Menu
 
 		#region Menu
 
+		bool didLoad = false;
+
 		protected override void DidOpen()
 		{
+			didLoad = false;
 			opacity.Show();
 			
 			AudioListener.pause = true;
+
+			if (cutscenes.playing) {
+				didPauseCutscenes = true;
+				cutscenes.Pause();
+			}
+			else {
+				didPauseCutscenes = false;
+			}
+
 			
-			_bgmVolume.normalizedValue = (float) Settings.Instance.FetchSetting("bgm_volume", Settings.Type.Float);
-			_sfxVolume.normalizedValue = (float) Settings.Instance.FetchSetting("sfx_volume", Settings.Type.Float);
+			var pausables = FindObjectsOfType<MonoBehaviour>().OfType<IPausable>();
+			foreach (IPausable pausable in pausables) 
+			{
+				pausable.Pause();
+			}
+			
+			float bgm = _bgmVolume.normalizedValue = (float) Settings.Instance.FetchSetting(Constants.BGM_Key, Settings.Type.Float);
+			float sfx = _sfxVolume.normalizedValue = (float) Settings.Instance.FetchSetting(Constants.SFX_Key, Settings.Type.Float);
+
+			didLoad = true;
 		}
 
 		protected override void DidClose()
 		{
+			didLoad = false;
 			opacity.Hide();
+			
 			AudioListener.pause = false;
+			
+			var pausables = FindObjectsOfType<MonoBehaviour>().OfType<IPausable>();
+			foreach (IPausable pausable in pausables) 
+			{
+				pausable.Resume();
+			}
+
+			if (didPauseCutscenes) {
+				cutscenes.Play();
+			}
 		}
 		
 		#endregion
@@ -154,8 +189,10 @@ namespace butterflowersOS.Menu
 
 		public void DidUpdateSettings()
 		{
-			Settings.Instance.ApplySetting("bgm_volume", Settings.Type.Float, _bgmVolume.normalizedValue);
-			Settings.Instance.ApplySetting("sfx_volume", Settings.Type.Float, _sfxVolume.normalizedValue);
+			if (!didLoad) return;
+			
+			Settings.Instance.ApplySetting(Constants.BGM_Key, Settings.Type.Float, _bgmVolume.normalizedValue);
+			Settings.Instance.ApplySetting(Constants.SFX_Key, Settings.Type.Float, _sfxVolume.normalizedValue);
 		}
 		
 		#endregion

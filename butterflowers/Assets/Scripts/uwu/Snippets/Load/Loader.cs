@@ -95,7 +95,7 @@ namespace uwu.Snippets.Load
 				else 
 					progress = 1f;
 				
-				Debug.Log("progress= " + progress);
+				Debug.Log("progress= " + progress + "  loadtime = " + loadTime);
 
 				loadTime += Time.unscaledDeltaTime;
 				progress = Mathf.Min(loadTime / minimumLoadTime, progress);

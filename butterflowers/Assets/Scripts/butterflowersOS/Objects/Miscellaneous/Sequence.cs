@@ -12,11 +12,12 @@ namespace butterflowersOS.Objects.Miscellaneous
 		
 		[SerializeField] Frame _frame = Frame.Destruction;
 		[SerializeField] Scene[] _scenes = new Scene[]{};
-
+		[SerializeField] LayerMask cullingMask;
 		
 		#region Accessors
 
 		public Frame frame => _frame;
+		public int culling => cullingMask.value;
 		
 		#endregion
 

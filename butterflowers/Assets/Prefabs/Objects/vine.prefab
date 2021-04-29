@@ -4873,7 +4873,7 @@ LineRenderer:
   m_RenderingLayerMask: 1
   m_RendererPriority: 0
   m_Materials:
-  - {fileID: 2100000, guid: ff263f2f182244c97b1049361012b8c6, type: 2}
+  - {fileID: 2100000, guid: b84074928efd33b459d5a0784317d0f9, type: 2}
   m_StaticBatchInfo:
     firstSubMesh: 0
     subMeshCount: 0
@@ -4982,13 +4982,12 @@ MonoBehaviour:
     type: 3}
   leafPrefab: {fileID: 1429265214365859130, guid: 64900a99a6f7c0443b02f49e335aef17,
     type: 3}
+  yvesMaterial: {fileID: 10302, guid: 0000000000000000f000000000000000, type: 0}
+  normalMaterial: {fileID: 2100000, guid: b84074928efd33b459d5a0784317d0f9, type: 2}
   waypoints: []
   gate: []
   vertices: []
   leaves: []
-  gate_midpoint: {x: 0, y: 0, z: 0}
-  gate_width: 0
-  gate_height: 0
   state: 0
   m_file: 
   growRadius: 0.3

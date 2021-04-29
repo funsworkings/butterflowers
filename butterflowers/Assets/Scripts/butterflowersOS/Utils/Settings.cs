@@ -34,8 +34,8 @@ namespace butterflowersOS.Utils
 
 		protected override object[] Items { get; } = new object[] 
 		{
-			"bgm_volume", Type.Float, .87f,
-			"sfx_volume", Type.Float, .87f
+			Constants.BGM_Key, Type.Float, .87f,
+			Constants.SFX_Key, Type.Float, .87f
 		};
 
 		protected override void Awake()
@@ -86,7 +86,7 @@ namespace butterflowersOS.Utils
 		{
 			Debug.LogWarning("Did apply " + key + "  => " + value);
 
-			if (key == "bgm_volume") 
+			if (key == Constants.BGM_Key) 
 			{
 				bgm_vol = volumeCurve.Evaluate((float) value);
 				
@@ -96,7 +96,7 @@ namespace butterflowersOS.Utils
 					m.mixer.audioMixer.SetFloat(m.volumeParam, bgv);
 				}
 			}
-			else if (key == "sfx_volume") 
+			else if (key == Constants.SFX_Key) 
 			{
 				sfx_vol = volumeCurve.Evaluate((float) value);
 				

@@ -1323,6 +1323,7 @@
                 <e p="Circle.cs" t="Include" />
                 <e p="Firework.cs" t="Include" />
                 <e p="Flower.cs" t="Include" />
+                <e p="Infinity.cs" t="Include" />
                 <e p="Star.cs" t="Include" />
                 <e p="Trail.cs" t="Include" />
               </e>
@@ -1404,6 +1405,7 @@
               <e p="IReactToSunCycle.cs" t="Include" />
               <e p="IReactToSunCycleReliable.cs" t="Include" />
               <e p="ITooltip.cs" t="Include" />
+              <e p="IYves.cs" t="Include" />
             </e>
             <e p="Menu" t="Include">
               <e p="ChooseUsername.cs" t="Include" />
@@ -1416,6 +1418,7 @@
               <e p="VersionText.cs" t="Include" />
             </e>
             <e p="Miscellaneous" t="Include">
+              <e p="Avi.cs" t="Include" />
               <e p="FramesPerSecond.cs" t="Include" />
               <e p="TextureCollection.cs" t="Include" />
             </e>
@@ -1456,10 +1459,13 @@
                 <e p="SummaryManager.cs" t="Include" />
                 <e p="TutorialManager.cs" t="Include" />
                 <e p="VineManager.cs" t="Include" />
+                <e p="YvesManager.cs" t="Include" />
               </e>
               <e p="Miscellaneous" t="Include">
                 <e p="Flares.cs" t="Include" />
                 <e p="Leaf.cs" t="Include" />
+                <e p="MouseLook.cs" t="Include" />
+                <e p="MouseLookCapture.cs" t="Include" />
                 <e p="Scene.cs" t="Include" />
                 <e p="SceneMesh.cs" t="Include" />
                 <e p="Sequence.cs" t="Include" />
@@ -1524,6 +1530,14 @@
             <e p="Visuals" t="Include">
               <e p="ParticleMesh.cs" t="Include" />
               <e p="ThumbnailField.cs" t="Include" />
+              <e p="Timeline" t="Include">
+                <e p="Yves" t="Include">
+                  <e p="YvesControlAsset.cs" t="Include" />
+                  <e p="YvesControlBehaviour.cs" t="Include" />
+                  <e p="YvesControlMixerBehaviour.cs" t="Include" />
+                  <e p="YvesControlTrack.cs" t="Include" />
+                </e>
+              </e>
               <e p="Types" t="Include">
                 <e p="WandAffectorMaterial.cs" t="Include" />
               </e>
@@ -1818,6 +1832,7 @@
             </e>
             <e p="Timeline" t="Include">
               <e p="Core" t="Include">
+                <e p="CutsceneAudioSource.cs" t="Include" />
                 <e p="Cutscenes.cs" t="Include" />
                 <e p="SimpleMarker.cs" t="Include" />
               </e>
@@ -1904,6 +1919,7 @@
           <e p="Textured With Detail.shader" t="Include" />
           <e p="TransparentShadowCollector.shader" t="Include" />
           <e p="UVVertexOffset.shader" t="Include" />
+          <e p="VineShader.shader" t="Include" />
           <e p="WaveTransTexture.shader" t="Include" />
           <e p="WorldSnappingSil.shader" t="Include" />
         </e>

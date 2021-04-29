@@ -23,4 +23,14 @@ public class SceneAudioManager : AudioFader, ILoadDependent
 
         base.Start();
     }
+
+    public override void Pause()
+    {
+        // Do nothing
+    }
+
+    public override void Resume()
+    {
+        // Do nothing 
+    }
 }
