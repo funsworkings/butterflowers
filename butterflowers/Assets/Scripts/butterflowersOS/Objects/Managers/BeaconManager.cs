@@ -222,8 +222,8 @@ namespace butterflowersOS.Objects.Managers
 			if (@params== null || !@params.ContainsKey("position")) { DecidePosition(ref position); requirePosition = true; }
 			else position = (Vector3) @params["position"];
 
-			if (@params== null || !@params.ContainsKey("position")){ if(requirePosition) origin = position; else DecidePosition(ref origin);}
-			else origin = (Vector3) @params["position"];
+			if (@params== null || !@params.ContainsKey("origin")){ if(requirePosition) origin = position; else DecidePosition(ref origin);}
+			else origin = (Vector3) @params["origin"];
 
 			var beacon = InstantiatePrefab().GetComponent<Beacon>();
 			return RegisterBeacon(beacon, path, type, state, position, rotation, origin, fromSave, transition);
@@ -391,8 +391,8 @@ namespace butterflowersOS.Objects.Managers
 					Debug.LogFormat("Success restore beacon!  file= {0}  locale={1}", p, s);
 
 					var @params = new Hashtable() {
-						//{"position", loc},
-						{"position", loc}
+						{"position", loc},
+						{"origin", loc}
 					};
 
 					var instance = CreateBeacon(p, t, s, @params, fromSave: true);

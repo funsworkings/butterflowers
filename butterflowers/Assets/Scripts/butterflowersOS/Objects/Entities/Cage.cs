@@ -25,6 +25,7 @@ namespace butterflowersOS.Objects.Entities
         // Properties
     
         [SerializeField] Sector[] sectors = new Sector[]{};
+        [SerializeField] Sprite[] shapes = new Sprite[] { };
         [SerializeField] bool complete = false;
         [SerializeField] bool hasCompletedAll = false;
 
@@ -104,30 +105,39 @@ namespace butterflowersOS.Objects.Entities
         public bool QueueVertex(int index)
         {
             var sector = sectors[index];
-            bool success = sector.Activate();
             
-            CheckIfAllQueued();
+            CheckIfAllQueued(out int sectorProgress, events:false);
+            sectorProgress = Mathf.Min(sectorProgress, sectors.Length - 1);
+            
+            bool success = sector.Activate(shapes[sectorProgress]);
+
+            CheckIfAllQueued(out sectorProgress);
             return success;
         }
 
-        void CheckIfAllQueued()
+        void CheckIfAllQueued(out int progress, bool events = true)
         {
             bool allQueued = false;
-
+            
+            progress = 0;
             if (!hasCompletedAll) 
             {
-                allQueued = true;
                 foreach (Sector sector in sectors) 
                 {
-                    if (sector._Status == Sector.Status.Wait) 
+                    if (sector._Status != Sector.Status.Wait) 
                     {
-                        allQueued = false;
-                        break;
+                        ++progress;
                     }
                 }
+
+                allQueued = (progress == sectors.Length);
+            }
+            else 
+            {
+                progress = sectors.Length-1;
             }
 
-            if (allQueued) // All corners have been queued/completed
+            if (allQueued && events) // All corners have been queued/completed
             {
                 onComplete.Invoke();
                 hasCompletedAll = true;

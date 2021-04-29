@@ -47,8 +47,8 @@ namespace butterflowersOS.UI
 		[SerializeField] Type type = Type.Integer;
 		[SerializeField] string unitMeasurement = "";
 		
-		[HideInInspector] public Vector3 normalScale;
-		public Vector3 focusScale = Vector2.one;
+		protected Vector3 normalScale;
+		protected Vector3 focusScale = new Vector3(1.8f,1.8f,1.8f);
 
 		[SerializeField] bool m_focus = false;
 
@@ -56,6 +56,9 @@ namespace butterflowersOS.UI
 		
 		public Vector3 Scale { get; set; } = Vector3.one;
 
+		public Vector3 FocusScale => focusScale;
+		public Vector3 NormalScale => normalScale;
+		
 		#region Accessors
 		
 		Transform scoreItem => transform.GetChild(3);
@@ -89,12 +92,15 @@ namespace butterflowersOS.UI
 			
 			trigger = GetComponentInChildren<SummaryCardTrigger>();
 
-			if(descriptionItem != null) labelField = descriptionItem.GetComponent<TMP_Text>();
+			if (descriptionItem != null) {
+				labelField = descriptionItem.GetComponent<TMP_Text>();
+				labelField.text = label;
+			}
 			if(scoreItem != null) scoreField = scoreItem.GetComponentInChildren<TMP_Text>();
 			if(scoreItem != null) deltaField = scoreItem.GetComponentInChildren<Image>();
 			if(averageItem != null) averageField = averageItem.GetComponentInChildren<TMP_Text>();
 
-			labelField.text = label;
+			
 
 			normalScale = rect.localScale;
 			focusScale.Scale(normalScale);
@@ -102,7 +108,7 @@ namespace butterflowersOS.UI
 
 		void Update()
 		{
-			transform.localScale = Scale * canvas.scaleFactor * 2f;
+			transform.localScale = Scale;
 		}
 
 		#region Operatiananons

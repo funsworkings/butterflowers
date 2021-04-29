@@ -1,4 +1,5 @@
-﻿using UnityEngine;
+﻿using System;
+using UnityEngine;
 using UnityEngine.Events;
 
 namespace butterflowersOS.Objects.Entities
@@ -26,6 +27,8 @@ namespace butterflowersOS.Objects.Entities
 		[SerializeField] Transform vertex = null;
 		[SerializeField] Status status = Status.Wait;
 
+		ParticleSystem ps;
+
 		#region Accessors
 
 		public Status _Status => status;
@@ -35,6 +38,11 @@ namespace butterflowersOS.Objects.Entities
 		
 		#endregion
 
+		void Awake()
+		{
+			ps = GetComponent<ParticleSystem>();
+		}
+
 		#region Initialization
 
 		public void Load(Cage cage, int _status)
@@ -42,11 +50,15 @@ namespace butterflowersOS.Objects.Entities
 			status = (Status)_status;
 		}
 
-		public bool Activate()
+		public bool Activate(Sprite shape)
 		{
 			if (status == Status.Wait) 
 			{
 				status = Status.Queue;
+
+				var shapeModule = ps.shape;
+				shapeModule.sprite = shape;
+				
 				onActivated.Invoke();
 
 				return true;

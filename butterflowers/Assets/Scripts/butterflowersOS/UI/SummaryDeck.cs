@@ -144,7 +144,7 @@ namespace butterflowersOS.UI
                     anchor.anchoredPosition, Time.unscaledDeltaTime * focusSpeed);
                 cardInFocus.rect.rotation = Quaternion.Lerp(cardInFocus.rect.rotation, anchor.rotation,
                     Time.unscaledDeltaTime * focusSpeed);
-                cardInFocus.Scale = Vector3.Lerp(cardInFocus.Scale, cardInFocus.focusScale,
+                cardInFocus.Scale = Vector3.Lerp(cardInFocus.Scale, cardInFocus.FocusScale,
                     Time.unscaledDeltaTime * focusSpeed);
 
                 if (Input.GetMouseButtonUp(0))
@@ -212,7 +212,7 @@ namespace butterflowersOS.UI
 
             card.transform.localPosition = origin + circle;
             card.rect.eulerAngles = rotation;
-            card.Scale = card.normalScale;
+            card.Scale = card.NormalScale;
 
             ResetToIndex(card);
         }

@@ -11,7 +11,7 @@ namespace butterflowersOS.UI
 		
 		// Properties
 
-		ToggleOpacity _opacity;
+		protected ToggleOpacity _opacity;
 
 		protected virtual void Awake()
 		{
