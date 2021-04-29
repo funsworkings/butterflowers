@@ -47,6 +47,9 @@ namespace butterflowersOS.Objects.Managers
 		[Header("General")] 
 			[SerializeField] PlayableAsset introCutscene = null;
 			[SerializeField] PlayableAsset outroCutscene = null;
+			[SerializeField] GameObject introAvi;
+			[SerializeField, Min(0f)] float minTorque, maxTorque;
+			[SerializeField, Min(0f)] float minForce, maxForce;
 
 		[Header("Vines")] 
 			[SerializeField] Transform vineCornerCameraPivot = null;
@@ -127,7 +130,7 @@ namespace butterflowersOS.Objects.Managers
 		{
 			bool flag_save = false;
 			
-			if (cutscene == introCutscene) { intro = true; flag_save = true; }
+			if (cutscene == introCutscene) { intro = true; flag_save = true; introAvi.SetActive(false); }
 			else if (cutscene == outroCutscene) 
 			{ 
 				outro = true;
@@ -160,7 +163,23 @@ namespace butterflowersOS.Objects.Managers
 		public void TriggerIntro()
 		{
 			ToggleSubtitle(true);
+			introAvi.SetActive(true);
+			
 			cutscenes.Play(introCutscene);
+		}
+
+		public Transform trajectory;
+		public void KickApparel()
+		{
+			var rigidbodies = introAvi.GetComponentsInChildren<Rigidbody>();
+			var trajectory = this.trajectory.forward;
+
+			foreach (Rigidbody r in rigidbodies) {
+				r.isKinematic = false;
+				
+				r.AddForce(trajectory * Random.Range(minForce, maxForce));
+				r.AddTorque(Random.insideUnitSphere * Random.Range(minTorque, maxTorque));
+			}
 		}
 
 		public void TriggerOutro(int rows, int columns, Texture2D texture)

@@ -559,6 +559,7 @@ MonoBehaviour:
   - {fileID: 6218059706133113002}
   - {fileID: 5078240377129072671}
   - {fileID: -2181991156082173428}
+  - {fileID: 8406061822347556284}
   m_FixedDuration: 0
   m_EditorSettings:
     m_Framerate: 60
@@ -587,6 +588,22 @@ MonoBehaviour:
   m_Clips: []
   m_Markers:
     m_Objects: []
+--- !u!114 &920322704742052164
+MonoBehaviour:
+  m_ObjectHideFlags: 1
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 0}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 15c38f6fa1940124db1ab7f6fe7268d1, type: 3}
+  m_Name: Signal Emitter
+  m_EditorClassIdentifier: 
+  m_Time: 29.05
+  m_Retroactive: 0
+  m_EmitOnce: 0
+  m_Asset: {fileID: 11400000, guid: 0baad9d5cb1518a4684a0b1a56323c54, type: 2}
 --- !u!114 &1067575689146339582
 MonoBehaviour:
   m_ObjectHideFlags: 1
@@ -1696,6 +1713,30 @@ MonoBehaviour:
     text: I am drifting around the solid structure and its perfect capsulation
     color: {r: 1, g: 1, b: 1, a: 1}
     includeColor: 0
+--- !u!114 &8406061822347556284
+MonoBehaviour:
+  m_ObjectHideFlags: 1
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 0}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: b46e36075dd1c124a8422c228e75e1fb, type: 3}
+  m_Name: Signal Track (1)
+  m_EditorClassIdentifier: 
+  m_Version: 3
+  m_AnimClip: {fileID: 0}
+  m_Locked: 0
+  m_Muted: 0
+  m_CustomPlayableFullTypename: 
+  m_Curves: {fileID: 0}
+  m_Parent: {fileID: 11400000}
+  m_Children: []
+  m_Clips: []
+  m_Markers:
+    m_Objects:
+    - {fileID: 920322704742052164}
 --- !u!114 &8425629271073747611
 MonoBehaviour:
   m_ObjectHideFlags: 1
