@@ -62,6 +62,7 @@ namespace butterflowersOS.Presets
             public float minimumVineGrowHeight = 1f;
             public float maximumVineGrowHeight = 10f;
             public float vineWidth = 1f;
+            [Range(0f, 1f)] public float minimumFlowerSize = 1f;
             public int minimumLeavesPerSegment = 5, maximumLeavesPerSegment = 10;
             public int minimumFileDepth = 3, maximumFileDepth = 10;
             [Range(0f, 1f)] public float vineHeightAllowance = .1f;
