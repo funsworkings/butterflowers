@@ -603,6 +603,9 @@ namespace butterflowersOS.Objects.Entities.Interactables
             var flowerInstance = Instantiate(flowerPrefab, pos, flowerPrefab.transform.rotation);
             flowerInstance.transform.parent = transform;
 
+            float scale = Random.Range(preset.minimumFlowerSize, 1f);
+            flowerInstance.transform.localScale *= scale;
+
             var flower = flowerInstance.GetComponentInChildren<Flower>();
             flower.Grow(Flower.Origin.Vine); 
         }
