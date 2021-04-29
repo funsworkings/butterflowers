@@ -101,15 +101,11 @@ namespace butterflowersOS.Objects.Managers
             while (!cage.load) yield return null;
         
             yield return new WaitForEndOfFrame();
-            
-            Debug.LogWarning($"Found {data.vines.Length} vines");
-        
+
             foreach (VineData v in data.vines) 
             {
                 string file = null;
                 bool success = Library.Instance.FetchFile(v.file, out file);
-                
-                Debug.LogWarning($"{success} find file {v.file} for vine");
 
                 if (success) 
                 {

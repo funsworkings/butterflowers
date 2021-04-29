@@ -26,7 +26,7 @@ using Random = UnityEngine.Random;
 
 namespace butterflowersOS.Objects.Managers
 {
-	public class CutsceneManager : MonoBehaviour, ISaveable
+	public class CutsceneManager : MonoBehaviour, ISaveable, IPausable
 	{
 		// External
 
@@ -35,6 +35,8 @@ namespace butterflowersOS.Objects.Managers
 		GameDataSaveSystem _Save;
 		
 		// Properties
+
+		[SerializeField] float playbackSpeed = 1f;
 
 		[SerializeField] Cutscenes cutscenes = null;
 		[SerializeField] VineManager vines = null;
@@ -72,8 +74,9 @@ namespace butterflowersOS.Objects.Managers
 			[SerializeField] TMP_Text sequenceFrameText;
 			[SerializeField] FrameVector2Group frameTextSizingGroup;
 			[SerializeField] FitViaScale frameScaler;
-			[SerializeField] ToggleOpacity frameOpacity;
-			[SerializeField] float frameTextDelay = 1f;
+			[SerializeField] CanvasGroup frameOpacity;
+			[SerializeField] float frameTextDelay = 1f, frameTransitionLength = 4f;
+			[SerializeField] float greenscreenVideoPlaybackSpeed = .67f;
 			[SerializeField] Avi avi;
 
 		[Header("Export")] 
@@ -113,7 +116,7 @@ namespace butterflowersOS.Objects.Managers
 
 		void Update()
 		{
-			inprogress = cutscenes.playing;
+			inprogress = cutscenes.playing || cutscenes.paused;
 		}
 
 		void DidStartCutscene(PlayableAsset cutscene)
@@ -203,24 +206,59 @@ namespace butterflowersOS.Objects.Managers
 
 		IEnumerator Sequencing(Sequence sq, PlayableAsset cutscene)
 		{
+			float time = 0f;
+			float duration = 0f;
+			
 			greenscreenPanel.SetActive(true);
 			greenscreenVideo.Play();
 
-			while ((float) (greenscreenVideo.time / greenscreenVideo.length) < greenscreenDisposeTrigger) yield return null; // Wait for dispose trigger
+			duration = (float)greenscreenVideo.length * greenscreenDisposeTrigger;
+			while (time < duration) 
+			{
+				time += Time.unscaledDeltaTime * playbackSpeed * greenscreenVideoPlaybackSpeed;
+				if (time > duration) time = duration;
+
+				greenscreenVideo.time = time; // Set frame of video
+				yield return null;
+			}
 			greenscreenVideo.Pause();
 			
 			TriggerFrameText(sq.frame);
-			while (frameOpacity.Hidden) yield return null; // Wait for frame opacity to complete
-			yield return new WaitForSecondsRealtime(frameTextDelay);
+
+			time = 0f;
+			duration = frameTransitionLength;
+
+			while (time < duration) 
+			{
+				time += Time.unscaledDeltaTime * playbackSpeed;
+				frameOpacity.alpha = Mathf.Clamp01(time / duration);
+				yield return null;
+			}
+
+			time = 0f;
+			duration = frameTextDelay;
+
+			while (time < duration) {
+				time += Time.unscaledDeltaTime * playbackSpeed;
+				yield return null;
+			}
+			
 			HideFrameText();
 			
-			greenscreenVideo.Play();
+			time = 0f;
+			duration = frameTransitionLength;
+
+			while (time < duration) 
+			{
+				time += Time.unscaledDeltaTime * playbackSpeed;
+				frameOpacity.alpha = 1f - Mathf.Clamp01(time / duration);
+				yield return null;
+			}
 			
+			greenscreenVideo.Play();
 			TriggerMainCamera(sq.culling);
 			
-			ToggleSubtitle(true);
-			cutscenes.Play(cutscene);
-			 
+			
 			List<SceneMesh> meshes = new List<SceneMesh>();
 			var _meshes = FindObjectsOfType<SceneMesh>();
 			foreach (SceneMesh m in _meshes) 
@@ -232,12 +270,26 @@ namespace butterflowersOS.Objects.Managers
 			}
 			
 			FocusSequenceCamera();
-			TriggerFadeInBGM();
 			ScaleSequenceObject();
 			
 			avi.Show(sq.gameObject.layer);
 			
-			while (cutscenes.playing) yield return null; // Wait for subtitles + VO to finish
+
+			time = (float)greenscreenVideo.time;
+			duration = (float) greenscreenVideo.length;
+			while (time < duration) 
+			{
+				time += Time.unscaledDeltaTime * playbackSpeed * greenscreenVideoPlaybackSpeed;
+				greenscreenVideo.time = Mathf.Min(time, duration);
+				yield return null;
+			}
+
+			ToggleSubtitle(true);
+			TriggerFadeInBGM();
+			
+			cutscenes.Play(cutscene);
+
+			while (cutscenes.playing || cutscenes.paused) yield return null; // Wait for subtitles + VO to finish
 
 			ResetMainCamera();
 
@@ -277,13 +329,13 @@ namespace butterflowersOS.Objects.Managers
 			Vector2 scale = frameTextSizingGroup.GetValue(frame);
 			frameScaler.XScale = scale.x;
 			frameScaler.YScale = scale.y;
-			
-			frameOpacity.Show();
+
+			frameOpacity.alpha = 0f;
 		}
 
 		void HideFrameText()
 		{
-			frameOpacity.Hide();
+			frameOpacity.alpha = 1f;
 		}
 		
 		void FocusSequenceCamera() 
@@ -367,6 +419,20 @@ namespace butterflowersOS.Objects.Managers
 			Sun = Sun.Instance;
 			World = World.Instance;
 			_Save = GameDataSaveSystem.Instance;
+		}
+		
+		#endregion
+		
+		#region Pausing
+
+		public void Pause()
+		{
+			playbackSpeed = 0f;
+		}
+
+		public void Resume()
+		{
+			playbackSpeed = 1f;
 		}
 		
 		#endregion
