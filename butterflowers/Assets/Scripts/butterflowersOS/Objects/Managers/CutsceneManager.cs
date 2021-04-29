@@ -71,9 +71,8 @@ namespace butterflowersOS.Objects.Managers
 			[SerializeField] GameObject greenscreenPanel;
 			[SerializeField] VideoPlayer greenscreenVideo;
 			[SerializeField, Range(0f, 1f)] float greenscreenDisposeTrigger;
-			[SerializeField] TMP_Text sequenceFrameText;
-			[SerializeField] FrameVector2Group frameTextSizingGroup;
-			[SerializeField] FitViaScale frameScaler;
+			[SerializeField] FrameSpriteGroup frameSpriteGroup;
+			[SerializeField] Image frameImageField;
 			[SerializeField] CanvasGroup frameOpacity;
 			[SerializeField] float frameTextDelay = 1f, frameTransitionLength = 4f;
 			[SerializeField] float greenscreenVideoPlaybackSpeed = .67f;
@@ -231,7 +230,10 @@ namespace butterflowersOS.Objects.Managers
 			while (time < duration) 
 			{
 				time += Time.unscaledDeltaTime * playbackSpeed;
-				frameOpacity.alpha = Mathf.Clamp01(time / duration);
+				
+				float alpha = Mathf.Clamp01(time / duration);
+				frameOpacity.alpha = alpha;
+
 				yield return null;
 			}
 
@@ -251,7 +253,10 @@ namespace butterflowersOS.Objects.Managers
 			while (time < duration) 
 			{
 				time += Time.unscaledDeltaTime * playbackSpeed;
-				frameOpacity.alpha = 1f - Mathf.Clamp01(time / duration);
+				
+				float alpha = 1f - Mathf.Clamp01(time / duration);
+				frameOpacity.alpha = alpha;
+
 				yield return null;
 			}
 			
@@ -324,12 +329,7 @@ namespace butterflowersOS.Objects.Managers
 
 		void TriggerFrameText(Frame frame)
 		{
-			sequenceFrameText.text = System.Enum.GetName(typeof(Frame), frame).ToUpper(); // Trigger name for framing
-				
-			Vector2 scale = frameTextSizingGroup.GetValue(frame);
-			frameScaler.XScale = scale.x;
-			frameScaler.YScale = scale.y;
-
+			frameImageField.sprite = frameSpriteGroup.GetValue(frame);
 			frameOpacity.alpha = 0f;
 		}
 
