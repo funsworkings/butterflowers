@@ -1,6 +1,8 @@
 ﻿using System;
 using System.Collections;
+using System.Linq;
 using butterflowersOS.Core;
+using butterflowersOS.Interfaces;
 using butterflowersOS.Utils;
 using TMPro;
 using UnityEngine;
@@ -77,11 +79,17 @@ namespace butterflowersOS.Menu
 			else {
 				didPauseCutscenes = false;
 			}
+
+			
+			var pausables = FindObjectsOfType<MonoBehaviour>().OfType<IPausable>();
+			foreach (IPausable pausable in pausables) 
+			{
+				pausable.Pause();
+			}
 			
 			float bgm = _bgmVolume.normalizedValue = (float) Settings.Instance.FetchSetting(Constants.BGM_Key, Settings.Type.Float);
 			float sfx = _sfxVolume.normalizedValue = (float) Settings.Instance.FetchSetting(Constants.SFX_Key, Settings.Type.Float);
-			
-			Debug.LogWarning($"Sounds? bgm -> {bgm}%  sfx -> {sfx}%");
+
 			didLoad = true;
 		}
 
@@ -91,6 +99,12 @@ namespace butterflowersOS.Menu
 			opacity.Hide();
 			
 			AudioListener.pause = false;
+			
+			var pausables = FindObjectsOfType<MonoBehaviour>().OfType<IPausable>();
+			foreach (IPausable pausable in pausables) 
+			{
+				pausable.Resume();
+			}
 
 			if (didPauseCutscenes) {
 				cutscenes.Play();
