@@ -120,7 +120,8 @@ namespace butterflowersOS.Objects.Managers
         }
 
         public Transform VariableRoot => variableSpawnRoot;
-        
+
+        public float Health => health;
 
         protected override void Awake()
         {
@@ -487,7 +488,7 @@ namespace butterflowersOS.Objects.Managers
 
         #region Health
 
-        public float GetHealth()
+        float GetHealth()
         {
             int alive = 0, dead = 0;
             foreach (int state in states) 

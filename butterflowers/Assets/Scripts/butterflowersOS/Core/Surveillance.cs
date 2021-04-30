@@ -262,7 +262,7 @@ namespace butterflowersOS.Core
 		{
 			var log = new SurveillanceLogData();
 
-			log.butterflyHealth = (byte)( ButterflyManager.GetHealth() * 255f);
+			log.butterflyHealth = (byte)( ButterflyManager.Health * 255f);
 
 			var cursorX = Wand.velocity2d.x;
 			var cursorY = Wand.velocity2d.y;

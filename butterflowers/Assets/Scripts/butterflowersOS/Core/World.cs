@@ -732,7 +732,7 @@ namespace butterflowersOS.Core
             float max = -1f;
 
             suggestion = SUGGESTION.ENDOW_KINDNESS;
-            max = (1f - Butterflowers.GetHealth());
+            max = (1f - Butterflowers.Health);
 
             float nest = (1f - Nest.fill);
             if (nest > max) {
