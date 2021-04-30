@@ -162,7 +162,9 @@ namespace butterflowersOS.Objects.Managers
 				}
 			}
 
+			#if UNITY_EDITOR
 			if (preset.overrideSequence) _frame = preset.overrideSequenceFrame; // Override sequence frame (Debug)
+			#endif
 				
 			frames[t_index] = _frame; // Assign random framing
 			return TriggerReason.Success;

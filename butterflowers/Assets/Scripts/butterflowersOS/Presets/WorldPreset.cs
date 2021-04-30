@@ -8,19 +8,12 @@ namespace butterflowersOS.Presets
     public class WorldPreset : ScriptableObject
     {
         [Header("Debug")]
-            public bool persistDiscoveries = false;
-            public bool resetWorldClock = false;
-            public bool persistDialogue = false;
-            public bool persistDialogueVisited = false;
             public bool persistKnowledge = false;
             public bool persistBeacons = false;
             public bool persistVines = false;
             public bool persistSequence = false;
             public bool overrideSequence = false;
             public Frame overrideSequenceFrame;
-            public bool alwaysIntro = false;
-            public bool alwaysAbsorb = false;
-            public bool useWizard = false;
             public bool takePhotos = false;
             public bool logEvents = false;
             public bool loadTexturesInEditor = true;
