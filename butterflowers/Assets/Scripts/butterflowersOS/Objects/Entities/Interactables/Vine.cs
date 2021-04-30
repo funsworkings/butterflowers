@@ -105,14 +105,17 @@ namespace butterflowersOS.Objects.Entities.Interactables
         public float length => waypoints.DistanceBetweenVectors();
         public float height => growHeight;
 
-        [SerializeField] float m_growSpeed = 0f;
-
-        public float growSpeed
+        float b_growSpeed = -1f;
+        public float baselineGrowSpeed
         {
             get
             {
-                m_growSpeed = Manager.CalculateVineGrowSpeed(this);
-                return m_growSpeed;
+                if (b_growSpeed < 0f) 
+                {
+                    b_growSpeed = Manager.CalculateVineGrowSpeed(this);
+                }
+
+                return b_growSpeed * Manager.GetGrowthMultiplier();
             }
         }
 
@@ -325,10 +328,20 @@ namespace butterflowersOS.Objects.Entities.Interactables
 
             if (interval < 1f) 
             {
-                float speed = growSpeed;
-                if (index == 1)
+                float speed = baselineGrowSpeed;
+                if (index == 1) 
+                {
                     speed = saplingSpeed;
-            
+                }
+                else 
+                {
+                    float segmentDistance = Vector3.Distance(vertices[index - 1], waypoints[index]);
+                    //float segmentDuration = (segmentDistance / growHeight) * (segmentDistance / baselineGrowSpeed); // In seconds
+
+                    speed /= segmentDistance;
+                }
+
+
                 interval += (Time.deltaTime * speed);
                 interval = Mathf.Clamp01(interval); // Clamp 0-1
 

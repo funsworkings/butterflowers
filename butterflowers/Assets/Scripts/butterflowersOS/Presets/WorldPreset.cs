@@ -67,6 +67,7 @@ namespace butterflowersOS.Presets
             public int minimumFileDepth = 3, maximumFileDepth = 10;
             [Range(0f, 1f)] public float vineHeightAllowance = .1f;
             [Range(0f, 1f)] public float leafDensityPerSegment;
+            [Min(0.1f)] public float minimumVineGrowthMultiplier = .1f;
 
         [Header("Leaf Attributes")] 
             public AnimationCurve leafGrowCurve;

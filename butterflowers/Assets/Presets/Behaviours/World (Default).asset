@@ -79,17 +79,18 @@ MonoBehaviour:
     m_PostInfinity: 2
     m_RotationOrder: 4
   saplingGrowHeight: 0
-  daysToGrowVine: 7
-  minimumVineGrowHeight: 3
+  daysToGrowVine: 6
+  minimumVineGrowHeight: 1
   maximumVineGrowHeight: 8
   vineWidth: 0.067
   minimumFlowerSize: 0.45
   minimumLeavesPerSegment: 5
   maximumLeavesPerSegment: 10
-  minimumFileDepth: 3
+  minimumFileDepth: 4
   maximumFileDepth: 10
   vineHeightAllowance: 0.1
   leafDensityPerSegment: 0.18
+  minimumVineGrowthMultiplier: 0.25
   leafGrowCurve:
     serializedVersion: 2
     m_Curve:

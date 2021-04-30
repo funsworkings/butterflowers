@@ -9,6 +9,7 @@ using butterflowersOS.Objects.Entities.Interactables;
 using butterflowersOS.Presets;
 using UnityEngine;
 using uwu;
+using uwu.Extensions;
 using Vertex = butterflowersOS.Objects.Entities.Cage.Vertex;
 
 namespace butterflowersOS.Objects.Managers
@@ -19,6 +20,7 @@ namespace butterflowersOS.Objects.Managers
 
         GameDataSaveSystem _Save;
         [SerializeField] BeaconManager Beacons = null;
+        [SerializeField] ButterflowerManager ButterflowerManager;
 
         #endregion
     
@@ -161,12 +163,18 @@ namespace butterflowersOS.Objects.Managers
     
         public float CalculateVineGrowSpeed(Vine vine)
         {
-            float secondsToGrow = Preset.ConvertDaysToSeconds(Preset.daysToGrowVine);
+            float lengthMagnitude = Mathf.Clamp01(vine.length / Preset.maximumVineGrowHeight);
+            float secondsToGrow = Preset.ConvertDaysToSeconds(Preset.daysToGrowVine * lengthMagnitude);
 
             float distanceToTravel = vine.length;
             float speed = (distanceToTravel / secondsToGrow); // per second
         
             return speed;
+        }
+
+        public float GetGrowthMultiplier()
+        {
+            return ButterflowerManager.Health.RemapNRB(0f, 1f, Preset.minimumVineGrowthMultiplier, 1f);
         }
 
         #endregion

@@ -120,7 +120,7 @@ public class Unknown : MonoBehaviour
     {
         bool healthy = false;
 
-        float health = Butterflies.GetHealth();
+        float health = Butterflies.Health;
         while (!healthy || health > Preset.unknownPersistenceThreshold) 
         {
             var patt = fetchPattern();
@@ -129,7 +129,7 @@ public class Unknown : MonoBehaviour
             //EventManager.Instance.Push(EVENTCODE.UNKNOWN, AGENT.Unknown, AGENT.World, @string, false);
             yield return new WaitForSeconds(Mathf.Max(0f, scribeInterval));
 
-            health = Butterflies.GetHealth();
+            health = Butterflies.Health;
             if (!healthy && health > Preset.unknownPersistenceThreshold)
                 healthy = true;
         }
@@ -165,7 +165,7 @@ public class Unknown : MonoBehaviour
 
 	public string river()
     {
-        float health = (Butterflies != null)? Butterflies.GetHealth():1f;
+        float health = (Butterflies != null)? Butterflies.Health:1f;
 
         float wavelength = health.RemapNRB(0f, 1f, minriverwavelength, maxriverwavelength);
         float slope = -(wavelength * Mathf.Sin(Time.time * riverspeed));

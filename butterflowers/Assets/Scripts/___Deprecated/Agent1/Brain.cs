@@ -508,7 +508,7 @@ namespace Neue.Agent1
 			BHW /= TW;
 			NW /= TW;
 
-			var butterflowerhealth = Butterflowers.GetHealth();
+			var butterflowerhealth = Butterflowers.Health;
 
 			var allNeeds = needs.behaviours;
 			var allNeedHealth = 0f;
