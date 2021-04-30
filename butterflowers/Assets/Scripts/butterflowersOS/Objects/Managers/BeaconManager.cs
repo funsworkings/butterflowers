@@ -163,7 +163,9 @@ namespace butterflowersOS.Objects.Managers
 
 		protected override void Update()
 		{
-			if(Input.GetKeyDown(KeyCode.LeftBracket) && preset.allowDebugSpawn) DebugBeaconFromDesktop();
+			#if UNITY_EDITOR
+				if(Input.GetKeyDown(KeyCode.LeftBracket) && preset.allowDebugSpawn) DebugBeaconFromDesktop();
+			#endif
 		}
 
 		#endregion

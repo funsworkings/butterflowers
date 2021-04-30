@@ -12,19 +12,12 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 2d1b3e60da8f84a548174644e0f114a0, type: 3}
   m_Name: World (Default)
   m_EditorClassIdentifier: 
-  persistDiscoveries: 1
-  resetWorldClock: 0
-  persistDialogue: 1
-  persistDialogueVisited: 1
   persistKnowledge: 1
   persistBeacons: 1
   persistVines: 1
   persistSequence: 1
   overrideSequence: 0
   overrideSequenceFrame: 3
-  alwaysIntro: 0
-  alwaysAbsorb: 0
-  useWizard: 0
   takePhotos: 1
   logEvents: 0
   loadTexturesInEditor: 1
@@ -79,7 +72,7 @@ MonoBehaviour:
     m_PostInfinity: 2
     m_RotationOrder: 4
   saplingGrowHeight: 0
-  daysToGrowVine: 6
+  daysToGrowVine: 7
   minimumVineGrowHeight: 1
   maximumVineGrowHeight: 8
   vineWidth: 0.067
