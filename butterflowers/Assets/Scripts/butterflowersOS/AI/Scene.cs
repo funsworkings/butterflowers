@@ -60,7 +60,7 @@ namespace butterflowersOS.AI
 				while (!Save.load) yield return null;
 			}
 
-			Loader.Load(.1f, 1f); // Trigger load
+			Loader.CompleteLoad();
 			
 			ImportFromSaveFile();
 

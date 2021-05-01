@@ -25,6 +25,12 @@ namespace uwu.Snippets.Load
 		int t_scene = -1;
 		bool loading = false;
 		
+		// Attributes
+		
+		[SerializeField] SceneLoadTarget[] _loadTargets = new SceneLoadTarget[]{};
+
+		public SceneLoadTarget LoadTarget { get; private set; } = null;
+		
 		void Awake()
 		{
 			if (Instance == null) 
@@ -47,15 +53,21 @@ namespace uwu.Snippets.Load
 
 		#region Ops
 
-		public void GoToScene(int buildIndex, float min = 0f, float max = 1f)
+		public void GoToScene(int buildIndex)
 		{
 			bool isValid = buildIndex < SceneManager.sceneCountInBuildSettings;
 			if (!isValid) return;
 
+			int currentSceneIndex = SceneManager.GetActiveScene().buildIndex;
+			if (currentSceneIndex == buildIndex) return; // Ignore req to go to current scene
+
+			FetchLoadTarget(currentSceneIndex, buildIndex, out SceneLoadTarget _target);
+			LoadTarget = _target;
+
 			t_scene = buildIndex;
 			loading = true;
 			
-			StartCoroutine(LoadScene(buildIndex, min, max));
+			StartCoroutine(LoadScene(buildIndex, 0f, LoadTarget.duration));
 		}
 
 		IEnumerator LoadScene(int buildIndex, float min, float max)
@@ -66,6 +78,18 @@ namespace uwu.Snippets.Load
 
 			while (!Completed || Loader.IsLoading) yield return null;
 			LoadOp.allowSceneActivation = true;
+		}
+
+		void FetchLoadTarget(int start, int finish, out SceneLoadTarget target)
+		{
+			foreach (SceneLoadTarget _target in _loadTargets) {
+				if (_target.@from == start && _target.to == finish) {
+					target = _target;
+					return;
+				}
+			}
+			
+			throw new SystemException("Unable to find scene load target");
 		}
 		
 		#endregion
