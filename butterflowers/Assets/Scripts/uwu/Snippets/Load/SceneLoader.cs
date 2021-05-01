@@ -10,6 +10,17 @@ namespace uwu.Snippets.Load
 	{
 		public static SceneLoader Instance = null;
 		
+		#region Internal
+
+		public enum SwapReason
+		{
+			Undefined,
+			
+			Import
+		}
+		
+		#endregion
+		
 		#region Load dependencies
 		
 		public float Progress { get { return (loading)? Mathf.Clamp01(LoadOp.progress / .9f):1f; } }
@@ -31,6 +42,11 @@ namespace uwu.Snippets.Load
 
 		public SceneLoadTarget LoadTarget { get; private set; } = null;
 		
+		public Scene From { get; private set; }
+		public Scene To { get; private set; }
+
+		public SwapReason Reason { get; set; } = SwapReason.Undefined;
+		
 		void Awake()
 		{
 			if (Instance == null) 
@@ -38,6 +54,7 @@ namespace uwu.Snippets.Load
 				Instance = this;
 				
 				SceneManager.sceneLoaded += OnSceneChanged;
+				SceneManager.activeSceneChanged += OnActiveSceneChange;
 				
 				DontDestroyOnLoad(gameObject);
 			}
@@ -53,7 +70,7 @@ namespace uwu.Snippets.Load
 
 		#region Ops
 
-		public void GoToScene(int buildIndex)
+		public void GoToScene(int buildIndex, SwapReason reason = SwapReason.Undefined)
 		{
 			bool isValid = buildIndex < SceneManager.sceneCountInBuildSettings;
 			if (!isValid) return;
@@ -64,6 +81,8 @@ namespace uwu.Snippets.Load
 			FetchLoadTarget(currentSceneIndex, buildIndex, out SceneLoadTarget _target);
 			LoadTarget = _target;
 
+			Reason = reason;
+			
 			t_scene = buildIndex;
 			loading = true;
 			
@@ -95,6 +114,12 @@ namespace uwu.Snippets.Load
 		#endregion
 		
 		#region Scene callbacks
+
+		void OnActiveSceneChange(Scene previous, Scene current)
+		{
+			From = previous;
+			To = current;
+		}
 
 		void OnSceneChanged(Scene scene, LoadSceneMode mode)
 		{

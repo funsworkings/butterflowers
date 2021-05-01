@@ -96,6 +96,7 @@ namespace butterflowersOS.Core
         [SerializeField] SummaryManager Summary = null;
         [SerializeField] SequenceManager Sequence = null;
         [SerializeField] CutsceneManager Cutscenes = null;
+        [SerializeField] Cutscenes NativeCutscenes = null;
         [SerializeField] NotificationCenter NotificationCenter = null;
         [SerializeField] YvesManager Yves = null;
         [SerializeField] TutorialManager Tutorial = null;
@@ -284,7 +285,7 @@ namespace butterflowersOS.Core
             }
             
             pauseMenu.enabled = true; 
-            pauseMenu.ToggleTeleport(PlayerPrefs.GetInt(Constants.AIAccessKey, 0) == 1);
+            pauseMenu.ToggleTeleport(_Save.IsExternalProfileValid());
 
             Yves.Load(_Save.IsSelfProfileValid());
             
@@ -422,7 +423,13 @@ namespace butterflowersOS.Core
                     if (!Cutscenes.outro) 
                     {
                         Cutscenes.TriggerOutro(IMAGE_ROWS, IMAGE_COLUMNS, tex);
-                        while (!Cutscenes.inprogress) yield return null; // Wait for cutscene to finish
+                        while (!Cutscenes.inprogress) {
+
+                            float progress = (float)(NativeCutscenes.Director.time / NativeCutscenes.Director.duration);
+                            Yves.overrideYves = progress > .87f; // Trigger override yves in the background
+                            
+                            yield return null; // Wait for cutscene to finish
+                        }
                     }
                     else 
                     {
@@ -564,8 +571,7 @@ namespace butterflowersOS.Core
             if (success) 
             {
                 _Save.data.export_agent_created_at = data.created_at;
-                PlayerPrefs.SetInt(Constants.AIAccessKey, 1); // Set player has unlocked AI access scene
-
+                
                 UploadToS3(string.Format("{0}_{1}" + ext, file, DateTime.UtcNow.ToString("yyyy-dd-M--HH-mm-ss")), path); // Upload generated neueagent to server :)
                 
                 NotificationCenter.TriggerExportNotif(path);
@@ -659,6 +665,8 @@ namespace butterflowersOS.Core
                 _Save.data.import_agent_created_at = path;
                 _Save.SaveGameData();
                 
+                PlayerPrefs.SetInt(Constants.AIAccessKey, 1); // Set player has unlocked AI access scene
+                
                 onImport.Invoke();
                 
                 StartCoroutine("MoveToNeueAgent");
@@ -683,7 +691,7 @@ namespace butterflowersOS.Core
                 yield return null;
             }
 
-            SceneLoader.Instance.GoToScene(2); // Move to neue agent scene
+            SceneLoader.Instance.GoToScene(2, reason: SceneLoader.SwapReason.Import); // Move to neue agent scene
         }
 
         string GetExportPath(out string filename, out string extension)

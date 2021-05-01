@@ -1475,7 +1475,11 @@ MonoBehaviour:
   breakBeforeColorGrading: 0
   m_BeforeTransparentBundles: []
   m_BeforeStackBundles: []
-  m_AfterStackBundles: []
+  m_AfterStackBundles:
+  - assemblyQualifiedName: CustomBlueLightGlassesPPSSettings, Assembly-CSharp, Version=0.0.0.0,
+      Culture=neutral, PublicKeyToken=null
+  - assemblyQualifiedName: butterflowersOS.AI.Grayscale, Assembly-CSharp, Version=0.0.0.0,
+      Culture=neutral, PublicKeyToken=null
 --- !u!1 &261062808
 GameObject:
   m_ObjectHideFlags: 0
@@ -7862,7 +7866,7 @@ PrefabInstance:
     - target: {fileID: 2973830041851690829, guid: 4ec5ab60b92a4e9419bebcfffedef8c6,
         type: 3}
       propertyPath: m_AnchoredPosition.x
-      value: 960.00006
+      value: 960
       objectReference: {fileID: 0}
     - target: {fileID: 2973830041851690829, guid: 4ec5ab60b92a4e9419bebcfffedef8c6,
         type: 3}
@@ -9691,6 +9695,7 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: 
   filter: 1
+  debugFNS: 
   preset: {fileID: 11400000, guid: 45ffdf5e02efb4848942aaeb5d029f6e, type: 2}
   butterflowersMaterial: {fileID: 2100000, guid: f7590f8c698b0b548954df9833e762bc,
     type: 2}
@@ -9701,6 +9706,7 @@ MonoBehaviour:
   wrapper: {fileID: 1740291653}
   cutscenes: {fileID: 1758789783}
   epilogue: {fileID: 11400000, guid: 93fc853b2269aeb49ad4fafb707a9ff5, type: 2}
+  _pauseMenu: {fileID: 1981274682}
 --- !u!114 &1740291651
 MonoBehaviour:
   m_ObjectHideFlags: 0
@@ -11151,6 +11157,18 @@ MonoBehaviour:
   transitionPlane: {fileID: 879372607}
   planeOpacity: {fileID: 879372606}
   planeAnimation: {fileID: 879372603}
+--- !u!114 &1981274682 stripped
+MonoBehaviour:
+  m_CorrespondingSourceObject: {fileID: 2973830041358062866, guid: 4ec5ab60b92a4e9419bebcfffedef8c6,
+    type: 3}
+  m_PrefabInstance: {fileID: 916937448}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 0}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: b8df235b25c547fe9e2643e76e0ec7a6, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
 --- !u!1 &2016326768
 GameObject:
   m_ObjectHideFlags: 0
@@ -11573,7 +11591,7 @@ RectTransform:
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
   m_AnchorMin: {x: 1, y: 0}
   m_AnchorMax: {x: 1, y: 0}
-  m_AnchoredPosition: {x: 32.000244, y: 16.001099}
+  m_AnchoredPosition: {x: 32.000244, y: 16.00122}
   m_SizeDelta: {x: 200, y: 50}
   m_Pivot: {x: 0.9999998, y: -0.00000020861626}
 --- !u!114 &2128139431

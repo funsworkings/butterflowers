@@ -3,6 +3,7 @@ using System.Collections;
 using System.Collections.Generic;
 using B83.Win32;
 using butterflowersOS.Core;
+using butterflowersOS.Menu;
 using butterflowersOS.Presets;
 using Neue.Agent.Brain.Data;
 using UnityEngine;
@@ -25,6 +26,7 @@ namespace butterflowersOS.AI
 		// Properties
 
 		Loader Loader;
+		SceneLoader SceneLoader;
 
 		[SerializeField] WorldPreset preset;
 		[SerializeField] Material butterflowersMaterial = null;
@@ -35,6 +37,7 @@ namespace butterflowersOS.AI
 		[SerializeField] Wrapper wrapper = null;
 		[SerializeField] Cutscenes cutscenes = null;
 		[SerializeField] PlayableAsset epilogue = null;
+		[SerializeField] PauseMenu _pauseMenu = null;
 
 		bool listen = false;
 						 
@@ -42,6 +45,7 @@ namespace butterflowersOS.AI
 		{
 			Save = GameDataSaveSystem.Instance;
 			Loader = Loader.Instance;
+			SceneLoader = SceneLoader.Instance;
 			Files = FileNavigator.Instance;
 
 			StartCoroutine("Initialize");
@@ -66,9 +70,11 @@ namespace butterflowersOS.AI
 
 			while (Loader.IsLoading) yield return null;
 			Loader.Dispose();
-
+			
+			_pauseMenu.ToggleTeleport(!string.IsNullOrEmpty(Save.data.username));
+			
 			bool hasCompletedEpilogue = Save.data.cutscenes[2];
-			if (!hasCompletedEpilogue) 
+			if (SceneLoader.Reason == SceneLoader.SwapReason.Import && !hasCompletedEpilogue) 
 			{
 				cutscenes.Play(epilogue);
 				while (!cutscenes.playing) yield return null;
@@ -135,10 +141,12 @@ namespace butterflowersOS.AI
 		protected override void HandleBrainImport(string path, BrainData brain, POINT point)
 		{
 			if (!listen) return; // Ignore brain import if loading!
-
-			Save.data.import_agent_created_at = path;
-			Save.SaveGameData();
 			
+			if (Save.IsExternalProfileValid()) { // Overwrite if assigned previously
+				Save.data.import_agent_created_at = path;
+				Save.SaveGameData();
+			}
+
 			Import(brain);
 		}
 

@@ -76,8 +76,6 @@ namespace butterflowersOS.Menu
         protected override void DidOpen()
         {
             route = Route.NULL;
-            
-            if(Save.IsSelfProfileValid()) PlayerPrefs.SetInt(Constants.AIAccessKey, 1); //  Ensure player access if fixed
             DisplayOptions(previousSaveExists);
             
             opacity.Show();   
