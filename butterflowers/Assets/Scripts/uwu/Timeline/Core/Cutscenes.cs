@@ -106,11 +106,13 @@ namespace uwu.Timeline.Core
 				debugTriggerPlay = false;
 			}
 
+			#if UNITY_EDITOR
 			if (debugTriggerCancel || (Input.GetKey(KeyCode.LeftControl) && Input.GetKeyUp(KeyCode.X))) 
 			{
 				Cancel();	
 				debugTriggerCancel = false;
 			}
+			#endif
 		}
 
 		#endregion
