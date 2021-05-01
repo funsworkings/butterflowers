@@ -408,6 +408,7 @@ MonoBehaviour:
   opacity: {fileID: 7765984912731716938}
   fill: {fileID: 7765984912442444514}
   loading: 0
+  currentLoadTime: 0
 --- !u!114 &7765984912757349041
 MonoBehaviour:
   m_ObjectHideFlags: 0
@@ -420,6 +421,25 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 83b3804fa96b44f6b778ce36b0f3c84a, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
+  _loadTargets:
+  - from: 0
+    to: 1
+    duration: 0.25
+  - from: 0
+    to: 2
+    duration: 0.5
+  - from: 1
+    to: 0
+    duration: 0.5
+  - from: 1
+    to: 2
+    duration: 0.33
+  - from: 2
+    to: 0
+    duration: 0.5
+  - from: 2
+    to: 1
+    duration: 0.25
 --- !u!114 &1952548831182338477
 MonoBehaviour:
   m_ObjectHideFlags: 0

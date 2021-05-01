@@ -266,7 +266,7 @@ namespace butterflowersOS.Core
             yield return new WaitForEndOfFrame();
 
             onLoad.Invoke();
-            Loader.Load(.1f, 1f);
+            Loader.CompleteLoad();
             while (Loader.IsLoading) yield return null;
             
             onLoadComplete.Invoke();
@@ -683,7 +683,7 @@ namespace butterflowersOS.Core
                 yield return null;
             }
 
-            SceneLoader.Instance.GoToScene(2, 0f, .1f); // Move to neue agent scene
+            SceneLoader.Instance.GoToScene(2); // Move to neue agent scene
         }
 
         string GetExportPath(out string filename, out string extension)
