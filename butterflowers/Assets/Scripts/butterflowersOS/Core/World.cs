@@ -423,13 +423,7 @@ namespace butterflowersOS.Core
                     if (!Cutscenes.outro) 
                     {
                         Cutscenes.TriggerOutro(IMAGE_ROWS, IMAGE_COLUMNS, tex);
-                        while (!Cutscenes.inprogress) {
-
-                            float progress = (float)(NativeCutscenes.Director.time / NativeCutscenes.Director.duration);
-                            Yves.overrideYves = progress > .87f; // Trigger override yves in the background
-                            
-                            yield return null; // Wait for cutscene to finish
-                        }
+                        while (!Cutscenes.inprogress) yield return null;
                     }
                     else 
                     {
@@ -438,7 +432,7 @@ namespace butterflowersOS.Core
                 }
             }
 
-            while(Cutscenes.inprogress) yield return null;
+            while (Cutscenes.inprogress) yield return null;
             gamePanel.Show();
         }
 
