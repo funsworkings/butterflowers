@@ -21,6 +21,8 @@ namespace butterflowersOS.Objects.Managers
 		bool active = false;
 		public bool IsActive => depth > 0f;
 
+		public bool overrideYves = false;
+
 		void OnEnable()
 		{
 			active = IsActive;
@@ -31,6 +33,12 @@ namespace butterflowersOS.Objects.Managers
 		
 		void Update()
 		{
+			if (overrideYves) 
+			{
+				value = 1f;
+				depth = 1f;
+			}
+			
 			blulite.blend.value = value;
 			blulite.intensity.value = depth;
 			blulite.brightness.value = brightness;

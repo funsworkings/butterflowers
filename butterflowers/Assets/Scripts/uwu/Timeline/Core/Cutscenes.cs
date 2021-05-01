@@ -65,6 +65,8 @@ namespace uwu.Timeline.Core
 			}
 		}
 
+		public PlayableDirector Director => playableDirector;
+		
 		#endregion
 
 		#region Monobehaviour callbacks

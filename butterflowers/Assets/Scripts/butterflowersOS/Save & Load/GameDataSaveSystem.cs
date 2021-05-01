@@ -43,6 +43,12 @@ namespace uwu
 			return BrainDataExtensions.IsProfileTimestampValid(data.export_agent_created_at);
 		}
 
+		public bool IsExternalProfileValid()
+		{
+			if (data == null) return false;
+			return !string.IsNullOrEmpty(data.import_agent_created_at);
+		}
+
 		#endregion
 	}
 }
