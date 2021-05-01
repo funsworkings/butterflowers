@@ -1400,6 +1400,7 @@
             <e p="Interfaces" t="Include">
               <e p="IFileContainer.cs" t="Include" />
               <e p="IFlammable.cs" t="Include" />
+              <e p="IPausable.cs" t="Include" />
               <e p="IPauseSun.cs" t="Include" />
               <e p="IReactToSun.cs" t="Include" />
               <e p="IReactToSunCycle.cs" t="Include" />
@@ -1893,6 +1894,7 @@
           <e p="Canvas.shader" t="Include" />
           <e p="Canvas2.shader" t="Include" />
           <e p="ColorKey.shader" t="Include" />
+          <e p="CullingOffTransparent.shader" t="Include" />
           <e p="CustomBlueLightGlassesPPSSettings.cs" t="Include" />
           <e p="DeferredFog.shader" t="Include" />
           <e p="DeferredShading.shader" t="Include" />
