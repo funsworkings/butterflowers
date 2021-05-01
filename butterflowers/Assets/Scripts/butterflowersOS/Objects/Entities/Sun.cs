@@ -206,7 +206,6 @@ namespace butterflowersOS.Objects.Entities
             Pausers = FindObjectsOfType<MonoBehaviour>().OfType<IPauseSun>().ToArray();
 
             SunData dat = (SunData) data;
-            active = dat.active;
             time = dat.time;
             
             WaitForPausers();

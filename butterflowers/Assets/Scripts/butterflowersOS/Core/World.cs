@@ -190,6 +190,8 @@ namespace butterflowersOS.Core
             Sun = Sun.Instance;
             Sun.active = false; // Initialize sun to inactive on start
 
+            wait = true;
+
             _Save = GameDataSaveSystem.Instance;
             Loader = Loader.Instance;
 
@@ -296,46 +298,31 @@ namespace butterflowersOS.Core
 
             yield return new WaitForEndOfFrame();
 
-            /*
-            Loader.Dispose();
-            while (true) {
+            LOAD = true;
+            Loader.Dispose(); // Completed loading!
 
-                triggerIntro = Input.GetKeyUp(KeyCode.I);
-                if (triggerIntro) 
-                {
-                    Cutscenes.TriggerIntro(); // Trigger intro cutscene    
-
-                    magicStar.enabled = true;
-                    magicStar.transform.localEulerAngles = def_rot;
-                    
-                    triggerIntro = false;
-                }
-
-                yield return null;
-            }*/
-
+            magicStar.enabled = true;
+            
             if (type == AdvanceType.Broken)
                 Surveillance.New(onload: true); // Trigger surveillance (if profile not generated!)
             else
                 Surveillance.Ignore();
 
 
-            if (!Cutscenes.intro) 
+            if (Cutscenes.HasCompletedIntro) 
+            {
+                welcomeMessage.DisplayUsername(username);
+            }
+            else 
             {
                 Cutscenes.TriggerIntro(); // Trigger intro cutscene    
                 yield return new WaitForEndOfFrame();
             }
-           
-            LOAD = true;
-            Loader.Dispose();
 
-            magicStar.enabled = true; // Set star rotation to active
-
-            if(Cutscenes.HasCompletedIntro) welcomeMessage.DisplayUsername(username);
-            
             while(Cutscenes.inprogress) yield return null; // Wait for cutscenes to wrap on open before showing game panel
 
             gamePanel.Show();
+            wait = false;
         }
 
         public void Cycle(bool refresh)
