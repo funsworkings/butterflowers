@@ -58,6 +58,8 @@ namespace butterflowersOS.UI
         [SerializeField] float focusSpeed = 1f;
         [SerializeField] float openDuration = 1f, closeDuration = 1f;
 
+        [SerializeField] float normalScale = 1f, focusScale = 2f;
+
         [HideInInspector] public bool inprogress = false;
 
         #region Accessors
@@ -144,7 +146,7 @@ namespace butterflowersOS.UI
                     anchor.anchoredPosition, Time.unscaledDeltaTime * focusSpeed);
                 cardInFocus.rect.rotation = Quaternion.Lerp(cardInFocus.rect.rotation, anchor.rotation,
                     Time.unscaledDeltaTime * focusSpeed);
-                cardInFocus.Scale = Vector3.Lerp(cardInFocus.Scale, cardInFocus.FocusScale,
+                cardInFocus.Scale = Vector3.Lerp(cardInFocus.Scale, focusScale * Vector3.one,
                     Time.unscaledDeltaTime * focusSpeed);
 
                 if (Input.GetMouseButtonUp(0))
@@ -212,7 +214,7 @@ namespace butterflowersOS.UI
 
             card.transform.localPosition = origin + circle;
             card.rect.eulerAngles = rotation;
-            card.Scale = card.NormalScale;
+            card.Scale = normalScale * Vector3.one;
 
             ResetToIndex(card);
         }

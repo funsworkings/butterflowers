@@ -48,7 +48,7 @@ namespace butterflowersOS.UI
 		[SerializeField] string unitMeasurement = "";
 		
 		protected Vector3 normalScale;
-		protected Vector3 focusScale = new Vector3(1.8f,1.8f,1.8f);
+		protected Vector3 focusScale = new Vector3(2.5f,2.5f,2.5f);
 
 		[SerializeField] bool m_focus = false;
 
@@ -56,9 +56,6 @@ namespace butterflowersOS.UI
 		
 		public Vector3 Scale { get; set; } = Vector3.one;
 
-		public Vector3 FocusScale => focusScale;
-		public Vector3 NormalScale => normalScale;
-		
 		#region Accessors
 		
 		Transform scoreItem => transform.GetChild(3);
@@ -99,11 +96,6 @@ namespace butterflowersOS.UI
 			if(scoreItem != null) scoreField = scoreItem.GetComponentInChildren<TMP_Text>();
 			if(scoreItem != null) deltaField = scoreItem.GetComponentInChildren<Image>();
 			if(averageItem != null) averageField = averageItem.GetComponentInChildren<TMP_Text>();
-
-			
-
-			normalScale = rect.localScale;
-			focusScale.Scale(normalScale);
 		}
 
 		void Update()
