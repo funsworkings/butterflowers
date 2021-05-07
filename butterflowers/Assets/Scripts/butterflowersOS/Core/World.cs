@@ -127,6 +127,7 @@ namespace butterflowersOS.Core
         [SerializeField] VideoPlayer greenscreenPlayer;
         [SerializeField, Range(0f, 1f)] float greenscreenProgressCutoff = .5f;
         [SerializeField] SimpleRotate magicStar;
+        [SerializeField] ToggleOpacity canvasOpacity;
 
         [SerializeField] bool wait = false;
         [SerializeField] bool dispose = false;
@@ -228,6 +229,12 @@ namespace butterflowersOS.Core
 
         void Update()
         {
+            if (Input.GetKeyUp(KeyCode.C)) {
+                if(canvasOpacity.Shown) canvasOpacity.Hide();
+                else canvasOpacity.Show();
+            }
+            
+            
             if (dispose) return;
             
             HandleReady();

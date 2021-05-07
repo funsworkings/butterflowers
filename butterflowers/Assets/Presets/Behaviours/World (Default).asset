@@ -23,9 +23,9 @@ MonoBehaviour:
   loadTexturesInEditor: 1
   loadThumbnailsInEditor: 1
   generateThumbnailsInEditor: 1
-  useDesktopFilesForDebugBeacons: 0
+  useDesktopFilesForDebugBeacons: 1
   allowDebugSpawn: 0
-  allowDebugTimeSkip: 0
+  allowDebugTimeSkip: 1
   allowImportBeforeExportAgent: 0
   allowExternalNeueagent: 1
   hoursPerDay: 0.033333335
@@ -72,7 +72,7 @@ MonoBehaviour:
     m_PostInfinity: 2
     m_RotationOrder: 4
   saplingGrowHeight: 0
-  daysToGrowVine: 7
+  daysToGrowVine: 1
   minimumVineGrowHeight: 1
   maximumVineGrowHeight: 8
   vineWidth: 0.067
