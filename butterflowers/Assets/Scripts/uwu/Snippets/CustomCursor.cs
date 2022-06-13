@@ -15,27 +15,28 @@ namespace uwu.Snippets
 		}
 
 		public State state = State.Normal;
+		public bool lockCursor = false;
 
-		[SerializeField] Setting[] settings;
+		[SerializeField] Setting[] settings = new Setting[]{};
 
 		// Update is called once per frame
 		void Update()
 		{
-			var settings = this.settings.Where(s => s.state == state);
-			if (settings.Count() > 0) {
-				var setting = settings.ElementAt(0);
-				var tex = setting.icon;
+			NativeCursor.lockState = (lockCursor) ? CursorLockMode.Locked : CursorLockMode.None;
+			
+			
+			Texture2D t_texture = null;
 
-				var mode = CursorMode.Auto;
-
-#if UNITY_STANDALONE_OSX && !UNITY_EDITOR
-                mode = CursorMode.ForceSoftware;
-#endif
-
-				var visible = NativeCursor.visible = (tex != null);
-				if(visible)
-					NativeCursor.SetCursor(tex, Vector2.zero, mode);
+			if (!lockCursor) 
+			{
+				var settings = this.settings.Where(s => s.state == state);
+				if (settings.Count() > 0) {
+					var setting = settings.ElementAt(0);
+					t_texture = setting.icon;
+				}
 			}
+
+			NativeCursor.SetCursor(t_texture, Vector2.zero, CursorMode.Auto);
 		}
 
 		[Serializable]

@@ -12,19 +12,16 @@ using uwu.IO;
 
 namespace uwu.Textures
 {
-	public class TextureLoader : Singleton<TextureLoader>
+	public class TextureLoader : MonoBehaviour
 	{
 		// Collections
 		
 		[SerializeField] List<string> STACK = new List<string>();
 		Dictionary<string, List<ITextureReceiver>> _receivers= new Dictionary<string, List<ITextureReceiver>>();
 
-		// Properties
-
-		private bool read = false;
-
 		void Start()
 		{
+			//Texture.allowThreadedTextureCreation = true;
 			StartCoroutine("LoadFromStack");
 		}
 
@@ -41,12 +38,36 @@ namespace uwu.Textures
 			{
 				if (STACK.Count > 0) 
 				{
-					if (!read) {
+					//if (!read) 
+					//{
 						var file = STACK[0];
 
-						ReadBytes(file);
-						read = true;
-					}	
+						
+#pragma warning disable 618
+						var www = new WWW(string.Format("file://{0}", file));
+						yield return www;
+#pragma warning restore 618
+			
+						Texture2D result = null;
+
+						if (!string.IsNullOrEmpty(www.error))
+							Debug.LogWarning("Error reading from texture => " + file);
+						else 
+						{
+							Debug.LogWarning("Success load = " + file);
+				
+							result = www.texture;
+							result.name = file;
+						}
+			
+						Pop(file, result);
+					//	read = false;
+			
+						www.Dispose(); // Dispose WWW!
+						
+						
+					//	read = true;
+					//}	
 				}
 
 				yield return null;
@@ -55,7 +76,9 @@ namespace uwu.Textures
 		
 		async Task ReadBytes(string file)
 		{
+#pragma warning disable 618
 			var www = await new WWW(string.Format("file://{0}", file));
+#pragma warning restore 618
 			
 			Texture2D result = null;
 
@@ -70,7 +93,8 @@ namespace uwu.Textures
 			}
 			
 			Pop(file, result);
-			read = false;
+
+			www.Dispose(); // Dispose WWW!
 		}
 		
 		#endregion

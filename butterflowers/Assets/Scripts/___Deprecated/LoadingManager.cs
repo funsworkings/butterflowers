@@ -1,5 +1,6 @@
 ﻿using System;
 using butterflowersOS.Core;
+using butterflowersOS.Objects.Managers;
 using TMPro;
 using UnityEngine;
 
@@ -15,7 +16,7 @@ namespace Objects.Managers
 		// Properties
 
 		SummaryManager Summary;
-		[SerializeField] TMP_Text loadingPrompt;
+		[SerializeField] TMP_Text loadingPrompt = null;
 		
 		// Attributes
 
@@ -35,7 +36,7 @@ namespace Objects.Managers
 
 		void OnDestroy()
 		{
-			Lib.onAddedFiles -= onAddedFilesToDesktop;
+			if(Lib.IsValid()) Lib.onAddedFiles -= onAddedFilesToDesktop;
 		}
 
 		#endregion
@@ -53,7 +54,7 @@ namespace Objects.Managers
 
 		void onAddedFilesToDesktop(string[] files)
 		{
-			if (!Summary.active || Summary.ActivePanel != SummaryManager.Panel.Reload) return;
+			//if (!Summary.active || Summary.ActivePanel != SummaryManager.Panel.Reload) return;
 
 			if (files.Length > 0)
 				loadingPrompt.text = string.Format(foundFilesText, files.Length);

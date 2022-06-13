@@ -250,7 +250,7 @@ namespace Wizard {
                 if (beacon != null) {
                     var first = new Action();
                     first.type = ActionType.MoveTo;
-                    first.dat = beacon.origin;
+                    first.dat = beacon.position;
 
                     var sec = new Action();
                     sec.type = ActionType.Inspect;

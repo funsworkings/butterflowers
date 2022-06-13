@@ -12,7 +12,7 @@ public class Audio: AudioHandler {
 
     #region External
 
-    [SerializeField] AudioHandler MemoryAudio;
+    [SerializeField] AudioHandler MemoryAudio = null;
     [SerializeField] Focusing Focusing;
 
     #endregion

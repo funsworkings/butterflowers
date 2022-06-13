@@ -245,7 +245,7 @@ namespace Intro
                 var file = SpawnBeacon(pos, root);
                 file.file = path;
                 file.fileEntry = null;
-                file.origin = pos;
+                file.position = pos;
                 file.type = Beacon.Type.External;
 
                 this.files.Add(file.gameObject);

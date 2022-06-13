@@ -6,6 +6,8 @@ namespace butterflowersOS.Objects.Base
 {
     public class Focusable : Interactable
     {
+        public static Focusable QueueFocus, ActiveFocus;
+        
         // Events
 
         public UnityEvent onFocused, onLostFocus, onQueue;
@@ -16,9 +18,7 @@ namespace butterflowersOS.Objects.Base
         // Attributes
 
         [SerializeField] bool focused = false, queued = false;
-        [SerializeField] Transform anchor;
-
-        public bool dispose = true;
+        [SerializeField] Transform anchor = null;
 
         string m_message = null;
 
@@ -29,6 +29,7 @@ namespace butterflowersOS.Objects.Base
         #region Accessors
 
         public bool isFocused => focused;
+        public bool isQueued => queued;
 
         public new FocusCamera camera => overrideCamera;
 
@@ -60,8 +61,9 @@ namespace butterflowersOS.Objects.Base
         {
             base.OnUpdate();
         
-            if (queued) {
-                if (Input.GetKeyDown(Controls.Focus))
+            if (queued) 
+            {
+                if (Input.GetMouseButtonUp(1))
                     Focus();
             }
         }
@@ -69,9 +71,14 @@ namespace butterflowersOS.Objects.Base
         public bool Focus()
         {
             if (focused) return false;
+            if (QueueFocus != this) return false;
+            
             focused = true;
 
             Debug.Log("Focus on " + gameObject.name);
+
+            ActiveFocus = this;
+            QueueFocus = null;
 
             onFocused.Invoke();
             if (onFocus != null)
@@ -87,6 +94,8 @@ namespace butterflowersOS.Objects.Base
             if (!focused) return false;
             focused = false;
 
+            ActiveFocus = null;
+            
             onLostFocus.Invoke();
             if (onLoseFocus != null)
                 onLoseFocus();
@@ -96,15 +105,20 @@ namespace butterflowersOS.Objects.Base
 
         #region Interactable callbacks
 
-        protected override void onHover(Vector3 point, Vector3 normal) {
+        protected override void onHover(Vector3 point, Vector3 normal)
+        {
+            if(ActiveFocus != this) QueueFocus = this;
+            
             queued = true;
             onQueue.Invoke();
-        
+
             base.onHover(point, normal);
         }
 
         protected override void onUnhover() {
             queued = false;
+
+            if (QueueFocus == this) QueueFocus = null;
 
             base.onUnhover();
         }

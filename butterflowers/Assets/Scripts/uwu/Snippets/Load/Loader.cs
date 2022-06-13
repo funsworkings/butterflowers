@@ -20,11 +20,11 @@ namespace uwu.Snippets.Load
 		
 		// Properties
 
-		[SerializeField] ToggleOpacity opacity;
-		[SerializeField] Image fill;
+		[SerializeField] ToggleOpacity opacity = null;
+		[SerializeField] Image fill = null;
 		
 		[SerializeField] bool loading = false;
-		
+		[SerializeField] float currentLoadTime = 0f;
 		
 		private const float minimumLoadTime = 1.3f;
 
@@ -36,8 +36,11 @@ namespace uwu.Snippets.Load
 
 		void Awake()
 		{
-			if (Instance == null) {
+			if (Instance == null) 
+			{
 				Instance = this;
+				currentLoadTime = 0f; // Clear current load time
+				
 				DontDestroyOnLoad(gameObject);
 			}
 			else {
@@ -59,9 +62,29 @@ namespace uwu.Snippets.Load
 			loading = true;
 		}
 
+		public void CompleteLoad()
+		{
+			Load(min: currentLoadTime, max: 1f); // Resume load from current state
+		}
+
 		public void Dispose()
 		{
 			StopAllCoroutines();
+			StartCoroutine("Disposing");
+		}
+
+		IEnumerator Disposing()
+		{
+			if (!loading) // In the middle of loading
+			{
+				if (currentLoadTime > 0f && currentLoadTime < 1f) 
+				{
+					CompleteLoad();
+					while (loading)
+						yield return null;
+				}
+			}
+
 			loading = false;
 			opacity.Hide();
 		}
@@ -94,12 +117,13 @@ namespace uwu.Snippets.Load
 				else 
 					progress = 1f;
 				
-				Debug.Log("progress= " + progress);
+				Debug.Log("progress= " + progress + "  loadtime = " + loadTime);
 
 				loadTime += Time.unscaledDeltaTime;
 				progress = Mathf.Min(loadTime / minimumLoadTime, progress);
 
-				UpdateFill(Mathf.Pow(progress, 4f).RemapNRB(0f, 1f, min, max));
+				currentLoadTime = Mathf.Pow(progress, 4f).RemapNRB(0f, 1f, min, max);
+				UpdateFill(currentLoadTime);
 				
 				if (onProgress != null)
 					onProgress(progress);
@@ -107,6 +131,8 @@ namespace uwu.Snippets.Load
 				yield return null;
 			
 			} while (progress < 1f);
+
+			if (currentLoadTime >= 1f) currentLoadTime = 0f; // Wipe current load time if completed full load
 			
 			onComplete.Invoke();
 			loading = false;

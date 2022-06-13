@@ -12,7 +12,7 @@ using uwu.Extensions;
 
 namespace butterflowersOS.Objects.Entities.Interactables
 {
-    public class Vine : Entity, ITooltip, IFileContainer
+    public class Vine : Entity, ITooltip, IFileContainer, IYves
     {
         #region Internal
 
@@ -31,16 +31,18 @@ namespace butterflowersOS.Objects.Entities.Interactables
 
         #region Properties
 
-        [SerializeField] WorldPreset preset;
+        [SerializeField] WorldPreset preset = null;
 
         LineRenderer line;
+        Material mat;
         new CapsuleCollider collider;
         VineManager Manager;
 
-        [SerializeField] ParticleSystem smokePS;
-        [SerializeField] GameObject wallPrefab;
-        [SerializeField] GameObject flowerPrefab;
-        [SerializeField] GameObject leafPrefab;
+        [SerializeField] ParticleSystem smokePS = null;
+        [SerializeField] GameObject wallPrefab = null;
+        [SerializeField] GameObject flowerPrefab = null;
+        [SerializeField] GameObject leafPrefab = null;
+        [SerializeField] Material yvesMaterial;
 
         #endregion
 
@@ -51,9 +53,6 @@ namespace butterflowersOS.Objects.Entities.Interactables
     
         [SerializeField] List<Vector3> vertices = new List<Vector3>();
         [SerializeField] List<Leaf> leaves = new List<Leaf>();
-
-        [SerializeField] Vector3 gate_midpoint = Vector3.zero;
-        [SerializeField] float gate_width = 0f, gate_height = 0f;
 
         #endregion
 
@@ -106,14 +105,17 @@ namespace butterflowersOS.Objects.Entities.Interactables
         public float length => waypoints.DistanceBetweenVectors();
         public float height => growHeight;
 
-        [SerializeField] float m_growSpeed = 0f;
-
-        public float growSpeed
+        float b_growSpeed = -1f;
+        public float baselineGrowSpeed
         {
             get
             {
-                m_growSpeed = Manager.CalculateVineGrowSpeed(this);
-                return m_growSpeed;
+                if (b_growSpeed < 0f) 
+                {
+                    b_growSpeed = Manager.CalculateVineGrowSpeed(this);
+                }
+
+                return b_growSpeed * Manager.GetGrowthMultiplier();
             }
         }
 
@@ -125,6 +127,8 @@ namespace butterflowersOS.Objects.Entities.Interactables
         {
             line = GetComponent<LineRenderer>();
             line.positionCount = 0;
+
+            mat = line.material;
             
             collider = GetComponent<CapsuleCollider>();
         }
@@ -183,13 +187,15 @@ namespace butterflowersOS.Objects.Entities.Interactables
 
         #region Growth
     
-        public void Initialize(VineManager manager, Cage cage, string file, VineData data = null)
+        public void Initialize(VineManager manager, Cage cage, string file, Texture2D tex, VineData data = null)
         {
             Manager = manager;
 
             bool refresh = (data != null);
         
             int vertexIndex = 0;
+            
+            File = file;
         
             if (data == null) 
             {
@@ -198,9 +204,21 @@ namespace butterflowersOS.Objects.Entities.Interactables
                 bool successQueue = cage.QueueVertex(vertexIndex);
                 if (successQueue) 
                     growHeight = preset.maximumVineGrowHeight;
-                else 
-                    growHeight = Random.Range(preset.minimumVineGrowHeight, preset.maximumVineGrowHeight);
-            
+                else {
+                    float min_h = preset.minimumVineGrowHeight;
+                    float max_h = preset.maximumVineGrowHeight;
+
+                    float spread = (max_h - min_h);
+                    float vh = preset.vineHeightAllowance * spread;
+                    
+                    float depth = Mathf.Clamp(file.Split('/').Length, preset.minimumFileDepth, preset.maximumFileDepth) / (1f * preset.maximumFileDepth); // 0-1 depth value
+
+                    float height = min_h + (depth * spread);
+                    float offset = Random.Range(-vh, vh);
+                    
+                    growHeight = Mathf.Clamp(height + offset, min_h, max_h);
+                }
+
                 waypoints = new List<Vector3>(ConstructNaturalLine());
                 leaves = new List<Leaf>(ConstructAllLeaves());
 
@@ -219,7 +237,6 @@ namespace butterflowersOS.Objects.Entities.Interactables
                 state = (Status) data.status; // Assign status
                 index = data.index;
                 interval = data.interval / 255f;
-                File = file;
 
                 transform.position = waypoints[0];
                 transform.up = transform.parent.up;
@@ -234,6 +251,8 @@ namespace butterflowersOS.Objects.Entities.Interactables
                 vertex = cage.GetClosestVertex(waypoints.Last(), out vertexIndex);
                 cage.QueueVertex(vertexIndex);
             }
+
+            line.material.mainTexture = tex; // Set main texture for vine
 
             gate = new List<Vector3>(ConstructGatedLine(vertex)); // Construct gate from waypoints
 
@@ -309,10 +328,20 @@ namespace butterflowersOS.Objects.Entities.Interactables
 
             if (interval < 1f) 
             {
-                float speed = growSpeed;
-                if (index == 1)
+                float speed = baselineGrowSpeed;
+                if (index == 1) 
+                {
                     speed = saplingSpeed;
-            
+                }
+                else 
+                {
+                    float segmentDistance = Vector3.Distance(vertices[index - 1], waypoints[index]);
+                    //float segmentDuration = (segmentDistance / growHeight) * (segmentDistance / baselineGrowSpeed); // In seconds
+
+                    speed /= segmentDistance;
+                }
+
+
                 interval += (Time.deltaTime * speed);
                 interval = Mathf.Clamp01(interval); // Clamp 0-1
 
@@ -464,10 +493,11 @@ namespace butterflowersOS.Objects.Entities.Interactables
             float gh = 0f;
 
             int i = 0;
-            while(gh <= growHeight) {
+            while(gh <= growHeight) 
+            {
                 float h = Random.Range(minHeight, maxHeight);
             
-                if (i > 0) // Past origin
+                if (i > 0) // Past position
                 { 
                     lastWaypoint = waypoints[waypoints.Count - 1];
                     nextWaypoint = NextWaypoint(origin, lastWaypoint, gh);
@@ -586,6 +616,9 @@ namespace butterflowersOS.Objects.Entities.Interactables
             var flowerInstance = Instantiate(flowerPrefab, pos, flowerPrefab.transform.rotation);
             flowerInstance.transform.parent = transform;
 
+            float scale = Random.Range(preset.minimumFlowerSize, 1f);
+            flowerInstance.transform.localScale *= scale;
+
             var flower = flowerInstance.GetComponentInChildren<Flower>();
             flower.Grow(Flower.Origin.Vine); 
         }
@@ -697,5 +730,15 @@ namespace butterflowersOS.Objects.Entities.Interactables
         }
     
         #endregion
+
+        public void EnableYves()
+        {
+            line.material = yvesMaterial;
+        }
+
+        public void DisableYves()
+        {
+            line.material = mat;
+        }
     }
 }

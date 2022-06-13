@@ -4,7 +4,7 @@ namespace uwu.Snippets
 {
 	public class VirtualCursor : Cursor
 	{
-		[SerializeField] new UnityEngine.Camera camera;
+		[SerializeField] new UnityEngine.Camera camera = null;
 
 		protected override Vector3 Position()
 		{

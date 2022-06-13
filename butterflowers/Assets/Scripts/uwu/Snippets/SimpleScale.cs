@@ -8,7 +8,7 @@ namespace uwu.Snippets
 		[SerializeField] float speed = 1f;
 		[SerializeField] float amount = 1f;
 
-		[SerializeField] bool randomSpeed, randomAmount;
+		[SerializeField] bool randomSpeed = false, randomAmount = false;
 
 		Vector3 origin;
 

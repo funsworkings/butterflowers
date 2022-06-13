@@ -13,13 +13,17 @@ namespace uwu.Gameplay
 		
 		// Properties
 
-		[SerializeField] GameObject prefab;
+		[SerializeField] GameObject prefab = null;
 		
 		// Attributes
 
 		[SerializeField] int initialSpawnAmount = 0;
 
 
+		public GameObject Prefab
+		{
+			set => prefab = value;
+		}
 
 		void Start()
 		{

@@ -23,10 +23,11 @@ namespace Neue.Agent.Brain.Data
 		public Profile profile = new Profile(); //
 		public byte[] images = new byte[]{}; //
 		public ushort image_height = 0;
+		public ushort image_width = 0;
 
 		public BrainData(){}
 
-		public BrainData(GameData dat, byte[] images, ushort image_height)
+		public BrainData(GameData dat, byte[] images, ushort image_height, ushort image_width)
 		{
 			this.username = dat.username;
 			this.created_at = System.DateTime.UtcNow.ToString(); // Write timestamp
@@ -40,8 +41,10 @@ namespace Neue.Agent.Brain.Data
 			this.world_files = dat.world_files;
 
 			this.profile = dat.profile;
+			
 			this.images = images;
 			this.image_height = image_height;
+			this.image_width = image_width;
 		}
 	}
 
@@ -66,7 +69,7 @@ namespace Neue.Agent.Brain.Data
 			}
 			catch (System.Exception err) 
 			{
-				UnityEngine.Debug.LogWarning("Profile in save file was invalid!");
+				UnityEngine.Debug.LogWarning("Profile in save file was invalid! => " + err.Message);
 				return false;	
 			}
 		}

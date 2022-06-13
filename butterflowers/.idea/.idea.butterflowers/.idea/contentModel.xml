@@ -1,8 +1,8 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <project version="4">
   <component name="ContentModelStore">
-    <e p="C:\Users\rickg\AppData\Local\JetBrains\Rider2020.2\extResources" t="IncludeRecursive" />
-    <e p="C:\Users\rickg\AppData\Local\JetBrains\Rider2020.2\resharper-host\Local\Transient\Rider\v202\SolutionCaches\_butterflowers.-1642005719.00" t="ExcludeRecursive" />
+    <e p="C:\Users\rickg\AppData\local\JetBrains\Rider2020.2\extResources" t="IncludeRecursive" />
+    <e p="C:\Users\rickg\AppData\local\JetBrains\Rider2020.2\resharper-host\local\Transient\Rider\v202\SolutionCaches\_butterflowers.-1642005719.00" t="ExcludeRecursive" />
     <e p="C:\Users\rickg\Desktop\b2\butterflowers" t="IncludeRecursive">
       <e p="AmplifyShaderEditor.csproj" t="IncludeRecursive" />
       <e p="Assembly-CSharp-Editor-firstpass.csproj" t="IncludeRecursive" />
@@ -762,6 +762,7 @@
             <e p="BeaconAppearBehaviour.cs" t="Include" />
           </e>
         </e>
+        <e p="ButterflyMenuPropertyBlock.cs" t="Include" />
         <e p="Cutscenes" t="Include">
           <e p="Behaviours" t="Include">
             <e p="CameraManagerTrack" t="Include">
@@ -867,31 +868,8 @@
         <e p="Extensions" t="Include">
           <e p="FontFormat.cs" t="Include" />
         </e>
-        <e p="Fonts" t="Include">
-          <e p="cantique-master" t="Include">
-            <e p="cantique-master" t="Include">
-              <e p="Fonts" t="Include">
-                <e p="web" t="Include">
-                  <e p="generator_config.txt" t="Include" />
-                </e>
-              </e>
-              <e p="LICENSE.txt" t="Include" />
-            </e>
-          </e>
-          <e p="linux_libertine" t="Include">
-            <e p="Bugs.txt" t="Include" />
-            <e p="ChangeLog.txt" t="Include" />
-            <e p="GPL.txt" t="Include" />
-            <e p="INSTALL.txt" t="Include" />
-            <e p="LICENCE.txt" t="Include" />
-            <e p="OFL.txt" t="Include" />
-            <e p="README.txt" t="Include" />
-          </e>
-          <e p="roman_sd" t="Include">
-            <e p="_Read Me.txt" t="Include" />
-          </e>
-        </e>
         <e p="GetMousePosition.cs" t="Include" />
+        <e p="NestedObject.shader" t="Include" />
         <e p="Packages" t="Include">
           <e p="noder" t="Include">
             <e p="Behaviors" t="Include">
@@ -1022,7 +1000,8 @@
             <e p="B83.Win32.cs" t="Include" />
             <e p="FileDragAndDrop.cs" t="Include" />
             <e p="IFileDragAndDropReceiver.cs" t="Include" />
-            <e p="ImageExample.cs" t="Include" />
+            <e p="MacOSDragAndDrop.cs" t="Include" />
+            <e p="POINT.cs" t="Include" />
           </e>
           <e p="xNode" t="Include">
             <e p="Examples" t="Include">
@@ -1149,6 +1128,7 @@
             </e>
           </e>
         </e>
+        <e p="PoemGeometryMaterialPropBlock.cs" t="Include" />
         <e p="QuickOutline" t="Include">
           <e p="README.txt" t="Include" />
           <e p="Resources" t="Include">
@@ -1161,6 +1141,32 @@
             <e p="Outline.cs" t="Include" />
           </e>
         </e>
+        <e p="Resources" t="Include">
+          <e p="Fonts" t="Include">
+            <e p="cantique-master" t="Include">
+              <e p="cantique-master" t="Include">
+                <e p="Fonts" t="Include">
+                  <e p="web" t="Include">
+                    <e p="generator_config.txt" t="Include" />
+                  </e>
+                </e>
+                <e p="LICENSE.txt" t="Include" />
+              </e>
+            </e>
+            <e p="linux_libertine" t="Include">
+              <e p="Bugs.txt" t="Include" />
+              <e p="ChangeLog.txt" t="Include" />
+              <e p="GPL.txt" t="Include" />
+              <e p="INSTALL.txt" t="Include" />
+              <e p="LICENCE.txt" t="Include" />
+              <e p="OFL.txt" t="Include" />
+              <e p="README.txt" t="Include" />
+            </e>
+            <e p="roman_sd" t="Include">
+              <e p="_Read Me.txt" t="Include" />
+            </e>
+          </e>
+        </e>
         <e p="Scripts" t="Include">
           <e p="___Deprecated" t="Include">
             <e p="Agent1" t="Include">
@@ -1171,6 +1177,12 @@
                 <e p="Action.cs" t="Include" />
                 <e p="ActionSequence.cs" t="Include" />
               </e>
+            </e>
+            <e p="AI" t="Include">
+              <e p="ButterflowerVFX.cs" t="Include" />
+              <e p="DebugMenu.cs" t="Include" />
+              <e p="EventLog.cs" t="Include" />
+              <e p="RemoteCamera.cs" t="Include" />
             </e>
             <e p="BeaconInfo.cs" t="Include" />
             <e p="Behaviours" t="Include">
@@ -1291,7 +1303,6 @@
               <e p="Gesture.cs" t="Include" />
               <e p="GestureCollection.cs" t="Include" />
             </e>
-            <e p="SummaryManager.cs" t="Include" />
             <e p="TooltipManager.cs" t="Include" />
             <e p="Wizard" t="Include">
               <e p="Appearance.cs" t="Include" />
@@ -1306,8 +1317,31 @@
           </e>
           <e p="butterflowersOS" t="Include">
             <e p="AI" t="Include">
-              <e p="RemoteAgent.cs" t="Include" />
+              <e p="Box.cs" t="Include" />
+              <e p="CCTV.cs" t="Include" />
+              <e p="Drawings" t="Include">
+                <e p="Circle.cs" t="Include" />
+                <e p="Firework.cs" t="Include" />
+                <e p="Flower.cs" t="Include" />
+                <e p="Infinity.cs" t="Include" />
+                <e p="Star.cs" t="Include" />
+                <e p="Trail.cs" t="Include" />
+              </e>
+              <e p="Driver.cs" t="Include" />
+              <e p="Globals.cs" t="Include" />
+              <e p="Grayscale.cs" t="Include" />
+              <e p="Objects" t="Include">
+                <e p="Burst.cs" t="Include" />
+                <e p="Entity.cs" t="Include" />
+                <e p="Image.cs" t="Include" />
+                <e p="Node.cs" t="Include" />
+                <e p="POINT.cs" t="Include" />
+                <e p="Shape.cs" t="Include" />
+              </e>
+              <e p="Platform.cs" t="Include" />
               <e p="Scene.cs" t="Include" />
+              <e p="VFXER.cs" t="Include" />
+              <e p="Wrapper.cs" t="Include" />
             </e>
             <e p="Audio" t="Include">
               <e p="GameSceneAudioManager.cs" t="Include" />
@@ -1366,21 +1400,27 @@
             <e p="Interfaces" t="Include">
               <e p="IFileContainer.cs" t="Include" />
               <e p="IFlammable.cs" t="Include" />
+              <e p="IPausable.cs" t="Include" />
               <e p="IPauseSun.cs" t="Include" />
               <e p="IReactToSun.cs" t="Include" />
               <e p="IReactToSunCycle.cs" t="Include" />
               <e p="IReactToSunCycleReliable.cs" t="Include" />
               <e p="ITooltip.cs" t="Include" />
+              <e p="IYves.cs" t="Include" />
             </e>
             <e p="Menu" t="Include">
               <e p="ChooseUsername.cs" t="Include" />
               <e p="GenericMenu.cs" t="Include" />
               <e p="MainMenu.cs" t="Include" />
+              <e p="MainMenuSubPage.cs" t="Include" />
               <e p="PauseMenu.cs" t="Include" />
               <e p="PreviewButterflowers.cs" t="Include" />
+              <e p="SettingsMenu.cs" t="Include" />
               <e p="VersionText.cs" t="Include" />
             </e>
             <e p="Miscellaneous" t="Include">
+              <e p="Avi.cs" t="Include" />
+              <e p="FramesPerSecond.cs" t="Include" />
               <e p="TextureCollection.cs" t="Include" />
             </e>
             <e p="Objects" t="Include">
@@ -1417,12 +1457,16 @@
                 <e p="EventManager.cs" t="Include" />
                 <e p="NotificationCenter.cs" t="Include" />
                 <e p="SequenceManager.cs" t="Include" />
+                <e p="SummaryManager.cs" t="Include" />
                 <e p="TutorialManager.cs" t="Include" />
                 <e p="VineManager.cs" t="Include" />
+                <e p="YvesManager.cs" t="Include" />
               </e>
               <e p="Miscellaneous" t="Include">
                 <e p="Flares.cs" t="Include" />
                 <e p="Leaf.cs" t="Include" />
+                <e p="MouseLook.cs" t="Include" />
+                <e p="MouseLookCapture.cs" t="Include" />
                 <e p="Scene.cs" t="Include" />
                 <e p="SceneMesh.cs" t="Include" />
                 <e p="Sequence.cs" t="Include" />
@@ -1430,6 +1474,9 @@
             </e>
             <e p="Presets" t="Include">
               <e p="ButterflyPreset.cs" t="Include" />
+              <e p="Editor" t="Include">
+                <e p="WorldPresetEditor.cs" t="Include" />
+              </e>
               <e p="WorldPreset.cs" t="Include" />
             </e>
             <e p="Save &amp; Load" t="Include">
@@ -1451,6 +1498,7 @@
                 <e p="ExportNotification.cs" t="Include" />
                 <e p="GenericNotification.cs" t="Include" />
               </e>
+              <e p="StatSlider.cs" t="Include" />
               <e p="Summary Cards" t="Include">
                 <e p="BeaconsAdded.cs" t="Include" />
                 <e p="BeaconsDestroyed.cs" t="Include" />
@@ -1466,15 +1514,31 @@
                 <e p="NestSpills.cs" t="Include" />
                 <e p="PhotoOfTheDay.cs" t="Include" />
               </e>
+              <e p="Summary Panels" t="Include">
+                <e p="HighlightsPanel.cs" t="Include" />
+                <e p="StatsPanel.cs" t="Include" />
+              </e>
               <e p="SummaryCard.cs" t="Include" />
               <e p="SummaryCardTrigger.cs" t="Include" />
               <e p="SummaryDeck.cs" t="Include" />
+              <e p="SummaryPanel.cs" t="Include" />
               <e p="TutorialPanel.cs" t="Include" />
               <e p="WelcomeMessage.cs" t="Include" />
+            </e>
+            <e p="Utils" t="Include">
+              <e p="Settings.cs" t="Include" />
             </e>
             <e p="Visuals" t="Include">
               <e p="ParticleMesh.cs" t="Include" />
               <e p="ThumbnailField.cs" t="Include" />
+              <e p="Timeline" t="Include">
+                <e p="Yves" t="Include">
+                  <e p="YvesControlAsset.cs" t="Include" />
+                  <e p="YvesControlBehaviour.cs" t="Include" />
+                  <e p="YvesControlMixerBehaviour.cs" t="Include" />
+                  <e p="YvesControlTrack.cs" t="Include" />
+                </e>
+              </e>
               <e p="Types" t="Include">
                 <e p="WandAffectorMaterial.cs" t="Include" />
               </e>
@@ -1544,11 +1608,13 @@
                   <e p="FrameInt.cs" t="Include" />
                   <e p="FrameSprite.cs" t="Include" />
                   <e p="FrameString.cs" t="Include" />
+                  <e p="FrameVector2.cs" t="Include" />
                   <e p="Groups" t="Include">
                     <e p="FrameFloatGroup.cs" t="Include" />
                     <e p="FrameIntGroup.cs" t="Include" />
                     <e p="FrameSpriteGroup.cs" t="Include" />
                     <e p="FrameStringGroup.cs" t="Include" />
+                    <e p="FrameVector2Group.cs" t="Include" />
                   </e>
                 </e>
               </e>
@@ -1685,6 +1751,7 @@
               <e p="SceneUtils.cs" t="Include" />
             </e>
             <e p="Settings" t="Include">
+              <e p="Controller.cs" t="Include" />
               <e p="Data.cs" t="Include" />
               <e p="Global.cs" t="Include" />
               <e p="Instances" t="Include">
@@ -1729,6 +1796,8 @@
                 <e p="LoadingBar.cs" t="Include" />
                 <e p="LoadingImageOpacity.cs" t="Include" />
                 <e p="SceneLoader.cs" t="Include" />
+                <e p="SceneLoadTarget.cs" t="Include" />
+                <e p="SceneLoadTiming.cs" t="Include" />
               </e>
               <e p="Logger.cs" t="Include" />
               <e p="MaintainGlobalScale.cs" t="Include" />
@@ -1766,6 +1835,7 @@
             </e>
             <e p="Timeline" t="Include">
               <e p="Core" t="Include">
+                <e p="CutsceneAudioSource.cs" t="Include" />
                 <e p="Cutscenes.cs" t="Include" />
                 <e p="SimpleMarker.cs" t="Include" />
               </e>
@@ -1812,10 +1882,12 @@
               <e p="Editor" t="Include">
                 <e p="Assets.cs" t="Include" />
               </e>
+              <e p="Settings.cs" t="Include" />
             </e>
           </e>
         </e>
         <e p="Shaders" t="Include">
+          <e p="AlwaysVisible.shader" t="Include" />
           <e p="BlendNoMaterial.shader" t="Include" />
           <e p="blurUI.shader" t="Include" />
           <e p="ButterflowerParticle.shader" t="Include" />
@@ -1824,10 +1896,13 @@
           <e p="Canvas.shader" t="Include" />
           <e p="Canvas2.shader" t="Include" />
           <e p="ColorKey.shader" t="Include" />
+          <e p="CullingOffTransparent.shader" t="Include" />
+          <e p="CustomBlueLightGlassesPPSSettings.cs" t="Include" />
           <e p="DeferredFog.shader" t="Include" />
           <e p="DeferredShading.shader" t="Include" />
           <e p="EtherealBoy.shader" t="Include" />
           <e p="FullBack.shader" t="Include" />
+          <e p="Grayscale.shader" t="Include" />
           <e p="Instancing.shader" t="Include" />
           <e p="My First Lighting Shader.shader" t="Include" />
           <e p="My First Shader.shader" t="Include" />
@@ -1837,16 +1912,20 @@
           <e p="MyDeferredShading.cginc" t="Include" />
           <e p="NestVertexSnap.shader" t="Include" />
           <e p="NestVertexSnapping.shader" t="Include" />
+          <e p="NestVertexSnappingSil.shader" t="Include" />
           <e p="NewUnlitShader.shader" t="Include" />
           <e p="NorthStar.shader" t="Include" />
           <e p="NoZWrite.shader" t="Include" />
           <e p="RippleUI.shader" t="Include" />
+          <e p="Simple Multi Pass Outline.shader" t="Include" />
           <e p="TerrainDistort.shader" t="Include" />
           <e p="Texture Splatting.shader" t="Include" />
           <e p="Textured With Detail.shader" t="Include" />
           <e p="TransparentShadowCollector.shader" t="Include" />
           <e p="UVVertexOffset.shader" t="Include" />
+          <e p="VineShader.shader" t="Include" />
           <e p="WaveTransTexture.shader" t="Include" />
+          <e p="WorldSnappingSil.shader" t="Include" />
         </e>
         <e p="Standard Assets" t="Include">
           <e p="2D" t="Include">
@@ -2163,6 +2242,10 @@
             <e p="EmojiOne Attribution.txt" t="Include" />
           </e>
         </e>
+        <e p="UniDragAndDrop" t="Include">
+          <e p="UniDragAndDrop.asmdef" t="Include" />
+          <e p="UniDragAndDrop.cs" t="Include" />
+        </e>
       </e>
       <e p="butterflowers.sln" t="IncludeFlat" />
       <e p="NonConvexCollider.csproj" t="IncludeRecursive" />
@@ -2172,6 +2255,7 @@
       <e p="Packages" t="ExcludeRecursive" />
       <e p="RuntimeTestAssembly.csproj" t="IncludeRecursive" />
       <e p="Temp\bin" t="ExcludeRecursive" />
+      <e p="UniDragAndDrop.csproj" t="IncludeRecursive" />
     </e>
   </component>
 </project>

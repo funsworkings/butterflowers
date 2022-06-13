@@ -14,9 +14,9 @@ namespace Neue.Agent.Brain
 
 		Capture _capture;
 		
-		[SerializeField] GameObject debugPrefab;
-		[SerializeField] Transform debugContainer;
-		[SerializeField] ToggleOpacity debugOpacity;
+		[SerializeField] GameObject debugPrefab = null;
+		[SerializeField] Transform debugContainer = null;
+		[SerializeField] ToggleOpacity debugOpacity = null;
 		
 		// Attributes
 

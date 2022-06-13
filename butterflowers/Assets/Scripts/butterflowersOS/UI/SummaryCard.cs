@@ -1,4 +1,5 @@
-﻿using butterflowersOS.Data;
+﻿using System;
+using butterflowersOS.Data;
 using TMPro;
 using UnityEngine;
 using UnityEngine.UI;
@@ -28,6 +29,8 @@ namespace butterflowersOS.UI
 		
 		// Properties
 
+		Canvas canvas;
+
 		protected SummaryDeck deck;
 		
 		[HideInInspector] public RectTransform rect;
@@ -40,16 +43,18 @@ namespace butterflowersOS.UI
 		
 		// Attributes
 
-		[SerializeField] string label;
+		[SerializeField] string label = "";
 		[SerializeField] Type type = Type.Integer;
 		[SerializeField] string unitMeasurement = "";
 		
-		[HideInInspector] public Vector3 normalScale;
-		public Vector3 focusScale = Vector2.one;
+		protected Vector3 normalScale;
+		protected Vector3 focusScale = new Vector3(2.5f,2.5f,2.5f);
 
 		[SerializeField] bool m_focus = false;
 
 		[HideInInspector] public State state = State.Normal;
+		
+		public Vector3 Scale { get; set; } = Vector3.one;
 
 		#region Accessors
 		
@@ -80,20 +85,25 @@ namespace butterflowersOS.UI
 		protected virtual void Start()
 		{
 			deck = GetComponentInParent<SummaryDeck>();
+			canvas = GetComponentInParent<Canvas>();
+			
 			trigger = GetComponentInChildren<SummaryCardTrigger>();
 
-			labelField = descriptionItem.GetComponent<TMP_Text>();
-			scoreField = scoreItem.GetComponentInChildren<TMP_Text>();
-			deltaField = scoreItem.GetComponentInChildren<Image>();
-			averageField = averageItem.GetComponentInChildren<TMP_Text>();
-
-			labelField.text = label;
-
-			normalScale = rect.localScale;
-			focusScale.Scale(normalScale);
+			if (descriptionItem != null) {
+				labelField = descriptionItem.GetComponent<TMP_Text>();
+				labelField.text = label;
+			}
+			if(scoreItem != null) scoreField = scoreItem.GetComponentInChildren<TMP_Text>();
+			if(scoreItem != null) deltaField = scoreItem.GetComponentInChildren<Image>();
+			if(averageItem != null) averageField = averageItem.GetComponentInChildren<TMP_Text>();
 		}
 
-		#region Operations
+		void Update()
+		{
+			transform.localScale = Scale;
+		}
+
+		#region Operatiananons
 		
 		public abstract void ShowScore(CompositeSurveillanceData average, CompositeSurveillanceData score);
 

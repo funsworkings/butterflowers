@@ -29,7 +29,7 @@ namespace Wizard {
 
 		[SerializeField] Vector3 move_position = Vector3.zero;
 
-		[SerializeField] Transform m_lookAt = null, defaultLookAt;
+		[SerializeField] Transform m_lookAt = null, defaultLookAt = null;
 		[SerializeField] Vector3 safeLookAt = Vector3.zero;
 
 		bool moving = false;

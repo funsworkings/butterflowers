@@ -3,10 +3,13 @@ using System.Collections;
 using System.Collections.Generic;
 using B83.Win32;
 using butterflowersOS.Core;
+using butterflowersOS.Menu;
+using butterflowersOS.Presets;
 using Neue.Agent.Brain.Data;
 using UnityEngine;
 using UnityEngine.Playables;
 using uwu;
+using uwu.Data;
 using uwu.IO;
 using uwu.Snippets.Load;
 using uwu.Timeline.Core;
@@ -23,14 +26,18 @@ namespace butterflowersOS.AI
 		// Properties
 
 		Loader Loader;
+		SceneLoader SceneLoader;
 
-		[SerializeField] ParticleSystem butterflowers;
-		[SerializeField] Material butterflowersMaterial;
-						 Texture2D butterflowersTexture;
+		[SerializeField] WorldPreset preset;
+		[SerializeField] Material butterflowersMaterial = null;
+		[SerializeField] Texture2D butterflowersTexture;
+		[SerializeField] int bWidth = 0, bHeight = 0;
 
-		[SerializeField] RemoteAgent agent;
-		[SerializeField] Cutscenes cutscenes;
-		[SerializeField] PlayableAsset epilogue;
+		[SerializeField] Driver agent = null;
+		[SerializeField] Wrapper wrapper = null;
+		[SerializeField] Cutscenes cutscenes = null;
+		[SerializeField] PlayableAsset epilogue = null;
+		[SerializeField] PauseMenu _pauseMenu = null;
 
 		bool listen = false;
 						 
@@ -38,6 +45,7 @@ namespace butterflowersOS.AI
 		{
 			Save = GameDataSaveSystem.Instance;
 			Loader = Loader.Instance;
+			SceneLoader = SceneLoader.Instance;
 			Files = FileNavigator.Instance;
 
 			StartCoroutine("Initialize");
@@ -50,16 +58,23 @@ namespace butterflowersOS.AI
 
 		IEnumerator Initialize()
 		{
-			while (!Save.load) yield return null;
+			if (!Save.load) 
+			{
+				Save.LoadGameData<GameData>(createIfEmpty: true);
+				while (!Save.load) yield return null;
+			}
+
+			Loader.CompleteLoad();
 			
-			Loader.Load(.1f, 1f); // Trigger load
-			Import();
+			ImportFromSaveFile();
 
 			while (Loader.IsLoading) yield return null;
 			Loader.Dispose();
-
+			
+			_pauseMenu.ToggleTeleport(!string.IsNullOrEmpty(Save.data.username));
+			
 			bool hasCompletedEpilogue = Save.data.cutscenes[2];
-			if (!hasCompletedEpilogue) 
+			if (SceneLoader.Reason == SceneLoader.SwapReason.Import && !hasCompletedEpilogue) 
 			{
 				cutscenes.Play(epilogue);
 				while (!cutscenes.playing) yield return null;
@@ -73,21 +88,24 @@ namespace butterflowersOS.AI
 
 		#region Ground
 
-		void ApplyImagesToParticleSystem(byte[] images, ushort _width, ushort _height)
+		void UnpackTexture(byte[] images, ushort _width, ushort _height)
 		{
 			int width = Library._WIDTH * _width;
 			int height = Library._HEIGHT * _height;
 
-			butterflowersTexture = new Texture2D(width, height, TextureFormat.RGB24, false);
+			bWidth = _width;
+			bHeight = _height;
+
+			butterflowersTexture = new Texture2D(width, height, TextureFormat.ARGB32, false);
+			butterflowersTexture.filterMode = FilterMode.Point;
+			butterflowersTexture.wrapMode = TextureWrapMode.Repeat;
 				butterflowersTexture.LoadImage(images);
 				butterflowersTexture.Apply();
 
-			var textureModule = butterflowers.textureSheetAnimation;
-				textureModule.numTilesX = _width;
-				textureModule.numTilesY = _height;
-				textureModule.startFrameMultiplier = (_width * _height);
-
-			butterflowersMaterial.mainTexture = butterflowersTexture;
+			butterflowersMaterial.SetTexture("_MainTex", butterflowersTexture);
+			butterflowersMaterial.mainTextureScale = new Vector2(1f / _width, 1f / _height);
+			
+			wrapper.Setup(10);
 		}
 		
 		#endregion
@@ -99,31 +117,52 @@ namespace butterflowersOS.AI
 			get => Files;
 		}
 
-		protected override void HandleBrainImport(BrainData brain, POINT point)
+		protected override void OnDebugImportFNS(string path, BrainData dat)
+		{
+			HandleBrainImport(path, dat, new POINT(0, 0)); // Trigger brain import
+		}
+
+		void ImportFromSaveFile()
+		{
+			string path = Save.data.import_agent_created_at;
+			if (string.IsNullOrEmpty(path)) return;
+			
+			BrainData dat = DataHandler.Read<BrainData>(path);
+			if (dat != null) 
+			{
+				Debug.LogWarning("Validate => " + dat.created_at);
+				if (dat.IsProfileValid()) 
+				{
+					Import(dat); // Break out of loop, successfully found file!
+				}
+			}
+		}
+
+		protected override void HandleBrainImport(string path, BrainData brain, POINT point)
 		{
 			if (!listen) return; // Ignore brain import if loading!
 			
-			Save.data.surveillanceData = brain.surveillanceData;
-			
-			Save.data.agent_created_at = brain.created_at;
-			Save.data.username = brain.username;
-			Save.data.profile = brain.profile;
-			Save.data.images = brain.images;
-			Save.data.image_height = brain.image_height;
+			if (Save.IsExternalProfileValid()) { // Overwrite if assigned previously
+				Save.data.import_agent_created_at = path;
+				Save.SaveGameData();
+			}
 
-			Save.data.agent_event_stack = brain.surveillanceData.Length; // Total stack of events to parse from
-			
-			Save.SaveGameData();
-			Import();
+			Import(brain);
 		}
 
-		void Import()
+		void Import(BrainData dat)
 		{
-			byte[] images = Save.data.images;
-			ushort image_height = Save.data.image_height;
+			byte[] images = dat.images;
 			
-			if(images.Length > 0 && image_height > 0) ApplyImagesToParticleSystem(images, Library._COLUMNS, image_height); // Apply ground texture
-			agent.Initialize(Save.data.surveillanceData);
+			ushort image_height = dat.image_height;
+			ushort image_width = dat.image_width;
+
+			if (images.Length > 0 && image_height > 0 && image_width > 0) 
+			{
+				UnpackTexture(images, image_width, image_height); // Apply ground texture
+			}
+
+			agent.Initialize(dat.profile, dat.surveillanceData, butterflowersTexture, bWidth, bHeight);
 		}
 
 		#endregion

@@ -21,13 +21,13 @@ namespace Objects.Managers
 	{
 		// Properties
 
-		[SerializeField] Brain brain;
+		[SerializeField] Brain brain = null;
 		[SerializeField] Neue.Agent.Presets.BrainPreset brainPreset;
-		[SerializeField] BrainPreset oldPreset;
+		[SerializeField] BrainPreset oldPreset = null;
 		
-		[SerializeField] BeaconManager beacons;
-		[SerializeField] ButterflowerManager butterflowers;
-		[SerializeField] Nest nest;
+		[SerializeField] BeaconManager beacons = null;
+		[SerializeField] ButterflowerManager butterflowers = null;
+		[SerializeField] Nest nest = null;
 		
 		// Accessors
 
@@ -116,19 +116,19 @@ namespace Objects.Managers
 		public bool isActionable(Beacon beacon)
 		{
 			return true;
-			return brain.FetchKnowledgeFromBeacon(beacon) > brain.FetchKnowledgeFromEnvironment();
+			//return brain.FetchKnowledgeFromBeacon(beacon) > brain.FetchKnowledgeFromEnvironment();
 		}
 
 		public bool isComfortable(Beacon beacon)
 		{
 			return true;
-			return brain.FetchKnowledgeFromBeacon(beacon) > oldPreset.actionableBeaconThreshold;
+			//return brain.FetchKnowledgeFromBeacon(beacon) > oldPreset.actionableBeaconThreshold;
 		}
 
 		public bool isUnknown(Beacon beacon)
 		{
 			return false;
-			return brain.FetchKnowledgeFromBeacon(beacon) <= oldPreset.unknownBeaconThreshold;
+			//return brain.FetchKnowledgeFromBeacon(beacon) <= oldPreset.unknownBeaconThreshold;
 		}
 		
 		#endregion

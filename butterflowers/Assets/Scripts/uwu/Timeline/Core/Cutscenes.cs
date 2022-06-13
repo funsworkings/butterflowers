@@ -1,6 +1,9 @@
 ﻿using System;
+using System.Collections.Generic;
+using System.Linq;
 using UnityEngine;
 using UnityEngine.Playables;
+using UnityEngine.Timeline;
 
 namespace uwu.Timeline.Core
 {
@@ -9,7 +12,7 @@ namespace uwu.Timeline.Core
 	{
 		// Events
 
-		public System.Action<PlayableAsset> Completed;
+		public System.Action<PlayableAsset> Started, Completed;
 		
 		
 		#region Internal
@@ -26,6 +29,7 @@ namespace uwu.Timeline.Core
 		#region Properties
 
 		PlayableDirector playableDirector;
+		float cache_t = 0f;
 
 		#endregion
 
@@ -61,6 +65,8 @@ namespace uwu.Timeline.Core
 			}
 		}
 
+		public PlayableDirector Director => playableDirector;
+		
 		#endregion
 
 		#region Monobehaviour callbacks
@@ -102,11 +108,13 @@ namespace uwu.Timeline.Core
 				debugTriggerPlay = false;
 			}
 
-			if (debugTriggerCancel) 
+			#if UNITY_EDITOR
+			if (debugTriggerCancel || (Input.GetKey(KeyCode.LeftControl) && Input.GetKeyUp(KeyCode.X))) 
 			{
 				Cancel();	
 				debugTriggerCancel = false;
 			}
+			#endif
 		}
 
 		#endregion
@@ -117,6 +125,8 @@ namespace uwu.Timeline.Core
 		{
 			state = State.Playing;
 			lastTimestamp = director.time;
+			
+			Started?.Invoke(director.playableAsset);
 		}
 
 		void onStop(PlayableDirector director)
@@ -142,6 +152,9 @@ namespace uwu.Timeline.Core
 				if (paused) 
 				{
 					playableDirector.playableGraph.GetRootPlayable(0).SetSpeed(1);
+					if(ResumeAudioSources()) playableDirector.RebuildGraph(); // Resume all audio tracks
+					playableDirector.time = cache_t;
+					
 					state = State.Playing;
 				}
 				else 
@@ -160,6 +173,7 @@ namespace uwu.Timeline.Core
 			if (cutscene == null) return;
 			
 			this.cutscene = playableDirector.playableAsset = cutscene;
+
 			Play();
 		}
 
@@ -186,10 +200,37 @@ namespace uwu.Timeline.Core
 			if (playing) 
 			{
 				playableDirector.playableGraph.GetRootPlayable(0).SetSpeed(0);
+				PauseAudioSources(); // Pause all audio tracks
+				cache_t = (float)playableDirector.time;
+				
 				state = State.Paused;
 			}
 		}
 
 		#endregion
+
+		bool ResumeAudioSources()
+		{
+			var tracks = (playableDirector.playableAsset as TimelineAsset).GetOutputTracks();
+			foreach (TrackAsset track in tracks) {
+				if (track is AudioTrack) {
+					track.muted = false; 
+				}
+			}
+
+			return tracks.Count() > 0;
+		}
+
+		bool PauseAudioSources()
+		{
+			var tracks = (playableDirector.playableAsset as TimelineAsset).GetOutputTracks();Debug.Log(tracks.Count());
+			foreach (TrackAsset track in tracks) {
+				if (track is AudioTrack) {
+					track.muted = true;
+				}
+			}
+			
+			return tracks.Count() > 0;
+		}
 	}
 }

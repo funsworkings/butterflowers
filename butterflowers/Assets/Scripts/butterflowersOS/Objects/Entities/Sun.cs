@@ -1,3 +1,4 @@
+using System;
 using System.Linq;
 using butterflowersOS.Core;
 using butterflowersOS.Data;
@@ -20,8 +21,8 @@ namespace butterflowersOS.Objects.Entities
 
         // External
     
-        [SerializeField] WorldPreset Preset;
-        [SerializeField] Cutscenes Cutscenes;
+        [SerializeField] WorldPreset Preset = null;
+        [SerializeField] Cutscenes Cutscenes = null;
 
         World World;
     
@@ -39,8 +40,8 @@ namespace butterflowersOS.Objects.Entities
 
         new Light light;
 
-        [SerializeField] Animator dayTracker;
-        [SerializeField] TMP_Text previousDayText, currentDayText;
+        [SerializeField] Animator dayTracker = null;
+        [SerializeField] TMP_Text previousDayText = null, currentDayText = null;
     
         // Attributes
 
@@ -160,9 +161,9 @@ namespace butterflowersOS.Objects.Entities
 
             if (active) 
             {
-                #if UNITY_EDITOR
-                    if (Input.GetKeyDown(KeyCode.RightBracket)) time += Preset.secondsPerDay;
-                #endif
+
+                    if (Input.GetKeyDown(KeyCode.RightBracket) && Preset.allowDebugTimeSkip) time += Preset.secondsPerDay;
+
 
                 time += Time.deltaTime; // Add time to global clock
 
@@ -177,6 +178,11 @@ namespace butterflowersOS.Objects.Entities
                 //if (advanced)
                 //  active = false; // Pause sun when crosses into new day (debug)
             }
+        }
+
+        void OnDestroy()
+        {
+            Time.timeScale = 1f; // Reset time scale back to normal
         }
 
         #endregion
@@ -200,7 +206,6 @@ namespace butterflowersOS.Objects.Entities
             Pausers = FindObjectsOfType<MonoBehaviour>().OfType<IPauseSun>().ToArray();
 
             SunData dat = (SunData) data;
-            active = dat.active;
             time = dat.time;
             
             WaitForPausers();

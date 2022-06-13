@@ -31,16 +31,16 @@ namespace butterflowersOS.Core
 
         // External
 
-        [SerializeField] CameraManager CameraManager;
+        [SerializeField] CameraManager CameraManager = null;
         [SerializeField] FocusCamera Camera;
-        [SerializeField] AudioHandler BackgroundAudio;
+        [SerializeField] AudioHandler BackgroundAudio = null;
 
         Sun sun;
 
         // Properties
 
-        [SerializeField] Focusable m_focus = null;
-        [SerializeField] CameraVisualBlend CameraBlending;
+        [SerializeField] Focusable activefocus = null, focusinqueue = null;
+        [SerializeField] CameraVisualBlend CameraBlending = null;
         [SerializeField] ToggleOpacity overlayOpacity;
 
         // Attributes
@@ -50,18 +50,20 @@ namespace butterflowersOS.Core
         [SerializeField] float minFocusDistance = 1f, maxFocusDistance = 10f;
     
         [Header("Camera blends")]
-        [SerializeField] CameraVisualBlendDefinition[] loseFocusBlends;
+        [SerializeField] CameraVisualBlendDefinition[] loseFocusBlends = new CameraVisualBlendDefinition[]{};
 
         [Header("Audio")] 
-        [SerializeField] AudioMixer mixer;
+        [SerializeField] AudioMixer mixer = null;
         [SerializeField] float minBGPitch = .4f, maxBGPitch = 1f;
         [SerializeField] float minBGLP = 300f, maxBGLP = 5000f;
         [SerializeField] float minBGVol = 0f, maxBGVol = 1f;
 
-        [SerializeField] string pitchParam;
+        [SerializeField] string pitchParam = "";
 
         [SerializeField] float lowpass = 0f, lowPassSmoothSpeed = .1f;
         [SerializeField] string lowPassFilterParam = null;
+
+        bool focusDuringFrame = false;
         
         // Collections
     
@@ -78,7 +80,7 @@ namespace butterflowersOS.Core
 
         public State state => m_state;
     
-        public Focusable focus => m_focus;
+        public Focusable focus => activefocus;
         public GameCamera FallbackCamera => CameraManager.DefaultCamera;
 
         #endregion
@@ -102,22 +104,25 @@ namespace butterflowersOS.Core
         }
 
         // Update is called once per frame
-        void Update()
+        void LateUpdate()
         {
-            if (active && sun.active) 
+            if (active && sun.active && !focusDuringFrame) 
             {
-                if (Input.GetKeyDown(Controls.LoseFocus))
+                if (Focusable.QueueFocus == null && Input.GetMouseButtonUp(1))
                     LoseFocus();
             }
 
             EvaluateState();
             EvaluateAudio();
+            
+            focusinqueue = Focusable.QueueFocus;
+            focusDuringFrame = false;
         }
     
         void Dispose()
         {
-            if (m_focus != null) 
-                m_focus.LoseFocus(); // Clear default focus
+            if (activefocus != null) 
+                activefocus.LoseFocus(); // Clear default focus
         }
 
         #endregion
@@ -147,38 +152,35 @@ namespace butterflowersOS.Core
 
         public void SetFocus(Focusable focus)
         {
-            if (focus == this.m_focus) return;
+            if (focus == this.activefocus) return;
+            focusDuringFrame = true;
+            
+            Dispose();
 
-            if (focus.dispose) 
+            this.activefocus = focus;
+
+            Camera = focus.camera;
+            if (Camera != null) 
             {
-                Dispose();
+                Camera.Focus(focus.transform);
 
-                this.m_focus = focus;
-
-                Camera = focus.camera;
-                if (Camera != null) 
-                {
-                    Camera.Focus(focus.transform);
-
-                    CameraBlending.blendDefinition = null;
-                    CameraBlending.BlendTo(Camera);
-                
-                    Events.ReceiveEvent(EVENTCODE.REFOCUS, AGENT.User, focus.Agent);
-                }
-                else 
-                {
-                    LoseFocus();    
-                }
+                CameraBlending.blendDefinition = null;
+                CameraBlending.BlendTo(Camera);
+            
+                Events.ReceiveEvent(EVENTCODE.REFOCUS, AGENT.User, focus.Agent);
             }
-        
+            else 
+            {
+                LoseFocus();    
+            }
+
             onFocus.Invoke();
-            //overlayOpacity.Show();
         }
 
         public void LoseFocus()
         {
             Dispose();
-            m_focus = null;
+            activefocus = null;
         
             var loseFocusBlend = loseFocusBlends.PickRandomSubset(1)[0];
 
@@ -236,7 +238,7 @@ namespace butterflowersOS.Core
             if (Camera == null) return;
 
             if(distance < 0f)
-                distance = Vector3.Distance(m_focus.transform.position, Camera.transform.position);
+                distance = Vector3.Distance(activefocus.transform.position, Camera.transform.position);
 
             float pitch = distance.RemapNRB(minFocusDistance, maxFocusDistance, minBGPitch, maxBGPitch);
             mixer.SetFloat(pitchParam, pitch);
@@ -260,7 +262,7 @@ namespace butterflowersOS.Core
             if (BackgroundAudio == null || Camera == null) return;
 
             if(distance < 0f)
-                distance = Vector3.Distance(m_focus.transform.position, Camera.transform.position);
+                distance = Vector3.Distance(activefocus.transform.position, Camera.transform.position);
 
             float vol = distance.RemapNRB(minFocusDistance, maxFocusDistance, minBGVol, maxBGVol);
             BackgroundAudio.volume = vol;

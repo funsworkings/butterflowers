@@ -303,6 +303,24 @@ namespace uwu.Extensions
 		}
 
 		#endregion
+		
+		#region Angles
+		
+		public static float ClampAngle (float angle, float min, float max)
+		{
+			angle = angle % 360;
+			if ((angle >= -360F) && (angle <= 360F)) {
+				if (angle < -360F) {
+					angle += 360F;
+				}
+				if (angle > 360F) {
+					angle -= 360F;
+				}			
+			}
+			return Mathf.Clamp (angle, min, max);
+		}
+		
+		#endregion
 
 		#region Screen conversions
 
@@ -545,7 +563,9 @@ namespace uwu.Extensions
 			try {
 				var num = int.Parse(value);
 			}
-			catch (Exception e) {
+			catch (Exception e) 
+			{
+				Debug.LogWarning(e.Message);
 				return false;
 			}
 
@@ -711,7 +731,9 @@ namespace uwu.Extensions
 						var character = formatted[i] + "";
 						var digit = int.Parse(character);
 					}
-					catch (Exception e) {
+					catch (Exception e) 
+					{
+						Debug.LogWarning(e.Message);
 						formatted = null;
 						break;
 					}
@@ -917,6 +939,48 @@ namespace uwu.Extensions
 				returnArray[j] = self.Evaluate(j / 256f);            
 			}              
 			return returnArray;
+		}
+		
+		#endregion
+		
+		#region Rigidbody
+		/*
+		public static Vector3[] Plot(Rigidbody2D rigidbody, Vector3 pos, Vector3 velocity, int steps)
+		{
+			Vector3[] results = new Vector3[steps];
+ 
+			float timestep = Time.fixedDeltaTime / Physics.defaultSolverVelocityIterations;
+			
+			Vector3 gravityAccel = Physics.gravity * rigidbody.gravityScale * timestep * timestep;
+			float drag = 1f - timestep * rigidbody.drag;
+			Vector3 moveStep = velocity * timestep;
+ 
+			for (int i = 0; i < steps; ++i)
+			{
+				moveStep += gravityAccel;
+				moveStep *= drag;
+				pos += moveStep;
+				
+				results[i] = pos;
+			}
+ 
+			return results;
+		}
+		*/
+		
+		public static Vector3 PredictPhysicsPosition(this Rigidbody rigidbody, float t)
+		{
+			Vector3 result = rigidbody.position;
+
+			Vector3 gravityAccel = Physics.gravity * t * t;
+			float drag = 1f - t * rigidbody.drag;
+			Vector3 moveStep = rigidbody.velocity * t;
+			
+			moveStep += gravityAccel;
+			moveStep *= drag;
+			
+			result += moveStep;
+			return result;
 		}
 		
 		#endregion

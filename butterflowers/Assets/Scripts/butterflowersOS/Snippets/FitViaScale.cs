@@ -2,7 +2,7 @@
 
 namespace butterflowersOS.Snippets
 {
-    [RequireComponent(typeof(RectTransform))]
+    [ExecuteInEditMode, RequireComponent(typeof(RectTransform))]
     public class FitViaScale : MonoBehaviour
     {
         // Properties
@@ -14,19 +14,32 @@ namespace butterflowersOS.Snippets
         // Attributes
 
         [SerializeField] float xScale = 1f, yScale = 1f;
+        
+        public float XScale
+        {
+            get => xScale;
+            set => xScale = value;
+        }
+
+        public float YScale
+        {
+            get => yScale;
+            set => yScale = value;
+        }
     
         // Start is called before the first frame update
-        void Start()
+        void OnEnable()
         {
             canvas = GetComponentInParent<Canvas>();
             rect = GetComponent<RectTransform>();
-            width = rect.rect.width;
-            height = rect.rect.height;
         }
 
         // Update is called once per frame
         void Update()
         {
+            width = rect.rect.width;
+            height = rect.rect.height;
+            
             var tw = Screen.width / canvas.scaleFactor * xScale;
             var th = Screen.height / canvas.scaleFactor * yScale;
         

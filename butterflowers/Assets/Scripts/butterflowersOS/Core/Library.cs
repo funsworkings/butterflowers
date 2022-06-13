@@ -58,7 +58,7 @@ namespace butterflowersOS.Core
 		// External
 
 		FileNavigator Files = null;
-		TextureLoader TextureLoader = null;
+		[SerializeField] TextureLoader TextureLoader = null;
 
 		// Collections
 	
@@ -83,12 +83,11 @@ namespace butterflowersOS.Core
 		[SerializeField] List<string> textureLoadCompleted = new List<string>();
 		[SerializeField] List<string> textureLoadTarget = new List<string>();
 
-		Texture2D textureSheet = null;
+		[SerializeField] Texture2D textureSheet = null;
 
 		// Attributes
 
 		[SerializeField] bool read = false, load = false, initialized = false;
-		[SerializeField] bool listenForEvents = false;
 
 		[SerializeField] LoadMode loadMode;
 		[SerializeField] bool exportSheet = false;
@@ -136,12 +135,7 @@ namespace butterflowersOS.Core
 			{
 				Destroy(gameObject);	
 			}
-		}
-
-		void Start()
-		{
-			TextureLoader = TextureLoader.Instance;
-		}
+		} 
 
 		void Update()
 		{
@@ -517,7 +511,9 @@ namespace butterflowersOS.Core
 			bool success = true;
 			bool @new = !ALL_FILES.Contains(file); // New entry to files
 
-			if (type == FileType.User || type == FileType.Shared)  // Verify file exists (user or shared)
+			bool fromUser = type == FileType.User || type == FileType.Shared;
+			
+			if (fromUser)  // Verify file exists (user or shared)
 			{
 				var fileInfo = new FileInfo(file);
 				success = fileInfo.Exists;
@@ -541,6 +537,8 @@ namespace butterflowersOS.Core
 
 				if (OnRefreshItems != null)
 					OnRefreshItems();
+				
+				if(fromUser) RequestTexture(file); // Request texture immediately from file
 			}
 		
 			AddToFileLookup(type, file);
@@ -708,7 +706,7 @@ namespace butterflowersOS.Core
 			Debug.LogFormat("Added {0} to thumbnails", file);
 		}
 
-		public byte[] ExportSheet(string filename, out int _rows, out int _columns, out Texture2D tex, int oColumns = -1)
+		public byte[] ExportSheet(string filename, out int _rows, out int _columns, out Texture2D tex)
 		{
 			if(textureSheet != null) Destroy(textureSheet);
 			
@@ -717,9 +715,10 @@ namespace butterflowersOS.Core
 			var path = Path.Combine(directory, filename + ".jpg");
 
 			Texture2D[] thumbnails = FALLBACK_TEXTURE_LOOKUP.Values.ToArray();
-
-			int columns = _columns = (oColumns > 0)? oColumns:_COLUMNS;
-			int rows = _rows = (thumbnails.Length / columns)+1;
+			int thumbnailCount = thumbnails.Length;
+			
+			int rows = _rows = Mathf.Min(thumbnailCount, _MAX_DIMENSION);
+			int columns = _columns = Mathf.Min( Mathf.Max(Mathf.CeilToInt((float)thumbnailCount / rows)), _MAX_DIMENSION);
 
 			int width = columns * _WIDTH;
 			int height = rows * _HEIGHT;
@@ -732,16 +731,17 @@ namespace butterflowersOS.Core
 			for (int i = 0; i < fill.Length; i++) fill[i] = Color.blue; // Set default fill color
 
 			int _x = 0, _y = 0;
+			int _maxX = width, _maxY = height;
 			Texture2D thumbnail = null;
 			
-			for (int i = 0; i < rows; i++) 
+			for (int i = 0; i < columns; i++) 
 			{
-				for (int j = 0; j < columns; j++) 
+				for (int j = 0; j < rows; j++) 
 				{
-					_x = j * _WIDTH;
-					_y = i * _HEIGHT;
+					_x = i * _WIDTH;
+					_y = j * _HEIGHT;
 
-					var _index = j + (i * columns);
+					var _index = j + (i * rows);
 					if (_index < thumbnails.Length) thumbnail = thumbnails[_index];
 					else thumbnail = null;
 				
@@ -763,16 +763,25 @@ namespace butterflowersOS.Core
 		
 		#region Degradation
 		
-		public const int _WIDTH = 32;
-		public const int _HEIGHT = 32;
+		public const int _WIDTH = 64;
+		public const int _HEIGHT = 64;
 
-		public const int _COLUMNS = 8;
+		public const int _MAX_DIMENSION = 64;
+
+		public static Texture2D DegradeTexture(Texture2D _original)
+		{
+			var _texture = new Texture2D(_original.width, _original.height);
+			_texture.SetPixels(_original.GetPixels());
+			_texture.Apply();
+
+			TextureScale.Bilinear(_texture, _WIDTH, _HEIGHT);
+			_texture.Apply();
+
+			return _texture;
+		}
 
 		Texture2D DegradeBytes(string file, Texture2D texture, bool transparency)
 		{
-			var width = texture.width;
-			var height = texture.height;
-
 			string path = DefaultThumbnailPathFromFile(file);
 			byte[] _data = new byte[] { };
 			
@@ -780,12 +789,7 @@ namespace butterflowersOS.Core
 			{
 				try 
 				{
-					var _texture = new Texture2D(texture.width, texture.height);
-					_texture.SetPixels(texture.GetPixels());
-					_texture.Apply();
-
-					TextureScale.Bilinear(_texture, _WIDTH, _HEIGHT);
-					_texture.Apply();
+					Texture2D _texture = DegradeTexture(texture);
 
 					if (transparency) _data = _texture.EncodeToPNG();
 					else _data = _texture.EncodeToJPG();
@@ -821,5 +825,18 @@ namespace butterflowersOS.Core
 		public bool IsWorldFile(string file) => FILE_LOOKUP[FileType.World].Contains(file);
 
 		#endregion
+	}
+
+	public static class LibraryExtensions
+	{
+		public static bool IsValid(this Library lib)
+		{
+			Library Lib = Library.Instance;
+			
+			if (Lib == null) return false;
+			if (lib == null) return false;
+
+			return (lib == Lib);
+		}
 	}
 }

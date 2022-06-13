@@ -1,4 +1,5 @@
 ﻿using System.Collections.Generic;
+using System.Runtime.CompilerServices;
 using butterflowersOS.Core;
 using butterflowersOS.Objects.Base;
 using butterflowersOS.Objects.Entities.Interactables;
@@ -13,6 +14,11 @@ namespace butterflowersOS
         public const float BaseCursorVelocityVector = 5f;
         public const float BeaconSnapDistance = .033f;
         public const float VineWaypointSnapDistance = .033f;
+
+        public const string AIAccessKey = "AI_Access";
+
+        public const string SFX_Key = "sfx_volume";
+        public const string BGM_Key = "bgm_volume";
     }
 
     public enum GAMESTATE {
@@ -55,16 +61,16 @@ namespace butterflowersOS
         NULL = -1,
         UNKNOWN = 255,
 
-        DISCOVERY = 0,
+        DISCOVERY = 0, // *
 
-        NESTKICK = 10, //
+        NESTKICK = 10, // *
         NESTPOP = 11, //
         NESTCLEAR = 12, //
-        NESTSPILL = 13,
+        NESTSPILL = 13, // *
         NESTGROW = 14,
         NESTSHRINK = 15,
 
-        BEACONACTIVATE = 20, //
+        BEACONACTIVATE = 20, // *
         BEACONADD = 21,
         BEACONDELETE = 22, //
         BEACONPLANT = 23, //
@@ -160,8 +166,8 @@ namespace butterflowersOS
         public static int ActionSize = 67;
         public static int SubtextSize = 72;
         
-        public static string FocusText = string.Format("Press {0} to focus", Controls.Focus.ToString());
-        public static string LoseFocusText = string.Format("Press {0} to lose focus", Controls.LoseFocus.ToString());
+        public static string FocusText = string.Format("Right click to focus");
+        public static string LoseFocusText = string.Format("Right click to lose focus");
 
         public static string AppendSubtext(this string info, Entity entity)
         {
@@ -208,11 +214,13 @@ namespace butterflowersOS
 
             if (entity is Focusable) 
             {
-                if (!(entity as Focusable).isFocused) actions = FocusText;
-                else actions = LoseFocusText;
+                if ((entity as Focusable) == Focusable.QueueFocus) 
+                {
+                    actions = FocusText;
 
-                actions = FormatActionItem(actions);
-                if (separator != null) actions = actions.Insert(0, separator);
+                    actions = FormatActionItem(actions);
+                    if (separator != null) actions = actions.Insert(0, separator);
+                }
             }
 
             return (info + actions);
@@ -240,13 +248,13 @@ namespace butterflowersOS
             return (info + contextual);
         }
 
-        static string FormatActionItem(string action)
+        public static string FormatActionItem(string action)
         {
             string format = "<size={0}%><color={1}>-  {2}  -</color></size>";
             return string.Format(format, ActionSize, COLOR_LOOKUP.ACTION, action);
         }
 
-        static string FormatSubtextItem(string subtext)
+        public static string FormatSubtextItem(string subtext)
         {
             string format = "<i><size={0}%><color={1}>{2}</color></size></i>";
             return string.Format(format, SubtextSize, COLOR_LOOKUP.SUBTEXT, subtext.ToLower());
@@ -256,7 +264,7 @@ namespace butterflowersOS
     public static class Controls
     {
         public static KeyCode Focus = KeyCode.LeftControl;
-        public static KeyCode LoseFocus = KeyCode.Backspace;
+        public static KeyCode LoseFocus = KeyCode.LeftControl;
     }
     
 }

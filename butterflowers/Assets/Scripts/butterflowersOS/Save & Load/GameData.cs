@@ -16,8 +16,8 @@ namespace uwu
         public SequenceData sequence = new SequenceData();
 
         public string export_agent_created_at = "";
-        public bool export = false;
-        
+        public string import_agent_created_at = "";
+
         [Header("Miscellaneous")] 
         
         public bool tutorial = false;
@@ -26,7 +26,6 @@ namespace uwu
         [Header("Neue")] 
         
         public string username = "";
-        public string agent_created_at = "";
         public int agent_event_stack = 0;
 
         public SurveillanceData[] surveillanceData = new SurveillanceData[]{};
@@ -40,8 +39,10 @@ namespace uwu
 
 	    public Profile profile = new Profile();
 	    
-	    public byte[] images = new byte[]{};
+	    [HideInInspector] public byte[] images = new byte[]{};
+	    
 	    public ushort image_height = 0;
+	    public ushort image_width = 0;
     }
 
 }

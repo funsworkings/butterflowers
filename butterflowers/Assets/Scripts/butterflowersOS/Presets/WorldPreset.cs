@@ -8,25 +8,22 @@ namespace butterflowersOS.Presets
     public class WorldPreset : ScriptableObject
     {
         [Header("Debug")]
-            public bool persistDiscoveries = false;
-            public bool resetWorldClock = false;
-            public bool persistDialogue = false;
-            public bool persistDialogueVisited = false;
             public bool persistKnowledge = false;
             public bool persistBeacons = false;
             public bool persistVines = false;
             public bool persistSequence = false;
             public bool overrideSequence = false;
             public Frame overrideSequenceFrame;
-            public bool alwaysIntro = false;
-            public bool alwaysAbsorb = false;
-            public bool useWizard = false;
             public bool takePhotos = false;
             public bool logEvents = false;
             public bool loadTexturesInEditor = true;
             public bool loadThumbnailsInEditor = true;
             public bool generateThumbnailsInEditor = true;
             public bool useDesktopFilesForDebugBeacons = true;
+            public bool allowDebugSpawn = true;
+            public bool allowDebugTimeSkip = true;
+            public bool allowImportBeforeExportAgent = false;
+            public bool allowExternalNeueagent = true;
 
         [Header("Time Attributes")]
             public float hoursPerDay = 24f;
@@ -58,8 +55,12 @@ namespace butterflowersOS.Presets
             public float minimumVineGrowHeight = 1f;
             public float maximumVineGrowHeight = 10f;
             public float vineWidth = 1f;
+            [Range(0f, 1f)] public float minimumFlowerSize = 1f;
             public int minimumLeavesPerSegment = 5, maximumLeavesPerSegment = 10;
+            public int minimumFileDepth = 3, maximumFileDepth = 10;
+            [Range(0f, 1f)] public float vineHeightAllowance = .1f;
             [Range(0f, 1f)] public float leafDensityPerSegment;
+            [Min(0.1f)] public float minimumVineGrowthMultiplier = .1f;
 
         [Header("Leaf Attributes")] 
             public AnimationCurve leafGrowCurve;
@@ -82,6 +83,9 @@ namespace butterflowersOS.Presets
 
             public float eventStackHeight = 64f;
             public AnimationCurve eventStackScoreCurve;
+
+            public float currentLogWeight = 0f;
+            public float averageLogWeight = 1f;
             
         [Header("Scoring Attributes")]
             public CompositeSurveillanceData baselineSurveillanceData;
@@ -93,6 +97,10 @@ namespace butterflowersOS.Presets
             public float cursorSpeedThreshold = 1f;
             public float cursorIdleTimeThreshold = 10f;
             public float cursorIdleDelay = 1f;
+
+            [Header("Miscellaneous")] 
+            [Range(0f, 1f)] public float worldTextureProbability = .5f;
+            public Texture2D[] worldTextures;
 
         #region Time conversions
 

@@ -24,7 +24,7 @@ namespace Noder.Nodes.Abstract {
             }
             catch (System.Exception e) 
             {
-                //Debug.LogException(e);
+                Debug.LogWarning(e);
                 port = GetOutputPort("fail");
             }
 

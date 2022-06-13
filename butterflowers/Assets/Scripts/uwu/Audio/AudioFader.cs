@@ -1,10 +1,11 @@
-﻿using UnityEngine;
+﻿using butterflowersOS.Interfaces;
+using UnityEngine;
 using UnityEngine.Audio;
 using UnityEngine.Events;
 
 namespace uwu.Audio
 {
-	public class AudioFader : MonoBehaviour
+	public class AudioFader : MonoBehaviour, IPausable
 	{
 		#region Internal
 
@@ -25,8 +26,8 @@ namespace uwu.Audio
 		// Properties
 
 		[SerializeField] protected AudioMixer mixer; 
-		[SerializeField] protected AudioSource audio;
-		[SerializeField] string mixerVolumeParam;
+		[SerializeField] protected new AudioSource audio;
+		[SerializeField] string mixerVolumeParam = "";
 
 		[SerializeField] bool useMixerGroup = true;
 		[SerializeField] bool useScaledTime = false;
@@ -82,6 +83,7 @@ namespace uwu.Audio
 			if (_fadeOp == FadeOp.Nothing) return;
 
 			float dt = (useScaledTime)? Time.deltaTime : Time.unscaledDeltaTime;
+			dt *= playbackSpeed;
 
 			if (_fadeOp == FadeOp.FadeIn) 
 			{
@@ -158,6 +160,22 @@ namespace uwu.Audio
 				audio.volume = _volume;
 		}
     
+		#endregion
+		
+		#region Pausing
+
+		protected float playbackSpeed = 1f;
+		
+		public virtual void Pause()
+		{
+			playbackSpeed = 0f;
+		}
+
+		public virtual void Resume()
+		{
+			playbackSpeed = 1f;
+		}
+		
 		#endregion
 	}
 }

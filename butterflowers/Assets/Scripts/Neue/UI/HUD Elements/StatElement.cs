@@ -10,10 +10,9 @@ namespace Neue.UI.HUD_Elements
 	{
 		// Properties
 
-		[SerializeField] StatOverlayElement overlay;
-		[SerializeField] Image fillArea;
-		[SerializeField] Animator animator;
-		[SerializeField] Damage damage;
+		[SerializeField] StatOverlayElement overlay = null;
+		[SerializeField] Image fillArea = null;
+		[SerializeField] Animator animator = null;
 
 		bool visible = false;
 

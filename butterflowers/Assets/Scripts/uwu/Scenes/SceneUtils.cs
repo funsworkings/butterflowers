@@ -7,7 +7,7 @@ namespace uwu.Scenes
 {
 	public class SceneUtils : MonoBehaviour
 	{
-		[SerializeField] Scene loadOnAwake;
+		[SerializeField] Scene loadOnAwake = null;
 
 		readonly Dictionary<string, LoadOp> queue = new Dictionary<string, LoadOp>();
 
@@ -40,15 +40,6 @@ namespace uwu.Scenes
 					//Debug.Log("Trigger load: " + target.id);
 					operation.op.allowSceneActivation = true; // Move to scene if flagged for move
 				}
-			}
-		}
-
-		void OnDestroy()
-		{
-			foreach (var item in queue) {
-				var scene = item.Key;
-				//if(scene.id != target.id)
-				//  SceneManager.UnloadSceneAsync( // Unload all scenes in queue from memory
 			}
 		}
 
@@ -93,7 +84,7 @@ namespace uwu.Scenes
 					operation.op = SceneManager.LoadSceneAsync(index);
 				}
 				catch (Exception e) {
-					Debug.LogWarning("Unable to parse scene index from parameter, using id...");
+					Debug.LogWarning("Unable to parse scene index from parameter, using id... " + e.Message);
 
 					operation.op = SceneManager.LoadSceneAsync(scene.id);
 				}

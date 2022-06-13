@@ -9,10 +9,10 @@ namespace uwu.Camera.Instances
 		[SerializeField] bool controls;
 
 		[Header("Attributes")] [SerializeField]
-		float radius = 1f, height;
+		float radius = 1f, height = 0f;
 
-		[SerializeField] float angle;
-		[SerializeField] bool resetOnDisable;
+		[SerializeField] float angle = 0f;
+		[SerializeField] bool resetOnDisable = false;
 
 		float defaultAngle;
 

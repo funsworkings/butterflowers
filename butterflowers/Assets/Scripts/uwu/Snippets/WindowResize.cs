@@ -4,7 +4,7 @@ using System.Collections.Generic;
 using UnityEngine;
 using uwu.Extensions;
 
-public class WindowResize : Singleton<WindowResize>
+public class WindowResize : MonoBehaviour
 {
     public System.Action<int, int> onResize;
     

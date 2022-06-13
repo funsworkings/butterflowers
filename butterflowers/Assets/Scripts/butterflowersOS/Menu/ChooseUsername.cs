@@ -7,9 +7,9 @@ using uwu.UI.Behaviors.Visibility;
 
 namespace butterflowersOS.Menu
 {
-	public class ChooseUsername : GenericMenu
+	public class ChooseUsername : MainMenuSubPage
 	{
-		Camera camera;
+		new Camera camera;
 		
 		// Events
 
@@ -20,16 +20,14 @@ namespace butterflowersOS.Menu
 
 		ToggleOpacity opacity;
 
-		[SerializeField] MainMenu _mainMenu;
-		[SerializeField] CanvasGroup usernameContainer;
-		[SerializeField] TMPro.TMP_InputField inputfield;
-		[SerializeField] RectTransform inputrect;
+		[SerializeField] CanvasGroup usernameContainer = null;
+		[SerializeField] TMPro.TMP_InputField inputfield = null;
+		[SerializeField] RectTransform inputrect = null;
 		
-		[SerializeField] ToggleOpacity submitButtonOpacity;
-		[SerializeField] GameObject pr_burst;
+		[SerializeField] ToggleOpacity submitButtonOpacity = null;
+		[SerializeField] GameObject pr_burst = null;
 
 		bool isInputValid = false;
-		string validInput = null;
 
 		// Attributes
 
@@ -50,9 +48,9 @@ namespace butterflowersOS.Menu
 			base.Start();
 		}
 
-		void Update()
+		protected override void Update()
 		{
-			if (!IsVisible) return;
+			base.Update();
 			
 			if(!Input.GetKeyUp(KeyCode.Escape))
 			{
@@ -66,11 +64,7 @@ namespace butterflowersOS.Menu
 				{
 					SubmitInput();
 				}
-
-				return;
 			}
-			
-			_mainMenu.Reset();
 		}
 
 		#endregion
@@ -87,11 +81,9 @@ namespace butterflowersOS.Menu
 
 		protected override void DidClose()
 		{
-			inputfield.onValueChanged.RemoveListener(onEditInput);
+			Dispose();
 			
-			inputfield.text = ""; // Wipe input
-			opacity.Hide();
-			isInputValid = false;
+			base.DidClose();
 		}
 		
 		#endregion
@@ -145,6 +137,15 @@ namespace butterflowersOS.Menu
 		{
 			Vector3 pos = camera.ScreenToWorldPoint(new Vector3(screen_pos.x, screen_pos.y, 10f));
 			Instantiate(pr_burst, pos, pr_burst.transform.rotation);
+		}
+
+		public void Dispose()
+		{
+			inputfield.onValueChanged.RemoveListener(onEditInput);
+			
+			inputfield.text = ""; // Wipe input
+			opacity.Hide();
+			isInputValid = false;
 		}
 	}
 }

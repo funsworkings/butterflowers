@@ -18,7 +18,7 @@ public class Unknown : MonoBehaviour
 
     #region External
 
-    [SerializeField] ButterflowerManager Butterflies;
+    [SerializeField] ButterflowerManager Butterflies = null;
     [SerializeField] Nest Nest;
     [SerializeField] World World;
 
@@ -32,7 +32,7 @@ public class Unknown : MonoBehaviour
 
     #region Properties
 
-    [SerializeField] WorldPreset Preset;
+    [SerializeField] WorldPreset Preset = null;
     [SerializeField] Camera feedCamera;
 
 	#endregion
@@ -60,7 +60,7 @@ public class Unknown : MonoBehaviour
     [SerializeField] char[] noise_chars = new char[] { };
 
     [Header("Feed")]
-    [SerializeField] RenderTexture feedTexture;
+    [SerializeField] RenderTexture feedTexture = null;
     [SerializeField] Texture2D sampler;
     [SerializeField] char wiz_char = '+';
     [SerializeField] int _y = 0;
@@ -73,8 +73,6 @@ public class Unknown : MonoBehaviour
     public delegate string patternFunction();
 
 	#endregion
-
-	bool plague = false;
 
     void OnEnable()
     {
@@ -122,7 +120,7 @@ public class Unknown : MonoBehaviour
     {
         bool healthy = false;
 
-        float health = Butterflies.GetHealth();
+        float health = Butterflies.Health;
         while (!healthy || health > Preset.unknownPersistenceThreshold) 
         {
             var patt = fetchPattern();
@@ -131,7 +129,7 @@ public class Unknown : MonoBehaviour
             //EventManager.Instance.Push(EVENTCODE.UNKNOWN, AGENT.Unknown, AGENT.World, @string, false);
             yield return new WaitForSeconds(Mathf.Max(0f, scribeInterval));
 
-            health = Butterflies.GetHealth();
+            health = Butterflies.Health;
             if (!healthy && health > Preset.unknownPersistenceThreshold)
                 healthy = true;
         }
@@ -167,7 +165,7 @@ public class Unknown : MonoBehaviour
 
 	public string river()
     {
-        float health = (Butterflies != null)? Butterflies.GetHealth():1f;
+        float health = (Butterflies != null)? Butterflies.Health:1f;
 
         float wavelength = health.RemapNRB(0f, 1f, minriverwavelength, maxriverwavelength);
         float slope = -(wavelength * Mathf.Sin(Time.time * riverspeed));

@@ -14,6 +14,7 @@ using UnityEngine;
 using UnityEngine.EventSystems;
 using UnityEngine.Serialization;
 using uwu.Gameplay;
+using uwu.Settings;
 using uwu.Snippets;
 using uwu.UI.Behaviors.Visibility;
 using uwu.UI.Extras;
@@ -49,7 +50,7 @@ namespace butterflowersOS.Core
     
         [SerializeField] WorldPreset preset;
         [SerializeField] ButterflowerManager butterflowers;
-        [SerializeField] BeaconManager beacons;
+        [SerializeField] BeaconManager beacons = null;
         [SerializeField] Nest nest;
 
         // Properties
@@ -60,9 +61,11 @@ namespace butterflowersOS.Core
 
         [Header("General")]
         [SerializeField] bool m_spells = true;
+        [SerializeField] bool m_hints = true;
+        [SerializeField] bool overrideSpells = true;
 
-        [SerializeField] Cursor cursor;
-        [SerializeField] CustomCursor cursor_icon;
+        [SerializeField] Cursor cursor = null;
+        [SerializeField] CustomCursor cursor_icon = null;
         [SerializeField] float cursorToWorldRate = 1f;
 
         public bool infocus = true;
@@ -71,7 +74,7 @@ namespace butterflowersOS.Core
         
         [SerializeField] Interaction _interaction = Interaction.Normal;
         
-        [SerializeField] LayerMask dragInteractionMask;
+        [SerializeField] LayerMask dragInteractionMask = default(LayerMask);
         
         IInteractable _interactable = null;
         RaycastHit _interactableHit;
@@ -86,19 +89,19 @@ namespace butterflowersOS.Core
             [SerializeField] float pointDistance;
 
         [Header("Layers")] 
-            [SerializeField] LayerMask additionMask;
-            [SerializeField] LayerMask flowerMask;
-            [SerializeField] LayerMask plantMask;
-            [SerializeField] LayerMask destroyMask;
+            [SerializeField] LayerMask additionMask = default(LayerMask);
+            [SerializeField] LayerMask flowerMask = default(LayerMask);
+            [SerializeField] LayerMask plantMask = default(LayerMask);
+            [SerializeField] LayerMask destroyMask = default(LayerMask);
 
         [Header("Effects")] 
             [SerializeField] Vector4 m_wandShaderParam;
-            [SerializeField] WandAffectorMaterial[] _affectorMaterials;
+            [SerializeField] WandAffectorMaterial[] _affectorMaterials = new WandAffectorMaterial[]{};
 
         [Header("UI")] 
             [SerializeField] Tooltip info;
-            [SerializeField] ToggleOpacity infoOpacity;
-            [SerializeField] TMP_Text infoText;
+            [SerializeField] ToggleOpacity infoOpacity = null;
+            [SerializeField] TMP_Text infoText = null;
 
         #region Accessors
 
@@ -224,7 +227,8 @@ namespace butterflowersOS.Core
 
         protected override void Update()
         {
-            m_spells = infocus && sun.active && World.ready;
+            if(overrideSpells)
+                m_spells = infocus && sun.active && World.ready;
             
             base.Update();
 
@@ -374,6 +378,16 @@ namespace butterflowersOS.Core
                 
                 beacon.Grab();
             }
+        }
+
+        public void DisposeBeaconIfExists()
+        {
+            if (beacon == null) return;
+            beacon.Release();
+            
+            _interaction = Interaction.Normal;
+            context = DragContext.Release;
+            beacon = null;
         }
 
         void DropBeacon()
@@ -601,6 +615,13 @@ namespace butterflowersOS.Core
                     {
                         message = ((ITooltip) _interactable).GetInfo();
                     }
+                    else 
+                    {
+                        if (Focusable.ActiveFocus != null) 
+                        {
+                            message = Copy.FormatActionItem(Copy.LoseFocusText);
+                        }
+                    }
                 }
                 else 
                 {
@@ -610,7 +631,7 @@ namespace butterflowersOS.Core
                     }
                 }
 
-                if (string.IsNullOrEmpty(message)) 
+                if (string.IsNullOrEmpty(message) || !m_hints) 
                 {
                     infoOpacity.Hide();
                 }
@@ -629,7 +650,7 @@ namespace butterflowersOS.Core
 
         public void Cycle(bool refresh)
         {
-            DropBeacon(); 
+            DisposeBeaconIfExists(); // Dispose beacon
         }
     }
 }

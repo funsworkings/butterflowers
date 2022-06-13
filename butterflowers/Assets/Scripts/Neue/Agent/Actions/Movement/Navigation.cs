@@ -26,7 +26,7 @@ namespace Neue.Agent.Actions.Movement
 		Vector3 _next = new Vector3(float.PositiveInfinity, float.PositiveInfinity, float.PositiveInfinity);
 		Vector3 _destination = new Vector3(float.PositiveInfinity, float.PositiveInfinity, float.PositiveInfinity);
 		
-		[SerializeField] MovementPreset preset;
+		[SerializeField] MovementPreset preset = null;
 		[SerializeField] float speed = 0f;
 
 		[SerializeField] float movementSpeed = -1f;

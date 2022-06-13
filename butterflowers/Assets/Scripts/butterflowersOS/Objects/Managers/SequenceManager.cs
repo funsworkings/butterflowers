@@ -3,12 +3,15 @@ using System.Linq;
 using butterflowersOS.Core;
 using butterflowersOS.Data;
 using butterflowersOS.Interfaces;
+using butterflowersOS.Miscellaneous;
 using butterflowersOS.Objects.Base;
 using butterflowersOS.Objects.Entities;
 using butterflowersOS.Objects.Miscellaneous;
 using butterflowersOS.Presets;
+using butterflowersOS.Snippets;
 using Neue.Reference.Types;
 using Neue.Reference.Types.Maps;
+using Neue.Reference.Types.Maps.Groups;
 using TMPro;
 using UnityEngine;
 using uwu;
@@ -39,37 +42,26 @@ namespace butterflowersOS.Objects.Managers
 		Sun Sun;
 		GameDataSaveSystem _Save;
 		
-		[SerializeField] Cage Cage;
+		[SerializeField] Cage Cage = null;
 		[SerializeField] Focusing Focus;
 		[SerializeField] ButterflowerManager Butterflowers;
-		[SerializeField] CutsceneManager Cutscenes;
+		[SerializeField] CutsceneManager Cutscenes = null;
 
-		[SerializeField] Transform root;
+		[SerializeField] Transform root = null;
 		
 		// Properties
 
-		[SerializeField] WorldPreset preset;
-		[SerializeField] ToggleOpacity opacity, frameOpacity;
-		[SerializeField] TMP_Text frameText;
-		[SerializeField] DialogueHandler sceneCaption;
+		[SerializeField] WorldPreset preset = null;
+		[SerializeField] ToggleOpacity opacity;
+		[SerializeField] DialogueHandler sceneCaption = null;
 		[SerializeField] AudioSource sceneAudio;
+		[SerializeField] FrameVector2Group frameTextSizingGroup;
 
 		Sequence[] sequences;
 
 		[SerializeField] int index = -1;
 		[SerializeField] Frame[] frames = new Frame[]{};
 		[SerializeField] bool inprogress = false;
-		
-		// Attributes
-
-		[SerializeField] AnimationCurve lightTransitionInCurve, lightTransitionOutCurve;
-		[SerializeField] float lightInTime = 1f, lightOutTime = 1f;
-		
-		[SerializeField] AnimationCurve meshScaleCurve;
-		[SerializeField] float meshScaleTime = 1f;
-
-		[SerializeField] float startDelay = 1f, endDelay = 1f, closeDelay = 1f;
-		[SerializeField] float frameDelay = 3f;
 
 		#region Accessors
 
@@ -86,7 +78,7 @@ namespace butterflowersOS.Objects.Managers
 
 			frames = new Frame[7];
 			sequences = root.GetComponentsInChildren<Sequence>();
-			
+
 			sceneCaption.Dispose(); // Clear text in caption
 		}
 
@@ -170,7 +162,9 @@ namespace butterflowersOS.Objects.Managers
 				}
 			}
 
+			#if UNITY_EDITOR
 			if (preset.overrideSequence) _frame = preset.overrideSequenceFrame; // Override sequence frame (Debug)
+			#endif
 				
 			frames[t_index] = _frame; // Assign random framing
 			return TriggerReason.Success;
@@ -200,11 +194,12 @@ namespace butterflowersOS.Objects.Managers
 			Frame frame = frames[_index];
 			Scene _scene = FetchScene(_index);
 			
-			bool didCutscene = Cutscenes.TriggerSequence(_scene);
-			if(didCutscene) yield return new WaitForSecondsRealtime(1.3f);
-
-			while (Cutscenes.inprogress) 
-				yield return null;
+			bool didCutscene = Cutscenes.TriggerSequence(_scene, FetchSequence(frame));
+			if (didCutscene) 
+			{
+				while (!Cutscenes.inprogress) yield return null; // Wait for cutscene to start
+			}
+			while (Cutscenes.inprogress) yield return null;
 
 			inprogress = false;
 			++index;

@@ -1,4 +1,5 @@
-﻿using System.Collections;
+﻿using System;
+using System.Collections;
 using System.Collections.Generic;
 using System.Linq;
 using butterflowersOS.Core;
@@ -8,6 +9,7 @@ using butterflowersOS.Objects.Entities.Interactables;
 using butterflowersOS.Presets;
 using UnityEngine;
 using uwu;
+using uwu.Extensions;
 using Vertex = butterflowersOS.Objects.Entities.Cage.Vertex;
 
 namespace butterflowersOS.Objects.Managers
@@ -17,7 +19,8 @@ namespace butterflowersOS.Objects.Managers
         #region External
 
         GameDataSaveSystem _Save;
-        [SerializeField] BeaconManager Beacons;
+        [SerializeField] BeaconManager Beacons = null;
+        [SerializeField] ButterflowerManager ButterflowerManager;
 
         #endregion
     
@@ -32,14 +35,13 @@ namespace butterflowersOS.Objects.Managers
 
         // Properties
 
-        [SerializeField] WorldPreset Preset;
+        [SerializeField] WorldPreset Preset = null;
+        [SerializeField] Library Lib = null;
 
-        [SerializeField] Cage cage;
+        [SerializeField] Cage cage = null;
 
         [SerializeField] GameObject vinePrefab = null;
         [SerializeField] Transform vineRoot = null;
-
-        bool load = false;
 
         #region Monobehaviour callbacks
 
@@ -57,6 +59,11 @@ namespace butterflowersOS.Objects.Managers
         
             Vine.onCompleteNaturalGrowth -= onVineCompleteNaturalGrowth;
             Vine.onCompleteGateGrowth -= onVineCompleteGateGrowth;
+        }
+
+        void Start()
+        {
+            Lib = FindObjectOfType<Library>();
         }
 
         #endregion
@@ -96,7 +103,7 @@ namespace butterflowersOS.Objects.Managers
             while (!cage.load) yield return null;
         
             yield return new WaitForEndOfFrame();
-        
+
             foreach (VineData v in data.vines) 
             {
                 string file = null;
@@ -105,14 +112,15 @@ namespace butterflowersOS.Objects.Managers
                 if (success) 
                 {
                     var vine = DropVine(transform.position, vineRoot.up);
-                    vine.Initialize(this, cage, file, v);
+                    var vineTexture = Lib.RequestTextureImmediate(file);
+                    
+                    vine.Initialize(this, cage, file, vineTexture, v);
 
                     vines.Add(vine);
                 }
             }
 
             _Save = GameDataSaveSystem.Instance;
-            load = true;
         }
 
         #endregion
@@ -123,12 +131,12 @@ namespace butterflowersOS.Objects.Managers
         {
             var origin = beacon.origin;
         
-            var vine = DropVine(origin, vineRoot.up);
-            vine.Initialize(this, cage,null);
-        
             var file = beacon.File;
-            vine.File = file;
+            var tex = Lib.RequestTextureImmediate(file);
             
+            var vine = DropVine(origin, vineRoot.up);
+            vine.Initialize(this, cage, file, tex);
+
             vines.Add(vine);
 
             if (onUpdateVines != null) onUpdateVines();
@@ -155,12 +163,18 @@ namespace butterflowersOS.Objects.Managers
     
         public float CalculateVineGrowSpeed(Vine vine)
         {
-            float secondsToGrow = Preset.ConvertDaysToSeconds(Preset.daysToGrowVine);
+            float lengthMagnitude = Mathf.Clamp01(vine.length / Preset.maximumVineGrowHeight);
+            float secondsToGrow = Preset.ConvertDaysToSeconds(Preset.daysToGrowVine * lengthMagnitude);
 
             float distanceToTravel = vine.length;
             float speed = (distanceToTravel / secondsToGrow); // per second
         
             return speed;
+        }
+
+        public float GetGrowthMultiplier()
+        {
+            return ButterflowerManager.Health.RemapNRB(0f, 1f, Preset.minimumVineGrowthMultiplier, 1f);
         }
 
         #endregion

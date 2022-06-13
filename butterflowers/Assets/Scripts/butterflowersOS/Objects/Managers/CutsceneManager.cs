@@ -3,14 +3,20 @@ using System.Collections;
 using System.Collections.Generic;
 using butterflowersOS.Core;
 using butterflowersOS.Interfaces;
+using butterflowersOS.Miscellaneous;
 using butterflowersOS.Objects.Entities;
 using butterflowersOS.Objects.Entities.Interactables;
 using butterflowersOS.Objects.Miscellaneous;
+using butterflowersOS.Snippets;
 using Cinemachine;
+using Neue.Reference.Types;
+using Neue.Reference.Types.Maps.Groups;
+using TMPro;
 using UnityEngine;
 using UnityEngine.Playables;
 using UnityEngine.Timeline;
 using UnityEngine.UI;
+using UnityEngine.Video;
 using uwu;
 using uwu.Audio;
 using uwu.Camera.Instances;
@@ -20,7 +26,7 @@ using Random = UnityEngine.Random;
 
 namespace butterflowersOS.Objects.Managers
 {
-	public class CutsceneManager : MonoBehaviour, ISaveable
+	public class CutsceneManager : MonoBehaviour, ISaveable, IPausable
 	{
 		// External
 
@@ -30,35 +36,55 @@ namespace butterflowersOS.Objects.Managers
 		
 		// Properties
 
-		[SerializeField] Cutscenes cutscenes;
-		[SerializeField] VineManager vines;
+		[SerializeField] float playbackSpeed = 1f;
+
+		[SerializeField] Cutscenes cutscenes = null;
+		[SerializeField] VineManager vines = null;
 		[SerializeField] Cage cage;
 		[SerializeField] PlayableDirector director;
+		[SerializeField] Wand wand;
 
 		[Header("General")] 
-			[SerializeField] PlayableAsset introCutscene;
-			[SerializeField] PlayableAsset outroCutscene;
+			[SerializeField] PlayableAsset introCutscene = null;
+			[SerializeField] PlayableAsset outroCutscene = null;
+			[SerializeField] GameObject introAvi;
+			[SerializeField] Rigidbody[] apparels = new Rigidbody[]{};
+			[SerializeField, Min(0f)] float minTorque, maxTorque;
+			[SerializeField, Min(0f)] float minForce, maxForce;
 
 		[Header("Vines")] 
-			[SerializeField] Transform vineCornerCameraPivot;
-			[SerializeField] PlayableAsset vineCornerCutscene;
+			[SerializeField] Transform vineCornerCameraPivot = null;
+			[SerializeField] PlayableAsset vineCornerCutscene = null;
 			[SerializeField] PlayableAsset vineCageCutscene;
 
-		[Header("Sequences")]
+			[Header("Sequences")] 
+			[SerializeField] Camera mainCamera;
+			CinemachineBrain mainCameraBrain;
+			[SerializeField] int def_cameraCullingMask = 0;
+			[SerializeField] CameraClearFlags def_cameraClearFlags;
 			[SerializeField] Scene currentScene;
 			[SerializeField] float sequenceMeshScaleDuration = 1f;
 			[SerializeField] float sequenceMeshScaleTime = 1f;
-			[SerializeField] AnimationCurve sequenceMeshScaleCurve;
+			[SerializeField] AnimationCurve sequenceMeshScaleCurve = null;
 			[SerializeField] PlayableAsset sequenceCutscene;
-			[SerializeField] Nest Nest;
-			[SerializeField] ToggleOpacity sequenceSubtitles;
-			[SerializeField] Text sequenceSubtitleText;
-			[SerializeField] AudioFader sequenceBGMFader;
-			[SerializeField] AudioSource sequenceBGM;
+			[SerializeField] Nest Nest = null;
+			[SerializeField] ToggleOpacity sequenceSubtitles = null;
+			[SerializeField] Text sequenceSubtitleText = null;
+			[SerializeField] AudioFader sequenceBGMFader = null;
+			[SerializeField] AudioSource sequenceBGM = null;
+			[SerializeField] GameObject greenscreenPanel;
+			[SerializeField] VideoPlayer greenscreenVideo;
+			[SerializeField, Range(0f, 1f)] float greenscreenDisposeTrigger;
+			[SerializeField] FrameSpriteGroup frameSpriteGroup;
+			[SerializeField] Image frameImageField;
+			[SerializeField] CanvasGroup frameOpacity;
+			[SerializeField] float frameTextDelay = 1f, frameTransitionLength = 4f;
+			[SerializeField] float greenscreenVideoPlaybackSpeed = .67f;
+			[SerializeField] Avi avi;
 
 		[Header("Export")] 
-			[SerializeField] ParticleSystem exportPS;
-			[SerializeField] Material exportMaterial;
+			[SerializeField] ParticleSystem exportPS = null;
+			[SerializeField] Material exportMaterial = null;
 
 		[Header("Status")] 
 			public bool intro = false;
@@ -68,26 +94,44 @@ namespace butterflowersOS.Objects.Managers
 
 		void OnEnable()
 		{
+			cutscenes.Started += DidStartCutscene;
 			cutscenes.Completed += DidCompleteCutscene;
-			vines.onCompleteCorner += DidCompleteCorner;
+			
+			vines.onCompleteCorner += DidCompleteCorner; 
 		}
 
 		void OnDisable()
 		{
+			cutscenes.Started -= DidStartCutscene;
 			cutscenes.Completed -= DidCompleteCutscene;
+			
 			vines.onCompleteCorner -= DidCompleteCorner;
+		}
+
+		void Start()
+		{
+			mainCamera = Camera.main;
+			mainCameraBrain = mainCamera.GetComponent<CinemachineBrain>();
+			
+			def_cameraCullingMask = mainCamera.cullingMask;
+			def_cameraClearFlags = mainCamera.clearFlags;
 		}
 
 		void Update()
 		{
-			inprogress = cutscenes.playing;
+			inprogress = cutscenes.playing || cutscenes.paused;
+		}
+
+		void DidStartCutscene(PlayableAsset cutscene)
+		{
+			wand.DisposeBeaconIfExists();
 		}
 
 		void DidCompleteCutscene(PlayableAsset cutscene)
 		{
 			bool flag_save = false;
 			
-			if (cutscene == introCutscene) { intro = true; flag_save = true; }
+			if (cutscene == introCutscene) { intro = true; flag_save = true; introAvi.SetActive(false); }
 			else if (cutscene == outroCutscene) 
 			{ 
 				outro = true;
@@ -97,14 +141,7 @@ namespace butterflowersOS.Objects.Managers
 			}
 			else if (cutscene == sequenceCutscene) 
 			{
-				if (currentScene != null) 
-				{
-					currentScene.Show(true); // Fully visible scene
-					TriggerFadeOutBGM();
-				}
-				
-				currentScene = null; // Wipe current scene
-				sequenceCutscene = null; // Wipe current cutscene
+				// Do nothing, maybe?
 			}
 			
 			ToggleSubtitle(false);
@@ -115,13 +152,37 @@ namespace butterflowersOS.Objects.Managers
 				_Save.SaveGameData(); // Save all cutscene data immediately when completed!
 			}
 		}
+		
+		#region Accessors
+
+		public bool HasCompletedIntro => intro;
+		
+		#endregion
 
 		#region Intro/outro
 
 		public void TriggerIntro()
 		{
 			ToggleSubtitle(true);
+			introAvi.SetActive(true);
+			
 			cutscenes.Play(introCutscene);
+		}
+
+		public Transform trajectory;
+		public void KickApparel()
+		{
+			introAvi.transform.parent = null; // Unbind intro avi
+			
+			var rigidbodies = introAvi.GetComponentsInChildren<Rigidbody>();
+			var trajectory = this.trajectory.forward;
+
+			foreach (Rigidbody r in rigidbodies) {
+				r.isKinematic = false;
+
+				r.AddForce(trajectory * Random.Range(minForce, maxForce));
+				r.AddTorque(Random.insideUnitSphere * Random.Range(minTorque, maxTorque));
+			}
 		}
 
 		public void TriggerOutro(int rows, int columns, Texture2D texture)
@@ -140,20 +201,17 @@ namespace butterflowersOS.Objects.Managers
 		
 		#region Sequences
 
-		public bool TriggerSequence(Scene seq)
+		public bool TriggerSequence(Scene sc, Sequence seq)
 		{
-			if (seq == null) return false;
+			if (sc == null) return false;
 			
-			var _cutscene = seq.cutscene;
+			var _cutscene = sc.cutscene;
 			if (_cutscene != null) 
 			{
-				currentScene = seq;
+				currentScene = sc;
 				sequenceCutscene = _cutscene;
 
-				ToggleSubtitle(true);
-				cutscenes.Play(_cutscene);
-				
-				TriggerFadeInBGM();
+				StartCoroutine(Sequencing(seq, _cutscene));
 				
 				return true;
 			}
@@ -162,98 +220,183 @@ namespace butterflowersOS.Objects.Managers
 				currentScene = null;
 				sequenceCutscene = null;	
 				
-				seq.Show(true);	// Immediate visibility
+				sc.Show(true);	// Immediate visibility
 				return false;
 			}
 		}
 
-		public void ScaleSequenceObject()
+		IEnumerator Sequencing(Sequence sq, PlayableAsset cutscene)
 		{
-			if(currentScene == null) return;
-			currentScene.Show(false);
+			float time = 0f;
+			float duration = 0f;
 			
-			SceneMesh[] meshes = currentScene.meshes;
-			if (meshes.Length > 0) 
-			{
-				StartCoroutine("ScalingSequenceMeshes", meshes);
-			}
-		}
+			greenscreenPanel.SetActive(true);
+			greenscreenVideo.Play();
 
-		IEnumerator ScalingSequenceMeshes(SceneMesh[] meshes)
-		{
-			float t = 0f;
-
-			List<float> timestamps = new List<float>();
-			foreach (SceneMesh mesh in meshes) 
+			duration = (float)greenscreenVideo.length * greenscreenDisposeTrigger;
+			while (time < duration) 
 			{
-				float __t = Random.Range(0f, sequenceMeshScaleDuration - sequenceMeshScaleTime);
-				timestamps.Add(__t);
+				time += Time.unscaledDeltaTime * playbackSpeed * greenscreenVideoPlaybackSpeed;
+				if (time > duration) time = duration;
+
+				greenscreenVideo.time = time; // Set frame of video
+				yield return null;
 			}
+			greenscreenVideo.Pause();
 			
-			float _t = 0f;
-			float _duration = 0f;
+			TriggerFrameText(sq.frame);
 
-			while (t < sequenceMeshScaleDuration) 
+			time = 0f;
+			duration = frameTransitionLength;
+
+			while (time < duration) 
 			{
-				t += Time.deltaTime;
-
-				for (int i = 0; i < meshes.Length; i++) 
-				{
-					var mesh = meshes[i];
-
-					_t = timestamps[i];
-
-					if (t > _t) 
-					{
-						_duration = (sequenceMeshScaleDuration - _t);
-
-						var si = Mathf.Clamp01((t - _t) / sequenceMeshScaleTime);
-						var sc = sequenceMeshScaleCurve.Evaluate(si);
-
-						Vector3 a = mesh.hidden;
-						Vector3 b = mesh.shown;
-							b.y = Mathf.Lerp(a.y, b.y, sc);
-
-						mesh.transform.localScale = b;
-					}
-				}
+				time += Time.unscaledDeltaTime * playbackSpeed;
+				
+				float alpha = Mathf.Clamp01(time / duration);
+				frameOpacity.alpha = alpha;
 
 				yield return null;
 			}
+
+			time = 0f;
+			duration = frameTextDelay;
+
+			while (time < duration) {
+				time += Time.unscaledDeltaTime * playbackSpeed;
+				yield return null;
+			}
+			
+			HideFrameText();
+			
+			time = 0f;
+			duration = frameTransitionLength;
+
+			while (time < duration) 
+			{
+				time += Time.unscaledDeltaTime * playbackSpeed;
+				
+				float alpha = 1f - Mathf.Clamp01(time / duration);
+				frameOpacity.alpha = alpha;
+
+				yield return null;
+			}
+			
+			greenscreenVideo.Play();
+			TriggerMainCamera(sq.culling);
+			
+			
+			List<SceneMesh> meshes = new List<SceneMesh>();
+			var _meshes = FindObjectsOfType<SceneMesh>();
+			foreach (SceneMesh m in _meshes) 
+			{
+				if (m.visible) {
+					m.visible = false;
+					meshes.Add(m);
+				}
+			}
+			
+			FocusSequenceCamera();
+			ScaleSequenceObject();
+			
+			avi.Show(sq.gameObject.layer);
+			
+
+			time = (float)greenscreenVideo.time;
+			duration = (float) greenscreenVideo.length;
+			while (time < duration) 
+			{
+				time += Time.unscaledDeltaTime * playbackSpeed * greenscreenVideoPlaybackSpeed;
+				greenscreenVideo.time = Mathf.Min(time, duration);
+				yield return null;
+			}
+
+			ToggleSubtitle(true);
+			TriggerFadeInBGM();
+			
+			cutscenes.Play(cutscene);
+
+			while (cutscenes.playing || cutscenes.paused) yield return null; // Wait for subtitles + VO to finish
+
+			ResetMainCamera();
+
+			currentScene.Show(true); // Fully visible scene
+			
+			DisableFocusCamera(); // Disable focus camera
+			TriggerFadeOutBGM();
+			
+			avi.Hide();
+			
+			greenscreenPanel.SetActive(false); // Disable 
+			
+			foreach (SceneMesh m in meshes) {
+				m.visible = true;
+			}
+			
+			currentScene = null; // Wipe current scene
+			sequenceCutscene = null; // Wipe current cutscene
+		}
+
+		public void TriggerMainCamera(int culling)
+		{
+			mainCamera.cullingMask = culling;
+			mainCamera.clearFlags = CameraClearFlags.Color;
+		}
+
+		public void ResetMainCamera()
+		{
+			mainCamera.cullingMask = def_cameraCullingMask; // Switch back to def culling mask
+			mainCamera.clearFlags = def_cameraClearFlags;
+		}
+
+		void TriggerFrameText(Frame frame)
+		{
+			frameImageField.sprite = frameSpriteGroup.GetValue(frame);
+			frameOpacity.alpha = 0f;
+		}
+
+		void HideFrameText()
+		{
+			frameOpacity.alpha = 1f;
 		}
 		
-		public void FocusSequenceCamera() 
+		void FocusSequenceCamera() 
 		{
 			if(currentScene == null) return;
 			
 			CinemachineVirtualCamera camera = currentScene.camera;
 			if(camera != null) camera.gameObject.SetActive(true);
+
+			CinemachineBrain.SoloCamera = camera;
 		}
 
-		public void DisableFocusCamera()
+		void DisableFocusCamera()
 		{
 			if(currentScene == null) return;
 			
 			CinemachineVirtualCamera camera = currentScene.camera;
 			if(camera != null) camera.gameObject.SetActive(false);
+
+			CinemachineBrain.SoloCamera = null;
 		}
 
-		public void TriggerKick()
-		{
-			Nest.RandomKick(); // Re-activate nest after sequence pause
-		}
-
-		public void TriggerFadeInBGM()
+		void TriggerFadeInBGM()
 		{
 			sequenceBGM.Play();
 			sequenceBGMFader.FadeIn();
 		}
 		
-		public void TriggerFadeOutBGM()
+		void TriggerFadeOutBGM()
 		{
 			sequenceBGMFader.FadeOut();
 		}
-		
+
+		void ScaleSequenceObject()
+		{
+			if(currentScene == null) return;
+			currentScene.Show(true); // Trigger visibility immediately
+		}
+
 		#endregion
 		
 		#region Subtitles
@@ -298,6 +441,20 @@ namespace butterflowersOS.Objects.Managers
 			Sun = Sun.Instance;
 			World = World.Instance;
 			_Save = GameDataSaveSystem.Instance;
+		}
+		
+		#endregion
+		
+		#region Pausing
+
+		public void Pause()
+		{
+			playbackSpeed = 0f;
+		}
+
+		public void Resume()
+		{
+			playbackSpeed = 1f;
 		}
 		
 		#endregion

@@ -37,13 +37,13 @@ namespace butterflowersOS.UI
         [SerializeField] bool open = false;
         [SerializeField] float t = 0f;
 
-        [SerializeField] RectTransform anchor;
+        [SerializeField] RectTransform anchor = null;
+        [SerializeField] WindowResize resizer = null;
         RectTransform rect;
-        Animator animator;
         
         [SerializeField] SummaryCard cardInQueue, cardInFocus = null;
         [SerializeField] int startingCardIndex = -1;
-        [SerializeField] AnimationCurve elasticCurve;
+        [SerializeField] AnimationCurve elasticCurve = null;
 
         int cardsBeforeQueue = 0;
         int tempDelayBeforeQueue = 0;
@@ -53,8 +53,12 @@ namespace butterflowersOS.UI
         [SerializeField] float width, height;
         [Range(1f, 180f)] public float range = 180f;
         [Range(0f, 180f)] public float offset = 90f;
+        [SerializeField, Range(0f, 1f)] float widthMultiplier, heightMultiplier;
+        [SerializeField, Range(-1f, 1f)] float heightOffset = 0f;
         [SerializeField] float focusSpeed = 1f;
-        [SerializeField] float openDuration, closeDuration;
+        [SerializeField] float openDuration = 1f, closeDuration = 1f;
+
+        [SerializeField] float normalScale = 1f, focusScale = 2f;
 
         [HideInInspector] public bool inprogress = false;
 
@@ -65,25 +69,24 @@ namespace butterflowersOS.UI
 
         float duration => (open) ? openDuration : closeDuration;
 
-        float _width => rect.rect.width * canvas.scaleFactor / 4f;
-        float _height => rect.rect.height * canvas.scaleFactor / 4f;
+        float _width => rect.rect.width * widthMultiplier / 2f;
+        float _height => rect.rect.height;
 
         #endregion
 
         void Awake()
         {
             rect = GetComponent<RectTransform>();
-            animator = GetComponent<Animator>();
         }
 
         void OnEnable()
         {
-            WindowResize.Instance.onResize += onResize;
+            resizer.onResize += onResize;
         }
 
         void OnDisable()
         {
-            WindowResize.Instance.onResize -= onResize;
+            resizer.onResize -= onResize;
         }
 
         // Start is called before the first frame update
@@ -143,7 +146,7 @@ namespace butterflowersOS.UI
                     anchor.anchoredPosition, Time.unscaledDeltaTime * focusSpeed);
                 cardInFocus.rect.rotation = Quaternion.Lerp(cardInFocus.rect.rotation, anchor.rotation,
                     Time.unscaledDeltaTime * focusSpeed);
-                cardInFocus.rect.localScale = Vector3.Lerp(cardInFocus.rect.localScale, cardInFocus.focusScale,
+                cardInFocus.Scale = Vector3.Lerp(cardInFocus.Scale, focusScale * Vector3.one,
                     Time.unscaledDeltaTime * focusSpeed);
 
                 if (Input.GetMouseButtonUp(0))
@@ -177,11 +180,6 @@ namespace butterflowersOS.UI
             state = State.Disabled;
         }
 
-        public void Drop()
-        {
-            animator.SetTrigger("drop");
-        }
-
         float GetInterval(int index)
         {
             return (index * 1f / (cards.Length - 1));
@@ -209,13 +207,14 @@ namespace butterflowersOS.UI
 
             float angle = Mathf.Clamp(180f - (interval * range * time + offset), 0f, 180f); // Target angle of card
             float angleRads = angle * Mathf.Deg2Rad;
-            
-            Vector2 circle = new Vector2(Mathf.Cos(angleRads) * _width, Mathf.Sin(angleRads) * _height);
+
+            Vector2 origin = Vector2.up * (-_height / 2f);
+            Vector2 circle = new Vector2(Mathf.Cos(angleRads) * _width, Mathf.Sin(angleRads) * _height * heightMultiplier);
             Vector3 rotation = new Vector3(0f, 0f, angle - 90f);
 
-            card.rect.anchoredPosition = circle;
+            card.transform.localPosition = origin + circle;
             card.rect.eulerAngles = rotation;
-            card.rect.localScale = card.normalScale;
+            card.Scale = normalScale * Vector3.one;
 
             ResetToIndex(card);
         }

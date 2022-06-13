@@ -50,12 +50,12 @@ namespace butterflowersOS.Objects.Managers
         // Properties
 
         [SerializeField] WorldPreset preset = null;
-        [SerializeField] ButterflyPreset butterflyPreset;
-        [SerializeField] Wand wand;
-        [SerializeField] Nest nest;
-        [SerializeField] Quilt quilt;
+        [SerializeField] ButterflyPreset butterflyPreset = null;
+        [SerializeField] Wand wand = null;
+        [SerializeField] Nest nest = null;
+        [SerializeField] Quilt quilt = null;
         [SerializeField] Canvas canvas;
-        [SerializeField] Transform variableSpawnRoot;
+        [SerializeField] Transform variableSpawnRoot = null;
         [SerializeField] Transform currentRoot;
 
         [SerializeField] Op op = Op.Nothing;
@@ -78,8 +78,6 @@ namespace butterflowersOS.Objects.Managers
         Mesh butterflyMesh;
 
         [SerializeField] Material butterflyMaterial;
-        [SerializeField] int spawnThreshold = 100, deathThreshold = 100;
-                         int spawnDuringFrame = 0, deadDuringFrame = 0;
 
         // Collections
 
@@ -122,7 +120,8 @@ namespace butterflowersOS.Objects.Managers
         }
 
         public Transform VariableRoot => variableSpawnRoot;
-        
+
+        public float Health => health;
 
         protected override void Awake()
         {
@@ -325,8 +324,6 @@ namespace butterflowersOS.Objects.Managers
 
         protected override void OnDestroy()
         {
-            base.OnDestroy();
-
             Butterfly.OnRegister -= AddButterfly;
             Butterfly.OnUnregister -= RemoveButterfly;
 
@@ -346,7 +343,10 @@ namespace butterflowersOS.Objects.Managers
             speedCurve.Dispose();
             deathCurve.Dispose();
 
-            _randoms.Dispose();
+            if(_randoms.IsCreated) _randoms.Dispose();
+            
+            
+            base.OnDestroy();
         }
 
         #region Cycle
@@ -488,7 +488,7 @@ namespace butterflowersOS.Objects.Managers
 
         #region Health
 
-        public float GetHealth()
+        float GetHealth()
         {
             int alive = 0, dead = 0;
             foreach (int state in states) 
@@ -668,8 +668,6 @@ namespace butterflowersOS.Objects.Managers
         [BurstCompile]
         struct VelocityButterflyJob : IJobParallelForTransform
         {
-            [ReadOnly] public float4x4 boundsMatrix;
-            
             [ReadOnly] public NativeArray<int> state;
             [ReadOnly] public NativeArray<float3> origin;
             [ReadOnly] public NativeArray<float3> positionRelCamera;

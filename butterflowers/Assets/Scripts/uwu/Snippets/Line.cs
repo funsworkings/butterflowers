@@ -12,9 +12,9 @@ namespace uwu.Snippets
 	[ExecuteInEditMode]
 	public class Line : MonoBehaviour
 	{
-		[SerializeField] RectTransform origin, destination;
+		[SerializeField] RectTransform origin = null, destination = null;
 
-		[SerializeField] GameObject dotPrefab;
+		[SerializeField] GameObject dotPrefab = null;
 		[SerializeField] List<LineDot> dots = new List<LineDot>();
 
 		public bool active = true;

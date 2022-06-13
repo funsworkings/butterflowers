@@ -60,8 +60,8 @@ namespace butterflowersOS.Objects.Managers
 
 		#region Properties
 
-		[SerializeField] WorldPreset preset;
-		[SerializeField] ObjectPool firePool, extinguishPool;
+		[SerializeField] WorldPreset preset = null;
+		[SerializeField] ObjectPool firePool = null, extinguishPool = null;
     
 		public Transition flowerTransition;
 		public Transition spawnTransition;
@@ -153,16 +153,19 @@ namespace butterflowersOS.Objects.Managers
 			Beacon.Destroyed -= onDestroyedBeacon;
 			Beacon.onFire -= onFireBeacon;
 			Beacon.onExtinguish -= onExtinguishBeacon;
-        
-			Library.onDeletedFiles -= UserDeletedFiles;
-			Library.onRecoverFiles -= UserRecoveredFiles;
+
+			if (Library.IsValid()) 
+			{
+				Library.onDeletedFiles -= UserDeletedFiles;
+				Library.onRecoverFiles -= UserRecoveredFiles;
+			}
 		}
 
-		void Update()
+		protected override void Update()
 		{
-			#if UNITY_EDITOR
-				if(Input.GetKeyDown(KeyCode.LeftBracket)) DebugBeaconFromDesktop();
-			#endif
+
+				if(Input.GetKeyDown(KeyCode.LeftBracket) && preset.allowDebugSpawn) DebugBeaconFromDesktop();
+
 		}
 
 		#endregion
@@ -217,7 +220,6 @@ namespace butterflowersOS.Objects.Managers
 			Vector3 origin = Vector3.zero;
 
 			bool requirePosition = false;
-			bool requireOrigin = false;
 
 			if (@params== null || !@params.ContainsKey("position")) { DecidePosition(ref position); requirePosition = true; }
 			else position = (Vector3) @params["position"];
@@ -240,25 +242,25 @@ namespace butterflowersOS.Objects.Managers
 			beacon.transform.rotation = rotation;
 
 
-			Transition _transition = default(Transition);
+			Transition _transition = null;
 			if (transition == TransitionType.Flower) 
 			{
-				_transition = flowerTransition;
-				_transition.posA = position;
-				_transition.posB = origin;
-				_transition.scaleA = Vector3.zero;
-				_transition.scaleB = preset.normalBeaconScale * Vector3.one;
+				_transition = new Transition(flowerTransition) {
+					posA = position,
+					posB = origin,
+					scaleA = Vector3.zero,
+					scaleB = preset.normalBeaconScale * Vector3.one
+				};
 			}
 			else if (transition == TransitionType.Spawn) 
 			{
-				_transition = spawnTransition;
-				_transition.posA = _transition.posB = origin;
-				_transition.scaleA = Vector3.zero;
-				_transition.scaleB = preset.normalBeaconScale * Vector3.one;
+				_transition = new Transition(spawnTransition) {
+					posA = origin, posB = origin, scaleA = Vector3.zero, scaleB = preset.normalBeaconScale * Vector3.one
+				};
 			}
+			if(_transition != null) _transition.time = 0f; // Reset transition time
 
-			_transition.time = 0f; // Reset transition time
-
+			
 			beacon.Register(type, state, origin, _transition, load);
 			
 			var filetype = Library.FileType.World;

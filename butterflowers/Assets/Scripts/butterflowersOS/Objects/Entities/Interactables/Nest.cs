@@ -18,7 +18,7 @@ using Random = UnityEngine.Random;
 
 namespace butterflowersOS.Objects.Entities.Interactables
 {
-    public class Nest : Focusable, IReactToSunCycle, ISaveable, IFlammable, ITooltip
+    public class Nest : Focusable, IReactToSunCycle, ISaveable, IFlammable, ITooltip, IYves
     {
         public static Nest Instance = null;
 
@@ -41,14 +41,16 @@ namespace butterflowersOS.Objects.Entities.Interactables
         Material mat;
         new Collider collider;
         new Rigidbody rigidbody;
-        [SerializeField] AudioHandler _audioHandler;
+        [SerializeField] AudioHandler _audioHandler = null;
         Damage damage;
 
-        [SerializeField] ParticleSystem sparklesPS, cometPS, deathPS;
-        [SerializeField] GameObject pr_impactPS, pr_shinePS;
+        [SerializeField] ParticleSystem sparklesPS = null, cometPS = null, deathPS = null;
+        [SerializeField] GameObject pr_impactPS = null;
 
         [SerializeField] TMPro.TMP_Text infoText;
-    
+
+        [SerializeField] GameObject yvesMesh;
+        
         // Attributes
 
         [Header("General")]
@@ -57,10 +59,10 @@ namespace butterflowersOS.Objects.Entities.Interactables
         public bool queue = false;
 
         [SerializeField] bool disposeOnClose = true;
-        [SerializeField] WorldPreset worldPreset;
+        [SerializeField] WorldPreset worldPreset = null;
 
         [Header("Physics")]
-        [SerializeField] float force = 10f, m_energy = 0f, m_globalEnergy = 0f;
+        [SerializeField] float force = 10f, m_energy = 0f;
         [SerializeField] float energyDecaySpeed = 1f, energyDecayDelay = 0f, timeSinceEnergyBoost = 0f;
 
         [Header("Beacons")]
@@ -68,10 +70,6 @@ namespace butterflowersOS.Objects.Entities.Interactables
         [SerializeField] int m_capacity = 12;
         [SerializeField] float dropRadius = 3f, dropDistance = 50f;
         [SerializeField] LayerMask dropMask;
-
-        [Header("Appearance")]
-        [SerializeField] float colorSmoothSpeed = 1f;
-        [SerializeField] Color inactiveColor, t_color;
 
         [Header("Audio")] 
         [SerializeField] float minPitch = 1f;
@@ -81,6 +79,7 @@ namespace butterflowersOS.Objects.Entities.Interactables
         [SerializeField] float safePointRadius = 1f;
         [SerializeField] float safePointInterval = 1f;
         [SerializeField] List<Vector3> safePoints = new List<Vector3>();
+        [SerializeField] float overrideFill = -1f;
 
         #region Accessors
 
@@ -176,7 +175,7 @@ namespace butterflowersOS.Objects.Entities.Interactables
         {
             base.OnDestroyed();
 
-            if(damage != null)damage.onHit.RemoveListener(SpillKick);
+            if(damage != null) damage.onHit.RemoveListener(SpillKick);
 
             Beacon.Deleted -= onDestroyBeacon;
 
@@ -343,9 +342,9 @@ namespace butterflowersOS.Objects.Entities.Interactables
         {
             if (open) 
             {
-                float fill = (float)beacons.Length / capacity;
+                float fill = (overrideFill >= 0f)? overrideFill:(float)beacons.Length / capacity;
                 //t_color = new Color(1f, (1f - fill), 1f);
-                Shader.SetGlobalFloat("_Fill", fill);
+                Shader.SetGlobalFloat("Fill", fill);
             }
             //else
                 //t_color = inactiveColor;
@@ -655,6 +654,20 @@ namespace butterflowersOS.Objects.Entities.Interactables
     
 #endif
     
+        #endregion
+        
+        #region Yves
+
+        public void EnableYves()
+        {
+            yvesMesh.SetActive(true);
+        }
+
+        public void DisableYves()
+        {
+            yvesMesh.SetActive(false);
+        }
+        
         #endregion
     }
 }

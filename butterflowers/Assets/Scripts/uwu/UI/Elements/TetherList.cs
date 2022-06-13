@@ -7,7 +7,7 @@ namespace uwu.UI.Elements
 {
 	public class TetherList<E> : MonoBehaviour
 	{
-		[SerializeField] GameObject tetherBlockPrefab;
+		[SerializeField] GameObject tetherBlockPrefab = null;
 
 		protected List<GameObject> blocks = new List<GameObject>();
 		public Action onPopulateList;
