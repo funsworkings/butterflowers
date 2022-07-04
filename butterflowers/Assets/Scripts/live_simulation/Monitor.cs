@@ -10,7 +10,8 @@ namespace live_simulation
         // Properties
     
         [SerializeField] Webcam _webcam;
-        [SerializeField] RawImage _webcamTargetImage;
+        [SerializeField] RawImage _webcamTargetImage, _webcamTargetLiveImage;
+        private AspectRatioFitter _webcamTargetLiveImageFitter;
         
         // Attributes
 
@@ -20,12 +21,18 @@ namespace live_simulation
         {
             while (!_webcam.Ready) yield return null;
             CaptureWebcamImage();
+
+            _webcamTargetLiveImageFitter = _webcamTargetLiveImage.GetComponent<AspectRatioFitter>();
         }
 
         void Update()
         {
             if(Input.GetKeyUp(KeyCode.Space)) CaptureWebcamImage();
             else if(Input.GetKeyUp(KeyCode.RightArrow)) SwitchWebcamDevice();
+
+            var tex = _webcam.CurrentActiveRenderTarget;
+            _webcamTargetLiveImage.texture = tex;
+            _webcamTargetLiveImageFitter.aspectRatio = (tex != null)? 1f * tex.width / tex.height:1f;
         }
 
         void CaptureWebcamImage()
@@ -39,9 +46,9 @@ namespace live_simulation
             });
         }
 
-        void SwitchWebcamDevice(string deviceName = null)
+        void SwitchWebcamDevice()
         {
-            
+            _webcam.RequestNextDevice(null);
         }
     }
 }
