@@ -1,3 +1,4 @@
+using System;
 using System.Collections;
 using live_simulation.Utils;
 using UnityEngine;
@@ -11,18 +12,33 @@ namespace live_simulation
     
         [SerializeField] Webcam _webcam;
         [SerializeField] RawImage _webcamTargetImage, _webcamTargetLiveImage;
-        private AspectRatioFitter _webcamTargetLiveImageFitter;
-        
+        private AspectRatioFitter _webcamTargetImageFitter;
+
+        private bool _wait = false;
+
         // Attributes
 
         [SerializeField, Range(0f, 1f)] private float _captureWResolution, _captureHResolution;
+        [SerializeField] private float _updateInterval = 1f;
 
         IEnumerator Start()
         {
+            _webcamTargetImageFitter = _webcamTargetImage.GetComponent<AspectRatioFitter>();
+            
             while (!_webcam.Ready) yield return null;
             CaptureWebcamImage();
 
-            _webcamTargetLiveImageFitter = _webcamTargetLiveImage.GetComponent<AspectRatioFitter>();
+            StartCoroutine(Loop());
+        }
+
+        IEnumerator Loop()
+        {
+            while (true)
+            {
+                yield return new WaitForSecondsRealtime(_updateInterval);
+                while (_wait) yield return null;
+                SwitchWebcamDevice(); // Jump to next webcam
+            }
         }
 
         void Update()
@@ -32,23 +48,39 @@ namespace live_simulation
 
             var tex = _webcam.CurrentActiveRenderTarget;
             _webcamTargetLiveImage.texture = tex;
-            _webcamTargetLiveImageFitter.aspectRatio = (tex != null)? 1f * tex.width / tex.height:1f;
+        }
+
+        private void OnDestroy()
+        {
+            StopAllCoroutines();
         }
 
         void CaptureWebcamImage()
         {
+            if (_wait) return;
+            _wait = true;
+            
             var w = Mathf.FloorToInt(Screen.width * _captureWResolution);
             var h = Mathf.FloorToInt(Screen.height * _captureHResolution);
             
             _webcam.Capture(w, h, result =>
             {
                 _webcamTargetImage.texture = result;
+                _wait = false;
+                //_webcamTargetImageFitter.aspectRatio = (result != null)? 1f * result.width / result.height:1f;
             });
         }
 
         void SwitchWebcamDevice()
         {
-            _webcam.RequestNextDevice(null);
+            if (_wait) return;
+            _wait = true;
+            
+            _webcam.RequestNextDevice(success =>
+            {
+                Debug.LogWarning("Switch to next webcam was successful!");
+                _wait = false;
+            });
         }
     }
 }
