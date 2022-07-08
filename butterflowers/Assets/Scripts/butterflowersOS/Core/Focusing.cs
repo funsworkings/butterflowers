@@ -184,7 +184,10 @@ namespace butterflowersOS.Core
         
             var loseFocusBlend = loseFocusBlends.PickRandomSubset(1)[0];
 
-            CameraBlending.blendDefinition = loseFocusBlend;
+            /* REMOVE ANIMATED BLEND OP
+             * CameraBlending.blendDefinition = loseFocusBlend;
+             */
+            CameraBlending.blendDefinition = null;
             CameraBlending.BlendTo(CameraManager.DefaultCamera);
 
             onLoseFocus.Invoke();
