@@ -272,10 +272,13 @@ namespace butterflowersOS.Objects.Entities.Interactables
 
         public void Cycle(bool refresh)
         {
-            Pulse();
-            if(IsOnFire) Extinguish();
-            if (refresh) 
-                Close();
+            if (worldPreset.emptyNestOnCycle)
+            {
+                Pulse();
+                if (IsOnFire) Extinguish();
+                if (refresh)
+                    Close();
+            }
         }
 
         #endregion

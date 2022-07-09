@@ -4,8 +4,14 @@ using UnityEngine.SceneManagement;
 
 namespace live_simulation
 {
-    public class PrimaryController : MonoBehaviour
+    public class BridgeUtil : MonoBehaviour
     {
+        // Events
+
+        public static System.Action onCameraChange;
+        public static System.Action onCycleDay;
+        public static System.Action<string> onCreateImage;
+        
         // Properties
 
         [SerializeField] private string additiveSceneName;

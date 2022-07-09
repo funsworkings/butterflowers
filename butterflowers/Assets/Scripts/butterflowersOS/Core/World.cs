@@ -212,9 +212,9 @@ namespace butterflowersOS.Core
             /* * * * * * * * * * * * * * * * */
 
             username = _Save.username;
-            type = (_Save.IsSelfProfileValid()) ? AdvanceType.Continuous : AdvanceType.Broken; // Adjust type from loaded profile!
-            
-            profile = _Save.data.profile;
+            type = AdvanceType.Continuous; /* WV (_Save.IsSelfProfileValid()) ? AdvanceType.Continuous : AdvanceType.Broken; // Adjust type from loaded profile!*/
+
+            profile = new Profile(); // WV _Save.data.profile;
 
             /* * * * * * * * * * * * * * * * */
 
@@ -336,8 +336,9 @@ namespace butterflowersOS.Core
         
         IEnumerator Advance()
         {
-            AdvanceType _type = (_Save.IsSelfProfileValid()) ? AdvanceType.Continuous : AdvanceType.Broken; // Adjust type from loaded profile!
+            AdvanceType _type = AdvanceType.Continuous; /* WV (_Save.IsSelfProfileValid()) ? AdvanceType.Continuous : AdvanceType.Broken;*/ // Adjust type from loaded profile!
             
+            /* WV
             if (_type == AdvanceType.Broken)  // Deactivate sun
             {
                 Sun.active = false;
@@ -345,13 +346,14 @@ namespace butterflowersOS.Core
                 
                 yield return new WaitForEndOfFrame();
             }
+            */
 
             if (Surveillance.IsRecording) 
             {
                 Surveillance.Stop();
                 Surveillance.Dispose();
                 
-                while (Surveillance.recording) 
+                while (Surveillance.recording) // Dispose recording
                     yield return null;
             }
             _Save.data.surveillanceData = (SurveillanceData[])Surveillance.Save(); // Continue saving surveillance data if profile has not been generated
@@ -364,7 +366,7 @@ namespace butterflowersOS.Core
             _Save.data.beacons = (BeaconSceneData) Beacons.Save();
             _Save.data.vines = (VineSceneData) Vines.Save();
 
-            if (_type == AdvanceType.Broken) 
+            /*if (_type == AdvanceType.Broken) 
             {
                 profile = Surveillance.ConstructBehaviourProfile(); // Generate profile cached
                 _Save.data.profile = profile; // Assign generated profile
@@ -372,7 +374,10 @@ namespace butterflowersOS.Core
             else 
             {
                 profile = _Save.data.profile; // Load existing profile
-            }
+            }*/
+            
+            // WV construct behaviour profile for day
+            profile = Surveillance.ConstructBehaviourProfile(); // Generate profile cached
 
             _Save.SaveGameData(); // Save all game data
             yield return new WaitForEndOfFrame();
@@ -771,14 +776,15 @@ namespace butterflowersOS.Core
             //lib_payload.worldFiles = _Save.data.world_files;
 
             bool loadTextures = true;
-            bool loadThumbnails = true;
-            bool generateThumbnails = true;
+            bool loadThumbnails = false;
+            bool generateThumbnails = false;
             
+            /*
             #if UNITY_EDITOR
                 loadTextures = Preset.loadTexturesInEditor;
                 loadThumbnails = Preset.loadThumbnailsInEditor;
                 generateThumbnails = Preset.generateThumbnailsInEditor;
-            #endif
+            #endif*/
             
             Library.Load(lib_payload, Preset.defaultNullTexture, texturePacks, loadTextures, Preset.backlogTextures, loadThumbnails, generateThumbnails);
         }

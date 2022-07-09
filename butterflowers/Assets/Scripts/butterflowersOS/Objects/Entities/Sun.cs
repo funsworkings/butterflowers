@@ -4,6 +4,7 @@ using butterflowersOS.Core;
 using butterflowersOS.Data;
 using butterflowersOS.Interfaces;
 using butterflowersOS.Presets;
+using live_simulation;
 using TMPro;
 using UnityEngine;
 using uwu.Timeline.Core;
@@ -42,7 +43,7 @@ namespace butterflowersOS.Objects.Entities
 
         [SerializeField] Animator dayTracker = null;
         [SerializeField] TMP_Text previousDayText = null, currentDayText = null;
-    
+
         // Attributes
 
         bool setTransform = false;
@@ -297,12 +298,15 @@ namespace butterflowersOS.Objects.Entities
 
                 CycleObservers(true);
 
-                Pausers = FindObjectsOfType<MonoBehaviour>().OfType<IPauseSun>().ToArray();
-                WaitForPausers();
+                /* WV
+                    Pausers = FindObjectsOfType<MonoBehaviour>().OfType<IPauseSun>().ToArray();
+                    WaitForPausers();
+                */
+
                 AdvanceUI(days-1, days);
             
-                if (onCycle != null)
-                    onCycle();
+                if (onCycle != null) onCycle();
+                BridgeUtil.onCycleDay?.Invoke();
 
                 return true;
             }
@@ -360,6 +364,7 @@ namespace butterflowersOS.Objects.Entities
             {
                 if (pauser != null && pauser.Pause) 
                 {
+                    Debug.LogWarning(pauser.GetType().FullName + " is paused!");
                     active = false;
                     break;
                 }    

@@ -581,6 +581,8 @@ namespace butterflowersOS.Core
 				ReceiveTexture(path, TEXTURE_LOOKUP[path]);
 				return;
 			}
+			
+			Debug.LogWarning($"Request texture: {path}, SELF");
 
 			TextureLoader.Push(path, this); // Push to texture loader
 		}
@@ -597,6 +599,8 @@ namespace butterflowersOS.Core
 
 		public void ReceiveTexture(string file, Texture2D texture)
 		{
+			Debug.LogWarning($"Try receive file {file} texture during load? {load}");
+			
 			if (load) // Completing loading during intiialization
 			{
 				if (loadMode == LoadMode.Thumbnails) 
@@ -625,15 +629,23 @@ namespace butterflowersOS.Core
 				
 				RegisterTexture(file, texture);
 
-				ITextureReceiver receiver = TEXTURE_RECEIVERS[file];
-				if (receiver != null) 
+				Debug.LogWarning($"Try find receiver for file: {file}");
+				try
 				{
-					if (texture == null) texture = GetFallbackTexture(file, nullable: false);
-					receiver.ReceiveTexture(file, texture);
+					ITextureReceiver receiver = TEXTURE_RECEIVERS[file]; // error
+					if (receiver != null)
+					{
+						if (texture == null) texture = GetFallbackTexture(file, nullable: false);
+						receiver.ReceiveTexture(file, texture);
+					}
+
+					TEXTURE_RECEIVERS.Remove(file); // Pop from receivers queue
+				}
+				catch (System.Exception e)
+				{
+					Debug.LogError(e);
 				}
 
-				TEXTURE_RECEIVERS.Remove(file); // Pop from receivers queue
-				
 			}
 		}
 		

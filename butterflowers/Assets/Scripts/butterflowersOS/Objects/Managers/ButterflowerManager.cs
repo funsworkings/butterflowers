@@ -353,7 +353,7 @@ namespace butterflowersOS.Objects.Managers
 
         public void Cycle(bool refresh)
         {
-            KillButterflies();
+            if(preset.killButterflowersOnCycle) KillButterflies();
         }
 
         #endregion

@@ -101,6 +101,14 @@ namespace butterflowersOS.Presets
             [Header("Miscellaneous")] 
             [Range(0f, 1f)] public float worldTextureProbability = .5f;
             public Texture2D[] worldTextures;
+            
+        
+            [Header("wundervil")] 
+            
+            // Cycle events
+            public bool killButterflowersOnCycle = false;
+            public bool clearBeaconsOnCycle = false;
+            public bool emptyNestOnCycle = false;
 
         #region Time conversions
 

@@ -1,6 +1,7 @@
 ﻿using System.Collections.Generic;
 using butterflowersOS.Objects.Base;
 using butterflowersOS.Objects.Entities;
+using live_simulation;
 using UnityEngine;
 using UnityEngine.Audio;
 using UnityEngine.Events;
@@ -166,6 +167,8 @@ namespace butterflowersOS.Core
 
                 CameraBlending.blendDefinition = null;
                 CameraBlending.BlendTo(Camera);
+                
+                BridgeUtil.onCameraChange?.Invoke();
             
                 Events.ReceiveEvent(EVENTCODE.REFOCUS, AGENT.User, focus.Agent);
             }
@@ -180,6 +183,8 @@ namespace butterflowersOS.Core
         public void LoseFocus()
         {
             Dispose();
+            
+            if(activefocus != null) BridgeUtil.onCameraChange?.Invoke();
             activefocus = null;
         
             var loseFocusBlend = loseFocusBlends.PickRandomSubset(1)[0];

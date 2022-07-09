@@ -24,8 +24,8 @@ MonoBehaviour:
   loadThumbnailsInEditor: 1
   generateThumbnailsInEditor: 1
   useDesktopFilesForDebugBeacons: 0
-  allowDebugSpawn: 0
-  allowDebugTimeSkip: 0
+  allowDebugSpawn: 1
+  allowDebugTimeSkip: 1
   allowImportBeforeExportAgent: 0
   allowExternalNeueagent: 1
   hoursPerDay: 0.033333335
@@ -123,7 +123,7 @@ MonoBehaviour:
   leafFlutterAngle: 45
   leafFlutterTime: 1
   surveillanceLogRate: 3.33
-  backlogTextures: 1
+  backlogTextures: 0
   discoveryScoreCurve:
     serializedVersion: 2
     m_Curve:
@@ -475,3 +475,10 @@ MonoBehaviour:
   - {fileID: 2800000, guid: 5938deb5c7432b547b8bc9e58bc07b0d, type: 3}
   - {fileID: 2800000, guid: 6abcd4fb167647e43997f21b5186cd3f, type: 3}
   - {fileID: 2800000, guid: 368822cb77e029b41a1ad99685992f03, type: 3}
+  infinite: 1
+  saveAndLoad: 0
+  surveillance: 0
+  autoImageLoad: 0
+  killButterflowersOnCycle: 0
+  clearBeaconsOnCycle: 1
+  emptyNestOnCycle: 1

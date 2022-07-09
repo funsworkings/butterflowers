@@ -75,6 +75,9 @@ namespace uwu
 
 		public bool SaveGameData(string file = null, bool useCacheSave = false)
 		{
+			// WV
+			return true;
+			
 			if (file == null) file = def_savefile;
 
 			object o = null;
@@ -120,6 +123,8 @@ namespace uwu
 
 		public bool LoadGameData<E>(string file = null, bool createIfEmpty = false) where E:GameData
 		{
+			// WV
+
 			if (file == null) file = def_savefile; // Fallback to default save file
 
 			E dat = null;
@@ -130,7 +135,7 @@ namespace uwu
 			else
 				path = ConstructDataPath(file);
 			
-			dat = DataHandler.Read<E>(path);
+			// WV remove reading op on load always create / dat = DataHandler.Read<E>(path);
 			if (dat == null && createIfEmpty) 
 			{
 				Debug.LogWarningFormat("No save file located, initializing data file... [{0}]", file);

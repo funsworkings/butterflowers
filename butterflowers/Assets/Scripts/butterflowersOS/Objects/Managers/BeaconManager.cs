@@ -8,6 +8,7 @@ using butterflowersOS.Data;
 using butterflowersOS.Interfaces;
 using butterflowersOS.Objects.Entities.Interactables;
 using butterflowersOS.Presets;
+using live_simulation;
 using UnityEngine;
 using UnityEngine.Events;
 using uwu;
@@ -137,6 +138,8 @@ namespace butterflowersOS.Objects.Managers
 			Library = Library.Instance;
 			Library.onDeletedFiles += UserDeletedFiles;
 			Library.onRecoverFiles += UserRecoveredFiles;
+
+			BridgeUtil.onCreateImage += CreateBeaconFromWebcamImage;
 		}
 		
 		protected override void OnDestroy()
@@ -159,6 +162,8 @@ namespace butterflowersOS.Objects.Managers
 				Library.onDeletedFiles -= UserDeletedFiles;
 				Library.onRecoverFiles -= UserRecoveredFiles;
 			}
+			
+			BridgeUtil.onCreateImage -= CreateBeaconFromWebcamImage;
 		}
 
 		protected override void Update()
@@ -174,9 +179,21 @@ namespace butterflowersOS.Objects.Managers
 
 		public void Cycle(bool refresh)
 		{
-			WipeBeacons(); // Clear out flammable beacons
+			if(preset.clearBeaconsOnCycle) WipeBeacons(); // Clear out flammable beacons
 		}
     
+		#endregion
+		
+		#region WV
+
+		void CreateBeaconFromWebcamImage(string path)
+		{
+			return; // Ignore beacon manager calls to create beacon from webcam img
+			
+			Debug.Log($"Request beacon spawn: {path}");
+			CreateBeacon(path, Type.Desktop, Locale.Terrain, new Hashtable(), transition:BeaconManager.TransitionType.Spawn);
+		}
+		
 		#endregion
 
 		#region Spawner overrides

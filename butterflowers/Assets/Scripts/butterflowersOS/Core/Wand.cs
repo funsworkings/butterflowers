@@ -1,4 +1,5 @@
-﻿using System.Collections;
+﻿using System;
+using System.Collections;
 using System.Collections.Generic;
 using System.Linq;
 using B83.Win32;
@@ -9,6 +10,7 @@ using butterflowersOS.Objects.Entities.Interactables;
 using butterflowersOS.Objects.Managers;
 using butterflowersOS.Presets;
 using butterflowersOS.Visuals.Types;
+using live_simulation;
 using TMPro;
 using UnityEngine;
 using UnityEngine.EventSystems;
@@ -223,6 +225,18 @@ namespace butterflowersOS.Core
             
             sun = Sun.Instance;
             m_wandShaderParam = new Vector4(Mathf.Infinity, Mathf.Infinity, Mathf.Infinity, 0f);
+
+            BridgeUtil.onCreateImage += TryCreateWebcamImage;
+        }
+
+        private void OnDestroy()
+        {
+            BridgeUtil.onCreateImage -= TryCreateWebcamImage;
+        }
+
+        void TryCreateWebcamImage(string path)
+        {
+            AddBeacon(path, new POINT(), random: true);
         }
 
         protected override void Update()

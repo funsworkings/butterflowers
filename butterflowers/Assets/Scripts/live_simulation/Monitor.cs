@@ -1,8 +1,10 @@
 using System;
 using System.Collections;
+using System.IO;
 using live_simulation.Utils;
 using UnityEngine;
 using UnityEngine.UI;
+using uwu.IO;
 
 namespace live_simulation
 {
@@ -20,15 +22,61 @@ namespace live_simulation
 
         [SerializeField, Range(0f, 1f)] private float _captureWResolution, _captureHResolution;
         [SerializeField] private float _updateInterval = 1f;
+        
+        
+        #region Files
+        
+        string savePath
+        {
+            get
+            {
+                var path = Application.persistentDataPath + "/scratch_disk";
+                FileUtils.EnsureDirectory(path);
+                return path;
+            }
+        }
+
+        void ClearDisk()
+        {
+            string folder = savePath;
+            string[] items = Directory.GetFiles(folder);
+            if (items != null && items.Length > 0)
+            {
+                foreach (string s in items)
+                {
+                    File.Delete(s); // Delete file at path
+                }
+            }
+        }
+
+        void SaveToDisk(Texture2D img)
+        {
+            var bytes = img.EncodeToJPG();
+            var filename = System.Guid.NewGuid().ToString() + ".jpg";
+            var fullpath = savePath + $"/{filename}";
+            
+            File.WriteAllBytes(fullpath, bytes);
+            Debug.LogWarning($"Success save image to path? {fullpath} -- {File.Exists(fullpath)}");
+            
+            BridgeUtil.onCreateImage?.Invoke(fullpath);
+        }
+        
+        
+        #endregion
 
         IEnumerator Start()
         {
             _webcamTargetImageFitter = _webcamTargetImage.GetComponent<AspectRatioFitter>();
+
+            yield return new WaitForEndOfFrame();
+            ClearDisk();
             
             while (!_webcam.Ready) yield return null;
             CaptureWebcamImage();
+            
+            BridgeUtil.onCameraChange += SwitchWebcamDevice;
 
-            StartCoroutine(Loop());
+            //StartCoroutine(Loop());
         }
 
         IEnumerator Loop()
@@ -53,6 +101,10 @@ namespace live_simulation
         private void OnDestroy()
         {
             StopAllCoroutines();
+            
+            ClearDisk(); // Wipe scratch disk
+
+            BridgeUtil.onCameraChange -= SwitchWebcamDevice;
         }
 
         void CaptureWebcamImage()
@@ -67,6 +119,11 @@ namespace live_simulation
             {
                 _webcamTargetImage.texture = result;
                 _wait = false;
+
+                if (result != null)
+                {
+                    SaveToDisk(result);
+                }
                 //_webcamTargetImageFitter.aspectRatio = (result != null)? 1f * result.width / result.height:1f;
             });
         }

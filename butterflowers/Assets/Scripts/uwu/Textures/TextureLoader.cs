@@ -41,6 +41,7 @@ namespace uwu.Textures
 					//if (!read) 
 					//{
 						var file = STACK[0];
+						Debug.LogWarning($"Try load {file}");
 
 						
 #pragma warning disable 618
