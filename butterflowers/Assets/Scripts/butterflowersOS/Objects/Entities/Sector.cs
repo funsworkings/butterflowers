@@ -52,16 +52,19 @@ namespace butterflowersOS.Objects.Entities
 
 		public bool Activate(Sprite shape)
 		{
+			var shapeModule = ps.shape;
+			shapeModule.sprite = shape;
+			
 			if (status == Status.Wait) 
 			{
 				status = Status.Queue;
-
-				var shapeModule = ps.shape;
-				shapeModule.sprite = shape;
-				
 				onActivated.Invoke();
 
 				return true;
+			}
+			else
+			{
+				ps.Play();
 			}
 
 			return false;

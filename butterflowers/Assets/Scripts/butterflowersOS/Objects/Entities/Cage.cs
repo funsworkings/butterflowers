@@ -1,6 +1,7 @@
 ﻿using System;
 using UnityEngine;
 using UnityEngine.Events;
+using Random = System.Random;
 
 namespace butterflowersOS.Objects.Entities
 {
@@ -108,8 +109,8 @@ namespace butterflowersOS.Objects.Entities
             
             CheckIfAllQueued(out int sectorProgress, events:false);
             sectorProgress = Mathf.Min(sectorProgress, sectors.Length - 1);
-            
-            bool success = sector.Activate(shapes[sectorProgress]);
+
+            bool success = sector.Activate(shapes[UnityEngine.Random.Range(0, shapes.Length)]);//sector.Activate(shapes[sectorProgress]);
 
             CheckIfAllQueued(out sectorProgress);
             return success;

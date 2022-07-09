@@ -273,7 +273,11 @@ namespace butterflowersOS.Core
             onLoadComplete.Invoke();
             while (loadAudio.isPlaying) yield return null;
             onLoadTrigger.Invoke();
+            
+            _Save.data.tutorial = true;
 
+            /* WV / disable tuts
+            
             bool requireTutorial = !_Save.data.tutorial;
             if (requireTutorial && Tutorial.IsValid) {
                 
@@ -283,6 +287,8 @@ namespace butterflowersOS.Core
                 _Save.data.tutorial = true;
                 _Save.SaveGameData(); // Save immediately when tutorial completed!
             }
+            
+            */
             
             pauseMenu.enabled = true; 
             pauseMenu.ToggleTeleport(_Save.IsExternalProfileValid());
@@ -310,6 +316,9 @@ namespace butterflowersOS.Core
                 Surveillance.Ignore();
 
 
+            welcomeMessage.DisplayUsername(username);
+            /*
+            WV
             if (Cutscenes.HasCompletedIntro) 
             {
                 welcomeMessage.DisplayUsername(username);
@@ -319,6 +328,7 @@ namespace butterflowersOS.Core
                 Cutscenes.TriggerIntro(); // Trigger intro cutscene    
                 yield return new WaitForEndOfFrame();
             }
+            */
 
             while(Cutscenes.inprogress) yield return null; // Wait for cutscenes to wrap on open before showing game panel
 
@@ -381,6 +391,15 @@ namespace butterflowersOS.Core
 
             _Save.SaveGameData(); // Save all game data
             yield return new WaitForEndOfFrame();
+            
+            Surveillance.New(); // Trigger
+            yield return null;
+            
+            wait = false; // Disable pause!
+            type = _type;
+            
+            /*
+            WV / STRIP OUT PREV ADVANCE FUNC
 
             SequenceManager.TriggerReason sequenceReason = SequenceManager.TriggerReason.Block;
             bool didLoadSequence = false;
@@ -436,6 +455,7 @@ namespace butterflowersOS.Core
                     }
                 }
             }
+            */
 
             while (Cutscenes.inprogress) yield return null;
             gamePanel.Show();
