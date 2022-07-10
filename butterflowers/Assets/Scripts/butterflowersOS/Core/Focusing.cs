@@ -69,6 +69,7 @@ namespace butterflowersOS.Core
         // Collections
     
         Focusable[] focuses = new Focusable[]{};
+        public Focusable[] Focuses => focuses;
     
         #region Accessors
 

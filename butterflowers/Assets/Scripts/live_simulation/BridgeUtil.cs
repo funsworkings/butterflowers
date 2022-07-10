@@ -1,4 +1,7 @@
 using System;
+using System.Collections;
+using System.Linq;
+using TMPro;
 using UnityEngine;
 using UnityEngine.SceneManagement;
 
@@ -8,22 +11,77 @@ namespace live_simulation
     {
         // Events
 
+        public static System.Action onLoad;
         public static System.Action onCameraChange;
         public static System.Action onCycleDay;
         public static System.Action<string> onCreateImage;
         
         // Properties
 
-        [SerializeField] private string additiveSceneName;
+        [SerializeField, Range(0f, 1f)] private float _nurture = 0f;
+        [SerializeField, Range(0f, 1f)] private float _quiet = 1f;
+        [SerializeField, Range(0f, 1f)] private float _destruction = 0f;
+        [SerializeField, Range(0f, 1f)] private float _order = 0f;
+
+        public float NURTURE => _nurture;
+        public float ORDER => _order;
+        public float DESTRUCTION => _destruction;
+        public float QUIET => _quiet;
+
+        private IBridgeUtilListener[] _listeners;
         
-        private void Start()
+        // UI
+
+        [SerializeField] private TMP_Text _nurtureUI, _quietUI, _orderUI, _destructionUI;
+        
+        void Start()
         {
-            SceneManager.LoadScene(additiveSceneName, LoadSceneMode.Additive);
+            StartCoroutine(SceneLoadAsync(() =>
+            {
+                // Scene load completed
+
+               _listeners = FindObjectsOfType<MonoBehaviour>().OfType<IBridgeUtilListener>().ToArray();
+               foreach (IBridgeUtilListener listener in _listeners) listener._Util = this;
+
+            }, () =>
+            {
+                Debug.LogWarning("Failed to load webcam scene!");
+            }));
+        }
+        
+        IEnumerator SceneLoadAsync(System.Action onComplete, System.Action onFailure)
+        {
+            var asyncLoadOp = SceneManager.LoadSceneAsync(1, LoadSceneMode.Additive);
+            asyncLoadOp.allowSceneActivation = true;
+
+            while (!asyncLoadOp.isDone)
+            {
+                Debug.Log($"Scene load progress for webcam: {asyncLoadOp.progress}%");
+                yield return null; // Wait for async scene load to finish
+            }
+
+            var sc = SceneManager.GetSceneByBuildIndex(1);
+            if (sc.IsValid())
+            {
+                onComplete?.Invoke();
+            }
+            else
+            {
+                onFailure?.Invoke();
+            }
+        }
+
+        private void Update()
+        {
+            _nurtureUI.text = Mathf.FloorToInt(_nurture * 100f).ToString();
+            _quietUI.text = Mathf.FloorToInt(_quiet * 100f).ToString();
+            _destructionUI.text = Mathf.FloorToInt(_destruction * 100f).ToString();
+            _orderUI.text = Mathf.FloorToInt(_order * 100f).ToString();
         }
 
         private void OnDestroy()
         {
-            SceneManager.UnloadScene(additiveSceneName);
+            SceneManager.UnloadScene(1);
         }
     }
 }

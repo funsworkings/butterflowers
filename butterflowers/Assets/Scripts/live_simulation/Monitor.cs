@@ -5,6 +5,7 @@ using live_simulation.Utils;
 using UnityEngine;
 using UnityEngine.UI;
 using uwu.IO;
+using Random = Unity.Mathematics.Random;
 
 namespace live_simulation
 {
@@ -14,6 +15,7 @@ namespace live_simulation
     
         [SerializeField] Webcam _webcam;
         [SerializeField] RawImage _webcamTargetImage, _webcamTargetLiveImage;
+        [SerializeField] private SelectionBox _selection;
         private AspectRatioFitter _webcamTargetImageFitter;
 
         private bool _wait = false;
@@ -76,16 +78,30 @@ namespace live_simulation
             
             BridgeUtil.onCameraChange += SwitchWebcamDevice;
 
-            //StartCoroutine(Loop());
+            StartCoroutine(Loop());
         }
 
         IEnumerator Loop()
         {
+            float t = 0f;
+            
             while (true)
             {
-                yield return new WaitForSecondsRealtime(_updateInterval);
-                while (_wait) yield return null;
-                SwitchWebcamDevice(); // Jump to next webcam
+                if (!_wait) t += Time.deltaTime;
+                if (t >= _updateInterval)
+                {
+                    t = 0f;
+                    
+                    // Change selection zone
+                    var cw = _selection.Container.rect.width;
+                    var ch = _selection.Container.rect.height;
+
+                    Vector2 sPos = new Vector2(UnityEngine.Random.Range(-cw/2f, cw/2f), UnityEngine.Random.Range(-ch/2f, ch/2f));
+                    Vector2 sScale = new Vector2(UnityEngine.Random.Range(64, cw), UnityEngine.Random.Range(64, ch));
+                        _selection.UpdateTransform(sPos, sScale);
+                }
+
+                yield return null;
             }
         }
 
@@ -96,6 +112,8 @@ namespace live_simulation
 
             var tex = _webcam.CurrentActiveRenderTarget;
             _webcamTargetLiveImage.texture = tex;
+
+            _selection.Pause = _wait; // Pause lerp for selection box during photo/switch
         }
 
         private void OnDestroy()
@@ -107,6 +125,10 @@ namespace live_simulation
             BridgeUtil.onCameraChange -= SwitchWebcamDevice;
         }
 
+        [SerializeField] private int captureWidth = 100;
+        [SerializeField] private int captureHeight = 100;
+        [SerializeField] private int captureX = 0, captureY;
+        
         void CaptureWebcamImage()
         {
             if (_wait) return;
@@ -114,7 +136,12 @@ namespace live_simulation
             
             var w = Mathf.FloorToInt(Screen.width * _captureWResolution);
             var h = Mathf.FloorToInt(Screen.height * _captureHResolution);
-            
+
+            var cx = _selection.X;
+            var cy = _selection.Y;
+            var cw = _selection.W;
+            var ch = _selection.H;
+
             _webcam.Capture(w, h, result =>
             {
                 _webcamTargetImage.texture = result;
@@ -124,8 +151,9 @@ namespace live_simulation
                 {
                     SaveToDisk(result);
                 }
-                //_webcamTargetImageFitter.aspectRatio = (result != null)? 1f * result.width / result.height:1f;
-            });
+                
+                _webcamTargetImageFitter.aspectRatio = (result != null)? 1f * result.width / result.height:1f;
+            }, (int)cw, (int)ch, (int)cx, (int)cy);
         }
 
         void SwitchWebcamDevice()

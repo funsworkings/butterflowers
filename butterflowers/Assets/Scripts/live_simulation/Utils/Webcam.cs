@@ -10,9 +10,12 @@ namespace live_simulation.Utils
     public class Webcam : MonoBehaviour
 	{
 		// Properties
-		
-		[SerializeField] string _defaultDeviceId;
 
+		[SerializeField] private Camera _renderCamera;
+		[SerializeField] string _defaultDeviceId;
+		[SerializeField] private List<GameObject> toggleVisibilityComponents = new List<GameObject>();
+		
+		
 		private List<WebCamDevice> AvailableDevices = new List<WebCamDevice>();
 		private int DeviceIndex = -1;
 		
@@ -43,17 +46,66 @@ namespace live_simulation.Utils
 			}
 		}
 
-		public void Capture(int width, int height, System.Action<Texture2D> onCompleted)
+		public void Capture(int width, int height, System.Action<Texture2D> onCompleted, int captureWidth = 0, int captureHeight = 0, int captureOX = 0, int captureOY = 0)
 		{
 			if(!Ready) throw new System.Exception("Device not ready!");
 
-			Texture2D render=  new Texture2D(wct.width, wct.height); 
-			render.SetPixels32(wct.GetPixels32());
+			var w = _renderCamera.pixelWidth;
+			var h = _renderCamera.pixelHeight;
+			
+			Rect _render = new Rect(0,0, w, h);
+
+			captureOY = h - captureOY;
+
+			if (captureWidth > 0 || captureHeight > 0)
+			{
+				captureWidth = Mathf.Clamp(captureWidth, 1, w);
+				captureHeight = Mathf.Clamp(captureHeight, 1, h);
+
+				captureOX = Mathf.Clamp(captureOX, 0, w - captureWidth);
+				captureOY = Mathf.Clamp(captureOY, 0, h - captureHeight);
+
+				_render = new Rect(captureOX, captureOY, captureWidth, captureHeight);
+			}
+
+			StartCoroutine(CaptureRoutine(w, h, _render, onCompleted));
+		}
+
+		IEnumerator CaptureRoutine(int w, int h, Rect captureRegion, Action<Texture2D> callback)
+		{
+			ToggleComponents(false);
+			
+			yield return new WaitForEndOfFrame();
+			
+			Texture2D render =  new Texture2D((int)captureRegion.width, (int)captureRegion.height, TextureFormat.RGB24, false); 
+			//Debug.LogWarning($"Render-- x:{_render.x} y:{_render.y} w:{_render.width} h:{_render.height} {render.width} {render.height} {w} {h}");
+			
+			RenderTexture renderTexture = new RenderTexture(w, h, 24);
+
+			_renderCamera.targetTexture = renderTexture;
+			_renderCamera.Render();
+ 
+			RenderTexture.active = renderTexture;
+			render.ReadPixels(captureRegion, 0, 0);
 			render.Apply();
+ 
+			_renderCamera.targetTexture = null;
+			RenderTexture.active = null;
+ 
+			Destroy(renderTexture);
+			renderTexture = null;
 
-			TextureScale.Bilinear(render, width, height);
+			//yield return new WaitForEndOfFrame();
+			
+			//TextureScale.Bilinear(render, width, height);
+			
+			ToggleComponents(true);
+			callback?.Invoke(render);
+		}
 
-			onCompleted?.Invoke(render);
+		void ToggleComponents(bool visible)
+		{
+			foreach(GameObject o in toggleVisibilityComponents) o.SetActive(visible);
 		}
 
 		public void RequestDevice(string deviceId, Action<bool> onReady)

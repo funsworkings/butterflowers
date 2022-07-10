@@ -17,6 +17,7 @@ using butterflowersOS.Objects.Entities.Interactables;
 using butterflowersOS.Objects.Managers;
 using butterflowersOS.Presets;
 using butterflowersOS.UI;
+using live_simulation;
 using Neue.Agent.Brain.Data;
 using Objects.Managers;
 using UnityEngine;
@@ -334,6 +335,10 @@ namespace butterflowersOS.Core
 
             gamePanel.Show();
             wait = false;
+            
+            Nest.RandomKick();
+            
+            BridgeUtil.onLoad?.Invoke();
         }
 
         public void Cycle(bool refresh)
