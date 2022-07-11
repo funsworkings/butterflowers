@@ -138,8 +138,6 @@ namespace butterflowersOS.Objects.Managers
 			Library = Library.Instance;
 			Library.onDeletedFiles += UserDeletedFiles;
 			Library.onRecoverFiles += UserRecoveredFiles;
-
-			BridgeUtil.onCreateImage += CreateBeaconFromWebcamImage;
 		}
 		
 		protected override void OnDestroy()
@@ -162,8 +160,6 @@ namespace butterflowersOS.Objects.Managers
 				Library.onDeletedFiles -= UserDeletedFiles;
 				Library.onRecoverFiles -= UserRecoveredFiles;
 			}
-			
-			BridgeUtil.onCreateImage -= CreateBeaconFromWebcamImage;
 		}
 
 		protected override void Update()
@@ -183,18 +179,6 @@ namespace butterflowersOS.Objects.Managers
 			if(preset.clearBeaconsOnCycle) WipeBeacons(); // Clear out flammable beacons
 		}
     
-		#endregion
-		
-		#region WV
-
-		void CreateBeaconFromWebcamImage(string path)
-		{
-			return; // Ignore beacon manager calls to create beacon from webcam img
-			
-			Debug.Log($"Request beacon spawn: {path}");
-			CreateBeacon(path, Type.Desktop, Locale.Terrain, new Hashtable(), transition:BeaconManager.TransitionType.Spawn);
-		}
-		
 		#endregion
 
 		#region Spawner overrides
@@ -230,8 +214,7 @@ namespace butterflowersOS.Objects.Managers
 
 		#region Operations
 
-		public Beacon CreateBeacon(string path, Type type, Locale state, Hashtable @params = null,
-			TransitionType transition = TransitionType.NULL, bool fromSave = false)
+		public Beacon CreateBeacon(string path, Type type, Locale state, Hashtable @params = null, TransitionType transition = TransitionType.NULL, bool fromSave = false)
 		{
 			Vector3 position = Vector3.zero;
 			Quaternion rotation = Quaternion.identity;
@@ -592,6 +575,8 @@ namespace butterflowersOS.Objects.Managers
 				instance.transform.position = position;
 				instance.GetComponent<ParticleSystem>().Play();
 			}
+			
+			Events.ReceiveEvent(EVENTCODE.BEACONFIRE, AGENT.User, AGENT.Beacon, details: beacon.File);
 		}
 
 		void onExtinguishBeacon(Beacon beacon, bool self)
@@ -600,6 +585,8 @@ namespace butterflowersOS.Objects.Managers
 			var instance = extinguishPool.Request();
 				instance.transform.position = position;
 				instance.GetComponent<ParticleSystem>().Play();
+				
+			Events.ReceiveEvent(EVENTCODE.BEACONEXTINGUISH, AGENT.User, AGENT.Beacon, details: beacon.File);
 		}
 
 		void TriggerUpdateBeacons()

@@ -69,12 +69,16 @@ namespace butterflowersOS
         NESTSPILL = 13, // *
         NESTGROW = 14,
         NESTSHRINK = 15,
+        NESTFIRE = 16,
+        NESTEXTINGUISH = 17,
 
         BEACONACTIVATE = 20, // *
         BEACONADD = 21,
         BEACONDELETE = 22, //
         BEACONPLANT = 23, //
         BEACONFLOWER = 24, //
+        BEACONFIRE = 25, 
+        BEACONEXTINGUISH = 26,
 
         GESTURE = 30,
         PHOTOGRAPH = 31,

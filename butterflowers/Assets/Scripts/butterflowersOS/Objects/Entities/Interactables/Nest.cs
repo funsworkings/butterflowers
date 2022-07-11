@@ -252,7 +252,7 @@ namespace butterflowersOS.Objects.Entities.Interactables
             return false;
         }
 
-        public bool Dispose(bool release = true)
+        public bool Dispose(bool release = true, AGENT agent = AGENT.Nest)
         {
             bool success = this.m_beacons.Count > 0;
 
@@ -266,6 +266,11 @@ namespace butterflowersOS.Objects.Entities.Interactables
             this.m_beacons = new List<Beacon>();
 
             Quilt.Dispose(true);
+
+            if (success)
+            {
+                Events.ReceiveEvent(EVENTCODE.NESTCLEAR, agent, AGENT.Nest);
+            }
 
             return success;
         }
@@ -583,11 +588,19 @@ namespace butterflowersOS.Objects.Entities.Interactables
     
         public void Fire()
         {
+            if (!IsOnFire)
+            {
+                Events.ReceiveEvent(EVENTCODE.NESTFIRE, AGENT.User, AGENT.Nest);
+            }
             deathPS.Play();
         }
 
         public void Extinguish()
         {
+            if (IsOnFire)
+            {
+                Events.ReceiveEvent(EVENTCODE.NESTEXTINGUISH, AGENT.User, AGENT.Nest);
+            }
             deathPS.Stop();
         }
     

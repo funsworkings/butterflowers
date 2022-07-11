@@ -51,7 +51,7 @@ namespace live_simulation
             }
         }
 
-        void SaveToDisk(Texture2D img)
+        string SaveToDisk(Texture2D img)
         {
             var bytes = img.EncodeToJPG();
             var filename = System.Guid.NewGuid().ToString() + ".jpg";
@@ -61,6 +61,7 @@ namespace live_simulation
             Debug.LogWarning($"Success save image to path? {fullpath} -- {File.Exists(fullpath)}");
             
             BridgeUtil.onCreateImage?.Invoke(fullpath);
+            return fullpath;
         }
         
         
@@ -99,7 +100,7 @@ namespace live_simulation
         [SerializeField] private int captureHeight = 100;
         [SerializeField] private int captureX = 0, captureY;
         
-        public void CaptureWebcamImage(System.Action<Texture2D> onComplete = null, bool includeSelectionTransition = true)
+        public void CaptureWebcamImage(System.Action<Texture2D, string> onComplete = null, bool includeSelectionTransition = true)
         {
             if (_wait) return;
             _wait = true;
@@ -132,13 +133,14 @@ namespace live_simulation
                         _webcamTargetImage.texture = result;
                         _wait = false;
 
+                        string fullpath = null;
                         if (result != null)
                         {
-                            SaveToDisk(result);
+                            fullpath = SaveToDisk(result);
                         }
                 
                         _webcamTargetImageFitter.aspectRatio = (result != null)? 1f * result.width / result.height:1f;
-                        onComplete?.Invoke(result);
+                        onComplete?.Invoke(result, fullpath);
                 
                     }, (int)cw, (int)ch, (int)cx, (int)cy); 
                 });
@@ -150,13 +152,14 @@ namespace live_simulation
                     _webcamTargetImage.texture = result;
                     _wait = false;
 
+                    string fullpath = null;
                     if (result != null)
                     {
-                        SaveToDisk(result);
+                        fullpath = SaveToDisk(result);
                     }
                 
                     _webcamTargetImageFitter.aspectRatio = (result != null)? 1f * result.width / result.height:1f;
-                    onComplete?.Invoke(result);
+                    onComplete?.Invoke(result, fullpath);
                 
                 }, (int)cw, (int)ch, (int)cx, (int)cy); 
             }

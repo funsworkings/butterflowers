@@ -96,11 +96,11 @@ namespace live_simulation
         
         #region Bridge ops
 
-        public void RequestWebcamTexture(System.Action<Texture2D> onComplete)
+        public void RequestWebcamTexture(System.Action<Texture2D, string> onComplete)
         {
             if (_monitor == null)
             {
-                onComplete?.Invoke(null);
+                onComplete?.Invoke(null, null);
                 return;
             }
             

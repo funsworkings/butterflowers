@@ -234,7 +234,7 @@ namespace butterflowersOS.Core
             BridgeUtil.onCreateImage -= TryCreateWebcamImage;
         }
 
-        void TryCreateWebcamImage(string path)
+        public void TryCreateWebcamImage(string path)
         {
             AddBeacon(path, new POINT(), random: true);
         }
@@ -535,10 +535,7 @@ namespace butterflowersOS.Core
 
         public bool ClearNest()
         {
-            bool success = Nest.Instance.Dispose();
-            if (success)
-                Events.ReceiveEvent(EVENTCODE.NESTCLEAR, Agent, AGENT.Nest);
-
+            bool success = Nest.Instance.Dispose(agent:AGENT.User);
             return success;
         }
     
