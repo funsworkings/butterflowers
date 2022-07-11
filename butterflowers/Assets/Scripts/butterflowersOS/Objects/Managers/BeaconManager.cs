@@ -179,6 +179,7 @@ namespace butterflowersOS.Objects.Managers
 
 		public void Cycle(bool refresh)
 		{
+			Debug.LogWarning($"Cycle beacons: {preset.clearBeaconsOnCycle}"); 
 			if(preset.clearBeaconsOnCycle) WipeBeacons(); // Clear out flammable beacons
 		}
     
@@ -431,7 +432,7 @@ namespace butterflowersOS.Objects.Managers
 
 		public void WipeBeacons()
 		{
-			KeyValuePair<string, List<Beacon>>[] cache = beacons.ToArray();
+			KeyValuePair<string, List<Beacon>>[] cache = beacons.ToArray(); Debug.LogWarning($"Found {cache.Length} beacons to wipe!");
 			foreach (KeyValuePair<string, List<Beacon>> lookup in cache) 
 			{
 				var file = lookup.Key;

@@ -79,7 +79,7 @@ namespace live_simulation
 
         void Update()
         {
-            if(Input.GetKeyUp(KeyCode.Space)) CaptureWebcamImage();
+            if(Input.GetKeyUp(KeyCode.Space)) CaptureWebcamImage(includeSelectionTransition:false);
             else if(Input.GetKeyUp(KeyCode.RightArrow)) SwitchWebcamDevice();
 
             var tex = _webcam.CurrentActiveRenderTarget;
@@ -99,27 +99,52 @@ namespace live_simulation
         [SerializeField] private int captureHeight = 100;
         [SerializeField] private int captureX = 0, captureY;
         
-        public void CaptureWebcamImage(System.Action<Texture2D> onComplete = null)
+        public void CaptureWebcamImage(System.Action<Texture2D> onComplete = null, bool includeSelectionTransition = true)
         {
             if (_wait) return;
             _wait = true;
             
-            // Change selection zone
-            var _cw = _selection.Container.rect.width;
-            var _ch = _selection.Container.rect.height;
+            var w = Mathf.FloorToInt(Screen.width * _captureWResolution);
+            var h = Mathf.FloorToInt(Screen.height * _captureHResolution);
+            
+            var cx = _selection.X;
+            var cy = _selection.Y;
+            var cw = _selection.W;
+            var ch = _selection.H;
 
-            Vector2 sPos = new Vector2(UnityEngine.Random.Range(-_cw/2f, _cw/2f), UnityEngine.Random.Range(-_ch/2f, _ch/2f));
-            Vector2 sScale = new Vector2(UnityEngine.Random.Range(64, _cw), UnityEngine.Random.Range(64, _ch));
-            _selection.UpdateTransform(sPos, sScale, () =>
+            if (includeSelectionTransition)
             {
-                var w = Mathf.FloorToInt(Screen.width * _captureWResolution);
-                var h = Mathf.FloorToInt(Screen.height * _captureHResolution);
+                // Change selection zone
+                var _cw = _selection.Container.rect.width;
+                var _ch = _selection.Container.rect.height;
 
-                var cx = _selection.X;
-                var cy = _selection.Y;
-                var cw = _selection.W;
-                var ch = _selection.H;
+                Vector2 sPos = new Vector2(UnityEngine.Random.Range(-_cw/2f, _cw/2f), UnityEngine.Random.Range(-_ch/2f, _ch/2f));
+                Vector2 sScale = new Vector2(UnityEngine.Random.Range(64, _cw), UnityEngine.Random.Range(64, _ch));
+                _selection.UpdateTransform(sPos, sScale, () =>
+                {
+                    cx = _selection.X;
+                    cy = _selection.Y;
+                    cw = _selection.W;
+                    ch = _selection.H;
 
+                    _webcam.Capture(w, h, result =>
+                    {
+                        _webcamTargetImage.texture = result;
+                        _wait = false;
+
+                        if (result != null)
+                        {
+                            SaveToDisk(result);
+                        }
+                
+                        _webcamTargetImageFitter.aspectRatio = (result != null)? 1f * result.width / result.height:1f;
+                        onComplete?.Invoke(result);
+                
+                    }, (int)cw, (int)ch, (int)cx, (int)cy); 
+                });
+            }
+            else
+            {
                 _webcam.Capture(w, h, result =>
                 {
                     _webcamTargetImage.texture = result;
@@ -134,7 +159,7 @@ namespace live_simulation
                     onComplete?.Invoke(result);
                 
                 }, (int)cw, (int)ch, (int)cx, (int)cy); 
-            });
+            }
         }
 
         void SwitchWebcamDevice()

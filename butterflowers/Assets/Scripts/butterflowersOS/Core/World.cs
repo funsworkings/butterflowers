@@ -311,10 +311,13 @@ namespace butterflowersOS.Core
 
             magicStar.enabled = true;
             
+            Surveillance.New(onload: true); // Trigger surveillance (if profile not generated!)
+            
+            /* WV
             if (type == AdvanceType.Broken)
                 Surveillance.New(onload: true); // Trigger surveillance (if profile not generated!)
             else
-                Surveillance.Ignore();
+                Surveillance.Ignore();*/
 
 
             welcomeMessage.DisplayUsername(username);
