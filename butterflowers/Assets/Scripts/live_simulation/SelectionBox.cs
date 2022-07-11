@@ -1,4 +1,5 @@
 using System;
+using System.Collections;
 using UnityEngine;
 
 namespace live_simulation
@@ -23,19 +24,20 @@ namespace live_simulation
         public float H => _scale.y * ScaleFactor;
 
         public bool Pause { get; set; } = false;
-
-        [SerializeField] private float originLerpSpeed, scaleLerpSpeed;
-
+        
+        [SerializeField] private AnimationCurve _originCurve, _scaleCurve;
+        [SerializeField] private float _transitionTime = 1f;
+        [SerializeField] private float _endDelayTime = 1.5f;
+        
         [SerializeField]private Vector2 _scale, _origin;
-        [SerializeField]private Vector2 t_scale, t_origin;
 
         private void Start()
         {
             _scaleUIParent = _scaleUI.transform.parent as RectTransform;
             _selectionCanvas = _scaleUI.GetComponentInParent<Canvas>();
 
-            _scale = t_scale = _scaleUI.sizeDelta;
-            _origin = t_origin = Vector2.zero;
+            _scale = _scaleUI.sizeDelta;
+            _origin = Vector2.zero;
             
             Debug.LogWarning($"Selection parent: w{_scaleUIParent.rect.width*_selectionCanvas.scaleFactor} h{_scaleUIParent.rect.height*_selectionCanvas.scaleFactor}");
         }
@@ -44,30 +46,18 @@ namespace live_simulation
         {
             if (Pause) return;
             
-            _scale = Vector2.Lerp(_scale, t_scale, Time.unscaledDeltaTime * scaleLerpSpeed);
-            _origin = Vector2.Lerp(_origin, t_origin, Time.unscaledDeltaTime * originLerpSpeed);
-            
-            ClampScale(t_scale, out t_scale);
-            ClampOrigin(_origin, out _origin);
-            
             UpdateUITransform(_origin, _scale);
-        }
-
-        public void UpdateTransform(Vector2 pos, Vector2 scale)
-        {
-            t_origin = pos;
-            t_scale = scale;
         }
 
         #region Safety
 
-        void ClampOrigin(Vector2 origin, out Vector2 origin_clamped)
+        void ClampOrigin(Vector2 origin, Vector2 scale, out Vector2 origin_clamped)
         {
             var cw = _scaleUIParent.rect.width;
             var ch = _scaleUIParent.rect.height;
 
-            var w = _scale.x;
-            var h = _scale.y;
+            var w = scale.x;
+            var h = scale.y;
             
             origin_clamped = new Vector2(Mathf.Clamp(origin.x, -cw/2f + w/2f, cw/2f - w/2f), Mathf.Clamp(origin.y, -ch/2f + h/2f, ch/2f - h/2f));
         }
@@ -79,6 +69,46 @@ namespace live_simulation
             
             scale_clamped = new Vector2(Mathf.Clamp(scale.x, 0, cw),
                 Mathf.Clamp(scale.y, 0, ch));
+        }
+        
+        #endregion
+        
+        #region Movement
+        
+        public void UpdateTransform(Vector2 pos, Vector2 scale, System.Action onComplete)
+        {
+            if (_transitionRoutine != null)
+            {
+                StopCoroutine(_transitionRoutine);
+                _transitionRoutine = null;
+            }
+            StartCoroutine(TransitionRoutine(pos, scale, onComplete));
+        }
+
+        private Coroutine _transitionRoutine = null;
+        IEnumerator TransitionRoutine(Vector2 to, Vector2 ts, System.Action onComplete)
+        {
+            float t = 0f;
+
+            Vector2 o = _origin;
+            Vector2 s = _scale;
+            
+            ClampScale(ts, out ts);
+            ClampOrigin(to, ts, out to);
+
+            while (t < _transitionTime)
+            {
+                t += Time.unscaledDeltaTime;
+
+                float i = Mathf.Clamp01(t / _transitionTime);
+                    _origin = Vector2.Lerp(o, to, _originCurve.Evaluate(i));
+                    _scale = Vector2.Lerp(s, ts, _scaleCurve.Evaluate(i));
+
+                yield return null;
+            }
+            yield return new WaitForSecondsRealtime(_endDelayTime);
+            
+            onComplete?.Invoke();
         }
         
         #endregion

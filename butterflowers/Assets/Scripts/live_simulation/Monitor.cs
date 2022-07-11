@@ -9,7 +9,7 @@ using Random = Unity.Mathematics.Random;
 
 namespace live_simulation
 {
-    public class Monitor : MonoBehaviour
+    public class Monitor : MonoBehaviour, IBridgeUtilListener
     {
         // Properties
     
@@ -74,35 +74,7 @@ namespace live_simulation
             ClearDisk();
             
             while (!_webcam.Ready) yield return null;
-            CaptureWebcamImage();
-            
             BridgeUtil.onCameraChange += SwitchWebcamDevice;
-
-            StartCoroutine(Loop());
-        }
-
-        IEnumerator Loop()
-        {
-            float t = 0f;
-            
-            while (true)
-            {
-                if (!_wait) t += Time.deltaTime;
-                if (t >= _updateInterval)
-                {
-                    t = 0f;
-                    
-                    // Change selection zone
-                    var cw = _selection.Container.rect.width;
-                    var ch = _selection.Container.rect.height;
-
-                    Vector2 sPos = new Vector2(UnityEngine.Random.Range(-cw/2f, cw/2f), UnityEngine.Random.Range(-ch/2f, ch/2f));
-                    Vector2 sScale = new Vector2(UnityEngine.Random.Range(64, cw), UnityEngine.Random.Range(64, ch));
-                        _selection.UpdateTransform(sPos, sScale);
-                }
-
-                yield return null;
-            }
         }
 
         void Update()
@@ -112,8 +84,6 @@ namespace live_simulation
 
             var tex = _webcam.CurrentActiveRenderTarget;
             _webcamTargetLiveImage.texture = tex;
-
-            _selection.Pause = _wait; // Pause lerp for selection box during photo/switch
         }
 
         private void OnDestroy()
@@ -129,43 +99,67 @@ namespace live_simulation
         [SerializeField] private int captureHeight = 100;
         [SerializeField] private int captureX = 0, captureY;
         
-        void CaptureWebcamImage()
+        public void CaptureWebcamImage(System.Action<Texture2D> onComplete = null)
         {
             if (_wait) return;
             _wait = true;
             
-            var w = Mathf.FloorToInt(Screen.width * _captureWResolution);
-            var h = Mathf.FloorToInt(Screen.height * _captureHResolution);
+            // Change selection zone
+            var _cw = _selection.Container.rect.width;
+            var _ch = _selection.Container.rect.height;
 
-            var cx = _selection.X;
-            var cy = _selection.Y;
-            var cw = _selection.W;
-            var ch = _selection.H;
-
-            _webcam.Capture(w, h, result =>
+            Vector2 sPos = new Vector2(UnityEngine.Random.Range(-_cw/2f, _cw/2f), UnityEngine.Random.Range(-_ch/2f, _ch/2f));
+            Vector2 sScale = new Vector2(UnityEngine.Random.Range(64, _cw), UnityEngine.Random.Range(64, _ch));
+            _selection.UpdateTransform(sPos, sScale, () =>
             {
-                _webcamTargetImage.texture = result;
-                _wait = false;
+                var w = Mathf.FloorToInt(Screen.width * _captureWResolution);
+                var h = Mathf.FloorToInt(Screen.height * _captureHResolution);
 
-                if (result != null)
+                var cx = _selection.X;
+                var cy = _selection.Y;
+                var cw = _selection.W;
+                var ch = _selection.H;
+
+                _webcam.Capture(w, h, result =>
                 {
-                    SaveToDisk(result);
-                }
+                    _webcamTargetImage.texture = result;
+                    _wait = false;
+
+                    if (result != null)
+                    {
+                        SaveToDisk(result);
+                    }
                 
-                _webcamTargetImageFitter.aspectRatio = (result != null)? 1f * result.width / result.height:1f;
-            }, (int)cw, (int)ch, (int)cx, (int)cy);
+                    _webcamTargetImageFitter.aspectRatio = (result != null)? 1f * result.width / result.height:1f;
+                    onComplete?.Invoke(result);
+                
+                }, (int)cw, (int)ch, (int)cx, (int)cy); 
+            });
         }
 
         void SwitchWebcamDevice()
         {
-            if (_wait) return;
+            SwitchWebcamDevice(null); // 0 callback
+        }
+
+        public void SwitchWebcamDevice(System.Action<WebCamTexture> onComplete = null)
+        {
+            if (_wait)
+            {
+                onComplete?.Invoke(null);
+                return;
+            }
             _wait = true;
             
-            _webcam.RequestNextDevice(success =>
+            _webcam.RequestNextDevice(texture =>
             {
                 Debug.LogWarning("Switch to next webcam was successful!");
                 _wait = false;
+                
+                onComplete?.Invoke(texture);
             });
         }
+
+        public BridgeUtil _Util { get; set; } = null;
     }
 }

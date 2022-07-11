@@ -10,7 +10,7 @@ using Random = UnityEngine.Random;
 
 namespace live_simulation
 {
-    public class Eye : MonoBehaviour
+    public class Eye : MonoBehaviour, IBridgeUtilListener
     {
         // Properties
 
@@ -22,8 +22,8 @@ namespace live_simulation
             private List<Focusable> _availableFocus = new List<Focusable>();
             private List<Focusable> _usedFocus = new List<Focusable>();
 
-            [Header("Smart Interaction")] 
-            [SerializeField] private Camera _interactionCamera;
+        [Header("Smart Interaction")] 
+        [SerializeField] private Camera _interactionCamera;
         [SerializeField] private LayerMask _interactionMask;
         [SerializeField] private float _interactionMaxDistance = 999f;
         [SerializeField] private int _queryInteractionsPerWidth = 10;
@@ -62,25 +62,48 @@ namespace live_simulation
             {
                 yield return new WaitForSecondsRealtime(_fovUpdateInterval);
 
+                SmartInteractionMarker _marker = null;
+
                 bool waitForQuery = true;
-                QueryInteractions(() =>
+                QueryInteractions((marker) =>
                 {
                     waitForQuery = false;
+                    _marker = marker;
                 });
                 while (waitForQuery) yield return null;
 
-                //SwitchFOV();
+                bool waitForAction = true;
+                if (_marker != null) // Has valid marker
+                {
+                    Debug.LogWarning($"Success find marker: {_marker.name}");
+                    _Util.RequestWebcamTexture((img) =>
+                    {
+                        SwitchFOV((focus) =>
+                        {
+                            waitForAction = false;
+                        });
+                    });
+                }
+                else // No valid marker
+                {
+                    Debug.LogError("Found no marker for AI behaviour!");
+                    SwitchFOV((focus) =>
+                    {
+                        waitForAction = false;
+                    });
+                }
+                while(waitForAction) yield return null;
             }
         }
 
         #region Actions
 
-        void SwitchFOV()
+        public void SwitchFOV(System.Action<Focusable> onComplete)
         {
             Focusable _nextFocus = FindNextFocus();
             //return;
-            if(_nextFocus != null) _focus.SetFocus(_nextFocus);
-            else _focus.LoseFocus();
+            if(_nextFocus != null) {_focus.SetFocus(_nextFocus); onComplete?.Invoke(_nextFocus);}
+            else {_focus.LoseFocus(); onComplete?.Invoke(null);}
         }
 
         Focusable FindNextFocus()
@@ -98,12 +121,51 @@ namespace live_simulation
 
             return f;
         }
+
+
+        #endregion
+        
+        #region Smart action
+
+        private Coroutine _actionLoop = null;
+        
+        void MakeAction(System.Action onComplete)
+        {
+            ClearAction();
+            _actionLoop = StartCoroutine(ActionLoop(onComplete));
+        }
+
+        void ClearAction()
+        {
+            if (_actionLoop != null)
+            {
+                StopCoroutine(_actionLoop);
+                _actionLoop = null;
+            }
+        }
+
+        IEnumerator ActionLoop(System.Action onComplete)
+        {
+            bool query = true;
+            QueryInteractions((marker) =>
+            {
+                if (marker != null) // Success
+                {
+                    
+                }
+                else // Failure
+                {
+                    
+                }
+            });
+            while(query) yield return null;
+        }
         
         #endregion
 
         #region Smart interaction
 
-        void QueryInteractions(System.Action onComplete)
+        void QueryInteractions(System.Action<SmartInteractionMarker> onComplete)
         {
             ClearInteractions();
             StartCoroutine(InteractionQueryLoop(onComplete));
@@ -129,7 +191,7 @@ namespace live_simulation
             }
         }
 
-        IEnumerator InteractionQueryLoop(System.Action onComplete)
+        IEnumerator InteractionQueryLoop(System.Action<SmartInteractionMarker> onComplete)
         {
             var w = _interactionMarkersContainer.rect.width;
             var h = _interactionMarkersContainer.rect.height;
@@ -183,15 +245,19 @@ namespace live_simulation
                     ClearInteractions(_removeHits);
                 }
                 yield return new WaitForSecondsRealtime(_stepAfterValidMarker);
-                ClearInteractions(new SmartInteractionMarker[]{_successHit});
+                
+                hits = new List<SmartInteractionMarker>(new SmartInteractionMarker[] {_successHit}); // Assign only valid hit!
+                onComplete?.Invoke(_successHit);
             }
-            
-            hits = new List<SmartInteractionMarker>();
-            misses = new List<SmartInteractionMarker>();
-
-            onComplete?.Invoke();
+            else
+            {
+                hits = new List<SmartInteractionMarker>();
+                onComplete?.Invoke(null); // No interaction found!
+            }
         }
 
         #endregion
+
+        public BridgeUtil _Util { get; set; } = null;
     }
 }

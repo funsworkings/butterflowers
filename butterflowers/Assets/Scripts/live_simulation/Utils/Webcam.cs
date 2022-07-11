@@ -39,9 +39,9 @@ namespace live_simulation.Utils
 
 			if (!string.IsNullOrEmpty(_defaultDeviceId))
 			{
-				RequestDevice(_defaultDeviceId, success =>
+				RequestDevice(_defaultDeviceId, texture =>
 				{
-					Debug.LogWarning($"Auto-start for webcam was successful? {success}");
+					Debug.LogWarning($"Auto-start for webcam was successful? {texture.deviceName}");
 				});
 			}
 		}
@@ -108,7 +108,7 @@ namespace live_simulation.Utils
 			foreach(GameObject o in toggleVisibilityComponents) o.SetActive(visible);
 		}
 
-		public void RequestDevice(string deviceId, Action<bool> onReady)
+		public void RequestDevice(string deviceId, Action<WebCamTexture> onReady)
 		{
 			WebCamTexture texture = SetupDevice(deviceId);
 			if (texture != null)
@@ -117,12 +117,9 @@ namespace live_simulation.Utils
 				wct = texture; // Assign new wsebcam texture
 				
 				UpdateActiveDeviceIndex();
-				onReady?.Invoke(true);
 			}
-			else
-			{
-				onReady?.Invoke(false);
-			}
+			
+			onReady?.Invoke(texture);
 		}
 
 		WebCamTexture SetupDevice(string deviceId)
@@ -174,7 +171,7 @@ namespace live_simulation.Utils
 		
 		#region Sequence ops
 
-		public void RequestPreviousDevice(Action<bool> onReady)
+		public void RequestPreviousDevice(Action<WebCamTexture> onReady)
 		{
 			if (DeviceIndex >= 0)
 			{
@@ -183,11 +180,11 @@ namespace live_simulation.Utils
 			}
 			else
 			{
-				onReady?.Invoke(false);
+				onReady?.Invoke(null);
 			}
 		}
 
-		public void RequestNextDevice(Action<bool> onReady)
+		public void RequestNextDevice(Action<WebCamTexture> onReady)
 		{
 			if (DeviceIndex >= 0)
 			{
@@ -196,11 +193,11 @@ namespace live_simulation.Utils
 			}
 			else
 			{
-				onReady?.Invoke(false);
+				onReady?.Invoke(null);
 			}
 		}
 
-		void RequestDeviceByIndex(int index, Action<bool> onReady)
+		void RequestDeviceByIndex(int index, Action<WebCamTexture> onReady)
 		{
 			if (index != DeviceIndex && index >= 0 && index < AvailableDevices.Count)
 			{

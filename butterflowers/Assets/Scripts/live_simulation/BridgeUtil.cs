@@ -1,6 +1,7 @@
 using System;
 using System.Collections;
 using System.Linq;
+using butterflowersOS.Objects.Base;
 using TMPro;
 using UnityEngine;
 using UnityEngine.SceneManagement;
@@ -17,6 +18,9 @@ namespace live_simulation
         public static System.Action<string> onCreateImage;
         
         // Properties
+
+        private Monitor _monitor;
+        private Eye _eye;
 
         [SerializeField, Range(0f, 1f)] private float _nurture = 0f;
         [SerializeField, Range(0f, 1f)] private float _quiet = 1f;
@@ -41,7 +45,13 @@ namespace live_simulation
                 // Scene load completed
 
                _listeners = FindObjectsOfType<MonoBehaviour>().OfType<IBridgeUtilListener>().ToArray();
-               foreach (IBridgeUtilListener listener in _listeners) listener._Util = this;
+               foreach (IBridgeUtilListener listener in _listeners)
+               {
+                   listener._Util = this;
+                   
+                   if(listener is Monitor) _monitor = listener as Monitor; // Assign monitor
+                   else if (listener is Eye) _eye = listener as Eye; // Assign eye
+               }
 
             }, () =>
             {
@@ -83,5 +93,41 @@ namespace live_simulation
         {
             SceneManager.UnloadScene(1);
         }
+        
+        #region Bridge ops
+
+        public void RequestWebcamTexture(System.Action<Texture2D> onComplete)
+        {
+            if (_monitor == null)
+            {
+                onComplete?.Invoke(null);
+                return;
+            }
+            
+            _monitor.CaptureWebcamImage(onComplete);
+        }
+
+        public void SwitchWebcam(System.Action<WebCamTexture> onComplete)
+        {
+            if (_monitor == null)
+            {
+                onComplete?.Invoke(null);
+                return;
+            }
+            _monitor.SwitchWebcamDevice(onComplete);
+        }
+
+        public void SwitchFocus(System.Action<Focusable> onComplete)
+        {
+            if (_eye == null)
+            {
+                onComplete?.Invoke(null);
+                return;
+            }
+            
+            _eye.SwitchFOV(onComplete);
+        }
+        
+        #endregion
     }
 }
