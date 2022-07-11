@@ -6,6 +6,7 @@ using butterflowersOS;
 using butterflowersOS.Core;
 using butterflowersOS.Objects.Base;
 using butterflowersOS.Objects.Entities.Interactables;
+using butterflowersOS.Objects.Entities.Interactables.Empty;
 using butterflowersOS.Objects.Managers;
 using butterflowersOS.Presets;
 using Neue.Reference.Types;
@@ -163,40 +164,47 @@ namespace live_simulation
                     Debug.LogWarning($"Handle event: {@event}");
                     if (@event == EVENTCODE.BEACONADD) // Spawn event!
                     {
-                        _Util.RequestWebcamTexture((img, imgPath) =>
+                        if ((entity is Flower)) // Spawning duplicate from flower
                         {
-                            if (img != null && !string.IsNullOrEmpty(imgPath))
+                            (entity as Flower).SpawnBeacon();
+                            HandleActionLoop(entity, @eventcodes, onComplete, onFailure); // Wait for transition to complete then next action
+                        }
+                        else // Spawning entire new beacon
+                        {
+                            _Util.RequestWebcamTexture((img, imgPath) =>
                             {
-                                var @params = new Hashtable()
+                                if (img != null && !string.IsNullOrEmpty(imgPath))
                                 {
-                                    { "position" , _interactionCamera.ViewportToWorldPoint(new Vector3(.5f, .5f, _beaconSpawnDistanceFromCamera)) }
-                                };
+                                    var @params = new Hashtable()
+                                    {
+                                        { "position" , _interactionCamera.ViewportToWorldPoint(new Vector3(.5f, .5f, _beaconSpawnDistanceFromCamera)) }
+                                    };
+                                    
+                                    var _transition = new Beacon.Transition()
+                                    {
+                                        scaleA = _world.normalBeaconScale * Vector3.one,
+                                        scaleB = _world.normalBeaconScale * Vector3.one,
+                                        delay = 1.5f
+                                    };
 
-                                //if (nextEvent.HasValue && nextEvent.Value == EVENTCODE.BEACONFLOWER) // Attaching beacon to tree
-                                //{
-                                    @params.Add("origin", _currentActionMarker.HitInfo.point + Vector3.up * ((nextEvent.HasValue && nextEvent.Value == EVENTCODE.BEACONFLOWER)? 0f:.67f)); // Attach to collision point
-                                //}
+                                    @params.Add("origin", _currentActionMarker.HitInfo.point + Vector3.up * ((nextEvent.HasValue && nextEvent.Value == EVENTCODE.BEACONFLOWER)? 0f:.67f));
 
-                                var _transition = new Beacon.Transition()
+                                    Debug.LogWarning("Create beacon for action loop : )");
+                                    var _beacon = _beaconManager.CreateBeacon(imgPath, Beacon.Type.Desktop, Beacon.Locale.Terrain, @params, fromSave:false, transition: BeaconManager.TransitionType.Flower, _overrideTransition:_transition, onCompleteTransition:
+                                    () =>
+                                    {
+                                        HandleActionLoop(entity, @eventcodes, onComplete, onFailure); // Wait for transition to complete then next action
+                                    });
+                                    entity = _beacon; // Swap to beacon element   
+                                }
+                                else
                                 {
-                                    scaleA = _world.normalBeaconScale * Vector3.one,
-                                    scaleB = _world.normalBeaconScale * Vector3.one,
-                                    delay = 1.5f
-                                };
-                                
-                                Debug.LogWarning("Create beacon for action loop : )");
-                                var _beacon = _beaconManager.CreateBeacon(imgPath, Beacon.Type.Desktop, Beacon.Locale.Terrain, @params, fromSave:false, transition: BeaconManager.TransitionType.Flower, _overrideTransition:_transition, onCompleteTransition:
-                                () =>
-                                {
-                                    HandleActionLoop(entity, @eventcodes, onComplete, onFailure); // Wait for transition to complete then next action
-                                });
-                                entity = _beacon; // Swap to beacon element   
-                            }
-                            else
-                            {
-                                HandleActionLoop(null, null, onComplete, onFailure, false);
-                            }
-                        });
+                                    HandleActionLoop(null, null, onComplete, onFailure, false);
+                                }
+                            });
+                        }
+
+                        
                     }
                     else
                     {
@@ -378,6 +386,18 @@ namespace live_simulation
                 
                 if(!_beacon.IsOnFire) _eventcodes.Add(EVENTCODE.BEACONFIRE);
                 else _eventcodes.Add(EVENTCODE.BEACONEXTINGUISH);
+            }
+            else if (entity is Flower)
+            {
+                var _flower = (entity as Flower);
+                
+                _eventcodes.AddRange(new EVENTCODE[]
+                {
+                    EVENTCODE.BEACONADD
+                });
+                
+                if(!_flower.IsOnFire) _eventcodes.Add(EVENTCODE.FLOWERFIRE);
+                else _eventcodes.Add(EVENTCODE.FLOWEREXTINGUISH);
             }
 
             _entity = entity;

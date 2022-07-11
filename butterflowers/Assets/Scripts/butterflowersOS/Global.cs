@@ -87,7 +87,11 @@ namespace butterflowersOS
 
         DAY = 41,
         NIGHT = 42,
-        CYCLE = 43
+        CYCLE = 43,
+        
+        FLOWERSPAWN = 50,
+        FLOWERFIRE = 51,
+        FLOWEREXTINGUISH = 52
     }
 
     public static class EventCodeExtensions

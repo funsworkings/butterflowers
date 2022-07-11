@@ -70,14 +70,18 @@ namespace butterflowersOS.Objects.Entities.Interactables.Empty
 		{
 			if (origin != Origin.Beacon) return;
 			if (file == null) return;
-			
-			var beacons = FindObjectOfType<BeaconManager>();
+
+			SpawnBeacon();
+		}
+
+		public Beacon SpawnBeacon()
+		{
 			var @params = new Hashtable() 
 			{
 				{ "position" , transform.position }
 			};
 			
-			beacons.CreateBeacon(file, type, Beacon.Locale.Terrain, @params, fromSave:false, transition: BeaconManager.TransitionType.Flower);
+			return FindObjectOfType<BeaconManager>().CreateBeacon(file, type, Beacon.Locale.Terrain, @params, fromSave:false, transition: BeaconManager.TransitionType.Flower);
 		}
 
 		#endregion
@@ -86,11 +90,13 @@ namespace butterflowersOS.Objects.Entities.Interactables.Empty
 
 		public bool IsOnFire => firePS.isPlaying;
 		
+		[ContextMenu("Fire")]
 		public void Fire()
 		{
 			firePS.Play();
 		}
 
+		[ContextMenu("Extinguish")]
 		public void Extinguish()
 		{
 			firePS.Stop();
