@@ -191,7 +191,7 @@ namespace butterflowersOS.Objects.Managers
 
 		public override void DecidePosition(ref Vector3 pos)
 		{
-			base.DecidePosition(ref pos); // Get initial ray position
+			base.DecidePosition(ref pos); // Get initial ray position 
 
 			Vector3 origin = pos + root.up * 9f;
 			Vector3 dir = -root.up;
@@ -201,6 +201,7 @@ namespace butterflowersOS.Objects.Managers
 
 			if (Physics.Raycast(ray, out hit, 999f, beaconGroundMask.value)) 
 			{
+				Debug.LogWarning($"beacon manager: {hit.collider.name}");
 				pos = hit.point;
 			}
 		}
@@ -214,7 +215,7 @@ namespace butterflowersOS.Objects.Managers
 
 		#region Operations
 
-		public Beacon CreateBeacon(string path, Type type, Locale state, Hashtable @params = null, TransitionType transition = TransitionType.NULL, bool fromSave = false)
+		public Beacon CreateBeacon(string path, Type type, Locale state, Hashtable @params = null, TransitionType transition = TransitionType.NULL, bool fromSave = false, Transition _overrideTransition = null, System.Action onCompleteTransition = null)
 		{
 			Vector3 position = Vector3.zero;
 			Quaternion rotation = Quaternion.identity;
@@ -229,10 +230,10 @@ namespace butterflowersOS.Objects.Managers
 			else origin = (Vector3) @params["origin"];
 
 			var beacon = InstantiatePrefab().GetComponent<Beacon>();
-			return RegisterBeacon(beacon, path, type, state, position, rotation, origin, fromSave, transition);
+			return RegisterBeacon(beacon, path, type, state, position, rotation, origin, fromSave, transition, _overrideTransition, onCompleteTransition);
 		}
 
-		Beacon RegisterBeacon(Beacon beacon, string path, Type type, Locale state, Vector3 position, Quaternion rotation, Vector3 origin, bool load, TransitionType transition)
+		Beacon RegisterBeacon(Beacon beacon, string path, Type type, Locale state, Vector3 position, Quaternion rotation, Vector3 origin, bool load, TransitionType transition, Transition _overrideTransition = null, System.Action onCompleteTransition = null)
 		{
 			var discovered = Library.HasDiscoveredFile(path); // Check if seen before
 	    
@@ -256,12 +257,27 @@ namespace butterflowersOS.Objects.Managers
 			else if (transition == TransitionType.Spawn) 
 			{
 				_transition = new Transition(spawnTransition) {
-					posA = origin, posB = origin, scaleA = Vector3.zero, scaleB = preset.normalBeaconScale * Vector3.one
+					posA = origin, 
+					posB = origin, 
+					scaleA = Vector3.zero, 
+					scaleB = preset.normalBeaconScale * Vector3.one
 				};
 			}
-			if(_transition != null) _transition.time = 0f; // Reset transition time
-
 			
+			if (_overrideTransition != null)
+			{
+				_transition.scaleA = _overrideTransition.scaleA;
+				_transition.scaleB = _overrideTransition.scaleB;
+				_transition.delay = _overrideTransition.delay;
+			}
+
+			if (_transition != null)
+			{
+				_transition.time = 0f; // Reset transition time
+				if(onCompleteTransition != null) _transition.AddCallback(onCompleteTransition);
+			}
+
+
 			beacon.Register(type, state, origin, _transition, load);
 			
 			var filetype = Library.FileType.World;

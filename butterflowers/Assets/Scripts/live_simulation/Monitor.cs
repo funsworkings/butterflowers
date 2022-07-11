@@ -102,7 +102,7 @@ namespace live_simulation
         
         public void CaptureWebcamImage(System.Action<Texture2D, string> onComplete = null, bool includeSelectionTransition = true)
         {
-            if (_wait) return;
+            if (_wait) throw new SystemException("Cannot capture image while in-progress");
             _wait = true;
             
             var w = Mathf.FloorToInt(Screen.width * _captureWResolution);
@@ -172,11 +172,7 @@ namespace live_simulation
 
         public void SwitchWebcamDevice(System.Action<WebCamTexture> onComplete = null)
         {
-            if (_wait)
-            {
-                onComplete?.Invoke(null);
-                return;
-            }
+            if (_wait) throw new SystemException("Cannot change device while in-progress");
             _wait = true;
             
             _webcam.RequestNextDevice(texture =>

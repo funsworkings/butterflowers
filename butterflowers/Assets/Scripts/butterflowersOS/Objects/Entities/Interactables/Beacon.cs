@@ -1,4 +1,5 @@
-﻿using butterflowersOS.Core;
+﻿using System;
+using butterflowersOS.Core;
 using butterflowersOS.Interfaces;
 using butterflowersOS.Objects.Base;
 using butterflowersOS.Objects.Entities.Interactables.Empty;
@@ -50,11 +51,17 @@ namespace butterflowersOS.Objects.Entities.Interactables
             public float time = 0f;
             public float duration = 0f;
             public float height = 0f;
-
+            public float delay = 0f; public float delay_time = 0f;
+            
             public AnimationCurve heightCurve;
             public AnimationCurve scaleCurve;
             public AnimationCurve positionCurve;
 
+            public Transition()
+            {
+                
+            }
+            
             public Transition(Transition copy)
             {
                 this.onBegin = copy.onBegin;
@@ -66,6 +73,8 @@ namespace butterflowersOS.Objects.Entities.Interactables
                 this.scaleB = copy.scaleB;
 
                 this.time = copy.time;
+                this.delay_time = copy.time;
+                this.delay = copy.delay;
                 this.duration = copy.duration;
                 this.height = copy.height;
 
@@ -76,6 +85,12 @@ namespace butterflowersOS.Objects.Entities.Interactables
 
             public bool Continue(Beacon beacon, float dt)
             {
+                if (delay_time < delay)
+                {
+                    delay_time += dt;
+                    return false;
+                }
+                
                 bool flagStart = (time <= 0f), flagEnd = (time+dt >= duration);
 
                 time += dt;
@@ -91,10 +106,18 @@ namespace butterflowersOS.Objects.Entities.Interactables
                 beacon.transform.position = position;
                 beacon.transform.localScale = scale;
             
-                if(flagStart) onBegin.Invoke(beacon, position);
-                if(flagEnd) onEnd.Invoke(beacon, position);
+                if(flagStart) onBegin?.Invoke(beacon, position);
+                if(flagEnd) onEnd?.Invoke(beacon, position);
             
                 return time >= duration;
+            }
+
+            public void AddCallback(Action onComplete)
+            {
+                onEnd.AddListener(((beacon, pos) =>
+                {
+                    onComplete?.Invoke();
+                }));
             }
         }
 

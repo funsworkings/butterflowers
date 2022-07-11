@@ -7,6 +7,7 @@ using butterflowersOS.Core;
 using butterflowersOS.Objects.Base;
 using butterflowersOS.Objects.Entities.Interactables;
 using butterflowersOS.Objects.Managers;
+using butterflowersOS.Presets;
 using Neue.Reference.Types;
 using UnityEngine;
 using uwu.Extensions;
@@ -48,8 +49,10 @@ namespace live_simulation
 
         [Header("Scene")] 
         [SerializeField] private BeaconManager _beaconManager;
+        [SerializeField] private float _beaconSpawnDistanceFromCamera = 1f;
         [SerializeField] private Wand _wand;
         [SerializeField] private Nest _nest;
+        [SerializeField] private WorldPreset _world;
 
         private void Start()
         {
@@ -126,6 +129,7 @@ namespace live_simulation
         #region Smart action
 
         private Coroutine _actionLoop = null;
+        private SmartInteractionMarker _currentActionMarker = null;
         
         void MakeAction(System.Action onComplete)
         {
@@ -140,6 +144,8 @@ namespace live_simulation
                 StopCoroutine(_actionLoop);
                 _actionLoop = null;
             }
+
+            _currentActionMarker = null; // Wipe action!
         }
 
         void HandleActionLoop(Entity entity, List<EVENTCODE> @eventcodes, System.Action onComplete, System.Action onFailure, bool? success = null)
@@ -151,16 +157,40 @@ namespace live_simulation
                     var @event = @eventcodes[0];
                     @eventcodes.RemoveAt(0);
 
+                    EVENTCODE? nextEvent = null;
+                    if (@eventcodes.Count > 0) nextEvent = @eventcodes[0];
+
+                    Debug.LogWarning($"Handle event: {@event}");
                     if (@event == EVENTCODE.BEACONADD) // Spawn event!
                     {
                         _Util.RequestWebcamTexture((img, imgPath) =>
                         {
                             if (img != null && !string.IsNullOrEmpty(imgPath))
                             {
-                                var _beacon = _beaconManager.CreateBeacon(imgPath, Beacon.Type.Desktop, Beacon.Locale.Terrain, new Hashtable(), fromSave:false, transition: BeaconManager.TransitionType.Spawn);
-                                entity = _beacon; // Swap to beacon element   
+                                var @params = new Hashtable()
+                                {
+                                    { "position" , _interactionCamera.ViewportToWorldPoint(new Vector3(.5f, .5f, _beaconSpawnDistanceFromCamera)) }
+                                };
+
+                                //if (nextEvent.HasValue && nextEvent.Value == EVENTCODE.BEACONFLOWER) // Attaching beacon to tree
+                                //{
+                                    @params.Add("origin", _currentActionMarker.HitInfo.point + Vector3.up * ((nextEvent.HasValue && nextEvent.Value == EVENTCODE.BEACONFLOWER)? 0f:.67f)); // Attach to collision point
+                                //}
+
+                                var _transition = new Beacon.Transition()
+                                {
+                                    scaleA = _world.normalBeaconScale * Vector3.one,
+                                    scaleB = _world.normalBeaconScale * Vector3.one,
+                                    delay = 1.5f
+                                };
                                 
-                                HandleActionLoop(entity, @eventcodes, onComplete, onFailure);
+                                Debug.LogWarning("Create beacon for action loop : )");
+                                var _beacon = _beaconManager.CreateBeacon(imgPath, Beacon.Type.Desktop, Beacon.Locale.Terrain, @params, fromSave:false, transition: BeaconManager.TransitionType.Flower, _overrideTransition:_transition, onCompleteTransition:
+                                () =>
+                                {
+                                    HandleActionLoop(entity, @eventcodes, onComplete, onFailure); // Wait for transition to complete then next action
+                                });
+                                entity = _beacon; // Swap to beacon element   
                             }
                             else
                             {
@@ -196,13 +226,13 @@ namespace live_simulation
                                     (entity as Beacon).AddToNest();
                                     break;
                                 case EVENTCODE.BEACONFLOWER:
-                                    (entity as Beacon).Flower(Vector3.zero);
+                                    (entity as Beacon).Flower((entity as Beacon).Origin); // Plant where it lands
                                     break;
                                 case EVENTCODE.BEACONDELETE:
                                     (entity as Beacon).Delete();
                                     break;
                                 case EVENTCODE.BEACONPLANT:
-                                    (entity as Beacon).Plant(Vector3.zero);
+                                    (entity as Beacon).Plant((entity as Beacon).Origin);
                                     break;
                                 case EVENTCODE.BEACONFIRE:
                                     (entity as Beacon).Fire();
@@ -242,8 +272,6 @@ namespace live_simulation
 
         IEnumerator ActionLoop(System.Action onComplete)
         {
-            SmartInteractionMarker _marker = null;
-
             Frame _frame = ChooseBestFrame();
             List<EVENTCODE> _frameEvents = null;
             for (int i = 0; i < _frameActions.Length; i++)
@@ -259,21 +287,21 @@ namespace live_simulation
             QueryInteractions(_frameEvents, (marker) =>
             {
                 waitForQuery = false;
-                _marker = marker;
+                _currentActionMarker = marker;
             });
             while (waitForQuery) yield return null;
 
             bool waitForAction = true;
-            if (_marker != null) // Has valid marker with valid entity+action
+            if (_currentActionMarker != null) // Has valid marker with valid entity+action
             {
-                Debug.LogWarning($"Success find marker: {_marker.name} entity: {_marker.HitEntity.gameObject.name} action: {_marker.HitEvents.print()}");
-                HandleActionLoop(_marker.HitEntity, _marker.HitEvents, () =>
+                Debug.LogWarning($"Success find marker: {_currentActionMarker.name} entity: {_currentActionMarker.HitEntity.gameObject.name} action: {_currentActionMarker.HitEvents.print()}");
+                HandleActionLoop(_currentActionMarker.HitEntity, _currentActionMarker.HitEvents, () =>
                 {
-                    Debug.LogWarning($"Success handle action loop for entity {_marker.HitEntity.gameObject.name} stack: {_marker.HitEvents.print()}");
+                    Debug.LogWarning($"Success handle action loop for entity {_currentActionMarker.HitEntity.gameObject.name} stack: {_currentActionMarker.HitEvents.print()}");
                     waitForAction = false;
                 }, () =>
                 {
-                    Debug.LogError($"Fail handle action loop for entity {_marker.HitEntity.gameObject.name} stack: {_marker.HitEvents.print()}");
+                    Debug.LogError($"Fail handle action loop for entity {_currentActionMarker.HitEntity.gameObject.name} stack: {_currentActionMarker.HitEvents.print()}");
                     waitForAction = false;
                 });
             }
@@ -421,7 +449,7 @@ namespace live_simulation
                                 var subEvent = subEvents.ElementAt(Random.Range(0, subEvents.Count()));
                                 __events = new List<EVENTCODE>();
                                 
-                                var subEventInt = (int) subEvent;
+                                var subEventInt = (int) subEvent; Debug.LogWarning($"Subevent index: {subEventInt}");
                                 if (subEventInt >= 20 && subEventInt < 30 && subEvent != EVENTCODE.BEACONADD && !(entity is Beacon)) // Beacon event!
                                 {
                                     __events.Add(EVENTCODE.BEACONADD); // Prepend beacon add event to supply entity

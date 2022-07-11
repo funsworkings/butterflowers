@@ -180,7 +180,7 @@ namespace live_simulation.Utils
 			}
 			else
 			{
-				onReady?.Invoke(null);
+				onReady?.Invoke(wct);
 			}
 		}
 
@@ -193,7 +193,7 @@ namespace live_simulation.Utils
 			}
 			else
 			{
-				onReady?.Invoke(null);
+				onReady?.Invoke(wct);
 			}
 		}
 
@@ -203,6 +203,10 @@ namespace live_simulation.Utils
 			{
 				var device = AvailableDevices[index];
 				RequestDevice(device.name, onReady);
+			}
+			else
+			{
+				onReady?.Invoke(wct);
 			}
 		}
 		
