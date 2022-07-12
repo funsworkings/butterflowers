@@ -53,8 +53,12 @@ namespace live_simulation
         [SerializeField] private float _beaconSpawnDistanceFromCamera = 1f;
         [SerializeField] private Wand _wand;
         [SerializeField] private Nest _nest;
+        [SerializeField] private ButterflowerManager _butterflowers;
         [SerializeField] private WorldPreset _world;
 
+        [Header("Debug")] 
+        [SerializeField] private EVENTCODE _debugOverrideEventCode = EVENTCODE.NULL;
+        
         private void Start()
         {
             BridgeUtil.onLoad += () =>
@@ -233,6 +237,11 @@ namespace live_simulation
                                         delay = 1.5f
                                     };
 
+                                    if (nextEvent.HasValue && nextEvent.Value == EVENTCODE.BEACONACTIVATE) // Trigger attract transition for beacon
+                                    {
+                                        _transition._tracking = _nest.transform;
+                                    }
+
                                     @params.Add("origin", _currentActionMarker.HitInfo.point + Vector3.up * ((nextEvent.HasValue && nextEvent.Value == EVENTCODE.BEACONFLOWER)? 0f:.67f));
 
                                     Debug.LogWarning("Create beacon for action loop : )"); 
@@ -301,6 +310,10 @@ namespace live_simulation
                                 case EVENTCODE.FLOWEREXTINGUISH:
                                     (entity as Flower).Extinguish();
                                     break;
+                                    
+                                case EVENTCODE.SLAUGHTER:
+                                    _butterflowers.KillButterflies();
+                                    break;
 
                                 default:
                                     throw new SystemException($"Event type {@event} not supported!");
@@ -344,6 +357,11 @@ namespace live_simulation
                 }
             }
 
+            if (_debugOverrideEventCode != EVENTCODE.NULL)
+            {
+                _frameEvents = new List<EVENTCODE>(new EVENTCODE[]{ _debugOverrideEventCode });
+            }
+
             bool waitForQuery = true;
             QueryInteractions(_frameEvents, (marker) =>
             {
@@ -363,7 +381,10 @@ namespace live_simulation
                 }, () =>
                 {
                     Debug.LogError($"Fail handle action loop for entity {_currentActionMarker.HitEntity.gameObject.name} stack: {_currentActionMarker.HitEvents.print()}");
-                    waitForAction = false;
+                    SwitchFOV((focus) =>
+                    {
+                        waitForAction = false;
+                    });
                 });
             }
             else // No valid marker
@@ -451,6 +472,15 @@ namespace live_simulation
                 
                 if(!_flower.IsOnFire) _eventcodes.Add(EVENTCODE.FLOWERFIRE);
                 else _eventcodes.Add(EVENTCODE.FLOWEREXTINGUISH);
+            }
+            else if (entity is Star)
+            {
+                var _star = (entity as Star);
+                
+                _eventcodes.AddRange(new EVENTCODE[]
+                {
+                    EVENTCODE.SLAUGHTER
+                });
             }
 
             _entity = entity;

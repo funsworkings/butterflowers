@@ -12,9 +12,8 @@ namespace live_simulation.Utils
 		// Properties
 
 		[SerializeField] private Camera _renderCamera;
-		[SerializeField] string _defaultDeviceId;
 		[SerializeField] private List<GameObject> toggleVisibilityComponents = new List<GameObject>();
-		
+		[SerializeField] private bool _autoStart = true;
 		
 		private List<WebCamDevice> AvailableDevices = new List<WebCamDevice>();
 		private int DeviceIndex = -1;
@@ -37,9 +36,9 @@ namespace live_simulation.Utils
 				AvailableDevices.Add(device);	
 			}
 
-			if (!string.IsNullOrEmpty(_defaultDeviceId))
+			if (_autoStart && AvailableDevices.Count > 0)
 			{
-				RequestDevice(_defaultDeviceId, texture =>
+				RequestDevice(AvailableDevices[0].name, texture =>
 				{
 					Debug.LogWarning($"Auto-start for webcam was successful? {texture.deviceName}");
 				});

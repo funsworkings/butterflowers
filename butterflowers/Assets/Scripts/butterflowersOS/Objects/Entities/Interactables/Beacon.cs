@@ -54,6 +54,8 @@ namespace butterflowersOS.Objects.Entities.Interactables
             public float height = 0f;
             public float delay = 0f; public float delay_time = 0f;
             
+            public Transform _tracking = null; // Object to attract to
+            
             public AnimationCurve heightCurve;
             public AnimationCurve scaleCurve;
             public AnimationCurve positionCurve;
@@ -97,6 +99,8 @@ namespace butterflowersOS.Objects.Entities.Interactables
                 time += dt;
 
                 float interval = Mathf.Clamp01(time / duration);
+
+                if (_tracking != null) posB = _tracking.position;
 
                 Vector3 position = (posA != posB)? Vector3.Lerp(posA, posB, positionCurve.Evaluate(interval)) : posB;
                 position += (Vector3.up * height * heightCurve.Evaluate(interval));

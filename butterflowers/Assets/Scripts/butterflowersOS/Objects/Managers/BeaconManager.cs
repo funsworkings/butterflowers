@@ -269,6 +269,7 @@ namespace butterflowersOS.Objects.Managers
 				_transition.scaleA = _overrideTransition.scaleA;
 				_transition.scaleB = _overrideTransition.scaleB;
 				_transition.delay = _overrideTransition.delay;
+				_transition._tracking = _overrideTransition._tracking; // Apply tracking
 			}
 
 			if (_transition != null)
