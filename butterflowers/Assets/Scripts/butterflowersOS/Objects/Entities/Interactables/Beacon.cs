@@ -44,6 +44,7 @@ namespace butterflowersOS.Objects.Entities.Interactables
         {
             [System.Serializable] public class Event :UnityEvent<Beacon, Vector3> {}
             public Event onBegin, onEnd;
+            public Event onInstanceBegin, onInstanceEnd;
 
             [HideInInspector] public Vector3 posA, posB;
             [HideInInspector] public Vector3 scaleA, scaleB;
@@ -106,15 +107,17 @@ namespace butterflowersOS.Objects.Entities.Interactables
                 beacon.transform.position = position;
                 beacon.transform.localScale = scale;
             
-                if(flagStart) onBegin?.Invoke(beacon, position);
-                if(flagEnd) onEnd?.Invoke(beacon, position);
+                if(flagStart) {onBegin?.Invoke(beacon, position);onInstanceBegin?.Invoke(beacon, position);}
+                if(flagEnd) {onEnd?.Invoke(beacon, position); onInstanceEnd?.Invoke(beacon, position);}
             
                 return time >= duration;
             }
 
             public void AddCallback(Action onComplete)
             {
-                onEnd.AddListener(((beacon, pos) =>
+                Debug.LogWarning("Did add new callback for beacon!");
+                if (onInstanceEnd == null) onInstanceEnd = new Event();
+                onInstanceEnd.AddListener(((beacon, pos) =>
                 {
                     onComplete?.Invoke();
                 }));

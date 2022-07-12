@@ -235,11 +235,10 @@ namespace live_simulation
 
                                     @params.Add("origin", _currentActionMarker.HitInfo.point + Vector3.up * ((nextEvent.HasValue && nextEvent.Value == EVENTCODE.BEACONFLOWER)? 0f:.67f));
 
-                                    Debug.LogWarning("Create beacon for action loop : )");
+                                    Debug.LogWarning("Create beacon for action loop : )"); 
                                     var _beacon = _beaconManager.CreateBeacon(imgPath, Beacon.Type.Desktop, Beacon.Locale.Terrain, @params, fromSave:false, transition: BeaconManager.TransitionType.Flower, _overrideTransition:_transition, onCompleteTransition:
-                                    (b, bPos) =>
+                                    () =>
                                     {
-                                        b._Transition.RemoveCallbacks(); // Remove all callbacks
                                         HandleActionLoop(entity, @eventcodes, onComplete, onFailure); // Wait for transition to complete then next action
                                     });
                                     entity = _beacon; // Swap to beacon element   
