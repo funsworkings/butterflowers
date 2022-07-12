@@ -5,6 +5,7 @@ using butterflowersOS.Objects.Base;
 using TMPro;
 using UnityEngine;
 using UnityEngine.SceneManagement;
+using UnityEngine.UI;
 
 namespace live_simulation
 {
@@ -27,22 +28,35 @@ namespace live_simulation
         [SerializeField, Range(0f, 1f)] private float _destruction = 0f;
         [SerializeField, Range(0f, 1f)] private float _order = 0f;
 
+        [SerializeField, Min(1)] int bpm = 60;
+        public int BPM => bpm;
+        
+        private float t = 0f;
+        private float thresh = 0f;
+        int w_bpm = 0;
+        private float timeA, timeB;
+
         public float NURTURE => _nurture;
         public float ORDER => _order;
         public float DESTRUCTION => _destruction;
         public float QUIET => _quiet;
+
+        private bool init = false;
 
         private IBridgeUtilListener[] _listeners;
         
         // UI
 
         [SerializeField] private TMP_Text _nurtureUI, _quietUI, _orderUI, _destructionUI;
+        [SerializeField] private Image _bpmUI;
         
         void Start()
         {
             StartCoroutine(SceneLoadAsync(() =>
             {
                 // Scene load completed
+
+                int beatIntervalMaxValue = 1;
 
                _listeners = FindObjectsOfType<MonoBehaviour>().OfType<IBridgeUtilListener>().ToArray();
                foreach (IBridgeUtilListener listener in _listeners)
@@ -57,6 +71,11 @@ namespace live_simulation
             {
                 Debug.LogWarning("Failed to load webcam scene!");
             }));
+
+            onLoad += () =>
+            {
+                init = true;
+            };
         }
         
         IEnumerator SceneLoadAsync(System.Action onComplete, System.Action onFailure)
@@ -87,6 +106,39 @@ namespace live_simulation
             _quietUI.text = Mathf.FloorToInt(_quiet * 100f).ToString();
             _destructionUI.text = Mathf.FloorToInt(_destruction * 100f).ToString();
             _orderUI.text = Mathf.FloorToInt(_order * 100f).ToString();
+
+            if (!init) return;
+            
+            // BPM
+
+            t += Time.unscaledDeltaTime;
+
+            var diff = t - thresh;
+            if (diff >= 0f)
+            {
+                Beat(diff);
+            }
+
+            _bpmUI.fillAmount = Mathf.Clamp01(1f - ((timeB - (t+timeA)) / thresh));
+        }
+
+        void Beat(float diff)
+        {
+            if (w_bpm != bpm)
+            {
+                w_bpm = bpm;
+                thresh = 60f / bpm;
+            }
+            
+            timeA = Time.time;
+            timeB = timeA + (thresh - diff); // Apply offset from tDiff
+            t = 0f;
+            
+            foreach (IBridgeUtilListener listener in _listeners)
+            {
+                listener.Beat(timeA, timeB);
+                listener.Beat_T = timeB;
+            }
         }
 
         private void OnDestroy()

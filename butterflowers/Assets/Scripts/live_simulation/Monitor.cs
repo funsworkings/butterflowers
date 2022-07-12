@@ -185,5 +185,12 @@ namespace live_simulation
         }
 
         public BridgeUtil _Util { get; set; } = null;
+        
+        public void Beat(float a, float b)
+        {
+            
+        }
+
+        public float Beat_T { get; set; } = 0f;
     }
 }

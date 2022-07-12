@@ -83,6 +83,7 @@ namespace live_simulation
                 yield return new WaitForSecondsRealtime(_fovUpdateInterval);
 
                 bool _action = true; // Wait for action
+                yield return new WaitForSecondsRealtime((Beat_T - Time.time)); // Wait for seconds to pass on-beat
                 MakeAction(() =>
                 {
                     _action = false;
@@ -652,5 +653,12 @@ namespace live_simulation
         #endregion
 
         public BridgeUtil _Util { get; set; } = null;
+        
+        public void Beat(float a, float b)
+        {
+            
+        }
+
+        public float Beat_T { get; set; } = 0f;
     }
 }
