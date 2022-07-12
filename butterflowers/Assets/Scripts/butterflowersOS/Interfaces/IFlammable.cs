@@ -6,5 +6,7 @@
 		
 		void Fire();
 		void Extinguish();
+
+		void Vanish();
 	}
 }

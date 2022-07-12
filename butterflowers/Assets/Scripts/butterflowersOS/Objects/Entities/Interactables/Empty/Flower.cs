@@ -24,6 +24,7 @@ namespace butterflowersOS.Objects.Entities.Interactables.Empty
 		// Properties
 
 		[SerializeField] WorldPreset preset;
+		[SerializeField] private GameObject root;
 		
 		public Animator animator;
 		[SerializeField] ParticleSystem firePS = null;
@@ -100,6 +101,19 @@ namespace butterflowersOS.Objects.Entities.Interactables.Empty
 		public void Extinguish()
 		{
 			firePS.Stop();
+		}
+
+		public void Vanish()
+		{
+			if (origin != Origin.Beacon)
+			{
+				Extinguish();
+				return;
+			}
+			else
+			{
+				DestroyImmediate(root);
+			}
 		}
 		
 		#endregion

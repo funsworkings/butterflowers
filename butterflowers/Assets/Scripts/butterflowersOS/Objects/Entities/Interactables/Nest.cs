@@ -603,6 +603,11 @@ namespace butterflowersOS.Objects.Entities.Interactables
             }
             deathPS.Stop();
         }
+
+        public void Vanish()
+        {
+            Extinguish(); // extinguish self
+        }
     
         #endregion
     

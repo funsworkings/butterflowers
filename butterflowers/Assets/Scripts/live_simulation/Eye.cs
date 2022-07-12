@@ -4,6 +4,7 @@ using System.Collections.Generic;
 using System.Linq;
 using butterflowersOS;
 using butterflowersOS.Core;
+using butterflowersOS.Interfaces;
 using butterflowersOS.Objects.Base;
 using butterflowersOS.Objects.Entities.Interactables;
 using butterflowersOS.Objects.Entities.Interactables.Empty;
@@ -18,7 +19,7 @@ using Tree = butterflowersOS.Objects.Entities.Interactables.Empty.Tree;
 
 namespace live_simulation
 {
-    public class Eye : MonoBehaviour, IBridgeUtilListener
+    public class Eye : MonoBehaviour, IBridgeUtilListener, IReactToSunCycleReliable
     {
         // Properties
 
@@ -143,6 +144,22 @@ namespace live_simulation
             if (frame == Frame.Order) return _Util.ORDER;
 
             return _Util.QUIET;
+        }
+        
+        #endregion
+        
+        #region Callbacks
+        
+        public void Cycle(bool refresh)
+        {
+            var flammables = FindObjectsOfType<MonoBehaviour>().OfType<IFlammable>().ToArray();
+            if (flammables != null && flammables.Length > 0)
+            {
+                foreach (IFlammable flammable in flammables)
+                {
+                    if(flammable.IsOnFire) flammable.Vanish();
+                }
+            }
         }
         
         #endregion

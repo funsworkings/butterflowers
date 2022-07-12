@@ -533,6 +533,18 @@ namespace butterflowersOS.Objects.Entities.Interactables
             onExtinguish?.Invoke(this, false);
             OnExtinguish.Invoke();
         }
+
+        public void Vanish()
+        {
+            if (state == Locale.Terrain)
+            {
+                Delete(events: true); // Delete self
+            }
+            else
+            {
+                Extinguish();
+            }
+        }
     
         #endregion
     
