@@ -17,11 +17,14 @@ namespace live_simulation
         public static System.Action onCameraChange;
         public static System.Action onCycleDay;
         public static System.Action<string> onCreateImage;
+        public static System.Action<float, float> onBeat;
         
         // Properties
 
         private Monitor _monitor;
         private Eye _eye;
+
+        [SerializeField] private OSC _osc;
 
         [SerializeField, Range(0f, 1f)] private float _nurture = 0f;
         [SerializeField, Range(0f, 1f)] private float _quiet = 1f;
@@ -49,9 +52,17 @@ namespace live_simulation
 
         [SerializeField] private TMP_Text _nurtureUI, _quietUI, _orderUI, _destructionUI;
         [SerializeField] private Image _bpmUI;
+
+        private const string Osc_StatKey = "/Stats";
         
         void Start()
         {
+            // Bind to OSC
+            if (_osc && _osc.enabled)
+            {
+                _osc.SetAddressHandler(Osc_StatKey, ReceiveOscStats);
+            }
+            
             StartCoroutine(SceneLoadAsync(() =>
             {
                 // Scene load completed
@@ -62,6 +73,7 @@ namespace live_simulation
                foreach (IBridgeUtilListener listener in _listeners)
                {
                    listener._Util = this;
+                   onBeat += listener.OnBeat; // Attach callback
                    
                    if(listener is Monitor) _monitor = listener as Monitor; // Assign monitor
                    else if (listener is Eye) _eye = listener as Eye; // Assign eye
@@ -77,6 +89,18 @@ namespace live_simulation
                 init = true;
             };
         }
+        
+        #region OSC
+
+        void ReceiveOscStats(OscMessage message)
+        {
+            _destruction = Mathf.Clamp01(message.GetFloat(0));
+            _order = Mathf.Clamp01(message.GetFloat(1));
+            _nurture = Mathf.Clamp01(message.GetFloat(2));
+            _quiet = Mathf.Clamp01(message.GetFloat(3));
+        }
+        
+        #endregion
         
         IEnumerator SceneLoadAsync(System.Action onComplete, System.Action onFailure)
         {
@@ -134,11 +158,7 @@ namespace live_simulation
             timeB = timeA + (thresh - diff); // Apply offset from tDiff
             t = 0f;
             
-            foreach (IBridgeUtilListener listener in _listeners)
-            {
-                listener.Beat(timeA, timeB);
-                listener.Beat_T = timeB;
-            }
+            onBeat?.Invoke(timeA, timeB);
         }
 
         private void OnDestroy()

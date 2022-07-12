@@ -174,6 +174,15 @@ namespace live_simulation
         {
             if (_wait) throw new SystemException("Cannot change device while in-progress");
             _wait = true;
+
+            StartCoroutine(SwitchDeviceRoutine(onComplete));
+        }
+
+        IEnumerator SwitchDeviceRoutine(System.Action<WebCamTexture> onComplete)
+        {
+            var tDiff = (Beat_T - Time.time);
+            Debug.LogWarning($"Wait {tDiff}s before trigger webcam!");
+            yield return new WaitForSecondsRealtime(tDiff);
             
             _webcam.RequestNextDevice(texture =>
             {
@@ -188,9 +197,11 @@ namespace live_simulation
         
         public void Beat(float a, float b)
         {
-            
+            Beat_T = b;
         }
 
-        public float Beat_T { get; set; } = 0f;
+        public float Beat_T { get; private set; } = 0f;
+
+        public Action<float, float> OnBeat => Beat;
     }
 }

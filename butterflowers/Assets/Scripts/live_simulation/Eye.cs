@@ -656,9 +656,11 @@ namespace live_simulation
         
         public void Beat(float a, float b)
         {
-            
+            Beat_T = b;
         }
 
-        public float Beat_T { get; set; } = 0f;
+        public float Beat_T { get; private set; } = 0f;
+
+        public Action<float, float> OnBeat => Beat;
     }
 }
