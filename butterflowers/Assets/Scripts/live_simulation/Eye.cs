@@ -220,146 +220,153 @@ namespace live_simulation
         {
             if (!success.HasValue)
             {
-                if (@eventcodes.Count > 0)
+                if (entity == null)
                 {
-                    var @event = @eventcodes[0];
-                    @eventcodes.RemoveAt(0);
-
-                    EVENTCODE? nextEvent = null;
-                    if (@eventcodes.Count > 0) nextEvent = @eventcodes[0];
-
-                    Debug.LogWarning($"Handle event: {@event}");
-                    if (@event == EVENTCODE.BEACONADD) // Spawn event!
-                    {
-                        if ((entity is Flower)) // Spawning duplicate from flower
-                        {
-                            (entity as Flower).SpawnBeacon();
-                            HandleActionLoop(entity, @eventcodes, onComplete, onFailure); // Wait for transition to complete then next action
-                        }
-                        else // Spawning entire new beacon
-                        {
-                            _Util.RequestWebcamTexture((img, imgPath) =>
-                            {
-                                if (img != null && !string.IsNullOrEmpty(imgPath))
-                                {
-                                    var @params = new Hashtable()
-                                    {
-                                        { "position" , _interactionCamera.ViewportToWorldPoint(new Vector3(.5f, .5f, _beaconSpawnDistanceFromCamera)) }
-                                    };
-                                    
-                                    var _transition = new Beacon.Transition()
-                                    {
-                                        scaleA = _world.normalBeaconScale * Vector3.one,
-                                        scaleB = _world.normalBeaconScale * Vector3.one,
-                                        delay = 1.5f
-                                    };
-
-                                    if (nextEvent.HasValue && nextEvent.Value == EVENTCODE.BEACONACTIVATE) // Trigger attract transition for beacon
-                                    {
-                                        _transition._tracking = _nest.transform;
-                                    }
-
-                                    Vector3? origin = null;
-                                    if ((entity is Tree || entity is Terrain))
-                                    {
-                                        origin = _currentActionMarker.HitInfo.point + Vector3.up *
-                                            ((nextEvent.HasValue && nextEvent.Value == EVENTCODE.BEACONFLOWER)
-                                                ? 0f
-                                                : .67f);
-                                    }
-
-                                    if (origin.HasValue)
-                                    {
-                                        @params.Add("origin", origin);
-                                    }
-
-                                    Debug.LogWarning("Create beacon for action loop : )"); 
-                                    var _beacon = _beaconManager.CreateBeacon(imgPath, Beacon.Type.Desktop, Beacon.Locale.Terrain, @params, fromSave:false, transition: BeaconManager.TransitionType.Flower, _overrideTransition:_transition, onCompleteTransition:
-                                    () =>
-                                    {
-                                        HandleActionLoop(entity, @eventcodes, onComplete, onFailure); // Wait for transition to complete then next action
-                                    });
-                                    entity = _beacon; // Swap to beacon element   
-                                }
-                                else
-                                {
-                                    HandleActionLoop(null, null, onComplete, onFailure, false);
-                                }
-                            });
-                        }
-
-                        
-                    }
-                    else
-                    {
-                        try
-                        {
-                            switch (@event)
-                            {
-                                // NEST
-                                case EVENTCODE.NESTKICK:
-                                    _nest.RandomKick();
-                                    break;
-                                case EVENTCODE.NESTPOP:
-                                    _nest.RemoveBeacon(_nest.beacons.First());
-                                    break;
-                                case EVENTCODE.NESTCLEAR:
-                                    _nest.Dispose();
-                                    break;
-                                case EVENTCODE.NESTFIRE:
-                                    _nest.Fire();
-                                    break;
-                                case EVENTCODE.NESTEXTINGUISH:
-                                    _nest.Extinguish();
-                                    break;
-
-                                // BEACON (requires beacon)
-                                case EVENTCODE.BEACONACTIVATE:
-                                    (entity as Beacon).AddToNest();
-                                    break;
-                                case EVENTCODE.BEACONFLOWER:
-                                    (entity as Beacon).Flower((entity as Beacon).Origin); // Plant where it lands
-                                    break;
-                                case EVENTCODE.BEACONDELETE:
-                                    (entity as Beacon).Delete();
-                                    break;
-                                case EVENTCODE.BEACONPLANT:
-                                    (entity as Beacon).Plant((entity as Beacon).Origin);
-                                    break;
-                                case EVENTCODE.BEACONFIRE:
-                                    (entity as Beacon).Fire();
-                                    break;
-                                case EVENTCODE.BEACONEXTINGUISH:
-                                    (entity as Beacon).Extinguish();
-                                    break;
-                                
-                                case EVENTCODE.FLOWERFIRE:
-                                    (entity as Flower).Fire();
-                                    break;
-                                case EVENTCODE.FLOWEREXTINGUISH:
-                                    (entity as Flower).Extinguish();
-                                    break;
-                                    
-                                case EVENTCODE.SLAUGHTER:
-                                    _butterflowers.KillButterflies();
-                                    break;
-
-                                default:
-                                    throw new SystemException($"Event type {@event} not supported!");
-                                    break;
-                            }
-                        }
-                        catch (SystemException e)
-                        {
-                            HandleActionLoop(null, null, onComplete, onFailure, false);
-                        }
-                        
-                        HandleActionLoop(entity, @eventcodes, onComplete, onFailure);
-                    }
+                    HandleActionLoop(null, null, onComplete, onFailure, false);
                 }
                 else
                 {
-                    HandleActionLoop(null, null, onComplete, onFailure, true);
+                    if (@eventcodes.Count > 0)
+                    {
+                        var @event = @eventcodes[0];
+                        @eventcodes.RemoveAt(0);
+
+                        EVENTCODE? nextEvent = null;
+                        if (@eventcodes.Count > 0) nextEvent = @eventcodes[0];
+
+                        Debug.LogWarning($"Handle event: {@event}");
+                        if (@event == EVENTCODE.BEACONADD) // Spawn event!
+                        {
+                            if ((entity is Flower)) // Spawning duplicate from flower
+                            {
+                                (entity as Flower).SpawnBeacon();
+                                HandleActionLoop(entity, @eventcodes, onComplete, onFailure); // Wait for transition to complete then next action
+                            }
+                            else // Spawning entire new beacon
+                            {
+                                _Util.RequestWebcamTexture((img, imgPath) =>
+                                {
+                                    if (img != null && !string.IsNullOrEmpty(imgPath))
+                                    {
+                                        var @params = new Hashtable()
+                                        {
+                                            { "position" , _interactionCamera.ViewportToWorldPoint(new Vector3(.5f, .5f, _beaconSpawnDistanceFromCamera)) }
+                                        };
+                                        
+                                        var _transition = new Beacon.Transition()
+                                        {
+                                            scaleA = _world.normalBeaconScale * Vector3.one,
+                                            scaleB = _world.normalBeaconScale * Vector3.one,
+                                            delay = 1.5f
+                                        };
+
+                                        if (nextEvent.HasValue && nextEvent.Value == EVENTCODE.BEACONACTIVATE) // Trigger attract transition for beacon
+                                        {
+                                            _transition._tracking = _nest.transform;
+                                        }
+
+                                        Vector3? origin = null;
+                                        if ((entity is Tree || entity is Terrain))
+                                        {
+                                            origin = _currentActionMarker.HitInfo.point + Vector3.up *
+                                                ((nextEvent.HasValue && nextEvent.Value == EVENTCODE.BEACONFLOWER)
+                                                    ? 0f
+                                                    : .67f);
+                                        }
+
+                                        if (origin.HasValue)
+                                        {
+                                            @params.Add("origin", origin);
+                                        }
+
+                                        Debug.LogWarning("Create beacon for action loop : )"); 
+                                        var _beacon = _beaconManager.CreateBeacon(imgPath, Beacon.Type.Desktop, Beacon.Locale.Terrain, @params, fromSave:false, transition: BeaconManager.TransitionType.Flower, _overrideTransition:_transition, onCompleteTransition:
+                                        () =>
+                                        {
+                                            HandleActionLoop(entity, @eventcodes, onComplete, onFailure); // Wait for transition to complete then next action
+                                        });
+                                        entity = _beacon; // Swap to beacon element   
+                                    }
+                                    else
+                                    {
+                                        HandleActionLoop(null, null, onComplete, onFailure, false);
+                                    }
+                                });
+                            }
+
+                            
+                        }
+                        else
+                        {
+                            try
+                            {
+                                switch (@event)
+                                {
+                                    // NEST
+                                    case EVENTCODE.NESTKICK:
+                                        _nest.RandomKick();
+                                        break;
+                                    case EVENTCODE.NESTPOP:
+                                        _nest.RemoveBeacon(_nest.beacons.First());
+                                        break;
+                                    case EVENTCODE.NESTCLEAR:
+                                        _nest.Dispose();
+                                        break;
+                                    case EVENTCODE.NESTFIRE:
+                                        _nest.Fire();
+                                        break;
+                                    case EVENTCODE.NESTEXTINGUISH:
+                                        _nest.Extinguish();
+                                        break;
+
+                                    // BEACON (requires beacon)
+                                    case EVENTCODE.BEACONACTIVATE:
+                                        (entity as Beacon).AddToNest();
+                                        break;
+                                    case EVENTCODE.BEACONFLOWER:
+                                        (entity as Beacon).Flower((entity as Beacon).Origin); // Plant where it lands
+                                        break;
+                                    case EVENTCODE.BEACONDELETE:
+                                        (entity as Beacon).Delete();
+                                        break;
+                                    case EVENTCODE.BEACONPLANT:
+                                        (entity as Beacon).Plant((entity as Beacon).Origin);
+                                        break;
+                                    case EVENTCODE.BEACONFIRE:
+                                        (entity as Beacon).Fire();
+                                        break;
+                                    case EVENTCODE.BEACONEXTINGUISH:
+                                        (entity as Beacon).Extinguish();
+                                        break;
+                                    
+                                    case EVENTCODE.FLOWERFIRE:
+                                        (entity as Flower).Fire();
+                                        break;
+                                    case EVENTCODE.FLOWEREXTINGUISH:
+                                        (entity as Flower).Extinguish();
+                                        break;
+                                        
+                                    case EVENTCODE.SLAUGHTER:
+                                        _butterflowers.KillButterflies();
+                                        break;
+
+                                    default:
+                                        throw new SystemException($"Event type {@event} not supported!");
+                                        break;
+                                }
+                            }
+                            catch (SystemException e)
+                            {
+                                HandleActionLoop(null, null, onComplete, onFailure, false);
+                            }
+                            
+                            HandleActionLoop(entity, @eventcodes, onComplete, onFailure);
+                        }
+                    }
+                    else
+                    {
+                        HandleActionLoop(null, null, onComplete, onFailure, true);
+                    }
                 }
             }
             else
