@@ -242,7 +242,19 @@ namespace live_simulation
                                         _transition._tracking = _nest.transform;
                                     }
 
-                                    @params.Add("origin", _currentActionMarker.HitInfo.point + Vector3.up * ((nextEvent.HasValue && nextEvent.Value == EVENTCODE.BEACONFLOWER)? 0f:.67f));
+                                    Vector3? origin = null;
+                                    if ((entity is Tree || entity is Terrain))
+                                    {
+                                        origin = _currentActionMarker.HitInfo.point + Vector3.up *
+                                            ((nextEvent.HasValue && nextEvent.Value == EVENTCODE.BEACONFLOWER)
+                                                ? 0f
+                                                : .67f);
+                                    }
+
+                                    if (origin.HasValue)
+                                    {
+                                        @params.Add("origin", origin);
+                                    }
 
                                     Debug.LogWarning("Create beacon for action loop : )"); 
                                     var _beacon = _beaconManager.CreateBeacon(imgPath, Beacon.Type.Desktop, Beacon.Locale.Terrain, @params, fromSave:false, transition: BeaconManager.TransitionType.Flower, _overrideTransition:_transition, onCompleteTransition:
