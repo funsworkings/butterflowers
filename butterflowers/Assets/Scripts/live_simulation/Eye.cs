@@ -88,12 +88,57 @@ namespace live_simulation
         
         #region Behaviours
 
-        [SerializeField] private Frame _debugFrame;
+        [SerializeField] private Frame _lastFrame;
         Frame ChooseBestFrame()
         {
-            float aggregate = _Util.ORDER + _Util.QUIET + _Util.NURTURE + _Util.DESTRUCTION;
-        // todo SOlve for best option between frame weights
-            return _debugFrame;
+            float aggregate = 0f;
+
+            List<float> _frameWeight = new List<float>();
+            List<Frame> _frameSelection = new List<Frame>();
+
+            var _frames = System.Enum.GetValues(typeof(Frame));
+            foreach (Frame frame in _frames)
+            {
+                var frameVal = GetValueFromFrame(frame);
+                if (frameVal > 0f)
+                {
+                    aggregate += frameVal;
+                    _frameWeight.Add(frameVal);
+                    _frameSelection.Add(frame);
+                }
+            }
+
+            int frameCount = _frameWeight.Count;
+            if (frameCount > 0)
+            {
+                if (frameCount == 1)
+                {
+                    return _frameSelection[0];
+                }
+                else
+                {
+                    float random = UnityEngine.Random.Range(0f, aggregate);
+                    for (int i = 0; i < frameCount; i++)
+                    {
+                        float w = _frameWeight[i];
+                        if (random <= w)
+                        {
+                            return _frameSelection[i];
+                        }
+                    }   
+                }
+            }
+
+            return Frame.Quiet;
+        }
+
+        float GetValueFromFrame(Frame frame)
+        {
+            if (frame == Frame.Destruction) return _Util.DESTRUCTION;
+            if (frame == Frame.Nurture) return _Util.NURTURE;
+            if (frame == Frame.Order) return _Util.ORDER;
+
+            return _Util.QUIET;
         }
         
         #endregion
@@ -147,6 +192,7 @@ namespace live_simulation
             }
 
             _currentActionMarker = null; // Wipe action!
+            _lastFrame = Frame.Quiet;
         }
 
         void HandleActionLoop(Entity entity, List<EVENTCODE> @eventcodes, System.Action onComplete, System.Action onFailure, bool? success = null)
@@ -191,8 +237,9 @@ namespace live_simulation
 
                                     Debug.LogWarning("Create beacon for action loop : )");
                                     var _beacon = _beaconManager.CreateBeacon(imgPath, Beacon.Type.Desktop, Beacon.Locale.Terrain, @params, fromSave:false, transition: BeaconManager.TransitionType.Flower, _overrideTransition:_transition, onCompleteTransition:
-                                    () =>
+                                    (b, bPos) =>
                                     {
+                                        b._Transition.RemoveCallbacks(); // Remove all callbacks
                                         HandleActionLoop(entity, @eventcodes, onComplete, onFailure); // Wait for transition to complete then next action
                                     });
                                     entity = _beacon; // Swap to beacon element   
@@ -248,6 +295,13 @@ namespace live_simulation
                                 case EVENTCODE.BEACONEXTINGUISH:
                                     (entity as Beacon).Extinguish();
                                     break;
+                                
+                                case EVENTCODE.FLOWERFIRE:
+                                    (entity as Flower).Fire();
+                                    break;
+                                case EVENTCODE.FLOWEREXTINGUISH:
+                                    (entity as Flower).Extinguish();
+                                    break;
 
                                 default:
                                     throw new SystemException($"Event type {@event} not supported!");
@@ -280,7 +334,7 @@ namespace live_simulation
 
         IEnumerator ActionLoop(System.Action onComplete)
         {
-            Frame _frame = ChooseBestFrame();
+            Frame _frame = _lastFrame = ChooseBestFrame();
             List<EVENTCODE> _frameEvents = null;
             for (int i = 0; i < _frameActions.Length; i++)
             {
