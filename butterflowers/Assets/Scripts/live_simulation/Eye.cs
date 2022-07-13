@@ -23,6 +23,14 @@ namespace live_simulation
     {
         // Properties
 
+        enum State
+        {
+            Idle,
+            Query,
+            Action
+        }
+        State _state = State.Idle;
+
         [Header("General")]
         [SerializeField] private float _fovUpdateInterval = .5f;
         
@@ -56,6 +64,7 @@ namespace live_simulation
         [SerializeField] private Nest _nest;
         [SerializeField] private ButterflowerManager _butterflowers;
         [SerializeField] private WorldPreset _world;
+        private Monitor _monitor = null;
 
         [Header("Debug")] 
         [SerializeField] private EVENTCODE _debugOverrideEventCode = EVENTCODE.NULL;
@@ -76,11 +85,25 @@ namespace live_simulation
             StopAllCoroutines();
         }
 
+        private int _beats = 0;
+        private bool _waitBeat = true;
+        [SerializeField] private int _beatsToIdle = 16;
+
         IEnumerator CoreLoop()
         {
             while (true)
             {
-                yield return new WaitForSecondsRealtime(_fovUpdateInterval);
+                while (++_beats < _beatsToIdle)
+                {
+                    yield return new WaitForSecondsRealtime(Beat_T - Time.time);
+                    bool _waitFov = true;
+                    SwitchFOV((_focus) =>
+                    {
+                        _waitFov = false;
+                    });
+                    while (_waitFov) yield return null;
+                }
+                _beats = 0;
 
                 bool _action = true; // Wait for action
                 yield return new WaitForSecondsRealtime((Beat_T - Time.time)); // Wait for seconds to pass on-beat
@@ -89,6 +112,9 @@ namespace live_simulation
                     _action = false;
                 });
                 while (_action) yield return null;
+                _state = State.Idle; // Return to idle state
+
+                yield return null;
             }
         }
         
@@ -171,8 +197,21 @@ namespace live_simulation
         {
             Focusable _nextFocus = FindNextFocus();
             //return;
-            if(_nextFocus != null) {_focus.SetFocus(_nextFocus); onComplete?.Invoke(_nextFocus);}
-            else {_focus.LoseFocus(); onComplete?.Invoke(null);}
+            if(_nextFocus != null) {_focus.SetFocus(_nextFocus);}
+            else {_focus.LoseFocus();}
+
+            if (_monitor == null) _monitor = FindObjectOfType<Monitor>(); // Runtime assign monitor
+            if (_monitor != null)
+            {
+                _monitor.SwitchWebcamDevice((webcam) =>
+                {
+                    onComplete?.Invoke(_nextFocus);
+                });
+            }
+            else
+            {
+                onComplete?.Invoke(_nextFocus);
+            }
         }
 
         Focusable FindNextFocus()
@@ -215,6 +254,7 @@ namespace live_simulation
 
             _currentActionMarker = null; // Wipe action!
             _lastFrame = Frame.Quiet;
+            _state = State.Idle;
         }
 
         void HandleActionLoop(Entity entity, List<EVENTCODE> @eventcodes, System.Action onComplete, System.Action onFailure, bool? success = null)
@@ -399,7 +439,7 @@ namespace live_simulation
                 _frameEvents = new List<EVENTCODE>(new EVENTCODE[]{ _debugOverrideEventCode });
             }
 
-            bool waitForQuery = true;
+            bool waitForQuery = true; _state = State.Query;
             QueryInteractions(_frameEvents, (marker) =>
             {
                 waitForQuery = false;
@@ -407,7 +447,7 @@ namespace live_simulation
             });
             while (waitForQuery) yield return null;
 
-            bool waitForAction = true;
+            bool waitForAction = true; _state = State.Action;
             if (_currentActionMarker != null) // Has valid marker with valid entity+action
             {
                 Debug.LogWarning($"Success find marker: {_currentActionMarker.name} entity: {_currentActionMarker.HitEntity.gameObject.name} action: {_currentActionMarker.HitEvents.print()}");
@@ -433,7 +473,7 @@ namespace live_simulation
                 });
             }
             while(waitForAction) yield return null;
-            
+
             onComplete?.Invoke();
         }
 
@@ -657,6 +697,7 @@ namespace live_simulation
         public void Beat(float a, float b)
         {
             Beat_T = b;
+            _waitBeat = false;
         }
 
         public float Beat_T { get; private set; } = 0f;

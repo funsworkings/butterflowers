@@ -53,14 +53,22 @@ namespace live_simulation
         [SerializeField] private TMP_Text _nurtureUI, _quietUI, _orderUI, _destructionUI;
         [SerializeField] private Image _bpmUI;
 
-        private const string Osc_StatKey = "/Stats";
+        private const string Osc_DKey = "/D";
+        private const string Osc_NKey = "/N";
+        private const string Osc_QKey = "/Q";
+        private const string Osc_OKey = "/O";
+        private const string Osc_BpmKey = "/Bpm";
         
         void Start()
         {
             // Bind to OSC
             if (_osc && _osc.enabled)
             {
-                _osc.SetAddressHandler(Osc_StatKey, ReceiveOscStats);
+                _osc.SetAddressHandler(Osc_DKey, ReceiveOscD);
+                _osc.SetAddressHandler(Osc_NKey, ReceiveOscN);
+                _osc.SetAddressHandler(Osc_OKey, ReceiveOscO);
+                _osc.SetAddressHandler(Osc_QKey, ReceiveOscQ);
+                _osc.SetAddressHandler(Osc_BpmKey, ReceiveOscBpm);
             }
             
             StartCoroutine(SceneLoadAsync(() =>
@@ -94,10 +102,38 @@ namespace live_simulation
 
         void ReceiveOscStats(OscMessage message)
         {
-            _destruction = Mathf.Clamp01(message.GetFloat(0));
+            Debug.LogWarning("Did receive message from OSC!");
+            
+            /*_destruction = Mathf.Clamp01(message.GetFloat(0));
             _order = Mathf.Clamp01(message.GetFloat(1));
             _nurture = Mathf.Clamp01(message.GetFloat(2));
-            _quiet = Mathf.Clamp01(message.GetFloat(3));
+            _quiet = Mathf.Clamp01(message.GetFloat(3));*/
+            bpm = message.GetInt(0);
+        }
+
+        void ReceiveOscD(OscMessage message)
+        {
+            _destruction = Mathf.Clamp01(message.GetFloat(0));
+        }
+        
+        void ReceiveOscN(OscMessage message)
+        {
+            _nurture = Mathf.Clamp01(message.GetFloat(0));
+        }
+        
+        void ReceiveOscQ(OscMessage message)
+        {
+            _quiet = Mathf.Clamp01(message.GetFloat(0));
+        }
+        
+        void ReceiveOscO(OscMessage message)
+        {
+            _order = Mathf.Clamp01(message.GetFloat(0));
+        }
+
+        void ReceiveOscBpm(OscMessage message)
+        {
+            bpm = message.GetInt(0);
         }
         
         #endregion

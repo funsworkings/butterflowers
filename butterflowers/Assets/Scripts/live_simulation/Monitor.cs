@@ -75,7 +75,7 @@ namespace live_simulation
             ClearDisk();
             
             while (!_webcam.Ready) yield return null;
-            BridgeUtil.onCameraChange += SwitchWebcamDevice;
+            //BridgeUtil.onCameraChange += SwitchWebcamDevice;
         }
 
         void Update()
@@ -93,13 +93,9 @@ namespace live_simulation
             
             ClearDisk(); // Wipe scratch disk
 
-            BridgeUtil.onCameraChange -= SwitchWebcamDevice;
+            //BridgeUtil.onCameraChange -= SwitchWebcamDevice;
         }
 
-        [SerializeField] private int captureWidth = 100;
-        [SerializeField] private int captureHeight = 100;
-        [SerializeField] private int captureX = 0, captureY;
-        
         public void CaptureWebcamImage(System.Action<Texture2D, string> onComplete = null, bool includeSelectionTransition = true)
         {
             if (_wait) throw new SystemException("Cannot capture image while in-progress");
