@@ -25,7 +25,8 @@ namespace live_simulation
         private Eye _eye;
 
         [SerializeField] private OSC _osc;
-
+        private bool _useOSC = false;
+        
         [SerializeField, Range(0f, 1f)] private float _nurture = 0f;
         [SerializeField, Range(0f, 1f)] private float _quiet = 1f;
         [SerializeField, Range(0f, 1f)] private float _destruction = 0f;
@@ -50,31 +51,38 @@ namespace live_simulation
         
         // UI
 
-        [SerializeField] private TMP_Text _nurtureUI, _quietUI, _orderUI, _destructionUI;
+        [SerializeField] private FrameDebugUI _nurtureUI, _quietUI, _orderUI, _destructionUI;
         [SerializeField] private Image _bpmUI;
 
-        private const string Osc_DKey = "/D";
-        private const string Osc_NKey = "/N";
-        private const string Osc_QKey = "/Q";
-        private const string Osc_OKey = "/O";
+        private const string Osc_DestructionKey = "/D";
+        private const string Osc_NurtureKey = "/N";
+        private const string Osc_QuietKey = "/Q";
+        private const string Osc_OrderKey = "/O";
         private const string Osc_BpmKey = "/Bpm";
         
         void Start()
         {
+            _useOSC = _osc && _osc.enabled;
             // Bind to OSC
-            if (_osc && _osc.enabled)
+            if (_useOSC)
             {
-                _osc.SetAddressHandler(Osc_DKey, ReceiveOscD);
-                _osc.SetAddressHandler(Osc_NKey, ReceiveOscN);
-                _osc.SetAddressHandler(Osc_OKey, ReceiveOscO);
-                _osc.SetAddressHandler(Osc_QKey, ReceiveOscQ);
+                _nurture = _quiet = _order = _destruction = 0f;
+                
+                _osc.SetAddressHandler(Osc_DestructionKey, ReceiveOsc_Destruction);
+                _osc.SetAddressHandler(Osc_NurtureKey, ReceiveOsc_Nurture);
+                _osc.SetAddressHandler(Osc_OrderKey, ReceiveOsc_Order);
+                _osc.SetAddressHandler(Osc_QuietKey, ReceiveOsc_Quiet);
                 _osc.SetAddressHandler(Osc_BpmKey, ReceiveOscBpm);
             }
+            
+            _nurtureUI.UpdateValue(_nurture);
+            _quietUI.UpdateValue(_quiet);
+            _destructionUI.UpdateValue(_destruction);
+            _orderUI.UpdateValue(_order);
             
             StartCoroutine(SceneLoadAsync(() =>
             {
                 // Scene load completed
-
                 int beatIntervalMaxValue = 1;
 
                _listeners = FindObjectsOfType<MonoBehaviour>().OfType<IBridgeUtilListener>().ToArray();
@@ -111,22 +119,22 @@ namespace live_simulation
             bpm = message.GetInt(0);
         }
 
-        void ReceiveOscD(OscMessage message)
+        void ReceiveOsc_Destruction(OscMessage message)
         {
             _destruction = Mathf.Clamp01(message.GetFloat(0));
         }
         
-        void ReceiveOscN(OscMessage message)
+        void ReceiveOsc_Nurture(OscMessage message)
         {
             _nurture = Mathf.Clamp01(message.GetFloat(0));
         }
         
-        void ReceiveOscQ(OscMessage message)
+        void ReceiveOsc_Quiet(OscMessage message)
         {
             _quiet = Mathf.Clamp01(message.GetFloat(0));
         }
         
-        void ReceiveOscO(OscMessage message)
+        void ReceiveOsc_Order(OscMessage message)
         {
             _order = Mathf.Clamp01(message.GetFloat(0));
         }
@@ -162,10 +170,20 @@ namespace live_simulation
 
         private void Update()
         {
-            _nurtureUI.text = Mathf.FloorToInt(_nurture * 100f).ToString();
-            _quietUI.text = Mathf.FloorToInt(_quiet * 100f).ToString();
-            _destructionUI.text = Mathf.FloorToInt(_destruction * 100f).ToString();
-            _orderUI.text = Mathf.FloorToInt(_order * 100f).ToString();
+            if (_useOSC)
+            {
+                _nurtureUI.UpdateValue(_nurture);
+                _quietUI.UpdateValue(_quiet);
+                _destructionUI.UpdateValue(_destruction);
+                _orderUI.UpdateValue(_order);
+            }
+            else
+            {
+                _nurture = _nurtureUI.Value;
+                _quiet = _quietUI.Value;
+                _destruction = _destructionUI.Value;
+                _order = _orderUI.Value;
+            }
 
             if (!init) return;
             

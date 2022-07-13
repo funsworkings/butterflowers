@@ -298,7 +298,8 @@ namespace live_simulation
                                         {
                                             scaleA = _world.normalBeaconScale * Vector3.one,
                                             scaleB = _world.normalBeaconScale * Vector3.one,
-                                            delay = 1.5f
+                                            delay = 1.5f,
+                                            _transitionTexture = img
                                         };
 
                                         if (nextEvent.HasValue && nextEvent.Value == EVENTCODE.BEACONACTIVATE) // Trigger attract transition for beacon

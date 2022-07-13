@@ -60,6 +60,8 @@ namespace butterflowersOS.Objects.Entities.Interactables
             public AnimationCurve scaleCurve;
             public AnimationCurve positionCurve;
 
+            public Texture2D _transitionTexture;
+
             public Transition()
             {
                 
@@ -112,7 +114,7 @@ namespace butterflowersOS.Objects.Entities.Interactables
                 beacon.transform.localScale = scale;
             
                 if(flagStart) {onBegin?.Invoke(beacon, position);onInstanceBegin?.Invoke(beacon, position);}
-                if(flagEnd) {onEnd?.Invoke(beacon, position); onInstanceEnd?.Invoke(beacon, position);}
+                if(flagEnd) {onEnd?.Invoke(beacon, position); onInstanceEnd?.Invoke(beacon, position); if(_transitionTexture != null) { DestroyImmediate(_transitionTexture); beacon.material.mainTexture = _transitionTexture = null; }}
             
                 return time >= duration;
             }
@@ -277,6 +279,8 @@ namespace butterflowersOS.Objects.Entities.Interactables
             collider = GetComponent<Collider>();
             renderer = GetComponentInChildren<MeshRenderer>();
             material = renderer.material;
+
+            material.mainTexture = transition?._transitionTexture;
 
             this.type = type;
             var targetState = state;
