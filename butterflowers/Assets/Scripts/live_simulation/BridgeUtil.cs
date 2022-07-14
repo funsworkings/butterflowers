@@ -1,16 +1,23 @@
 using System;
 using System.Collections;
+using System.Collections.Generic;
 using System.Linq;
 using System.Threading;
 using System.Threading.Tasks;
 using butterflowersOS;
+using butterflowersOS.AI;
 using butterflowersOS.Objects.Base;
+using butterflowersOS.Objects.Managers;
 using JetBrains.Annotations;
+using LeTai.Asset.TranslucentImage;
 using Neue.Reference.Types;
 using TMPro;
 using UnityEngine;
+using UnityEngine.Rendering.PostProcessing;
 using UnityEngine.SceneManagement;
 using UnityEngine.UI;
+using uwu.Extensions;
+using Random = UnityEngine.Random;
 
 namespace live_simulation
 {
@@ -38,7 +45,7 @@ namespace live_simulation
         [SerializeField, Range(0f, 1f)] private float _destruction = 0f;
         [SerializeField, Range(0f, 1f)] private float _order = 0f;
 
-        [SerializeField, Min(1)] int bpm = 60;
+        [SerializeField, UnityEngine.Min(1)] int bpm = 60;
         public int BPM => bpm;
         
         private float t = 0f;
@@ -73,8 +80,38 @@ namespace live_simulation
 
         private bool successLoadScene = false;
         
+        [Header("Capture")] 
+        List<CaptureThumbnail> _activeThumbnails = new List<CaptureThumbnail>();
+        [SerializeField] private CaptureThumbnail _captureThumbnailPrefab;
+        [SerializeField] private RectTransform _captureThumbnailRoot;
+        [SerializeField] private float _thumbnailTransitionDuration = 1f;
+        [SerializeField] private float _thumbnailHeightRange = 32f;
+        [SerializeField] private Camera _simulationCamera;
+
+        [Header("Effects")] [SerializeField] private YvesManager _fxManager;
+        [SerializeField] private PostProcessVolume _ppVolume;
+        [SerializeField] private PostProcessingStatValue _nurtureFX, _quietFX, _destructionFX, _orderFX;
+        [SerializeField] private Image _quietBlurRenderer;
+        private Material _quietBlur;
+        
+        private ColorGrading _ppColorGrading;
+        private ChromaticAberration _ppChromaticAberration;
+        private Smiley _ppSmile;
+
         void Start()
         {
+            if (_ppVolume)
+            {
+                _ppVolume.profile.TryGetSettings(out _ppColorGrading);
+                _ppVolume.profile.TryGetSettings(out _ppSmile);
+                //_ppVolume.profile.TryGetSettings(out _ppChromaticAberration);
+            }
+
+            if (_quietBlurRenderer)
+            {
+                _quietBlur = _quietBlurRenderer.material;
+            }
+            
             _useOSC = _osc && _osc.enabled;
             // Bind to OSC
             if (_useOSC)
@@ -231,6 +268,28 @@ namespace live_simulation
             }
 
             if (!init) return;
+
+            if (_ppColorGrading)
+            {
+                _ppColorGrading.saturation.value = _nurture.RemapNRB(0f, 1f, _nurtureFX.min, _nurtureFX.max);
+                //_ppColorGrading.temperature.value = _destruction.RemapNRB(0f, 1f, _destructionFX.min, _destructionFX.max);
+            }
+
+            if (_ppChromaticAberration)
+            {
+                _ppChromaticAberration.intensity.value = _destruction.RemapNRB(0f, 1f, _destructionFX.min, _destructionFX.max);
+            }
+
+            if (_quietBlur)
+            {
+                _quietBlur.SetFloat("_Size", _quiet.RemapNRB(0f, 1f, _quietFX.min, _quietFX.max));
+            }
+
+            if (_ppSmile)
+            {
+                _ppSmile._blend.value = Mathf.Clamp01(_destruction.RemapNRB(0f, 1f, _destructionFX.min, _destructionFX.max));
+                _ppSmile._steps.value = Mathf.FloorToInt((1f - _order).RemapNRB(0f, 1f, _orderFX.min, _orderFX.max));
+            }
             
             // BPM
 
@@ -244,6 +303,13 @@ namespace live_simulation
 
             _interval = Mathf.Clamp01(1f - ((timeB - (t+timeA)) / thresh));;
             _bpmUI.fillAmount = _interval;
+            
+            UpdateFX();
+        }
+
+        void UpdateFX()
+        {
+            
         }
 
         void Beat(float diff)
@@ -321,7 +387,40 @@ namespace live_simulation
                 return;
             }
             
-            _monitor.CaptureWebcamImage(onComplete);
+            StartCoroutine(RequestRoutine(onComplete));
+        }
+
+        IEnumerator RequestRoutine(System.Action<Texture2D, string> onComplete)
+        {
+            Texture2D _res = null;
+            string _resPath = null;
+            
+            bool _capture = true;
+            _monitor.CaptureWebcamImage((img, imgPath) =>
+            {
+                if (img != null && !string.IsNullOrEmpty(imgPath)) // Success
+                {
+                    Vector2 t_pos =  _simulationCamera.ViewportToScreenPoint(new Vector3(Random.Range(0f, 1f), Random.Range(0f, 1f), 0f)); // Random screen pos from sim
+                    t_pos = _simulationCamera.ViewportToScreenPoint(new Vector3(.5f, .5f));
+                    float t_height = Random.Range(-_thumbnailHeightRange*2, _thumbnailHeightRange*2);
+                    
+                    var _thumb = Instantiate(_captureThumbnailPrefab, _captureThumbnailRoot);
+                    _thumb.Setup(img, t_pos, (timeB - Time.time), () =>
+                    {
+                        DestroyImmediate(_thumb.gameObject); // Dispose gameObject for thumb
+                        
+                        _capture = false;
+                    }, height:t_height);
+                }
+                else // Failure
+                {
+                    _capture = false;
+                }
+            });
+            while (_capture) yield return null;
+            
+            // Fire event
+            onComplete?.Invoke(_res, _resPath);
         }
 
         public void SwitchWebcam(System.Action<WebCamTexture> onComplete)

@@ -16,6 +16,7 @@ namespace live_simulation
         [SerializeField] Webcam _webcam;
         [SerializeField] RawImage _webcamTargetImage, _webcamTargetLiveImage;
         [SerializeField] private SelectionBox _selection;
+
         private AspectRatioFitter _webcamTargetImageFitter;
 
         private bool _wait = false;
