@@ -1,3 +1,4 @@
+using System;
 using System.Collections;
 using System.Collections.Generic;
 using butterflowersOS.Core;
@@ -28,8 +29,7 @@ namespace butterflowersOS.Objects.Entities
         // Collections
     
         [SerializeField] List<Texture2D> textures = new List<Texture2D>();
-        List<Texture2D> overridetextures = new List<Texture2D>();
-    
+
         public int textureCap = 4;
     
         // Attributes
@@ -54,8 +54,10 @@ namespace butterflowersOS.Objects.Entities
         {
             get
             {
-                if (overridetextures.Count > 0)
-                    return overridetextures.ToArray();
+                if (_overrideTextures != null)
+                {
+                    return _overrideTextures;
+                }
 
                 return textures.ToArray();
             }
@@ -98,7 +100,6 @@ namespace butterflowersOS.Objects.Entities
             Lib = Library.Instance;
 
             textures = new List<Texture2D>();
-            overridetextures = new List<Texture2D>();
 
             textureCap = preset.nestCapacity;
 
@@ -124,6 +125,12 @@ namespace butterflowersOS.Objects.Entities
                 offset = Mathf.Repeat(offset + (Time.deltaTime * m_speed), 1f);
         }
 
+        private void OnDestroy()
+        {
+            ClearOverrideRoutine(events: false); // Clear overrides
+            StopAllCoroutines();
+        }
+
         float wait = 0f;
         IEnumerator Wait()
         {
@@ -136,6 +143,53 @@ namespace butterflowersOS.Objects.Entities
         }
 
         #region Operations
+
+        private Coroutine _overrideRoutine = null;
+        private Texture2D[] _overrideTextures = null;
+        private System.Action _overrideRoutineCallback = null;
+        private bool _deleteOverrides = false;
+
+        public void OverrideTextures(Texture2D[] _textures, float duration, System.Action onComplete = null, bool deleteOverrideTextures = false)
+        {
+            ClearOverrideRoutine();
+            
+            _deleteOverrides = deleteOverrideTextures;
+            _overrideTextures = _textures;
+            _overrideRoutineCallback = onComplete;
+            
+            _overrideRoutine = StartCoroutine(OverrideRoutine(duration, onComplete)); // Assign override!
+        }
+
+        void ClearOverrideRoutine(bool @events = true)
+        {
+            if (_overrideRoutine != null)
+            {
+                StopCoroutine(_overrideRoutine);
+                _overrideRoutine = null;
+
+                if (_deleteOverrides)
+                {
+                    if (_overrideTextures != null && _overrideTextures.Length > 0)
+                    {
+                        for (int i = 0; i < _overrideTextures.Length; i++) DestroyImmediate(_overrideTextures[i]);
+                    }
+                }
+                
+                if(@events) _overrideRoutineCallback?.Invoke(); // Fire callback for completion
+            }
+
+            _overrideRoutine = null;
+            _overrideTextures = null;
+            _overrideRoutineCallback = null;
+        }
+
+        IEnumerator OverrideRoutine(float duration, System.Action onComplete)
+        {
+            yield return new WaitForSeconds(duration);
+
+            ClearOverrideRoutine(events:false);
+            onComplete?.Invoke();
+        }
 
         public void Push(string file)
         {
@@ -162,6 +216,7 @@ namespace butterflowersOS.Objects.Entities
 
             textures.Add(texture);
             ApplyTextures();
+            ClearOverrideRoutine();
         }
 
         void Remove(Texture tex) 
@@ -255,30 +310,6 @@ namespace butterflowersOS.Objects.Entities
             Add(texture);
         }
 
-        #endregion
-    
-        #region Overrides
-
-        public void PushOverrideTexture(string file)
-        {
-            var texture = Lib.RequestTextureImmediate(file);
-            if (texture != null) 
-            {
-                overridetextures.Add(texture);
-                ApplyTextures();
-            }
-        }
-
-        public void PopOverrideTexture(string file)
-        {
-            var texture = Lib.RequestTextureImmediate(file);
-            if (texture != null) 
-            {
-                overridetextures.Remove(texture);
-                ApplyTextures();
-            }
-        }
-    
         #endregion
 
         #region Textures

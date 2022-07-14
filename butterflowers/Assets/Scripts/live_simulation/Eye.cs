@@ -7,6 +7,7 @@ using butterflowersOS;
 using butterflowersOS.Core;
 using butterflowersOS.Interfaces;
 using butterflowersOS.Objects.Base;
+using butterflowersOS.Objects.Entities;
 using butterflowersOS.Objects.Entities.Interactables;
 using butterflowersOS.Objects.Entities.Interactables.Empty;
 using butterflowersOS.Objects.Managers;
@@ -68,6 +69,8 @@ namespace live_simulation
         [SerializeField] private Nest _nest;
         [SerializeField] private ButterflowerManager _butterflowers;
         [SerializeField] private WorldPreset _world;
+        [SerializeField] private Quilt _quilt;
+        [SerializeField] private float _butterflyOverrideLength = 3f;
         private Monitor _monitor = null;
 
         [Header("Debug")] 
@@ -308,6 +311,8 @@ namespace live_simulation
                                 {
                                     if (img != null && !string.IsNullOrEmpty(imgPath))
                                     {
+                                        _quilt.OverrideTextures(new Texture2D[]{img}, _butterflyOverrideLength);
+                                        
                                         var @params = new Hashtable()
                                         {
                                             { "position" , _interactionCamera.ViewportToWorldPoint(new Vector3(.5f, .5f, _beaconSpawnDistanceFromCamera)) }
