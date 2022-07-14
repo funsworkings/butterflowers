@@ -19,27 +19,29 @@ namespace live_simulation
 
         void Start()
         {
-            BridgeUtil.onUpdateEyeActionStack += (actions =>
-            {
-                string _eventStackMessage = "";
-                if (actions != null && actions.Length > 0)
-                {
-                    var i = 0;
-                    foreach (EVENTCODE @eventcode in actions)
-                    {
-                        if (i++ > 0)
-                        {
-                            _eventStackMessage += "\n"; 
-                        }
-                        _eventStackMessage += @eventcode.ToString();
-                    }
-                }
-
-                if (string.IsNullOrEmpty(_eventStackMessage)) _eventStackMessage = "[NONE]";
-                _actionStack.text = _eventStackMessage;
-            });
+            BridgeUtil.onUpdateEyeActionStack += UpdateActionStack;
             
             _restartButton.onClick.AddListener(RestartSimulation);
+        }
+
+        void UpdateActionStack(EVENTCODE[] actions)
+        {
+            string _eventStackMessage = "";
+            if (actions != null && actions.Length > 0)
+            {
+                var i = 0;
+                foreach (EVENTCODE @eventcode in actions)
+                {
+                    if (i++ > 0)
+                    {
+                        _eventStackMessage += "\n"; 
+                    }
+                    _eventStackMessage += @eventcode.ToString();
+                }
+            }
+
+            if (string.IsNullOrEmpty(_eventStackMessage)) _eventStackMessage = "[NONE]";
+            _actionStack.text = _eventStackMessage;
         }
 
         void Update()
@@ -51,7 +53,12 @@ namespace live_simulation
             _currentEyeAction.text = $"action: {((_Util.CurrentAction.HasValue) ? _Util.CurrentAction.Value.ToString() : "NONE")}";
             _bpm.text = $"BPM: {_Util.BPM}";
         }
-        
+
+        private void OnDestroy()
+        {
+            BridgeUtil.onUpdateEyeActionStack -= UpdateActionStack;
+        }
+
         #region Utils
 
         private bool restartInProgress = false;

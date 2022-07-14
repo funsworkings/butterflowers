@@ -75,17 +75,21 @@ namespace live_simulation
         
         private void Start()
         {
-            BridgeUtil.onLoad += () =>
-            {
-                _availableFocus.AddRange(_focus.Focuses);
-                _usedFocus.Add(null); // Append current default focus
+            BridgeUtil.onLoad += Initialize;
+        }
+
+        void Initialize()
+        {
+            _availableFocus.AddRange(_focus.Focuses);
+            _usedFocus.Add(null); // Append current default focus
                 
-                StartCoroutine("CoreLoop");
-            };
+            StartCoroutine("CoreLoop");
         }
 
         private void OnDestroy()
         {
+            BridgeUtil.onLoad -= Initialize;
+            
             StopAllCoroutines();
         }
         

@@ -153,10 +153,12 @@ namespace live_simulation
                 successLoadScene = false;
             }));
 
-            onLoad += () =>
-            {
-                init = true;
-            };
+            onLoad += Initialize;
+        }
+
+        void Initialize()
+        {
+            init = true;
         }
         
         #region OSC
@@ -374,7 +376,9 @@ namespace live_simulation
 
         private void OnDestroy()
         {
-            SceneManager.UnloadScene(1);
+            onLoad -= Initialize;
+            
+            if(!restartInProgress) SceneManager.UnloadScene(1);
         }
         
         #region Bridge ops
@@ -398,6 +402,9 @@ namespace live_simulation
             bool _capture = true;
             _monitor.CaptureWebcamImage((img, imgPath) =>
             {
+                _res = img;
+                _resPath = imgPath;
+                
                 if (img != null && !string.IsNullOrEmpty(imgPath)) // Success
                 {
                     Vector2 t_pos =  _simulationCamera.ViewportToScreenPoint(new Vector3(Random.Range(0f, 1f), Random.Range(0f, 1f), 0f)); // Random screen pos from sim
@@ -448,13 +455,17 @@ namespace live_simulation
 
         #region Utils
 
+        private bool restartInProgress = false;
+
         public void RestartSim(System.Action onFailure)
         {
+            restartInProgress = true;
             StartCoroutine(SceneUnloadAsync(() =>
             {
                 SceneManager.LoadScene(0); // Reload current scene!
             }, () =>
             {
+                restartInProgress = false;
                 onFailure?.Invoke();
             }));
         }
