@@ -1,7 +1,12 @@
 using System;
 using System.Collections;
 using System.Linq;
+using System.Threading;
+using System.Threading.Tasks;
+using butterflowersOS;
 using butterflowersOS.Objects.Base;
+using JetBrains.Annotations;
+using Neue.Reference.Types;
 using TMPro;
 using UnityEngine;
 using UnityEngine.SceneManagement;
@@ -18,7 +23,8 @@ namespace live_simulation
         public static System.Action onCycleDay;
         public static System.Action<string> onCreateImage;
         public static System.Action<float, float> onBeat;
-        
+        public static System.Action<EVENTCODE[]> onUpdateEyeActionStack;
+
         // Properties
 
         private Monitor _monitor;
@@ -39,6 +45,7 @@ namespace live_simulation
         private float thresh = 0f;
         int w_bpm = 0;
         private float timeA, timeB;
+        private float _interval = 0f;
 
         public float NURTURE => _nurture;
         public float ORDER => _order;
@@ -46,6 +53,10 @@ namespace live_simulation
         public float QUIET => _quiet;
 
         private bool init = false;
+
+        public Frame CurrentFrame => _eye._currentFrame;
+        public EVENTCODE? CurrentAction => _eye._currentAction;
+        public Eye.State CurrentEyeState => _eye._state;
 
         private IBridgeUtilListener[] _listeners;
         
@@ -59,6 +70,8 @@ namespace live_simulation
         private const string Osc_QuietKey = "/Q";
         private const string Osc_OrderKey = "/O";
         private const string Osc_BpmKey = "/Bpm";
+
+        private bool successLoadScene = false;
         
         void Start()
         {
@@ -95,9 +108,12 @@ namespace live_simulation
                    else if (listener is Eye) _eye = listener as Eye; // Assign eye
                }
 
+               successLoadScene = true;
+
             }, () =>
             {
                 Debug.LogWarning("Failed to load webcam scene!");
+                successLoadScene = false;
             }));
 
             onLoad += () =>
@@ -146,6 +162,8 @@ namespace live_simulation
         
         #endregion
         
+        #region Scene load/unload
+
         IEnumerator SceneLoadAsync(System.Action onComplete, System.Action onFailure)
         {
             var asyncLoadOp = SceneManager.LoadSceneAsync(1, LoadSceneMode.Additive);
@@ -167,6 +185,33 @@ namespace live_simulation
                 onFailure?.Invoke();
             }
         }
+
+        IEnumerator SceneUnloadAsync(System.Action onComplete, System.Action onFailure)
+        {
+            if (successLoadScene)
+            {
+                var t_scene = SceneManager.GetSceneByBuildIndex(1);
+                if (t_scene.IsValid())
+                {
+                    var asyncUnloadOp = SceneManager.UnloadSceneAsync(1);
+                    asyncUnloadOp.allowSceneActivation = true;
+                
+                    while (!asyncUnloadOp.isDone) yield return null; // Wait for scene unload op to complete   
+                    
+                    onComplete?.Invoke();
+                }
+                else
+                {
+                    onFailure?.Invoke();
+                }
+            }
+            else
+            {
+                onComplete?.Invoke();
+            }
+        }
+        
+        #endregion
 
         private void Update()
         {
@@ -197,7 +242,8 @@ namespace live_simulation
                 Beat(diff);
             }
 
-            _bpmUI.fillAmount = Mathf.Clamp01(1f - ((timeB - (t+timeA)) / thresh));
+            _interval = Mathf.Clamp01(1f - ((timeB - (t+timeA)) / thresh));;
+            _bpmUI.fillAmount = _interval;
         }
 
         void Beat(float diff)
@@ -213,6 +259,51 @@ namespace live_simulation
             t = 0f;
             
             onBeat?.Invoke(timeA, timeB);
+        }
+
+        public Task WaitForBeats(int beats)
+        {
+            TaskCompletionSource<bool> _taskCompletionSource = new TaskCompletionSource<bool>();
+            Task<bool> _task = _taskCompletionSource.Task;
+
+            Task.Factory.StartNew(() =>
+            {
+                int _b = 0;
+                onBeat += DidCompleteBeatLocal;
+
+                void DidCompleteBeatLocal(float a, float b)
+                {
+                    onBeat -= DidCompleteBeatLocal;
+                    
+                    Debug.LogWarning($"wait beat: {_b}");
+                    if (++_b >= beats)
+                    {
+                        _taskCompletionSource.SetResult(true);
+                    }
+                }
+            });
+
+            return _task;
+        }
+
+        public Task WaitForNextBeatWithDelay(float delay)
+        {
+            TaskCompletionSource<bool> _taskCompletionSource = new TaskCompletionSource<bool>();
+            Task<bool> _task = _taskCompletionSource.Task;
+
+            Task.Factory.StartNew(() =>
+            {
+                Thread.Sleep((int)(delay * 1000));
+                
+                onBeat += DidCompleteBeatLocal;
+                void DidCompleteBeatLocal(float a, float b)
+                {
+                    onBeat -= DidCompleteBeatLocal;
+                    _taskCompletionSource.SetResult(true);
+                }
+            });
+
+            return _task;
         }
 
         private void OnDestroy()
@@ -254,6 +345,21 @@ namespace live_simulation
             _eye.SwitchFOV(onComplete);
         }
         
+        #endregion
+
+        #region Utils
+
+        public void RestartSim(System.Action onFailure)
+        {
+            StartCoroutine(SceneUnloadAsync(() =>
+            {
+                SceneManager.LoadScene(0); // Reload current scene!
+            }, () =>
+            {
+                onFailure?.Invoke();
+            }));
+        }
+
         #endregion
     }
 }

@@ -155,10 +155,10 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: 
   _renderCamera: {fileID: 954335376}
-  _defaultDeviceId: FaceTime HD Camera
   toggleVisibilityComponents:
   - {fileID: 1214875732}
   - {fileID: 1927580908}
+  _autoStart: 1
 --- !u!114 &643733115
 MonoBehaviour:
   m_ObjectHideFlags: 0
@@ -177,11 +177,8 @@ MonoBehaviour:
   _selection: {fileID: 643733117}
   _captureWResolution: 0.3
   _captureHResolution: 0.3
-  _updateInterval: 1
-  captureWidth: 200
-  captureHeight: 200
-  captureX: 0
-  captureY: 0
+  selectionBoxTransitionTime: 2.5
+  selectionBoxWaitTime: 1.3
 --- !u!4 &643733116
 Transform:
   m_ObjectHideFlags: 0
@@ -257,7 +254,6 @@ MonoBehaviour:
     m_PreInfinity: 2
     m_PostInfinity: 2
     m_RotationOrder: 4
-  _transitionTime: 2.1
   _scale: {x: 0, y: 0}
   _origin: {x: 0, y: 0}
 --- !u!1 &954335374

@@ -1,5 +1,6 @@
 using System;
 using System.Collections;
+using System.Threading.Tasks;
 using UnityEngine;
 
 namespace live_simulation
@@ -26,9 +27,6 @@ namespace live_simulation
         public bool Pause { get; set; } = false;
         
         [SerializeField] private AnimationCurve _originCurve, _scaleCurve;
-        [SerializeField] private float _transitionTime = 1f;
-        [SerializeField] private float _endDelayTime = 1.5f;
-        
         [SerializeField]private Vector2 _scale, _origin;
 
         private void Start()
@@ -75,18 +73,18 @@ namespace live_simulation
         
         #region Movement
         
-        public void UpdateTransform(Vector2 pos, Vector2 scale, System.Action onComplete)
+        public void UpdateTransform(Vector2 pos, Vector2 scale, float duration, float wait, System.Action onComplete, BridgeUtil util = null)
         {
             if (_transitionRoutine != null)
             {
                 StopCoroutine(_transitionRoutine);
                 _transitionRoutine = null;
             }
-            StartCoroutine(TransitionRoutine(pos, scale, onComplete));
+            StartCoroutine(TransitionRoutine(pos, scale, duration, wait, onComplete, util));
         }
 
         private Coroutine _transitionRoutine = null;
-        IEnumerator TransitionRoutine(Vector2 to, Vector2 ts, System.Action onComplete)
+        IEnumerator TransitionRoutine(Vector2 to, Vector2 ts, float duration, float wait, System.Action onComplete, BridgeUtil util)
         {
             float t = 0f;
 
@@ -96,17 +94,23 @@ namespace live_simulation
             ClampScale(ts, out ts);
             ClampOrigin(to, ts, out to);
 
-            while (t < _transitionTime)
+            while (t < duration)
             {
                 t += Time.unscaledDeltaTime;
 
-                float i = Mathf.Clamp01(t / _transitionTime);
+                float i = Mathf.Clamp01(t / duration);
                     _origin = Vector2.Lerp(o, to, _originCurve.Evaluate(i));
                     _scale = Vector2.Lerp(s, ts, _scaleCurve.Evaluate(i));
 
                 yield return null;
             }
-            yield return new WaitForSecondsRealtime(_endDelayTime);
+            
+            if(util == null) yield return new WaitForSecondsRealtime(wait);
+            else
+            {
+                var task = util.WaitForNextBeatWithDelay(wait);
+                while (!task.IsCompleted) yield return null;
+            }
             
             onComplete?.Invoke();
         }

@@ -2,6 +2,7 @@ using System;
 using System.Collections;
 using System.Collections.Generic;
 using System.Linq;
+using System.Threading.Tasks;
 using butterflowersOS;
 using butterflowersOS.Core;
 using butterflowersOS.Interfaces;
@@ -23,13 +24,16 @@ namespace live_simulation
     {
         // Properties
 
-        enum State
+        public enum State
         {
             Idle,
             Query,
             Action
         }
-        State _state = State.Idle;
+        public State _state { get; private set; } = State.Idle;
+        
+        public Frame _currentFrame { get; private set; } = Frame.Quiet;
+        public EVENTCODE? _currentAction { get; private set; }= null;
 
         [Header("General")]
         [SerializeField] private float _fovUpdateInterval = .5f;
@@ -48,7 +52,7 @@ namespace live_simulation
         [SerializeField] private SmartInteractionMarker _interactionMarkerPrefab;
         [SerializeField] private RectTransform _interactionMarkersContainer;
         [SerializeField] private float _markerScaleMultiplier = 1f;
-        [SerializeField] private float _stepBetweenMarkers = .1f;
+        [SerializeField] private float _markerInstantiateTime = .1f;
         [SerializeField] private float _stepBetweenFailureMarkers = 2f;
         [SerializeField] private float _stepBetweenValidMarker = 1.5f;
         [SerializeField] private float _stepAfterValidMarker = 2f;
@@ -84,26 +88,34 @@ namespace live_simulation
         {
             StopAllCoroutines();
         }
-
-        private int _beats = 0;
+        
         private bool _waitBeat = true;
-        [SerializeField] private int _beatsToIdle = 16;
+        [SerializeField] private float _timeToIdle = 6f;
 
         IEnumerator CoreLoop()
         {
             while (true)
             {
-                while (++_beats < _beatsToIdle)
+                float t = 0f;
+                float cache_beat_t = Beat_T;
+                
+                while (t < _timeToIdle) // Wait for idle time to pass
                 {
-                    yield return new WaitForSecondsRealtime(Beat_T - Time.time);
+                    float tDiff = (Beat_T - Time.time);
+
+                    t += tDiff;
+                    yield return new WaitForSecondsRealtime(tDiff);
                     bool _waitFov = true;
                     SwitchFOV((_focus) =>
                     {
                         _waitFov = false;
                     });
-                    while (_waitFov) yield return null;
+                    while (_waitFov)
+                    {
+                        t += Time.unscaledDeltaTime;
+                        yield return null;
+                    }
                 }
-                _beats = 0;
 
                 bool _action = true; // Wait for action
                 yield return new WaitForSecondsRealtime((Beat_T - Time.time)); // Wait for seconds to pass on-beat
@@ -120,7 +132,6 @@ namespace live_simulation
         
         #region Behaviours
 
-        [SerializeField] private Frame _lastFrame;
         Frame ChooseBestFrame()
         {
             float aggregate = 0f;
@@ -253,12 +264,16 @@ namespace live_simulation
             }
 
             _currentActionMarker = null; // Wipe action!
-            _lastFrame = Frame.Quiet;
+            _currentFrame = Frame.Quiet;
+            _currentAction = null;
             _state = State.Idle;
+            frameEvents = null;
         }
 
         void HandleActionLoop(Entity entity, List<EVENTCODE> @eventcodes, System.Action onComplete, System.Action onFailure, bool? success = null)
         {
+            _currentAction = null; // Clear current action
+            
             if (!success.HasValue)
             {
                 if (entity == null)
@@ -269,7 +284,7 @@ namespace live_simulation
                 {
                     if (@eventcodes.Count > 0)
                     {
-                        var @event = @eventcodes[0];
+                        var @event = _currentAction = @eventcodes[0];
                         @eventcodes.RemoveAt(0);
 
                         EVENTCODE? nextEvent = null;
@@ -419,12 +434,23 @@ namespace live_simulation
                 else onFailure?.Invoke(); // Fail condition
             }
         }
+        
 
         [SerializeField] private FrameEventSet[] _frameActions = new FrameEventSet[] { };
+        [SerializeField] private EVENTCODE[] _frameEvents = new EVENTCODE[] { };
+        private EVENTCODE[] frameEvents
+        {
+            get => _frameEvents;
+            set
+            {
+                _frameEvents = value;
+                BridgeUtil.onUpdateEyeActionStack?.Invoke(_frameEvents);
+            }
+        }
 
         IEnumerator ActionLoop(System.Action onComplete)
         {
-            Frame _frame = _lastFrame = ChooseBestFrame();
+            Frame _frame = _currentFrame = ChooseBestFrame();
             List<EVENTCODE> _frameEvents = null;
             for (int i = 0; i < _frameActions.Length; i++)
             {
@@ -445,6 +471,8 @@ namespace live_simulation
             {
                 waitForQuery = false;
                 _currentActionMarker = marker;
+
+                this.frameEvents = (_currentActionMarker != null) ? _currentActionMarker.HitEvents.ToArray() : null;
             });
             while (waitForQuery) yield return null;
 
@@ -597,11 +625,19 @@ namespace live_simulation
 
         IEnumerator InteractionQueryLoop(List<EVENTCODE> events, System.Action<SmartInteractionMarker> onComplete)
         {
+            yield return new WaitForSecondsRealtime(Beat_T - Time.time);
+            
             var w = _interactionMarkersContainer.rect.width;
             var h = _interactionMarkersContainer.rect.height;
 
             var xOffset = (1f - _screenInteractionFillWidth) / 2f;
             var yOffset = (1f - _screenInteractionFillHeight) / 2f;
+
+            int markerI = 0;
+            int totalMarkers = _queryInteractionsPerHeight * _queryInteractionsPerWidth;
+            float _markerDelay = _markerInstantiateTime / totalMarkers;
+
+            Task _waitTask = null;
             
             for (int y = 0; y < _queryInteractionsPerHeight; y++)
             {
@@ -657,13 +693,21 @@ namespace live_simulation
                     if (_hit) hits.Add(marker);
                     else misses.Add(marker);
 
-                    yield return new WaitForSecondsRealtime(_stepBetweenMarkers);
+                    if (++markerI >= (totalMarkers - 1)) //Last
+                    {
+                        _waitTask = _Util.WaitForNextBeatWithDelay(_markerDelay);
+                        while (!_waitTask.IsCompleted) yield return null;
+                    }
+                    else
+                    {
+                        yield return new WaitForSecondsRealtime(_markerDelay);
+                    }
                 }
             }
             
-            yield return null;
-            yield return new WaitForSecondsRealtime(_stepBetweenFailureMarkers);
-            
+            _waitTask = _Util.WaitForNextBeatWithDelay(_stepBetweenFailureMarkers);
+            while (!_waitTask.IsCompleted) yield return null;
+
             var _misses = this.misses.ToArray();
             ClearInteractions(_misses);
             misses = new List<SmartInteractionMarker>();
@@ -673,13 +717,16 @@ namespace live_simulation
                 SmartInteractionMarker _successHit = hits[0];
                 if (hits.Count > 1)
                 {
-                    yield return new WaitForSecondsRealtime(_stepBetweenValidMarker);
+                    _waitTask = _Util.WaitForNextBeatWithDelay(_stepBetweenValidMarker);
+                    while (!_waitTask.IsCompleted) yield return null;
+                    
                     _successHit = hits[Random.Range(0, hits.Count)];
                     
                     var _removeHits = hits.Except(new SmartInteractionMarker[] {_successHit}).ToArray();
                     ClearInteractions(_removeHits);
                 }
-                yield return new WaitForSecondsRealtime(_stepAfterValidMarker);
+                _waitTask = _Util.WaitForNextBeatWithDelay(_stepAfterValidMarker);
+                while (!_waitTask.IsCompleted) yield return null;
                 
                 hits = new List<SmartInteractionMarker>(new SmartInteractionMarker[] {_successHit}); // Assign only valid hit!
                 onComplete?.Invoke(_successHit);

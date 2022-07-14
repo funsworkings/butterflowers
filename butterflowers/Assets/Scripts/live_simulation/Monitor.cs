@@ -23,7 +23,7 @@ namespace live_simulation
         // Attributes
 
         [SerializeField, Range(0f, 1f)] private float _captureWResolution, _captureHResolution;
-        [SerializeField] private float _updateInterval = 1f;
+        [SerializeField] private float selectionBoxTransitionTime = 1f, selectionBoxWaitTime = 1f;
         
         
         #region Files
@@ -117,7 +117,7 @@ namespace live_simulation
 
                 Vector2 sPos = new Vector2(UnityEngine.Random.Range(-_cw/2f, _cw/2f), UnityEngine.Random.Range(-_ch/2f, _ch/2f));
                 Vector2 sScale = new Vector2(UnityEngine.Random.Range(64, _cw), UnityEngine.Random.Range(64, _ch));
-                _selection.UpdateTransform(sPos, sScale, () =>
+                _selection.UpdateTransform(sPos, sScale, selectionBoxTransitionTime, selectionBoxWaitTime, () =>
                 {
                     cx = _selection.X;
                     cy = _selection.Y;
@@ -139,7 +139,7 @@ namespace live_simulation
                         onComplete?.Invoke(result, fullpath);
                 
                     }, (int)cw, (int)ch, (int)cx, (int)cy); 
-                });
+                }, _Util);
             }
             else
             {
