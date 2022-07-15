@@ -70,6 +70,7 @@ namespace live_simulation
             _usedFocus.Add(null); // Append current default focus
                 
             StartCoroutine("CoreLoop");
+            StartCoroutine("NestLoop");
         }
 
         private void OnDestroy()
@@ -120,6 +121,23 @@ namespace live_simulation
                 _state = State.Idle; // Return to idle state
 
                 yield return null;
+            }
+        }
+
+        IEnumerator NestLoop()
+        {
+            yield return new WaitForSecondsRealtime(Beat_T - Time.time);
+            _nest.RandomKick(_Util.PRESET.nestKickForce);
+            
+            while(true)
+            {
+                var task = _Util.WaitForBeats(_Util.PRESET.beatsToNestUpdate);
+                while (!task.IsCompleted) yield return null;
+
+                if (_state == State.Idle)
+                {
+                    _nest.RandomKick(_Util.PRESET.nestKickForce);
+                }
             }
         }
         

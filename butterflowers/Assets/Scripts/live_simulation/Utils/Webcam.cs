@@ -39,6 +39,19 @@ namespace live_simulation.Utils
 				string deviceId = device.name;
 				Debug.Log($"Discovered video device: {deviceId}");
 
+				Resolution[] res = device.availableResolutions;
+				if (res != null && res.Length > 0)
+				{
+					foreach (Resolution r in res)
+					{
+						Debug.LogWarning($"Found resolutions - {deviceId}; {r.width}w {r.height}h {r.refreshRate}rate");
+					}	
+				}
+				else
+				{
+					Debug.LogWarning($"Found no resolutions for {deviceId}");
+				}
+
 				AvailableDevices.Add(device);	
 				_cache.Add(deviceId);
 			}

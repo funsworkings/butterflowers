@@ -25,6 +25,9 @@ MonoBehaviour:
   beaconSpawnDistanceFromCamera: 1
   beaconPostSpawnDelay: 1.5
   overrideEventCode: -1
+  beatsToWaitWebcamIdle: 2
+  beatsToNestUpdate: 2
+  nestKickForce: 2
   selectionBoxTransitionTime: 2.5
   selectionBoxWaitTime: 1.3
   heatmapUpdateInterval: 5
