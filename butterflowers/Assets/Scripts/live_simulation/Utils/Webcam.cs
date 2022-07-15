@@ -4,6 +4,7 @@ using System.Collections.Generic;
 using System.Linq;
 using UnityEngine;
 using uwu.Textures;
+using Random = UnityEngine.Random;
 
 namespace live_simulation.Utils
 {
@@ -14,8 +15,13 @@ namespace live_simulation.Utils
 		[SerializeField] private Camera _renderCamera;
 		[SerializeField] private List<GameObject> toggleVisibilityComponents = new List<GameObject>();
 		[SerializeField] private bool _autoStart = true;
-		
+
+		private string _current;
 		private List<WebCamDevice> AvailableDevices = new List<WebCamDevice>();
+
+		private List<string> _used = new List<string>();
+		private List<string> _cache = new List<string>();
+		
 		private int DeviceIndex = -1;
 		
 		WebCamTexture wct;
@@ -34,6 +40,7 @@ namespace live_simulation.Utils
 				Debug.Log($"Discovered video device: {deviceId}");
 
 				AvailableDevices.Add(device);	
+				_cache.Add(deviceId);
 			}
 
 			if (_autoStart && AvailableDevices.Count > 0)
@@ -113,8 +120,22 @@ namespace live_simulation.Utils
 			if (texture != null)
 			{
 				DestroyDevice(); // Clear out previous device
-				wct = texture; // Assign new wsebcam texture
 				
+				wct = texture; // Assign new wsebcam texture
+				_current = deviceId;
+				
+				if (_cache.Contains(deviceId))
+				{
+					_cache.Remove(deviceId);
+					if (_cache.Count == 0)
+					{
+						// Reset collections
+						_cache = new List<string>(_used);
+						_used = new List<string>();
+					}
+				}
+				if (!_used.Contains(deviceId)) _used.Add(deviceId);
+
 				UpdateActiveDeviceIndex();
 			}
 			
@@ -194,6 +215,12 @@ namespace live_simulation.Utils
 			{
 				onReady?.Invoke(wct);
 			}
+		}
+
+		public void RequestRandomDevice(Action<WebCamTexture> onReady)
+		{
+			var _item = _cache[Random.Range(0, _cache.Count)];
+			RequestDevice(_item, onReady);
 		}
 
 		void RequestDeviceByIndex(int index, Action<WebCamTexture> onReady)

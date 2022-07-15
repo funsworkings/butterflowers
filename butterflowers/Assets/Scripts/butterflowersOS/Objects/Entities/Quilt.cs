@@ -376,8 +376,16 @@ namespace butterflowersOS.Objects.Entities
             
             UpdateLerpSpeed();
             UpdateTextures();
-            
-            offset = 1f - (1f / textureStack.Length); // Snap back immediately to last added
+
+            int textureCount = textureStack.Length;
+            if (textureCount > 0)
+            {
+                offset = 1f - (1f / textureStack.Length); // Snap back immediately to last added
+            }
+            else
+            {
+                offset = 0f;
+            }
 
             if (wait <= 0f) 
             {

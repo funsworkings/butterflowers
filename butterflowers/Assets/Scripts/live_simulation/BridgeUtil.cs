@@ -412,11 +412,10 @@ namespace live_simulation
 
                 void DidCompleteBeatLocal(float a, float b)
                 {
-                    onBeat -= DidCompleteBeatLocal;
-                    
                     Debug.LogWarning($"wait beat: {_b}");
                     if (++_b >= beats)
                     {
+                        onBeat -= DidCompleteBeatLocal;
                         _taskCompletionSource.SetResult(true);
                     }
                 }

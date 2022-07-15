@@ -22,10 +22,12 @@ MonoBehaviour:
   stepBetweenFailureMarkers: 0.3
   stepBetweenValidMarker: 0.5
   stepAfterValidMarker: 1
+  beaconSpawnDistanceFromCamera: 1
+  beaconPostSpawnDelay: 1.5
   overrideEventCode: -1
   selectionBoxTransitionTime: 2.5
   selectionBoxWaitTime: 1.3
   heatmapUpdateInterval: 5
   heatmapSmoothingTime: 10
   textureOverrideTimeLength: 3
-  showDebugMenu: 1
+  showDebugMenu: 0

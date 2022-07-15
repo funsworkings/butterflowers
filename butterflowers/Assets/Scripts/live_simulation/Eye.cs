@@ -91,10 +91,13 @@ namespace live_simulation
                 
                 while (t < idleT) // Wait for idle time to pass
                 {
-                    float tDiff = (Beat_T - Time.time);
-
-                    t += tDiff;
-                    yield return new WaitForSecondsRealtime(tDiff);
+                    var task = _Util.WaitForBeats(_Util.PRESET.beatsToWaitWebcamIdle);
+                    while (!task.IsCompleted)
+                    {
+                        t += Time.unscaledDeltaTime; 
+                        yield return null;
+                    }
+                    
                     bool _waitFov = true;
                     SwitchFOV((_focus) =>
                     {

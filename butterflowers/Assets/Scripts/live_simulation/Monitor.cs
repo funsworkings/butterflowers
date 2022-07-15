@@ -183,7 +183,7 @@ namespace live_simulation
             Debug.LogWarning($"Wait {tDiff}s before trigger webcam!");
             yield return new WaitForSecondsRealtime(tDiff);
             
-            _webcam.RequestNextDevice(texture =>
+            _webcam.RequestRandomDevice(texture =>
             {
                 Debug.LogWarning("Switch to next webcam was successful!");
                 _wait = false;

@@ -21,6 +21,7 @@ namespace live_simulation
         public float beaconSpawnDistanceFromCamera = 1f;
         public float beaconPostSpawnDelay = 1.5f;
         public EVENTCODE overrideEventCode = EVENTCODE.NULL;
+        public int beatsToWaitWebcamIdle = 2;
         
         [Header("Webcam")] 
         [UnityEngine.Min(.3f)] public float selectionBoxTransitionTime = 1f;
