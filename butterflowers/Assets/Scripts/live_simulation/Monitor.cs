@@ -120,7 +120,7 @@ namespace live_simulation
 
                 Vector2 sPos = new Vector2(UnityEngine.Random.Range(-_cw/2f, _cw/2f), UnityEngine.Random.Range(-_ch/2f, _ch/2f));
                 Vector2 sScale = new Vector2(UnityEngine.Random.Range(128, _cw), UnityEngine.Random.Range(128, _ch));
-                _selection.UpdateTransform(sPos, sScale, selectionBoxTransitionTime, selectionBoxWaitTime, () =>
+                _selection.UpdateTransform(sPos, sScale, _Util.PRESET.selectionBoxTransitionTime, _Util.PRESET.selectionBoxWaitTime, () =>
                 {
                     cx = _selection.X;
                     cy = _selection.Y;

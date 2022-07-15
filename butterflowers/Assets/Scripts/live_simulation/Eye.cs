@@ -36,9 +36,6 @@ namespace live_simulation
         public Frame _currentFrame { get; private set; } = Frame.Quiet;
         public EVENTCODE? _currentAction { get; private set; }= null;
 
-        [Header("General")]
-        [SerializeField] private float _fovUpdateInterval = .5f;
-        
         [Header("Focus")]
         [SerializeField] private Focusing _focus;
             private List<Focusable> _availableFocus = new List<Focusable>();
@@ -48,34 +45,20 @@ namespace live_simulation
         [SerializeField] private Camera _interactionCamera;
         [SerializeField] private LayerMask _interactionMask;
         [SerializeField] private float _interactionMaxDistance = 999f;
-        [SerializeField] private int _queryInteractionsPerWidth = 10;
-        [SerializeField] private int _queryInteractionsPerHeight = 10;
         [SerializeField] private SmartInteractionMarker _interactionMarkerPrefab;
         [SerializeField] private RectTransform _interactionMarkersContainer;
-        [SerializeField] private float _markerScaleMultiplier = 1f;
-        [SerializeField] private float _markerInstantiateTime = .1f;
-        [SerializeField] private float _stepBetweenFailureMarkers = 2f;
-        [SerializeField] private float _stepBetweenValidMarker = 1.5f;
-        [SerializeField] private float _stepAfterValidMarker = 2f;
-        [SerializeField, Range(.1f, 1f)] float _screenInteractionFillWidth = 1f;
-        [SerializeField, Range(.1f, 1f)] float _screenInteractionFillHeight = 1f;
         private List<SmartInteractionMarker> hits = new List<SmartInteractionMarker>();
         private List<SmartInteractionMarker> misses = new List<SmartInteractionMarker>();
 
         [Header("Scene")] 
         [SerializeField] private BeaconManager _beaconManager;
-        [SerializeField] private float _beaconSpawnDistanceFromCamera = 1f;
         [SerializeField] private Wand _wand;
         [SerializeField] private Nest _nest;
         [SerializeField] private ButterflowerManager _butterflowers;
         [SerializeField] private WorldPreset _world;
         [SerializeField] private Quilt _quilt;
-        [SerializeField] private float _butterflyOverrideLength = 3f;
         private Monitor _monitor = null;
 
-        [Header("Debug")] 
-        [SerializeField] private EVENTCODE _debugOverrideEventCode = EVENTCODE.NULL;
-        
         private void Start()
         {
             BridgeUtil.onLoad += Initialize;
@@ -97,16 +80,16 @@ namespace live_simulation
         }
         
         private bool _waitBeat = true;
-        [SerializeField] private float _timeToIdle = 6f;
 
         IEnumerator CoreLoop()
         {
             while (true)
             {
                 float t = 0f;
+                float idleT = _Util.PRESET.idleTime;
                 float cache_beat_t = Beat_T;
                 
-                while (t < _timeToIdle) // Wait for idle time to pass
+                while (t < idleT) // Wait for idle time to pass
                 {
                     float tDiff = (Beat_T - Time.time);
 
@@ -311,19 +294,19 @@ namespace live_simulation
                                 {
                                     if (img != null && !string.IsNullOrEmpty(imgPath))
                                     {
-                                        _quilt.OverrideTextures(new Texture2D[]{img}, _butterflyOverrideLength); // Override quilt texture
-                                        _nest.OverridePulse(_butterflyOverrideLength); // Override nest pulse
+                                        _quilt.OverrideTextures(new Texture2D[]{img}, _Util.PRESET.textureOverrideTimeLength); // Override quilt texture
+                                        _nest.OverridePulse(_Util.PRESET.textureOverrideTimeLength); // Override nest pulse
                                         
                                         var @params = new Hashtable()
                                         {
-                                            { "position" , _interactionCamera.ViewportToWorldPoint(new Vector3(.5f, .5f, _beaconSpawnDistanceFromCamera)) }
+                                            { "position" , _interactionCamera.ViewportToWorldPoint(new Vector3(.5f, .5f, _Util.PRESET.beaconSpawnDistanceFromCamera)) }
                                         };
                                         
                                         var _transition = new Beacon.Transition()
                                         {
                                             scaleA = _world.normalBeaconScale * Vector3.one,
                                             scaleB = _world.normalBeaconScale * Vector3.one,
-                                            delay = 1.5f,
+                                            delay = _Util.PRESET.beaconPostSpawnDelay,
                                             _transitionTexture = img
                                         };
 
@@ -471,6 +454,7 @@ namespace live_simulation
                 }
             }
 
+            var _debugOverrideEventCode = _Util.PRESET.overrideEventCode;
             if (_debugOverrideEventCode != EVENTCODE.NULL)
             {
                 _frameEvents = new List<EVENTCODE>(new EVENTCODE[]{ _debugOverrideEventCode });
@@ -640,21 +624,24 @@ namespace live_simulation
             var w = _interactionMarkersContainer.rect.width;
             var h = _interactionMarkersContainer.rect.height;
 
-            var xOffset = (1f - _screenInteractionFillWidth) / 2f;
-            var yOffset = (1f - _screenInteractionFillHeight) / 2f;
+            var xl = _Util.PRESET.queryWidth;
+            var yl = _Util.PRESET.queryHeight;
+
+            var xOffset = (1f - _Util.PRESET.queryViewportWidth) / 2f;
+            var yOffset = (1f - _Util.PRESET.queryViewportHeight) / 2f;
 
             int markerI = 0;
-            int totalMarkers = _queryInteractionsPerHeight * _queryInteractionsPerWidth;
-            float _markerDelay = _markerInstantiateTime / totalMarkers;
+            int totalMarkers = yl * xl;
+            float _markerDelay = _Util.PRESET.markerInstantiateTime / totalMarkers;
 
             Task _waitTask = null;
             
-            for (int y = 0; y < _queryInteractionsPerHeight; y++)
+            for (int y = 0; y < yl; y++)
             {
-                for (int x = 0; x < _queryInteractionsPerWidth; x++)
+                for (int x = 0; x < xl; x++)
                 {
-                    var ix = (1f * x / (_queryInteractionsPerWidth-1)).RemapNRB(0f, 1f, xOffset, 1f - xOffset);
-                    var iy = (1f * y / (_queryInteractionsPerHeight-1)).RemapNRB(0f, 1f, yOffset, 1f - yOffset);
+                    var ix = (1f * x / (xl-1)).RemapNRB(0f, 1f, xOffset, 1f - xOffset);
+                    var iy = (1f * y / (xl-1)).RemapNRB(0f, 1f, yOffset, 1f - yOffset);
 
                     Vector3 viewPt = new Vector3(ix * 1f, iy * 1f, 0f);
                     Vector3 screenPt = _interactionCamera.ViewportToScreenPoint(viewPt);
@@ -697,7 +684,7 @@ namespace live_simulation
 
                     var marker = Instantiate(_interactionMarkerPrefab, _interactionMarkersContainer);
                     marker.transform.position = screenPt; // Set transform position
-                    marker.transform.localScale *= _markerScaleMultiplier;
+                    marker.transform.localScale *= _Util.PRESET.markerScaleMultiplier;
                     marker.Setup(_hit, hit, entity, __events);
 
                     if (_hit) hits.Add(marker);
@@ -715,7 +702,7 @@ namespace live_simulation
                 }
             }
             
-            _waitTask = _Util.WaitForNextBeatWithDelay(_stepBetweenFailureMarkers);
+            _waitTask = _Util.WaitForNextBeatWithDelay(_Util.PRESET.stepBetweenFailureMarkers);
             while (!_waitTask.IsCompleted) yield return null;
 
             var _misses = this.misses.ToArray();
@@ -727,7 +714,7 @@ namespace live_simulation
                 SmartInteractionMarker _successHit = hits[0];
                 if (hits.Count > 1)
                 {
-                    _waitTask = _Util.WaitForNextBeatWithDelay(_stepBetweenValidMarker);
+                    _waitTask = _Util.WaitForNextBeatWithDelay(_Util.PRESET.stepBetweenValidMarker);
                     while (!_waitTask.IsCompleted) yield return null;
                     
                     _successHit = hits[Random.Range(0, hits.Count)];
@@ -735,7 +722,7 @@ namespace live_simulation
                     var _removeHits = hits.Except(new SmartInteractionMarker[] {_successHit}).ToArray();
                     ClearInteractions(_removeHits);
                 }
-                _waitTask = _Util.WaitForNextBeatWithDelay(_stepAfterValidMarker);
+                _waitTask = _Util.WaitForNextBeatWithDelay(_Util.PRESET.stepAfterValidMarker);
                 while (!_waitTask.IsCompleted) yield return null;
                 
                 hits = new List<SmartInteractionMarker>(new SmartInteractionMarker[] {_successHit}); // Assign only valid hit!

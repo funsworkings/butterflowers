@@ -25,12 +25,14 @@ namespace live_simulation
             _canvasGroup = GetComponent<CanvasGroup>();
         }
 
-        void Start()
+        IEnumerator Start()
         {
             BridgeUtil.onUpdateEyeActionStack += UpdateActionStack;
             _restartButton.onClick.AddListener(RestartSimulation);
+
+            while (!_Util) yield return null;
             
-            if(visible) Show();
+            if(_Util.PRESET.showDebugMenu) Show();
             else Hide();
         }
         

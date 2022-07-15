@@ -23,6 +23,8 @@ namespace live_simulation
 {
     public class BridgeUtil : MonoBehaviour
     {
+        public WondervillePreset PRESET;
+        
         // Events
 
         public static System.Action onLoad;
@@ -165,27 +167,28 @@ namespace live_simulation
             init = true;
         }
 
-        [SerializeField] private float heatmapUpdateInterval = 5f;
-        [SerializeField] private Gradient lastHeatmap;
-        [SerializeField] private float heatMapSmoothingTime = 3f;
-        private List<Texture2D> _generatedHeatmaps = new List<Texture2D>();
-        
+        [SerializeField] private Texture2D lastHeatmap;
+
         IEnumerator HeatmapLoop()
         {
             while (true)
             {
-                yield return new WaitForSecondsRealtime(heatmapUpdateInterval);
+                float _interval = PRESET.heatmapUpdateInterval;
+                yield return new WaitForSecondsRealtime(_interval);
                 
                 var prevTex = _ppSmile._heatmapA.value as Texture2D;
                 var (tex, gradient) = GradientGenerator.RequestGradient(128, 1, 12);
-                lastHeatmap = gradient;
-                
                 if (tex != null) // Has valid gradient texture
                 {
                     Debug.LogWarning("Success generate new heatmap for PP!");
-                    
-                    _generatedHeatmaps.Add(tex);
                     yield return BlendGradient(prevTex, tex);
+
+                    if (lastHeatmap != null)
+                    {
+                        DestroyImmediate(lastHeatmap);
+                        lastHeatmap = null;
+                    }
+                    lastHeatmap = tex;
                 }
                 else
                 {
@@ -196,9 +199,6 @@ namespace live_simulation
             }
         }
 
-        [SerializeField] private float _hmBlend;
-        [SerializeField] private float _photoboothBlend;
-        
         IEnumerator BlendGradient(Texture2D a, Texture2D b)
         {
             var photoA = _photobooth.setting;
@@ -208,15 +208,15 @@ namespace live_simulation
             if (a != null)
             {
                 float t = 0f;
-                float dur = heatMapSmoothingTime;
+                float dur = PRESET.heatmapSmoothingTime;
             
-                _hmBlend = _ppSmile._heatmapBlend.value = 0f; // Reset
+                _ppSmile._heatmapBlend.value = 0f; // Reset
                 _photobooth.ApplySetting(photoA); // Reset
                 while (t < dur)
                 {
                     t += Time.unscaledDeltaTime;
                 
-                    float i = _hmBlend = _photoboothBlend = Mathf.Clamp01(t / dur);
+                    float i = Mathf.Clamp01(t / dur);
                     _ppSmile._heatmapBlend.value = i;
 
                     photoT.blur = Mathf.Lerp(photoA.blur, photoB.blur, i);
@@ -383,13 +383,6 @@ namespace live_simulation
 
             _interval = Mathf.Clamp01(1f - ((timeB - (t+timeA)) / thresh));;
             _bpmUI.fillAmount = _interval;
-            
-            UpdateFX();
-        }
-
-        void UpdateFX()
-        {
-            
         }
 
         void Beat(float diff)
@@ -456,8 +449,11 @@ namespace live_simulation
         {
             onLoad -= Initialize;
 
-            var heatmaps = _generatedHeatmaps.ToArray();
-            foreach(Texture2D gh in heatmaps) DestroyImmediate(gh);
+            if (lastHeatmap != null)
+            {
+                DestroyImmediate(lastHeatmap);
+                lastHeatmap = null;
+            }
             
             if(!restartInProgress) SceneManager.UnloadScene(1);
             
