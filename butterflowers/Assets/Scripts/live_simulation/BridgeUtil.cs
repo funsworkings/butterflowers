@@ -145,6 +145,8 @@ namespace live_simulation
                    else if (listener is Eye) _eye = listener as Eye; // Assign eye
                }
 
+               StartCoroutine(HeatmapLoop());
+
                successLoadScene = true;
 
             }, () =>
@@ -159,6 +161,63 @@ namespace live_simulation
         void Initialize()
         {
             init = true;
+        }
+
+        [SerializeField] private float heatmapUpdateInterval = 5f;
+        [SerializeField] private Gradient lastHeatmap;
+        [SerializeField] private float heatMapSmoothingTime = 3f;
+        private List<Texture2D> _generatedHeatmaps = new List<Texture2D>();
+        
+        IEnumerator HeatmapLoop()
+        {
+            while (true)
+            {
+                yield return new WaitForSecondsRealtime(heatmapUpdateInterval);
+                
+                var prevTex = _ppSmile._heatmapA.value as Texture2D;
+                var (tex, gradient) = GradientGenerator.RequestGradient(128, 1, 12);
+                lastHeatmap = gradient;
+                
+                if (tex != null) // Has valid gradient texture
+                {
+                    Debug.LogWarning("Success generate new heatmap for PP!");
+                    
+                    _generatedHeatmaps.Add(tex);
+                    yield return BlendGradient(prevTex, tex);
+                }
+                else
+                {
+                    Debug.LogError("Fail generate heatmap for PP!");
+                }
+
+                yield return null;
+            }
+        }
+
+        [SerializeField] private float _hmBlend;
+        IEnumerator BlendGradient(Texture2D a, Texture2D b)
+        {
+            if (a != null)
+            {
+                float t = 0f;
+                float dur = heatMapSmoothingTime;
+            
+                _hmBlend = _ppSmile._heatmapBlend.value = 0f; // Reset
+                while (t < dur)
+                {
+                    t += Time.unscaledDeltaTime;
+                
+                    float i = _hmBlend = Mathf.Clamp01(t / dur);
+                    _ppSmile._heatmapBlend.value = i;
+
+                    yield return null;
+                }
+            }
+
+            // Remove prev texture
+            _ppSmile._heatmapA.value = b;
+            _ppSmile._heatmapB.value = null;
+            _ppSmile._heatmapBlend.value = 1f;
         }
         
         #region OSC
@@ -377,8 +436,13 @@ namespace live_simulation
         private void OnDestroy()
         {
             onLoad -= Initialize;
+
+            var heatmaps = _generatedHeatmaps.ToArray();
+            foreach(Texture2D gh in heatmaps) DestroyImmediate(gh);
             
             if(!restartInProgress) SceneManager.UnloadScene(1);
+            
+            StopAllCoroutines();
         }
         
         #region Bridge ops

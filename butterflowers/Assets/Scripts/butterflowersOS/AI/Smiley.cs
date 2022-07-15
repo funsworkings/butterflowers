@@ -9,9 +9,11 @@ namespace butterflowersOS.AI
 	public sealed class Smiley : PostProcessEffectSettings
 	{
 		public TextureParameter _gradient = new TextureParameter() {value = null};
-		public TextureParameter _heatmap = new TextureParameter() {value = null};
+		public TextureParameter _heatmapA = new TextureParameter() {value = null};
+		public TextureParameter _heatmapB = new TextureParameter() {value = null};
 		
 		public FloatParameter _blend = new FloatParameter { value = 0f };
+		public FloatParameter _heatmapBlend = new FloatParameter { value = 0f };
 		public IntParameter _steps = new IntParameter() {value = 128};
 
 		/*
@@ -28,9 +30,16 @@ namespace butterflowersOS.AI
 			var sheet = context.propertySheets.Get(Shader.Find("Hidden/Custom/Smiley"));
 			
 			sheet.properties.SetTexture("_Gradient", settings._gradient);
-			sheet.properties.SetTexture("_Heatmap", settings._heatmap);
+
+			var ha = settings._heatmapA;
+			var hb = settings._heatmapB;
+			if (hb.value == null) hb = settings._heatmapA; // Override with Heatmap A if NULL
+			
+			sheet.properties.SetTexture("_HeatmapA", ha);
+			sheet.properties.SetTexture("_HeatmapB", hb);
 			
 			sheet.properties.SetFloat("_Blend", settings._blend);
+			sheet.properties.SetFloat("_HeatmapBlend", settings._heatmapBlend);
 			sheet.properties.SetInt("_Steps", settings._steps);
 			
 			/*

@@ -7,10 +7,10 @@ Shader "Hidden/Custom/Smiley"
         TEXTURE2D_SAMPLER2D(_MainTex, sampler_MainTex);
         TEXTURE2D_SAMPLER2D(_CameraDepthTexture, sampler_CameraDepthTexture);
         
-        Texture2D _Gradient, _Heatmap;
+        Texture2D _Gradient, _HeatmapA, _HeatmapB;
 
         half _Steps;
-        float _Blend;
+        float _Blend, _HeatmapBlend;
     
         //float _Tiling;
         //float4 _Color;
@@ -27,9 +27,11 @@ Shader "Hidden/Custom/Smiley"
                 float4 gradient = SAMPLE_TEXTURE2D(_Gradient, sampler_MainTex, float2(length(baseColor.rgb), 0));
                 float value = length(gradient.rgb);
 
-            float4 heatmapColor = SAMPLE_TEXTURE2D(_Heatmap, sampler_MainTex, float2(value, 0));
+            float4 heatmapAColor = SAMPLE_TEXTURE2D(_HeatmapA, sampler_MainTex, float2(value, 0));
+            float4 heatmapBColor = SAMPLE_TEXTURE2D(_HeatmapB, sampler_MainTex, float2(value, 0));
+                float4 heatmapFinalColor = lerp(heatmapAColor, heatmapBColor, _HeatmapBlend); // Blend heatmap
             
-            baseColor.rgb = lerp(baseColor.rgb, heatmapColor, _Blend);
+            baseColor.rgb = lerp(baseColor.rgb, heatmapFinalColor, _Blend);
             
             //float depth = min(1, (LinearEyeDepth(SAMPLE_DEPTH_TEXTURE(_CameraDepthTexture, sampler_CameraDepthTexture, s_texcoord)) / _Offset) + _Brightness);
 

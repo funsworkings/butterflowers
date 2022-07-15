@@ -1346,13 +1346,20 @@ MonoBehaviour:
     overrideState: 1
     value: {fileID: 2800000, guid: 831dc3d639e154aad9bbdd42ab6d66d0, type: 3}
     defaultState: 1
-  _heatmap:
+  _heatmapA:
     overrideState: 1
     value: {fileID: 2800000, guid: 928912159f4bc4e26bbac17377df9446, type: 3}
+    defaultState: 1
+  _heatmapB:
+    overrideState: 1
+    value: {fileID: 0}
     defaultState: 1
   _blend:
     overrideState: 1
     value: 0.48
+  _heatmapBlend:
+    overrideState: 1
+    value: 0
   _steps:
     overrideState: 1
     value: 107
