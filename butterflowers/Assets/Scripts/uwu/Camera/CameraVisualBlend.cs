@@ -176,7 +176,7 @@ namespace uwu.Camera
 			if (def == null) def = defaultBlendDefinition;
 
 			if (def.type == CameraVisualBlendDefinition.Type.Opacity) {
-				planeAnimation.transform.ResetTransformValues();
+				if(planeAnimation)planeAnimation.transform.ResetTransformValues();
 				planeOpacity.alpha = 1f - interval;
 			}
 			else if (def.type == CameraVisualBlendDefinition.Type.Animation) {
@@ -184,19 +184,19 @@ namespace uwu.Camera
 				var clip_name = anim.name;
 
 				if (interval == 0f) {
-					if (planeAnimation.GetClip(clip_name) == null)
+					if (planeAnimation && planeAnimation.GetClip(clip_name) == null)
 						planeAnimation.AddClip(def.animation, clip_name);
 
-					planeAnimation.Play(clip_name, PlayMode.StopAll);
+					if(planeAnimation)planeAnimation.Play(clip_name, PlayMode.StopAll);
 				}
 				else {
 					var duration = anim.length;
 
-					if (planeAnimation.GetClip(clip_name) == null)
+					if (planeAnimation && planeAnimation.GetClip(clip_name) == null)
 						planeAnimation.AddClip(def.animation, clip_name);
 
-					planeAnimation[clip_name].time = interval * duration;
-					planeAnimation.Sample();
+					if(planeAnimation)planeAnimation[clip_name].time = interval * duration;
+					if(planeAnimation)planeAnimation.Sample();
 				}
 			}
 		}
