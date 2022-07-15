@@ -59,13 +59,17 @@ Material:
         m_Texture: {fileID: 2800000, guid: 50f45dd4ee2699c4fbed5fc1f0df135d, type: 3}
         m_Scale: {x: 1, y: 1}
         m_Offset: {x: 0, y: 0}
+    - _Texture1:
+        m_Texture: {fileID: 2800000, guid: 6541c673d674b0c47a31b4867e8e3cbd, type: 3}
+        m_Scale: {x: 1, y: 1}
+        m_Offset: {x: 0, y: 0}
     - _texcoord:
         m_Texture: {fileID: 0}
         m_Scale: {x: 1, y: 1}
         m_Offset: {x: 0, y: 0}
     m_Floats:
-    - _Blur: 0.0089
-    - _Brightness: 8.1
+    - _Blur: 0
+    - _Brightness: 1
     - _BumpScale: 1
     - _Cutoff: 0.5
     - _DetailNormalMapScale: 1
@@ -81,6 +85,10 @@ Material:
     - _SmoothnessTextureChannel: 0
     - _SpecularHighlights: 1
     - _SrcBlend: 1
+    - _StarSize: 2.76
+    - _StarSpeed: 0.499
+    - _StarTiling: 10
+    - _StarVisibility: 0.54
     - _UVSec: 0
     - _ZWrite: 1
     - __dirty: 0
