@@ -36,6 +36,7 @@ namespace live_simulation
 
         private Monitor _monitor;
         private Eye _eye;
+        private PhotoboothManager _photobooth;
 
         [SerializeField] private OSC _osc;
         private bool _useOSC = false;
@@ -143,6 +144,7 @@ namespace live_simulation
                    
                    if(listener is Monitor) _monitor = listener as Monitor; // Assign monitor
                    else if (listener is Eye) _eye = listener as Eye; // Assign eye
+                   else if(listener is PhotoboothManager) _photobooth = listener as PhotoboothManager; // Assign photobooth
                }
 
                StartCoroutine(HeatmapLoop());
@@ -195,20 +197,35 @@ namespace live_simulation
         }
 
         [SerializeField] private float _hmBlend;
+        [SerializeField] private float _photoboothBlend;
+        
         IEnumerator BlendGradient(Texture2D a, Texture2D b)
         {
+            var photoA = _photobooth.setting;
+            var photoB = _photobooth.GenerateRandom();
+            var photoT = new PhotoboothPreset();
+            
             if (a != null)
             {
                 float t = 0f;
                 float dur = heatMapSmoothingTime;
             
                 _hmBlend = _ppSmile._heatmapBlend.value = 0f; // Reset
+                _photobooth.ApplySetting(photoA); // Reset
                 while (t < dur)
                 {
                     t += Time.unscaledDeltaTime;
                 
-                    float i = _hmBlend = Mathf.Clamp01(t / dur);
+                    float i = _hmBlend = _photoboothBlend = Mathf.Clamp01(t / dur);
                     _ppSmile._heatmapBlend.value = i;
+
+                    photoT.blur = Mathf.Lerp(photoA.blur, photoB.blur, i);
+                    photoT.brightness = Mathf.Lerp(photoA.brightness, photoB.brightness, i);
+                    photoT.distort = Mathf.Lerp(photoA.distort, photoB.distort, i);
+                    photoT.star_speed = Mathf.Lerp(photoA.star_speed, photoB.star_speed, i);
+                    photoT.star_vis = Mathf.Lerp(photoA.star_vis, photoB.star_vis, i);
+                    photoT.star_tile = Mathf.Lerp(photoA.star_tile, photoB.star_tile, i);
+                    _photobooth.ApplySetting(photoT);
 
                     yield return null;
                 }
@@ -218,6 +235,8 @@ namespace live_simulation
             _ppSmile._heatmapA.value = b;
             _ppSmile._heatmapB.value = null;
             _ppSmile._heatmapBlend.value = 1f;
+
+            _photobooth.ApplySetting(photoB);
         }
         
         #region OSC

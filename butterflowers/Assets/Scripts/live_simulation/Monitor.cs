@@ -16,6 +16,8 @@ namespace live_simulation
         [SerializeField] Webcam _webcam;
         [SerializeField] RawImage _webcamTargetImage, _webcamTargetLiveImage;
         [SerializeField] private SelectionBox _selection;
+        [SerializeField] private Material _photoboothMaterial;
+            public Material PhotoBoothMaterial => _photoboothMaterial;
 
         private AspectRatioFitter _webcamTargetImageFitter;
 
@@ -117,7 +119,7 @@ namespace live_simulation
                 var _ch = _selection.Container.rect.height;
 
                 Vector2 sPos = new Vector2(UnityEngine.Random.Range(-_cw/2f, _cw/2f), UnityEngine.Random.Range(-_ch/2f, _ch/2f));
-                Vector2 sScale = new Vector2(UnityEngine.Random.Range(64, _cw), UnityEngine.Random.Range(64, _ch));
+                Vector2 sScale = new Vector2(UnityEngine.Random.Range(128, _cw), UnityEngine.Random.Range(128, _ch));
                 _selection.UpdateTransform(sPos, sScale, selectionBoxTransitionTime, selectionBoxWaitTime, () =>
                 {
                     cx = _selection.X;
