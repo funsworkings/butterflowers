@@ -38,7 +38,7 @@ RenderSettings:
   m_ReflectionIntensity: 1
   m_CustomReflection: {fileID: 0}
   m_Sun: {fileID: 0}
-  m_IndirectSpecularColor: {r: 0.12729391, g: 0.13414288, b: 0.121147, a: 1}
+  m_IndirectSpecularColor: {r: 0.12729394, g: 0.1341429, b: 0.121147014, a: 1}
   m_UseRadianceAmbientProbe: 0
 --- !u!157 &3
 LightmapSettings:
@@ -135,6 +135,7 @@ GameObject:
   - component: {fileID: 643733115}
   - component: {fileID: 643733114}
   - component: {fileID: 643733117}
+  - component: {fileID: 643733118}
   m_Layer: 0
   m_Name: Monitor
   m_TagString: Untagged
@@ -175,6 +176,7 @@ MonoBehaviour:
   _webcamTargetImage: {fileID: 1214875734}
   _webcamTargetLiveImage: {fileID: 1771146996}
   _selection: {fileID: 643733117}
+  _photoboothMaterial: {fileID: 0}
   _captureWResolution: 0.3
   _captureHResolution: 0.3
   selectionBoxTransitionTime: 2.5
@@ -256,6 +258,46 @@ MonoBehaviour:
     m_RotationOrder: 4
   _scale: {x: 0, y: 0}
   _origin: {x: 0, y: 0}
+--- !u!114 &643733118
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 643733113}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 775a8c971d714478963a5c838cbda1c9, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
+  _imageView: {fileID: 1771146996}
+  _photoboothBounds:
+    blurMin: 0
+    blurMax: 0.05
+    distortMin: 0
+    distortMax: 1
+    brightnessMin: 1
+    brightnessMax: 24
+    starVisMin: 0
+    starVisMax: 1
+    starSpeedMin: 0.33
+    starSpeedMax: 1
+    starTileMin: 2
+    starTileMax: 36
+  a:
+    blur: 0
+    distort: 0
+    brightness: 0
+    star_vis: 0
+    star_speed: 0
+    star_tile: 0
+  b:
+    blur: 0
+    distort: 0
+    brightness: 0
+    star_vis: 0
+    star_speed: 0
+    star_tile: 0
 --- !u!1 &954335374
 GameObject:
   m_ObjectHideFlags: 0
@@ -561,7 +603,7 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 1344c3c82d62a2a41a3576d8abb8e3ea, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  m_Material: {fileID: 0}
+  m_Material: {fileID: 2100000, guid: 0b7243b440f83f840b2514b17da52f50, type: 2}
   m_Color: {r: 1, g: 1, b: 1, a: 1}
   m_RaycastTarget: 1
   m_RaycastPadding: {x: 0, y: 0, z: 0, w: 0}

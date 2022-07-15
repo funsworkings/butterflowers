@@ -62,7 +62,7 @@ namespace butterflowersOS.Objects.Entities.Interactables
         [SerializeField] WorldPreset worldPreset = null;
 
         [Header("Physics")]
-        [SerializeField] float force = 10f, m_energy = 0f;
+        [SerializeField] float force = 10f, m_energy = 0f, m_overrideEnergy = -1f;
         [SerializeField] float energyDecaySpeed = 1f, energyDecayDelay = 0f, timeSinceEnergyBoost = 0f;
 
         [Header("Beacons")]
@@ -96,7 +96,14 @@ namespace butterflowersOS.Objects.Entities.Interactables
         public int capacity { get { return m_capacity; } }
         public Beacon[] beacons { get { return m_beacons.ToArray(); } }
 
-        public float energy => m_energy;
+        public float energy
+        {
+            get
+            {
+                if (m_overrideEnergy > 0f) return m_overrideEnergy;
+                return m_energy;
+            }
+        }
 
         public Vector3 trajectory => rigidbody.velocity.normalized;
 
@@ -180,6 +187,7 @@ namespace butterflowersOS.Objects.Entities.Interactables
             Beacon.Deleted -= onDestroyBeacon;
 
             StopCoroutine("MaintainOnScreen");
+            ClearOverrideRoutine();
         }
 
         #endregion
@@ -495,6 +503,41 @@ namespace butterflowersOS.Objects.Entities.Interactables
         {
             timeSinceEnergyBoost = 0f;
             m_energy = 1f;
+        }
+
+        public void OverridePulse(float duration, System.Action onComplete = null)
+        {
+            ClearOverrideRoutine();
+            _overrideRoutine = StartCoroutine(OverridePulseRoutine(duration, onComplete));
+        }
+
+        void ClearOverrideRoutine()
+        {
+            if (_overrideRoutine != null)
+            {
+                StopCoroutine(_overrideRoutine);
+                _overrideRoutine = null;
+            }
+
+            m_overrideEnergy = -1f;
+        }
+
+        private Coroutine _overrideRoutine = null;
+        IEnumerator OverridePulseRoutine(float duration, System.Action onComplete)
+        {
+            m_overrideEnergy = 1f;
+            
+            float t = 0f;
+            while (t < duration)
+            {
+                t += Time.unscaledDeltaTime;
+                m_overrideEnergy = 1f - Mathf.Clamp01(t / duration);
+                
+                yield return null;
+            }
+
+            m_overrideEnergy = -1f;
+            onComplete?.Invoke();
         }
 
         #endregion

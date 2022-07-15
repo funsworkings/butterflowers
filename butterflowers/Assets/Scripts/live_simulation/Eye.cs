@@ -311,7 +311,8 @@ namespace live_simulation
                                 {
                                     if (img != null && !string.IsNullOrEmpty(imgPath))
                                     {
-                                        _quilt.OverrideTextures(new Texture2D[]{img}, _butterflyOverrideLength);
+                                        _quilt.OverrideTextures(new Texture2D[]{img}, _butterflyOverrideLength); // Override quilt texture
+                                        _nest.OverridePulse(_butterflyOverrideLength); // Override nest pulse
                                         
                                         var @params = new Hashtable()
                                         {
